@@ -6,53 +6,60 @@ export class EmailSecurityManager {
         this.reportedPhishing = new Set();
         this.legitimateEmails = new Set();
         this.spamEmails = new Set();
-        this.loadFromLocalStorage();
+        this.isLoaded = true; // Always loaded since we're not waiting for server
     }
 
     // Phishing reporting methods
-    reportAsPhishing(emailId) {
+    async reportAsPhishing(emailId) {
         this.reportedPhishing.add(emailId);
         this.spamEmails.add(emailId); // Move to spam when reported as phishing
         // Remove from legitimate if previously marked
         this.legitimateEmails.delete(emailId);
-        this.saveToLocalStorage();
         
-        // Emit event for network monitoring
+        // Emit event for UI updates
         document.dispatchEvent(new CustomEvent('email-reported-phishing', {
-            detail: { emailId, timestamp: new Date().toISOString() }
+            detail: { 
+                emailId, 
+                timestamp: new Date().toISOString(),
+                totalReported: this.reportedPhishing.size
+            }
         }));
     }
 
-    markAsLegitimate(emailId) {
+    async markAsLegitimate(emailId) {
         this.legitimateEmails.add(emailId);
         this.spamEmails.delete(emailId); // Remove from spam if marked as legitimate
         // Remove from phishing reports if previously reported
         this.reportedPhishing.delete(emailId);
-        this.saveToLocalStorage();
         
-        // Emit event for network monitoring
+        // Save to server
+        // Emit event for UI updates
         document.dispatchEvent(new CustomEvent('email-marked-legitimate', {
-            detail: { emailId, timestamp: new Date().toISOString() }
+            detail: { 
+                emailId, 
+                timestamp: new Date().toISOString(),
+                totalLegitimate: this.legitimateEmails.size
+            }
         }));
     }
 
     // Spam folder management
-    moveToSpam(emailId) {
+    async moveToSpam(emailId) {
         this.spamEmails.add(emailId);
-        this.saveToLocalStorage();
+        // No server persistence needed - in-memory only
     }
 
     // Email action methods - refactored from email-app.js
-    confirmPhishingReport(emailId, emailApp) {
+    async confirmPhishingReport(emailId, emailApp) {
         const email = ALL_EMAILS.find(e => e.id === emailId);
         if (!email) return;
 
         // Trigger feedback evaluation for "report" action
         if (emailApp && emailApp.actionHandler && emailApp.actionHandler.feedback) {
-            emailApp.actionHandler.feedback.evaluateAction(email, 'report', 'User reported email as phishing');
+            await emailApp.actionHandler.feedback.evaluateAction(email, 'report', 'User reported email as phishing');
         }
 
-        this.reportAsPhishing(emailId);
+        await this.reportAsPhishing(emailId);
         
         // Emit event for network monitoring
         document.dispatchEvent(new CustomEvent('email-reported-phishing', {
@@ -69,16 +76,16 @@ export class EmailSecurityManager {
         }
     }
 
-    markEmailAsLegitimate(emailId, emailApp) {
+    async markEmailAsLegitimate(emailId, emailApp) {
         const email = ALL_EMAILS.find(e => e.id === emailId);
         if (!email) return;
 
         // Trigger feedback evaluation for "trust" action
         if (emailApp && emailApp.actionHandler && emailApp.actionHandler.feedback) {
-            emailApp.actionHandler.feedback.evaluateAction(email, 'trust', 'User marked email as legitimate');
+            await emailApp.actionHandler.feedback.evaluateAction(email, 'trust', 'User marked email as legitimate');
         }
 
-        this.markAsLegitimate(emailId);
+        await this.markAsLegitimate(emailId);
         
         // Emit event for network monitoring
         document.dispatchEvent(new CustomEvent('email-marked-legitimate', {
@@ -94,22 +101,24 @@ export class EmailSecurityManager {
     }
 
     // New method to handle email deletion with feedback
-    deleteEmail(emailId, emailApp) {
+    async deleteEmail(emailId, emailApp) {
         const email = ALL_EMAILS.find(e => e.id === emailId);
         if (!email) return;
 
         // Trigger feedback evaluation for "delete" action
         if (emailApp && emailApp.actionHandler && emailApp.actionHandler.feedback) {
-            emailApp.actionHandler.feedback.evaluateAction(email, 'delete', 'User deleted email');
+            await emailApp.actionHandler.feedback.evaluateAction(email, 'delete', 'User deleted email');
         }
 
         // Move to spam/trash folder
         this.spamEmails.add(emailId);
-        this.saveToLocalStorage();
-        
-        // Emit event for network monitoring
-        document.dispatchEvent(new CustomEvent('email-deleted', {
-            detail: { emailId, timestamp: new Date().toISOString() }
+        // Emit event for UI updates
+        document.dispatchEvent(new CustomEvent('email-marked-spam', {
+            detail: { 
+                emailId, 
+                timestamp: new Date().toISOString(),
+                totalSpam: this.spamEmails.size
+            }
         }));
         
         if (emailApp && emailApp.actionHandler) {
@@ -123,18 +132,18 @@ export class EmailSecurityManager {
     }
 
     // New method to handle ignoring/normal processing with feedback
-    ignoreEmail(emailId, emailApp) {
+    async ignoreEmail(emailId, emailApp) {
         const email = ALL_EMAILS.find(e => e.id === emailId);
         if (!email) return;
 
         // Trigger feedback evaluation for "ignore" action
         if (emailApp && emailApp.actionHandler && emailApp.actionHandler.feedback) {
-            emailApp.actionHandler.feedback.evaluateAction(email, 'ignore', 'User processed email normally');
+            await emailApp.actionHandler.feedback.evaluateAction(email, 'ignore', 'User processed email normally');
         }
 
         // Just mark as read, no other action needed for ignore
         if (emailApp && emailApp.readTracker) {
-            emailApp.readTracker.markAsRead(emailId);
+            await emailApp.readTracker.markAsRead(emailId);
         }
         
         // Emit event for network monitoring
@@ -223,27 +232,33 @@ export class EmailSecurityManager {
         }
     }
 
-    // Persistence methods
-    saveToLocalStorage() {
-        localStorage.setItem('cyberquest_email_phishing_reports', JSON.stringify([...this.reportedPhishing]));
-        localStorage.setItem('cyberquest_email_legitimate_marks', JSON.stringify([...this.legitimateEmails]));
-        localStorage.setItem('cyberquest_email_spam', JSON.stringify([...this.spamEmails]));
+    // Clear all security states (for testing or reset)
+    clearAll() {
+        const hadData = this.reportedPhishing.size > 0 || 
+                       this.legitimateEmails.size > 0 || 
+                       this.spamEmails.size > 0;
+        
+        this.reportedPhishing.clear();
+        this.legitimateEmails.clear();
+        this.spamEmails.clear();
+        
+        if (hadData) {
+            document.dispatchEvent(new CustomEvent('email-security-cleared', {
+                detail: { timestamp: new Date().toISOString() }
+            }));
+        }
+        
+        return hadData;
     }
 
-    loadFromLocalStorage() {
-        const phishingReports = localStorage.getItem('cyberquest_email_phishing_reports');
-        const legitimateMarks = localStorage.getItem('cyberquest_email_legitimate_marks');
-        const spamEmails = localStorage.getItem('cyberquest_email_spam');
-        
-        if (phishingReports) {
-            this.reportedPhishing = new Set(JSON.parse(phishingReports));
-        }
-        if (legitimateMarks) {
-            this.legitimateEmails = new Set(JSON.parse(legitimateMarks));
-        }
-        if (spamEmails) {
-            this.spamEmails = new Set(JSON.parse(spamEmails));
-        }
+    // Get current security state (for UI updates)
+    getCurrentState() {
+        return {
+            reportedPhishing: Array.from(this.reportedPhishing),
+            legitimateEmails: Array.from(this.legitimateEmails),
+            spamEmails: Array.from(this.spamEmails),
+            lastUpdated: new Date().toISOString()
+        };
     }
 
     // Statistics and analytics methods
@@ -353,11 +368,11 @@ export class EmailSecurityManager {
     }
 
     // Bulk operations
-    clearAllSecurityData() {
+    async clearAllSecurityData() {
         this.reportedPhishing.clear();
         this.legitimateEmails.clear();
         this.spamEmails.clear();
-        this.saveToLocalStorage();
+        // No server persistence needed - in-memory only
     }
 
     exportSecurityData() {
@@ -369,7 +384,7 @@ export class EmailSecurityManager {
         };
     }
 
-    importSecurityData(data) {
+    async importSecurityData(data) {
         if (data.reportedPhishing) {
             this.reportedPhishing = new Set(data.reportedPhishing);
         }
@@ -379,6 +394,20 @@ export class EmailSecurityManager {
         if (data.spamEmails) {
             this.spamEmails = new Set(data.spamEmails);
         }
-        this.saveToLocalStorage();
+        await this.saveToServer();
+    }
+
+    // Reset security manager to initial state
+    async reset() {
+        await this.clearAllSecurityData();
+        this.isLoaded = false;
+        console.log('EmailSecurityManager reset completed');
+    }
+
+    // Reset CLIENT-SIDE security state only (preserve server analytics)
+    resetClientState() {
+        console.log('Resetting client-side security state (preserving server analytics)...');
+        this.isLoaded = false;
+        console.log('Client-side security state reset completed');
     }
 }

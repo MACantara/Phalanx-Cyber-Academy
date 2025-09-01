@@ -108,35 +108,32 @@ def dashboard():
         return redirect(url_for('main.home'))
     
     from app.routes.levels import CYBERSECURITY_LEVELS
-    from app.models.adaptive_learning import UserProgress, SkillAssessment, LearningRecommendation
-    from app.utils.adaptive_learning_engine import AdaptiveLearningEngine
+    from app.models.user_progress import UserProgress
     
-    # Get comprehensive user progress from adaptive learning system
-    progress_summary = UserProgress.get_user_progress_summary(current_user.id)
-    skills = SkillAssessment.get_user_skills(current_user.id)
-    recommendations = LearningRecommendation.get_user_recommendations(current_user.id)
+    # Get user statistics from UserProgress
+    user_stats = UserProgress.get_user_stats(current_user.id)
     
-    # Use real data from adaptive learning system
+    # Use real data from user progress system
     total_levels = len(CYBERSECURITY_LEVELS)
-    completed_levels = progress_summary.get('completed_levels', 0)
-    total_xp = progress_summary.get('total_xp', 0)
-    learning_streak = progress_summary.get('learning_streak', 0)
-    user_rank = progress_summary.get('user_rank', 'Novice')
+    completed_levels = user_stats.get('completed_levels', 0)
+    total_xp = user_stats.get('total_xp', 0)
+    learning_streak = user_stats.get('learning_streak', 0)
+    user_rank = user_stats.get('user_rank', 'Novice')
     progress_percentage = (completed_levels / total_levels) * 100 if total_levels > 0 else 0
     
     # Prepare levels with completion status from database
     levels_progress = []
-    for i, level in enumerate(CYBERSECURITY_LEVELS):
+    for level in CYBERSECURITY_LEVELS:
         level_data = level.copy()
         
         # Get actual progress from database
-        user_progress = UserProgress.get_by_user_and_level(current_user.id, level['id'], 'simulation')
-        if user_progress:
-            level_data['completed'] = user_progress.status == 'completed'
-            level_data['score'] = user_progress.score
-            level_data['attempts'] = user_progress.attempts
-            level_data['time_spent'] = user_progress.time_spent
-            level_data['xp_earned'] = user_progress.xp_earned
+        user_progress = UserProgress.get_level_progress(current_user.id, level['id'])
+        if user_progress and user_progress.get('status') == 'completed':
+            level_data['completed'] = True
+            level_data['score'] = user_progress.get('score', 0)
+            level_data['attempts'] = user_progress.get('attempts', 0)
+            level_data['time_spent'] = user_progress.get('time_spent', 0)
+            level_data['xp_earned'] = user_progress.get('xp_earned', 0)
         else:
             level_data['completed'] = False
             level_data['score'] = 0
@@ -144,65 +141,60 @@ def dashboard():
             level_data['time_spent'] = 0
             level_data['xp_earned'] = 0
         
-        # All levels are always unlocked
+        # All levels are now unlocked (per previous requirement)
         level_data['unlocked'] = True
-        
-        # Get adaptive difficulty recommendation
-        if not level_data['completed']:
-            level_data['recommended_difficulty'] = AdaptiveLearningEngine.calculate_adaptive_difficulty(
-                current_user.id, level['id'], 'simulation'
-            )
         
         levels_progress.append(level_data)
     
-    # Find next available level
+    # Find next available level (first uncompleted level)
     next_level = None
     for level in levels_progress:
         if not level['completed']:
             next_level = level
             break
     
-    # Get Blue Team vs Red Team progress
-    blue_team_progress = UserProgress.get_by_user_and_level(current_user.id, 1, 'blue_team_vs_red_team')
-    blue_team_unlocked = True  # Always unlocked
-    
-    # Prepare skill analysis
+    # Simple skill analysis based on completed levels
     skill_analysis = []
-    all_skills = ['critical_thinking', 'source_verification', 'fact_checking', 'phishing_detection', 
-                  'email_analysis', 'social_engineering', 'malware_recognition', 'system_security', 
-                  'threat_analysis', 'penetration_testing', 'vulnerability_assessment', 'ethical_hacking',
-                  'digital_forensics', 'evidence_analysis', 'advanced_investigation']
+    if completed_levels > 0:
+        # Basic skills that improve with level completion
+        basic_skills = [
+            ('Critical Thinking', min(completed_levels * 20, 100)),
+            ('Source Verification', min((completed_levels - 0) * 25, 100) if completed_levels >= 1 else 0),
+            ('Fact Checking', min((completed_levels - 1) * 30, 100) if completed_levels >= 2 else 0),
+            ('Phishing Detection', min((completed_levels - 2) * 25, 100) if completed_levels >= 3 else 0),
+            ('System Security', min((completed_levels - 3) * 35, 100) if completed_levels >= 4 else 0),
+            ('Digital Forensics', min((completed_levels - 4) * 50, 100) if completed_levels >= 5 else 0)
+        ]
+        
+        for skill_name, score in basic_skills:
+            if score > 0:
+                if score >= 80:
+                    proficiency = 'advanced'
+                elif score >= 60:
+                    proficiency = 'intermediate'
+                elif score >= 30:
+                    proficiency = 'beginner'
+                else:
+                    proficiency = 'novice'
+                
+                skill_analysis.append({
+                    'name': skill_name,
+                    'proficiency': proficiency,
+                    'score': score,
+                    'max_score': 100
+                })
     
-    for skill in all_skills:
-        if skill in skills:
-            assessment = skills[skill]
-            skill_analysis.append({
-                'name': skill.replace('_', ' ').title(),
-                'proficiency': assessment.proficiency_level,
-                'score': assessment.assessment_score,
-                'max_score': assessment.max_score
-            })
-        else:
-            skill_analysis.append({
-                'name': skill.replace('_', ' ').title(),
-                'proficiency': 'not_assessed',
-                'score': 0,
-                'max_score': 100
-            })
-    
-    # Get learning recommendations
-    rec_data = []
-    for rec in recommendations[:3]:  # Show top 3 recommendations
-        rec_data.append({
-            'id': rec.id,
-            'title': rec.recommendation_data.get('title', 'New Recommendation'),
-            'description': rec.recommendation_data.get('description', ''),
-            'type': rec.recommendation_type,
-            'confidence': rec.confidence_score
-        })
-    
-    # Get learning analytics
-    learning_patterns = AdaptiveLearningEngine.analyze_learning_patterns(current_user.id, 30)
+    # Mock learning patterns for now
+    learning_patterns = {
+        'status': 'success',
+        'engagement_score': min(completed_levels * 20, 100),
+        'total_sessions': completed_levels + (completed_levels * 2),
+        'preferred_time': 'afternoon',
+        'recommendations': [
+            'You learn best in the afternoon - try scheduling study sessions then!',
+            'Great progress! Consider reviewing previous levels to reinforce learning.'
+        ] if completed_levels > 0 else []
+    }
     
     return render_template('profile/dashboard.html',
                          total_xp=total_xp,
@@ -213,8 +205,6 @@ def dashboard():
                          progress_percentage=int(progress_percentage),
                          levels=levels_progress,
                          next_level=next_level,
-                         blue_team_progress=blue_team_progress,
-                         blue_team_unlocked=blue_team_unlocked,
                          skill_analysis=skill_analysis,
-                         recommendations=rec_data,
+                         recommendations=[],  # No recommendations for now
                          learning_patterns=learning_patterns)

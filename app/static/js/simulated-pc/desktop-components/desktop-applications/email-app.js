@@ -5,6 +5,7 @@ import { EmailReadTracker } from './email-functions/email-read-tracker.js';
 import { EmailCompletionTracker } from './email-functions/email-completion-tracker.js';
 import { ALL_EMAILS } from '../../levels/level-two/emails/email-registry.js';
 import { NavigationUtil } from '../shared-utils/navigation-util.js';
+import { InMemoryFeedbackStore } from './email-functions/email-session-summary.js';
 
 export class EmailApp extends WindowBase {
     constructor() {
@@ -14,11 +15,56 @@ export class EmailApp extends WindowBase {
         });
         this.state = new EmailState();
         this.readTracker = new EmailReadTracker();
+        // Shared in-memory feedback store for this email app session
+        this.feedbackStore = new InMemoryFeedbackStore();
         this.actionHandler = new EmailActionHandler(this);
         this.completionTracker = new EmailCompletionTracker(this);
         
         // Load saved email state
-        this.state.loadFromLocalStorage();
+        this.initializeState();
+        
+        // Expose debug methods globally for testing
+        window.emailAppDebug = {
+            debugState: () => this.debugCurrentState(),
+            forceReset: () => this.debugForceReset(),
+            debugReadTracker: () => this.readTracker.debugCurrentState(),
+            forceReloadReadTracker: () => this.readTracker.forceReload()
+        };
+    }
+
+    async initializeState() {
+        try {
+            await this.state.loadFromServer();
+            await this.readTracker.ensureLoaded();
+            await this.actionHandler.feedback.loadSessionData();
+            
+            // Check if this is a fresh Level 2 start
+            await this.checkForFreshStart();
+        } catch (error) {
+            console.warn('Failed to load some email state data:', error);
+        }
+    }
+
+    async checkForFreshStart() {
+        // Check if Level 2 was just started fresh (dialogue completed)
+        const level2Started = localStorage.getItem('cyberquest_level_2_started');
+        const level2FreshStart = localStorage.getItem('cyberquest_level_2_fresh_start');
+        
+        if (level2Started && level2FreshStart === 'true') {
+            console.log('Detected fresh Level 2 start - resetting email app state...');
+            await this.reset();
+            
+            // Clear read states for a fresh start
+            try {
+                await this.readTracker.clearReadStates();
+                console.log('Email read states cleared for new session');
+            } catch (error) {
+                console.error('Failed to clear email read states:', error);
+            }
+            
+            // Clear the fresh start flag
+            localStorage.removeItem('cyberquest_level_2_fresh_start');
+        }
     }
 
     createContent() {
@@ -350,6 +396,63 @@ export class EmailApp extends WindowBase {
         const allEmails = [...ALL_EMAILS];
         this.readTracker.markAllAsUnread(allEmails);
         this.updateContent();
+    }
+
+    // Reset method to clear CLIENT-SIDE email app state only (preserve server data)
+    async reset() {
+        try {
+            console.log('Resetting email app CLIENT-SIDE state (preserving server data)...');
+            
+            // Clear all read tracking (client-side only)
+            this.readTracker.clearClientState();
+            
+            // Reset email state (folder, selection, etc.)
+            this.state.reset();
+            
+            // Reset security manager (client-side only)
+            this.state.securityManager.resetClientState();
+            
+            // Reset action handler and feedback (client-side only)
+            this.actionHandler.resetClientState();
+            
+            // Reset completion tracker
+            this.completionTracker.reset();
+            
+            // Refresh the UI
+            this.updateContent();
+            
+            console.log('Email app CLIENT-SIDE state reset completed (server data preserved)');
+        } catch (error) {
+            console.error('Failed to reset email app:', error);
+        }
+    }
+
+    // Debug methods for troubleshooting
+    debugCurrentState() {
+        const readTrackerState = this.readTracker.debugCurrentState();
+        const securityManagerState = this.state.securityManager.exportSecurityData();
+        
+        console.log('=== EMAIL APP DEBUG STATE ===');
+        console.log('Read Tracker:', readTrackerState);
+        console.log('Security Manager:', securityManagerState);
+        console.log('Current Folder:', this.state.getCurrentFolder());
+        console.log('Selected Email:', this.state.getSelectedEmailId());
+        console.log('===============================');
+        
+        return {
+            readTracker: readTrackerState,
+            securityManager: securityManagerState,
+            currentFolder: this.state.getCurrentFolder(),
+            selectedEmail: this.state.getSelectedEmailId()
+        };
+    }
+
+    // Force reset method for manual debugging
+    async debugForceReset() {
+        console.log('=== FORCING EMAIL APP RESET ===');
+        localStorage.setItem('cyberquest_level_2_fresh_start', 'true');
+        await this.reset();
+        console.log('=== RESET COMPLETED ===');
     }
 
 }

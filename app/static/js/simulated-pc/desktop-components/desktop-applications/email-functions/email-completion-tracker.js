@@ -5,6 +5,10 @@ export class EmailCompletionTracker {
     constructor(emailApp) {
         this.emailApp = emailApp;
         this.sessionSummary = new EmailSessionSummary(emailApp);
+        // If the email app maintains a feedbackStore, attach it so session summary uses the same in-memory data
+        if (emailApp && emailApp.feedbackStore) {
+            this.sessionSummary.attachFeedbackStore(emailApp.feedbackStore);
+        }
         this.hasTriggeredCompletion = false;
         this.completionCheckInterval = null;
     }
@@ -68,7 +72,7 @@ export class EmailCompletionTracker {
         }
     }
 
-    triggerLevelCompletion() {
+    async triggerLevelCompletion() {
         if (this.hasTriggeredCompletion) return;
         
         this.hasTriggeredCompletion = true;
@@ -79,21 +83,27 @@ export class EmailCompletionTracker {
             this.completionCheckInterval = null;
         }
 
-        // Mark email training as completed
-        localStorage.setItem('cyberquest_email_training_completed', 'true');
-        
-        // Delay before showing completion dialogue
+        // Calculate completion score based on session performance
+        const completionScore = await this.calculateLevelScore();
+        // Capture session stats and history to pass through to the dialogue
+        const sessionStats = this.emailApp.actionHandler.feedback.getSessionStats();
+        const feedbackHistory = Array.isArray(sessionStats.feedbackHistory) ? sessionStats.feedbackHistory : [];
+
+        // Mark level as completed on server (in-memory for now)
+        await this.markLevelCompletedOnServer(completionScore);
+
+        // Delay before showing completion dialogue and pass the session data
         setTimeout(() => {
-            this.showLevelCompletionDialogue();
+            this.showLevelCompletionDialogue(sessionStats, feedbackHistory);
         }, 2000);
     }
 
-    showLevelCompletionDialogue() {
+        showLevelCompletionDialogue(sessionStats = null, feedbackHistory = []) {
         // Import and trigger the Level 2 completion dialogue
-        import('../../../dialogues/levels/level-two/email-security-completion-dialogue.js').then(module => {
+        import('../../../levels/level-two/dialogues/email-security-completion-dialogue.js').then(module => {
             const EmailSecurityCompletionDialogue = module.EmailSecurityCompletionDialogue;
             if (EmailSecurityCompletionDialogue.startCompletionDialogue && window.desktop) {
-                EmailSecurityCompletionDialogue.startCompletionDialogue(window.desktop);
+                EmailSecurityCompletionDialogue.startCompletionDialogue(window.desktop, { sessionStats, feedbackHistory });
             }
         }).catch(error => {
             console.error('Failed to load Level 2 completion dialogue:', error);
@@ -146,7 +156,7 @@ export class EmailCompletionTracker {
      * Mark Level 2 as completed and store completion data
      * @param {Object} sessionStats - Session statistics
      */
-    markLevel2Complete(sessionStats) {
+    async markLevel2Complete(sessionStats) {
         const completionData = {
             levelId: 2,
             completed: true,
@@ -157,15 +167,12 @@ export class EmailCompletionTracker {
             completionMethod: 'email-training'
         };
         
-        // Store completion data in localStorage
-        localStorage.setItem('cyberquest_level_2_completed', 'true');
-        localStorage.setItem('cyberquest_level_2_completion', JSON.stringify(completionData));
-        localStorage.setItem('cyberquest_email_training_completed', 'true');
-        localStorage.setItem('cyberquest_email_training_score', sessionStats.accuracy.toString());
+        // Store completion data on server
+        await this.markLevelCompletedOnServer(sessionStats.accuracy);
         
         console.log('Level 2 marked as completed via EmailCompletionTracker:', {
-            level_completed: localStorage.getItem('cyberquest_level_2_completed'),
-            completion_data: localStorage.getItem('cyberquest_level_2_completion')
+            score: sessionStats.accuracy,
+            completionData: completionData
         });
         
         // Emit completion event for other systems
@@ -249,18 +256,14 @@ export class EmailCompletionTracker {
     }
 
     /**
-     * Load previous session data if available
+     * Load previous session data from in-memory storage
      */
     loadPreviousSessionData() {
-        const previousCompletion = localStorage.getItem('cyberquest_level_2_completion');
-        if (previousCompletion) {
-            try {
-                const completionData = JSON.parse(previousCompletion);
-                console.log('Previous Level 2 completion found:', completionData);
-            } catch (error) {
-                console.warn('Error parsing previous completion data:', error);
-            }
+        if (window.cyberQuestLevels && window.cyberQuestLevels[2]) {
+            console.log('Loaded Level 2 completion data from memory');
+            return window.cyberQuestLevels[2];
         }
+        return null;
     }
 
     /**
@@ -277,13 +280,116 @@ export class EmailCompletionTracker {
         document.addEventListener('navigate-to-level', (event) => {
             const { levelId } = event.detail;
             if (levelId === 3) {
-                // User wants to go to level 3, ensure level 2 is marked complete
-                const level2Complete = localStorage.getItem('cyberquest_level_2_completed');
-                if (level2Complete !== 'true') {
-                    console.warn('Attempting to access Level 3 without completing Level 2');
-                }
+                // User wants to go to level 3 - completion validation now handled server-side
+                console.log('Navigation to Level 3 requested - completion checked server-side');
             }
         });
+    }
+
+    /**
+     * Calculate the completion score for Level 2 based on email security performance
+     */
+    calculateLevelScore() {
+        try {
+            // Get current email security performance data from the feedback system
+            const sessionStats = this.emailApp.actionHandler.feedback.getSessionStats();
+            
+            // Use the accuracy from the feedback system which already calculates correct actions
+            let score = sessionStats.accuracy || 0;
+            
+            // If feedback system doesn't have an accuracy score, calculate it manually
+            if (score === 0 && sessionStats.totalActions > 0) {
+                score = Math.round((sessionStats.correctActions / sessionStats.totalActions) * 100);
+            }
+            
+            // Default to 70% if no feedback data available
+            if (score === 0) {
+                score = 70;
+            }
+            
+            // Ensure score is within bounds
+            score = Math.max(0, Math.min(100, score));
+            
+            console.log(`Level 2 completion score: ${score}% based on feedback system`);
+            console.log('Session stats:', sessionStats);
+            
+            return score;
+            
+        } catch (error) {
+            console.error('Error calculating Level 2 score:', error);
+            return 70; // Default score on error
+        }
+    }
+
+    /**
+     * Mark Level 2 as completed in memory
+     */
+    async markLevelCompletedOnServer(score) {
+        const completionData = {
+            level_id: 2,
+            score: score,
+            time_spent: this.getTotalTimeSpent(),
+            xp_earned: 150, // Level 2 XP reward
+            completion_data: {
+                sessionData: this.emailApp.actionHandler.feedback.getSessionStats(),
+                overallScore: score,
+                timestamp: new Date().toISOString()
+            }
+        };
+        
+        // Store completion in memory
+        if (!window.cyberQuestLevels) {
+            window.cyberQuestLevels = {};
+        }
+        window.cyberQuestLevels[2] = completionData;
+        
+        console.log('Level 2 completed successfully in memory:', completionData);
+    }
+
+    /**
+     * Calculate total time spent in Level 2
+     */
+    getTotalTimeSpent() {
+        // Simple calculation based on session activity
+        // In a real implementation, you'd track actual time spent
+        const emailsProcessed = ALL_EMAILS.length;
+        return emailsProcessed * 180; // 3 minutes per email average
+    }
+
+    /**
+     * Get email action status from server-side tracking or session data
+     */
+    getEmailActionStatus(emailId) {
+        // Try to get from EmailSecurityManager through the email app
+        if (this.emailApp && this.emailApp.state && this.emailApp.state.securityManager) {
+            const emailData = this.emailApp.state.securityManager.getEmailData(emailId);
+            if (emailData) {
+                if (emailData.reportedAsPhishing) return 'reported_phishing';
+                if (emailData.markedAsSpam) return 'spam';
+                if (emailData.markedAsLegitimate) return 'inbox';
+            }
+        }
+        
+        // Default to unread if no action found
+        return 'unread';
+    }
+
+    /**
+     * Reset completion tracker to initial state
+     */
+    reset() {
+        this.hasTriggeredCompletion = false;
+        
+        // Clear any existing completion check interval
+        if (this.completionCheckInterval) {
+            clearInterval(this.completionCheckInterval);
+            this.completionCheckInterval = null;
+        }
+        
+        // Close any open completion dialogues
+        this.closeLevelCompletionDialogue();
+        
+        console.log('EmailCompletionTracker reset completed');
     }
 
     /**

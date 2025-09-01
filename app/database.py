@@ -44,6 +44,11 @@ class Tables:
     LOGIN_ATTEMPTS = "login_attempts"
     EMAIL_VERIFICATIONS = "email_verifications"
     PASSWORD_RESET_TOKENS = "password_reset_tokens"
+    USER_PROGRESS = "user_progress"
+    LEARNING_ANALYTICS = "learning_analytics"
+    ADAPTIVE_PREFERENCES = "adaptive_preferences"
+    SKILL_ASSESSMENTS = "skill_assessments"
+    LEARNING_RECOMMENDATIONS = "learning_recommendations"
 
 # Common database operations
 class DatabaseError(Exception):

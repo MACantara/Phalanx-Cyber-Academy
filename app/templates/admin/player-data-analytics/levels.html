@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Completion Rate</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Avg: {{ (level.avg_time / 60) | round(1) }}m</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Avg: {{ ((level.avg_time or 0) / 60) | round(1) }}m</p>
                 </div>
             </div>
             {% endfor %}

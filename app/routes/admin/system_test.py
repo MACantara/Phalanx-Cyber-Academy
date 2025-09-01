@@ -453,13 +453,13 @@ def export_test_plans_docx():
         # Create one continuous table for all test plans
         if test_plans:
             # Create table with header row + number of test plans
-            table = doc.add_table(rows=1, cols=4)
+            table = doc.add_table(rows=1, cols=5)
             table.style = 'Table Grid'
             table.alignment = WD_TABLE_ALIGNMENT.CENTER
-            table.autofit = False  # important to prevent Word from resizing columns
+            # table.autofit = False  # important to prevent Word from resizing columns
 
-            # Desired column widths
-            col_widths = [Inches(1.0), Inches(1.2), Inches(4.0), Inches(0.8)]
+            # Desired column widths - adjusted for 5 columns
+            col_widths = [Inches(0.9), Inches(1.1), Inches(2.8), Inches(1.4), Inches(2.0)]
 
             # Apply widths to header row cells
             for i, width in enumerate(col_widths):
@@ -469,7 +469,7 @@ def export_test_plans_docx():
 
             # Add header row
             header_cells = table.rows[0].cells
-            headers = ['Test Plan No.', 'Module', 'Description', 'Remarks']
+            headers = ['Test Plan No.', 'Module', 'Description', 'Date & Time', 'Status & Reason']
 
             for i, header in enumerate(headers):
                 header_cells[i].text = header
@@ -487,12 +487,39 @@ def export_test_plans_docx():
                     formatted_module_name = test_plan.module_name.replace('-', ' ').replace('_', ' ')
                     formatted_module_name = ' '.join(word.capitalize() for word in formatted_module_name.split())
 
+                # Format execution date
+                formatted_date = 'N/A'
+                if test_plan.execution_date:
+                    try:
+                        # Handle both timezone-aware and naive datetime objects
+                        if test_plan.execution_date.tzinfo is None:
+                            # If naive, assume UTC
+                            date_obj = test_plan.execution_date
+                        else:
+                            # If timezone-aware, convert to local time for display
+                            date_obj = test_plan.execution_date.replace(tzinfo=None)
+                        
+                        formatted_date = date_obj.strftime("%m/%d/%Y %H:%M")
+                    except (AttributeError, ValueError):
+                        formatted_date = 'N/A'
+
+                # Format status
+                status_display = test_plan.test_status.capitalize() if test_plan.test_status else 'Pending'
+
+                # Combine status with reason
+                status_and_reason = status_display
+                if test_plan.failure_reason:
+                    status_and_reason = f"{status_display} - {test_plan.failure_reason}"
+                elif test_plan.test_status == 'passed':
+                    status_and_reason = status_display
+
                 # Populate row data
                 row_data = [
                     test_plan.test_plan_no or 'N/A',
                     formatted_module_name,
                     test_plan.description or 'N/A',
-                    test_plan.failure_reason or 'Passed' if test_plan.test_status == 'passed' else 'N/A'
+                    formatted_date,
+                    status_and_reason
                 ]
 
                 for i, value in enumerate(row_data):

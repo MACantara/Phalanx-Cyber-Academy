@@ -2,8 +2,9 @@ import { BaseDialogue } from '../../../dialogues/base-dialogue.js';
 import { EmailSessionSummary } from '../../../desktop-components/desktop-applications/email-functions/email-session-summary.js';
 
 export class EmailSecurityCompletionDialogue extends BaseDialogue {
-    constructor(desktop, character = 'instructor') {
+    constructor(desktop, character = 'instructor', options = {}) {
         super(desktop, character);
+        this.options = options || {};
         this.messages = [
             {
                 text: "Outstanding work, Agent! You've successfully completed Level 2: Shadow Inbox. Your email security analysis skills are now at professional level."
@@ -41,8 +42,8 @@ export class EmailSecurityCompletionDialogue extends BaseDialogue {
             localStorage.setItem('cyberquest_badges', JSON.stringify(badges));
         }
         
-        // Show email session summary
-        this.showEmailSessionSummary();
+        // Show email session summary (if session data passed via options, use it)
+        this.showEmailSessionSummary(this.options || {});
         
         // Navigate back to main dashboard after a delay
         setTimeout(() => {
@@ -59,13 +60,13 @@ export class EmailSecurityCompletionDialogue extends BaseDialogue {
         }, 1000);
     }
 
-    showEmailSessionSummary() {
+    showEmailSessionSummary(options = {}) {
         try {
-            // Get session stats from localStorage
-            const sessionStats = this.getStoredSessionStats();
-            const feedbackHistory = this.getStoredFeedbackHistory();
-            
-            // Create a temporary email session summary instance
+            // If sessionStats and feedbackHistory were passed in options, use them
+            const sessionStats = options.sessionStats || this.getStoredSessionStats();
+            const feedbackHistory = options.feedbackHistory || this.getStoredFeedbackHistory();
+
+            // Create a temporary email session summary instance and pass the data
             const sessionSummary = new EmailSessionSummary(null);
             sessionSummary.showSessionSummary(sessionStats, feedbackHistory);
         } catch (error) {
@@ -141,8 +142,8 @@ export class EmailSecurityCompletionDialogue extends BaseDialogue {
         return allEmailsProcessed && !levelCompleted;
     }
 
-    static startCompletionDialogue(desktop) {
-        const dialogue = new EmailSecurityCompletionDialogue(desktop);
+    static startCompletionDialogue(desktop, options = {}) {
+        const dialogue = new EmailSecurityCompletionDialogue(desktop, 'instructor', options);
         dialogue.start();
     }
 }

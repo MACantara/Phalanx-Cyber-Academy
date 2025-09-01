@@ -81,9 +81,11 @@ export class NavigationHandler {
         );
         
         localStorage.setItem('cyberquest_level1_score', overallScore.toString());
-        localStorage.setItem('cyberquest_level_1_completed', 'true');
         
-        console.log('Level 1 marked as completed with score:', overallScore);
+        console.log('Level 1 analysis completed with score:', overallScore);
+        
+        // Note: Level completion status will be determined by the modal based on score threshold
+        // Don't automatically mark as completed here - let the modal handle pass/fail logic
     }
 
     canProceedToNextLevel() {

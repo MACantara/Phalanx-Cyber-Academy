@@ -84,7 +84,7 @@
                         </div>
                         <div class="ml-4">
                             <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Avg Session Length</dt>
-                            <dd class="text-2xl font-bold text-gray-900 dark:text-white">{{ (general_stats.avg_session_length / 60) | round(1) }}m</dd>
+                            <dd class="text-2xl font-bold text-gray-900 dark:text-white">{{ ((general_stats.avg_session_length or 0) / 60) | round(1) }}m</dd>
                         </div>
                     </div>
                 </div>

@@ -28,13 +28,13 @@
                         <div class="flex items-center">
                             <i class="bi bi-trophy text-yellow-500 mr-2"></i>
                             <span class="text-gray-600 dark:text-gray-300">
-                                Completed: <strong id="completed-count">0/{{ levels | length }}</strong>
+                                Completed: <strong id="completed-count">{{ user_stats.completed_levels }}/{{ user_stats.total_levels }}</strong>
                             </span>
                         </div>
                         <div class="flex items-center">
                             <i class="bi bi-star text-blue-500 mr-2"></i>
                             <span class="text-gray-600 dark:text-gray-300">
-                                Total XP: <strong id="total-xp">0</strong>
+                                Total XP: <strong id="total-xp">{{ user_stats.total_xp }}</strong>
                             </span>
                         </div>
                     </div>
@@ -43,10 +43,10 @@
                     <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">Overall Progress</div>
                     <div class="w-48 bg-gray-200 dark:bg-gray-700 rounded-full h-3">
                         <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500" 
-                             style="width: 0%"></div>
+                             style="width: {{ user_stats.completion_percentage }}%"></div>
                     </div>
                     <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                        <span id="progress-percentage">0</span>% Complete
+                        <span id="progress-percentage">{{ user_stats.completion_percentage|round|int }}</span>% Complete
                     </div>
                 </div>
             </div>
@@ -59,23 +59,47 @@
                  data-level-id="{{ level.id }}"
                  data-level-xp="{{ level.xp_reward }}"
                  data-coming-soon="{{ level.coming_soon | lower }}"
+                 data-completed="{{ level.user_progress.completed | lower }}"
+                 data-status="{{ level.user_progress.status }}"
+                 data-score="{{ level.user_progress.score }}"
+                 data-xp-earned="{{ level.user_progress.xp_earned }}"
                  style="animation-delay: {{ loop.index * 0.1 }}s;">
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 level-content">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 level-content
+                    {% if level.user_progress.completed %}border-green-400 dark:border-green-500
+                    {% elif level.coming_soon %}border-purple-400 dark:border-purple-500
+                    {% else %}border-blue-400 dark:border-blue-500{% endif %}">
                     
                     <!-- Level Card Content -->
                     <div class="p-6">
                         <!-- Level Header -->
                         <div class="flex items-start justify-between mb-4">
                             <div class="flex items-center">
-                                <div class="level-icon w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl mr-4 bg-gray-400 dark:bg-gray-600">
+                                <div class="level-icon w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl mr-4 
+                                    {% if level.user_progress.completed %}bg-gradient-to-br from-green-500 to-emerald-600
+                                    {% elif level.coming_soon %}bg-gradient-to-br from-purple-500 to-indigo-600
+                                    {% else %}bg-gradient-to-br from-blue-500 to-purple-600{% endif %}">
                                     <i class="{{ level.icon }}"></i>
                                 </div>
                                 <div>
                                     <div class="text-sm font-medium text-gray-500 dark:text-gray-400">Level {{ level.id }}</div>
                                     <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ level.name }}</h3>
+                                    {% if level.user_progress.completed %}
+                                        <div class="text-xs text-green-600 dark:text-green-400 font-medium">
+                                            <i class="bi bi-check-circle mr-1"></i>
+                                            Completed • {{ level.user_progress.score }}% • {{ level.user_progress.xp_earned }} XP
+                                        </div>
+                                    {% elif level.user_progress.status == 'in_progress' %}
+                                        <div class="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                                            <i class="bi bi-play-circle mr-1"></i>
+                                            In Progress • {{ level.user_progress.completion_percentage|round|int }}%
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
-                            <i class="level-lock-icon bi bi-lock text-gray-400 text-xl"></i>
+                            <i class="level-lock-icon 
+                                {% if level.user_progress.completed %}bi bi-check-circle text-green-500 text-xl
+                                {% elif level.coming_soon %}bi bi-clock text-purple-500 text-xl
+                                {% else %}bi bi-unlock text-blue-500 text-xl{% endif %}"></i>
                         </div>
 
                         <!-- Level Description -->
@@ -117,12 +141,27 @@
                         </div>
 
                         <!-- Action Button -->
-                        <a href="#" 
-                           class="level-button w-full inline-flex items-center justify-center px-4 py-3 bg-gray-400 dark:bg-gray-600 text-white font-semibold rounded-lg cursor-not-allowed opacity-60"
-                           data-level-id="{{ level.id }}">
-                            <i class="bi bi-lock mr-2"></i>
-                            Locked
-                        </a>
+                        {% if level.user_progress.completed %}
+                            <a href="{{ url_for('levels.start_level', level_id=level.id) }}" 
+                               class="level-button w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-500/25 shadow-lg hover:shadow-xl"
+                               data-level-id="{{ level.id }}">
+                                <i class="bi bi-play-circle mr-2"></i>
+                                Replay Level
+                            </a>
+                        {% elif level.coming_soon %}
+                            <button class="level-button w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold rounded-lg cursor-not-allowed opacity-80"
+                                    disabled>
+                                <i class="bi bi-clock mr-2"></i>
+                                Coming Soon
+                            </button>
+                        {% else %}
+                            <a href="{{ url_for('levels.start_level', level_id=level.id) }}" 
+                               class="level-button w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/25 shadow-lg hover:shadow-xl"
+                               data-level-id="{{ level.id }}">
+                                <i class="bi bi-play-circle mr-2"></i>
+                                {% if level.user_progress.status == 'in_progress' %}Continue Level{% else %}Start Level{% endif %}
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -135,10 +174,8 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Level unlock logic using localStorage
-    function checkLevelCompletion(levelId) {
-        return localStorage.getItem(`cyberquest_level_${levelId}_completed`) === 'true';
-    }
+    // Server-side data tracking with localStorage fallback for offline compatibility
+    const userStats = {{ user_stats | tojson | safe }};
     
     function updateLevelStates() {
         const levelCards = document.querySelectorAll('.level-card');
@@ -271,30 +308,124 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(modal);
     }
     
-    // Initialize level states
-    updateLevelStates();
-    
-    // Listen for storage changes (when levels are completed in other tabs/windows)
-    window.addEventListener('storage', function(e) {
-        if (e.key && e.key.startsWith('cyberquest_level_') && e.key.endsWith('_completed')) {
-            updateLevelStates();
+    // API functions for server communication
+    window.CyberQuestAPI = {
+        async updateProgress(levelId, progressData) {
+            try {
+                const response = await fetch(`/levels/api/level/${levelId}/progress`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(progressData)
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('Error updating progress:', error);
+                return { success: false, error: error.message };
+            }
+        },
+        
+        async completeLevel(levelId, completionData) {
+            try {
+                const response = await fetch(`/levels/api/complete/${levelId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(completionData)
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Update local stats
+                    userStats.completed_levels = result.completed_levels;
+                    userStats.total_xp = result.total_xp;
+                    userStats.completion_percentage = result.completion_percentage;
+                    updateProgressDisplay();
+                    
+                    // Show completion notification
+                    this.showCompletionNotification(levelId, result);
+                }
+                
+                return result;
+            } catch (error) {
+                console.error('Error completing level:', error);
+                return { success: false, error: error.message };
+            }
+        },
+        
+        async getUserProgress() {
+            try {
+                const response = await fetch('/levels/api/progress');
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching progress:', error);
+                return { success: false, error: error.message };
+            }
+        },
+        
+        async logAnalytics(levelId, actionType, actionData = {}) {
+            try {
+                const response = await fetch('/levels/api/analytics', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        level_id: levelId,
+                        action_type: actionType,
+                        action_data: actionData
+                    })
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('Error logging analytics:', error);
+                return { success: false, error: error.message };
+            }
+        },
+        
+        showCompletionNotification(levelId, result) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-600 text-white p-4 rounded-lg shadow-lg z-50 animate-fade-in-up';
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="bi bi-check-circle text-2xl mr-3"></i>
+                    <div>
+                        <div class="font-bold">Level ${levelId} Completed!</div>
+                        <div class="text-sm">+${result.xp_earned} XP • Score: ${result.score}%</div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
         }
-    });
-    
-    // Debug function to test completion states
-    window.debugCompleteLevel = function(levelId) {
-        localStorage.setItem(`cyberquest_level_${levelId}_completed`, 'true');
-        updateLevelStates();
-        console.log(`Level ${levelId} marked as completed`);
     };
     
-    // Debug function to reset all levels
-    window.debugResetLevels = function() {
-        for (let i = 1; i <= 5; i++) {
-            localStorage.removeItem(`cyberquest_level_${i}_completed`);
-        }
-        updateLevelStates();
-        console.log('All levels reset');
+    // Initialize display
+    updateProgressDisplay();
+    
+    // Make functions available globally for template use
+    window.showComingSoonModal = showComingSoonModal;
+    window.startLevel = startLevel;
+    
+    // Debug functions for development
+    window.debugCompleteLevel = async function(levelId, score = 100) {
+        const result = await CyberQuestAPI.completeLevel(levelId, { 
+            score: score, 
+            time_spent: 300,
+            mistakes_made: 0,
+            hints_used: 0
+        });
+        console.log(`Level ${levelId} completion result:`, result);
+    };
+    
+    window.debugResetProgress = function() {
+        // Note: This would need a server endpoint to actually reset progress
+        console.log('To reset progress, implement a server endpoint for development use');
     };
 });
 </script>

@@ -304,6 +304,118 @@ export class InteractiveLabeling {
         this.navigationHandler.continueToNextLevel();
     }
 
+    // New method to handle level completion with server-side tracking
+    async completeLevel() {
+        const overallScore = Math.round(
+            this.articleResults.reduce((sum, result) => sum + result.results.percentage, 0) / 
+            this.articleResults.length
+        );
+        
+        try {
+            // Send completion data to server
+            const completionData = {
+                level_id: 1,
+                score: overallScore,
+                time_spent: this.getTotalTimeSpent(),
+                xp_earned: 100, // Base XP for Level 1
+                completion_data: {
+                    articleResults: this.articleResults,
+                    overallScore: overallScore,
+                    timestamp: new Date().toISOString()
+                }
+            };
+            
+            // Make API call to mark level as completed
+            const response = await fetch('/levels/api/complete/1', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(completionData)
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Level 1 completed successfully:', result);
+            } else {
+                console.error('Failed to mark level as completed');
+            }
+        } catch (error) {
+            console.error('Error completing level:', error);
+        }
+        
+        // Store local completion data as backup
+        localStorage.setItem('cyberquest_level_1_completed', 'true');
+        localStorage.setItem('cyberquest_level1_score', overallScore.toString());
+        
+        // Clean up and navigate to levels page
+        this.modalManager.removeModal();
+        this.cleanup();
+        this.showShutdownSequenceAndNavigate();
+    }
+
+    // New method to handle level retry
+    retryLevel() {
+        // Clear current results
+        this.articleResults = [];
+        this.currentArticleIndex = 0;
+        
+        // Remove the modal
+        this.modalManager.removeModal();
+        
+        // Clean up current elements
+        this.cleanupCurrentElements();
+        
+        // Restart the level by reloading the page
+        window.location.reload();
+    }
+
+    // Helper method to calculate total time spent
+    getTotalTimeSpent() {
+        // Simple calculation based on number of articles and average time
+        // In a real implementation, you'd track actual time spent
+        return this.articleResults.length * 120; // 2 minutes per article average
+    }
+
+    async showShutdownSequenceAndNavigate() {
+        console.log('Starting shutdown sequence before navigation...');
+        
+        // Create shutdown overlay
+        const shutdownOverlay = document.createElement('div');
+        shutdownOverlay.className = 'fixed inset-0 bg-black z-50';
+        shutdownOverlay.style.zIndex = '9999';
+        document.body.appendChild(shutdownOverlay);
+        
+        try {
+            // Import and run shutdown sequence
+            const { ShutdownSequence } = await import('../../../../../../shutdown-sequence.js');
+            
+            // Run shutdown sequence
+            await ShutdownSequence.runShutdown(shutdownOverlay);
+            
+            // After shutdown completes, navigate to levels overview
+            this.navigateToLevelsOverview();
+            
+        } catch (error) {
+            console.error('Failed to run shutdown sequence:', error);
+            // Fallback to direct navigation if shutdown fails
+            setTimeout(() => {
+                this.navigateToLevelsOverview();
+            }, 1000);
+        } finally {
+            // Clean up shutdown overlay
+            if (shutdownOverlay.parentNode) {
+                shutdownOverlay.remove();
+            }
+        }
+    }
+
+    navigateToLevelsOverview() {
+        console.log('Navigating to levels overview...');
+        // Navigate to levels overview in the actual browser (not simulated browser)
+        window.location.href = '/levels';
+    }
+
     cleanup() {
         this.ui.cleanup();
         this.cleanupCurrentElements();

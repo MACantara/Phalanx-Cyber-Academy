@@ -58,8 +58,8 @@ export class EmailState {
     }
 
     // Persistence methods - delegate to security manager
-    loadFromLocalStorage() {
-        this.securityManager.loadFromLocalStorage();
+    async loadFromServer() {
+        await this.securityManager.loadFromServer();
     }
 
     // Statistics methods
@@ -70,5 +70,12 @@ export class EmailState {
     // Access to security manager for advanced operations
     getSecurityManager() {
         return this.securityManager;
+    }
+
+    // Reset email state to initial values
+    reset() {
+        this.currentFolder = 'inbox';
+        this.selectedEmailId = null;
+        // Note: security manager will be reset separately by the email app
     }
 }

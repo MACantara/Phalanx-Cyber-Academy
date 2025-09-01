@@ -26,11 +26,38 @@ export class Level2ShadowInboxDialogue extends BaseDialogue {
         // Store completion in localStorage
         localStorage.setItem('cyberquest_level_2_started', 'true');
         
+        // Set fresh start flag for email app
+        localStorage.setItem('cyberquest_level_2_fresh_start', 'true');
+        
+        // Start new session (don't clear previous data - keep for analytics)
+        this.startNewSession();
+        
         // Open the email application using application launcher
         if (window.applicationLauncher) {
             setTimeout(async () => {
                 await window.applicationLauncher.launchForLevel(2, 'email', 'Email Client');
             }, 500);
+        }
+    }
+
+    async startNewSession() {
+        try {
+            // Start a new session without clearing previous attempts
+            const response = await fetch('/levels/api/level/2/new-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                }
+            });
+
+            if (response.ok) {
+                console.log('New Level 2 session started (previous data preserved)');
+            } else {
+                console.warn('Failed to start new Level 2 session');
+            }
+        } catch (error) {
+            console.warn('Failed to start new Level 2 session:', error);
         }
     }
 

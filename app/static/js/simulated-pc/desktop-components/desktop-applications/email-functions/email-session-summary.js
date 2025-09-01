@@ -1,6 +1,29 @@
+/**
+ * EmailSessionSummary - Handles displaying session summary and performance metrics
+ * Now uses in-memory state management only, with no server persistence
+ */
 export class EmailSessionSummary {
+    /**
+     * Create a new EmailSessionSummary instance
+     * @param {Object} emailApp - Reference to the main email application instance
+     */
     constructor(emailApp) {
         this.emailApp = emailApp;
+        this.sessionData = {
+            startTime: new Date().toISOString(),
+            lastUpdated: new Date().toISOString(),
+            totalSessions: 1
+        };
+
+        // In-memory feedback store used for the session UI (not persisted server-side)
+        this.feedbackStore = new InMemoryFeedbackStore();
+    }
+
+    // Allow external code (email app) to attach its feedback store
+    attachFeedbackStore(store) {
+        if (store && typeof store.getAll === 'function') {
+            this.feedbackStore = store;
+        }
     }
 
     /**
@@ -9,6 +32,42 @@ export class EmailSessionSummary {
      * @param {Array} feedbackHistory - Array of all feedback interactions
      */
     showSessionSummary(sessionStats, feedbackHistory = []) {
+        // If no explicit history passed, use the in-memory feedback store
+        if ((!feedbackHistory || feedbackHistory.length === 0) && this.feedbackStore) {
+            feedbackHistory = this.feedbackStore.getAll();
+        }
+        // If sessionStats is missing or appears empty, try to derive it from feedbackHistory or attached app feedback
+        const isEmptyStats = !sessionStats || (typeof sessionStats === 'object' && (sessionStats.totalActions === 0 || sessionStats.totalActions === undefined) && (sessionStats.accuracy === 0 || sessionStats.accuracy === undefined));
+        if (isEmptyStats) {
+            // Try derive from passed feedbackHistory
+            if (feedbackHistory && feedbackHistory.length > 0) {
+                const totalActions = feedbackHistory.length;
+                const correctActions = feedbackHistory.filter(f => f.isCorrect).length;
+                const accuracy = totalActions > 0 ? Math.round((correctActions / totalActions) * 100) : 0;
+                sessionStats = {
+                    totalActions,
+                    correctActions,
+                    accuracy,
+                    feedbackHistory
+                };
+            } else if (this.feedbackStore && typeof this.feedbackStore.getAll === 'function') {
+                const fb = this.feedbackStore.getAll();
+                if (fb && fb.length > 0) {
+                    const totalActions = fb.length;
+                    const correctActions = fb.filter(f => f.isCorrect).length;
+                    const accuracy = totalActions > 0 ? Math.round((correctActions / totalActions) * 100) : 0;
+                    sessionStats = { totalActions, correctActions, accuracy, feedbackHistory: fb };
+                }
+            } else if (this.emailApp && this.emailApp.actionHandler && this.emailApp.actionHandler.feedback && typeof this.emailApp.actionHandler.feedback.getSessionStats === 'function') {
+                sessionStats = this.emailApp.actionHandler.feedback.getSessionStats();
+                feedbackHistory = feedbackHistory.length > 0 ? feedbackHistory : (sessionStats.feedbackHistory || []);
+            } else {
+                sessionStats = sessionStats || { totalActions: 0, correctActions: 0, accuracy: 0, feedbackHistory: [] };
+            }
+        }
+        // Update session data
+        this.sessionData.lastUpdated = new Date().toISOString();
+        this.sessionData.totalSessions = (this.sessionData.totalSessions || 0) + 1;
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
         
@@ -388,16 +447,37 @@ export class EmailSessionSummary {
      * Action handlers for buttons
      */
     async completeLevel2() {
-        // Mark Level 2 as completed
-        localStorage.setItem('cyberquest_level_2_completed', 'true');
-        localStorage.setItem('cyberquest_email_training_completed', 'true');
-        localStorage.setItem('cyberquest_email_training_score', this.lastSessionStats.accuracy.toString());
-        
-        console.log('Level 2 marked as completed:', {
-            level_completed: localStorage.getItem('cyberquest_level_2_completed'),
-            training_completed: localStorage.getItem('cyberquest_email_training_completed'),
-            score: localStorage.getItem('cyberquest_email_training_score')
-        });
+        try {
+            // Mark Level 2 as completed via server API call
+            const completionData = {
+                level_id: 2,
+                score: this.lastSessionStats.accuracy,
+                time_spent: 1800, // 30 minutes estimate
+                xp_earned: 150,
+                completion_data: {
+                    sessionStats: this.lastSessionStats,
+                    timestamp: new Date().toISOString()
+                }
+            };
+            
+            // Make API call to complete the level
+            const response = await fetch('/levels/api/complete/2', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(completionData)
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Level 2 marked as completed:', result);
+            } else {
+                console.error('Failed to mark Level 2 as completed');
+            }
+        } catch (error) {
+            console.error('Error completing Level 2:', error);
+        }
         
         // Close modal first
         document.querySelector('.fixed')?.remove();
@@ -442,16 +522,99 @@ export class EmailSessionSummary {
         window.location.href = '/levels';
     }
 
-    retryTraining() {
-        // Reset email training state and restart
-        document.querySelector('.fixed')?.remove();
-        
-        // Reset the email app to allow retry
-        if (this.emailApp && this.emailApp.reset) {
-            this.emailApp.reset();
+    async retryTraining() {
+        // Close the current modal with a nice fade out
+        const modal = document.querySelector('.fixed.inset-0.bg-black\/75');
+        if (modal) {
+            modal.style.opacity = '0';
+            modal.style.transition = 'opacity 300ms ease-in-out';
+            setTimeout(() => modal.remove(), 300);
         }
         
-        console.log('Training session reset for retry');
+        // Show loading state
+        const loadingModal = document.createElement('div');
+        loadingModal.className = 'fixed inset-0 bg-black/90 flex items-center justify-center z-50';
+        loadingModal.innerHTML = `
+            <div class="bg-gray-800 p-8 rounded-lg text-center max-w-md mx-4">
+                <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-6"></div>
+                <h3 class="text-xl font-semibold text-white mb-2">Preparing Your Training Session</h3>
+                <p class="text-gray-300">Loading your progress and resetting the simulation...</p>
+                <div class="w-full bg-gray-700 rounded-full h-2.5 mt-6">
+                    <div class="bg-blue-600 h-2.5 rounded-full animate-pulse" style="width: 80%"></div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(loadingModal);
+        
+        try {
+            // First, save any pending progress
+            if (this.emailApp && typeof this.emailApp.saveProgress === 'function') {
+                await this.emailApp.saveProgress();
+            }
+            
+            // Clear any client-side state that might interfere with retry
+            localStorage.setItem('cyberquest_level_2_retry', 'true');
+            
+            // Reload the level with retry flag
+            loadingModal.innerHTML = `
+                <div class="bg-gray-800 p-8 rounded-lg text-center max-w-md mx-4">
+                    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-6"></div>
+                    <h3 class="text-xl font-semibold text-white mb-2">Preparing Your Training Session</h3>
+                    <p class="text-gray-300">Loading your progress and resetting the simulation...</p>
+                    <div class="w-full bg-gray-700 rounded-full h-2.5 mt-6">
+                        <div class="bg-blue-600 h-2.5 rounded-full animate-pulse" style="width: 80%"></div>
+                    </div>
+                    <p class="text-gray-300 mb-6">There was an error preparing your training session. Please try again or refresh the page.</p>
+                    <button onclick="window.location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                        <i class="bi bi-arrow-clockwise mr-2"></i> Refresh Page
+                    </button>
+                </div>
+            `;
+        } catch (error) {
+            console.error('Error during retry training:', error);
+            if (loadingModal && loadingModal.parentNode) {
+                loadingModal.innerHTML = `
+                    <div class="bg-gray-800 p-8 rounded-lg text-center max-w-md mx-4">
+                        <div class="text-red-500 text-5xl mb-4">⚠️</div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Error Resetting Training</h3>
+                        <p class="text-gray-300 mb-4">There was an error preparing your training session. Please try again or refresh the page.</p>
+                        <button onclick="window.location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                            <i class="bi bi-arrow-clockwise mr-2"></i> Refresh Page
+                        </button>
+                    </div>
+                `;
+            }
+        } finally {
+            // Ensure loading modal is removed if still present after a short delay
+            if (loadingModal && loadingModal.parentNode) {
+                setTimeout(() => {
+                    if (loadingModal.parentNode) {
+                        loadingModal.remove();
+                    }
+                }, 5000);
+            }
+        }
+    }
+
+    async startNewSession() {
+        try {
+            // Start a new session without clearing previous attempts
+            const response = await fetch('/levels/api/level/2/new-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                }
+            });
+
+            if (response.ok) {
+                console.log('New Level 2 retry session started');
+            } else {
+                console.warn('Failed to start new Level 2 retry session');
+            }
+        } catch (error) {
+            console.warn('Failed to start new Level 2 retry session:', error);
+        }
     }
 
     reviewMistakes() {
@@ -507,5 +670,37 @@ export class EmailSessionSummary {
         `;
         
         document.body.appendChild(modal);
+    }
+
+    // Reset session summary to initial state
+    reset() {
+        // EmailSessionSummary doesn't maintain persistent state,
+        // it generates reports from feedback data
+        console.log('EmailSessionSummary reset completed');
+    }
+}
+
+/**
+ * Simple in-memory feedback store for a single session.
+ * Methods: add(feedback), getAll(), clear()
+ */
+export class InMemoryFeedbackStore {
+    constructor() {
+        this.items = [];
+    }
+
+    add(feedback) {
+        if (!feedback) return;
+        // Ensure timestamp
+        if (!feedback.timestamp) feedback.timestamp = new Date().toISOString();
+        this.items.push(feedback);
+    }
+
+    getAll() {
+        return Array.from(this.items);
+    }
+
+    clear() {
+        this.items = [];
     }
 }

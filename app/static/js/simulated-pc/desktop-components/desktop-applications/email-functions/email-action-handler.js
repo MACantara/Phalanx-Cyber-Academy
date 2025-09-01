@@ -8,11 +8,13 @@ export class EmailActionHandler {
         this.emailApp = emailApp;
         this.feedback = new EmailFeedback(emailApp);
         this.sessionSummary = new EmailSessionSummary(emailApp);
+        if (emailApp && emailApp.feedbackStore) {
+            this.sessionSummary.attachFeedbackStore(emailApp.feedbackStore);
+        }
         this.completionTracker = new EmailCompletionTracker(emailApp);
         this.sessionStartTime = new Date().toISOString();
         
-        // Load previous session data
-        this.feedback.loadSessionData();
+        // Initialize completion tracker
         this.completionTracker.initialize();
     }
 
@@ -212,10 +214,6 @@ export class EmailActionHandler {
             // If level completion criteria not met, just show training completion
             this.completionTracker.showTrainingCompletionOnly(sessionStats, feedbackHistory);
         }
-        
-        // Mark email training as completed regardless of level completion
-        localStorage.setItem('cyberquest_email_training_completed', 'true');
-        localStorage.setItem('cyberquest_email_training_score', sessionStats.accuracy.toString());
     }
 
     // Initialize action handler
@@ -226,6 +224,44 @@ export class EmailActionHandler {
         
         // Store global reference for modal callbacks
         window.emailActionHandler = this;
+    }
+
+    // Reset email action handler to initial state
+    async reset() {
+        try {
+            // Reset feedback system
+            await this.feedback.reset();
+            
+            // Reset session summary
+            this.sessionSummary.reset();
+            
+            // Reset completion tracker
+            this.completionTracker.reset();
+            
+            // Reset session start time
+            this.sessionStartTime = new Date().toISOString();
+            
+            console.log('EmailActionHandler reset completed');
+        } catch (error) {
+            console.error('Failed to reset EmailActionHandler:', error);
+        }
+    }
+
+    // Reset CLIENT-SIDE action handler state only (preserve server analytics)
+    resetClientState() {
+        try {
+            console.log('Resetting client-side action handler state (preserving server analytics)...');
+            
+            // Reset completion tracker (client-side only)
+            this.completionTracker.reset();
+            
+            // Reset session start time
+            this.sessionStartTime = new Date().toISOString();
+            
+            console.log('Client-side action handler state reset completed');
+        } catch (error) {
+            console.error('Failed to reset client-side action handler state:', error);
+        }
     }
 
     // Cleanup when email app is closed
