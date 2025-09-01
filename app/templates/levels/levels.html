@@ -177,12 +177,101 @@ document.addEventListener('DOMContentLoaded', function() {
     // Server-side data tracking with localStorage fallback for offline compatibility
     const userStats = {{ user_stats | tojson | safe }};
     
-    function updateProgressDisplay() {
-        // Update progress display with server data
-        document.getElementById('completed-count').textContent = `${userStats.completed_levels}/${userStats.total_levels}`;
-        document.getElementById('total-xp').textContent = userStats.total_xp;
-        document.getElementById('progress-bar').style.width = `${userStats.completion_percentage}%`;
-        document.getElementById('progress-percentage').textContent = Math.round(userStats.completion_percentage);
+    function updateLevelStates() {
+        const levelCards = document.querySelectorAll('.level-card');
+        let completedCount = 0;
+        let totalXP = 0;
+        
+        levelCards.forEach((card, index) => {
+            const levelId = parseInt(card.dataset.levelId);
+            const levelXP = parseInt(card.dataset.levelXp);
+            const isComingSoon = card.dataset.comingSoon === 'true';
+            const isCompleted = checkLevelCompletion(levelId);
+            const isUnlocked = true; // All levels are always unlocked
+            
+            const levelContent = card.querySelector('.level-content');
+            const levelIcon = card.querySelector('.level-icon');
+            const lockIcon = card.querySelector('.level-lock-icon');
+            const levelButton = card.querySelector('.level-button');
+            
+            if (isCompleted) {
+                completedCount++;
+                totalXP += levelXP;
+                
+                // Mark as completed
+                levelIcon.className = 'level-icon w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl mr-4 bg-gradient-to-br from-green-500 to-emerald-600';
+                lockIcon.className = 'level-lock-icon bi bi-check-circle text-green-500 text-xl';
+                levelContent.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-green-400 dark:border-green-500 level-content';
+                card.className = 'level-card group relative opacity-0 animate-fade-in-up cursor-pointer hover:shadow-2xl hover:scale-105 transform transition-all duration-300';
+                
+                levelButton.innerHTML = '<i class="bi bi-play-circle mr-2"></i>Replay Level';
+                levelButton.className = 'level-button w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-500/25 shadow-lg hover:shadow-xl';
+                levelButton.href = '#';
+                levelButton.style.pointerEvents = 'auto';
+                
+            } else if (isComingSoon) {
+                // Mark as coming soon
+                levelIcon.className = 'level-icon w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl mr-4 bg-gradient-to-br from-purple-500 to-indigo-600';
+                lockIcon.className = 'level-lock-icon bi bi-clock text-purple-500 text-xl';
+                levelContent.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-purple-400 dark:border-purple-500 level-content';
+                card.className = 'level-card group relative opacity-0 animate-fade-in-up cursor-not-allowed';
+                
+                levelButton.innerHTML = '<i class="bi bi-clock mr-2"></i>Coming Soon';
+                levelButton.className = 'level-button w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold rounded-lg cursor-not-allowed opacity-80';
+                levelButton.href = '#';
+                levelButton.style.pointerEvents = 'none';
+                
+            } else if (isUnlocked) {
+                // Mark as unlocked but not completed
+                levelIcon.className = 'level-icon w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl mr-4 bg-gradient-to-br from-blue-500 to-purple-600';
+                lockIcon.className = 'level-lock-icon bi bi-unlock text-blue-500 text-xl';
+                levelContent.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-blue-400 dark:border-blue-500 level-content';
+                card.className = 'level-card group relative opacity-0 animate-fade-in-up cursor-pointer hover:shadow-2xl hover:scale-105 transform transition-all duration-300';
+                
+                levelButton.innerHTML = '<i class="bi bi-play-circle mr-2"></i>Start Level';
+                levelButton.className = 'level-button w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/25 shadow-lg hover:shadow-xl';
+                levelButton.href = '#';
+                levelButton.style.pointerEvents = 'auto';
+                
+            } else {
+                // Mark as available but not completed
+                levelIcon.className = 'level-icon w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl mr-4 bg-gradient-to-br from-blue-500 to-purple-600';
+                lockIcon.className = 'level-lock-icon bi bi-unlock text-blue-500 text-xl';
+                levelContent.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-blue-400 dark:border-blue-500 level-content';
+                card.className = 'level-card group relative opacity-0 animate-fade-in-up cursor-pointer hover:shadow-2xl hover:scale-105 transform transition-all duration-300';
+                
+                levelButton.innerHTML = '<i class="bi bi-play-circle mr-2"></i>Start Level';
+                levelButton.className = 'level-button w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/25 shadow-lg hover:shadow-xl';
+                levelButton.href = '#';
+                levelButton.style.pointerEvents = 'auto';
+            }
+            
+            // Add click handler for level start buttons (all levels except coming soon)
+            if (!isComingSoon) {
+                levelButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    startLevel(levelId);
+                });
+            }
+            
+            // Add click handler for coming soon levels
+            if (isComingSoon) {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showComingSoonModal(levelId);
+                });
+            }
+        });
+        
+        // Update progress display
+        const totalLevels = levelCards.length;
+        const progressPercentage = Math.round((completedCount / totalLevels) * 100);
+        
+        document.getElementById('completed-count').textContent = `${completedCount}/${totalLevels}`;
+        document.getElementById('total-xp').textContent = totalXP;
+        document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
+        document.getElementById('progress-percentage').textContent = progressPercentage;
     }
     
     function startLevel(levelId) {
