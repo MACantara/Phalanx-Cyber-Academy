@@ -430,14 +430,14 @@ def export_test_plans_docx():
         from flask import send_file
         import io
         
-        # Get all test plans
-        test_plans = SystemTestPlan.get_all_paginated()
+        # Get only passed test plans
+        test_plans = SystemTestPlan.get_all_paginated(filters={'test_status': 'passed'})
         
         # Create document
         doc = Document()
         
         # Add title
-        title = doc.add_heading('System Test Plans Report', 0)
+        title = doc.add_heading('Passed System Test Plans Report', 0)
         title.alignment = WD_ALIGN_PARAGRAPH.CENTER
         # Set title text color to black
         for run in title.runs:
@@ -531,8 +531,8 @@ def export_test_plans_docx():
                         for run in paragraph.runs:
                             run.font.color.rgb = None  # Default black
         else:
-            # Add message if no test plans found
-            doc.add_paragraph('No test plans found.')
+            # Add message if no passed test plans found
+            doc.add_paragraph('No passed test plans found.')
 
         # Add spacing at the end
         doc.add_paragraph('')
@@ -543,7 +543,7 @@ def export_test_plans_docx():
         docx_buffer.seek(0)
         
         # Generate filename with current date
-        filename = f'system-test-plans-{datetime.now().strftime("%Y-%m-%d")}.docx'
+        filename = f'passed-system-test-plans-{datetime.now().strftime("%Y-%m-%d")}.docx'
         
         return send_file(
             docx_buffer,
