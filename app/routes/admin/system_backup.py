@@ -2,7 +2,7 @@
 System backup routes for admin panel.
 """
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, send_file
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, send_file, Response
 from flask_login import login_required, current_user
 from app.models.user import User
 from app.models.login_attempt import LoginAttempt
@@ -14,10 +14,14 @@ from datetime import datetime
 from typing import Dict, Any
 import json
 import os
-import tempfile
 import zipfile
+import io
+from supabase import Client
 
 system_backup_bp = Blueprint('system_backup', __name__, url_prefix='/admin')
+
+# Supabase Storage Configuration
+BACKUP_BUCKET = 'system-backups'
 
 
 def _format_file_size(size_bytes):
@@ -32,79 +36,153 @@ def _format_file_size(size_bytes):
         return f"{size_bytes} bytes"
 
 
+def _ensure_backup_bucket(supabase: Client):
+    """Ensure the backup bucket exists in Supabase Storage."""
+    try:
+        # Try to list files in the bucket - if it exists, this will work
+        supabase.storage.from_(BACKUP_BUCKET).list()
+    except Exception as e:
+        # If bucket doesn't exist, create it
+        try:
+            supabase.storage.create_bucket(BACKUP_BUCKET, options={'public': False})
+            current_app.logger.info(f"Created backup bucket: {BACKUP_BUCKET}")
+        except Exception as create_error:
+            current_app.logger.error(f"Failed to create backup bucket: {create_error}")
+            raise DatabaseError(f"Could not ensure backup bucket exists: {create_error}")
+
+
+def _list_backup_files(supabase: Client):
+    """List all backup files from Supabase Storage."""
+    try:
+        _ensure_backup_bucket(supabase)
+        response = supabase.storage.from_(BACKUP_BUCKET).list()
+        
+        backups = []
+        for file_info in response:
+            if file_info['name'].endswith('.zip'):
+                backup_info = {
+                    'filename': file_info['name'],
+                    'size': file_info.get('metadata', {}).get('size', 0),
+                    'created_at': datetime.fromisoformat(file_info['created_at'].replace('Z', '+00:00')).replace(tzinfo=None) if file_info.get('created_at') else datetime.now(),
+                    'size_mb': round(file_info.get('metadata', {}).get('size', 0) / (1024 * 1024), 2),
+                    'size_formatted': _format_file_size(file_info.get('metadata', {}).get('size', 0))
+                }
+                
+                # Try to get backup metadata
+                try:
+                    metadata_response = _get_backup_metadata(supabase, file_info['name'])
+                    if metadata_response:
+                        backup_info['metadata'] = metadata_response
+                    else:
+                        backup_info['metadata'] = {
+                            'tables_backed_up': 'Unknown',
+                            'total_records': 'Unknown',
+                            'app_version': 'Legacy',
+                            'database_type': 'Unknown'
+                        }
+                except Exception as e:
+                    current_app.logger.warning(f"Could not read metadata from backup {file_info['name']}: {e}")
+                    backup_info['metadata'] = {
+                        'tables_backed_up': 'Error',
+                        'total_records': 'Error',
+                        'app_version': 'Error',
+                        'database_type': 'Error'
+                    }
+                
+                backups.append(backup_info)
+        
+        return backups
+        
+    except Exception as e:
+        current_app.logger.error(f"Failed to list backup files: {e}")
+        raise DatabaseError(f"Could not list backup files: {e}")
+
+
+def _get_backup_metadata(supabase: Client, filename: str):
+    """Get metadata from a backup file in Supabase Storage."""
+    try:
+        # Download the backup file to extract metadata
+        response = supabase.storage.from_(BACKUP_BUCKET).download(filename)
+        
+        with zipfile.ZipFile(io.BytesIO(response), 'r') as zipf:
+            if 'backup_metadata.json' in zipf.namelist():
+                metadata_json = zipf.read('backup_metadata.json')
+                metadata = json.loads(metadata_json)
+                
+                return {
+                    'tables_backed_up': metadata.get('tables_backed_up', len(metadata.get('tables_included', []))),
+                    'total_records': metadata.get('total_records', 0),
+                    'app_version': metadata.get('app_version', f"Version {metadata.get('version', 'Unknown')}"),
+                    'database_type': metadata.get('database_type', 'Supabase'),
+                    'created_by': metadata.get('created_by', 'Unknown'),
+                    'record_counts': metadata.get('record_counts', {}),
+                    'backup_version': metadata.get('version', '1.0')
+                }
+        
+        return None
+        
+    except Exception as e:
+        current_app.logger.warning(f"Could not read metadata from backup {filename}: {e}")
+        return None
+
+
+def _upload_backup_to_storage(supabase: Client, backup_data: bytes, filename: str):
+    """Upload backup data to Supabase Storage."""
+    try:
+        _ensure_backup_bucket(supabase)
+        
+        response = supabase.storage.from_(BACKUP_BUCKET).upload(
+            filename,
+            backup_data,
+            file_options={'content-type': 'application/zip'}
+        )
+        
+        if hasattr(response, 'error') and response.error:
+            raise Exception(f"Upload failed: {response.error}")
+            
+        return True
+        
+    except Exception as e:
+        current_app.logger.error(f"Failed to upload backup to storage: {e}")
+        raise DatabaseError(f"Could not upload backup: {e}")
+
+
+def _download_backup_from_storage(supabase: Client, filename: str):
+    """Download backup file from Supabase Storage."""
+    try:
+        response = supabase.storage.from_(BACKUP_BUCKET).download(filename)
+        return response
+        
+    except Exception as e:
+        current_app.logger.error(f"Failed to download backup from storage: {e}")
+        raise DatabaseError(f"Could not download backup: {e}")
+
+
+def _delete_backup_from_storage(supabase: Client, filename: str):
+    """Delete backup file from Supabase Storage."""
+    try:
+        response = supabase.storage.from_(BACKUP_BUCKET).remove([filename])
+        
+        if hasattr(response, 'error') and response.error:
+            raise Exception(f"Delete failed: {response.error}")
+            
+        return True
+        
+    except Exception as e:
+        current_app.logger.error(f"Failed to delete backup from storage: {e}")
+        raise DatabaseError(f"Could not delete backup: {e}")
+
+
 @system_backup_bp.route('/system-backup')
 @login_required
 @admin_required
 def backup_management():
     """System backup and restore management page."""
     try:
-        # Get backup directory info
-        backup_dir = os.path.join(current_app.root_path, '..', 'backups')
-        os.makedirs(backup_dir, exist_ok=True)
+        supabase = get_supabase()
         
-        # List existing backups with enhanced metadata
-        backups = []
-        if os.path.exists(backup_dir):
-            for filename in os.listdir(backup_dir):
-                if filename.endswith('.zip'):
-                    backup_path = os.path.join(backup_dir, filename)
-                    try:
-                        stat = os.stat(backup_path)
-                        backup_info = {
-                            'filename': filename,
-                            'size': stat.st_size,
-                            'created_at': datetime.fromtimestamp(stat.st_ctime),
-                            'size_mb': round(stat.st_size / (1024 * 1024), 2),
-                            'size_formatted': _format_file_size(stat.st_size)
-                        }
-                        
-                        # Try to extract metadata from inside the ZIP file
-                        try:
-                            with zipfile.ZipFile(backup_path, 'r') as zipf:
-                                # Check if backup metadata exists
-                                if 'backup_metadata.json' in zipf.namelist():
-                                    metadata_json = zipf.read('backup_metadata.json')
-                                    metadata = json.loads(metadata_json)
-                                    
-                                    # Use metadata creation time if available (more accurate)
-                                    if 'created_at' in metadata:
-                                        try:
-                                            backup_info['created_at'] = datetime.fromisoformat(metadata['created_at'].replace('Z', '+00:00')).replace(tzinfo=None)
-                                        except (ValueError, AttributeError):
-                                            pass  # Keep filesystem timestamp as fallback
-                                    
-                                    # Add additional metadata with backward compatibility
-                                    backup_info['metadata'] = {
-                                        'tables_backed_up': metadata.get('tables_backed_up', len(metadata.get('tables_included', []))),
-                                        'total_records': metadata.get('total_records', 0),
-                                        'app_version': metadata.get('app_version', f"Version {metadata.get('version', 'Unknown')}"),
-                                        'database_type': metadata.get('database_type', 'Supabase'),
-                                        'created_by': metadata.get('created_by', 'Unknown'),
-                                        'record_counts': metadata.get('record_counts', {}),
-                                        'backup_version': metadata.get('version', '1.0')
-                                    }
-                                else:
-                                    # Legacy backup without metadata
-                                    backup_info['metadata'] = {
-                                        'tables_backed_up': 'Unknown',
-                                        'total_records': 'Unknown',
-                                        'app_version': 'Legacy',
-                                        'database_type': 'Unknown'
-                                    }
-                        except (zipfile.BadZipFile, json.JSONDecodeError, KeyError) as e:
-                            current_app.logger.warning(f"Could not read metadata from backup {filename}: {e}")
-                            backup_info['metadata'] = {
-                                'tables_backed_up': 'Error',
-                                'total_records': 'Error',
-                                'app_version': 'Error',
-                                'database_type': 'Error'
-                            }
-                        
-                        backups.append(backup_info)
-                        
-                    except OSError as e:
-                        current_app.logger.error(f"Could not access backup file {filename}: {e}")
-                        continue
+        # List existing backups from Supabase Storage
+        backups = _list_backup_files(supabase)
         
         # Sort backups by creation date (newest first)
         backups.sort(key=lambda x: x['created_at'], reverse=True)
@@ -135,19 +213,18 @@ def backup_management():
 def create_backup():
     """Create a full system backup."""
     try:
-        backup_dir = os.path.join(current_app.root_path, '..', 'backups')
-        os.makedirs(backup_dir, exist_ok=True)
+        supabase = get_supabase()
         
         # Generate backup filename with timestamp
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         backup_filename = f'cyberquest_backup_{timestamp}.zip'
-        backup_path = os.path.join(backup_dir, backup_filename)
         
         # Create backup data
         backup_data = _create_database_backup()
         
-        # Create ZIP file with backup data
-        with zipfile.ZipFile(backup_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        # Create ZIP file in memory
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zipf:
             # Add database backup as JSON
             zipf.writestr('database_backup.json', json.dumps(backup_data, indent=2, default=str))
             
@@ -177,8 +254,14 @@ def create_backup():
             }
             zipf.writestr('app_info.json', json.dumps(app_info, indent=2))
         
-        file_size = os.path.getsize(backup_path)
+        # Get the ZIP file data
+        zip_buffer.seek(0)
+        zip_data = zip_buffer.getvalue()
+        file_size = len(zip_data)
         size_mb = round(file_size / (1024 * 1024), 2)
+        
+        # Upload to Supabase Storage
+        _upload_backup_to_storage(supabase, zip_data, backup_filename)
         
         flash(f'Backup created successfully: {backup_filename} ({size_mb} MB)', 'success')
         current_app.logger.info(f'Database backup created by {current_user.username}: {backup_filename}')
@@ -196,16 +279,31 @@ def create_backup():
 def download_backup(filename):
     """Download a backup file."""
     try:
-        backup_dir = os.path.join(current_app.root_path, '..', 'backups')
-        backup_path = os.path.join(backup_dir, filename)
+        supabase = get_supabase()
         
-        if not os.path.exists(backup_path) or not filename.endswith('.zip'):
-            flash('Backup file not found.', 'error')
+        if not filename.endswith('.zip'):
+            flash('Invalid backup file format.', 'error')
             return redirect(url_for('system_backup.backup_management'))
         
-        current_app.logger.info(f'Backup downloaded by {current_user.username}: {filename}')
-        return send_file(backup_path, as_attachment=True, download_name=filename)
+        # Download from Supabase Storage
+        backup_data = _download_backup_from_storage(supabase, filename)
         
+        current_app.logger.info(f'Backup downloaded by {current_user.username}: {filename}')
+        
+        # Return the file as a response
+        return Response(
+            backup_data,
+            mimetype='application/zip',
+            headers={
+                'Content-Disposition': f'attachment; filename={filename}',
+                'Content-Length': str(len(backup_data))
+            }
+        )
+        
+    except DatabaseError as e:
+        current_app.logger.error(f"Backup download error: {e}")
+        flash('Backup file not found in storage.', 'error')
+        return redirect(url_for('system_backup.backup_management'))
     except Exception as e:
         current_app.logger.error(f"Backup download error: {e}")
         flash('Error downloading backup file.', 'error')
@@ -218,17 +316,21 @@ def download_backup(filename):
 def delete_backup(filename):
     """Delete a backup file."""
     try:
-        backup_dir = os.path.join(current_app.root_path, '..', 'backups')
-        backup_path = os.path.join(backup_dir, filename)
+        supabase = get_supabase()
         
-        if not os.path.exists(backup_path) or not filename.endswith('.zip'):
-            flash('Backup file not found.', 'error')
+        if not filename.endswith('.zip'):
+            flash('Invalid backup file format.', 'error')
             return redirect(url_for('system_backup.backup_management'))
         
-        os.remove(backup_path)
+        # Delete from Supabase Storage
+        _delete_backup_from_storage(supabase, filename)
+        
         flash(f'Backup {filename} deleted successfully.', 'success')
         current_app.logger.info(f'Backup deleted by {current_user.username}: {filename}')
         
+    except DatabaseError as e:
+        current_app.logger.error(f"Backup deletion error: {e}")
+        flash('Backup file not found in storage.', 'error')
     except Exception as e:
         current_app.logger.error(f"Backup deletion error: {e}")
         flash('Error deleting backup file.', 'error')
@@ -251,57 +353,45 @@ def restore_backup():
             flash('Please select a valid backup file (.zip).', 'error')
             return redirect(url_for('system_backup.backup_management'))
         
-        # Save uploaded file temporarily
-        temp_file_path = None
-        try:
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.zip') as temp_file:
-                temp_file_path = temp_file.name
-                file.save(temp_file_path)
-            
-            # Extract and restore backup
-            with zipfile.ZipFile(temp_file_path, 'r') as zipf:
-                try:
-                    # Read backup metadata
-                    metadata = json.loads(zipf.read('backup_metadata.json'))
-                    
-                    # Read database backup
-                    backup_data = json.loads(zipf.read('database_backup.json'))
-                    
-                    # Perform restore with confirmation
-                    restore_type = request.form.get('restore_type', 'merge')
-                    
-                    # Count records to be restored
-                    total_records = sum(len(table_data) for table_data in backup_data.values())
-                    
-                    current_app.logger.info(f'Starting database restore: {restore_type} mode, {total_records} records')
-                    
-                    _restore_database_backup(backup_data, restore_type)
-                    
-                    # Generate detailed success message
-                    if restore_type == 'replace':
-                        flash(f'Database REPLACED successfully! All existing data was deleted and replaced with {total_records} records from backup created on {metadata.get("created_at", "unknown date")}. Previous data is permanently lost.', 'success')
-                    else:
-                        flash(f'Database MERGED successfully! {total_records} records from backup created on {metadata.get("created_at", "unknown date")} have been merged with existing data.', 'success')
-                    
-                    current_app.logger.info(f'Database restored by {current_user.username} using {restore_type} mode from backup: {file.filename}')
-                    
-                except json.JSONDecodeError as e:
-                    current_app.logger.error(f"Invalid backup file format: {e}")
-                    flash('Invalid backup file format. Please ensure you are uploading a valid CyberQuest backup.', 'error')
-                except KeyError as e:
-                    current_app.logger.error(f"Missing backup file components: {e}")
-                    flash('Incomplete backup file. Missing required components.', 'error')
-                except DatabaseError as e:
-                    current_app.logger.error(f"Database restore failed: {e}")
-                    flash(f'Database restore failed: {str(e)}', 'error')
-            
-        finally:
-            # Clean up temp file
-            if temp_file_path and os.path.exists(temp_file_path):
-                try:
-                    os.unlink(temp_file_path)
-                except OSError as e:
-                    current_app.logger.warning(f"Could not delete temp file {temp_file_path}: {e}")
+        # Read uploaded file into memory
+        file_data = file.read()
+        
+        # Extract and restore backup from memory
+        with zipfile.ZipFile(io.BytesIO(file_data), 'r') as zipf:
+            try:
+                # Read backup metadata
+                metadata = json.loads(zipf.read('backup_metadata.json'))
+                
+                # Read database backup
+                backup_data = json.loads(zipf.read('database_backup.json'))
+                
+                # Perform restore with confirmation
+                restore_type = request.form.get('restore_type', 'merge')
+                
+                # Count records to be restored
+                total_records = sum(len(table_data) for table_data in backup_data.values())
+                
+                current_app.logger.info(f'Starting database restore: {restore_type} mode, {total_records} records')
+                
+                _restore_database_backup(backup_data, restore_type)
+                
+                # Generate detailed success message
+                if restore_type == 'replace':
+                    flash(f'Database REPLACED successfully! All existing data was deleted and replaced with {total_records} records from backup created on {metadata.get("created_at", "unknown date")}. Previous data is permanently lost.', 'success')
+                else:
+                    flash(f'Database MERGED successfully! {total_records} records from backup created on {metadata.get("created_at", "unknown date")} have been merged with existing data.', 'success')
+                
+                current_app.logger.info(f'Database restored by {current_user.username} using {restore_type} mode from backup: {file.filename}')
+                
+            except json.JSONDecodeError as e:
+                current_app.logger.error(f"Invalid backup file format: {e}")
+                flash('Invalid backup file format. Please ensure you are uploading a valid CyberQuest backup.', 'error')
+            except KeyError as e:
+                current_app.logger.error(f"Missing backup file components: {e}")
+                flash('Incomplete backup file. Missing required components.', 'error')
+            except DatabaseError as e:
+                current_app.logger.error(f"Database restore failed: {e}")
+                flash(f'Database restore failed: {str(e)}', 'error')
         
     except zipfile.BadZipFile:
         current_app.logger.error("Invalid ZIP file uploaded for restore")
@@ -317,8 +407,9 @@ def restore_backup():
 @login_required
 @admin_required
 def restore_from_server():
-    """Restore system from a backup file already on the server."""
+    """Restore system from a backup file already in Supabase Storage."""
     try:
+        supabase = get_supabase()
         backup_filename = request.form.get('backup_filename')
         restore_type = request.form.get('restore_type', 'merge')
         
@@ -326,16 +417,15 @@ def restore_from_server():
             flash('No backup file specified.', 'error')
             return redirect(url_for('system_backup.backup_management'))
         
-        # Validate backup file exists on server
-        backup_dir = os.path.join(current_app.root_path, '..', 'backups')
-        backup_path = os.path.join(backup_dir, backup_filename)
-        
-        if not os.path.exists(backup_path) or not backup_filename.endswith('.zip'):
-            flash(f'Backup file "{backup_filename}" not found on server.', 'error')
+        if not backup_filename.endswith('.zip'):
+            flash('Invalid backup file format.', 'error')
             return redirect(url_for('system_backup.backup_management'))
         
+        # Download backup from Supabase Storage
+        backup_data_bytes = _download_backup_from_storage(supabase, backup_filename)
+        
         # Extract and restore backup
-        with zipfile.ZipFile(backup_path, 'r') as zipf:
+        with zipfile.ZipFile(io.BytesIO(backup_data_bytes), 'r') as zipf:
             try:
                 # Read backup metadata
                 metadata = json.loads(zipf.read('backup_metadata.json'))
@@ -368,6 +458,9 @@ def restore_from_server():
                 current_app.logger.error(f"Server backup restore failed: {e}")
                 flash(f'Database restore failed: {str(e)}', 'error')
         
+    except DatabaseError as e:
+        current_app.logger.error(f"Backup file not found in storage: {e}")
+        flash(f'Backup file "{backup_filename}" not found in storage.', 'error')
     except zipfile.BadZipFile:
         current_app.logger.error(f"Invalid ZIP file: {backup_filename}")
         flash('Invalid backup file. File appears to be corrupted.', 'error')
