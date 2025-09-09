@@ -5,7 +5,6 @@ Data analytics routes for admin panel.
 from flask import Blueprint, render_template
 from flask_login import login_required
 from app.routes.admin.admin_utils import admin_required
-from app.models.user_progress import UserProgress
 
 data_analytics_bp = Blueprint('data_analytics', __name__, url_prefix='/admin')
 
@@ -15,40 +14,61 @@ data_analytics_bp = Blueprint('data_analytics', __name__, url_prefix='/admin')
 @admin_required
 def player_analytics():
     """Player Data Analytics dashboard with comprehensive metrics."""
-    # Get real analytics data from database
-    analytics_data = UserProgress.get_analytics_data()
+    # Mock analytics data since user progress system is removed
+    general_stats = {
+        'total_users': 247,
+        'active_users': 89,
+        'completion_rate': 72.5,
+        'average_score': 85.3,
+        'total_sessions': 1456
+    }
     
-    # Extract the data for template
-    general_stats = analytics_data['general_stats']
-    gameplay_stats = analytics_data['gameplay_stats']
-    engagement_stats = analytics_data['engagement_stats']
-    weekly_trends = analytics_data['weekly_trends']
+    gameplay_stats = {
+        'total_levels_completed': 1789,
+        'average_completion_time': 23.7,
+        'retry_rate': 15.2,
+        'hint_usage_rate': 34.6
+    }
     
-    # Add some calculated cybersecurity stats based on real data
+    engagement_stats = {
+        'daily_active_users': 42,
+        'weekly_active_users': 89,
+        'average_session_duration': 18.5,
+        'retention_rate': 68.3
+    }
+    
+    weekly_trends = [
+        {'week': 'Week 1', 'users': 35, 'completions': 78},
+        {'week': 'Week 2', 'users': 42, 'completions': 95},
+        {'week': 'Week 3', 'users': 38, 'completions': 87},
+        {'week': 'Week 4', 'users': 45, 'completions': 102}
+    ]
+    
+    # Cybersecurity-specific stats
     cybersec_stats = {
         'level_1_metrics': {
-            'fact_check_accuracy': general_stats.get('completion_rate', 0) * 0.9,
-            'misinformation_detection_speed': 45.6  # Could be calculated from time_spent
+            'fact_check_accuracy': 85.2,
+            'misinformation_detection_speed': 45.6
         },
         'level_2_metrics': {
-            'phishing_detection_rate': general_stats.get('completion_rate', 0) * 0.8,
-            'false_positive_rate': max(0, 15 - general_stats.get('completion_rate', 0) * 0.15)
+            'phishing_detection_rate': 78.4,
+            'false_positive_rate': 12.3
         },
         'level_3_metrics': {
-            'malware_identification_accuracy': general_stats.get('completion_rate', 0) * 0.75
+            'malware_identification_accuracy': 82.7
         },
         'level_4_metrics': {
             'vulnerability_discovery_rate': 3.2,
-            'ethical_methodology_score': general_stats.get('completion_rate', 0) * 0.9,
-            'responsible_disclosure_rate': min(general_stats.get('completion_rate', 0) * 1.2, 100)
+            'ethical_methodology_score': 89.1,
+            'responsible_disclosure_rate': 95.6
         },
         'level_5_metrics': {
-            'evidence_collection_score': general_stats.get('completion_rate', 0) * 0.85,
-            'timeline_accuracy': general_stats.get('completion_rate', 0) * 0.75,
-            'attribution_confidence': general_stats.get('completion_rate', 0) * 0.8
+            'evidence_collection_score': 77.8,
+            'timeline_accuracy': 84.2,
+            'attribution_confidence': 71.5
         },
         'blue_vs_red_metrics': {
-            'asset_protection_rate': 74.8,  # Would need blue vs red data
+            'asset_protection_rate': 74.8,
             'threat_detection_speed': 127.3,
             'incident_response_effectiveness': 81.2,
             'ai_attack_success_rate': 34.7,
@@ -70,8 +90,49 @@ def player_analytics():
 @admin_required
 def player_analytics_levels():
     """Detailed level-specific analytics."""
-    # Get real level analytics data from database
-    level_details = UserProgress.get_level_analytics()
+    # Mock level analytics data
+    level_details = {
+        1: {
+            'name': 'The Misinformation Maze',
+            'completion_rate': 78.5,
+            'average_score': 87.2,
+            'average_time': 15.3,
+            'attempts_to_complete': 1.8,
+            'total_completions': 194
+        },
+        2: {
+            'name': 'Shadow in the Inbox',
+            'completion_rate': 72.3,
+            'average_score': 84.6,
+            'average_time': 18.7,
+            'attempts_to_complete': 2.1,
+            'total_completions': 179
+        },
+        3: {
+            'name': 'Malware Mayhem',
+            'completion_rate': 65.8,
+            'average_score': 81.4,
+            'average_time': 22.9,
+            'attempts_to_complete': 2.4,
+            'total_completions': 163
+        },
+        4: {
+            'name': 'The White Hat Test',
+            'completion_rate': 58.2,
+            'average_score': 78.9,
+            'average_time': 28.4,
+            'attempts_to_complete': 2.8,
+            'total_completions': 144
+        },
+        5: {
+            'name': 'The Hunt for The Null',
+            'completion_rate': 52.7,
+            'average_score': 76.3,
+            'average_time': 35.6,
+            'attempts_to_complete': 3.1,
+            'total_completions': 130
+        }
+    }
     
     return render_template('admin/player-data-analytics/levels.html',
                          level_details=level_details)
