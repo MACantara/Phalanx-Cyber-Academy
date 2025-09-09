@@ -108,92 +108,46 @@ def dashboard():
         return redirect(url_for('main.home'))
     
     from app.routes.levels import CYBERSECURITY_LEVELS
-    from app.models.user_progress import UserProgress
     
-    # Get user statistics from UserProgress
-    user_stats = UserProgress.get_user_stats(current_user.id)
-    
-    # Use real data from user progress system
+    # Basic stats without user progress system
     total_levels = len(CYBERSECURITY_LEVELS)
-    completed_levels = user_stats.get('completed_levels', 0)
-    total_xp = user_stats.get('total_xp', 0)
-    learning_streak = user_stats.get('learning_streak', 0)
-    user_rank = user_stats.get('user_rank', 'Novice')
-    progress_percentage = (completed_levels / total_levels) * 100 if total_levels > 0 else 0
+    completed_levels = 0
+    total_xp = 0
+    learning_streak = 0
+    user_rank = 'Novice'
+    progress_percentage = 0
     
-    # Prepare levels with completion status from database
+    # Prepare levels without completion status
     levels_progress = []
     for level in CYBERSECURITY_LEVELS:
         level_data = level.copy()
         
-        # Get actual progress from database
-        user_progress = UserProgress.get_level_progress(current_user.id, level['id'])
-        if user_progress and user_progress.get('status') == 'completed':
-            level_data['completed'] = True
-            level_data['score'] = user_progress.get('score', 0)
-            level_data['attempts'] = user_progress.get('attempts', 0)
-            level_data['time_spent'] = user_progress.get('time_spent', 0)
-            level_data['xp_earned'] = user_progress.get('xp_earned', 0)
-        else:
-            level_data['completed'] = False
-            level_data['score'] = 0
-            level_data['attempts'] = 0
-            level_data['time_spent'] = 0
-            level_data['xp_earned'] = 0
-        
-        # All levels are now unlocked (per previous requirement)
+        # Set default progress values
+        level_data['completed'] = False
+        level_data['score'] = 0
+        level_data['attempts'] = 0
+        level_data['time_spent'] = 0
+        level_data['xp_earned'] = 0
         level_data['unlocked'] = True
         
         levels_progress.append(level_data)
     
-    # Find next available level (first uncompleted level)
-    next_level = None
-    for level in levels_progress:
-        if not level['completed']:
-            next_level = level
-            break
+    # First available level (always Level 1)
+    next_level = levels_progress[0] if levels_progress else None
     
-    # Simple skill analysis based on completed levels
+    # Empty skill analysis
     skill_analysis = []
-    if completed_levels > 0:
-        # Basic skills that improve with level completion
-        basic_skills = [
-            ('Critical Thinking', min(completed_levels * 20, 100)),
-            ('Source Verification', min((completed_levels - 0) * 25, 100) if completed_levels >= 1 else 0),
-            ('Fact Checking', min((completed_levels - 1) * 30, 100) if completed_levels >= 2 else 0),
-            ('Phishing Detection', min((completed_levels - 2) * 25, 100) if completed_levels >= 3 else 0),
-            ('System Security', min((completed_levels - 3) * 35, 100) if completed_levels >= 4 else 0),
-            ('Digital Forensics', min((completed_levels - 4) * 50, 100) if completed_levels >= 5 else 0)
-        ]
-        
-        for skill_name, score in basic_skills:
-            if score > 0:
-                if score >= 80:
-                    proficiency = 'advanced'
-                elif score >= 60:
-                    proficiency = 'intermediate'
-                elif score >= 30:
-                    proficiency = 'beginner'
-                else:
-                    proficiency = 'novice'
-                
-                skill_analysis.append({
-                    'name': skill_name,
-                    'proficiency': proficiency,
-                    'score': score,
-                    'max_score': 100
-                })
     
-    # Mock learning patterns for now
+    # Basic learning patterns
     learning_patterns = {
         'status': 'success',
-        'engagement_score': min(completed_levels * 20, 100),
-        'total_sessions': completed_levels + (completed_levels * 2),
+        'engagement_score': 0,
+        'total_sessions': 0,
         'preferred_time': 'afternoon',
         'recommendations': [
-            'You learn best in the afternoon - try scheduling study sessions then!',
-            'Great progress! Consider reviewing previous levels to reinforce learning.'
-        ] if completed_levels > 0 else []
+            'Complete your first cybersecurity level to start building your skills!',
+            'Take your time to explore each level thoroughly.'
+        ]
     }
     
     return render_template('profile/dashboard.html',
@@ -206,5 +160,5 @@ def dashboard():
                          levels=levels_progress,
                          next_level=next_level,
                          skill_analysis=skill_analysis,
-                         recommendations=[],  # No recommendations for now
+                         recommendations=[],
                          learning_patterns=learning_patterns)
