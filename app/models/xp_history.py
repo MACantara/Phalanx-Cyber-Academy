@@ -39,17 +39,19 @@ class XPHistory:
 
     @classmethod
     def create_entry(cls, user_id: int, xp_change: int, reason: str = 'manual_adjustment', 
-                    level_id: int = None) -> 'XPHistory':
-        """Create a new XP history entry with automatic balance calculation"""
+                    level_id: int = None, balance_before: int = None, balance_after: int = None) -> 'XPHistory':
+        """Create a new XP history entry with automatic or provided balance calculation"""
         try:
-            # Get user's current XP balance
-            from app.models.user import User
-            user = User.get_by_id(user_id)
-            if not user:
-                raise ValueError(f"User {user_id} not found")
-            
-            balance_before = user.total_xp or 0
-            balance_after = balance_before + xp_change
+            # If balance values are not provided, calculate them from user data
+            if balance_before is None or balance_after is None:
+                # Get user's current XP balance
+                from app.models.user import User
+                user = User.find_by_id(user_id)
+                if not user:
+                    raise ValueError(f"User {user_id} not found")
+                
+                balance_before = user.total_xp or 0
+                balance_after = balance_before + xp_change
             
             # Create the entry
             supabase = get_supabase()
@@ -62,6 +64,16 @@ class XPHistory:
                 'level_id': level_id,
                 'created_at': datetime.utcnow().isoformat()
             }
+            
+            response = supabase.table('xp_history').insert(entry_data).execute()
+            data = handle_supabase_error(response)
+            
+            if data and len(data) > 0:
+                return cls(data[0])
+            raise DatabaseError("No data returned from XP history creation")
+            
+        except Exception as e:
+            raise DatabaseError(f"Failed to create XP history entry: {str(e)}")
             
             response = supabase.table('xp_history').insert(entry_data).execute()
             data = handle_supabase_error(response)
