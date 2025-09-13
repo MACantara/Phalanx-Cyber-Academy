@@ -151,9 +151,9 @@ def dashboard():
                 # Progress data
                 'completed': completion is not None,
                 'score': completion.score if completion else 0,
-                'attempts': completion.attempts if completion else 0,
+                'attempts': 1 if completion else 0,  # For now, count completion as 1 attempt
                 'time_spent': completion.time_spent if completion else 0,
-                'xp_earned': completion.xp_earned if completion else 0
+                'xp_earned': level.metadata.get('xp_reward', 100) if completion and level.metadata else (100 if completion else 0)
             }
             
             levels_progress.append(level_data)
