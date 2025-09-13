@@ -527,6 +527,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
+    // Function to update the progress display with current userStats
+    function updateProgressDisplay() {
+        // Update completed count
+        const completedElement = document.getElementById('completed-count');
+        if (completedElement && userStats.completed_levels !== undefined && userStats.total_levels !== undefined) {
+            completedElement.textContent = `${userStats.completed_levels}/${userStats.total_levels}`;
+        }
+        
+        // Update total XP
+        const totalXpElement = document.getElementById('total-xp');
+        if (totalXpElement && userStats.total_xp !== undefined) {
+            totalXpElement.textContent = userStats.total_xp;
+        }
+        
+        // Update progress bar
+        const progressBarElement = document.getElementById('progress-bar');
+        if (progressBarElement && userStats.completion_percentage !== undefined) {
+            progressBarElement.style.width = `${userStats.completion_percentage}%`;
+        }
+        
+        // Update progress percentage text
+        const progressPercentageElement = document.getElementById('progress-percentage');
+        if (progressPercentageElement && userStats.completion_percentage !== undefined) {
+            progressPercentageElement.textContent = Math.round(userStats.completion_percentage);
+        }
+    }
+    
     // Initialize display
     updateProgressDisplay();
     
