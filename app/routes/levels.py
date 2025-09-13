@@ -395,7 +395,12 @@ def levels_overview():
         
         # Get user's completions for detailed progress
         user_completions = LevelCompletion.get_user_completions(current_user.id, limit=100)
-        completion_lookup = {completion.level_id: completion for completion in user_completions}
+        
+        # Create lookup for latest completion per level (user_completions is ordered by created_at DESC)
+        completion_lookup = {}
+        for completion in user_completions:
+            if completion.level_id not in completion_lookup:
+                completion_lookup[completion.level_id] = completion
         
         # Enhance levels with user progress data
         enhanced_levels = []
