@@ -28,7 +28,7 @@ class LevelCompletion:
 
     def to_dict(self):
         """Convert to dictionary for JSON serialization"""
-        return {
+        result = {
             'id': self.id,
             'user_id': self.user_id,
             'level_id': self.level_id,
@@ -39,6 +39,22 @@ class LevelCompletion:
             'source': self.source,
             'created_at': self.created_at
         }
+        
+        # Include XP information if available (from recent completion)
+        if hasattr(self, '_xp_awarded'):
+            result['xp_awarded'] = self._xp_awarded
+        if hasattr(self, '_xp_calculation'):
+            result['xp_calculation'] = self._xp_calculation
+            
+        return result
+
+    def get_xp_awarded(self) -> int:
+        """Get XP awarded for this completion (if available from recent creation)"""
+        return getattr(self, '_xp_awarded', 0)
+    
+    def get_xp_calculation_details(self) -> dict:
+        """Get XP calculation details for this completion (if available from recent creation)"""
+        return getattr(self, '_xp_calculation', {})
 
     @classmethod
     def check_duplicate(cls, user_id: int, level_id: int) -> Optional['LevelCompletion']:
@@ -69,7 +85,7 @@ class LevelCompletion:
     @classmethod
     def create_completion(cls, user_id: int, level_id: int, score: int = None, time_spent: int = None, 
                          difficulty: str = None, source: str = 'web') -> tuple['LevelCompletion', bool]:
-        """Create a new level completion with idempotency checking"""
+        """Create a new level completion with idempotency checking and automatic XP calculation"""
         try:
             # Check for duplicates
             existing = cls.check_duplicate(user_id, level_id)
@@ -82,6 +98,17 @@ class LevelCompletion:
             if not level:
                 raise ValueError(f"Level {level_id} not found")
             
+            # Calculate XP for this completion
+            from app.utils.xp import XPCalculator, XPManager
+            difficulty_used = difficulty or level.difficulty
+            xp_calculation = XPCalculator.calculate_level_xp(
+                level_id=level_id,
+                score=score,
+                time_spent=time_spent,
+                difficulty=difficulty_used
+            )
+            xp_earned = xp_calculation['xp_earned']
+            
             # Create new completion
             supabase = get_supabase()
             completion_data = {
@@ -89,7 +116,7 @@ class LevelCompletion:
                 'level_id': level_id,
                 'score': score,
                 'time_spent': time_spent,
-                'difficulty': difficulty or level.difficulty,
+                'difficulty': difficulty_used,
                 'source': source,
                 'created_at': datetime.utcnow().isoformat()
             }
@@ -98,11 +125,68 @@ class LevelCompletion:
             data = handle_supabase_error(response)
             
             if data and len(data) > 0:
-                return cls(data[0]), True  # Return new completion and is_new=True
+                completion = cls(data[0])
+                
+                # Award XP and create history entry
+                try:
+                    xp_result = XPManager.award_xp(
+                        user_id=user_id,
+                        level_id=level_id,
+                        score=score,
+                        time_spent=time_spent,
+                        difficulty=difficulty_used,
+                        reason='level_completion'
+                    )
+                    # Store XP info for reference (though not in database)
+                    completion._xp_awarded = xp_result['xp_awarded']
+                    completion._xp_calculation = xp_calculation
+                except Exception as xp_error:
+                    # Log XP error but don't fail the completion
+                    print(f"Warning: Failed to award XP for completion: {xp_error}")
+                    completion._xp_awarded = 0
+                    completion._xp_calculation = None
+                
+                return completion, True  # Return new completion and is_new=True
             raise DatabaseError("No data returned from completion creation")
             
         except Exception as e:
             raise DatabaseError(f"Failed to create completion: {str(e)}")
+
+    def calculate_and_award_xp(self) -> dict:
+        """Calculate and award XP for an existing completion (useful for historical data)"""
+        try:
+            from app.utils.xp import XPCalculator, XPManager
+            
+            # Calculate XP based on completion data
+            xp_calculation = XPCalculator.calculate_level_xp(
+                level_id=self.level_id,
+                score=self.score,
+                time_spent=self.time_spent,
+                difficulty=self.difficulty
+            )
+            
+            # Award XP and create history entry
+            xp_result = XPManager.award_xp(
+                user_id=self.user_id,
+                level_id=self.level_id,
+                score=self.score,
+                time_spent=self.time_spent,
+                difficulty=self.difficulty,
+                reason='level_completion_recalculation'
+            )
+            
+            # Store XP info for reference
+            self._xp_awarded = xp_result['xp_awarded']
+            self._xp_calculation = xp_calculation
+            
+            return {
+                'xp_awarded': xp_result['xp_awarded'],
+                'calculation_details': xp_calculation,
+                'new_total_xp': xp_result['new_total']
+            }
+            
+        except Exception as e:
+            raise DatabaseError(f"Failed to calculate and award XP for completion: {str(e)}")
 
     @classmethod
     def get_user_completions(cls, user_id: int, limit: int = 50, offset: int = 0) -> List['LevelCompletion']:
