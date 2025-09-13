@@ -40,6 +40,7 @@ class User(UserMixin):
         self.created_at = data.get('created_at')
         self.last_login = data.get('last_login')
         self.is_admin = data.get('is_admin', False)
+        self.total_xp = data.get('total_xp', 0)
         
         # Convert string timestamps to datetime objects if needed
         if isinstance(self.created_at, str):
@@ -82,6 +83,7 @@ class User(UserMixin):
                 'password_hash': self.password_hash,
                 'is_active': self.is_active,
                 'is_admin': self.is_admin,
+                'total_xp': self.total_xp,
                 'last_login': self.last_login.isoformat() if self.last_login else None
             }
             
@@ -133,6 +135,7 @@ class User(UserMixin):
             'password_hash': None,
             'is_active': True,
             'is_admin': False,
+            'total_xp': 0,
             'created_at': datetime.utcnow(),
             'last_login': None
         }
