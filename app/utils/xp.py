@@ -217,12 +217,14 @@ class XPManager:
             response = supabase.table('users').update({'total_xp': new_total}).eq('id', user_id).execute()
             handle_supabase_error(response)
             
-            # Create XP history entry
+            # Create XP history entry with the calculated balances
             xp_entry = XPHistory.create_entry(
                 user_id=user_id,
                 xp_change=xp_earned,
                 reason=reason,
-                level_id=level_id
+                level_id=level_id,
+                balance_before=old_total,
+                balance_after=new_total
             )
             
             return {
