@@ -577,33 +577,33 @@ def complete_level(level_id):
                 'message': 'Level already completed'
             }), 200
         
-        # Award XP for the completion
-        xp_result = award_user_xp(
-            user_id=current_user.id,
-            level_id=level_id,
-            score=score,
-            time_spent=time_spent,
-            difficulty=difficulty
-        )
+        # XP is automatically calculated and awarded in create_completion
+        xp_awarded = completion.get_xp_awarded()
+        xp_calculation_details = completion.get_xp_calculation_details()
         
         # Get updated user progress
         progress_summary = LevelCompletion.get_user_progress_summary(current_user.id)
         
+        # Get user's current total XP from database
+        from app.models.user import User
+        updated_user = User.find_by_id(current_user.id)
+        current_total_xp = getattr(updated_user, 'total_xp', 0) if updated_user else 0
+        
         # Get user level information
-        level_info = get_user_level_info(xp_result['new_total'])
+        level_info = get_user_level_info(current_total_xp)
         
         return jsonify({
             'success': True,
             'duplicate': False,
             'level_completed': level_id,
-            'xp_earned': xp_result['xp_awarded'],
+            'xp_earned': xp_awarded,
             'score': score,
-            'total_xp': xp_result['new_total'],
+            'total_xp': current_total_xp,
             'completed_levels': progress_summary['completed_levels'],
             'completion_percentage': progress_summary['completion_percentage'],
             'user_level': level_info['level'],
             'xp_for_next_level': level_info['xp_for_next'],
-            'calculation_details': xp_result['calculation_details'],
+            'calculation_details': xp_calculation_details,
             'message': 'Level completed successfully'
         }), 200
         
