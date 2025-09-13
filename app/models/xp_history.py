@@ -19,7 +19,6 @@ class XPHistory:
         self.balance_after = data.get('balance_after')
         self.reason = data.get('reason')
         self.level_id = data.get('level_id')
-        self.metadata = data.get('metadata')
         self.created_at = data.get('created_at')
 
     def __repr__(self):
@@ -35,13 +34,12 @@ class XPHistory:
             'balance_after': self.balance_after,
             'reason': self.reason,
             'level_id': self.level_id,
-            'metadata': self.metadata,
             'created_at': self.created_at
         }
 
     @classmethod
     def create_entry(cls, user_id: int, xp_change: int, reason: str = 'manual_adjustment', 
-                    level_id: int = None, metadata: Dict[str, Any] = None) -> 'XPHistory':
+                    level_id: int = None) -> 'XPHistory':
         """Create a new XP history entry with automatic balance calculation"""
         try:
             # Get user's current XP balance
@@ -62,7 +60,6 @@ class XPHistory:
                 'balance_after': balance_after,
                 'reason': reason,
                 'level_id': level_id,
-                'metadata': metadata,
                 'created_at': datetime.utcnow().isoformat()
             }
             
@@ -224,8 +221,7 @@ class XPHistory:
                 'balance_before': self.balance_before,
                 'balance_after': self.balance_after,
                 'reason': self.reason,
-                'level_id': self.level_id,
-                'metadata': self.metadata
+                'level_id': self.level_id
             }
             
             if self.id:

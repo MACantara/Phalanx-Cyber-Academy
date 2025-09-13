@@ -20,8 +20,6 @@ class LevelCompletion:
         self.score = data.get('score')
         self.time_spent = data.get('time_spent')
         self.difficulty = data.get('difficulty')
-        self.metadata = data.get('metadata')
-        self.client_event_id = data.get('client_event_id')
         self.source = data.get('source', 'web')
         self.created_at = data.get('created_at')
 
@@ -38,26 +36,17 @@ class LevelCompletion:
             'score': self.score,
             'time_spent': self.time_spent,
             'difficulty': self.difficulty,
-            'metadata': self.metadata,
-            'client_event_id': self.client_event_id,
             'source': self.source,
             'created_at': self.created_at
         }
 
     @classmethod
-    def check_duplicate(cls, user_id: int, level_id: int, client_event_id: str = None) -> Optional['LevelCompletion']:
-        """Check for duplicate completion based on client_event_id or recent submission"""
+    def check_duplicate(cls, user_id: int, level_id: int) -> Optional['LevelCompletion']:
+        """Check for duplicate completion based on recent submission"""
         try:
             supabase = get_supabase()
             
-            # First check by client_event_id if provided
-            if client_event_id:
-                response = supabase.table('level_completions').select('*').eq('client_event_id', client_event_id).execute()
-                data = handle_supabase_error(response)
-                if data and len(data) > 0:
-                    return cls(data[0])
-            
-            # Fallback: check for recent completion (within last 5 minutes)
+            # Check for recent completion (within last 5 minutes)
             recent_threshold = (datetime.utcnow() - timedelta(minutes=5)).isoformat()
             
             response = (supabase.table('level_completions')
@@ -79,12 +68,11 @@ class LevelCompletion:
 
     @classmethod
     def create_completion(cls, user_id: int, level_id: int, score: int = None, time_spent: int = None, 
-                         difficulty: str = None, metadata: Dict[str, Any] = None, 
-                         client_event_id: str = None, source: str = 'web') -> tuple['LevelCompletion', bool]:
+                         difficulty: str = None, source: str = 'web') -> tuple['LevelCompletion', bool]:
         """Create a new level completion with idempotency checking"""
         try:
             # Check for duplicates
-            existing = cls.check_duplicate(user_id, level_id, client_event_id)
+            existing = cls.check_duplicate(user_id, level_id)
             if existing:
                 return existing, False  # Return existing completion and is_new=False
             
@@ -102,8 +90,6 @@ class LevelCompletion:
                 'score': score,
                 'time_spent': time_spent,
                 'difficulty': difficulty or level.difficulty,
-                'metadata': metadata,
-                'client_event_id': client_event_id,
                 'source': source,
                 'created_at': datetime.utcnow().isoformat()
             }
@@ -232,8 +218,6 @@ class LevelCompletion:
                 'score': self.score,
                 'time_spent': self.time_spent,
                 'difficulty': self.difficulty,
-                'metadata': self.metadata,
-                'client_event_id': self.client_event_id,
                 'source': self.source
             }
             

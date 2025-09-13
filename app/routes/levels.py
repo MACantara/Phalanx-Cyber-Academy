@@ -27,11 +27,11 @@ def get_levels_from_db():
                 'name': level.name,
                 'description': level.description,
                 'difficulty': level.difficulty.title() if level.difficulty else 'Medium',
-                'xp_reward': level.metadata.get('xp_reward', 100) if level.metadata else 100,
-                'icon': level.metadata.get('icon', 'bi-shield-check') if level.metadata else 'bi-shield-check',
+                'xp_reward': level.xp_reward or 100,
+                'icon': level.icon or 'bi-shield-check',
                 'category': level.category or 'Cybersecurity',
-                'estimated_time': level.metadata.get('estimated_time', '15 minutes') if level.metadata else '15 minutes',
-                'skills': level.metadata.get('skills', []) if level.metadata else [],
+                'estimated_time': level.estimated_time or '15 minutes',
+                'skills': level.skills or [],
                 'unlocked': level.unlocked,
                 'coming_soon': level.coming_soon
             }
@@ -505,8 +505,8 @@ def start_level(level_id):
             'description': level.description,
             'category': level.category,
             'difficulty': level.difficulty,
-            'xp_reward': level.metadata.get('xp_reward', 100) if level.metadata else 100,
-            'skills': level.metadata.get('skills', []) if level.metadata else [],
+            'xp_reward': level.xp_reward or 100,
+            'skills': level.skills or [],
             'is_retry': previous_completion is not None,
             'previous_attempts': 1 if previous_completion else 0,
             'previous_score': previous_completion.score if previous_completion else 0,
@@ -551,8 +551,6 @@ def complete_level(level_id):
         score = data.get('score', 100)
         time_spent = data.get('time_spent')
         difficulty = data.get('difficulty') or level.difficulty
-        metadata = data.get('metadata', {})
-        client_event_id = data.get('client_event_id')
         
         # Validate score
         if score is not None and (score < 0 or score > 100):
@@ -565,8 +563,6 @@ def complete_level(level_id):
             score=score,
             time_spent=time_spent,
             difficulty=difficulty,
-            metadata=metadata,
-            client_event_id=client_event_id,
             source='web'
         )
         
@@ -587,8 +583,7 @@ def complete_level(level_id):
             level_id=level_id,
             score=score,
             time_spent=time_spent,
-            difficulty=difficulty,
-            metadata=metadata
+            difficulty=difficulty
         )
         
         # Get updated user progress

@@ -35,8 +35,7 @@ class XPCalculator:
 
     @classmethod
     def calculate_level_xp(cls, level_id: int, score: Optional[int] = None, 
-                          time_spent: Optional[int] = None, difficulty: str = 'medium',
-                          metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+                          time_spent: Optional[int] = None, difficulty: str = 'medium') -> Dict[str, Any]:
         """
         Calculate XP earned for a level completion
         
@@ -45,7 +44,6 @@ class XPCalculator:
             score: Score achieved (0-100)
             time_spent: Time in seconds
             difficulty: Level difficulty
-            metadata: Additional completion data
             
         Returns:
             Dict with xp_earned, breakdown, and calculation details
@@ -187,7 +185,6 @@ class XPManager:
     @classmethod
     def award_xp(cls, user_id: int, level_id: int, score: Optional[int] = None,
                  time_spent: Optional[int] = None, difficulty: str = 'medium',
-                 metadata: Optional[Dict[str, Any]] = None, 
                  reason: str = 'level_completion') -> Dict[str, Any]:
         """
         Award XP to a user and create history entry
@@ -202,7 +199,7 @@ class XPManager:
             
             # Calculate XP earned
             xp_calculation = XPCalculator.calculate_level_xp(
-                level_id, score, time_spent, difficulty, metadata
+                level_id, score, time_spent, difficulty
             )
             xp_earned = xp_calculation['xp_earned']
             
@@ -225,13 +222,7 @@ class XPManager:
                 user_id=user_id,
                 xp_change=xp_earned,
                 reason=reason,
-                level_id=level_id,
-                metadata={
-                    **xp_calculation,
-                    'score': score,
-                    'time_spent': time_spent,
-                    'difficulty': difficulty
-                }
+                level_id=level_id
             )
             
             return {
@@ -342,17 +333,15 @@ class XPManager:
 
 # Convenience functions for easy imports
 def calculate_level_xp(level_id: int, score: Optional[int] = None, 
-                      time_spent: Optional[int] = None, difficulty: str = 'medium',
-                      metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+                      time_spent: Optional[int] = None, difficulty: str = 'medium') -> Dict[str, Any]:
     """Convenience function to calculate XP for level completion"""
-    return XPCalculator.calculate_level_xp(level_id, score, time_spent, difficulty, metadata)
+    return XPCalculator.calculate_level_xp(level_id, score, time_spent, difficulty)
 
 
 def award_user_xp(user_id: int, level_id: int, score: Optional[int] = None,
-                  time_spent: Optional[int] = None, difficulty: str = 'medium',
-                  metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+                  time_spent: Optional[int] = None, difficulty: str = 'medium') -> Dict[str, Any]:
     """Convenience function to award XP to a user"""
-    return XPManager.award_xp(user_id, level_id, score, time_spent, difficulty, metadata)
+    return XPManager.award_xp(user_id, level_id, score, time_spent, difficulty)
 
 
 def get_user_level_info(total_xp: int) -> Dict[str, Any]:

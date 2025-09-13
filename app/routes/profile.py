@@ -141,11 +141,11 @@ def dashboard():
                 'name': level.name,
                 'description': level.description,
                 'difficulty': level.difficulty.title() if level.difficulty else 'Medium',
-                'xp_reward': level.metadata.get('xp_reward', 100) if level.metadata else 100,
-                'icon': level.metadata.get('icon', 'bi-shield-check') if level.metadata else 'bi-shield-check',
+                'xp_reward': level.xp_reward or 100,
+                'icon': level.icon or 'bi-shield-check',
                 'category': level.category or 'Cybersecurity',
-                'estimated_time': level.metadata.get('estimated_time', '15 minutes') if level.metadata else '15 minutes',
-                'skills': level.metadata.get('skills', []) if level.metadata else [],
+                'estimated_time': level.estimated_time or '15 minutes',
+                'skills': level.skills or [],
                 'unlocked': level.unlocked,
                 'coming_soon': level.coming_soon,
                 # Progress data
@@ -153,7 +153,7 @@ def dashboard():
                 'score': completion.score if completion else 0,
                 'attempts': 1 if completion else 0,  # For now, count completion as 1 attempt
                 'time_spent': completion.time_spent if completion else 0,
-                'xp_earned': level.metadata.get('xp_reward', 100) if completion and level.metadata else (100 if completion else 0)
+                'xp_earned': level.xp_reward if completion else 0
             }
             
             levels_progress.append(level_data)

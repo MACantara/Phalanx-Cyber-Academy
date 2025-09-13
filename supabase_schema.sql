@@ -134,7 +134,6 @@ CREATE TABLE IF NOT EXISTS levels (
     unlocked BOOLEAN DEFAULT true,
     coming_soon BOOLEAN DEFAULT false,
     requirements JSONB,
-    metadata JSONB,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -155,8 +154,6 @@ CREATE TABLE IF NOT EXISTS level_completions (
     score INTEGER,
     time_spent INTEGER, -- seconds
     difficulty VARCHAR(20),
-    metadata JSONB,
-    client_event_id UUID,
     source VARCHAR(20) DEFAULT 'web',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -164,7 +161,6 @@ CREATE TABLE IF NOT EXISTS level_completions (
 -- Create indexes for level_completions table
 CREATE INDEX IF NOT EXISTS idx_level_completions_user_id ON level_completions(user_id);
 CREATE INDEX IF NOT EXISTS idx_level_completions_level_id ON level_completions(level_id);
-CREATE INDEX IF NOT EXISTS idx_level_completions_client_event_id ON level_completions(client_event_id);
 CREATE INDEX IF NOT EXISTS idx_level_completions_created_at ON level_completions(created_at);
 CREATE INDEX IF NOT EXISTS idx_level_completions_user_level ON level_completions(user_id, level_id);
 
@@ -177,7 +173,6 @@ CREATE TABLE IF NOT EXISTS xp_history (
     balance_after INTEGER,
     reason VARCHAR(100) NOT NULL,
     level_id INTEGER, -- references levels.level_id
-    metadata JSONB,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

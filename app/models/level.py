@@ -17,11 +17,15 @@ class Level:
         self.name = data.get('name')
         self.description = data.get('description')
         self.category = data.get('category')
+        self.icon = data.get('icon')
+        self.estimated_time = data.get('estimated_time')
+        self.expected_time_seconds = data.get('expected_time_seconds')
+        self.xp_reward = data.get('xp_reward', 0)
+        self.skills = data.get('skills')
         self.difficulty = data.get('difficulty', 'medium')
         self.unlocked = data.get('unlocked', True)
         self.coming_soon = data.get('coming_soon', False)
         self.requirements = data.get('requirements')
-        self.metadata = data.get('metadata')
         self.created_at = data.get('created_at')
         self.updated_at = data.get('updated_at')
 
@@ -36,11 +40,15 @@ class Level:
             'name': self.name,
             'description': self.description,
             'category': self.category,
+            'icon': self.icon,
+            'estimated_time': self.estimated_time,
+            'expected_time_seconds': self.expected_time_seconds,
+            'xp_reward': self.xp_reward,
+            'skills': self.skills,
             'difficulty': self.difficulty,
             'unlocked': self.unlocked,
             'coming_soon': self.coming_soon,
             'requirements': self.requirements,
-            'metadata': self.metadata,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
@@ -139,11 +147,15 @@ class Level:
                 'name': self.name,
                 'description': self.description,
                 'category': self.category,
+                'icon': self.icon,
+                'estimated_time': self.estimated_time,
+                'expected_time_seconds': self.expected_time_seconds,
+                'xp_reward': self.xp_reward,
+                'skills': self.skills,
                 'difficulty': self.difficulty,
                 'unlocked': self.unlocked,
                 'coming_soon': self.coming_soon,
                 'requirements': self.requirements,
-                'metadata': self.metadata,
                 'updated_at': datetime.utcnow().isoformat()
             }
             
