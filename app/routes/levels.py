@@ -505,6 +505,7 @@ def start_level(level_id):
             'description': level.description,
             'category': level.category,
             'difficulty': level.difficulty,
+            'xp_reward': level.metadata.get('xp_reward', 100) if level.metadata else 100,
             'skills': level.metadata.get('skills', []) if level.metadata else [],
             'is_retry': previous_completion is not None,
             'previous_attempts': 1 if previous_completion else 0,
