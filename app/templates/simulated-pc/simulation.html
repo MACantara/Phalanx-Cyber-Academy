@@ -104,12 +104,12 @@
 <!-- Store level data in a JSON object that will be parsed by JavaScript -->
 <script id="level-data" type="application/json">
 {
-    "id": {{ level.id if level else 'null' }},
-    "name": "{{ level.name | default('') | safe }}",
-    "description": "{{ level.description | default('') | safe }}",
-    "category": "{{ level.category | default('') | safe }}",
-    "difficulty": "{{ level.difficulty | default('') | safe }}",
-    "xp_reward": {{ level.xp_reward if level else 0 }}
+    "id": {{ level_data.id if level_data else 'null' }},
+    "name": "{{ level_data.name | default('') | safe }}",
+    "description": "{{ level_data.description | default('') | safe }}",
+    "category": "{{ level_data.category | default('') | safe }}",
+    "difficulty": "{{ level_data.difficulty | default('') | safe }}",
+    "xp_reward": {{ level_data.xp_reward if level_data else 100 }}
 }
 </script>
 
