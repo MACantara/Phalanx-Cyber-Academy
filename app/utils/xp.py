@@ -3,8 +3,7 @@ XP Calculation and Management Utilities
 Handles XP calculations, user total updates, and XP-related business logic
 """
 from typing import Dict, Any, Optional, List
-from sqlalchemy import func
-from app.database import db, DatabaseError
+from app.database import get_supabase, DatabaseError, handle_supabase_error
 
 
 class XPCalculator:
