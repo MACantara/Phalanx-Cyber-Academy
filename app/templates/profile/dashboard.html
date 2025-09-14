@@ -257,9 +257,9 @@
                         XP Activity
                     </h2>
                     <div class="flex items-center space-x-4">
-                        <div class="text-right">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Total Gained</p>
-                            <p class="text-lg font-bold text-green-600 dark:text-green-400">+{{ xp_summary.xp_gained or 0 }}</p>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Total Gained:</span>
+                            <span class="text-lg font-bold text-green-600 dark:text-green-400">+{{ xp_summary.xp_gained or 0 }}</span>
                         </div>
                     </div>
                 </div>
@@ -509,23 +509,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // History section functionality
 function initializeHistorySections() {
-    // Add tooltips to XP history entries
-    const xpEntries = document.querySelectorAll('[data-xp-entry]');
-    xpEntries.forEach(entry => {
-        entry.addEventListener('mouseenter', function() {
-            const reason = this.dataset.reason;
-            const xpChange = this.dataset.xpChange;
-            const date = this.dataset.date;
-            
-            const tooltip = `${reason}: ${xpChange > 0 ? '+' : ''}${xpChange} XP on ${date}`;
-            showTooltip(this, tooltip);
-        });
-        
-        entry.addEventListener('mouseleave', function() {
-            hideTooltip();
-        });
-    });
-    
     // Add click handlers for completion entries
     const completionEntries = document.querySelectorAll('[data-completion-entry]');
     completionEntries.forEach(entry => {
@@ -537,30 +520,6 @@ function initializeHistorySections() {
             }
         });
     });
-}
-
-// Enhanced tooltip function for history items
-function showHistoryTooltip(element, title, details) {
-    const tooltip = document.createElement('div');
-    tooltip.className = 'absolute bg-gray-900 text-white p-3 rounded-lg text-sm z-20 shadow-lg max-w-xs';
-    tooltip.innerHTML = `
-        <div class="font-semibold mb-1">${title}</div>
-        <div class="text-gray-300">${details}</div>
-    `;
-    
-    const rect = element.getBoundingClientRect();
-    tooltip.style.left = (rect.left + rect.width / 2) + 'px';
-    tooltip.style.top = (rect.top - 10) + 'px';
-    tooltip.style.transform = 'translateX(-50%) translateY(-100%)';
-    
-    document.body.appendChild(tooltip);
-    
-    // Auto-remove after 3 seconds
-    setTimeout(() => {
-        if (document.body.contains(tooltip)) {
-            document.body.removeChild(tooltip);
-        }
-    }, 3000);
 }
 
 // Format relative time for history entries
