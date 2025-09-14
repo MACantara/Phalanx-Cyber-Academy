@@ -319,7 +319,7 @@ class GameController {
         return Math.max(0.1, Math.min(0.9, baseChance));
     }
     
-    xhandleDetectedAttack(attackData) {
+    handleDetectedAttack(attackData) {
         const alert = {
             id: Date.now(),
             timestamp: new Date(),
@@ -779,7 +779,7 @@ class GameController {
     async initializeXPTracking() {
         try {
             // Fetch current user XP from server
-            const response = await fetch('/api/xp-status', {
+            const response = await fetch('/blue-vs-red/api/xp-status', {
                 method: 'GET',
                 headers: {
                     'X-CSRFToken': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
@@ -799,7 +799,7 @@ class GameController {
 
     async sendPlayerAction(action, target = null, effectiveness = 1.0) {
         try {
-            const response = await fetch('/api/player-action', {
+            const response = await fetch('/blue-vs-red/api/player-action', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -808,7 +808,8 @@ class GameController {
                 body: JSON.stringify({
                     action: action,
                     target: target,
-                    effectiveness: effectiveness
+                    effectiveness: effectiveness,
+                    successful: true  // Mark defensive actions as successful
                 })
             });
 
@@ -832,7 +833,7 @@ class GameController {
 
     async handleAIAction(attackData) {
         try {
-            const response = await fetch('/api/ai-action', {
+            const response = await fetch('/blue-vs-red/api/ai-action', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -871,7 +872,7 @@ class GameController {
 
     async handleGameCompletion() {
         try {
-            const response = await fetch('/api/stop-game', {
+            const response = await fetch('/blue-vs-red/api/stop-game', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
