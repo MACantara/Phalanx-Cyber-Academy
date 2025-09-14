@@ -70,8 +70,6 @@ class AIEngine {
         // Initialize current IP address after pools are defined
         this.currentIPAddress = this.generateRandomIP();
         
-        console.log('🤖 AI Engine IP initialized:', this.currentIPAddress);
-        
         // Attack progression - tracks current attack phase
         this.currentPhase = 0;
         this.attackPhases = [
@@ -419,11 +417,8 @@ class AIEngine {
     generateRandomIP() {
         // Safety check - ensure ipPools is initialized
         if (!this.ipPools || !this.ipPools.malicious) {
-            console.log('⚠️ ipPools not initialized, using fallback');
             return this.generateNewRandomIP();
         }
-        
-        console.log('🤖 Generating IP from pools:', Object.keys(this.ipPools));
         
         // Generate a random IP from available pools or create new one
         const allIPs = [...this.ipPools.malicious, ...this.ipPools.proxies, ...this.ipPools.compromised];

@@ -319,7 +319,7 @@ class GameController {
         return Math.max(0.1, Math.min(0.9, baseChance));
     }
     
-    handleDetectedAttack(attackData) {
+    xhandleDetectedAttack(attackData) {
         const alert = {
             id: Date.now(),
             timestamp: new Date(),
@@ -327,6 +327,10 @@ class GameController {
             target: attackData.target,
             technique: attackData.technique,
             severity: attackData.severity,
+            sourceIP: attackData.sourceIP,
+            ipType: attackData.ipType,
+            attackId: attackData.attackId,
+            sessionId: attackData.sessionId,
             status: 'detected'
         };
         
