@@ -126,8 +126,28 @@ def dashboard():
         level_info = get_user_level_info(total_xp)
         user_rank = f"Level {level_info['level']}"
         
-        # Basic stats (these could be enhanced with actual tracking)
-        learning_streak = 0  # Could track actual streaks in future
+        # Get learning streak information
+        try:
+            from app.utils.streak_tracker import get_user_learning_streak
+            streak_info = get_user_learning_streak(current_user.id)
+            learning_streak = streak_info['current_streak']
+            streak_data = {
+                'current_streak': streak_info['current_streak'],
+                'longest_streak': streak_info['longest_streak'],
+                'status': streak_info['status'],
+                'message': streak_info['message'],
+                'is_active': streak_info['is_active']
+            }
+        except Exception as e:
+            current_app.logger.warning(f"Failed to calculate learning streak for user {current_user.id}: {str(e)}")
+            learning_streak = 0
+            streak_data = {
+                'current_streak': 0,
+                'longest_streak': 0,
+                'status': 'unknown',
+                'message': 'Streak information unavailable',
+                'is_active': False
+            }
         
         # Prepare levels with completion status
         levels_progress = []
@@ -184,6 +204,7 @@ def dashboard():
                              completed_levels=completed_levels,
                              total_levels=total_levels,
                              learning_streak=learning_streak,
+                             streak_data=streak_data,
                              user_rank=user_rank,
                              progress_percentage=int(progress_percentage),
                              levels=levels_progress,
