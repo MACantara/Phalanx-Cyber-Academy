@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, jsonify
 from flask_login import login_required, current_user
 from app.models.user import User
 from app.database import DatabaseError
@@ -221,3 +221,33 @@ def dashboard():
         current_app.logger.error(f"Unexpected error in dashboard: {str(e)}")
         flash('An error occurred while loading your dashboard. Please try again.', 'error')
         return redirect(url_for('profile.profile'))
+
+
+@profile_bp.route('/api/user/streak', methods=['GET'])
+@login_required
+def get_user_streak_api():
+    """API endpoint to get current user streak information"""
+    try:
+        from app.utils.streak_tracker import get_user_learning_streak
+        
+        streak_info = get_user_learning_streak(current_user.id)
+        
+        return jsonify({
+            'success': True,
+            'streak_info': streak_info
+        }), 200
+        
+    except Exception as e:
+        current_app.logger.error(f"Error getting streak info for user {current_user.id}: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': 'Unable to load streak information',
+            'streak_info': {
+                'current_streak': 0,
+                'longest_streak': 0,
+                'is_active': False,
+                'status': 'unknown',
+                'message': 'Streak information unavailable',
+                'days_since_last_activity': 0
+            }
+        }), 500
