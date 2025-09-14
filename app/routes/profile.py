@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, jsonify
 from flask_login import login_required, current_user
 from app.models.user import User
 from app.database import DatabaseError
@@ -126,8 +126,28 @@ def dashboard():
         level_info = get_user_level_info(total_xp)
         user_rank = f"Level {level_info['level']}"
         
-        # Basic stats (these could be enhanced with actual tracking)
-        learning_streak = 0  # Could track actual streaks in future
+        # Get learning streak information
+        try:
+            from app.utils.streak_tracker import get_user_learning_streak
+            streak_info = get_user_learning_streak(current_user.id)
+            learning_streak = streak_info['current_streak']
+            streak_data = {
+                'current_streak': streak_info['current_streak'],
+                'longest_streak': streak_info['longest_streak'],
+                'status': streak_info['status'],
+                'message': streak_info['message'],
+                'is_active': streak_info['is_active']
+            }
+        except Exception as e:
+            current_app.logger.warning(f"Failed to calculate learning streak for user {current_user.id}: {str(e)}")
+            learning_streak = 0
+            streak_data = {
+                'current_streak': 0,
+                'longest_streak': 0,
+                'status': 'unknown',
+                'message': 'Streak information unavailable',
+                'is_active': False
+            }
         
         # Prepare levels with completion status
         levels_progress = []
@@ -184,6 +204,7 @@ def dashboard():
                              completed_levels=completed_levels,
                              total_levels=total_levels,
                              learning_streak=learning_streak,
+                             streak_data=streak_data,
                              user_rank=user_rank,
                              progress_percentage=int(progress_percentage),
                              levels=levels_progress,
@@ -200,3 +221,33 @@ def dashboard():
         current_app.logger.error(f"Unexpected error in dashboard: {str(e)}")
         flash('An error occurred while loading your dashboard. Please try again.', 'error')
         return redirect(url_for('profile.profile'))
+
+
+@profile_bp.route('/api/user/streak', methods=['GET'])
+@login_required
+def get_user_streak_api():
+    """API endpoint to get current user streak information"""
+    try:
+        from app.utils.streak_tracker import get_user_learning_streak
+        
+        streak_info = get_user_learning_streak(current_user.id)
+        
+        return jsonify({
+            'success': True,
+            'streak_info': streak_info
+        }), 200
+        
+    except Exception as e:
+        current_app.logger.error(f"Error getting streak info for user {current_user.id}: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': 'Unable to load streak information',
+            'streak_info': {
+                'current_streak': 0,
+                'longest_streak': 0,
+                'is_active': False,
+                'status': 'unknown',
+                'message': 'Streak information unavailable',
+                'days_since_last_activity': 0
+            }
+        }), 500

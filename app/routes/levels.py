@@ -597,6 +597,16 @@ def complete_level(level_id):
         # Get user level information
         level_info = get_user_level_info(current_total_xp)
         
+        # Get updated streak information
+        try:
+            from app.utils.streak_tracker import get_user_learning_streak, LearningStreakTracker
+            streak_info = get_user_learning_streak(current_user.id)
+            streak_message = LearningStreakTracker.get_streak_encouragement_message(streak_info)
+        except Exception as e:
+            logger.warning(f"Failed to get streak info for user {current_user.id}: {str(e)}")
+            streak_info = {'current_streak': 0, 'longest_streak': 0, 'is_active': False}
+            streak_message = "Great job completing this level!"
+        
         return jsonify({
             'success': True,
             'duplicate': False,
@@ -609,6 +619,12 @@ def complete_level(level_id):
             'user_level': level_info['level'],
             'xp_for_next_level': level_info['xp_for_next'],
             'calculation_details': xp_calculation_details,
+            'streak_info': {
+                'current_streak': streak_info['current_streak'],
+                'longest_streak': streak_info['longest_streak'],
+                'is_active': streak_info['is_active'],
+                'message': streak_message
+            },
             'message': 'Level completed successfully'
         }), 200
         
