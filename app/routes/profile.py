@@ -149,6 +149,33 @@ def dashboard():
                 'is_active': False
             }
         
+        # Get user activity history
+        try:
+            from app.models.xp_history import XPHistory
+            
+            # Get recent XP history (last 10 entries)
+            recent_xp_history = XPHistory.get_user_history(current_user.id, limit=10)
+            
+            # Get XP summary for stats
+            xp_summary = XPHistory.get_user_xp_summary(current_user.id)
+            
+            # Get recent level completions (last 5 completions)
+            recent_completions = LevelCompletion.get_user_completions(current_user.id, limit=5)
+            
+        except Exception as e:
+            current_app.logger.warning(f"Failed to load activity history for user {current_user.id}: {str(e)}")
+            recent_xp_history = []
+            xp_summary = {
+                'total_xp': total_xp,
+                'total_entries': 0,
+                'xp_gained': 0,
+                'xp_lost': 0,
+                'by_reason': {},
+                'first_entry': None,
+                'last_entry': None
+            }
+            recent_completions = []
+        
         # Prepare levels with completion status
         levels_progress = []
         user_completions = {comp.level_id: comp for comp in LevelCompletion.get_user_completions(current_user.id)}
@@ -211,7 +238,10 @@ def dashboard():
                              next_level=next_level,
                              skill_analysis=skill_analysis,
                              recommendations=[],
-                             learning_patterns=learning_patterns)
+                             learning_patterns=learning_patterns,
+                             recent_xp_history=recent_xp_history,
+                             xp_summary=xp_summary,
+                             recent_completions=recent_completions)
     
     except DatabaseError as e:
         current_app.logger.error(f"Database error in dashboard: {str(e)}")
