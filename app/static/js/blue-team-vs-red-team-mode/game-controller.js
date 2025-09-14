@@ -21,7 +21,10 @@ class GameController {
             sessionXP: 0,
             attacksMitigated: 0,
             attacksSuccessful: 0,
-            currentXP: 0
+            currentXP: 0,
+            // IP tracking
+            blockedIPs: [],
+            attackHistory: []
         };
         
         this.aiEngine = null;
@@ -203,7 +206,10 @@ class GameController {
             sessionXP: 0,
             attacksMitigated: 0,
             attacksSuccessful: 0,
-            currentXP: this.gameState.currentXP // Keep total XP, reset session
+            currentXP: this.gameState.currentXP, // Keep total XP, reset session
+            // IP tracking
+            blockedIPs: [],
+            attackHistory: []
         };
         
         // Reset AI
@@ -230,7 +236,23 @@ class GameController {
     
     // Handle AI attack attempts
     processAttack(attackData) {
-        const { type, target, technique, severity } = attackData;
+        const { type, target, technique, severity, sourceIP } = attackData;
+        
+        // Store attack in history
+        if (!this.gameState.attackHistory) {
+            this.gameState.attackHistory = [];
+        }
+        this.gameState.attackHistory.push({
+            ...attackData,
+            detectionTime: new Date(),
+            blocked: false
+        });
+        
+        // Check if source IP is blocked
+        if (this.gameState.blockedIPs && this.gameState.blockedIPs.includes(sourceIP)) {
+            this.handleBlockedIPAttack(attackData);
+            return; // Attack blocked, don't process further
+        }
         
         // Calculate detection probability based on security controls
         const detectionChance = this.calculateDetectionChance(type, technique);
@@ -246,6 +268,25 @@ class GameController {
         
         // AI learns from the outcome
         this.aiEngine.updateQTable(attackData, detected);
+    }
+
+    handleBlockedIPAttack(attackData) {
+        // Attack was blocked by IP blacklist
+        this.uiManager.addTerminalOutput(`🛡️  BLOCKED: Attack from ${attackData.sourceIP} (${attackData.technique})`);
+        this.uiManager.addTerminalOutput(`   Target: ${attackData.target} | Severity: ${attackData.severity.toUpperCase()}`);
+        
+        // Mark attack as blocked in history
+        const lastAttack = this.gameState.attackHistory[this.gameState.attackHistory.length - 1];
+        if (lastAttack) {
+            lastAttack.blocked = true;
+        }
+        
+        // Small XP reward for successful blocking
+        this.gameState.sessionXP += 2;
+        this.gameState.attacksMitigated += 1;
+        this.uiManager.showXPReward(2, `Blocked attack from ${attackData.sourceIP}`);
+        
+        console.log(`🛡️ Attack blocked from IP: ${attackData.sourceIP}`);
     }
     
     calculateDetectionChance(attackType, technique) {
@@ -426,6 +467,17 @@ class GameController {
             case 'increase-monitoring':
                 this.executeIncreaseMonitoring();
                 break;
+            case 'show-ips':
+            case 'list-ips':
+                this.showIPInformation();
+                break;
+            case 'show-attacks':
+            case 'attack-history':
+                this.showAttackHistory();
+                break;
+            case 'ai-info':
+                this.showAIInformation();
+                break;
             case 'clear':
                 this.uiManager.clearTerminal();
                 this.uiManager.addTerminalOutput('$ Defense Command Terminal - Ready');
@@ -465,6 +517,9 @@ class GameController {
         this.uiManager.addTerminalOutput('  assets                    - Show asset integrity');
         this.uiManager.addTerminalOutput('  alerts                    - Show active alerts');
         this.uiManager.addTerminalOutput('  scan                      - Run security scan');
+        this.uiManager.addTerminalOutput('  show-ips                  - Show IP information and blocked list');
+        this.uiManager.addTerminalOutput('  show-attacks              - Show recent attack history');
+        this.uiManager.addTerminalOutput('  ai-info                   - Show AI attacker information');
         this.uiManager.addTerminalOutput('');
         this.uiManager.addTerminalOutput('DEFENSIVE ACTIONS:');
         this.uiManager.addTerminalOutput('  block-ip [address]        - Block suspicious IP address');
@@ -476,6 +531,8 @@ class GameController {
         this.uiManager.addTerminalOutput('UTILITY COMMANDS:');
         this.uiManager.addTerminalOutput('  clear                     - Clear terminal screen');
         this.uiManager.addTerminalOutput('  help                      - Show this help');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('💡 Tip: Click "Block IP" button in alerts for quick IP blocking');
     }
     
     runSecurityScan() {
@@ -500,19 +557,50 @@ class GameController {
     executeBlockIP(ipAddress) {
         if (!ipAddress) {
             this.uiManager.addTerminalOutput('❌ Error: IP address required. Usage: block-ip [address]');
+            this.uiManager.addTerminalOutput('   Example: block-ip 192.168.1.100');
+            return;
+        }
+        
+        // Validate IP address format
+        const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+        if (!ipRegex.test(ipAddress)) {
+            this.uiManager.addTerminalOutput(`❌ Error: Invalid IP address format: ${ipAddress}`);
             return;
         }
         
         this.uiManager.addTerminalOutput(`🚫 Blocking IP address: ${ipAddress}`);
         
-        // Enhance firewall effectiveness temporarily
-        if (this.gameState.securityControls.firewall) {
-            this.gameState.securityControls.firewall.effectiveness = Math.min(100,
-                this.gameState.securityControls.firewall.effectiveness + 5
-            );
+        // Add to blocked IPs list in game state
+        if (!this.gameState.blockedIPs) {
+            this.gameState.blockedIPs = [];
         }
         
-        this.uiManager.addTerminalOutput('✅ IP address blocked. Firewall rules updated.');
+        if (!this.gameState.blockedIPs.includes(ipAddress)) {
+            this.gameState.blockedIPs.push(ipAddress);
+            
+            // Notify AI engine about blocked IP
+            const ipChanged = this.aiEngine.handleIPBlock(ipAddress);
+            
+            if (ipChanged) {
+                this.uiManager.addTerminalOutput(`⚠️  Detected IP change: Attacker switched to new address`);
+                this.uiManager.addTerminalOutput(`🔍 Monitoring new attack patterns...`);
+            }
+            
+            // Enhance firewall effectiveness
+            if (this.gameState.securityControls.firewall) {
+                this.gameState.securityControls.firewall.effectiveness = Math.min(100,
+                    this.gameState.securityControls.firewall.effectiveness + 5
+                );
+            }
+            
+            // Send player action for XP tracking
+            this.sendPlayerAction('block-ip', ipAddress, 0.8);
+            
+            this.uiManager.addTerminalOutput(`✅ IP address blocked. Firewall rules updated. (${this.gameState.blockedIPs.length} IPs blocked)`);
+        } else {
+            this.uiManager.addTerminalOutput(`ℹ️  IP address ${ipAddress} is already blocked.`);
+        }
+        
         this.uiManager.updateDisplay();
     }
     
@@ -809,6 +897,78 @@ class GameController {
             console.error('Failed to handle game completion:', error);
         }
         return null;
+    }
+
+    showIPInformation() {
+        this.uiManager.addTerminalOutput('=== IP ADDRESS INFORMATION ===');
+        
+        // Get AI IP info
+        const aiIPInfo = this.aiEngine.getCurrentIPInfo();
+        this.uiManager.addTerminalOutput(`Current Attacker IP: ${aiIPInfo.currentIP}`);
+        
+        // Show blocked IPs
+        if (this.gameState.blockedIPs && this.gameState.blockedIPs.length > 0) {
+            this.uiManager.addTerminalOutput(`Blocked IPs (${this.gameState.blockedIPs.length}):`);
+            this.gameState.blockedIPs.forEach((ip, index) => {
+                this.uiManager.addTerminalOutput(`  ${index + 1}. ${ip}`);
+            });
+        } else {
+            this.uiManager.addTerminalOutput('No IPs currently blocked');
+        }
+        
+        // Show IP change history
+        if (aiIPInfo.ipChangeCount > 0) {
+            this.uiManager.addTerminalOutput(`Attacker IP changes: ${aiIPInfo.ipChangeCount}`);
+            if (aiIPInfo.lastIPChange) {
+                const change = aiIPInfo.lastIPChange;
+                this.uiManager.addTerminalOutput(`Last change: ${change.oldIP} → ${change.newIP} (${change.reason})`);
+            }
+        }
+    }
+
+    showAttackHistory() {
+        this.uiManager.addTerminalOutput('=== RECENT ATTACK HISTORY ===');
+        
+        if (!this.gameState.attackHistory || this.gameState.attackHistory.length === 0) {
+            this.uiManager.addTerminalOutput('No attacks recorded yet');
+            return;
+        }
+        
+        // Show last 10 attacks
+        const recentAttacks = this.gameState.attackHistory.slice(-10);
+        recentAttacks.forEach((attack, index) => {
+            const status = attack.blocked ? 'BLOCKED' : 'DETECTED';
+            const timestamp = attack.detectionTime.toLocaleTimeString();
+            this.uiManager.addTerminalOutput(
+                `${timestamp} | ${attack.sourceIP} | ${attack.technique} → ${attack.target} | ${status}`
+            );
+        });
+        
+        this.uiManager.addTerminalOutput(`Total attacks: ${this.gameState.attackHistory.length}`);
+        this.uiManager.addTerminalOutput(`Blocked: ${this.gameState.attackHistory.filter(a => a.blocked).length}`);
+    }
+
+    showAIInformation() {
+        this.uiManager.addTerminalOutput('=== AI ATTACKER INFORMATION ===');
+        
+        const aiIPInfo = this.aiEngine.getCurrentIPInfo();
+        const difficulty = this.aiEngine.getDifficulty();
+        const tactics = this.aiEngine.getCurrentTactics();
+        
+        this.uiManager.addTerminalOutput(`Difficulty Level: ${difficulty.level} (${difficulty.value}%)`);
+        this.uiManager.addTerminalOutput(`Current Tactics: ${tactics}`);
+        this.uiManager.addTerminalOutput(`Active IP: ${aiIPInfo.currentIP}`);
+        this.uiManager.addTerminalOutput(`IP Changes: ${aiIPInfo.ipChangeCount}`);
+        this.uiManager.addTerminalOutput(`Known Blocked IPs: ${aiIPInfo.blockedIPs.length}`);
+        
+        // Attack statistics
+        if (this.gameState.attackHistory) {
+            const totalAttacks = this.gameState.attackHistory.length;
+            const blockedAttacks = this.gameState.attackHistory.filter(a => a.blocked).length;
+            const blockRate = totalAttacks > 0 ? Math.round((blockedAttacks / totalAttacks) * 100) : 0;
+            
+            this.uiManager.addTerminalOutput(`Attack Success Rate: ${100 - blockRate}%`);
+        }
     }
 }
 

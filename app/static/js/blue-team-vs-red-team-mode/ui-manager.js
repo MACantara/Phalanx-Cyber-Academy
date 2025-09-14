@@ -268,14 +268,25 @@ class UIManager {
         const alertElement = document.createElement('div');
         alertElement.className = `p-3 rounded-lg border-l-4 ${severityClass.bg} ${severityClass.border} mb-2`;
         alertElement.dataset.alertId = alert.id || Date.now();
+        
+        // Format IP address information
+        const ipInfo = alert.sourceIP ? 
+            `<div class="text-xs text-gray-400 mt-1">
+                <i class="bi bi-globe2 mr-1"></i>Source: ${alert.sourceIP}
+                ${alert.ipType ? `<span class="ml-2 px-1 py-0.5 bg-gray-600 rounded text-xs">${alert.ipType}</span>` : ''}
+            </div>` : '';
+        
         alertElement.innerHTML = `
             <div class="flex items-center justify-between">
-                <div>
+                <div class="flex-1">
                     <div class="text-sm font-medium ${severityClass.text}">${alert.technique}</div>
                     <div class="text-xs text-white">${this.formatAssetName(alert.target)} • ${alert.timestamp.toLocaleTimeString()}</div>
+                    ${ipInfo}
+                    ${alert.attackId ? `<div class="text-xs text-gray-500 mt-1">ID: ${alert.attackId}</div>` : ''}
                 </div>
                 <div class="flex items-center space-x-2">
                     <span class="text-xs px-2 py-1 ${severityClass.badge} rounded-full">${alert.severity.toUpperCase()}</span>
+                    ${alert.sourceIP ? `<button class="text-xs px-2 py-1 bg-red-600 hover:bg-red-700 rounded cursor-pointer" onclick="window.gameController?.executeBlockIP('${alert.sourceIP}')">Block IP</button>` : ''}
                     <button class="text-xs text-gray-400 hover:text-white" onclick="this.parentElement.parentElement.parentElement.remove()">
                         <i class="bi bi-x-lg cursor-pointer"></i>
                     </button>

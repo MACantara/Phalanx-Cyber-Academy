@@ -48,6 +48,30 @@ class AIEngine {
         // Target assets
         this.targets = ['academy-server', 'student-db', 'research-files', 'learning-platform'];
         
+        // IP Address Management - Initialize pools first
+        this.blockedIPs = new Set();
+        this.ipChangeHistory = [];
+        this.ipPools = {
+            'malicious': [
+                '192.168.100.45', '10.0.50.23', '172.16.75.12', '203.45.67.89',
+                '192.168.200.15', '10.0.25.67', '172.16.33.44', '198.51.100.23',
+                '192.168.150.88', '10.0.75.34', '172.16.60.91', '203.0.113.56'
+            ],
+            'proxies': [
+                '192.168.250.10', '10.0.100.78', '172.16.90.23', '198.51.100.67',
+                '192.168.175.33', '10.0.60.45', '172.16.110.88', '203.0.113.99'
+            ],
+            'compromised': [
+                '192.168.50.77', '10.0.80.12', '172.16.40.56', '198.51.100.34',
+                '192.168.120.91', '10.0.90.23', '172.16.70.45', '203.0.113.12'
+            ]
+        };
+        
+        // Initialize current IP address after pools are defined
+        this.currentIPAddress = this.generateRandomIP();
+        
+        console.log('🤖 AI Engine IP initialized:', this.currentIPAddress);
+        
         // Attack progression - tracks current attack phase
         this.currentPhase = 0;
         this.attackPhases = [
@@ -224,12 +248,35 @@ class AIEngine {
     }
     
     createAttackData(action) {
+        // Sometimes change IP address proactively (5% chance)
+        if (Math.random() < 0.05 && !this.blockedIPs.has(this.currentIPAddress)) {
+            const oldIP = this.currentIPAddress;
+            this.currentIPAddress = this.generateRandomIP();
+            this.ipChangeHistory.push({
+                timestamp: new Date(),
+                oldIP: oldIP,
+                newIP: this.currentIPAddress,
+                reason: 'PROACTIVE_CHANGE'
+            });
+            console.log(`🤖 AI proactively changed IP from ${oldIP} to ${this.currentIPAddress}`);
+        }
+
         return {
             type: action.type,
             technique: action.technique,
             target: action.target,
             severity: this.calculateSeverity(action.type),
-            timestamp: new Date()
+            timestamp: new Date(),
+            // IP address information
+            sourceIP: this.currentIPAddress,
+            ipType: this.getIPType(this.currentIPAddress),
+            isBlocked: this.blockedIPs.has(this.currentIPAddress),
+            // Additional network information
+            sourcePort: this.generateRandomPort(),
+            userAgent: this.generateRandomUserAgent(),
+            // Attack metadata
+            attackId: this.generateAttackId(),
+            sessionId: this.generateSessionId()
         };
     }
     
@@ -360,8 +407,172 @@ class AIEngine {
     reset() {
         this.stopAttackSequence();
         this.currentPhase = 0;
+        // Reset IP tracking
+        this.currentIPAddress = this.generateRandomIP();
+        this.blockedIPs.clear();
+        this.ipChangeHistory = [];
         // Keep Q-table for continued learning
         console.log('🤖 AI Engine reset');
+    }
+
+    // IP Address Management Methods
+    generateRandomIP() {
+        // Safety check - ensure ipPools is initialized
+        if (!this.ipPools || !this.ipPools.malicious) {
+            console.log('⚠️ ipPools not initialized, using fallback');
+            return this.generateNewRandomIP();
+        }
+        
+        console.log('🤖 Generating IP from pools:', Object.keys(this.ipPools));
+        
+        // Generate a random IP from available pools or create new one
+        const allIPs = [...this.ipPools.malicious, ...this.ipPools.proxies, ...this.ipPools.compromised];
+        const availableIPs = allIPs.filter(ip => !this.blockedIPs.has(ip));
+        
+        if (availableIPs.length > 0) {
+            return availableIPs[Math.floor(Math.random() * availableIPs.length)];
+        }
+        
+        // If all known IPs are blocked, generate a new random IP
+        return this.generateNewRandomIP();
+    }
+
+    generateNewRandomIP() {
+        // Generate a realistic-looking IP address
+        const ranges = [
+            () => `192.168.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`,
+            () => `10.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`,
+            () => `172.${16 + Math.floor(Math.random() * 16)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`,
+            () => `203.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`
+        ];
+        
+        const randomRange = ranges[Math.floor(Math.random() * ranges.length)];
+        return randomRange();
+    }
+
+    handleIPBlock(blockedIP) {
+        if (blockedIP === this.currentIPAddress) {
+            // Current IP was blocked, need to change
+            this.blockedIPs.add(blockedIP);
+            const oldIP = this.currentIPAddress;
+            this.currentIPAddress = this.generateRandomIP();
+            
+            // Record the IP change
+            this.ipChangeHistory.push({
+                timestamp: new Date(),
+                oldIP: oldIP,
+                newIP: this.currentIPAddress,
+                reason: 'IP_BLOCKED'
+            });
+            
+            console.log(`🤖 AI changed IP from ${oldIP} to ${this.currentIPAddress} due to blocking`);
+            
+            // Reduce effectiveness temporarily due to IP change disruption
+            this.explorationRate = Math.min(0.8, this.explorationRate + 0.1);
+            
+            return true; // IP was changed
+        }
+        
+        // IP wasn't current, just add to blocked list
+        this.blockedIPs.add(blockedIP);
+        return false; // No IP change needed
+    }
+
+    getCurrentIPInfo() {
+        return {
+            currentIP: this.currentIPAddress,
+            blockedIPs: Array.from(this.blockedIPs),
+            ipChangeCount: this.ipChangeHistory.length,
+            lastIPChange: this.ipChangeHistory.length > 0 ? 
+                this.ipChangeHistory[this.ipChangeHistory.length - 1] : null
+        };
+    }
+
+    getIPType(ip) {
+        if (this.ipPools.malicious.includes(ip)) return 'malicious';
+        if (this.ipPools.proxies.includes(ip)) return 'proxy';
+        if (this.ipPools.compromised.includes(ip)) return 'compromised';
+        return 'unknown';
+    }
+
+    // Enhanced attack data creation with IP information
+    generateRandomPort() {
+        // Common malicious ports and random high ports
+        const commonPorts = [80, 443, 8080, 8443, 3389, 22, 21, 25, 53, 445];
+        const useCommonPort = Math.random() < 0.3;
+        
+        if (useCommonPort) {
+            return commonPorts[Math.floor(Math.random() * commonPorts.length)];
+        }
+        
+        // Random high port
+        return Math.floor(Math.random() * (65535 - 1024)) + 1024;
+    }
+
+    generateRandomUserAgent() {
+        const userAgents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+            'curl/7.68.0',
+            'python-requests/2.25.1',
+            'Nmap/7.80',
+            'sqlmap/1.4.7',
+            'Nikto/2.1.6'
+        ];
+        
+        return userAgents[Math.floor(Math.random() * userAgents.length)];
+    }
+
+    generateAttackId() {
+        return 'ATK-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    }
+
+    generateSessionId() {
+        return 'SES-' + Math.random().toString(36).substr(2, 12).toUpperCase();
+    }
+
+    getCurrentIPInfo() {
+        return {
+            currentIP: this.currentIPAddress,
+            ipChangeCount: this.ipChangeHistory.length,
+            lastIPChange: this.ipChangeHistory.length > 0 ? this.ipChangeHistory[this.ipChangeHistory.length - 1] : null,
+            blockedIPs: [...this.blockedIPs] // Return copy to prevent external modification
+        };
+    }
+
+    getDifficulty() {
+        // Calculate current difficulty based on performance
+        const successfulAttacks = this.recentAttacks.filter(a => a.successful).length;
+        const totalAttacks = this.recentAttacks.length;
+        const successRate = totalAttacks > 0 ? (successfulAttacks / totalAttacks) * 100 : 50;
+        
+        // Map success rate to difficulty level
+        let level = 'Medium';
+        if (successRate < 20) level = 'Easy';
+        else if (successRate > 80) level = 'Hard';
+        
+        return {
+            level: level,
+            value: Math.round(successRate)
+        };
+    }
+
+    getCurrentTactics() {
+        const tactics = {
+            'reconnaissance': 'Information Gathering',
+            'initial-access': 'Initial Compromise',
+            'persistence': 'Maintaining Access',
+            'privilege-escalation': 'Privilege Escalation',
+            'defense-evasion': 'Defense Evasion',
+            'credential-access': 'Credential Harvesting',
+            'discovery': 'Network Discovery',
+            'lateral-movement': 'Lateral Movement',
+            'collection': 'Data Collection',
+            'exfiltration': 'Data Exfiltration',
+            'impact': 'System Impact'
+        };
+        
+        return tactics[this.currentPhase] || 'Mixed Tactics';
     }
     
     
