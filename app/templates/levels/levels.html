@@ -278,6 +278,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Store autostart flag and navigate to level start
         sessionStorage.setItem('cyberquest_auto_audio', 'true');
         
+        // Start timer for completion tracking
+        CyberQuestAPI.startLevelTimer(levelId);
+        
         // Navigate to level start URL
         window.location.href = `/levels/${levelId}/start?autostart=true`;
     }
@@ -328,24 +331,56 @@ document.addEventListener('DOMContentLoaded', function() {
         
         async completeLevel(levelId, completionData) {
             try {
+                // Generate client event ID for idempotency
+                const clientEventId = this.generateEventId();
+                
+                // Prepare completion payload with new server-side tracking fields
+                const payload = {
+                    score: completionData.score || 100,
+                    time_spent: completionData.time_spent || this.calculateTimeSpent(levelId),
+                    difficulty: completionData.difficulty,
+                    metadata: {
+                        mistakes_made: completionData.mistakes_made || 0,
+                        hints_used: completionData.hints_used || 0,
+                        completion_method: completionData.completion_method || 'manual',
+                        user_agent: navigator.userAgent,
+                        screen_resolution: `${screen.width}x${screen.height}`,
+                        timestamp: new Date().toISOString(),
+                        ...completionData.metadata
+                    },
+                    client_event_id: clientEventId
+                };
+                
                 const response = await fetch(`/levels/api/complete/${levelId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(completionData)
+                    body: JSON.stringify(payload)
                 });
                 const result = await response.json();
                 
                 if (result.success) {
-                    // Update local stats
+                    // Update local stats with new fields
                     userStats.completed_levels = result.completed_levels;
                     userStats.total_xp = result.total_xp;
                     userStats.completion_percentage = result.completion_percentage;
+                    
+                    // Store user level information if available
+                    if (result.user_level !== undefined) {
+                        userStats.user_level = result.user_level;
+                        userStats.xp_for_next_level = result.xp_for_next_level;
+                    }
+                    
                     updateProgressDisplay();
                     
-                    // Show completion notification
+                    // Show completion notification with enhanced info
                     this.showCompletionNotification(levelId, result);
+                    
+                    // Handle duplicate submissions gracefully
+                    if (result.duplicate) {
+                        console.log(`Level ${levelId} was already completed (duplicate submission prevented)`);
+                    }
                 }
                 
                 return result;
@@ -355,6 +390,62 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         
+        // Helper functions for the enhanced completion tracking
+        generateEventId() {
+            // Generate a UUID v4 for client event tracking
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        },
+        
+        calculateTimeSpent(levelId) {
+            // Get time spent from sessionStorage or estimate
+            const startTime = sessionStorage.getItem(`level_${levelId}_start_time`);
+            if (startTime) {
+                const timeSpent = Math.floor((Date.now() - parseInt(startTime)) / 1000);
+                sessionStorage.removeItem(`level_${levelId}_start_time`);
+                return timeSpent;
+            }
+            return null; // Let server handle if no time tracking
+        },
+        
+        startLevelTimer(levelId) {
+            // Store start time for level completion tracking
+            sessionStorage.setItem(`level_${levelId}_start_time`, Date.now().toString());
+        },
+        
+        async getXPHistory(limit = 20, offset = 0) {
+            try {
+                const response = await fetch(`/levels/api/xp/history?limit=${limit}&offset=${offset}`);
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching XP history:', error);
+                return { success: false, error: error.message };
+            }
+        },
+        
+        async getCompletions(limit = 20, offset = 0) {
+            try {
+                const response = await fetch(`/levels/api/completions?limit=${limit}&offset=${offset}`);
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching completions:', error);
+                return { success: false, error: error.message };
+            }
+        },
+        
+        async getLevelStatistics(levelId) {
+            try {
+                const response = await fetch(`/levels/api/level/${levelId}/statistics`);
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching level statistics:', error);
+                return { success: false, error: error.message };
+            }
+        },
+
         async getUserProgress() {
             try {
                 const response = await fetch('/levels/api/progress');
@@ -387,23 +478,81 @@ document.addEventListener('DOMContentLoaded', function() {
         
         showCompletionNotification(levelId, result) {
             const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-green-600 text-white p-4 rounded-lg shadow-lg z-50 animate-fade-in-up';
-            notification.innerHTML = `
-                <div class="flex items-center">
-                    <i class="bi bi-check-circle text-2xl mr-3"></i>
-                    <div>
+            notification.className = 'fixed top-4 right-4 bg-green-600 text-white p-4 rounded-lg shadow-lg z-50 animate-fade-in-up max-w-sm';
+            
+            // Enhanced notification with XP breakdown and level info
+            let notificationContent = `
+                <div class="flex items-start">
+                    <i class="bi bi-check-circle text-2xl mr-3 flex-shrink-0"></i>
+                    <div class="flex-1">
                         <div class="font-bold">Level ${levelId} Completed!</div>
-                        <div class="text-sm">+${result.xp_earned} XP • Score: ${result.score}%</div>
+                        <div class="text-sm space-y-1">
+                            <div>+${result.xp_earned} XP • Score: ${result.score}%</div>
+            `;
+            
+            // Add duplicate warning if applicable
+            if (result.duplicate) {
+                notificationContent += `<div class="text-yellow-200"><i class="bi bi-info-circle mr-1"></i>Already completed</div>`;
+            }
+            
+            // Add user level info if available
+            if (result.user_level !== undefined) {
+                notificationContent += `<div>Level ${result.user_level} • ${result.xp_for_next_level} XP to next</div>`;
+            }
+            
+            // Add calculation details if available
+            if (result.calculation_details && result.calculation_details.breakdown) {
+                const breakdown = result.calculation_details.breakdown;
+                notificationContent += `<div class="text-xs mt-1 opacity-80">Base: ${breakdown.base_xp} × ${breakdown.score_multiplier} × ${breakdown.time_multiplier}</div>`;
+            }
+            
+            notificationContent += `
+                        </div>
                     </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-white hover:text-gray-200">
+                        <i class="bi bi-x"></i>
+                    </button>
                 </div>
             `;
+            
+            notification.innerHTML = notificationContent;
             document.body.appendChild(notification);
             
+            // Auto-remove after 6 seconds (longer for more info)
             setTimeout(() => {
-                notification.remove();
-            }, 5000);
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 6000);
         }
     };
+    
+    // Function to update the progress display with current userStats
+    function updateProgressDisplay() {
+        // Update completed count
+        const completedElement = document.getElementById('completed-count');
+        if (completedElement && userStats.completed_levels !== undefined && userStats.total_levels !== undefined) {
+            completedElement.textContent = `${userStats.completed_levels}/${userStats.total_levels}`;
+        }
+        
+        // Update total XP
+        const totalXpElement = document.getElementById('total-xp');
+        if (totalXpElement && userStats.total_xp !== undefined) {
+            totalXpElement.textContent = userStats.total_xp;
+        }
+        
+        // Update progress bar
+        const progressBarElement = document.getElementById('progress-bar');
+        if (progressBarElement && userStats.completion_percentage !== undefined) {
+            progressBarElement.style.width = `${userStats.completion_percentage}%`;
+        }
+        
+        // Update progress percentage text
+        const progressPercentageElement = document.getElementById('progress-percentage');
+        if (progressPercentageElement && userStats.completion_percentage !== undefined) {
+            progressPercentageElement.textContent = Math.round(userStats.completion_percentage);
+        }
+    }
     
     // Initialize display
     updateProgressDisplay();
@@ -413,19 +562,44 @@ document.addEventListener('DOMContentLoaded', function() {
     window.startLevel = startLevel;
     
     // Debug functions for development
-    window.debugCompleteLevel = async function(levelId, score = 100) {
+    window.debugCompleteLevel = async function(levelId, score = 100, timeSpent = null) {
         const result = await CyberQuestAPI.completeLevel(levelId, { 
             score: score, 
-            time_spent: 300,
+            time_spent: timeSpent || 300,
             mistakes_made: 0,
-            hints_used: 0
+            hints_used: 0,
+            completion_method: 'debug'
         });
         console.log(`Level ${levelId} completion result:`, result);
+        return result;
+    };
+    
+    window.debugGetProgress = async function() {
+        const result = await CyberQuestAPI.getUserProgress();
+        console.log('User progress:', result);
+        return result;
+    };
+    
+    window.debugGetXPHistory = async function(limit = 10) {
+        const result = await CyberQuestAPI.getXPHistory(limit);
+        console.log('XP History:', result);
+        return result;
+    };
+    
+    window.debugGetLevelStats = async function(levelId) {
+        const result = await CyberQuestAPI.getLevelStatistics(levelId);
+        console.log(`Level ${levelId} statistics:`, result);
+        return result;
     };
     
     window.debugResetProgress = function() {
         // Note: This would need a server endpoint to actually reset progress
         console.log('To reset progress, implement a server endpoint for development use');
+        console.log('Available debug functions:');
+        console.log('- debugCompleteLevel(levelId, score, timeSpent)');
+        console.log('- debugGetProgress()');
+        console.log('- debugGetXPHistory(limit)');
+        console.log('- debugGetLevelStats(levelId)');
     };
 });
 </script>

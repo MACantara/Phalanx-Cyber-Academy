@@ -8,74 +8,57 @@ logger = logging.getLogger(__name__)
 
 levels_bp = Blueprint('levels', __name__, url_prefix='/levels')
 
-# Define all levels with their metadata
-CYBERSECURITY_LEVELS = [
-    {
-        'id': 1,
-        'name': 'The Misinformation Maze',
-        'description': 'Debunk fake news and stop misinformation from influencing an election.',
-        'difficulty': 'Beginner',
-        'xp_reward': 100,
-        'icon': 'bi-newspaper',
-        'category': 'Information Literacy',
-        'estimated_time': '15 minutes',
-        'skills': ['Critical Thinking', 'Source Verification', 'Fact Checking'],
-        'unlocked': True,
-        'coming_soon': False
-    },
-    {
-        'id': 2,
-        'name': 'Shadow in the Inbox',
-        'description': 'Spot phishing attempts and practice safe email protocols.',
-        'difficulty': 'Beginner',
-        'xp_reward': 150,
-        'icon': 'bi-envelope-exclamation',
-        'category': 'Email Security',
-        'estimated_time': '20 minutes',
-        'skills': ['Phishing Detection', 'Email Analysis', 'Social Engineering'],
-        'unlocked': True,
-        'coming_soon': False
-    },
-    {
-        'id': 3,
-        'name': 'Malware Mayhem',
-        'description': 'Isolate infections and perform digital cleanup during a gaming tournament.',
-        'difficulty': 'Intermediate',
-        'xp_reward': 200,
-        'icon': 'bi-bug',
-        'category': 'Threat Detection',
-        'estimated_time': '25 minutes',
-        'skills': ['Malware Recognition', 'System Security', 'Threat Analysis'],
-        'unlocked': True,
-        'coming_soon': False
-    },
-    {
-        'id': 4,
-        'name': 'The White Hat Test',
-        'description': 'Practice ethical hacking and responsible vulnerability disclosure.',
-        'difficulty': 'Expert',
-        'xp_reward': 350,
-        'icon': 'bi-terminal',
-        'category': 'Ethical Hacking',
-        'estimated_time': '30 minutes',
-        'skills': ['Penetration Testing', 'Vulnerability Assessment', 'Ethical Hacking'],
-        'unlocked': True,
-        'coming_soon': False
-    },
-    {
-        'id': 5,
-        'name': 'The Hunt for The Null',
-        'description': 'Final mission: Use advanced digital forensics to expose The Null\'s identity.',
-        'difficulty': 'Master',
-        'xp_reward': 500,
-        'icon': 'bi-trophy',
-        'category': 'Digital Forensics',
-        'estimated_time': '40 minutes',
-        'skills': ['Digital Forensics', 'Evidence Analysis', 'Advanced Investigation'],
-        'unlocked': True,
-        'coming_soon': False
-    }
-]
+# Legacy CYBERSECURITY_LEVELS for compatibility - will be populated from database
+CYBERSECURITY_LEVELS = []
+
+def get_levels_from_db():
+    """Get all levels from database and cache them."""
+    global CYBERSECURITY_LEVELS
+    try:
+        from app.models.level import Level
+        
+        levels = Level.get_all_levels()
+        CYBERSECURITY_LEVELS = []
+        
+        for level in levels:
+            # Convert Level model to legacy format for compatibility
+            level_dict = {
+                'id': level.level_id,
+                'name': level.name,
+                'description': level.description,
+                'difficulty': level.difficulty.title() if level.difficulty else 'Medium',
+                'xp_reward': level.xp_reward or 100,
+                'icon': level.icon or 'bi-shield-check',
+                'category': level.category or 'Cybersecurity',
+                'estimated_time': level.estimated_time or '15 minutes',
+                'skills': level.skills or [],
+                'unlocked': level.unlocked,
+                'coming_soon': level.coming_soon
+            }
+            CYBERSECURITY_LEVELS.append(level_dict)
+        
+        # Sort by level_id
+        CYBERSECURITY_LEVELS.sort(key=lambda x: x['id'])
+        
+        return CYBERSECURITY_LEVELS
+    except Exception as e:
+        logger.error(f"Failed to load levels from database: {str(e)}")
+        # Fallback to basic levels if database fails
+        return [
+            {
+                'id': 1,
+                'name': 'The Misinformation Maze',
+                'description': 'Debunk fake news and stop misinformation from influencing an election.',
+                'difficulty': 'Beginner',
+                'xp_reward': 100,
+                'icon': 'bi-newspaper',
+                'category': 'Information Literacy',
+                'estimated_time': '15 minutes',
+                'skills': ['Critical Thinking', 'Source Verification', 'Fact Checking'],
+                'unlocked': True,
+                'coming_soon': False
+            }
+        ]
 
 def get_level_js_files(level_id):
     """Get the JavaScript files required for a specific level."""
@@ -394,13 +377,95 @@ def get_level_js_files(level_id):
 @levels_bp.route('/')
 @login_required
 def levels_overview():
-    """Display all cybersecurity levels."""
+    """Display all cybersecurity levels with real user progress."""
     try:
-        # Simple level display without user progress tracking
+        from app.models.level import Level
+        from app.models.level_completion import LevelCompletion
+        from app.utils.xp import get_user_level_info
+        
+        # Load levels from database, fallback to cached if needed
+        levels = get_levels_from_db()
+        
+        # Get user's progress summary
+        progress_summary = LevelCompletion.get_user_progress_summary(current_user.id)
+        
+        # Get user's total XP
+        user_total_xp = getattr(current_user, 'total_xp', None) or 0
+        level_info = get_user_level_info(user_total_xp)
+        
+        # Get user's completions for detailed progress
+        user_completions = LevelCompletion.get_user_completions(current_user.id, limit=100)
+        
+        # Create lookup for latest completion per level (user_completions is ordered by created_at DESC)
+        completion_lookup = {}
+        for completion in user_completions:
+            if completion.level_id not in completion_lookup:
+                completion_lookup[completion.level_id] = completion
+        
+        # Enhance levels with user progress data
         enhanced_levels = []
-        for level in CYBERSECURITY_LEVELS:
+        for level in levels:
             level_data = level.copy()
-            # Add basic progress structure for template compatibility
+            
+            # Check if user has completed this level
+            completion = completion_lookup.get(level['id'])
+            
+            if completion:
+                level_data['user_progress'] = {
+                    'status': 'completed',
+                    'completed': True,
+                    'score': completion.score or 0,
+                    'completion_percentage': completion.score or 0,
+                    'xp_earned': level['xp_reward'],  # Use the reward from level data
+                    'time_spent': completion.time_spent or 0,
+                    'attempts': 1,  # Could be enhanced to track multiple attempts
+                    'completed_at': completion.created_at,
+                    'started_at': completion.created_at  # Could be enhanced with separate start tracking
+                }
+            else:
+                level_data['user_progress'] = {
+                    'status': 'not_started',
+                    'completed': False,
+                    'score': 0,
+                    'completion_percentage': 0,
+                    'xp_earned': 0,
+                    'time_spent': 0,
+                    'attempts': 0,
+                    'completed_at': None,
+                    'started_at': None
+                }
+            enhanced_levels.append(level_data)
+        
+        # Real user stats from server-side tracking
+        user_stats = {
+            'total_levels': progress_summary['total_levels'],
+            'completed_levels': progress_summary['completed_levels'],
+            'total_xp': user_total_xp,
+            'completion_percentage': progress_summary['completion_percentage'],
+            'user_level': level_info['level'],
+            'xp_for_next_level': level_info['xp_for_next'],
+            'best_scores': progress_summary['best_scores']
+        }
+        
+        return render_template('levels/levels.html', 
+                             levels=enhanced_levels, 
+                             user_stats=user_stats)
+                             
+    except Exception as e:
+        logger.error(f"Error loading levels overview: {e}")
+        # Fallback to basic display if database fails
+        levels = get_levels_from_db()
+        user_stats = {
+            'total_levels': len(levels),
+            'completed_levels': 0,
+            'total_xp': 0,
+            'completion_percentage': 0
+        }
+        
+        # Add basic progress structure for fallback
+        enhanced_levels = []
+        for level in levels:
+            level_data = level.copy()
             level_data['user_progress'] = {
                 'status': 'not_started',
                 'completed': False,
@@ -414,53 +479,43 @@ def levels_overview():
             }
             enhanced_levels.append(level_data)
         
-        # Basic user stats for template compatibility
-        user_stats = {
-            'total_levels': len(CYBERSECURITY_LEVELS),
-            'completed_levels': 0,
-            'total_xp': 0,
-            'completion_percentage': 0
-        }
-        
+        flash('Some features may be limited due to a temporary issue.', 'warning')
         return render_template('levels/levels.html', 
                              levels=enhanced_levels, 
                              user_stats=user_stats)
-                             
-    except Exception as e:
-        logger.error(f"Error loading levels overview: {e}")
-        flash('Error loading level data. Please try again.', 'error')
-        return render_template('levels/levels.html', 
-                             levels=CYBERSECURITY_LEVELS, 
-                             user_stats={
-                                 'total_levels': 5,
-                                 'completed_levels': 0,
-                                 'total_xp': 0,
-                                 'completion_percentage': 0
-                             })
 
 @levels_bp.route('/<int:level_id>/start')
 @login_required
 def start_level(level_id):
-    """Start a level."""
-    level = next((l for l in CYBERSECURITY_LEVELS if l['id'] == level_id), None)
-    
-    if not level:
-        flash('Level not found.', 'error')
-        return redirect(url_for('levels.levels_overview'))
-    
+    """Start a level using database Level model."""
     try:
-        # Prepare basic level data for simulation
+        from app.models.level import Level
+        from app.models.level_completion import LevelCompletion
+        
+        # Get level from database
+        level = Level.get_by_level_id(level_id)
+        
+        if not level:
+            flash('Level not found.', 'error')
+            return redirect(url_for('levels.levels_overview'))
+        
+        # Check if user has previous completions for this level
+        user_completions = LevelCompletion.get_user_completions(current_user.id, limit=10)
+        previous_completion = next((c for c in user_completions if c.level_id == level_id), None)
+        
+        # Prepare level data for simulation
         level_data = {
-            'id': level['id'],
-            'name': level['name'],
-            'description': level['description'],
-            'category': level['category'],
-            'difficulty': level['difficulty'],
-            'skills': level['skills'],
-            'is_retry': False,
-            'previous_attempts': 0,
-            'previous_score': 0,
-            'previous_status': 'not_started'
+            'id': level.level_id,
+            'name': level.name,
+            'description': level.description,
+            'category': level.category,
+            'difficulty': level.difficulty,
+            'xp_reward': level.xp_reward or 100,
+            'skills': level.skills or [],
+            'is_retry': previous_completion is not None,
+            'previous_attempts': 1 if previous_completion else 0,
+            'previous_score': previous_completion.score if previous_completion else 0,
+            'previous_status': 'completed' if previous_completion else 'not_started'
         }
         
         # Define level-specific JavaScript files to load
@@ -485,48 +540,246 @@ def start_level(level_id):
 @levels_bp.route('/api/complete/<int:level_id>', methods=['POST'])
 @login_required
 def complete_level(level_id):
-    """API endpoint to mark a level as completed (simplified)."""
-    level = next((l for l in CYBERSECURITY_LEVELS if l['id'] == level_id), None)
-    if not level:
-        return jsonify({'success': False, 'error': 'Level not found'}), 404
-    
-    data = request.get_json() or {}
-    score = data.get('score', 100)
-    
-    return jsonify({
-        'success': True,
-        'level_completed': level_id,
-        'xp_earned': level['xp_reward'],
-        'score': score,
-        'total_xp': 0,
-        'completed_levels': 0,
-        'completion_percentage': 0,
-        'message': 'Level completed successfully'
-    })
+    """API endpoint to mark a level as completed with server-side tracking."""
+    try:
+        from app.models.level import Level
+        from app.models.level_completion import LevelCompletion
+        from app.utils.xp import award_user_xp, get_user_level_info
+        
+        # Validate level exists
+        level = Level.get_by_level_id(level_id)
+        if not level:
+            return jsonify({'success': False, 'error': 'Level not found'}), 404
+        
+        # Get request data
+        data = request.get_json() or {}
+        score = data.get('score', 100)
+        time_spent = data.get('time_spent')
+        difficulty = data.get('difficulty') or level.difficulty
+        
+        # Validate score
+        if score is not None and (score < 0 or score > 100):
+            return jsonify({'success': False, 'error': 'Score must be between 0 and 100'}), 400
+        
+        # Create completion record with idempotency check
+        completion, is_new = LevelCompletion.create_completion(
+            user_id=current_user.id,
+            level_id=level_id,
+            score=score,
+            time_spent=time_spent,
+            difficulty=difficulty,
+            source='web'
+        )
+        
+        if not is_new:
+            # Duplicate submission detected
+            return jsonify({
+                'success': True,
+                'duplicate': True,
+                'level_completed': level_id,
+                'xp_earned': 0,
+                'score': completion.score,
+                'message': 'Level already completed'
+            }), 200
+        
+        # XP is automatically calculated and awarded in create_completion
+        xp_awarded = completion.get_xp_awarded()
+        xp_calculation_details = completion.get_xp_calculation_details()
+        
+        # Get updated user progress
+        progress_summary = LevelCompletion.get_user_progress_summary(current_user.id)
+        
+        # Get user's current total XP from database
+        from app.models.user import User
+        updated_user = User.find_by_id(current_user.id)
+        current_total_xp = getattr(updated_user, 'total_xp', 0) if updated_user else 0
+        
+        # Get user level information
+        level_info = get_user_level_info(current_total_xp)
+        
+        return jsonify({
+            'success': True,
+            'duplicate': False,
+            'level_completed': level_id,
+            'xp_earned': xp_awarded,
+            'score': score,
+            'total_xp': current_total_xp,
+            'completed_levels': progress_summary['completed_levels'],
+            'completion_percentage': progress_summary['completion_percentage'],
+            'user_level': level_info['level'],
+            'xp_for_next_level': level_info['xp_for_next'],
+            'calculation_details': xp_calculation_details,
+            'message': 'Level completed successfully'
+        }), 200
+        
+    except ValueError as e:
+        logger.error(f"Validation error in complete_level: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 400
+    except DatabaseError as e:
+        logger.error(f"Database error in complete_level: {str(e)}")
+        return jsonify({'success': False, 'error': 'Database error occurred'}), 500
+    except Exception as e:
+        logger.error(f"Unexpected error in complete_level: {str(e)}")
+        return jsonify({'success': False, 'error': 'Internal server error'}), 500
 
 @levels_bp.route('/api/progress', methods=['GET'])
 @login_required
 def get_user_progress():
-    """API endpoint to get user progress data (simplified)."""
-    return jsonify({
-        'success': True,
-        'stats': {
-            'total_levels': len(CYBERSECURITY_LEVELS),
-            'completed_levels': 0,
-            'total_xp': 0,
-            'completion_percentage': 0
-        }
-    })
+    """API endpoint to get user progress data with server-side tracking."""
+    try:
+        from app.models.level_completion import LevelCompletion
+        from app.models.level import Level
+        from app.utils.xp import get_user_level_info
+        
+        # Get user's progress summary
+        progress_summary = LevelCompletion.get_user_progress_summary(current_user.id)
+        
+        # Get user's total XP (from User model or calculate from history)
+        user_total_xp = getattr(current_user, 'total_xp', None) or 0
+        
+        # Get user level information
+        level_info = get_user_level_info(user_total_xp)
+        
+        # Get recent completions
+        recent_completions = LevelCompletion.get_user_completions(current_user.id, limit=10)
+        
+        return jsonify({
+            'success': True,
+            'stats': {
+                'total_levels': progress_summary['total_levels'],
+                'completed_levels': progress_summary['completed_levels'],
+                'total_xp': user_total_xp,
+                'completion_percentage': progress_summary['completion_percentage'],
+                'user_level': level_info['level'],
+                'xp_for_next_level': level_info['xp_for_next'],
+                'xp_in_current_level': level_info['xp_in_current'],
+                'progress_percent': level_info['progress_percent']
+            },
+            'best_scores': progress_summary['best_scores'],
+            'recent_completions': [completion.to_dict() for completion in recent_completions]
+        })
+        
+    except DatabaseError as e:
+        logger.error(f"Database error in get_user_progress: {str(e)}")
+        return jsonify({'success': False, 'error': 'Database error occurred'}), 500
+    except Exception as e:
+        logger.error(f"Unexpected error in get_user_progress: {str(e)}")
+        return jsonify({'success': False, 'error': 'Internal server error'}), 500
 
 @levels_bp.route('/api/level/<int:level_id>/progress', methods=['POST'])
 @login_required
 def update_level_progress(level_id):
     """API endpoint to update level progress during gameplay (simplified)."""
-    level = next((l for l in CYBERSECURITY_LEVELS if l['id'] == level_id), None)
-    if not level:
-        return jsonify({'success': False, 'error': 'Level not found'}), 404
-    
-    return jsonify({'success': True, 'message': 'Progress updated'})
+    try:
+        from app.models.level import Level
+        
+        # Validate level exists in database
+        level = Level.get_by_level_id(level_id)
+        if not level:
+            return jsonify({'success': False, 'error': 'Level not found'}), 404
+        
+        return jsonify({'success': True, 'message': 'Progress updated'})
+        
+    except DatabaseError as e:
+        logger.error(f"Database error in update_level_progress: {str(e)}")
+        return jsonify({'success': False, 'error': 'Database error occurred'}), 500
+    except Exception as e:
+        logger.error(f"Unexpected error in update_level_progress: {str(e)}")
+        return jsonify({'success': False, 'error': 'Internal server error'}), 500
+
+@levels_bp.route('/api/level/<int:level_id>/statistics', methods=['GET'])
+@login_required  
+def get_level_statistics(level_id):
+    """API endpoint to get statistics for a specific level."""
+    try:
+        from app.models.level_completion import LevelCompletion
+        from app.models.level import Level
+        
+        # Validate level exists
+        level = Level.get_by_level_id(level_id)
+        if not level:
+            return jsonify({'success': False, 'error': 'Level not found'}), 404
+        
+        # Get level statistics
+        stats = LevelCompletion.get_level_statistics(level_id)
+        
+        return jsonify({
+            'success': True,
+            'level_id': level_id,
+            'level_name': level.name,
+            'statistics': stats
+        })
+        
+    except DatabaseError as e:
+        logger.error(f"Database error in get_level_statistics: {str(e)}")
+        return jsonify({'success': False, 'error': 'Database error occurred'}), 500
+    except Exception as e:
+        logger.error(f"Unexpected error in get_level_statistics: {str(e)}")
+        return jsonify({'success': False, 'error': 'Internal server error'}), 500
+
+@levels_bp.route('/api/xp/history', methods=['GET'])
+@login_required
+def get_user_xp_history():
+    """API endpoint to get user's XP history."""
+    try:
+        from app.models.xp_history import XPHistory
+        
+        # Get pagination parameters
+        limit = min(int(request.args.get('limit', 20)), 100)
+        offset = int(request.args.get('offset', 0))
+        
+        # Get user's XP history
+        history_entries = XPHistory.get_user_history(current_user.id, limit=limit, offset=offset)
+        xp_summary = XPHistory.get_user_xp_summary(current_user.id)
+        
+        return jsonify({
+            'success': True,
+            'history': [entry.to_dict() for entry in history_entries],
+            'summary': xp_summary,
+            'pagination': {
+                'limit': limit,
+                'offset': offset,
+                'has_more': len(history_entries) == limit
+            }
+        })
+        
+    except DatabaseError as e:
+        logger.error(f"Database error in get_user_xp_history: {str(e)}")
+        return jsonify({'success': False, 'error': 'Database error occurred'}), 500
+    except Exception as e:
+        logger.error(f"Unexpected error in get_user_xp_history: {str(e)}")
+        return jsonify({'success': False, 'error': 'Internal server error'}), 500
+
+@levels_bp.route('/api/completions', methods=['GET'])
+@login_required
+def get_user_completions():
+    """API endpoint to get user's level completions."""
+    try:
+        from app.models.level_completion import LevelCompletion
+        
+        # Get pagination parameters
+        limit = min(int(request.args.get('limit', 20)), 100)
+        offset = int(request.args.get('offset', 0))
+        
+        # Get user's completions
+        completions = LevelCompletion.get_user_completions(current_user.id, limit=limit, offset=offset)
+        
+        return jsonify({
+            'success': True,
+            'completions': [completion.to_dict() for completion in completions],
+            'pagination': {
+                'limit': limit,
+                'offset': offset,
+                'has_more': len(completions) == limit
+            }
+        })
+        
+    except DatabaseError as e:
+        logger.error(f"Database error in get_user_completions: {str(e)}")
+        return jsonify({'success': False, 'error': 'Database error occurred'}), 500
+    except Exception as e:
+        logger.error(f"Unexpected error in get_user_completions: {str(e)}")
+        return jsonify({'success': False, 'error': 'Internal server error'}), 500
 
 @levels_bp.route('/api/analytics', methods=['POST'])
 @login_required
@@ -585,3 +838,11 @@ def get_level2_session_data():
 def start_new_level2_session():
     """API endpoint to start a new Level 2 session (simplified)."""
     return jsonify({'success': True, 'message': 'New session started'})
+
+# Initialize levels from database when module is imported
+# This ensures CYBERSECURITY_LEVELS is populated for compatibility
+try:
+    get_levels_from_db()
+except Exception as e:
+    logger.error(f"Failed to initialize levels from database: {str(e)}")
+    # Continue with empty CYBERSECURITY_LEVELS - will use fallback when needed

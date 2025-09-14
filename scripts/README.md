@@ -4,6 +4,40 @@ This directory contains scripts for preprocessing the news articles dataset used
 
 ## Scripts
 
+### clean_pycache.py
+
+Recursively finds and removes all `__pycache__` directories from the project to clean up compiled Python bytecode files.
+
+**Usage:**
+```bash
+# Run from project root
+python scripts/clean_pycache.py
+
+# Or run directly from scripts directory
+python clean_pycache.py
+```
+
+**What it does:**
+- Recursively scans the entire project for `__pycache__` directories
+- Shows a list of all directories that will be deleted
+- Asks for confirmation before proceeding
+- Safely removes all `__pycache__` directories and their contents
+- Provides detailed progress and summary statistics
+
+**Features:**
+- **Safe deletion** with confirmation prompt
+- **Cross-platform compatibility** (Windows, macOS, Linux)
+- **Error handling** for permission issues or locked files
+- **Progress feedback** showing what was deleted
+- **Verification** to ensure complete cleanup
+- **Statistics** on directories and files removed
+
+**Output:**
+- Lists all `__pycache__` directories found
+- Shows confirmation prompt
+- Displays deletion progress
+- Provides cleanup summary with counts
+
 ### preprocess_english_articles.py
 
 Filters the news articles dataset to only include English language articles with valid data and accessible images.
