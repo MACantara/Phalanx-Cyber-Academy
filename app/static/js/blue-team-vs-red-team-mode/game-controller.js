@@ -16,7 +16,12 @@ class GameController {
                 firewall: { active: true, effectiveness: 80 },
                 endpoint: { active: true, effectiveness: 75 },
                 access: { active: true, effectiveness: 85 }
-            }
+            },
+            // XP tracking
+            sessionXP: 0,
+            attacksMitigated: 0,
+            attacksSuccessful: 0,
+            currentXP: 0
         };
         
         this.aiEngine = null;
@@ -41,6 +46,9 @@ class GameController {
         this.uiManager.addTerminalOutput('$ Defense Command Terminal - Ready');
         this.uiManager.addTerminalOutput('$ Monitoring Project Sentinel Academy...');
         this.uiManager.addTerminalOutput('$ Type "help" for available commands');
+        
+        // Initialize XP tracking
+        await this.initializeXPTracking();
         
         // Auto-start the simulation after a brief delay
         setTimeout(() => {
@@ -165,6 +173,9 @@ class GameController {
         this.aiEngine.stopAttackSequence();
         this.uiManager.updateGameControls();
         
+        // Handle XP completion bonus if game was actually running
+        this.handleGameCompletion();
+        
         console.log('🎮 Game stopped');
     }
     
@@ -187,7 +198,12 @@ class GameController {
                 firewall: { active: true, effectiveness: 80 },
                 endpoint: { active: true, effectiveness: 75 },
                 access: { active: true, effectiveness: 85 }
-            }
+            },
+            // Reset XP tracking for new session
+            sessionXP: 0,
+            attacksMitigated: 0,
+            attacksSuccessful: 0,
+            currentXP: this.gameState.currentXP // Keep total XP, reset session
         };
         
         // Reset AI
@@ -224,6 +240,8 @@ class GameController {
             this.handleDetectedAttack(attackData);
         } else {
             this.handleUndetectedAttack(attackData);
+            // Send to server for XP penalties if attack succeeds
+            this.handleAIAction(attackData);
         }
         
         // AI learns from the outcome
@@ -354,6 +372,9 @@ class GameController {
             'patch-vulnerability': 'Vulnerability patched',
             'reset-credentials': 'Credentials reset'
         };
+        
+        // Send player action to server for XP tracking
+        this.sendPlayerAction(response, alert.target, effectiveness);
         
         // Update security controls effectiveness
         Object.keys(this.gameState.securityControls).forEach(control => {
@@ -660,6 +681,134 @@ class GameController {
         };
         
         console.log(`Executed response: ${action}`);
+    }
+
+    // XP Tracking Methods
+    async initializeXPTracking() {
+        try {
+            // Fetch current user XP from server
+            const response = await fetch('/api/xp-status', {
+                method: 'GET',
+                headers: {
+                    'X-CSRFToken': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                this.gameState.currentXP = data.currentXP || 0;
+                this.uiManager.setCurrentUserXP(data.currentXP || 0);
+                console.log('🎯 XP tracking initialized');
+            }
+        } catch (error) {
+            console.error('Failed to initialize XP tracking:', error);
+        }
+    }
+
+    async sendPlayerAction(action, target = null, effectiveness = 1.0) {
+        try {
+            const response = await fetch('/api/player-action', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify({
+                    action: action,
+                    target: target,
+                    effectiveness: effectiveness
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                
+                // Update game state with XP data
+                if (data.xpAwarded && data.xpAwarded > 0) {
+                    this.gameState.sessionXP += data.xpAwarded;
+                    this.gameState.attacksMitigated += 1;
+                    this.uiManager.showXPReward(data.xpAwarded, data.reason || action);
+                }
+                
+                return data;
+            }
+        } catch (error) {
+            console.error('Failed to send player action:', error);
+        }
+        return null;
+    }
+
+    async handleAIAction(attackData) {
+        try {
+            const response = await fetch('/api/ai-action', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify(attackData)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                
+                // Handle XP penalties
+                if (data.xpPenalty && data.xpPenalty > 0) {
+                    this.gameState.sessionXP = Math.max(0, this.gameState.sessionXP - data.xpPenalty);
+                    this.gameState.attacksSuccessful += 1;
+                    this.uiManager.showXPPenalty(data.xpPenalty, data.reason || 'Attack succeeded');
+                }
+                
+                // Update asset integrity
+                if (data.assetUpdates) {
+                    Object.entries(data.assetUpdates).forEach(([assetName, updates]) => {
+                        if (this.gameState.assets[assetName]) {
+                            this.gameState.assets[assetName].integrity = updates.integrity;
+                            this.gameState.assets[assetName].status = updates.status;
+                        }
+                    });
+                }
+                
+                return data;
+            }
+        } catch (error) {
+            console.error('Failed to handle AI action:', error);
+        }
+        return null;
+    }
+
+    async handleGameCompletion() {
+        try {
+            const response = await fetch('/api/stop-game', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify({
+                    timeRemaining: this.gameState.timeRemaining,
+                    assets: this.gameState.assets,
+                    sessionXP: this.gameState.sessionXP,
+                    attacksMitigated: this.gameState.attacksMitigated,
+                    attacksSuccessful: this.gameState.attacksSuccessful
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                
+                // Show completion bonus
+                if (data.completionBonus && data.completionBonus > 0) {
+                    this.uiManager.showCompletionBonus(data.completionBonus, data.bonusBreakdown);
+                    this.gameState.sessionXP += data.completionBonus;
+                }
+                
+                return data;
+            }
+        } catch (error) {
+            console.error('Failed to handle game completion:', error);
+        }
+        return null;
     }
 }
 

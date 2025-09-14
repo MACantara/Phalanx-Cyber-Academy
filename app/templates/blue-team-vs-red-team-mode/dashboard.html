@@ -198,7 +198,7 @@
 
         <!-- Game Status Bar -->
         <div class="bg-gray-800 border border-gray-600 p-4 mb-6">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div class="flex items-center space-x-3">
                     <div class="w-4 h-4 rounded-full bg-green-400 pulse-green" id="network-status"></div>
                     <span class="text-sm font-medium text-white">Network: <span id="network-text" class="text-green-400">Secure</span></span>
@@ -210,6 +210,10 @@
                 <div class="flex items-center space-x-3">
                     <div class="w-4 h-4 rounded-full bg-gray-500" id="alerts-status"></div>
                     <span class="text-sm font-medium text-white">Alerts: <span id="alerts-count" class="text-gray-300">0 Active</span></span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <i class="bi bi-award text-blue-400"></i>
+                    <span class="text-sm font-medium text-white">Session XP: <span id="session-xp" class="text-blue-400">0</span></span>
                 </div>
                 <div class="flex items-center space-x-3">
                     <i class="bi bi-clock text-green-400"></i>
@@ -318,6 +322,49 @@
                     </h3>
                     <div id="alert-center" class="space-y-3 security-content max-h-64 overflow-y-auto">
                         <div class="text-sm text-gray-400 italic">No active alerts</div>
+                    </div>
+                </div>
+
+                <!-- XP Tracking Panel -->
+                <div class="bg-gray-800 border border-gray-600 p-6 window-content">
+                    <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                        <i class="bi bi-trophy me-2 text-yellow-400"></i>XP Progress
+                    </h3>
+                    <div class="space-y-4">
+                        <!-- Session XP -->
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-300">Session XP:</span>
+                            <span id="session-xp-detailed" class="text-blue-400 font-semibold">0</span>
+                        </div>
+                        
+                        <!-- XP Progress Bar -->
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div id="xp-progress" class="bg-blue-400 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        
+                        <!-- Performance Stats -->
+                        <div class="text-xs text-gray-400 space-y-1">
+                            <div class="flex justify-between">
+                                <span>Attacks Mitigated:</span>
+                                <span id="attacks-mitigated" class="text-green-400">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Attacks Successful:</span>
+                                <span id="attacks-successful" class="text-red-400">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Defense Ratio:</span>
+                                <span id="defense-ratio" class="text-blue-400">100%</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Current Total XP -->
+                        <div class="border-t border-gray-600 pt-3 mt-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-300">Total XP:</span>
+                                <span id="current-xp" class="text-yellow-400 font-bold">0</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
