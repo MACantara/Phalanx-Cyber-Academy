@@ -325,7 +325,8 @@ def player_action():
             'success': True,
             'message': 'Player action recorded',
             'action': action,
-            'xp_awarded': xp_awarded,
+            'xpAwarded': xp_awarded,
+            'reason': f"Defensive action: {data['action']}",
             'total_session_xp': game_state.get('sessionXP', 0)
         })
     
@@ -470,6 +471,7 @@ def get_xp_status():
         
         return jsonify({
             'success': True,
+            'currentXP': current_user.total_xp or 0,
             'sessionXP': game_state.get('sessionXP', 0),
             'userTotalXP': current_user.total_xp or 0,
             'attacksMitigated': game_state.get('attacksMitigated', 0),
