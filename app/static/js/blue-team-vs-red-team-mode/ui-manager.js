@@ -5,6 +5,11 @@ class UIManager {
         this.terminalOutput = [];
         this.maxTerminalLines = 20;
         
+        // XP tracking
+        this.sessionXP = 0;
+        this.currentUserXP = 0;
+        this.xpAnimationQueue = [];
+        
         console.log('🖥️ UI Manager initialized');
     }
     
@@ -16,6 +21,7 @@ class UIManager {
         this.updateGameControls();
         this.updateAlerts();
         this.updateIncidents();
+        this.updateXPDisplay();
     }
     
     updateSystemStatus() {
@@ -262,14 +268,25 @@ class UIManager {
         const alertElement = document.createElement('div');
         alertElement.className = `p-3 rounded-lg border-l-4 ${severityClass.bg} ${severityClass.border} mb-2`;
         alertElement.dataset.alertId = alert.id || Date.now();
+        
+        // Format IP address information
+        const ipInfo = alert.sourceIP ? 
+            `<div class="text-xs text-gray-400 mt-1">
+                <i class="bi bi-globe2 mr-1"></i>Source: ${alert.sourceIP}
+                ${alert.ipType ? `<span class="ml-2 px-1 py-0.5 bg-gray-600 rounded text-xs">${alert.ipType}</span>` : ''}
+            </div>` : '';
+        
         alertElement.innerHTML = `
             <div class="flex items-center justify-between">
-                <div>
+                <div class="flex-1">
                     <div class="text-sm font-medium ${severityClass.text}">${alert.technique}</div>
                     <div class="text-xs text-white">${this.formatAssetName(alert.target)} • ${alert.timestamp.toLocaleTimeString()}</div>
+                    ${ipInfo}
+                    ${alert.attackId ? `<div class="text-xs text-gray-500 mt-1">ID: ${alert.attackId}</div>` : ''}
                 </div>
                 <div class="flex items-center space-x-2">
                     <span class="text-xs px-2 py-1 ${severityClass.badge} rounded-full">${alert.severity.toUpperCase()}</span>
+                    ${alert.sourceIP ? `<button class="text-xs px-2 py-1 bg-red-600 hover:bg-red-700 rounded cursor-pointer" onclick="window.gameController?.executeBlockIP('${alert.sourceIP}')">Block IP</button>` : ''}
                     <button class="text-xs text-gray-400 hover:text-white" onclick="this.parentElement.parentElement.parentElement.remove()">
                         <i class="bi bi-x-lg cursor-pointer"></i>
                     </button>
@@ -380,17 +397,6 @@ class UIManager {
         }
     }
     
-    addTerminalOutput(text) {
-        this.terminalOutput.push(text);
-        
-        // Keep only last N lines
-        if (this.terminalOutput.length > this.maxTerminalLines) {
-            this.terminalOutput.shift();
-        }
-        
-        this.updateTerminal();
-    }
-    
     updateTerminal() {
         const terminalOutput = document.getElementById('terminal-output');
         if (!terminalOutput) return;
@@ -398,8 +404,14 @@ class UIManager {
         // Preserve the existing input container
         const existingInput = terminalOutput.querySelector('.flex.items-center');
         
-        // Update output
-        terminalOutput.innerHTML = this.terminalOutput.map(line => `<div>${line}</div>`).join('');
+        // Update output - support both new and old format
+        terminalOutput.innerHTML = this.terminalOutput.map(entry => {
+            if (typeof entry === 'object' && entry.text && entry.class) {
+                return `<div class="${entry.class}">${entry.text}</div>`;
+            } else {
+                return `<div class="text-gray-300">${entry}</div>`;
+            }
+        }).join('');
         
         // Add or restore input line
         if (!terminalOutput.querySelector('.flex.items-center')) {
@@ -432,6 +444,223 @@ class UIManager {
     
     clearTerminal() {
         this.terminalOutput = [];
+        this.updateTerminal();
+    }
+
+    // XP Tracking Methods
+    updateXPDisplay() {
+        const gameState = this.gameController.getGameState();
+        
+        // Update session XP display (both locations)
+        const sessionXPElement = document.getElementById('session-xp');
+        const sessionXPDetailedElement = document.getElementById('session-xp-detailed');
+        if (sessionXPElement) {
+            sessionXPElement.textContent = gameState.sessionXP || 0;
+        }
+        if (sessionXPDetailedElement) {
+            sessionXPDetailedElement.textContent = gameState.sessionXP || 0;
+        }
+        
+        // Update current user XP display
+        const currentXPElement = document.getElementById('current-xp');
+        if (currentXPElement) {
+            currentXPElement.textContent = this.currentUserXP;
+        }
+        
+        // Update performance stats
+        const attacksMitigatedElement = document.getElementById('attacks-mitigated');
+        if (attacksMitigatedElement) {
+            attacksMitigatedElement.textContent = gameState.attacksMitigated || 0;
+        }
+        
+        const attacksSuccessfulElement = document.getElementById('attacks-successful');
+        if (attacksSuccessfulElement) {
+            attacksSuccessfulElement.textContent = gameState.attacksSuccessful || 0;
+        }
+        
+        // Calculate and update defense ratio
+        const totalAttacks = (gameState.attacksMitigated || 0) + (gameState.attacksSuccessful || 0);
+        const defenseRatio = totalAttacks > 0 ? Math.round(((gameState.attacksMitigated || 0) / totalAttacks) * 100) : 100;
+        const defenseRatioElement = document.getElementById('defense-ratio');
+        if (defenseRatioElement) {
+            defenseRatioElement.textContent = `${defenseRatio}%`;
+            // Update color based on performance
+            if (defenseRatio >= 80) {
+                defenseRatioElement.className = 'text-green-400';
+            } else if (defenseRatio >= 60) {
+                defenseRatioElement.className = 'text-yellow-400';
+            } else {
+                defenseRatioElement.className = 'text-red-400';
+            }
+        }
+        
+        // Update XP progress bar if available
+        const xpProgressElement = document.getElementById('xp-progress');
+        if (xpProgressElement && gameState.sessionXP) {
+            const progress = Math.min(100, (gameState.sessionXP / 200) * 100); // Cap at 200 XP for full bar
+            xpProgressElement.style.width = `${progress}%`;
+        }
+    }
+
+    showXPReward(amount, reason = '') {
+        // Show floating XP animation
+        this.showFloatingXP(amount, 'reward');
+        
+        // Add to terminal
+        const message = reason ? 
+            `$ +${amount} XP earned: ${reason}` : 
+            `$ +${amount} XP earned`;
+        this.addTerminalOutput(message, 'success');
+        
+        // Update session XP
+        this.sessionXP += amount;
+        this.updateXPDisplay();
+        
+        // Show notification
+        this.showXPNotification(amount, 'reward', reason);
+    }
+
+    showXPPenalty(amount, reason = '') {
+        // Show floating XP animation
+        this.showFloatingXP(-amount, 'penalty');
+        
+        // Add to terminal
+        const message = reason ? 
+            `$ -${amount} XP lost: ${reason}` : 
+            `$ -${amount} XP lost`;
+        this.addTerminalOutput(message, 'error');
+        
+        // Update session XP
+        this.sessionXP -= amount;
+        this.updateXPDisplay();
+        
+        // Show notification
+        this.showXPNotification(-amount, 'penalty', reason);
+    }
+
+    showFloatingXP(amount, type) {
+        const gameArea = document.querySelector('.grid.grid-cols-1.lg\\:grid-cols-4');
+        if (!gameArea) return;
+        
+        const floatingXP = document.createElement('div');
+        floatingXP.className = `fixed z-50 pointer-events-none font-bold text-lg ${
+            type === 'reward' ? 'text-green-400' : 'text-red-400'
+        }`;
+        floatingXP.textContent = `${amount > 0 ? '+' : ''}${amount} XP`;
+        
+        // Position randomly in the game area
+        const rect = gameArea.getBoundingClientRect();
+        floatingXP.style.left = `${rect.left + Math.random() * 200}px`;
+        floatingXP.style.top = `${rect.top + 50}px`;
+        
+        document.body.appendChild(floatingXP);
+        
+        // Animate upward and fade out
+        floatingXP.animate([
+            { transform: 'translateY(0px)', opacity: 1 },
+            { transform: 'translateY(-50px)', opacity: 0 }
+        ], {
+            duration: 2000,
+            easing: 'ease-out'
+        }).onfinish = () => {
+            floatingXP.remove();
+        };
+    }
+
+    showXPNotification(amount, type, reason) {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-20 right-4 z-50 p-3 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full ${
+            type === 'reward' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
+        }`;
+        
+        const icon = type === 'reward' ? 'bi-arrow-up-circle' : 'bi-arrow-down-circle';
+        const sign = amount > 0 ? '+' : '';
+        
+        notification.innerHTML = `
+            <div class="flex items-center space-x-2">
+                <i class="bi ${icon}"></i>
+                <span class="font-semibold">${sign}${amount} XP</span>
+                ${reason ? `<span class="text-sm opacity-90">• ${reason}</span>` : ''}
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 300);
+            }
+        }, 3000);
+    }
+
+    showCompletionBonus(bonus, breakdown) {
+        // Show completion bonus modal or notification
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-gray-800 border border-green-400 p-6 rounded-lg shadow-xl max-w-md';
+        
+        let breakdownHTML = '';
+        if (breakdown) {
+            breakdownHTML = Object.entries(breakdown)
+                .map(([key, value]) => `<div class="flex justify-between"><span>${key}:</span><span>+${value} XP</span></div>`)
+                .join('');
+        }
+        
+        notification.innerHTML = `
+            <div class="text-center">
+                <div class="text-4xl mb-4">🎉</div>
+                <h3 class="text-xl font-bold text-white mb-2">Simulation Complete!</h3>
+                <div class="text-2xl font-bold text-green-400 mb-4">+${bonus} Bonus XP</div>
+                ${breakdownHTML ? `
+                    <div class="text-sm text-gray-300 space-y-1 mb-4">
+                        ${breakdownHTML}
+                    </div>
+                ` : ''}
+                <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700" onclick="this.parentElement.parentElement.remove()">
+                    Continue
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Auto remove after 8 seconds
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 8000);
+    }
+
+    setCurrentUserXP(xp) {
+        this.currentUserXP = xp;
+        this.updateXPDisplay();
+    }
+
+    addTerminalOutput(text, type = 'normal') {
+        const timestamp = new Date().toLocaleTimeString();
+        const prefix = type === 'success' ? '✓' : type === 'error' ? '✗' : '$';
+        const colorClass = type === 'success' ? 'text-green-400' : type === 'error' ? 'text-red-400' : 'text-gray-300';
+        
+        this.terminalOutput.push({
+            text: `[${timestamp}] ${prefix} ${text}`,
+            class: colorClass
+        });
+        
+        if (this.terminalOutput.length > this.maxTerminalLines) {
+            this.terminalOutput.shift();
+        }
+        
         this.updateTerminal();
     }
 }
