@@ -153,8 +153,8 @@ def dashboard():
         try:
             from app.models.xp_history import XPHistory
             
-            # Get recent XP history (last 10 entries)
-            recent_xp_history = XPHistory.get_user_history(current_user.id, limit=10)
+            # Get recent XP history (last 5 entries)
+            recent_xp_history = XPHistory.get_user_history(current_user.id, limit=5)
             
             # Get XP summary for stats
             xp_summary = XPHistory.get_user_xp_summary(current_user.id)
