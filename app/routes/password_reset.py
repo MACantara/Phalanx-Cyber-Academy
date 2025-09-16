@@ -18,12 +18,17 @@ def send_reset_email(user, token):
         return False
     
     try:
+        # Ensure centralized config for URL generation
+        current_app.config['SERVER_NAME'] = current_app.config.get('SERVER_NAME')
+        current_app.config['APPLICATION_ROOT'] = current_app.config.get('APPLICATION_ROOT')
+        current_app.config['PREFERRED_URL_SCHEME'] = current_app.config.get('PREFERRED_URL_SCHEME')
+
         reset_url = url_for('password_reset.reset_password', token=token, _external=True)
-        
+
         current_app.logger.info(f"Attempting to send password reset email to: {user.email}")
         current_app.logger.info(f"Using MAIL_SERVER: {current_app.config.get('MAIL_SERVER')}")
         current_app.logger.info(f"Using MAIL_DEFAULT_SENDER: {current_app.config.get('MAIL_DEFAULT_SENDER')}")
-        
+
         msg = EmailMessage(
             subject='Password Reset Request - CyberQuest',
             body=f"""Hello {user.username},
