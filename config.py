@@ -39,6 +39,11 @@ class Config:
     WTF_CSRF_TIME_LIMIT = 3600  # 1 hour token validity
     WTF_CSRF_SSL_STRICT = False  # Allow CSRF over HTTP for development
     
+    # Centralized URL generation config for Flask
+    SERVER_NAME = os.environ.get('VERCEL_URL', 'cyber-quest-ten.vercel.app') if IS_VERCEL else os.environ.get('SERVER_NAME', 'localhost:5000')
+    APPLICATION_ROOT = '/'
+    PREFERRED_URL_SCHEME = 'https' if IS_VERCEL else 'http'
+    
     # Email configuration (required for password reset)
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
     MAIL_PORT = int(os.environ.get('MAIL_PORT') or 587)
