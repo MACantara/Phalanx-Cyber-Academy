@@ -39,12 +39,21 @@ class Config:
     WTF_CSRF_TIME_LIMIT = 3600  # 1 hour token validity
     WTF_CSRF_SSL_STRICT = False  # Allow CSRF over HTTP for development
     
+    # Centralized URL generation config for Flask
+    SERVER_NAME = os.environ.get('VERCEL_URL', 'cyber-quest-ten.vercel.app') if IS_VERCEL else os.environ.get('SERVER_NAME', 'localhost:5000')
+    APPLICATION_ROOT = '/'
+    PREFERRED_URL_SCHEME = 'https' if IS_VERCEL else 'http'
+    
     # Email configuration (required for password reset)
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
     MAIL_PORT = int(os.environ.get('MAIL_PORT') or 587)
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'true').lower() in ['true', 'on', '1']
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
+    MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', 'false').lower() in ['true', 'on', '1']
+    MAIL_DEBUG = os.environ.get('MAIL_DEBUG', 'false').lower() in ['true', 'on', '1']
+    MAIL_SUPPRESS_SEND = os.environ.get('MAIL_SUPPRESS_SEND', 'false').lower() in ['true', 'on', '1']
     
     # Session configuration for serverless compatibility
     PERMANENT_SESSION_LIFETIME = timedelta(days=int(os.environ.get('PERMANENT_SESSION_LIFETIME', 7)))  # Shorter for serverless

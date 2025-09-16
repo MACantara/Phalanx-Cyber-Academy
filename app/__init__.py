@@ -19,6 +19,15 @@ def create_app(config_name=None):
     else:
         app.config.from_object(get_config())
 
+    # Ensure URL generation configuration is set for Flask url_for with _external=True
+    # Use centralized config from config.py
+    app.config['SERVER_NAME'] = app.config.get('SERVER_NAME')
+    app.config['APPLICATION_ROOT'] = app.config.get('APPLICATION_ROOT')
+    app.config['PREFERRED_URL_SCHEME'] = app.config.get('PREFERRED_URL_SCHEME')
+    app.logger.info(f"URL generation config - SERVER_NAME: {app.config.get('SERVER_NAME')}, "
+                    f"APPLICATION_ROOT: {app.config.get('APPLICATION_ROOT')}, "
+                    f"PREFERRED_URL_SCHEME: {app.config.get('PREFERRED_URL_SCHEME')}")
+
     # Initialize Supabase
     from app.database import init_supabase
     try:

@@ -20,14 +20,18 @@ def send_contact_notification(contact_submission):
         return False
     
     try:
+        current_app.logger.info(f"Attempting to send contact form emails from: {contact_submission.email}")
+        current_app.logger.info(f"Using MAIL_SERVER: {current_app.config.get('MAIL_SERVER')}")
+        current_app.logger.info(f"Using MAIL_DEFAULT_SENDER: {current_app.config.get('MAIL_DEFAULT_SENDER')}")
+        
         # Email to admin
         admin_msg = EmailMessage(
             subject=f'[Contact Form Submission] {contact_submission.subject}',
             body=f"""
 {contact_submission.message}
 """,
-            from_email=current_app.config.get('MAIL_USERNAME'),
-            to=[current_app.config.get('MAIL_USERNAME')],  # Send to admin
+            from_email=current_app.config.get('MAIL_DEFAULT_SENDER'),
+            to=[current_app.config.get('MAIL_DEFAULT_SENDER')],  # Send to admin
             reply_to=[contact_submission.email]  # Add reply-to parameter
         )
         
@@ -59,7 +63,7 @@ We typically respond within 24-48 hours.
 Best regards,
 CyberQuest Team
 """,
-            from_email=current_app.config.get('MAIL_USERNAME'),
+            from_email=current_app.config.get('MAIL_DEFAULT_SENDER'),
             to=[contact_submission.email]
         )
         
@@ -84,11 +88,27 @@ CyberQuest Team
         
         # Send both emails
         admin_msg.send()
+        current_app.logger.info(f"Admin notification email sent successfully")
+        
         user_msg.send()
+        current_app.logger.info(f"User auto-reply email sent successfully to: {contact_submission.email}")
+        
         return True
         
     except Exception as e:
         current_app.logger.error(f"Failed to send contact form emails: {e}")
+        current_app.logger.error(f"Exception type: {type(e).__name__}")
+        
+        # Log more details about the error
+        import traceback
+        current_app.logger.error(f"Full traceback: {traceback.format_exc()}")
+        
+        # Check if it's an SMTP-related error
+        if hasattr(e, 'smtp_code'):
+            current_app.logger.error(f"SMTP error code: {e.smtp_code}")
+        if hasattr(e, 'smtp_error'):
+            current_app.logger.error(f"SMTP error message: {e.smtp_error}")
+            
         return False
 
 @contact_bp.route('/contact', methods=['GET', 'POST'])

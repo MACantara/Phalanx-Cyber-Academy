@@ -18,8 +18,17 @@ def send_reset_email(user, token):
         return False
     
     try:
+        # Ensure centralized config for URL generation
+        current_app.config['SERVER_NAME'] = current_app.config.get('SERVER_NAME')
+        current_app.config['APPLICATION_ROOT'] = current_app.config.get('APPLICATION_ROOT')
+        current_app.config['PREFERRED_URL_SCHEME'] = current_app.config.get('PREFERRED_URL_SCHEME')
+
         reset_url = url_for('password_reset.reset_password', token=token, _external=True)
-        
+
+        current_app.logger.info(f"Attempting to send password reset email to: {user.email}")
+        current_app.logger.info(f"Using MAIL_SERVER: {current_app.config.get('MAIL_SERVER')}")
+        current_app.logger.info(f"Using MAIL_DEFAULT_SENDER: {current_app.config.get('MAIL_DEFAULT_SENDER')}")
+
         msg = EmailMessage(
             subject='Password Reset Request - CyberQuest',
             body=f"""Hello {user.username},
@@ -36,8 +45,15 @@ If you didn't request this password reset, please ignore this email.
 Best regards,
 CyberQuest Team
 """,
-            from_email=current_app.config.get('MAIL_USERNAME'),
-            to=[user.email]
+            from_email=current_app.config.get('MAIL_DEFAULT_SENDER'),
+            to=[user.email],
+            headers={
+                'X-Mailer': 'CyberQuest Application',
+                'X-Priority': '2',
+                'Message-ID': f'<password-reset-{token}@cyberquest.app>',
+                'List-Unsubscribe': '<mailto:unsubscribe@cyberquest.app>',
+                'Precedence': 'bulk'
+            }
         )
         
         msg.content_subtype = 'html'
@@ -281,10 +297,23 @@ CyberQuest Team
 """
 
         msg.send()
+        current_app.logger.info(f"Password reset email sent successfully to: {user.email}")
         return True
         
     except Exception as e:
-        current_app.logger.error(f"Failed to send reset email: {e}")
+        current_app.logger.error(f"Failed to send password reset email to {user.email}: {e}")
+        current_app.logger.error(f"Exception type: {type(e).__name__}")
+        
+        # Log more details about the error
+        import traceback
+        current_app.logger.error(f"Full traceback: {traceback.format_exc()}")
+        
+        # Check if it's an SMTP-related error
+        if hasattr(e, 'smtp_code'):
+            current_app.logger.error(f"SMTP error code: {e.smtp_code}")
+        if hasattr(e, 'smtp_error'):
+            current_app.logger.error(f"SMTP error message: {e.smtp_error}")
+            
         return False
 
 @password_reset_bp.route('/forgot', methods=['GET', 'POST'])
