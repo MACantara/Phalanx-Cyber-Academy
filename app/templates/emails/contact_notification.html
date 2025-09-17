@@ -1,0 +1,9 @@
+<html>
+<body>
+    <h3>New Contact Form Submission</h3>
+    <p><strong>From:</strong> {{ contact.name }} &lt;{{ contact.email }}&gt;</p>
+    <p><strong>Subject:</strong> {{ contact.subject }}</p>
+    <p><strong>Message:</strong></p>
+    <p>{{ contact.message.replace('\n', '<br>')|safe }}</p>
+</body>
+</html>

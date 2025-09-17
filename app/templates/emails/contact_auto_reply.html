@@ -1,0 +1,15 @@
+<html>
+<body>
+    <h2>Thank you for contacting us!</h2>
+    <p>Hello <strong>{{ contact.name }}</strong>,</p>
+    
+    <p>Thank you for contacting us! We have received your message regarding "<strong>{{ contact.subject }}</strong>" and will get back to you as soon as possible.</p>
+    
+    <h3>Your message:</h3>
+    <p>{{ contact.message.replace('\n', '<br>')|safe }}</p>
+    
+    <p>We typically respond within 24-48 hours.</p>
+    
+    <p>Best regards,<br>CyberQuest Team</p>
+</body>
+</html>
