@@ -116,7 +116,10 @@ class PasswordValidator {
             // Move the password visibility toggle to the inline container if it exists
             if (toggleButton) {
                 // Remove the toggle from its current position and add it to our inline container
-                toggleButton.remove();
+                const visibilityContainer = parentNode.querySelector('.password-visibility-container');
+                if (visibilityContainer) {
+                    visibilityContainer.remove(); // Remove the standalone container
+                }
                 toggleButton.className = 'password-toggle-btn text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 focus:outline-none transition-colors duration-200 cursor-pointer';
                 inlineContainer.appendChild(toggleButton);
             }
