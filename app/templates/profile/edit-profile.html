@@ -126,64 +126,50 @@ document.addEventListener('DOMContentLoaded', function() {
     const newPassword = document.getElementById('new_password');
     const confirmPassword = document.getElementById('confirm_password');
     
-    // Initialize password components only when new password is being set
+    // Initialize password components immediately on page load
     let strengthChecker = null;
     let passwordValidator = null;
+    
+    // Wait a bit for password visibility toggles to be inserted, then initialize components
+    setTimeout(() => {
+        strengthChecker = new PasswordStrengthChecker('new_password', {
+            showMeter: true,
+            showFeedback: true,
+            userInputs: [
+                document.getElementById('username').value,
+                document.getElementById('email').value.split('@')[0]
+            ],
+            customClasses: {
+                container: 'mt-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-300 dark:border-gray-600',
+                meter: 'h-2 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-600',
+                feedback: 'text-sm text-gray-600 dark:text-gray-300 mt-2'
+            }
+        });
+
+        passwordValidator = new PasswordValidator('new_password', 'confirm_password', {
+            showValidation: true,
+            showMatching: true,
+            minLength: 8,
+            requireUppercase: true,
+            requireLowercase: true,
+            requireNumbers: true,
+            requireSpecialChars: true,
+            customClasses: {
+                valid: 'text-green-600 dark:text-green-400',
+                invalid: 'text-gray-600 dark:text-gray-400',
+                container: 'mt-2 text-sm'
+            }
+        });
+    }, 100);
     
     // Enable/disable confirm password based on new password
     newPassword.addEventListener('input', function() {
         if (this.value) {
             confirmPassword.required = true;
             confirmPassword.disabled = false;
-            
-            // Initialize password components if not already done
-            if (!strengthChecker) {
-                // Wait a bit for password visibility toggles to be inserted
-                setTimeout(() => {
-                    strengthChecker = new PasswordStrengthChecker('new_password', {
-                        showMeter: true,
-                        showFeedback: true,
-                        userInputs: [
-                            document.getElementById('username').value,
-                            document.getElementById('email').value.split('@')[0]
-                        ],
-                        customClasses: {
-                            container: 'mt-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-300 dark:border-gray-600',
-                            meter: 'h-2 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-600',
-                            feedback: 'text-sm text-gray-600 dark:text-gray-300 mt-2'
-                        }
-                    });
-
-                    passwordValidator = new PasswordValidator('new_password', 'confirm_password', {
-                        showValidation: true,
-                        showMatching: true,
-                        minLength: 8,
-                        requireUppercase: true,
-                        requireLowercase: true,
-                        requireNumbers: true,
-                        requireSpecialChars: true,
-                        customClasses: {
-                            valid: 'text-green-600 dark:text-green-400',
-                            invalid: 'text-gray-600 dark:text-gray-400',
-                            container: 'mt-2 text-sm'
-                        }
-                    });
-                }, 100);
-            }
         } else {
             confirmPassword.required = false;
             confirmPassword.value = '';
-            
-            // Clean up password components when password is cleared
-            if (strengthChecker) {
-                strengthChecker.strengthContainer?.remove();
-                strengthChecker = null;
-            }
-            if (passwordValidator) {
-                passwordValidator.validationContainer?.remove();
-                passwordValidator.matchingContainer?.remove();
-                passwordValidator = null;
-            }
         }
     });
     
