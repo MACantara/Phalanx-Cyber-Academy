@@ -48,7 +48,17 @@ class PasswordStrengthChecker {
             container.appendChild(feedback);
         }
         
-        this.passwordInput.parentNode.insertBefore(container, this.passwordInput.nextSibling);
+        // Find the best insertion point - after any password visibility toggle or directly after the input
+        let insertionPoint = this.passwordInput.nextSibling;
+        const parentNode = this.passwordInput.parentNode;
+        
+        // Look for password visibility toggle button
+        const toggleButton = parentNode.querySelector('.password-toggle-btn');
+        if (toggleButton) {
+            insertionPoint = toggleButton.nextSibling;
+        }
+        
+        parentNode.insertBefore(container, insertionPoint);
         this.strengthContainer = container;
     }
     

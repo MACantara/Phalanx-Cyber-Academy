@@ -65,7 +65,17 @@ class PasswordValidator {
                 </p>
             `;
             
-            this.passwordInput.parentNode.insertBefore(validationContainer, this.passwordInput.nextSibling);
+            // Find the best insertion point - after any password visibility toggle or directly after the input
+            let insertionPoint = this.passwordInput.nextSibling;
+            const parentNode = this.passwordInput.parentNode;
+            
+            // Look for password visibility toggle button
+            const toggleButton = parentNode.querySelector('.password-toggle-btn');
+            if (toggleButton) {
+                insertionPoint = toggleButton.nextSibling;
+            }
+            
+            parentNode.insertBefore(validationContainer, insertionPoint);
             this.validationContainer = validationContainer;
         }
         
@@ -80,7 +90,17 @@ class PasswordValidator {
                 </p>
             `;
             
-            this.confirmPasswordInput.parentNode.insertBefore(matchingContainer, this.confirmPasswordInput.nextSibling);
+            // Find the best insertion point - after any password visibility toggle or directly after the input
+            let insertionPoint = this.confirmPasswordInput.nextSibling;
+            const parentNode = this.confirmPasswordInput.parentNode;
+            
+            // Look for password visibility toggle button
+            const toggleButton = parentNode.querySelector('.password-toggle-btn');
+            if (toggleButton) {
+                insertionPoint = toggleButton.nextSibling;
+            }
+            
+            parentNode.insertBefore(matchingContainer, insertionPoint);
             this.matchingContainer = matchingContainer;
         }
     }
