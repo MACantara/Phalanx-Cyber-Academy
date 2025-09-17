@@ -4,26 +4,29 @@ import hcaptchaValidator from "./utils/hcaptcha-validator.js";
 import PasswordVisibility from "./utils/password-visibility.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Initialize password visibility utility
+    // Initialize password visibility utility first
     const passwordVisibility = new PasswordVisibility();
     
-    // Initialize password strength checker
-    const strengthChecker = new PasswordStrengthChecker("password", {
-        showMeter: true,
-        showFeedback: true,
-        userInputs: [], // User context will be available from backend
-    });
+    // Wait a bit for password visibility toggles to be inserted, then initialize other components
+    setTimeout(() => {
+        // Initialize password strength checker
+        const strengthChecker = new PasswordStrengthChecker("password", {
+            showMeter: true,
+            showFeedback: true,
+            userInputs: [], // User context will be available from backend
+        });
 
-    // Initialize password validator for requirements and matching
-    const passwordValidator = new PasswordValidator("password", "confirm_password", {
-        showValidation: true,
-        showMatching: true,
-        minLength: 8,
-        requireUppercase: true,
-        requireLowercase: true,
-        requireNumbers: true,
-        requireSpecialChars: true
-    });
+        // Initialize password validator for requirements and matching
+        const passwordValidator = new PasswordValidator("password", "confirm_password", {
+            showValidation: true,
+            showMatching: true,
+            minLength: 8,
+            requireUppercase: true,
+            requireLowercase: true,
+            requireNumbers: true,
+            requireSpecialChars: true
+        });
+    }, 100); // Small delay to ensure password visibility is fully initialized
 
     // Form validation on submit
     const form = document.querySelector('form');

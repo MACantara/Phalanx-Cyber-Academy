@@ -17,36 +17,39 @@ class CyberQuestSignup {
     }
 
     initializeComponents() {
-        // Initialize password visibility utility
+        // Initialize password visibility utility first
         this.passwordVisibility = new PasswordVisibility();
         
-        // Initialize password strength checker with cybersecurity theme
-        this.strengthChecker = new PasswordStrengthChecker("password", {
-            showMeter: true,
-            showFeedback: true,
-            userInputs: [],
-            customClasses: {
-                container: 'mt-3 p-3 bg-gray-800/50 rounded-lg border border-purple-500/30',
-                meter: 'h-2 rounded-full overflow-hidden bg-gray-700',
-                feedback: 'text-sm text-gray-300 mt-2'
-            }
-        });
+        // Wait a bit for password visibility toggles to be inserted, then initialize other components
+        setTimeout(() => {
+            // Initialize password strength checker with cybersecurity theme
+            this.strengthChecker = new PasswordStrengthChecker("password", {
+                showMeter: true,
+                showFeedback: true,
+                userInputs: [],
+                customClasses: {
+                    container: 'mt-3 p-3 bg-gray-800/50 rounded-lg border border-purple-500/30',
+                    meter: 'h-2 rounded-full overflow-hidden bg-gray-700',
+                    feedback: 'text-sm text-gray-300 mt-2'
+                }
+            });
 
-        // Initialize password validator
-        this.passwordValidator = new PasswordValidator("password", "confirm_password", {
-            showValidation: true,
-            showMatching: true,
-            minLength: 8,
-            requireUppercase: true,
-            requireLowercase: true,
-            requireNumbers: true,
-            requireSpecialChars: true,
-            customClasses: {
-                valid: 'text-green-400',
-                invalid: 'text-red-400',
-                container: 'mt-2 text-sm'
-            }
-        });
+            // Initialize password validator
+            this.passwordValidator = new PasswordValidator("password", "confirm_password", {
+                showValidation: true,
+                showMatching: true,
+                minLength: 8,
+                requireUppercase: true,
+                requireLowercase: true,
+                requireNumbers: true,
+                requireSpecialChars: true,
+                customClasses: {
+                    valid: 'text-green-400',
+                    invalid: 'text-red-400',
+                    container: 'mt-2 text-sm'
+                }
+            });
+        }, 100); // Small delay to ensure password visibility is fully initialized
 
         // Get form elements
         this.form = document.getElementById('cyberquest-signup');
