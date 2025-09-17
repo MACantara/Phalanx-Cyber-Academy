@@ -68,8 +68,8 @@ class PasswordVisibility {
         // Store reference
         this.toggleButtons.set(passwordField, toggleButton);
 
-        // Insert the button after the password field container
-        fieldContainer.parentNode.insertBefore(toggleButton, fieldContainer.nextSibling);
+        // Insert the button inside the field container
+        fieldContainer.appendChild(toggleButton);
     }
 
     /**
