@@ -1,6 +1,7 @@
 import PasswordStrengthChecker from "./components/password-strength.js";
 import PasswordValidator from "./components/password-validator.js";
 import hcaptchaValidator from "./utils/hcaptcha-validator.js";
+import PasswordVisibility from "./utils/password-visibility.js";
 
 class CyberQuestSignup {
     constructor() {
@@ -16,6 +17,9 @@ class CyberQuestSignup {
     }
 
     initializeComponents() {
+        // Initialize password visibility utility
+        this.passwordVisibility = new PasswordVisibility();
+        
         // Initialize password strength checker with cybersecurity theme
         this.strengthChecker = new PasswordStrengthChecker("password", {
             showMeter: true,
