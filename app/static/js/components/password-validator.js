@@ -33,49 +33,93 @@ class PasswordValidator {
         if (this.options.showValidation) {
             const validationContainer = document.createElement('div');
             validationContainer.className = 'password-validation mt-2';
-            validationContainer.innerHTML = `
-                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                    Password must contain:
-                </p>
-                <p class="text-xs text-gray-600 dark:text-gray-400 space-x-4">
-                    <span class="requirement-item inline-flex items-center" data-requirement="length">
-                        <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
-                        <span>${this.options.minLength}+ chars</span>
-                    </span>
-                    ${this.options.requireUppercase ? `
-                    <span class="requirement-item inline-flex items-center" data-requirement="uppercase">
-                        <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
-                        <span>A-Z</span>
-                    </span>` : ''}
-                    ${this.options.requireLowercase ? `
-                    <span class="requirement-item inline-flex items-center" data-requirement="lowercase">
-                        <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
-                        <span>a-z</span>
-                    </span>` : ''}
-                    ${this.options.requireNumbers ? `
-                    <span class="requirement-item inline-flex items-center" data-requirement="numbers">
-                        <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
-                        <span>0-9</span>
-                    </span>` : ''}
-                    ${this.options.requireSpecialChars ? `
-                    <span class="requirement-item inline-flex items-center" data-requirement="special">
-                        <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
-                        <span>!@#$</span>
-                    </span>` : ''}
-                </p>
-            `;
             
-            // Find the best insertion point - after any password visibility toggle or directly after the input
-            let insertionPoint = this.passwordInput.nextSibling;
+            // Check if there's already a password strength container with inline text
             const parentNode = this.passwordInput.parentNode;
+            const existingStrengthContainer = parentNode.querySelector('.password-strength-container');
             
-            // Look for password visibility toggle button
-            const toggleButton = parentNode.querySelector('.password-toggle-btn');
-            if (toggleButton) {
-                insertionPoint = toggleButton.nextSibling;
+            if (existingStrengthContainer) {
+                // Insert requirements into the existing password strength container
+                validationContainer.innerHTML = `
+                    <p class="text-xs text-gray-600 dark:text-gray-400 space-x-4 mb-2">
+                        <span class="requirement-item inline-flex items-center" data-requirement="length">
+                            <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
+                            <span>${this.options.minLength}+ chars</span>
+                        </span>
+                        ${this.options.requireUppercase ? `
+                        <span class="requirement-item inline-flex items-center" data-requirement="uppercase">
+                            <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
+                            <span>A-Z</span>
+                        </span>` : ''}
+                        ${this.options.requireLowercase ? `
+                        <span class="requirement-item inline-flex items-center" data-requirement="lowercase">
+                            <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
+                            <span>a-z</span>
+                        </span>` : ''}
+                        ${this.options.requireNumbers ? `
+                        <span class="requirement-item inline-flex items-center" data-requirement="numbers">
+                            <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
+                            <span>0-9</span>
+                        </span>` : ''}
+                        ${this.options.requireSpecialChars ? `
+                        <span class="requirement-item inline-flex items-center" data-requirement="special">
+                            <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
+                            <span>!@#$</span>
+                        </span>` : ''}
+                    </p>
+                `;
+                
+                // Insert after the inline container but before other password strength elements
+                const inlineContainer = existingStrengthContainer.querySelector('.flex.justify-between');
+                if (inlineContainer) {
+                    existingStrengthContainer.insertBefore(validationContainer, inlineContainer.nextSibling);
+                } else {
+                    existingStrengthContainer.appendChild(validationContainer);
+                }
+            } else {
+                // Create standalone validation with "Password must contain:" text if no strength container exists
+                validationContainer.innerHTML = `
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                        Password must contain:
+                    </p>
+                    <p class="text-xs text-gray-600 dark:text-gray-400 space-x-4">
+                        <span class="requirement-item inline-flex items-center" data-requirement="length">
+                            <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
+                            <span>${this.options.minLength}+ chars</span>
+                        </span>
+                        ${this.options.requireUppercase ? `
+                        <span class="requirement-item inline-flex items-center" data-requirement="uppercase">
+                            <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
+                            <span>A-Z</span>
+                        </span>` : ''}
+                        ${this.options.requireLowercase ? `
+                        <span class="requirement-item inline-flex items-center" data-requirement="lowercase">
+                            <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
+                            <span>a-z</span>
+                        </span>` : ''}
+                        ${this.options.requireNumbers ? `
+                        <span class="requirement-item inline-flex items-center" data-requirement="numbers">
+                            <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
+                            <span>0-9</span>
+                        </span>` : ''}
+                        ${this.options.requireSpecialChars ? `
+                        <span class="requirement-item inline-flex items-center" data-requirement="special">
+                            <i class="bi bi-circle mr-1 text-gray-400 requirement-icon text-xs"></i>
+                            <span>!@#$</span>
+                        </span>` : ''}
+                    </p>
+                `;
+                
+                // Find the best insertion point - after any password visibility toggle or directly after the input
+                let insertionPoint = this.passwordInput.nextSibling;
+                const toggleButton = parentNode.querySelector('.password-toggle-btn');
+                if (toggleButton) {
+                    insertionPoint = toggleButton.nextSibling;
+                }
+                
+                parentNode.insertBefore(validationContainer, insertionPoint);
             }
             
-            parentNode.insertBefore(validationContainer, insertionPoint);
             this.validationContainer = validationContainer;
         }
         
@@ -116,7 +160,10 @@ class PasswordValidator {
             // Move the password visibility toggle to the inline container if it exists
             if (toggleButton) {
                 // Remove the toggle from its current position and add it to our inline container
-                toggleButton.remove();
+                const visibilityContainer = parentNode.querySelector('.password-visibility-container');
+                if (visibilityContainer) {
+                    visibilityContainer.remove(); // Remove the standalone container
+                }
                 toggleButton.className = 'password-toggle-btn text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 focus:outline-none transition-colors duration-200 cursor-pointer';
                 inlineContainer.appendChild(toggleButton);
             }
