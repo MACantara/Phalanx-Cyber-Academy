@@ -60,7 +60,7 @@ class EmailService:
         """Load email template from file."""
         template_path = os.path.join(
             current_app.root_path, 
-            'utils', 
+            'templates', 
             'emails', 
             template_name
         )
