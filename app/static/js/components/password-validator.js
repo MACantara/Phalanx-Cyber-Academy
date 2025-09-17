@@ -83,12 +83,22 @@ class PasswordValidator {
         if (this.options.showMatching) {
             const matchingContainer = document.createElement('div');
             matchingContainer.className = 'password-matching mt-2 hidden';
-            matchingContainer.innerHTML = `
-                <p class="text-xs flex items-center" id="password-match-status">
-                    <i class="bi bi-circle mr-2 text-gray-400"></i>
-                    <span class="text-gray-600 dark:text-gray-400">Passwords match</span>
-                </p>
+            
+            // Create inline container for password visibility toggle and matching status
+            const inlineContainer = document.createElement('div');
+            inlineContainer.className = 'flex justify-between items-center';
+            
+            // Add password matching status on the left
+            const matchStatus = document.createElement('p');
+            matchStatus.className = 'text-xs flex items-center';
+            matchStatus.id = 'password-match-status';
+            matchStatus.innerHTML = `
+                <i class="bi bi-circle mr-2 text-gray-400"></i>
+                <span class="text-gray-600 dark:text-gray-400">Passwords match</span>
             `;
+            inlineContainer.appendChild(matchStatus);
+            
+            matchingContainer.appendChild(inlineContainer);
             
             // Find the best insertion point - after any password visibility toggle or directly after the input
             let insertionPoint = this.confirmPasswordInput.nextSibling;
@@ -102,6 +112,14 @@ class PasswordValidator {
             
             parentNode.insertBefore(matchingContainer, insertionPoint);
             this.matchingContainer = matchingContainer;
+            
+            // Move the password visibility toggle to the inline container if it exists
+            if (toggleButton) {
+                // Remove the toggle from its current position and add it to our inline container
+                toggleButton.remove();
+                toggleButton.className = 'password-toggle-btn text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 focus:outline-none transition-colors duration-200 cursor-pointer';
+                inlineContainer.appendChild(toggleButton);
+            }
         }
     }
     
