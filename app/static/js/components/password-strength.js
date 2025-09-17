@@ -26,6 +26,21 @@ class PasswordStrengthChecker {
         const container = document.createElement('div');
         container.className = 'password-strength-container mt-2';
         
+        // Create a container for the inline text (password visibility + "Password must contain:")
+        const inlineContainer = document.createElement('div');
+        inlineContainer.className = 'flex justify-between items-center mb-2';
+        
+        // Add "Password must contain:" text on the left
+        const requirementText = document.createElement('span');
+        requirementText.className = 'text-xs text-gray-500 dark:text-gray-400';
+        requirementText.textContent = 'Password must contain:';
+        inlineContainer.appendChild(requirementText);
+        
+        // Password visibility toggle will be added to the right side of this container
+        // by checking if this container exists and appending to it
+        
+        container.appendChild(inlineContainer);
+        
         if (this.options.showMeter) {
             const meter = document.createElement('div');
             meter.className = 'password-strength-meter mb-2';
@@ -48,8 +63,26 @@ class PasswordStrengthChecker {
             container.appendChild(feedback);
         }
         
-        this.passwordInput.parentNode.insertBefore(container, this.passwordInput.nextSibling);
+        // Find the best insertion point - after any password visibility toggle or directly after the input
+        let insertionPoint = this.passwordInput.nextSibling;
+        const parentNode = this.passwordInput.parentNode;
+        
+        // Look for password visibility toggle button
+        const toggleButton = parentNode.querySelector('.password-toggle-btn');
+        if (toggleButton) {
+            insertionPoint = toggleButton.nextSibling;
+        }
+        
+        parentNode.insertBefore(container, insertionPoint);
         this.strengthContainer = container;
+        
+        // Move the password visibility toggle to the inline container if it exists
+        if (toggleButton) {
+            // Remove the toggle from its current position and add it to our inline container
+            toggleButton.remove();
+            toggleButton.className = 'password-toggle-btn text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 focus:outline-none transition-colors duration-200 cursor-pointer';
+            inlineContainer.appendChild(toggleButton);
+        }
     }
     
     setupEventListeners() {

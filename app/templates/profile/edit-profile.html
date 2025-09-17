@@ -59,9 +59,11 @@
                             <label for="new_password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                 New Password
                             </label>
-                            <input type="password" id="new_password" name="new_password"
-                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:shadow-md"
-                                   placeholder="Enter new password (optional)">
+                            <div class="relative">
+                                <input type="password" id="new_password" name="new_password"
+                                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:shadow-md"
+                                       placeholder="Enter new password (optional)">
+                            </div>
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">At least 8 characters with uppercase, lowercase, and number</p>
                         </div>
 
@@ -69,9 +71,11 @@
                             <label for="confirm_password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                 Confirm New Password
                             </label>
-                            <input type="password" id="confirm_password" name="confirm_password"
-                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:shadow-md"
-                                   placeholder="Confirm new password">
+                            <div class="relative">
+                                <input type="password" id="confirm_password" name="confirm_password"
+                                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:shadow-md"
+                                       placeholder="Confirm new password">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -84,9 +88,11 @@
                     <label for="current_password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                         Current Password <span class="text-red-500">*</span>
                     </label>
-                    <input type="password" id="current_password" name="current_password" required
-                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:shadow-md"
-                           placeholder="Enter your current password to confirm changes">
+                    <div class="relative">
+                        <input type="password" id="current_password" name="current_password" required
+                               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:shadow-md"
+                               placeholder="Enter your current password to confirm changes">
+                    </div>
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Required to verify your identity before making any changes</p>
                 </div>
 
@@ -106,6 +112,10 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="module" src="{{ url_for('static', filename='js/utils/password-visibility.js') }}"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
