@@ -1,8 +1,12 @@
 import PasswordStrengthChecker from "./components/password-strength.js";
 import PasswordValidator from "./components/password-validator.js";
 import hcaptchaValidator from "./utils/hcaptcha-validator.js";
+import PasswordVisibility from "./utils/password-visibility.js";
 
 document.addEventListener("DOMContentLoaded", function () {
+    // Initialize password visibility utility
+    const passwordVisibility = new PasswordVisibility();
+    
     // Initialize password strength checker
     const strengthChecker = new PasswordStrengthChecker("password", {
         showMeter: true,
