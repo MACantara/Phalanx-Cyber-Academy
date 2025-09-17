@@ -349,13 +349,13 @@ class CyberQuestSignup {
             
             if (stepNumber < this.currentStep) {
                 indicator.classList.add('step-completed');
-                indicator.innerHTML = '<i class="bi bi-check text-white"></i>';
+                indicator.innerHTML = '<i class="bi bi-check text-white font-bold"></i>';
             } else if (stepNumber === this.currentStep) {
                 indicator.classList.add('step-active');
-                indicator.textContent = stepNumber;
+                indicator.innerHTML = `<span class="text-white font-bold">${stepNumber}</span>`;
             } else {
                 indicator.classList.add('step-inactive');
-                indicator.textContent = stepNumber;
+                indicator.innerHTML = `<span class="text-gray-600 dark:text-gray-400 font-bold">${stepNumber}</span>`;
             }
         });
     }
