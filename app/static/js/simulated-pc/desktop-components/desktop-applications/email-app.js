@@ -289,9 +289,21 @@ export class EmailApp extends WindowBase {
                 <!-- Email information -->
                 <div class="mb-4">
                     <div class="font-medium text-lg text-white">${email.subject}</div>
-                    <div class="text-gray-400 text-sm">${email.sender}</div>
-                    <div class="text-gray-500 text-xs mb-2" title="Full timestamp: ${displayTime}">
-                        <i class="bi bi-clock mr-1"></i>${displayTime}
+                    <div class="bg-gray-700 rounded p-3 mt-3 text-sm">
+                        <div class="grid grid-cols-1 gap-2">
+                            <div class="flex">
+                                <span class="text-gray-400 w-16 flex-shrink-0">From:</span>
+                                <span class="text-white break-all">${this.formatSenderDetails(email.sender)}</span>
+                            </div>
+                            <div class="flex">
+                                <span class="text-gray-400 w-16 flex-shrink-0">To:</span>
+                                <span class="text-white">${email.receiver || 'user@company.com'}</span>
+                            </div>
+                            <div class="flex">
+                                <span class="text-gray-400 w-16 flex-shrink-0">Date:</span>
+                                <span class="text-white">${email.date || displayTime}</span>
+                            </div>
+                        </div>
                     </div>
                     ${statusBadge ? `<div class="mt-2">${statusBadge}</div>` : ''}
                 </div>
@@ -319,6 +331,35 @@ export class EmailApp extends WindowBase {
             });
         }
         return email.time;
+    }
+
+    // Format sender details to show display name and email address
+    formatSenderDetails(sender) {
+        if (!sender) return 'Unknown Sender';
+        
+        // If the sender already contains angle brackets, return as-is
+        if (sender.includes('<') && sender.includes('>')) {
+            return sender;
+        }
+        
+        // If it's just an email address, format it nicely
+        if (sender.includes('@')) {
+            // Extract username part before @ and create a display name
+            const emailParts = sender.split('@');
+            const username = emailParts[0];
+            
+            // Create a readable display name from username
+            const displayName = username
+                .replace(/[._-]/g, ' ')
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ');
+            
+            return `${displayName} <${sender}>`;
+        }
+        
+        // If it's already a display name without email, return as-is
+        return sender;
     }
 
     initialize() {
