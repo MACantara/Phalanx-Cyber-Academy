@@ -73,9 +73,6 @@ class CyberQuestSignup {
                 timezoneInput.value = detectedTimezone;
                 console.log('Detected timezone:', detectedTimezone);
                 
-                // Update summary to show detected timezone
-                this.updateSummary();
-                
                 // Show a subtle notification to the user about timezone detection
                 this.showTimezoneNotification(detectedTimezone);
             }
@@ -206,24 +203,39 @@ class CyberQuestSignup {
     }
 
     updateSummary() {
-        document.getElementById('summary-username').textContent = this.usernameInput.value || '-';
-        document.getElementById('summary-email').textContent = this.emailInput.value || '-';
+        // Only update summary elements if they exist (we might be on an earlier step)
+        const summaryUsername = document.getElementById('summary-username');
+        const summaryEmail = document.getElementById('summary-email');
+        const summaryFocus = document.getElementById('summary-focus');
+        const summaryTimezone = document.getElementById('summary-timezone');
         
-        const selectedFocus = document.querySelector('input[name="focus"]:checked');
-        if (selectedFocus) {
-            const focusLabels = {
-                'beginner': 'Beginner',
-                'intermediate': 'Intermediate', 
-                'advanced': 'Advanced',
-                'expert': 'Expert'
-            };
-            document.getElementById('summary-focus').textContent = focusLabels[selectedFocus.value] || '-';
+        if (summaryUsername) {
+            summaryUsername.textContent = this.usernameInput.value || '-';
         }
         
-        // Update timezone summary
-        const timezoneInput = document.getElementById('detected_timezone');
-        const detectedTimezone = timezoneInput ? timezoneInput.value : 'UTC';
-        document.getElementById('summary-timezone').textContent = detectedTimezone || 'UTC';
+        if (summaryEmail) {
+            summaryEmail.textContent = this.emailInput.value || '-';
+        }
+        
+        if (summaryFocus) {
+            const selectedFocus = document.querySelector('input[name="focus"]:checked');
+            if (selectedFocus) {
+                const focusLabels = {
+                    'beginner': 'Beginner',
+                    'intermediate': 'Intermediate', 
+                    'advanced': 'Advanced',
+                    'expert': 'Expert'
+                };
+                summaryFocus.textContent = focusLabels[selectedFocus.value] || '-';
+            }
+        }
+        
+        // Update timezone summary only if the element exists
+        if (summaryTimezone) {
+            const timezoneInput = document.getElementById('detected_timezone');
+            const detectedTimezone = timezoneInput ? timezoneInput.value : 'UTC';
+            summaryTimezone.textContent = detectedTimezone || 'UTC';
+        }
     }
 
     async handleNext(e) {
@@ -417,6 +429,11 @@ class CyberQuestSignup {
                 indicator.innerHTML = `<span class="text-gray-600 dark:text-gray-400 font-bold">${stepNumber}</span>`;
             }
         });
+        
+        // Update summary when reaching the final step (step 4)
+        if (this.currentStep === 4) {
+            this.updateSummary();
+        }
     }
 
     updateNavigationButtons() {
