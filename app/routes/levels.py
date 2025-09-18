@@ -504,7 +504,8 @@ def start_level(level_id):
         try:
             session = Session.start_session(
                 user_id=current_user.id,
-                session_name=level.name
+                session_name=level.name,
+                level_id=level.level_id
             )
             session_id = session.id
         except Exception as session_error:
