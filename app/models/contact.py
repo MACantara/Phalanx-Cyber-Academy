@@ -1,27 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any, Tuple
 from app.database import get_supabase, Tables, handle_supabase_error, DatabaseError
-
-def parse_datetime_naive(dt_string: str) -> datetime:
-    """Parse datetime string and ensure it's timezone-naive."""
-    if not dt_string:
-        return None
-    
-    # Remove various timezone indicators to make it timezone-naive
-    dt_str = dt_string.replace('Z', '').replace('+00:00', '')
-    
-    # Handle fromisoformat parsing
-    try:
-        dt = datetime.fromisoformat(dt_str)
-        # If it somehow still has timezone info, remove it
-        if dt.tzinfo is not None:
-            dt = dt.replace(tzinfo=None)
-        return dt
-    except ValueError:
-        # Fallback: try parsing without microseconds
-        if '.' in dt_str:
-            dt_str = dt_str.split('.')[0]
-        return datetime.fromisoformat(dt_str)
+from app.utils.timezone_utils import parse_datetime_aware, utc_now
 
 class Contact:
     """Contact form submission model."""
@@ -38,7 +18,7 @@ class Contact:
         
         # Convert string timestamp to datetime object if needed
         if isinstance(self.created_at, str):
-            self.created_at = parse_datetime_naive(self.created_at)
+            self.created_at = parse_datetime_aware(self.created_at)
     
     def save(self):
         """Save contact submission to database."""
@@ -58,12 +38,12 @@ class Contact:
                 handle_supabase_error(response)
             else:
                 # Create new contact
-                contact_data['created_at'] = datetime.utcnow().isoformat()
+                contact_data['created_at'] = utc_now().isoformat()
                 response = supabase.table(Tables.CONTACT_SUBMISSIONS).insert(contact_data).execute()
                 data = handle_supabase_error(response)
                 if data and len(data) > 0:
                     self.id = data[0]['id']
-                    self.created_at = parse_datetime_naive(data[0]['created_at'])
+                    self.created_at = parse_datetime_aware(data[0]['created_at'])
         except Exception as e:
             raise DatabaseError(f"Failed to save contact: {e}")
 
@@ -92,7 +72,7 @@ class Contact:
             'email': email,
             'subject': subject,
             'message': message,
-            'created_at': datetime.utcnow(),
+            'created_at': utc_now(),
             'is_read': False
         }
         contact = cls(contact_data)
@@ -166,7 +146,7 @@ class Contact:
         """Count recent contact submissions."""
         supabase = get_supabase()
         try:
-            cutoff_date = (datetime.utcnow() - timedelta(days=days)).isoformat()
+            cutoff_date = (utc_now() - timedelta(days=days)).isoformat()
             response = supabase.table(Tables.CONTACT_SUBMISSIONS).select("*", count='exact').gte('created_at', cutoff_date).execute()
             return response.count if hasattr(response, 'count') else 0
         except Exception as e:
@@ -177,7 +157,7 @@ class Contact:
         """Clean up old contact submissions."""
         supabase = get_supabase()
         try:
-            cutoff_date = (datetime.utcnow() - timedelta(days=days_old)).isoformat()
+            cutoff_date = (utc_now() - timedelta(days=days_old)).isoformat()
             response = supabase.table(Tables.CONTACT_SUBMISSIONS).delete().lt('created_at', cutoff_date).execute()
             data = handle_supabase_error(response)
             return len(data) if data else 0

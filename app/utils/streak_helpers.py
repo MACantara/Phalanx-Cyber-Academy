@@ -5,6 +5,7 @@ from typing import Dict, Any
 from datetime import datetime, timedelta
 from app.models.xp_history import XPHistory
 from app.models.level_completion import LevelCompletion
+from app.utils.timezone_utils import utc_now, utc_today
 
 
 def has_active_streak(user_id: int) -> bool:
@@ -17,7 +18,7 @@ def has_active_streak(user_id: int) -> bool:
     This is a lightweight version for simple boolean checks.
     """
     try:
-        today = datetime.utcnow().date()
+        today = utc_now().date()
         yesterday = today - timedelta(days=1)
         
         # Check for recent XP activity

@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Any, Optional, List
 import uuid
 from app.database import get_supabase, DatabaseError, handle_supabase_error
+from app.utils.timezone_utils import utc_now
 
 
 class LevelCompletion:
@@ -63,7 +64,7 @@ class LevelCompletion:
             supabase = get_supabase()
             
             # Check for recent completion (within last 5 minutes)
-            recent_threshold = (datetime.utcnow() - timedelta(minutes=5)).isoformat()
+            recent_threshold = (utc_now() - timedelta(minutes=5)).isoformat()
             
             response = (supabase.table('level_completions')
                        .select('*')
@@ -118,7 +119,7 @@ class LevelCompletion:
                 'time_spent': time_spent,
                 'difficulty': difficulty_used,
                 'source': source,
-                'created_at': datetime.utcnow().isoformat()
+                'created_at': utc_now().isoformat()
             }
             
             response = supabase.table('level_completions').insert(completion_data).execute()
@@ -311,7 +312,7 @@ class LevelCompletion:
                 handle_supabase_error(response)
             else:
                 # Create new completion
-                completion_data['created_at'] = datetime.utcnow().isoformat()
+                completion_data['created_at'] = utc_now().isoformat()
                 response = supabase.table('level_completions').insert(completion_data).execute()
                 data = handle_supabase_error(response)
                 if data and len(data) > 0:

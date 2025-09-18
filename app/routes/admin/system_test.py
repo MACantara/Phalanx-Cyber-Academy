@@ -8,6 +8,7 @@ from datetime import datetime, timezone, timedelta
 import json
 from app.models.system_test_plan import SystemTestPlan
 from app.models.user import User
+from app.utils.timezone_utils import utc_now
 
 system_test_bp = Blueprint('system_test', __name__, url_prefix='/admin/system-test')
 
@@ -191,7 +192,7 @@ def execute_test_plan(test_plan_id):
             proceed_to_next = request.form.get('proceed_to_next') == 'on'
             
             test_plan.test_status = test_status
-            test_plan.execution_date = datetime.utcnow()
+            test_plan.execution_date = utc_now()
             test_plan.executed_by = current_user.username
             test_plan.failure_reason = failure_reason if test_status == 'failed' else None
             
@@ -392,7 +393,7 @@ def update_test_status(test_plan_id):
             return jsonify({'success': False, 'error': 'Invalid status'}), 400
         
         test_plan.test_status = test_status
-        test_plan.execution_date = datetime.utcnow()
+        test_plan.execution_date = utc_now()
         test_plan.executed_by = current_user.username
         test_plan.failure_reason = failure_reason if test_status == 'failed' else None
         

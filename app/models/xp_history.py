@@ -5,6 +5,7 @@ Tracks XP changes for users with detailed audit trail
 from datetime import datetime
 from typing import Dict, Any, Optional, List
 from app.database import get_supabase, DatabaseError, handle_supabase_error
+from app.utils.timezone_utils import utc_now
 
 
 class XPHistory:
@@ -62,7 +63,7 @@ class XPHistory:
                 'balance_after': balance_after,
                 'reason': reason,
                 'level_id': level_id,
-                'created_at': datetime.utcnow().isoformat()
+                'created_at': utc_now().isoformat()
             }
             
             response = supabase.table('xp_history').insert(entry_data).execute()
@@ -242,7 +243,7 @@ class XPHistory:
                 handle_supabase_error(response)
             else:
                 # Create new entry
-                entry_data['created_at'] = datetime.utcnow().isoformat()
+                entry_data['created_at'] = utc_now().isoformat()
                 response = supabase.table('xp_history').insert(entry_data).execute()
                 data = handle_supabase_error(response)
                 if data and len(data) > 0:

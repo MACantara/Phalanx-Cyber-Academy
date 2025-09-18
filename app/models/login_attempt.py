@@ -1,27 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any
 from app.database import get_supabase, Tables, handle_supabase_error, DatabaseError
-
-def parse_datetime_naive(dt_string: str) -> datetime:
-    """Parse datetime string and ensure it's timezone-naive."""
-    if not dt_string:
-        return None
-    
-    # Remove various timezone indicators to make it timezone-naive
-    dt_str = dt_string.replace('Z', '').replace('+00:00', '')
-    
-    # Handle fromisoformat parsing
-    try:
-        dt = datetime.fromisoformat(dt_str)
-        # If it somehow still has timezone info, remove it
-        if dt.tzinfo is not None:
-            dt = dt.replace(tzinfo=None)
-        return dt
-    except ValueError:
-        # Fallback: try parsing without microseconds
-        if '.' in dt_str:
-            dt_str = dt_str.split('.')[0]
-        return datetime.fromisoformat(dt_str)
+from app.utils.timezone_utils import parse_datetime_aware, utc_now
 
 class LoginAttempt:
     def __init__(self, data: Dict[str, Any]):
@@ -35,7 +15,7 @@ class LoginAttempt:
         
         # Convert string timestamp to datetime object if needed
         if isinstance(self.attempted_at, str):
-            self.attempted_at = parse_datetime_naive(self.attempted_at)
+            self.attempted_at = parse_datetime_aware(self.attempted_at)
     
     def save(self):
         """Save login attempt to database."""
@@ -45,7 +25,7 @@ class LoginAttempt:
                 'ip_address': self.ip_address,
                 'username_or_email': self.username_or_email,
                 'success': self.success,
-                'attempted_at': self.attempted_at.isoformat() if self.attempted_at else datetime.utcnow().isoformat(),
+                'attempted_at': self.attempted_at.isoformat() if self.attempted_at else utc_now().isoformat(),
                 'user_agent': self.user_agent
             }
             
@@ -73,7 +53,7 @@ class LoginAttempt:
         
         supabase = get_supabase()
         try:
-            cutoff_time = (datetime.utcnow() - timedelta(minutes=time_window_minutes)).isoformat()
+            cutoff_time = (utc_now() - timedelta(minutes=time_window_minutes)).isoformat()
             response = supabase.table(Tables.LOGIN_ATTEMPTS).select("*", count='exact').eq('ip_address', ip_address).eq('success', False).gte('attempted_at', cutoff_time).execute()
             return response.count if hasattr(response, 'count') else 0
         except Exception as e:
@@ -98,15 +78,16 @@ class LoginAttempt:
         
         supabase = get_supabase()
         try:
-            cutoff_time = (datetime.utcnow() - timedelta(minutes=lockout_minutes)).isoformat()
+            cutoff_time = (utc_now() - timedelta(minutes=lockout_minutes)).isoformat()
             response = supabase.table(Tables.LOGIN_ATTEMPTS).select("*").eq('ip_address', ip_address).eq('success', False).gte('attempted_at', cutoff_time).order('attempted_at', desc=True).limit(1).execute()
             data = handle_supabase_error(response)
             
             if data and len(data) > 0:
                 last_failed = cls(data[0])
                 unlock_time = last_failed.attempted_at + timedelta(minutes=lockout_minutes)
-                if unlock_time > datetime.utcnow():
-                    return unlock_time - datetime.utcnow()
+                current_time = utc_now()
+                if unlock_time > current_time:
+                    return unlock_time - current_time
             return None
         except Exception as e:
             raise DatabaseError(f"Failed to get lockout time remaining: {e}")
@@ -118,7 +99,7 @@ class LoginAttempt:
             'ip_address': ip_address,
             'username_or_email': username_or_email,
             'success': success,
-            'attempted_at': datetime.utcnow(),
+            'attempted_at': utc_now(),
             'user_agent': user_agent
         }
         attempt = cls(attempt_data)
@@ -130,7 +111,7 @@ class LoginAttempt:
         """Clean up old login attempts (for maintenance)."""
         supabase = get_supabase()
         try:
-            cutoff_date = (datetime.utcnow() - timedelta(days=days_old)).isoformat()
+            cutoff_date = (utc_now() - timedelta(days=days_old)).isoformat()
             response = supabase.table(Tables.LOGIN_ATTEMPTS).delete().lt('attempted_at', cutoff_date).execute()
             data = handle_supabase_error(response)
             return len(data) if data else 0
@@ -153,7 +134,7 @@ class LoginAttempt:
         """Count recent login attempts."""
         supabase = get_supabase()
         try:
-            cutoff_time = (datetime.utcnow() - timedelta(hours=hours)).isoformat()
+            cutoff_time = (utc_now() - timedelta(hours=hours)).isoformat()
             response = supabase.table(Tables.LOGIN_ATTEMPTS).select("*", count='exact').gte('attempted_at', cutoff_time).execute()
             return response.count if hasattr(response, 'count') else 0
         except Exception as e:
@@ -164,7 +145,7 @@ class LoginAttempt:
         """Count failed login attempts."""
         supabase = get_supabase()
         try:
-            cutoff_time = (datetime.utcnow() - timedelta(hours=hours)).isoformat()
+            cutoff_time = (utc_now() - timedelta(hours=hours)).isoformat()
             response = supabase.table(Tables.LOGIN_ATTEMPTS).select("*", count='exact').eq('success', False).gte('attempted_at', cutoff_time).execute()
             return response.count if hasattr(response, 'count') else 0
         except Exception as e:

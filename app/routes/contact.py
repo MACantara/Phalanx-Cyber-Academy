@@ -3,6 +3,7 @@ from app.models.contact import Contact
 from app.utils.hcaptcha_utils import verify_hcaptcha
 from app.utils.email_service import EmailService
 from app.database import DatabaseError
+from app.utils.timezone_utils import utc_now
 import re
 
 contact_bp = Blueprint('contact', __name__)
@@ -78,13 +79,12 @@ def contact_page():
             if EmailService.is_email_configured():
                 try:
                     # Create a temporary contact object for email
-                    from datetime import datetime
                     temp_contact = type('Contact', (), {
                         'name': name,
                         'email': email,
                         'subject': subject,
                         'message': message,
-                        'created_at': datetime.utcnow()
+                        'created_at': utc_now()
                     })()
                     send_contact_notification(temp_contact)
                 except Exception as e:

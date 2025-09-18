@@ -5,6 +5,7 @@ Database models for managing system test plans and test execution results
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 from app.database import get_supabase
+from app.utils.timezone_utils import utc_now
 
 class SystemTestPlan:
     """Model for system test plan entries."""
@@ -49,7 +50,7 @@ class SystemTestPlan:
                 'failure_reason': self.failure_reason,
                 'priority': self.priority,
                 'category': self.category,
-                'updated_at': datetime.utcnow().isoformat()
+                'updated_at': utc_now().isoformat()
             }
             
             if self.id:
@@ -57,7 +58,7 @@ class SystemTestPlan:
                 result = supabase.table('system_test_plans').update(data).eq('id', self.id).execute()
             else:
                 # Insert new record
-                data['created_at'] = datetime.utcnow().isoformat()
+                data['created_at'] = utc_now().isoformat()
                 result = supabase.table('system_test_plans').insert(data).execute()
                 if result.data:
                     self.id = result.data[0]['id']
@@ -436,8 +437,8 @@ class SystemTestPlan:
                     'test_status': plan_data.get('test_status', 'pending'),
                     'priority': plan_data.get('priority', 'medium'),
                     'category': plan_data.get('category', 'functional'),
-                    'created_at': datetime.utcnow().isoformat(),
-                    'updated_at': datetime.utcnow().isoformat()
+                    'created_at': utc_now().isoformat(),
+                    'updated_at': utc_now().isoformat()
                 })
             
             result = supabase.table('system_test_plans').insert(insert_data).execute()

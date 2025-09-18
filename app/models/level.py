@@ -5,6 +5,7 @@ Represents level metadata and configuration for the CyberQuest system
 from datetime import datetime
 from typing import Dict, Any, List, Optional
 from app.database import get_supabase, DatabaseError, handle_supabase_error
+from app.utils.timezone_utils import utc_now
 
 
 class Level:
@@ -126,8 +127,8 @@ class Level:
                 'coming_soon': coming_soon,
                 'requirements': requirements,
                 'metadata': metadata,
-                'created_at': datetime.utcnow().isoformat(),
-                'updated_at': datetime.utcnow().isoformat()
+                'created_at': utc_now().isoformat(),
+                'updated_at': utc_now().isoformat()
             }
             
             response = supabase.table('levels').insert(level_data).execute()
@@ -156,7 +157,7 @@ class Level:
                 'unlocked': self.unlocked,
                 'coming_soon': self.coming_soon,
                 'requirements': self.requirements,
-                'updated_at': datetime.utcnow().isoformat()
+                'updated_at': utc_now().isoformat()
             }
             
             if self.id:
@@ -166,7 +167,7 @@ class Level:
             else:
                 # Create new level
                 level_data['level_id'] = self.level_id
-                level_data['created_at'] = datetime.utcnow().isoformat()
+                level_data['created_at'] = utc_now().isoformat()
                 response = supabase.table('levels').insert(level_data).execute()
                 data = handle_supabase_error(response)
                 if data and len(data) > 0:
@@ -244,7 +245,7 @@ class Level:
                         metadata={
                             'original_data': level_data,
                             'auto_populated': True,
-                            'populated_at': datetime.utcnow().isoformat()
+                            'populated_at': utc_now().isoformat()
                         }
                     )
                     created_count += 1

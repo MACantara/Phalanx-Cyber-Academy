@@ -2,27 +2,7 @@ from datetime import datetime, timedelta
 import secrets
 from typing import Optional, Dict, Any, List
 from app.database import get_supabase, Tables, handle_supabase_error, DatabaseError
-
-def parse_datetime_naive(dt_string: str) -> datetime:
-    """Parse datetime string and ensure it's timezone-naive."""
-    if not dt_string:
-        return None
-    
-    # Remove various timezone indicators to make it timezone-naive
-    dt_str = dt_string.replace('Z', '').replace('+00:00', '')
-    
-    # Handle fromisoformat parsing
-    try:
-        dt = datetime.fromisoformat(dt_str)
-        # If it somehow still has timezone info, remove it
-        if dt.tzinfo is not None:
-            dt = dt.replace(tzinfo=None)
-        return dt
-    except ValueError:
-        # Fallback: try parsing without microseconds
-        if '.' in dt_str:
-            dt_str = dt_str.split('.')[0]
-        return datetime.fromisoformat(dt_str)
+from app.utils.timezone_utils import parse_datetime_aware, utc_now, is_expired
 
 class EmailVerification:
     def __init__(self, data: Dict[str, Any]):
@@ -38,11 +18,11 @@ class EmailVerification:
         
         # Convert string timestamps to datetime objects if needed
         if isinstance(self.created_at, str):
-            self.created_at = parse_datetime_naive(self.created_at)
+            self.created_at = parse_datetime_aware(self.created_at)
         if isinstance(self.expires_at, str):
-            self.expires_at = parse_datetime_naive(self.expires_at)
+            self.expires_at = parse_datetime_aware(self.expires_at)
         if isinstance(self.verified_at, str):
-            self.verified_at = parse_datetime_naive(self.verified_at)
+            self.verified_at = parse_datetime_aware(self.verified_at)
     
     def save(self):
         """Save email verification to database."""
@@ -76,12 +56,12 @@ class EmailVerification:
     
     def is_expired(self):
         """Check if the verification token has expired."""
-        return datetime.utcnow() > self.expires_at
+        return is_expired(self.expires_at, 0)  # Already expired if expires_at is in the past
     
     def verify(self):
         """Mark this email as verified."""
         self.is_verified = True
-        self.verified_at = datetime.utcnow()
+        self.verified_at = utc_now()
         self.save()
     
     @classmethod
@@ -96,8 +76,8 @@ class EmailVerification:
                 'user_id': user_id,
                 'email': email,
                 'token': secrets.token_urlsafe(32),
-                'created_at': datetime.utcnow(),
-                'expires_at': datetime.utcnow() + timedelta(hours=24),  # 24 hour expiration
+                'created_at': utc_now(),
+                'expires_at': utc_now() + timedelta(hours=24),  # 24 hour expiration
                 'verified_at': None,
                 'is_verified': False
             }
@@ -148,7 +128,7 @@ class EmailVerification:
         """Clean up expired verification tokens."""
         supabase = get_supabase()
         try:
-            cutoff_date = (datetime.utcnow() - timedelta(days=days_old)).isoformat()
+            cutoff_date = (utc_now() - timedelta(days=days_old)).isoformat()
             response = supabase.table(Tables.EMAIL_VERIFICATIONS).delete().lt('expires_at', cutoff_date).eq('is_verified', False).execute()
             data = handle_supabase_error(response)
             return len(data) if data else 0
