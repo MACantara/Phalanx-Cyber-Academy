@@ -1,11 +1,11 @@
 """
 Learning Streak Tracking Utility
-Tracks user learning streaks based on XP history and level completion records
+Tracks user learning streaks based on XP history and session records
 """
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional, List
 from app.models.xp_history import XPHistory
-from app.models.level_completion import LevelCompletion
+from app.models.session import Session
 from app.database import DatabaseError
 from app.utils.timezone_utils import utc_now
 
@@ -20,14 +20,14 @@ class LearningStreakTracker:
         
         A streak is maintained if the user has either:
         - XP history records (any XP change)
-        - Level completion records
+        - Session records (learning sessions)
         
         Returns streak information including current streak, longest streak, and last activity.
         """
         try:
-            # Get recent XP history and level completions
+            # Get recent XP history and sessions
             xp_history = XPHistory.get_user_history(user_id, limit=100)
-            level_completions = LevelCompletion.get_user_completions(user_id, limit=100)
+            sessions = Session.get_user_sessions(user_id, limit=100)
             
             # Combine and sort all activity by date
             activity_dates = set()
@@ -38,10 +38,10 @@ class LearningStreakTracker:
                     activity_date = datetime.fromisoformat(entry.created_at.replace('Z', '+00:00')).date()
                     activity_dates.add(activity_date)
             
-            # Add level completion dates
-            for completion in level_completions:
-                if completion.created_at:
-                    activity_date = datetime.fromisoformat(completion.created_at.replace('Z', '+00:00')).date()
+            # Add session dates
+            for session in sessions:
+                if session.created_at:
+                    activity_date = datetime.fromisoformat(session.created_at.replace('Z', '+00:00')).date()
                     activity_dates.add(activity_date)
             
             if not activity_dates:
