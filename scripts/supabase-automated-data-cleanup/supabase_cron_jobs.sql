@@ -36,7 +36,7 @@ SELECT cron.schedule(
         jsonb_build_object(
             'report_date', NOW(),
             'login_attempts_count', (SELECT COUNT(*) FROM login_attempts),
-            'email_verifications_count', (SELECT COUNT(*) FROM email_verifications WHERE is_verified = false),
+            'password_reset_tokens_count', (SELECT COUNT(*) FROM password_reset_tokens),
             'contact_submissions_count', (SELECT COUNT(*) FROM contact_submissions),
             'system_logs_count', (SELECT COUNT(*) FROM system_logs),
             'oldest_login_attempt', (SELECT MIN(attempted_at) FROM login_attempts),
@@ -182,11 +182,11 @@ Current retention policies (matching privacy policy):
    - Purpose: Security monitoring and fraud prevention
    - Cleanup: Daily at 2:00 AM UTC
 
-2. Email Verification Tokens: 7 days (for unverified tokens)
-   - Purpose: Email verification process
+2. Password Reset Tokens: 7 days (for expired tokens)
+   - Purpose: Password reset process
    - Cleanup: Daily at 2:00 AM UTC
 
-3. Contact Form Submissions: 2 years (730 days)
+3. Contact Form Submissions: 1 year (365 days)
    - Purpose: Customer support and communication history
    - Cleanup: Daily at 2:00 AM UTC
 
@@ -194,7 +194,11 @@ Current retention policies (matching privacy policy):
    - Purpose: User authentication sessions
    - Cleanup: On logout or session expiry
 
-5. System Logs: 90 days
+5. System Logs: 30 days
    - Purpose: System monitoring and debugging
    - Cleanup: Daily at 2:00 AM UTC (cleanup logs kept longer for auditing)
+
+Note: Email verification tokens are NOT automatically cleaned up to preserve
+verified account records. Manual cleanup may be performed for unverified tokens
+if necessary.
 */

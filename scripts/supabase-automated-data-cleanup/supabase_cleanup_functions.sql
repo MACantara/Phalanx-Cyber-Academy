@@ -41,25 +41,24 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ==============================================================================
--- 2. CLEANUP FUNCTION FOR EXPIRED EMAIL VERIFICATION TOKENS (7 days retention)
+-- 2. CLEANUP FUNCTION FOR OLD PASSWORD RESET TOKENS (7 days retention)
 -- ==============================================================================
 
-CREATE OR REPLACE FUNCTION cleanup_expired_email_tokens()
+CREATE OR REPLACE FUNCTION cleanup_old_password_reset_tokens()
 RETURNS INTEGER AS $$
 DECLARE
     deleted_count INTEGER;
 BEGIN
-    -- Delete expired and unverified email verification tokens older than 7 days
-    DELETE FROM email_verifications 
-    WHERE expires_at < NOW() 
-    AND is_verified = false;
+    -- Delete expired password reset tokens older than 7 days
+    DELETE FROM password_reset_tokens 
+    WHERE expires_at < NOW();
     
     GET DIAGNOSTICS deleted_count = ROW_COUNT;
     
     -- Log the cleanup operation
     INSERT INTO system_logs (operation, details, created_at)
     VALUES (
-        'automated_cleanup_email_tokens',
+        'automated_cleanup_password_reset_tokens',
         jsonb_build_object(
             'deleted_count', deleted_count,
             'retention_days', 7,
@@ -73,7 +72,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ==============================================================================
--- 3. CLEANUP FUNCTION FOR OLD CONTACT SUBMISSIONS (1 years retention)
+-- 3. CLEANUP FUNCTION FOR OLD CONTACT SUBMISSIONS (1 year retention)
 -- ==============================================================================
 
 CREATE OR REPLACE FUNCTION cleanup_old_contact_submissions()
@@ -81,7 +80,7 @@ RETURNS INTEGER AS $$
 DECLARE
     deleted_count INTEGER;
 BEGIN
-    -- Delete contact submissions older than 1 years (365 days)
+    -- Delete contact submissions older than 1 year (365 days)
     DELETE FROM contact_submissions 
     WHERE created_at < (NOW() - INTERVAL '365 days');
     
@@ -104,7 +103,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ==============================================================================
--- 4. CLEANUP FUNCTION FOR OLD SYSTEM LOGS (90 days retention)
+-- 4. CLEANUP FUNCTION FOR OLD SYSTEM LOGS (30 days retention)
 -- ==============================================================================
 
 CREATE OR REPLACE FUNCTION cleanup_old_system_logs()
@@ -112,20 +111,20 @@ RETURNS INTEGER AS $$
 DECLARE
     deleted_count INTEGER;
 BEGIN
-    -- Delete system logs older than 90 days (keep cleanup logs longer for auditing)
+    -- Delete system logs older than 30 days (keep cleanup logs longer for auditing)
     DELETE FROM system_logs 
-    WHERE created_at < (NOW() - INTERVAL '90 days')
+    WHERE created_at < (NOW() - INTERVAL '30 days')
     AND operation NOT LIKE 'automated_cleanup_%';  -- Keep cleanup audit logs longer
     
     GET DIAGNOSTICS deleted_count = ROW_COUNT;
     
-    -- Log the cleanup operation (this will be kept for 90 days)
+    -- Log the cleanup operation (this will be kept for 30 days)
     INSERT INTO system_logs (operation, details, created_at)
     VALUES (
         'automated_cleanup_system_logs',
         jsonb_build_object(
             'deleted_count', deleted_count,
-            'retention_days', 90,
+            'retention_days', 30,
             'cleanup_date', NOW()
         ),
         NOW()
@@ -143,14 +142,14 @@ CREATE OR REPLACE FUNCTION run_automated_cleanup()
 RETURNS JSONB AS $$
 DECLARE
     login_attempts_deleted INTEGER;
-    email_tokens_deleted INTEGER;
+    password_reset_tokens_deleted INTEGER;
     contact_submissions_deleted INTEGER;
     system_logs_deleted INTEGER;
     cleanup_result JSONB;
 BEGIN
     -- Run all cleanup functions
     SELECT cleanup_old_login_attempts() INTO login_attempts_deleted;
-    SELECT cleanup_expired_email_tokens() INTO email_tokens_deleted;
+    SELECT cleanup_old_password_reset_tokens() INTO password_reset_tokens_deleted;
     SELECT cleanup_old_contact_submissions() INTO contact_submissions_deleted;
     SELECT cleanup_old_system_logs() INTO system_logs_deleted;
     
@@ -158,12 +157,12 @@ BEGIN
     cleanup_result := jsonb_build_object(
         'cleanup_date', NOW(),
         'login_attempts_deleted', login_attempts_deleted,
-        'email_tokens_deleted', email_tokens_deleted,
+        'password_reset_tokens_deleted', password_reset_tokens_deleted,
         'contact_submissions_deleted', contact_submissions_deleted,
         'system_logs_deleted', system_logs_deleted,
         'total_records_deleted', (
             login_attempts_deleted + 
-            email_tokens_deleted + 
+            password_reset_tokens_deleted + 
             contact_submissions_deleted + 
             system_logs_deleted
         )
@@ -202,7 +201,7 @@ CREATE INDEX IF NOT EXISTS idx_system_logs_operation ON system_logs(operation);
 
 -- Grant execute permissions to the service role (adjust as needed)
 -- GRANT EXECUTE ON FUNCTION cleanup_old_login_attempts() TO service_role;
--- GRANT EXECUTE ON FUNCTION cleanup_expired_email_tokens() TO service_role;
+-- GRANT EXECUTE ON FUNCTION cleanup_old_password_reset_tokens() TO service_role;
 -- GRANT EXECUTE ON FUNCTION cleanup_old_contact_submissions() TO service_role;
 -- GRANT EXECUTE ON FUNCTION cleanup_old_system_logs() TO service_role;
 -- GRANT EXECUTE ON FUNCTION run_automated_cleanup() TO service_role;
@@ -213,7 +212,7 @@ CREATE INDEX IF NOT EXISTS idx_system_logs_operation ON system_logs(operation);
 
 -- Test individual cleanup functions:
 -- SELECT cleanup_old_login_attempts();
--- SELECT cleanup_expired_email_tokens();
+-- SELECT cleanup_old_password_reset_tokens();
 -- SELECT cleanup_old_contact_submissions();
 -- SELECT cleanup_old_system_logs();
 

@@ -7,18 +7,18 @@ This directory contains SQL scripts for setting up automated data retention comp
 The CyberQuest application implements automated data cleanup to comply with the privacy policy retention periods:
 
 - **Security Logs (Login Attempts)**: 30 days
-- **Email Verification Tokens**: 7 days (unverified only)
-- **Contact Form Submissions**: 2 years (730 days)
-- **System Logs**: 90 days (cleanup audit logs kept longer)
+- **Password Reset Tokens**: 7 days (expired tokens only)
+- **Contact Form Submissions**: 1 year (365 days)
+- **System Logs**: 30 days (cleanup audit logs kept longer)
 
 ## 📁 Files
 
 ### 1. `supabase_cleanup_functions.sql`
 Contains PostgreSQL functions for data cleanup operations:
 - `cleanup_old_login_attempts()` - Removes login attempts older than 30 days
-- `cleanup_expired_email_tokens()` - Removes expired email verification tokens
-- `cleanup_old_contact_submissions()` - Removes contact submissions older than 2 years
-- `cleanup_old_system_logs()` - Removes system logs older than 90 days
+- `cleanup_old_password_reset_tokens()` - Removes expired password reset tokens
+- `cleanup_old_contact_submissions()` - Removes contact submissions older than 1 year
+- `cleanup_old_system_logs()` - Removes system logs older than 30 days
 - `run_automated_cleanup()` - Master function that runs all cleanup operations
 
 ### 2. `supabase_cron_jobs.sql`
@@ -87,7 +87,12 @@ SELECT
     details->>'retention_days' as retention_days,
     created_at
 FROM system_logs 
-WHERE operation LIKE 'automated_cleanup_%' 
+WHERE operation IN (
+    'automated_cleanup_login_attempts',
+    'automated_cleanup_password_reset_tokens', 
+    'automated_cleanup_contact_submissions',
+    'automated_cleanup_system_logs'
+)
 ORDER BY created_at DESC 
 LIMIT 10;
 ```
@@ -184,6 +189,11 @@ This setup ensures compliance with:
 - **CyberQuest Privacy Policy** retention periods
 
 All cleanup operations are logged for audit purposes and compliance verification.
+
+**Important Notes:**
+- Email verification tokens are NOT automatically cleaned up to preserve verified account records
+- Contact form submissions are retained for 1 year for customer support purposes
+- System logs are kept for 30 days with cleanup audit logs preserved longer
 
 ## 🔄 Maintenance
 
