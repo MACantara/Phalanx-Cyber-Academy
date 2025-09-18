@@ -500,7 +500,7 @@ def export_test_plans_docx():
                             # If timezone-aware, convert to local time for display
                             date_obj = test_plan.execution_date.replace(tzinfo=None)
                         
-                        formatted_date = date_obj.strftime("%m/%d/%Y %H:%M")
+                        formatted_date = date_obj.strftime("%m/%d/%Y %I:%M %p")
                     except (AttributeError, ValueError):
                         formatted_date = 'N/A'
 

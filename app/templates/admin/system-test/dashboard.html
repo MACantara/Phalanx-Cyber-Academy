@@ -267,7 +267,7 @@
                                     <td class="py-3 px-2 dark:text-gray-300">{{ test.executed_by or '-' }}</td>
                                     <td class="py-3 px-2 dark:text-gray-300">
                                         {% if test.execution_date %}
-                                        {{ test.execution_date|format_user_timezone(current_user.timezone, '%Y-%m-%d %H:%M') }}
+                                        {{ test.execution_date|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}
                                         {% else %}
                                         -
                                         {% endif %}
