@@ -176,6 +176,15 @@ def create_app(config_name=None):
         formatted = name.replace('-', ' ').replace('_', ' ')
         return ' '.join(word.capitalize() for word in formatted.split())
 
+    @app.template_filter('format_display_name')
+    def format_display_name(name):
+        """Format session and level names by replacing hyphens with spaces"""
+        if not name:
+            return name
+        # Replace hyphens and underscores with spaces, preserve original capitalization
+        formatted = name.replace('-', ' ').replace('_', ' ')
+        return formatted
+
     @app.template_filter('format_user_timezone')
     def format_user_timezone_filter(dt, user_timezone='UTC', format_string='%Y-%m-%d %H:%M:%S'):
         """Format datetime for user's timezone in templates"""
