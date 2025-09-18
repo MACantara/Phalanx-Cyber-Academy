@@ -164,10 +164,16 @@ export class EmailSessionSummary {
                             Continue to Level 3
                         </button>
                     ` : `
-                        <button onclick="window.emailSessionSummary?.retryTraining()" class="bg-orange-600 text-white px-8 py-3 rounded hover:bg-orange-700 transition-colors font-semibold text-lg cursor-pointer flex items-center justify-center gap-2 mx-auto">
-                            <i class="bi bi-arrow-clockwise"></i>
-                            Retry Training
-                        </button>
+                        <div class="space-y-3">
+                            <button onclick="window.emailSessionSummary?.completeLevel2()" class="bg-blue-600 text-white px-8 py-3 rounded hover:bg-blue-700 transition-colors font-semibold text-lg cursor-pointer flex items-center justify-center gap-2 mx-auto">
+                                <i class="bi bi-save-fill"></i>
+                                Save Progress & Exit
+                            </button>
+                            <button onclick="window.emailSessionSummary?.retryTraining()" class="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 transition-colors font-semibold cursor-pointer flex items-center justify-center gap-2 mx-auto">
+                                <i class="bi bi-arrow-clockwise"></i>
+                                Retry Training
+                            </button>
+                        </div>
                     `}
                 </div>
             </div>
@@ -446,7 +452,7 @@ export class EmailSessionSummary {
     /**
      * Action handlers for buttons
      */
-    async completeLevel2() {
+    async completeLevel2(isRetry = false) {
         try {
             // Mark Level 2 as completed via server API call
             const completionData = {
@@ -479,11 +485,24 @@ export class EmailSessionSummary {
             console.error('Error completing Level 2:', error);
         }
         
-        // Close modal first
-        document.querySelector('.fixed')?.remove();
-        
-        // Show shutdown sequence before navigation
-        await this.showShutdownSequenceAndNavigate();
+        if (isRetry) {
+            // Close the current modal with a nice fade out
+            const modal = document.querySelector('.fixed.inset-0.bg-black\/75');
+            if (modal) {
+                modal.style.opacity = '0';
+                modal.style.transition = 'opacity 300ms ease-in-out';
+                setTimeout(() => modal.remove(), 300);
+            }
+            
+            // Start the retry process after recording completion
+            this.startRetryProcess();
+        } else {
+            // Close modal first
+            document.querySelector('.fixed')?.remove();
+            
+            // Show shutdown sequence before navigation
+            await this.showShutdownSequenceAndNavigate();
+        }
     }
 
     async showShutdownSequenceAndNavigate() {
@@ -523,14 +542,11 @@ export class EmailSessionSummary {
     }
 
     async retryTraining() {
-        // Close the current modal with a nice fade out
-        const modal = document.querySelector('.fixed.inset-0.bg-black\/75');
-        if (modal) {
-            modal.style.opacity = '0';
-            modal.style.transition = 'opacity 300ms ease-in-out';
-            setTimeout(() => modal.remove(), 300);
-        }
-        
+        // First record the end time by calling completeLevel2
+        await this.completeLevel2(true); // Pass true to indicate this is a retry
+    }
+
+    async startRetryProcess() {
         // Show loading state
         const loadingModal = document.createElement('div');
         loadingModal.className = 'fixed inset-0 bg-black/90 flex items-center justify-center z-50';
@@ -556,20 +572,10 @@ export class EmailSessionSummary {
             localStorage.setItem('cyberquest_level_2_retry', 'true');
             
             // Reload the level with retry flag
-            loadingModal.innerHTML = `
-                <div class="bg-gray-800 p-8 rounded-lg text-center max-w-md mx-4">
-                    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-6"></div>
-                    <h3 class="text-xl font-semibold text-white mb-2">Preparing Your Training Session</h3>
-                    <p class="text-gray-300">Loading your progress and resetting the simulation...</p>
-                    <div class="w-full bg-gray-700 rounded-full h-2.5 mt-6">
-                        <div class="bg-blue-600 h-2.5 rounded-full animate-pulse" style="width: 80%"></div>
-                    </div>
-                    <p class="text-gray-300 mb-6">There was an error preparing your training session. Please try again or refresh the page.</p>
-                    <button onclick="window.location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
-                        <i class="bi bi-arrow-clockwise mr-2"></i> Refresh Page
-                    </button>
-                </div>
-            `;
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+            
         } catch (error) {
             console.error('Error during retry training:', error);
             if (loadingModal && loadingModal.parentNode) {
