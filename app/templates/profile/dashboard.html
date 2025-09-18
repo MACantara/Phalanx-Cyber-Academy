@@ -308,11 +308,6 @@
                                            {% else %}bi bi-arrow-down-circle-fill{% endif %} mr-1"></i>
                                 <span class="font-bold">{% if entry.xp_change > 0 %}+{% endif %}{{ entry.xp_change }} XP</span>
                             </div>
-                            {% if entry.balance_after %}
-                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                <i class="bi bi-wallet mr-1"></i>{{ entry.balance_after }} total
-                            </p>
-                            {% endif %}
                         </div>
                     </div>
                     {% endfor %}
