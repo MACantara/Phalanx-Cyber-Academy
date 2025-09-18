@@ -176,6 +176,24 @@ def create_app(config_name=None):
         formatted = name.replace('-', ' ').replace('_', ' ')
         return ' '.join(word.capitalize() for word in formatted.split())
 
+    @app.template_filter('format_user_timezone')
+    def format_user_timezone_filter(dt, user_timezone='UTC', format_string='%Y-%m-%d %H:%M:%S'):
+        """Format datetime for user's timezone in templates"""
+        if not dt:
+            return ""
+        
+        from app.utils.timezone_utils import format_for_user_timezone
+        return format_for_user_timezone(dt, user_timezone, format_string)
+
+    @app.template_filter('format_user_timezone_with_tz')
+    def format_user_timezone_with_tz_filter(dt, user_timezone='UTC'):
+        """Format datetime for user's timezone with timezone abbreviation in templates"""
+        if not dt:
+            return ""
+        
+        from app.utils.timezone_utils import format_for_user_timezone_with_tz
+        return format_for_user_timezone_with_tz(dt, user_timezone)
+
     # Make hCaptcha available in templates
     from app.utils.hcaptcha_utils import hcaptcha, is_hcaptcha_enabled
     app.jinja_env.globals.update(hcaptcha=hcaptcha, hcaptcha_enabled=is_hcaptcha_enabled)
