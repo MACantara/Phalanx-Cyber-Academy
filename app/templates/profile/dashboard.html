@@ -224,11 +224,6 @@
                                     {% if session.created_at %}
                                         {{ session.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}
                                     {% endif %}
-                                    {% if session.end_time %}
-                                        • Completed
-                                    {% else %}
-                                        • In Progress
-                                    {% endif %}
                                 </p>
                             </div>
                         </div>
