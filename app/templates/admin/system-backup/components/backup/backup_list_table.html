@@ -46,8 +46,8 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        <div>{{ backup.created_at.strftime('%Y-%m-%d') }}</div>
-                        <div class="text-xs">{{ backup.created_at.strftime('%H:%M:%S') }}</div>
+                        <div>{{ backup.created_at|format_user_timezone(current_user.timezone, '%Y-%m-%d') }}</div>
+                        <div class="text-xs">{{ backup.created_at|format_user_timezone(current_user.timezone, '%I:%M:%S %p') }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         <div class="font-medium">{{ backup.size_formatted }}</div>
@@ -88,7 +88,7 @@
                             <button class="restore-backup-btn inline-flex items-center px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors cursor-pointer"
                                     data-filename="{{ backup.filename }}"
                                     data-records="{{ backup.metadata.total_records }}"
-                                    data-created="{{ backup.created_at.strftime('%Y-%m-%d %H:%M') }}">
+                                    data-created="{{ backup.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}">
                                 <i class="bi bi-arrow-clockwise mr-1"></i>
                                 Restore
                             </button>

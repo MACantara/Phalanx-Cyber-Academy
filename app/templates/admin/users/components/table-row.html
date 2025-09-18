@@ -23,11 +23,11 @@
     </div>
 </td>
 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-    {{ user.created_at.strftime('%m/%d/%Y %H:%M') }}
+    {{ user.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}
 </td>
 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
     {% if user.last_login %}
-        {{ user.last_login.strftime('%m/%d/%Y %H:%M') }}
+        {{ user.last_login|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}
     {% else %}
         Never
     {% endif %}

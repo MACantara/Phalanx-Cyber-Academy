@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user
 from app.models.user import User
 from app.database import DatabaseError
+from app.utils.timezone_utils import get_timezones
 import re
 
 profile_bp = Blueprint('profile', __name__, url_prefix='/profile')
@@ -30,9 +31,13 @@ def edit_profile():
         flash('Profile editing is not available in this deployment environment.', 'warning')
         return redirect(url_for('main.home'))
     
+    # Get timezone list for template
+    common_timezones = get_timezones()
+    
     if request.method == 'POST':
         username = request.form.get('username', '').strip().lower()
         email = request.form.get('email', '').strip().lower()
+        timezone = request.form.get('timezone', 'UTC').strip()
         current_password = request.form.get('current_password', '').strip()
         new_password = request.form.get('new_password', '').strip()
         confirm_password = request.form.get('confirm_password', '').strip()
@@ -40,46 +45,52 @@ def edit_profile():
         # Validate current password for any changes
         if not current_user.check_password(current_password):
             flash('Current password is incorrect.', 'error')
-            return render_template('profile/edit-profile.html', user=current_user)
+            return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
         
         # Validate username
         if not username or len(username) < 3 or len(username) > 30 or not is_valid_username(username):
             flash('Username must be between 3 and 30 characters.', 'error')
-            return render_template('profile/edit-profile.html', user=current_user)
+            return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
         
         # Check if username is taken by another user
         if username != current_user.username:
             existing_user = User.find_by_username(username)
             if existing_user:
                 flash('Username is already taken.', 'error')
-                return render_template('profile/edit-profile.html', user=current_user)
+                return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
         
         # Validate email
         if not email or '@' not in email:
             flash('Please enter a valid email address.', 'error')
-            return render_template('profile/edit-profile.html', user=current_user)
+            return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
         
         # Check if email is taken by another user
         if email != current_user.email:
             existing_user = User.find_by_email(email)
             if existing_user:
                 flash('Email address is already registered.', 'error')
-                return render_template('profile/edit-profile.html', user=current_user)
+                return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
+        
+        # Validate timezone
+        if timezone not in common_timezones:
+            flash('Please select a valid timezone.', 'error')
+            return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
         
         # Validate new password if provided
         if new_password:
             if len(new_password) < 8:
                 flash('Password must be at least 8 characters long.', 'error')
-                return render_template('profile/edit-profile.html', user=current_user)
+                return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
             
             if new_password != confirm_password:
                 flash('New passwords do not match.', 'error')
-                return render_template('profile/edit-profile.html', user=current_user)
+                return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
         
         try:
             # Update user information
             current_user.username = username
             current_user.email = email
+            current_user.timezone = timezone
             
             # Update password if provided
             if new_password:
@@ -92,12 +103,12 @@ def edit_profile():
             
         except DatabaseError as e:
             flash('An error occurred while updating your profile. Please try again.', 'error')
-            return render_template('profile/edit-profile.html', user=current_user)
+            return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
         except Exception as e:
             flash('An error occurred while updating your profile. Please try again.', 'error')
-            return render_template('profile/edit-profile.html', user=current_user)
+            return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
     
-    return render_template('profile/edit-profile.html', user=current_user)
+    return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
 
 @profile_bp.route('/dashboard')
 @login_required

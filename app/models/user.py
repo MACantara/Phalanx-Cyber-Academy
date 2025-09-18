@@ -5,29 +5,9 @@ from flask_login import UserMixin
 import secrets
 from typing import Optional, List, Dict, Any
 from app.database import get_supabase, Tables, handle_supabase_error, DatabaseError
+from app.utils.timezone_utils import parse_datetime_aware, utc_now, is_expired
 
 ph = PasswordHasher()
-
-def parse_datetime_naive(dt_string: str) -> datetime:
-    """Parse datetime string and ensure it's timezone-naive."""
-    if not dt_string:
-        return None
-    
-    # Remove various timezone indicators to make it timezone-naive
-    dt_str = dt_string.replace('Z', '').replace('+00:00', '')
-    
-    # Handle fromisoformat parsing
-    try:
-        dt = datetime.fromisoformat(dt_str)
-        # If it somehow still has timezone info, remove it
-        if dt.tzinfo is not None:
-            dt = dt.replace(tzinfo=None)
-        return dt
-    except ValueError:
-        # Fallback: try parsing without microseconds
-        if '.' in dt_str:
-            dt_str = dt_str.split('.')[0]
-        return datetime.fromisoformat(dt_str)
 
 class User(UserMixin):
     def __init__(self, data: Dict[str, Any]):
@@ -41,12 +21,13 @@ class User(UserMixin):
         self.last_login = data.get('last_login')
         self.is_admin = data.get('is_admin', False)
         self.total_xp = data.get('total_xp', 0)
+        self.timezone = data.get('timezone', 'UTC')  # Default to UTC if not set
         
         # Convert string timestamps to datetime objects if needed
         if isinstance(self.created_at, str):
-            self.created_at = parse_datetime_naive(self.created_at)
+            self.created_at = parse_datetime_aware(self.created_at)
         if isinstance(self.last_login, str):
-            self.last_login = parse_datetime_naive(self.last_login)
+            self.last_login = parse_datetime_aware(self.last_login)
     
     @property
     def is_active(self):
@@ -84,6 +65,7 @@ class User(UserMixin):
                 'is_active': self.is_active,
                 'is_admin': self.is_admin,
                 'total_xp': self.total_xp,
+                'timezone': self.timezone,
                 'last_login': self.last_login.isoformat() if self.last_login else None
             }
             
@@ -93,18 +75,18 @@ class User(UserMixin):
                 handle_supabase_error(response)
             else:
                 # Create new user
-                user_data['created_at'] = datetime.utcnow().isoformat()
+                user_data['created_at'] = utc_now().isoformat()
                 response = supabase.table(Tables.USERS).insert(user_data).execute()
                 data = handle_supabase_error(response)
                 if data and len(data) > 0:
                     self.id = data[0]['id']
-                    self.created_at = parse_datetime_naive(data[0]['created_at'])
+                    self.created_at = parse_datetime_aware(data[0]['created_at'])
         except Exception as e:
             raise DatabaseError(f"Failed to save user: {e}")
     
     def update_last_login(self):
         """Update last login timestamp."""
-        self.last_login = datetime.utcnow()
+        self.last_login = utc_now()
         self.save()
     
     def generate_reset_token(self):
@@ -136,7 +118,8 @@ class User(UserMixin):
             'is_active': True,
             'is_admin': False,
             'total_xp': 0,
-            'created_at': datetime.utcnow(),
+            'timezone': 'UTC',  # Default timezone for new users
+            'created_at': utc_now(),
             'last_login': None
         }
         user = cls(user_data)
@@ -253,7 +236,7 @@ class User(UserMixin):
         """Count recent user registrations."""
         supabase = get_supabase()
         try:
-            cutoff_date = (datetime.utcnow() - timedelta(days=days)).isoformat()
+            cutoff_date = (utc_now() - timedelta(days=days)).isoformat()
             response = supabase.table(Tables.USERS).select("*", count='exact').gte('created_at', cutoff_date).execute()
             return response.count if hasattr(response, 'count') else 0
         except Exception as e:
@@ -312,11 +295,11 @@ class PasswordResetToken:
         """Check if token is valid (active and not expired)."""
         return (self.is_active and 
                 not self.used_at and 
-                datetime.utcnow() < self.expires_at)
+                not is_expired(self.expires_at, 0))
     
     def use_token(self):
         """Mark token as used."""
-        self.used_at = datetime.utcnow()
+        self.used_at = utc_now()
         self.is_active = False
         self.save()
     
@@ -337,8 +320,8 @@ class PasswordResetToken:
         token_data = {
             'user_id': user_id,
             'token': secrets.token_urlsafe(32),
-            'created_at': datetime.utcnow(),
-            'expires_at': datetime.utcnow() + timedelta(hours=1),
+            'created_at': utc_now(),
+            'expires_at': utc_now() + timedelta(hours=1),
             'is_active': True,
             'used_at': None
         }

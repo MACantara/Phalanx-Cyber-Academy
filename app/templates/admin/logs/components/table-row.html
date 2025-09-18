@@ -15,8 +15,8 @@
     </span>
 </td>
 <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-    <div class="hidden sm:block">{{ log.attempted_at.strftime('%m/%d/%Y %H:%M:%S') }}</div>
-    <div class="sm:hidden">{{ log.attempted_at.strftime('%m/%d %H:%M') }}</div>
+    <div class="hidden sm:block">{{ log.attempted_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M:%S %p') }}</div>
+    <div class="sm:hidden">{{ log.attempted_at|format_user_timezone(current_user.timezone, '%m/%d %I:%M %p') }}</div>
 </td>
 {% elif log_type == 'user_registrations' %}
 <td class="px-3 sm:px-6 py-4">
@@ -46,8 +46,8 @@
     </div>
 </td>
 <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-    <div class="hidden sm:block">{{ log.created_at.strftime('%m/%d/%Y %H:%M:%S') }}</div>
-    <div class="sm:hidden">{{ log.created_at.strftime('%m/%d %H:%M') }}</div>
+    <div class="hidden sm:block">{{ log.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M:%S %p') }}</div>
+    <div class="sm:hidden">{{ log.created_at|format_user_timezone(current_user.timezone, '%m/%d %I:%M %p') }}</div>
 </td>
 {% elif log_type == 'email_verifications' %}
 <td class="px-3 sm:px-6 py-4 text-sm text-gray-900 dark:text-white">
@@ -75,8 +75,8 @@
     {% endif %}
 </td>
 <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-    <div class="hidden sm:block">{{ log.created_at.strftime('%m/%d/%Y %H:%M:%S') }}</div>
-    <div class="sm:hidden">{{ log.created_at.strftime('%m/%d %H:%M') }}</div>
+    <div class="hidden sm:block">{{ log.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M:%S %p') }}</div>
+    <div class="sm:hidden">{{ log.created_at|format_user_timezone(current_user.timezone, '%m/%d %I:%M %p') }}</div>
 </td>
 {% elif log_type == 'contact_submissions' %}
 <td class="px-3 sm:px-6 py-4 text-sm text-gray-900 dark:text-white">
@@ -90,7 +90,7 @@
     <div class="max-w-xs truncate">{{ log.subject[:50] }}{% if log.subject|length > 50 %}...{% endif %}</div>
 </td>
 <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-    <div class="hidden sm:block">{{ log.created_at.strftime('%m/%d/%Y %H:%M:%S') }}</div>
-    <div class="sm:hidden">{{ log.created_at.strftime('%m/%d %H:%M') }}</div>
+    <div class="hidden sm:block">{{ log.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M:%S %p') }}</div>
+    <div class="sm:hidden">{{ log.created_at|format_user_timezone(current_user.timezone, '%m/%d %I:%M %p') }}</div>
 </td>
 {% endif %}

@@ -5,6 +5,7 @@ Represents level metadata and configuration for the CyberQuest system
 from datetime import datetime
 from typing import Dict, Any, List, Optional
 from app.database import get_supabase, DatabaseError, handle_supabase_error
+from app.utils.timezone_utils import utc_now, parse_datetime_aware
 
 
 class Level:
@@ -28,6 +29,12 @@ class Level:
         self.requirements = data.get('requirements')
         self.created_at = data.get('created_at')
         self.updated_at = data.get('updated_at')
+        
+        # Parse datetime fields
+        if self.created_at and isinstance(self.created_at, str):
+            self.created_at = parse_datetime_aware(self.created_at)
+        if self.updated_at and isinstance(self.updated_at, str):
+            self.updated_at = parse_datetime_aware(self.updated_at)
 
     def __repr__(self):
         return f'<Level {self.level_id}: {self.name}>'
@@ -126,8 +133,8 @@ class Level:
                 'coming_soon': coming_soon,
                 'requirements': requirements,
                 'metadata': metadata,
-                'created_at': datetime.utcnow().isoformat(),
-                'updated_at': datetime.utcnow().isoformat()
+                'created_at': utc_now().isoformat(),
+                'updated_at': utc_now().isoformat()
             }
             
             response = supabase.table('levels').insert(level_data).execute()
@@ -156,7 +163,7 @@ class Level:
                 'unlocked': self.unlocked,
                 'coming_soon': self.coming_soon,
                 'requirements': self.requirements,
-                'updated_at': datetime.utcnow().isoformat()
+                'updated_at': utc_now().isoformat()
             }
             
             if self.id:
@@ -166,7 +173,7 @@ class Level:
             else:
                 # Create new level
                 level_data['level_id'] = self.level_id
-                level_data['created_at'] = datetime.utcnow().isoformat()
+                level_data['created_at'] = utc_now().isoformat()
                 response = supabase.table('levels').insert(level_data).execute()
                 data = handle_supabase_error(response)
                 if data and len(data) > 0:
@@ -244,7 +251,7 @@ class Level:
                         metadata={
                             'original_data': level_data,
                             'auto_populated': True,
-                            'populated_at': datetime.utcnow().isoformat()
+                            'populated_at': utc_now().isoformat()
                         }
                     )
                     created_count += 1

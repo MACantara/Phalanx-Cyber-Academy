@@ -45,6 +45,138 @@
                            placeholder="Enter your email address" value="{{ user.email }}">
                 </div>
 
+                <!-- Timezone -->
+                <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.35s;">
+                    <label for="timezone" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        Timezone
+                    </label>
+                    <select id="timezone" name="timezone" 
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:shadow-md">
+                        {% set current_timezone = user.timezone if user.timezone else 'UTC' %}
+                        
+                        <!-- UTC and Common -->
+                        <optgroup label="Universal / Common">
+                            {% for tz in common_timezones %}
+                                {% if tz in ['UTC', 'Etc/UTC', 'GMT', 'Etc/GMT'] %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        
+                        <!-- Africa -->
+                        <optgroup label="Africa">
+                            {% for tz in common_timezones %}
+                                {% if tz.startswith('Africa/') %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz.replace('Africa/', '') }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        
+                        <!-- Americas -->
+                        <optgroup label="Americas">
+                            {% for tz in common_timezones %}
+                                {% if tz.startswith('America/') %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz.replace('America/', '') }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        
+                        <!-- Antarctica -->
+                        <optgroup label="Antarctica">
+                            {% for tz in common_timezones %}
+                                {% if tz.startswith('Antarctica/') %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz.replace('Antarctica/', '') }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        
+                        <!-- Arctic -->
+                        <optgroup label="Arctic">
+                            {% for tz in common_timezones %}
+                                {% if tz.startswith('Arctic/') %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz.replace('Arctic/', '') }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        
+                        <!-- Asia -->
+                        <optgroup label="Asia">
+                            {% for tz in common_timezones %}
+                                {% if tz.startswith('Asia/') %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz.replace('Asia/', '') }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        
+                        <!-- Atlantic -->
+                        <optgroup label="Atlantic">
+                            {% for tz in common_timezones %}
+                                {% if tz.startswith('Atlantic/') %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz.replace('Atlantic/', '') }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        
+                        <!-- Australia -->
+                        <optgroup label="Australia">
+                            {% for tz in common_timezones %}
+                                {% if tz.startswith('Australia/') %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz.replace('Australia/', '') }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        
+                        <!-- Europe -->
+                        <optgroup label="Europe">
+                            {% for tz in common_timezones %}
+                                {% if tz.startswith('Europe/') %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz.replace('Europe/', '') }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        
+                        <!-- Indian Ocean -->
+                        <optgroup label="Indian Ocean">
+                            {% for tz in common_timezones %}
+                                {% if tz.startswith('Indian/') %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz.replace('Indian/', '') }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        
+                        <!-- Pacific -->
+                        <optgroup label="Pacific">
+                            {% for tz in common_timezones %}
+                                {% if tz.startswith('Pacific/') %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz.replace('Pacific/', '') }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        
+                        <!-- Legacy/Country Codes -->
+                        <optgroup label="Legacy / Country Codes">
+                            {% for tz in common_timezones %}
+                                {% if not (tz.startswith('Africa/') or tz.startswith('America/') or tz.startswith('Antarctica/') or 
+                                          tz.startswith('Arctic/') or tz.startswith('Asia/') or tz.startswith('Atlantic/') or 
+                                          tz.startswith('Australia/') or tz.startswith('Europe/') or tz.startswith('Indian/') or 
+                                          tz.startswith('Pacific/') or tz.startswith('Etc/') or tz in ['UTC', 'GMT']) %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        
+                        <!-- Etc/GMT Offsets -->
+                        <optgroup label="GMT Offsets">
+                            {% for tz in common_timezones %}
+                                {% if tz.startswith('Etc/') and tz not in ['Etc/UTC', 'Etc/GMT'] %}
+                                    <option value="{{ tz }}" {% if tz == current_timezone %}selected{% endif %}>{{ tz }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Times will be displayed in your selected timezone</p>
+                </div>
+
                 <!-- Password Change Section -->
                 <div class="border-t border-gray-200 dark:border-gray-700 pt-6 opacity-0 animate-fade-in-up" style="animation-delay: 0.4s;">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">

@@ -7,6 +7,7 @@ from typing import Dict, Any, Optional, List
 from app.models.xp_history import XPHistory
 from app.models.level_completion import LevelCompletion
 from app.database import DatabaseError
+from app.utils.timezone_utils import utc_now
 
 
 class LearningStreakTracker:
@@ -55,7 +56,7 @@ class LearningStreakTracker:
             
             # Sort dates in descending order (most recent first)
             sorted_dates = sorted(activity_dates, reverse=True)
-            today = datetime.utcnow().date()
+            today = utc_now().date()
             
             # Check if there's activity today
             is_active_today = sorted_dates[0] == today
@@ -188,7 +189,7 @@ class LearningStreakTracker:
     def get_weekly_activity_summary(user_id: int) -> Dict[str, Any]:
         """Get a summary of learning activity for the past week"""
         try:
-            end_date = datetime.utcnow().date()
+            end_date = utc_now().date()
             start_date = end_date - timedelta(days=6)  # Last 7 days including today
             
             # Get activity for the past week

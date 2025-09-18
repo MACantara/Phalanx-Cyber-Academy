@@ -216,7 +216,7 @@
                                 <p class="font-semibold text-gray-900 dark:text-white">Level {{ completion.level_id }}</p>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">
                                     {% if completion.created_at %}
-                                        {{ completion.created_at[:10] }}
+                                        {{ completion.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}
                                     {% endif %}
                                     {% if completion.difficulty %}
                                         • {{ completion.difficulty.title() }}
@@ -285,7 +285,7 @@
                                 </p>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">
                                     {% if entry.created_at %}
-                                        {{ entry.created_at[:10] }}
+                                        {{ entry.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}
                                     {% endif %}
                                     {% if entry.level_id %}
                                         • Level {{ entry.level_id }}

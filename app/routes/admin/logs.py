@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, make_response
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app.models.user import User
 from app.models.login_attempt import LoginAttempt
 from app.models.email_verification import EmailVerification
 from app.models.contact import Contact
 from app.database import DatabaseError
+from app.utils.timezone_utils import utc_now, format_for_user_timezone
 from datetime import datetime, timedelta
 import csv
 import io
@@ -101,22 +102,24 @@ def export_logs():
             writer.writerow(['Username/Email', 'IP Address', 'Success', 'Attempted At'])
             logs = LoginAttempt.get_recent_attempts(1000)  # Get recent 1000 for export
             for log in logs:
+                attempted_at_formatted = format_for_user_timezone(log.attempted_at, current_user.timezone, '%m/%d/%Y %I:%M:%S %p') if log.attempted_at else 'Unknown'
                 writer.writerow([
                     log.username_or_email or 'Unknown',
                     log.ip_address,
                     'Success' if log.success else 'Failed',
-                    log.attempted_at.strftime('%Y-%m-%d %H:%M:%S') if log.attempted_at else 'Unknown'
+                    attempted_at_formatted
                 ])
         elif log_type == 'user_registrations':
             writer.writerow(['Username', 'Email', 'Active', 'Admin', 'Created At'])
             logs, _ = User.get_all_users(page=1, per_page=1000)  # Get recent 1000 for export
             for log in logs:
+                created_at_formatted = format_for_user_timezone(log.created_at, current_user.timezone, '%m/%d/%Y %I:%M:%S %p') if log.created_at else 'Unknown'
                 writer.writerow([
                     log.username,
                     log.email,
                     'Yes' if log.is_active else 'No',
                     'Yes' if log.is_admin else 'No',
-                    log.created_at.strftime('%Y-%m-%d %H:%M:%S') if log.created_at else 'Unknown'
+                    created_at_formatted
                 ])
         elif log_type == 'email_verifications':
             writer.writerow(['Email', 'User ID', 'Verified', 'Created At'])
@@ -126,12 +129,13 @@ def export_logs():
             writer.writerow(['Name', 'Email', 'Subject', 'Message', 'Created At'])
             logs = Contact.get_recent_submissions(1000)  # Get recent 1000 for export
             for log in logs:
+                created_at_formatted = format_for_user_timezone(log.created_at, current_user.timezone, '%m/%d/%Y %I:%M:%S %p') if log.created_at else 'Unknown'
                 writer.writerow([
                     log.name,
                     log.email,
                     log.subject,
                     log.message,
-                    log.created_at.strftime('%Y-%m-%d %H:%M:%S') if log.created_at else 'Unknown'
+                    created_at_formatted
                 ])
         
         # Create response

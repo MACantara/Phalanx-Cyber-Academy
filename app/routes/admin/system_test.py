@@ -8,6 +8,7 @@ from datetime import datetime, timezone, timedelta
 import json
 from app.models.system_test_plan import SystemTestPlan
 from app.models.user import User
+from app.utils.timezone_utils import utc_now, format_for_user_timezone
 
 system_test_bp = Blueprint('system_test', __name__, url_prefix='/admin/system-test')
 
@@ -191,7 +192,7 @@ def execute_test_plan(test_plan_id):
             proceed_to_next = request.form.get('proceed_to_next') == 'on'
             
             test_plan.test_status = test_status
-            test_plan.execution_date = datetime.utcnow()
+            test_plan.execution_date = utc_now()
             test_plan.executed_by = current_user.username
             test_plan.failure_reason = failure_reason if test_status == 'failed' else None
             
@@ -348,7 +349,7 @@ def reports():
         all_tests = SystemTestPlan.get_all_paginated()
         
         # Create timezone-aware datetime for comparison
-        thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
+        thirty_days_ago = utc_now() - timedelta(days=30)
         
         recent_executions = []
         for test in all_tests:
@@ -368,7 +369,7 @@ def reports():
                              modules_summary=modules_summary,
                              failed_tests=failed_tests,
                              recent_executions=recent_executions,
-                             report_generated_at=datetime.now())
+                             report_generated_at=utc_now())
     except Exception as e:
         current_app.logger.error(f'Error generating reports: {str(e)}')
         abort(500)
@@ -392,7 +393,7 @@ def update_test_status(test_plan_id):
             return jsonify({'success': False, 'error': 'Invalid status'}), 400
         
         test_plan.test_status = test_status
-        test_plan.execution_date = datetime.utcnow()
+        test_plan.execution_date = utc_now()
         test_plan.executed_by = current_user.username
         test_plan.failure_reason = failure_reason if test_status == 'failed' else None
         
@@ -444,7 +445,7 @@ def export_test_plans_docx():
             run.font.color.rgb = None  # Default black
         
         # Add generation info
-        gen_info = doc.add_paragraph(f'Generated on: {datetime.now().strftime("%B %d, %Y at %H:%M")}')
+        gen_info = doc.add_paragraph(f'Generated on: {format_for_user_timezone(utc_now(), current_user.timezone, "%B %d, %Y at %I:%M %p")}')
         # Set generation info text color to black
         for run in gen_info.runs:
             run.font.color.rgb = None  # Default black
@@ -499,7 +500,7 @@ def export_test_plans_docx():
                             # If timezone-aware, convert to local time for display
                             date_obj = test_plan.execution_date.replace(tzinfo=None)
                         
-                        formatted_date = date_obj.strftime("%m/%d/%Y %H:%M")
+                        formatted_date = date_obj.strftime("%m/%d/%Y %I:%M %p")
                     except (AttributeError, ValueError):
                         formatted_date = 'N/A'
 
@@ -543,7 +544,7 @@ def export_test_plans_docx():
         docx_buffer.seek(0)
         
         # Generate filename with current date
-        filename = f'passed-system-test-plans-{datetime.now().strftime("%Y-%m-%d")}.docx'
+        filename = f'passed-system-test-plans-{utc_now().strftime("%Y-%m-%d")}.docx'
         
         return send_file(
             docx_buffer,

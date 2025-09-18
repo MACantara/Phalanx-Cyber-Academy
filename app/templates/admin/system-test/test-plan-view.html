@@ -125,7 +125,7 @@
                         {% if test_plan.execution_date %}
                         <div>
                             <label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Last Executed</label>
-                            <p class="text-gray-900 dark:text-white">{{ test_plan.execution_date.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                            <p class="text-gray-900 dark:text-white">{{ test_plan.execution_date|format_user_timezone(current_user.timezone, '%B %d, %Y at %I:%M %p') }}</p>
                         </div>
                         {% endif %}
 
@@ -186,14 +186,14 @@
                         {% if test_plan.created_at %}
                         <div>
                             <label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Created</label>
-                            <p class="text-gray-900 dark:text-white text-sm">{{ test_plan.created_at.strftime('%B %d, %Y') }}</p>
+                            <p class="text-gray-900 dark:text-white text-sm">{{ test_plan.created_at|format_user_timezone(current_user.timezone, '%B %d, %Y') }}</p>
                         </div>
                         {% endif %}
 
                         {% if test_plan.updated_at %}
                         <div>
                             <label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Last Updated</label>
-                            <p class="text-gray-900 dark:text-white text-sm">{{ test_plan.updated_at.strftime('%B %d, %Y') }}</p>
+                            <p class="text-gray-900 dark:text-white text-sm">{{ test_plan.updated_at|format_user_timezone(current_user.timezone, '%B %d, %Y') }}</p>
                         </div>
                         {% endif %}
                     </div>

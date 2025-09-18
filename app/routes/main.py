@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 from datetime import datetime, timedelta
+from app.utils.timezone_utils import utc_now
 
 main_bp = Blueprint('main', __name__)
 

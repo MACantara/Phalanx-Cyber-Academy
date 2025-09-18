@@ -172,7 +172,7 @@
                                 <p class="text-sm text-gray-600 dark:text-gray-300">{{ test.module_name | format_module_name }}</p>
                                 {% if test.execution_date %}
                                 <p class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{ test.execution_date.strftime('%m/%d/%Y %I:%M %p') }}
+                                    {{ test.execution_date|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}
                                     {% if test.executed_by %} by {{ test.executed_by }}{% endif %}
                                 </p>
                                 {% endif %}
@@ -237,7 +237,7 @@
                                 </td>
                                 <td class="text-center py-3 px-2">
                                     {% if test.execution_date %}
-                                    <span class="text-gray-600 dark:text-gray-300">{{ test.execution_date.strftime('%m/%d/%Y') }}</span>
+                                    <span class="text-gray-600 dark:text-gray-300">{{ test.execution_date|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}</span>
                                     {% else %}
                                     <span class="text-gray-500 dark:text-gray-400">-</span>
                                     {% endif %}
@@ -297,7 +297,7 @@
                 <div>
                     <h4 class="text-blue-800 dark:text-blue-200 font-medium">Report Information</h4>
                     <p class="text-blue-700 dark:text-blue-300 text-sm mt-1">
-                        This report was generated on {{ report_generated_at.strftime('%B %d, %Y at %H:%M') }} and includes all test execution data up to this point.
+                        This report was generated on {{ report_generated_at|format_user_timezone(current_user.timezone, '%B %d, %Y at %I:%M %p') }} and includes all test execution data up to this point.
                         Recent executions include tests run within the last 30 days.
                     </p>
                 </div>

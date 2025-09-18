@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="text-right flex-shrink-0 ml-2">
-                <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{{ attempt.attempted_at.strftime('%m/%d %H:%M') }}</p>
+                <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{{ attempt.attempted_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}</p>
                 <span class="px-2 py-1 text-xs rounded-full whitespace-nowrap {{ 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' if attempt.success else 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' }}">
                     {{ 'Success' if attempt.success else 'Failed' }}
                 </span>
