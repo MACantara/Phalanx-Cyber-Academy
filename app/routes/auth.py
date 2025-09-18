@@ -6,6 +6,7 @@ from app.routes.login_attempts import check_ip_lockout, record_login_attempt, ge
 from app.routes.email_verification import create_and_send_verification, check_email_verification_status
 from app.utils.hcaptcha_utils import verify_hcaptcha
 from app.utils.password_validator import PasswordValidator
+from app.utils.timezone_utils import get_timezones
 from app.database import DatabaseError
 from argon2.exceptions import HashingError
 import re
@@ -132,6 +133,7 @@ def signup():
         email = request.form.get('email', '').strip().lower()
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
+        timezone = request.form.get('timezone', 'UTC').strip()  # Get detected timezone
         
         # Check if database is disabled (Vercel environment)
         if current_app.config.get('DISABLE_DATABASE', False):
@@ -173,14 +175,32 @@ def signup():
         if password != confirm_password:
             errors.append('Passwords do not match.')
         
+        # Validate timezone - ensure it's a valid IANA timezone
+        if timezone:
+            try:
+                valid_timezones = get_timezones()
+                if timezone not in valid_timezones:
+                    # If provided timezone is invalid, fall back to UTC
+                    timezone = 'UTC'
+                    current_app.logger.warning(f"Invalid timezone '{timezone}' provided during signup, falling back to UTC")
+            except Exception as e:
+                current_app.logger.warning(f"Timezone validation failed: {e}, falling back to UTC")
+                timezone = 'UTC'
+        else:
+            timezone = 'UTC'
+        
         if errors:
             for error in errors:
                 flash(error, 'error')
             return render_template('auth/signup.html')
         
         try:
-            # Create new user
-            user = User.create(username=username, email=email, password=password)
+            # Create new user with detected timezone
+            user = User.create(username=username, email=email, password=password, timezone=timezone)
+            
+            # Log successful timezone detection (for analytics)
+            if timezone != 'UTC':
+                current_app.logger.info(f"User {username} registered with timezone: {timezone}")
             
             # Create verification and send email
             verification, email_sent = create_and_send_verification(user)
