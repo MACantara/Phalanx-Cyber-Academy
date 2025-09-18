@@ -83,10 +83,10 @@ class Challenge1PageClass extends BasePage {
         const isFakeNews = !currentArticle.is_real;
         
         return `
-            <div class="font-sans bg-white min-h-screen">
+            <div class="font-sans bg-white min-h-screen w-full">
                 <!-- Header -->
-                <header class="bg-gray-800 text-white p-5">
-                    <div class="flex justify-between items-center">
+                <header class="bg-gray-800 text-white p-5 w-full">
+                    <div class="flex justify-between items-center max-w-4xl mx-auto">
                         <div>
                             <h1 class="m-0 text-3xl">Daily Politico News</h1>
                             <p class="mt-1 mb-0 text-gray-400">Your Source for News and Analysis</p>
@@ -98,59 +98,61 @@ class Challenge1PageClass extends BasePage {
                 </header>
                 
                 <!-- Main Content -->
-                <main class="p-8 max-w-4xl mx-auto">
-                    <h2 class="text-slate-900 text-3xl mb-3" data-element-type="title" data-element-id="title_analysis">
-                        ${ArticleFormatter.toTitleCase(currentArticle.title)}
-                    </h2>
-                    
-                    <!-- Article Metadata -->
-                    <div class="text-gray-700 mb-5 text-sm flex gap-4 flex-wrap items-center">
-                        <span data-element-type="date" data-element-id="date_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800">
-                            <i class="bi bi-calendar-event text-xs"></i>
-                            Published: ${formattedDate}
-                        </span>
-                        <span class="text-slate-500">•</span>
-                        <span data-element-type="author" data-element-id="author_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800">
-                            <i class="bi bi-pencil text-xs"></i>
-                            By: ${currentArticle.author || 'Staff Reporter'}
-                        </span>
-                        <span class="text-slate-500">•</span>
-                        <span data-element-type="source" data-element-id="source_analysis" class="px-2 py-1 bg-sky-50 border border-sky-500 rounded flex items-center gap-1">
-                            <i class="bi bi-globe text-xs"></i>
-                            <strong class="text-sky-800">Source:</strong>
-                            <span class="text-sky-800 font-mono text-xs">${currentArticle.source || 'Unknown'}</span>
-                        </span>
-                    </div>
-                    
-                    <!-- Article Text -->
-                    <div class="text-lg leading-relaxed text-slate-800" data-element-type="content" data-element-id="content_analysis">
-                        ${ArticleFormatter.formatArticleText(displayText, isFakeNews, currentArticle)}
-                    </div>
-                    
-                    <!-- Classification Interface -->
-                    <div class="my-8 p-5 bg-slate-50 rounded-lg border border-slate-200">
-                        <h3 class="mt-0 text-slate-800 text-xl">Classify this Article</h3>
-                        <p class="text-slate-600 mb-5">Based on your analysis, is this article real or fake news?</p>
+                <main class="w-full">
+                    <div class="px-8 py-6 max-w-4xl mx-auto">
+                        <h2 class="text-slate-900 text-3xl mb-3" data-element-type="title" data-element-id="title_analysis">
+                            ${ArticleFormatter.toTitleCase(currentArticle.title)}
+                        </h2>
                         
-                        <div class="flex gap-4 mb-5">
-                            <button id="classify-real" 
-                                    class="flex-1 px-5 py-3 bg-emerald-500 text-white border-none rounded-md text-base cursor-pointer transition-colors hover:bg-emerald-600">
-                                <i class="bi bi-newspaper me-2"></i> Real News
-                            </button>
-                            <button id="classify-fake" 
-                                    class="flex-1 px-5 py-3 bg-red-500 text-white border-none rounded-md text-base cursor-pointer transition-colors hover:bg-red-600">
-                                <i class="bi bi-exclamation-triangle me-2"></i> Fake News
-                            </button>
-                        </div>
-                        
-                        <div id="classification-result" class="hidden p-4 rounded-md mt-4">
-                            <!-- Result will be shown here -->
-                        </div>
-                        
-                        <div class="text-center mt-5">
-                            <span class="text-slate-600 text-sm">
-                                Article ${this.currentArticleIndex + 1} of ${this.articlesData.length}
+                        <!-- Article Metadata -->
+                        <div class="text-gray-700 mb-5 text-sm flex gap-4 flex-wrap items-center">
+                            <span data-element-type="date" data-element-id="date_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800">
+                                <i class="bi bi-calendar-event text-xs"></i>
+                                Published: ${formattedDate}
                             </span>
+                            <span class="text-slate-500">•</span>
+                            <span data-element-type="author" data-element-id="author_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800">
+                                <i class="bi bi-pencil text-xs"></i>
+                                By: ${currentArticle.author || 'Staff Reporter'}
+                            </span>
+                            <span class="text-slate-500">•</span>
+                            <span data-element-type="source" data-element-id="source_analysis" class="px-2 py-1 bg-sky-50 border border-sky-500 rounded flex items-center gap-1">
+                                <i class="bi bi-globe text-xs"></i>
+                                <strong class="text-sky-800">Source:</strong>
+                                <span class="text-sky-800 font-mono text-xs">${currentArticle.source || 'Unknown'}</span>
+                            </span>
+                        </div>
+                        
+                        <!-- Article Text -->
+                        <div class="text-lg leading-relaxed text-slate-800 mb-6" data-element-type="content" data-element-id="content_analysis">
+                            ${ArticleFormatter.formatArticleText(displayText, isFakeNews, currentArticle)}
+                        </div>
+                        
+                        <!-- Classification Interface -->
+                        <div class="mt-6 mb-4 p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h3 class="mt-0 text-slate-800 text-xl">Classify this Article</h3>
+                            <p class="text-slate-600 mb-5">Based on your analysis, is this article real or fake news?</p>
+                            
+                            <div class="flex gap-4 mb-5">
+                                <button id="classify-real" 
+                                        class="flex-1 px-5 py-3 bg-emerald-500 text-white border-none rounded-md text-base cursor-pointer transition-colors hover:bg-emerald-600">
+                                    <i class="bi bi-newspaper me-2"></i> Real News
+                                </button>
+                                <button id="classify-fake" 
+                                        class="flex-1 px-5 py-3 bg-red-500 text-white border-none rounded-md text-base cursor-pointer transition-colors hover:bg-red-600">
+                                    <i class="bi bi-exclamation-triangle me-2"></i> Fake News
+                                </button>
+                            </div>
+                            
+                            <div id="classification-result" class="hidden p-4 rounded-md mt-4">
+                                <!-- Result will be shown here -->
+                            </div>
+                            
+                            <div class="text-center mt-5">
+                                <span class="text-slate-600 text-sm">
+                                    Article ${this.currentArticleIndex + 1} of ${this.articlesData.length}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </main>
