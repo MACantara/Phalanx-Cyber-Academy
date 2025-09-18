@@ -3,7 +3,12 @@
         <div class="grid md:grid-cols-4 gap-8 mb-8">
             <!-- Company Info -->
             <div class="md:col-span-2">
-                <h3 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent mb-4">CyberQuest</h3>
+                <div class="flex items-center mb-4">
+                    <img src="{{ url_for('static', filename='images/logos/Cyberquest_Logo.png') }}" 
+                         alt="CyberQuest Logo" 
+                         class="h-12 w-auto mr-3 drop-shadow-lg">
+                    <h3 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">CyberQuest</h3>
+                </div>
                 <p class="text-gray-600 dark:text-gray-300 mb-4">An interactive cybersecurity learning platform designed to teach essential security concepts through hands-on challenges and real-world scenarios.</p>
             </div>
             
