@@ -150,9 +150,10 @@ CREATE INDEX IF NOT EXISTS idx_levels_updated_at ON levels(updated_at);
 CREATE TABLE IF NOT EXISTS sessions (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),
-    session_name TEXT NOT NULL, -- Level name or 'Blue Team vs Red Team Mode'
+    session_name TEXT NOT NULL, -- Level name or 'Blue-Team-vs-Red-Team-Mode'
+    level_id INTEGER, -- references levels.level_id or NULL for non-level sessions
     score INTEGER,
-    start_time TIMESTAMPTZ NOT NULL,
+    start_time TIMESTAMPTZ NOT NULL,    
     end_time TIMESTAMPTZ, -- NULL while session is active
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -160,6 +161,7 @@ CREATE TABLE IF NOT EXISTS sessions (
 -- Create indexes for sessions table
 CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
 CREATE INDEX IF NOT EXISTS idx_sessions_session_name ON sessions(session_name);
+CREATE INDEX IF NOT EXISTS idx_sessions_level_id ON sessions(level_id);
 CREATE INDEX IF NOT EXISTS idx_sessions_created_at ON sessions(created_at);
 CREATE INDEX IF NOT EXISTS idx_sessions_start_time ON sessions(start_time);
 CREATE INDEX IF NOT EXISTS idx_sessions_end_time ON sessions(end_time);
@@ -173,7 +175,7 @@ CREATE TABLE IF NOT EXISTS xp_history (
     balance_before INTEGER DEFAULT 0,
     balance_after INTEGER,
     reason VARCHAR(100) NOT NULL,
-    level_id INTEGER, -- references levels.level_id or NULL for non-level sessions
+    session_id INTEGER REFERENCES sessions(id),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -181,7 +183,7 @@ CREATE TABLE IF NOT EXISTS xp_history (
 CREATE INDEX IF NOT EXISTS idx_xp_history_user_id ON xp_history(user_id);
 CREATE INDEX IF NOT EXISTS idx_xp_history_created_at ON xp_history(created_at);
 CREATE INDEX IF NOT EXISTS idx_xp_history_reason ON xp_history(reason);
-CREATE INDEX IF NOT EXISTS idx_xp_history_level_id ON xp_history(level_id);
+CREATE INDEX IF NOT EXISTS idx_xp_history_session_id ON xp_history(session_id);
 
 -- Populate levels table with initial data from app/routes/levels.py
 INSERT INTO levels (level_id, name, description, category, icon, estimated_time, expected_time_seconds, xp_reward, skills, difficulty, unlocked, coming_soon, requirements, updated_at) VALUES
