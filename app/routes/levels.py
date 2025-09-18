@@ -377,50 +377,51 @@ def get_level_js_files(level_id):
 @levels_bp.route('/')
 @login_required
 def levels_overview():
-    """Display all cybersecurity levels with real user progress."""
+    """Display all cybersecurity levels with real user progress from sessions."""
     try:
         from app.models.level import Level
-        from app.models.level_completion import LevelCompletion
+        from app.models.session import Session
         from app.utils.xp import get_user_level_info
         
         # Load levels from database, fallback to cached if needed
         levels = get_levels_from_db()
         
         # Get user's progress summary
-        progress_summary = LevelCompletion.get_user_progress_summary(current_user.id)
+        progress_summary = Session.get_user_progress_summary(current_user.id)
         
         # Get user's total XP
         user_total_xp = getattr(current_user, 'total_xp', None) or 0
         level_info = get_user_level_info(user_total_xp)
         
-        # Get user's completions for detailed progress
-        user_completions = LevelCompletion.get_user_completions(current_user.id, limit=100)
+        # Get user's sessions for detailed progress
+        user_sessions = Session.get_user_sessions(current_user.id, limit=100)
         
-        # Create lookup for latest completion per level (user_completions is ordered by created_at DESC)
-        completion_lookup = {}
-        for completion in user_completions:
-            if completion.level_id not in completion_lookup:
-                completion_lookup[completion.level_id] = completion
+        # Create lookup for latest session per level (user_sessions is ordered by created_at DESC)
+        session_lookup = {}
+        for session in user_sessions:
+            if session.session_name not in session_lookup and session.end_time is not None:
+                session_lookup[session.session_name] = session
         
         # Enhance levels with user progress data
         enhanced_levels = []
         for level in levels:
             level_data = level.copy()
             
-            # Check if user has completed this level
-            completion = completion_lookup.get(level['id'])
+            # Check if user has completed this level (by session name)
+            level_name = level.get('name', f"Level {level['id']}")
+            session = session_lookup.get(level_name)
             
-            if completion:
+            if session:
                 level_data['user_progress'] = {
                     'status': 'completed',
                     'completed': True,
-                    'score': completion.score or 0,
-                    'completion_percentage': completion.score or 0,
+                    'score': session.score or 0,
+                    'completion_percentage': session.score or 0,
                     'xp_earned': level['xp_reward'],  # Use the reward from level data
-                    'time_spent': completion.time_spent or 0,
+                    'time_spent': session.time_spent or 0,
                     'attempts': 1,  # Could be enhanced to track multiple attempts
-                    'completed_at': completion.created_at,
-                    'started_at': completion.created_at  # Could be enhanced with separate start tracking
+                    'completed_at': session.end_time,
+                    'started_at': session.start_time
                 }
             else:
                 level_data['user_progress'] = {
@@ -487,10 +488,10 @@ def levels_overview():
 @levels_bp.route('/<int:level_id>/start')
 @login_required
 def start_level(level_id):
-    """Start a level using database Level model."""
+    """Start a level using database Level model and create a new session."""
     try:
         from app.models.level import Level
-        from app.models.level_completion import LevelCompletion
+        from app.models.session import Session
         
         # Get level from database
         level = Level.get_by_level_id(level_id)
@@ -499,9 +500,22 @@ def start_level(level_id):
             flash('Level not found.', 'error')
             return redirect(url_for('levels.levels_overview'))
         
-        # Check if user has previous completions for this level
-        user_completions = LevelCompletion.get_user_completions(current_user.id, limit=10)
-        previous_completion = next((c for c in user_completions if c.level_id == level_id), None)
+        # Create a new session for this level
+        try:
+            session = Session.start_session(
+                user_id=current_user.id,
+                session_name=level.name
+            )
+            session_id = session.id
+        except Exception as session_error:
+            logger.error(f"Failed to create session for level {level_id}: {session_error}")
+            # Continue without session tracking
+            session_id = None
+        
+        # Check if user has previous sessions for this level
+        user_sessions = Session.get_user_sessions(current_user.id, limit=10)
+        previous_sessions = [s for s in user_sessions if s.session_name == level.name and s.end_time is not None]
+        previous_session = previous_sessions[0] if previous_sessions else None
         
         # Prepare level data for simulation
         level_data = {
@@ -512,10 +526,11 @@ def start_level(level_id):
             'difficulty': level.difficulty,
             'xp_reward': level.xp_reward or 100,
             'skills': level.skills or [],
-            'is_retry': previous_completion is not None,
-            'previous_attempts': 1 if previous_completion else 0,
-            'previous_score': previous_completion.score if previous_completion else 0,
-            'previous_status': 'completed' if previous_completion else 'not_started'
+            'session_id': session_id,  # Include session ID for tracking
+            'is_retry': previous_session is not None,
+            'previous_attempts': len(previous_sessions),
+            'previous_score': previous_session.score if previous_session else 0,
+            'previous_status': 'completed' if previous_session else 'not_started'
         }
         
         # Define level-specific JavaScript files to load
@@ -540,10 +555,10 @@ def start_level(level_id):
 @levels_bp.route('/api/complete/<int:level_id>', methods=['POST'])
 @login_required
 def complete_level(level_id):
-    """API endpoint to mark a level as completed with server-side tracking."""
+    """API endpoint to mark a level as completed by ending the session."""
     try:
         from app.models.level import Level
-        from app.models.level_completion import LevelCompletion
+        from app.models.session import Session
         from app.utils.xp import award_user_xp, get_user_level_info
         
         # Validate level exists
@@ -554,40 +569,35 @@ def complete_level(level_id):
         # Get request data
         data = request.get_json() or {}
         score = data.get('score', 100)
-        time_spent = data.get('time_spent')
-        difficulty = data.get('difficulty') or level.difficulty
+        session_id = data.get('session_id')  # Session ID from client
         
         # Validate score
         if score is not None and (score < 0 or score > 100):
             return jsonify({'success': False, 'error': 'Score must be between 0 and 100'}), 400
         
-        # Create completion record with idempotency check
-        completion, is_new = LevelCompletion.create_completion(
-            user_id=current_user.id,
-            level_id=level_id,
-            score=score,
-            time_spent=time_spent,
-            difficulty=difficulty,
-            source='web'
-        )
+        # Find the active session or use provided session_id
+        session = None
+        if session_id:
+            session = Session.get_by_id(session_id)
         
-        if not is_new:
-            # Duplicate submission detected
-            return jsonify({
-                'success': True,
-                'duplicate': True,
-                'level_completed': level_id,
-                'xp_earned': 0,
-                'score': completion.score,
-                'message': 'Level already completed'
-            }), 200
+        if not session:
+            # Try to find active session for this user
+            active_session = Session.get_active_session(current_user.id)
+            if active_session and active_session.session_name == level.name:
+                session = active_session
         
-        # XP is automatically calculated and awarded in create_completion
-        xp_awarded = completion.get_xp_awarded()
-        xp_calculation_details = completion.get_xp_calculation_details()
+        if not session:
+            return jsonify({'success': False, 'error': 'No active session found for this level'}), 400
+        
+        # End the session with the score
+        completed_session = Session.end_session(session.id, score=score)
+        
+        # Get XP awarded (if any)
+        xp_awarded = completed_session.get_xp_awarded()
+        xp_calculation_details = completed_session.get_xp_calculation_details()
         
         # Get updated user progress
-        progress_summary = LevelCompletion.get_user_progress_summary(current_user.id)
+        progress_summary = Session.get_user_progress_summary(current_user.id)
         
         # Get user's current total XP from database
         from app.models.user import User
@@ -641,14 +651,14 @@ def complete_level(level_id):
 @levels_bp.route('/api/progress', methods=['GET'])
 @login_required
 def get_user_progress():
-    """API endpoint to get user progress data with server-side tracking."""
+    """API endpoint to get user progress data with server-side session tracking."""
     try:
-        from app.models.level_completion import LevelCompletion
+        from app.models.session import Session
         from app.models.level import Level
         from app.utils.xp import get_user_level_info
         
         # Get user's progress summary
-        progress_summary = LevelCompletion.get_user_progress_summary(current_user.id)
+        progress_summary = Session.get_user_progress_summary(current_user.id)
         
         # Get user's total XP (from User model or calculate from history)
         user_total_xp = getattr(current_user, 'total_xp', None) or 0
@@ -656,8 +666,8 @@ def get_user_progress():
         # Get user level information
         level_info = get_user_level_info(user_total_xp)
         
-        # Get recent completions
-        recent_completions = LevelCompletion.get_user_completions(current_user.id, limit=10)
+        # Get recent sessions
+        recent_sessions = Session.get_user_sessions(current_user.id, limit=10)
         
         return jsonify({
             'success': True,
@@ -672,7 +682,7 @@ def get_user_progress():
                 'progress_percent': level_info['progress_percent']
             },
             'best_scores': progress_summary['best_scores'],
-            'recent_completions': [completion.to_dict() for completion in recent_completions]
+            'recent_sessions': [session.to_dict() for session in recent_sessions]
         })
         
     except DatabaseError as e:
@@ -706,9 +716,9 @@ def update_level_progress(level_id):
 @levels_bp.route('/api/level/<int:level_id>/statistics', methods=['GET'])
 @login_required  
 def get_level_statistics(level_id):
-    """API endpoint to get statistics for a specific level."""
+    """API endpoint to get statistics for a specific level based on sessions."""
     try:
-        from app.models.level_completion import LevelCompletion
+        from app.models.session import Session
         from app.models.level import Level
         
         # Validate level exists
@@ -716,8 +726,8 @@ def get_level_statistics(level_id):
         if not level:
             return jsonify({'success': False, 'error': 'Level not found'}), 404
         
-        # Get level statistics
-        stats = LevelCompletion.get_level_statistics(level_id)
+        # Get session statistics for this level
+        stats = Session.get_session_statistics(level.name)
         
         return jsonify({
             'success': True,
@@ -766,35 +776,35 @@ def get_user_xp_history():
         logger.error(f"Unexpected error in get_user_xp_history: {str(e)}")
         return jsonify({'success': False, 'error': 'Internal server error'}), 500
 
-@levels_bp.route('/api/completions', methods=['GET'])
+@levels_bp.route('/api/sessions', methods=['GET'])
 @login_required
-def get_user_completions():
-    """API endpoint to get user's level completions."""
+def get_user_sessions():
+    """API endpoint to get user's learning sessions."""
     try:
-        from app.models.level_completion import LevelCompletion
+        from app.models.session import Session
         
         # Get pagination parameters
         limit = min(int(request.args.get('limit', 20)), 100)
         offset = int(request.args.get('offset', 0))
         
-        # Get user's completions
-        completions = LevelCompletion.get_user_completions(current_user.id, limit=limit, offset=offset)
+        # Get user's sessions
+        sessions = Session.get_user_sessions(current_user.id, limit=limit, offset=offset)
         
         return jsonify({
             'success': True,
-            'completions': [completion.to_dict() for completion in completions],
+            'sessions': [session.to_dict() for session in sessions],
             'pagination': {
                 'limit': limit,
                 'offset': offset,
-                'has_more': len(completions) == limit
+                'has_more': len(sessions) == limit
             }
         })
         
     except DatabaseError as e:
-        logger.error(f"Database error in get_user_completions: {str(e)}")
+        logger.error(f"Database error in get_user_sessions: {str(e)}")
         return jsonify({'success': False, 'error': 'Database error occurred'}), 500
     except Exception as e:
-        logger.error(f"Unexpected error in get_user_completions: {str(e)}")
+        logger.error(f"Unexpected error in get_user_sessions: {str(e)}")
         return jsonify({'success': False, 'error': 'Internal server error'}), 500
 
 @levels_bp.route('/api/analytics', methods=['POST'])
