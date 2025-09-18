@@ -304,8 +304,8 @@ export class InteractiveLabeling {
         this.navigationHandler.continueToNextLevel();
     }
 
-    // New method to handle level completion with server-side tracking
-    async completeLevel() {
+    // Method to handle level completion with server-side tracking
+    async completeLevel(isRetry = false) {
         const overallScore = Math.round(
             this.articleResults.reduce((sum, result) => sum + result.results.percentage, 0) / 
             this.articleResults.length
@@ -348,26 +348,31 @@ export class InteractiveLabeling {
         localStorage.setItem('cyberquest_level_1_completed', 'true');
         localStorage.setItem('cyberquest_level1_score', overallScore.toString());
         
-        // Clean up and navigate to levels page
-        this.modalManager.removeModal();
-        this.cleanup();
-        this.showShutdownSequenceAndNavigate();
+        if (isRetry) {
+            // Clear current results
+            this.articleResults = [];
+            this.currentArticleIndex = 0;
+            
+            // Remove the modal
+            this.modalManager.removeModal();
+            
+            // Clean up current elements
+            this.cleanupCurrentElements();
+            
+            // Restart the level by reloading the page
+            window.location.reload();
+        } else {
+            // Clean up and navigate to levels page
+            this.modalManager.removeModal();
+            this.cleanup();
+            this.showShutdownSequenceAndNavigate();
+        }
     }
 
     // New method to handle level retry
     retryLevel() {
-        // Clear current results
-        this.articleResults = [];
-        this.currentArticleIndex = 0;
-        
-        // Remove the modal
-        this.modalManager.removeModal();
-        
-        // Clean up current elements
-        this.cleanupCurrentElements();
-        
-        // Restart the level by reloading the page
-        window.location.reload();
+        // First record the end time by calling completeLevel
+        this.completeLevel(true); // Pass true to indicate this is a retry (will reload after completion)
     }
 
     // Helper method to calculate total time spent
