@@ -234,6 +234,27 @@ def create_app(config_name=None):
         except (ValueError, TypeError):
             return "0s"
 
+    @app.template_filter('format_number')
+    def format_number_filter(number):
+        """Format large numbers with K, M, B suffixes"""
+        if not number:
+            return "0"
+        
+        try:
+            # Convert to float for calculations
+            num = float(number)
+            
+            if abs(num) >= 1_000_000_000:  # Billions
+                return f"{num / 1_000_000_000:.1f}B".rstrip('0').rstrip('.')
+            elif abs(num) >= 1_000_000:  # Millions
+                return f"{num / 1_000_000:.1f}M".rstrip('0').rstrip('.')
+            elif abs(num) >= 1_000:  # Thousands
+                return f"{num / 1_000:.1f}K".rstrip('0').rstrip('.')
+            else:
+                return str(int(num))  # Return as integer for smaller numbers
+        except (ValueError, TypeError):
+            return str(number) if number else "0"
+
     # Make hCaptcha available in templates
     from app.utils.hcaptcha_utils import hcaptcha, is_hcaptcha_enabled
     app.jinja_env.globals.update(hcaptcha=hcaptcha, hcaptcha_enabled=is_hcaptcha_enabled)
