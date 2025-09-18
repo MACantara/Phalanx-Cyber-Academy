@@ -4,7 +4,7 @@ Quick streak utilities for simple streak checks throughout the application
 from typing import Dict, Any
 from datetime import datetime, timedelta
 from app.models.xp_history import XPHistory
-from app.models.level_completion import LevelCompletion
+from app.models.session import Session
 from app.utils.timezone_utils import utc_now, utc_today
 
 
@@ -12,7 +12,7 @@ def has_active_streak(user_id: int) -> bool:
     """
     Quick check if user has an active learning streak.
     
-    Returns True if the user has activity (XP history or level completion) 
+    Returns True if the user has activity (XP history or session activity) 
     in the last 2 days (today or yesterday).
     
     This is a lightweight version for simple boolean checks.
@@ -29,12 +29,12 @@ def has_active_streak(user_id: int) -> bool:
                 if entry_date >= yesterday:
                     return True
         
-        # Check for recent level completions
-        recent_completions = LevelCompletion.get_user_completions(user_id, limit=5)
-        for completion in recent_completions:
-            if completion.created_at:
-                completion_date = datetime.fromisoformat(completion.created_at.replace('Z', '+00:00')).date()
-                if completion_date >= yesterday:
+        # Check for recent sessions
+        recent_sessions = Session.get_user_sessions(user_id, limit=5)
+        for session in recent_sessions:
+            if session.created_at:
+                session_date = datetime.fromisoformat(session.created_at.replace('Z', '+00:00')).date()
+                if session_date >= yesterday:
                     return True
         
         return False
