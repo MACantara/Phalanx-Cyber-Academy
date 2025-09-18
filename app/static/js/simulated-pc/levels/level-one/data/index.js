@@ -1,35 +1,47 @@
 /**
  * Level 1 Data
  * Misinformation detection scenario data
+ * Now loads from news_articles_cleaned.csv
  */
 
 export const Level1Data = {
-    // Fake news articles for detection
-    fakeArticles: [
-        {
-            id: 'fake_001',
-            title: 'Local Election Rigged by Voting Machine Hack',
-            source: 'UnverifiedNews.com',
-            content: 'Claims about election interference...',
-            indicators: ['unverified source', 'sensational headline', 'no evidence']
-        }
+    // Data source configuration
+    dataSource: {
+        type: 'csv',
+        file: 'news_articles_cleaned.csv',
+        api_endpoint: '/api/news/mixed-articles'
+    },
+    
+    // Article selection criteria
+    articleSelection: {
+        fake_articles: 8,
+        real_articles: 7,
+        total: 15,
+        shuffle: true
+    },
+    
+    // Required fields from CSV
+    requiredFields: [
+        'author',
+        'published', 
+        'title_without_stopwords',
+        'text_without_stopwords',
+        'site_url',
+        'label' // For checking only, not displayed
     ],
     
-    // Real news articles for comparison
-    realArticles: [
-        {
-            id: 'real_001',
-            title: 'Election Security Measures Updated',
-            source: 'Reuters',
-            content: 'Official election security update...',
-            indicators: ['verified source', 'factual reporting', 'official quotes']
-        }
-    ],
-    
-    // Source verification database
+    // Source verification database (can be expanded based on CSV data)
     sourceDatabase: {
-        'reuters.com': { credibility: 'high', bias: 'center' },
-        'UnverifiedNews.com': { credibility: 'low', bias: 'unknown' }
+        // This will be populated dynamically based on site_url values from CSV
+        'default': { credibility: 'unknown', bias: 'unknown' }
+    },
+    
+    // Training configuration
+    trainingConfig: {
+        showLabels: false, // Hide true labels during training
+        enableHints: true,
+        enableAnalysis: true,
+        randomizeOrder: true
     }
 };
 
