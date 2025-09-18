@@ -54,8 +54,8 @@ class GameController {
         await this.initializeXPTracking();
         
         // Auto-start the simulation after a brief delay
-        setTimeout(() => {
-            this.autoStartGame();
+        setTimeout(async () => {
+            await this.autoStartGame();
         }, 1000);
         
         console.log('🎮 Game Controller initialized');
@@ -110,11 +110,11 @@ class GameController {
         }
         
         // Game control buttons
-        document.getElementById('pause-simulation')?.addEventListener('click', () => {
+        document.getElementById('pause-simulation')?.addEventListener('click', async () => {
             if (this.gameState.isRunning) {
                 this.pauseGame();
             } else {
-                this.startGame();
+                await this.startGame();
             }
         });
         document.getElementById('stop-simulation')?.addEventListener('click', () => this.stopGame());
@@ -133,10 +133,10 @@ class GameController {
         });
         
         // Modal controls
-        document.getElementById('play-again')?.addEventListener('click', () => {
+        document.getElementById('play-again')?.addEventListener('click', async () => {
             this.hideGameOverModal();
-            this.resetGame();
-            setTimeout(() => this.autoStartGame(), 500);
+            await this.resetGame();
+            setTimeout(async () => await this.autoStartGame(), 500);
         });
         
         document.getElementById('close-modal')?.addEventListener('click', () => {
@@ -144,8 +144,34 @@ class GameController {
         });
     }
     
-    startGame() {
+    async startGame() {
         if (this.gameState.isRunning) return;
+        
+        // Call the server to start a new game session
+        try {
+            const response = await fetch('/blue-vs-red/api/start-game', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.gameState) {
+                    // Update local game state with server data
+                    this.gameState = { ...this.gameState, ...data.gameState };
+                    console.log('🎮 Session created successfully:', data.gameState.session_id);
+                } else {
+                    console.error('Failed to start session:', data.error || 'Unknown error');
+                }
+            } else {
+                console.error('Failed to start session - HTTP error:', response.status);
+            }
+        } catch (error) {
+            console.error('Failed to start session:', error);
+        }
         
         this.gameState.isRunning = true;
         this.uiManager.updateGameControls();
@@ -161,9 +187,9 @@ class GameController {
         console.log('🎮 Game started');
     }
     
-    autoStartGame() {
-        setTimeout(() => {
-            this.startGame();
+    async autoStartGame() {
+        setTimeout(async () => {
+            await this.startGame();
         }, 1500);
     }
     
