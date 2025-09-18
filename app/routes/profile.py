@@ -113,14 +113,14 @@ def edit_profile():
 @profile_bp.route('/dashboard')
 @login_required
 def dashboard():
-    """Display user dashboard with cybersecurity level progress."""
+    """Display user dashboard with cybersecurity level progress from sessions."""
     if current_app.config.get('DISABLE_DATABASE', False):
         flash('User dashboard is not available in this deployment environment.', 'warning')
         return redirect(url_for('main.home'))
     
     try:
         from app.models.level import Level
-        from app.models.level_completion import LevelCompletion
+        from app.models.session import Session
         from app.utils.xp import get_user_level_info
         
         # Get all levels from database
@@ -128,7 +128,7 @@ def dashboard():
         total_levels = len(levels)
         
         # Get user progress from database
-        progress_summary = LevelCompletion.get_user_progress_summary(current_user.id)
+        progress_summary = Session.get_user_progress_summary(current_user.id)
         completed_levels = progress_summary['completed_levels']
         total_xp = getattr(current_user, 'total_xp', None) or 0
         progress_percentage = progress_summary['completion_percentage']
@@ -170,8 +170,8 @@ def dashboard():
             # Get XP summary for stats
             xp_summary = XPHistory.get_user_xp_summary(current_user.id)
             
-            # Get recent level completions (last 5 completions)
-            recent_completions = LevelCompletion.get_user_completions(current_user.id, limit=5)
+            # Get recent sessions (last 5 sessions)
+            recent_sessions = Session.get_user_sessions(current_user.id, limit=5)
             
         except Exception as e:
             current_app.logger.warning(f"Failed to load activity history for user {current_user.id}: {str(e)}")
@@ -185,14 +185,22 @@ def dashboard():
                 'first_entry': None,
                 'last_entry': None
             }
-            recent_completions = []
+            recent_sessions = []
         
-        # Prepare levels with completion status
+        # Prepare levels with completion status based on sessions
         levels_progress = []
-        user_completions = {comp.level_id: comp for comp in LevelCompletion.get_user_completions(current_user.id)}
+        user_sessions = Session.get_user_sessions(current_user.id)
+        
+        # Create lookup for completed sessions by session name
+        session_lookup = {}
+        for session in user_sessions:
+            if session.end_time is not None and session.session_name != 'Blue Team vs Red Team Mode':
+                if session.session_name not in session_lookup:
+                    session_lookup[session.session_name] = session
         
         for level in levels:
-            completion = user_completions.get(level.level_id)
+            # Find session for this level by matching names
+            session = session_lookup.get(level.name)
             
             level_data = {
                 'id': level.level_id,
@@ -206,12 +214,12 @@ def dashboard():
                 'skills': level.skills or [],
                 'unlocked': level.unlocked,
                 'coming_soon': level.coming_soon,
-                # Progress data
-                'completed': completion is not None,
-                'score': completion.score if completion else 0,
-                'attempts': 1 if completion else 0,  # For now, count completion as 1 attempt
-                'time_spent': completion.time_spent if completion else 0,
-                'xp_earned': level.xp_reward if completion else 0
+                # Progress data from sessions
+                'completed': session is not None,
+                'score': session.score if session else 0,
+                'attempts': 1 if session else 0,  # For now, count session as 1 attempt
+                'time_spent': session.time_spent if session else 0,
+                'xp_earned': level.xp_reward if session else 0
             }
             
             levels_progress.append(level_data)
@@ -252,7 +260,7 @@ def dashboard():
                              learning_patterns=learning_patterns,
                              recent_xp_history=recent_xp_history,
                              xp_summary=xp_summary,
-                             recent_completions=recent_completions)
+                             recent_sessions=recent_sessions)
     
     except DatabaseError as e:
         current_app.logger.error(f"Database error in dashboard: {str(e)}")
