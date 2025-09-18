@@ -185,7 +185,7 @@ class XPManager:
     @classmethod
     def award_xp(cls, user_id: int, level_id: int, score: Optional[int] = None,
                  time_spent: Optional[int] = None, difficulty: str = 'medium',
-                 reason: str = 'level_completion') -> Dict[str, Any]:
+                 session_id: Optional[int] = None, reason: str = 'level_completion') -> Dict[str, Any]:
         """
         Award XP to a user and create history entry
         
@@ -217,14 +217,14 @@ class XPManager:
             response = supabase.table('users').update({'total_xp': new_total}).eq('id', user_id).execute()
             handle_supabase_error(response)
             
-            # Create XP history entry with the calculated balances
+            # Create XP history entry
             xp_entry = XPHistory.create_entry(
                 user_id=user_id,
                 xp_change=xp_earned,
                 reason=reason,
-                level_id=level_id,
                 balance_before=old_total,
-                balance_after=new_total
+                balance_after=new_total,
+                session_id=session_id
             )
             
             return {
@@ -331,6 +331,119 @@ class XPManager:
             
         except Exception as e:
             raise DatabaseError(f"Failed to get leaderboard: {str(e)}")
+
+    @classmethod
+    def award_session_xp(cls, user_id: int, session_name: str, score: Optional[int] = None,
+                         time_spent: Optional[int] = None, level_id: Optional[int] = None,
+                         session_id: Optional[int] = None, reason: str = 'session_completion') -> Dict[str, Any]:
+        """
+        Award XP for a session completion (could be a level or Blue Team vs Red Team Mode)
+        
+        Args:
+            user_id: The user completing the session
+            session_name: Name of the session (level name or 'Blue Team vs Red Team Mode')
+            score: Score achieved (0-100)
+            time_spent: Time spent in seconds
+            level_id: Level ID if this is a level session (None for Blue Team vs Red Team Mode)
+            session_id: Session ID to link XP award to specific session
+            reason: Reason for XP award
+            
+        Returns:
+            Dict with xp_awarded, new_total, calculation_details
+        """
+        try:
+            from app.models.user import User
+            from app.models.xp_history import XPHistory
+            from app.database import get_supabase, handle_supabase_error
+            
+            # Calculate XP based on session type
+            if level_id is not None:
+                # Level-based session - use existing level XP calculation
+                from app.models.level import Level
+                level = Level.get_by_level_id(level_id)
+                difficulty = level.difficulty if level else 'medium'
+                
+                xp_calculation = XPCalculator.calculate_level_xp(
+                    level_id, score, time_spent, difficulty
+                )
+            else:
+                # Non-level session (e.g., Blue Team vs Red Team Mode)
+                # Use a simpler calculation
+                base_xp = 50  # Base XP for Blue Team vs Red Team Mode
+                
+                # Apply score multiplier if available
+                if score is not None:
+                    score_multiplier = cls._get_score_multiplier_for_session(score)
+                    xp_earned = int(base_xp * score_multiplier)
+                else:
+                    xp_earned = base_xp
+                
+                xp_calculation = {
+                    'xp_earned': xp_earned,
+                    'breakdown': {
+                        'base_xp': base_xp,
+                        'score_multiplier': score_multiplier if score is not None else 1.0,
+                        'total_xp': xp_earned
+                    },
+                    'calculation_details': {
+                        'session_type': 'non_level',
+                        'session_name': session_name,
+                        'score': score
+                    }
+                }
+            
+            xp_earned = xp_calculation['xp_earned']
+            
+            # Get user and update XP
+            user = User.find_by_id(user_id)
+            if not user:
+                raise ValueError(f"User {user_id} not found")
+            
+            # Update user's total XP
+            old_total = getattr(user, 'total_xp', None) or 0
+            new_total = old_total + xp_earned
+            
+            # Update user's total_xp in database
+            supabase = get_supabase()
+            response = supabase.table('users').update({'total_xp': new_total}).eq('id', user_id).execute()
+            handle_supabase_error(response)
+            
+            # Create XP history entry (with session_id to link to the session)
+            xp_entry = XPHistory.create_entry(
+                user_id=user_id,
+                xp_change=xp_earned,
+                reason=reason,
+                balance_before=old_total,
+                balance_after=new_total,
+                session_id=session_id
+            )
+            
+            return {
+                'xp_awarded': xp_earned,
+                'old_total': old_total,
+                'new_total': new_total,
+                'calculation_details': xp_calculation,
+                'history_entry_id': xp_entry.id
+            }
+            
+        except Exception as e:
+            raise DatabaseError(f"Failed to award session XP: {str(e)}")
+
+    @classmethod
+    def _get_score_multiplier_for_session(cls, score: Optional[int]) -> float:
+        """Get score-based multiplier for non-level sessions"""
+        if score is None:
+            return 1.0
+        elif score >= 90:
+            return 1.5
+        elif score >= 80:
+            return 1.2
+        elif score >= 70:
+            return 1.0
+        elif score >= 60:
+            return 0.9
+        else:
+            return 0.8
 
 
 # Convenience functions for easy imports
