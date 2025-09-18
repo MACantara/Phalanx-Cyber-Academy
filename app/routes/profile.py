@@ -166,6 +166,7 @@ def dashboard():
             
             # Get recent XP history (last 5 entries)
             recent_xp_history_raw = XPHistory.get_user_history(current_user.id, limit=5)
+            current_app.logger.info(f"Raw XP history count for user {current_user.id}: {len(recent_xp_history_raw)}")
             
             # Enrich XP history with level information from sessions
             recent_xp_history = []
@@ -185,12 +186,16 @@ def dashboard():
                     entry_dict['level_id'] = None
                 recent_xp_history.append(entry_dict)
             
+            current_app.logger.info(f"Enriched XP history count for user {current_user.id}: {len(recent_xp_history)}")
+            
             # Get XP summary for stats
             xp_summary = XPHistory.get_user_xp_summary(current_user.id)
+            current_app.logger.info(f"XP summary for user {current_user.id}: {xp_summary}")
             
             # Get recent sessions (last 5 sessions) and convert to dict format
             recent_sessions_raw = Session.get_user_sessions(current_user.id, limit=5)
             recent_sessions = [session.to_dict() for session in recent_sessions_raw]
+            current_app.logger.info(f"Recent sessions count for user {current_user.id}: {len(recent_sessions)}")
             
         except Exception as e:
             current_app.logger.warning(f"Failed to load activity history for user {current_user.id}: {str(e)}")
