@@ -148,7 +148,7 @@ class Challenge1PageClass extends BasePage {
                 
                 <!-- Footer -->
                 <footer style="background: #f3f4f6; padding: 20px; text-align: center; color: #6b7280;">
-                    <p>© 2024 Daily Politico News</p>
+                    <p>© 2025 Daily Politico News</p>
                     <p style="font-size: 12px;">
                         This website is for CyberQuest training purposes. Article source: ${currentArticle.source}
                     </p>
