@@ -3,7 +3,7 @@ import { EmailState } from './email-functions/email-state.js';
 import { EmailActionHandler } from './email-functions/email-action-handler.js';
 import { EmailReadTracker } from './email-functions/email-read-tracker.js';
 import { EmailCompletionTracker } from './email-functions/email-completion-tracker.js';
-import { ALL_EMAILS } from '../../levels/level-two/emails/email-registry.js';
+import { ALL_EMAILS, loadEmailsFromCSV } from '../../levels/level-two/emails/email-registry.js';
 import { NavigationUtil } from '../shared-utils/navigation-util.js';
 import { InMemoryFeedbackStore } from './email-functions/email-session-summary.js';
 
@@ -20,8 +20,9 @@ export class EmailApp extends WindowBase {
         this.actionHandler = new EmailActionHandler(this);
         this.completionTracker = new EmailCompletionTracker(this);
         
-        // Load saved email state
-        this.initializeState();
+        // Flag to track initialization
+        this.isInitialized = false;
+        this.initializationPromise = null;
         
         // Expose debug methods globally for testing
         window.emailAppDebug = {
@@ -32,8 +33,32 @@ export class EmailApp extends WindowBase {
         };
     }
 
+    async ensureInitialized() {
+        if (this.isInitialized) {
+            return;
+        }
+        
+        if (this.initializationPromise) {
+            await this.initializationPromise;
+            return;
+        }
+        
+        this.initializationPromise = this.initializeState();
+        try {
+            await this.initializationPromise;
+            this.isInitialized = true;
+        } catch (error) {
+            console.error('Failed to initialize email app:', error);
+            this.initializationPromise = null; // Allow retry
+        }
+    }
+
     async initializeState() {
         try {
+            // First ensure CSV email data is loaded
+            await loadEmailsFromCSV();
+            console.log('EmailApp: Email data loaded from CSV');
+            
             await this.state.loadFromServer();
             await this.readTracker.ensureLoaded();
             await this.actionHandler.feedback.loadSessionData();
@@ -68,6 +93,29 @@ export class EmailApp extends WindowBase {
     }
 
     createContent() {
+        // Check if data is loaded, if not show loading message
+        if (!this.isInitialized) {
+            // Start initialization if not already started
+            if (!this.initializationPromise) {
+                this.initializationPromise = this.ensureInitialized().then(() => {
+                    // Update content once initialized
+                    this.updateContent();
+                });
+            }
+            
+            return `
+                <div class="h-full flex items-center justify-center">
+                    <div class="text-center">
+                        <div class="text-lg font-medium text-gray-300 mb-2">Loading Email Data...</div>
+                        <div class="text-sm text-gray-500">Fetching emails from security database</div>
+                        <div class="mt-4">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400 mx-auto"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
         const currentFolder = this.state.getCurrentFolder();
         const selectedEmailId = this.state.getSelectedEmailId();
         
