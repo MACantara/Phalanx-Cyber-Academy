@@ -30,6 +30,7 @@ class Challenge1PageClass extends BasePage {
         this.articlesData = []; // Store all 15 articles
         this.currentArticleIndex = 0; // Track which article is being displayed
         this.classifiedArticles = new Set(); // Track which articles have been classified
+        this.correctClassifications = 0; // Track correct classifications for scoring
         this.fetchPromise = null;
     }
 
@@ -92,7 +93,7 @@ class Challenge1PageClass extends BasePage {
                         </div>
                         
                         <!-- Progress Bar -->
-                        ${ProgressBar.create(this.currentArticleIndex, this.articlesData.length)}
+                        ${ProgressBar.create(this.currentArticleIndex, this.articlesData.length, this.classifiedArticles.size)}
                     </div>
                 </header>
                 
@@ -137,22 +138,10 @@ class Challenge1PageClass extends BasePage {
                             <!-- Result will be shown here -->
                         </div>
                         
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-                            <button id="prev-article" 
-                                    style="padding: 8px 16px; background: #6b7280; color: white; border: none; border-radius: 4px; cursor: pointer;" 
-                                    ${this.currentArticleIndex === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                                ← Previous
-                            </button>
-                            
+                        <div style="text-align: center; margin-top: 20px;">
                             <span style="color: #6b7280; font-size: 14px;">
                                 Article ${this.currentArticleIndex + 1} of ${this.articlesData.length}
                             </span>
-                            
-                            <button id="next-article" 
-                                    style="padding: 8px 16px; background: #6b7280; color: white; border: none; border-radius: 4px; cursor: pointer;" 
-                                    ${this.currentArticleIndex === this.articlesData.length - 1 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
-                                Next →
-                            </button>
                         </div>
                     </div>
                 </main>
@@ -223,20 +212,12 @@ class Challenge1PageClass extends BasePage {
         // Bind classification buttons
         const realBtn = document.getElementById('classify-real');
         const fakeBtn = document.getElementById('classify-fake');
-        const prevBtn = document.getElementById('prev-article');
-        const nextBtn = document.getElementById('next-article');
 
         if (realBtn) {
             realBtn.addEventListener('click', () => this.classifyArticle('real'));
         }
         if (fakeBtn) {
             fakeBtn.addEventListener('click', () => this.classifyArticle('fake'));
-        }
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => this.previousArticle());
-        }
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => this.nextArticle());
         }
     }
 
@@ -286,6 +267,11 @@ class Challenge1PageClass extends BasePage {
             `;
         }
 
+        // Track correct classifications for scoring
+        if (isCorrect) {
+            this.correctClassifications++;
+        }
+
         // Show toast notification
         if (window.ToastManager) {
             const message = isCorrect ? 
@@ -298,15 +284,46 @@ class Challenge1PageClass extends BasePage {
         // Track that this article has been classified
         this.classifiedArticles.add(this.currentArticleIndex);
         
-        // Check if enough articles have been classified to complete the challenge
-        this.checkChallengeCompletion();
+        // Check if this is the last article
+        const isLastArticle = this.currentArticleIndex === this.articlesData.length - 1;
+        
+        if (isLastArticle) {
+            // Check for completion if this was the last article
+            this.checkChallengeCompletion();
+        } else {
+            // Update progress bar after classification
+            this.updateProgressBar();
+            
+            // Auto-advance to next article after 3 seconds
+            setTimeout(() => {
+                this.nextArticle();
+            }, 3000);
+        }
+    }
+
+    updateProgressBar() {
+        // Find and update the progress bar in the header
+        const headerElement = document.querySelector('header');
+        if (headerElement) {
+            const progressBarHtml = ProgressBar.create(this.currentArticleIndex, this.articlesData.length, this.classifiedArticles.size);
+            // Extract just the progress bar div from the HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = progressBarHtml;
+            const newProgressBar = tempDiv.firstElementChild;
+            
+            // Find the existing progress bar and replace it
+            const existingProgressBar = headerElement.querySelector('.bg-white\\/10, [class*="bg-white/10"]');
+            if (existingProgressBar && newProgressBar) {
+                existingProgressBar.replaceWith(newProgressBar);
+            }
+        }
     }
 
     checkChallengeCompletion() {
-        // Complete the challenge when the user has classified at least 10 out of 15 articles
-        const minRequiredClassifications = Math.min(10, this.articlesData.length);
+        // Complete the challenge when the user has classified all 15 articles
+        const totalArticles = this.articlesData.length;
         
-        if (this.classifiedArticles.size >= minRequiredClassifications) {
+        if (this.classifiedArticles.size >= totalArticles) {
             // Mark challenge as completed after a short delay
             setTimeout(() => {
                 this.completeChallenge();
@@ -318,6 +335,9 @@ class Challenge1PageClass extends BasePage {
         // Mark challenge 1 as completed
         localStorage.setItem('cyberquest_challenge1_completed', 'true');
         
+        // Calculate final score
+        const finalScore = Math.round((this.correctClassifications / this.articlesData.length) * 100);
+        
         // Show completion message
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
@@ -327,10 +347,14 @@ class Challenge1PageClass extends BasePage {
                 <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
                 <h2 style="color: #16a34a; font-size: 24px; font-weight: bold; margin-bottom: 16px;">Challenge Complete!</h2>
                 <p style="color: #374151; margin-bottom: 20px;">
-                    Excellent work! You've successfully classified ${this.classifiedArticles.size} articles and completed Level 1: The Misinformation Maze!
+                    Excellent work! You've successfully classified all ${this.articlesData.length} articles and completed Level 1: The Misinformation Maze!
                 </p>
+                <div style="background: #f3f4f6; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
+                    <div style="color: #374151; font-size: 18px; font-weight: bold;">Final Score: ${finalScore}%</div>
+                    <div style="color: #6b7280; font-size: 14px;">Correct Classifications: ${this.correctClassifications}/${this.articlesData.length}</div>
+                </div>
                 <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">
-                    You've earned 100 XP in Information Literacy and unlocked the 'Fact-Checker' badge.
+                    You've earned XP in Information Literacy and unlocked the 'Fact-Checker' badge.
                 </p>
                 <button onclick="this.closest('.fixed').remove(); window.challenge1Page?.completeLevelOne?.()" 
                         style="background: #16a34a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer;">
