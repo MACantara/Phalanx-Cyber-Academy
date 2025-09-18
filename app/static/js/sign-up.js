@@ -90,7 +90,7 @@ class CyberQuestSignup {
         // Create a subtle notification about timezone detection
         setTimeout(() => {
             const notification = document.createElement('div');
-            notification.className = 'fixed bottom-4 right-4 z-40 p-3 rounded-lg shadow-lg max-w-sm bg-blue-100 dark:bg-blue-900/50 border border-blue-300 dark:border-blue-600/50 text-blue-800 dark:text-blue-200 animate-fade-in-up';
+            notification.className = 'fixed top-4 right-4 z-60 p-3 rounded-lg shadow-lg max-w-sm bg-blue-100 dark:bg-blue-900/90 border border-blue-300 dark:border-blue-600/50 text-blue-800 dark:text-blue-200 animate-fade-in-right';
             notification.innerHTML = `
                 <div class="flex items-center space-x-2 text-sm">
                     <i class="bi bi-clock text-blue-600 dark:text-blue-400"></i>

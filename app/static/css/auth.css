@@ -84,7 +84,7 @@ input[type="checkbox"]:checked {
 @keyframes animate-fade-in-right {
     from {
         opacity: 0;
-        transform: translateX(-10px);
+        transform: translateX(10px);
     }
     to {
         opacity: 1;
