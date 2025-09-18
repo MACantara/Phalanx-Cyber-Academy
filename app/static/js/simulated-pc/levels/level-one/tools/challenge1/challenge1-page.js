@@ -99,38 +99,38 @@ class Challenge1PageClass extends BasePage {
                 
                 <!-- Main Content -->
                 <main style="padding: 30px; max-width: 800px; margin: 0 auto;">
-                    <h2 style="color: #374151; font-size: 32px; margin-bottom: 10px;" data-element-type="title" data-element-id="title_analysis">
+                    <h2 style="color: #0f172a; font-size: 32px; margin-bottom: 10px;" data-element-type="title" data-element-id="title_analysis">
                         ${ArticleFormatter.toTitleCase(currentArticle.title)}
                     </h2>
                     
                     <!-- Article Metadata -->
-                    <div style="color: #6b7280; margin-bottom: 20px; font-size: 14px; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
-                        <span data-element-type="date" data-element-id="date_analysis" style="padding: 4px 8px; background: #f3f4f6; border-radius: 4px; display: flex; align-items: center; gap: 5px;">
+                    <div style="color: #374151; margin-bottom: 20px; font-size: 14px; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                        <span data-element-type="date" data-element-id="date_analysis" style="padding: 4px 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; display: flex; align-items: center; gap: 5px; color: #1e293b;">
                             <span style="font-size: 12px;">📅</span>
                             Published: ${formattedDate}
                         </span>
-                        <span style="color: #d1d5db;">•</span>
-                        <span data-element-type="author" data-element-id="author_analysis" style="padding: 4px 8px; background: #f3f4f6; border-radius: 4px; display: flex; align-items: center; gap: 5px;">
+                        <span style="color: #64748b;">•</span>
+                        <span data-element-type="author" data-element-id="author_analysis" style="padding: 4px 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; display: flex; align-items: center; gap: 5px; color: #1e293b;">
                             <span style="font-size: 12px;">✍️</span>
                             By: ${currentArticle.author || 'Staff Reporter'}
                         </span>
-                        <span style="color: #d1d5db;">•</span>
+                        <span style="color: #64748b;">•</span>
                         <span data-element-type="source" data-element-id="source_analysis" style="padding: 4px 8px; background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 4px; display: flex; align-items: center; gap: 5px;">
                             <span style="font-size: 12px;">🌐</span>
-                            <strong style="color: #0369a1;">Source:</strong>
-                            <span style="color: #0284c7; font-family: monospace; font-size: 13px;">${currentArticle.source || 'Unknown'}</span>
+                            <strong style="color: #0c4a6e;">Source:</strong>
+                            <span style="color: #0c4a6e; font-family: monospace; font-size: 13px;">${currentArticle.source || 'Unknown'}</span>
                         </span>
                     </div>
                     
                     <!-- Article Text -->
-                    <div style="font-size: 18px; line-height: 1.6; color: #374151;" data-element-type="content" data-element-id="content_analysis">
+                    <div style="font-size: 18px; line-height: 1.6; color: #1e293b;" data-element-type="content" data-element-id="content_analysis">
                         ${ArticleFormatter.formatArticleText(displayText, isFakeNews, currentArticle)}
                     </div>
                     
                     <!-- Classification Interface -->
-                    <div style="margin: 30px 0; padding: 20px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <h3 style="margin-top: 0; color: #374151; font-size: 20px;">Classify this Article</h3>
-                        <p style="color: #6b7280; margin-bottom: 20px;">Based on your analysis, is this article real or fake news?</p>
+                    <div style="margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                        <h3 style="margin-top: 0; color: #1e293b; font-size: 20px;">Classify this Article</h3>
+                        <p style="color: #475569; margin-bottom: 20px;">Based on your analysis, is this article real or fake news?</p>
                         
                         <div style="display: flex; gap: 15px; margin-bottom: 20px;">
                             <button id="classify-real" 
@@ -152,7 +152,7 @@ class Challenge1PageClass extends BasePage {
                         </div>
                         
                         <div style="text-align: center; margin-top: 20px;">
-                            <span style="color: #6b7280; font-size: 14px;">
+                            <span style="color: #475569; font-size: 14px;">
                                 Article ${this.currentArticleIndex + 1} of ${this.articlesData.length}
                             </span>
                         </div>
@@ -160,10 +160,10 @@ class Challenge1PageClass extends BasePage {
                 </main>
                 
                 <!-- Footer -->
-                <footer style="background: #f3f4f6; padding: 20px; text-align: center; color: #6b7280; border-top: 1px solid #e5e7eb;">
+                <footer style="background: #f8fafc; padding: 20px; text-align: center; color: #475569; border-top: 1px solid #e2e8f0;">
                     <div style="max-width: 800px; margin: 0 auto;">
-                        <p style="margin-bottom: 10px; font-weight: 500;">© 2025 Daily Politico News - CyberQuest Training Environment</p>
-                        <div style="font-size: 12px; line-height: 1.4; color: #9ca3af;">
+                        <p style="margin-bottom: 10px; font-weight: 500; color: #1e293b;">© 2025 Daily Politico News - CyberQuest Training Environment</p>
+                        <div style="font-size: 12px; line-height: 1.4; color: #334155;">
                             <p style="margin: 5px 0;">
                                 <span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 3px; font-weight: 500;">⚠️ Training Purpose Only</span>
                             </p>
@@ -172,7 +172,7 @@ class Challenge1PageClass extends BasePage {
                                 Articles are sourced from various datasets for educational analysis of misinformation patterns.
                             </p>
                             <p style="margin: 5px 0; font-style: italic;">
-                                Current article sourced from: <span style="font-family: monospace; background: #f1f5f9; padding: 1px 4px; border-radius: 2px;">${currentArticle.source || 'Training Dataset'}</span>
+                                Current article sourced from: <span style="font-family: monospace; background: #f1f5f9; padding: 1px 4px; border-radius: 2px; color: #0f172a;">${currentArticle.source || 'Training Dataset'}</span>
                             </p>
                         </div>
                     </div>
