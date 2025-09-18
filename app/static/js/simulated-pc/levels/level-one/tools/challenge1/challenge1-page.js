@@ -83,13 +83,13 @@ class Challenge1PageClass extends BasePage {
         const isFakeNews = !currentArticle.is_real;
         
         return `
-            <div style="font-family: Arial, sans-serif; background: #ffffff; min-height: 100vh;">
+            <div class="font-sans bg-white min-h-screen">
                 <!-- Header -->
-                <header style="background: #1f2937; color: white; padding: 20px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                <header class="bg-gray-800 text-white p-5">
+                    <div class="flex justify-between items-center">
                         <div>
-                            <h1 style="margin: 0; font-size: 28px;">Daily Politico News</h1>
-                            <p style="margin: 5px 0 0 0; color: #9ca3af;">Your Source for News and Analysis</p>
+                            <h1 class="m-0 text-3xl">Daily Politico News</h1>
+                            <p class="mt-1 mb-0 text-gray-400">Your Source for News and Analysis</p>
                         </div>
                         
                         <!-- Progress Bar -->
@@ -98,61 +98,57 @@ class Challenge1PageClass extends BasePage {
                 </header>
                 
                 <!-- Main Content -->
-                <main style="padding: 30px; max-width: 800px; margin: 0 auto;">
-                    <h2 style="color: #0f172a; font-size: 32px; margin-bottom: 10px;" data-element-type="title" data-element-id="title_analysis">
+                <main class="p-8 max-w-4xl mx-auto">
+                    <h2 class="text-slate-900 text-3xl mb-3" data-element-type="title" data-element-id="title_analysis">
                         ${ArticleFormatter.toTitleCase(currentArticle.title)}
                     </h2>
                     
                     <!-- Article Metadata -->
-                    <div style="color: #374151; margin-bottom: 20px; font-size: 14px; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
-                        <span data-element-type="date" data-element-id="date_analysis" style="padding: 4px 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; display: flex; align-items: center; gap: 5px; color: #1e293b;">
-                            <span style="font-size: 12px;">📅</span>
+                    <div class="text-gray-700 mb-5 text-sm flex gap-4 flex-wrap items-center">
+                        <span data-element-type="date" data-element-id="date_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800">
+                            <i class="bi bi-calendar-event text-xs"></i>
                             Published: ${formattedDate}
                         </span>
-                        <span style="color: #64748b;">•</span>
-                        <span data-element-type="author" data-element-id="author_analysis" style="padding: 4px 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; display: flex; align-items: center; gap: 5px; color: #1e293b;">
-                            <span style="font-size: 12px;">✍️</span>
+                        <span class="text-slate-500">•</span>
+                        <span data-element-type="author" data-element-id="author_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800">
+                            <i class="bi bi-pencil text-xs"></i>
                             By: ${currentArticle.author || 'Staff Reporter'}
                         </span>
-                        <span style="color: #64748b;">•</span>
-                        <span data-element-type="source" data-element-id="source_analysis" style="padding: 4px 8px; background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 4px; display: flex; align-items: center; gap: 5px;">
-                            <span style="font-size: 12px;">🌐</span>
-                            <strong style="color: #0c4a6e;">Source:</strong>
-                            <span style="color: #0c4a6e; font-family: monospace; font-size: 13px;">${currentArticle.source || 'Unknown'}</span>
+                        <span class="text-slate-500">•</span>
+                        <span data-element-type="source" data-element-id="source_analysis" class="px-2 py-1 bg-sky-50 border border-sky-500 rounded flex items-center gap-1">
+                            <i class="bi bi-globe text-xs"></i>
+                            <strong class="text-sky-800">Source:</strong>
+                            <span class="text-sky-800 font-mono text-xs">${currentArticle.source || 'Unknown'}</span>
                         </span>
                     </div>
                     
                     <!-- Article Text -->
-                    <div style="font-size: 18px; line-height: 1.6; color: #1e293b;" data-element-type="content" data-element-id="content_analysis">
+                    <div class="text-lg leading-relaxed text-slate-800" data-element-type="content" data-element-id="content_analysis">
                         ${ArticleFormatter.formatArticleText(displayText, isFakeNews, currentArticle)}
                     </div>
                     
                     <!-- Classification Interface -->
-                    <div style="margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
-                        <h3 style="margin-top: 0; color: #1e293b; font-size: 20px;">Classify this Article</h3>
-                        <p style="color: #475569; margin-bottom: 20px;">Based on your analysis, is this article real or fake news?</p>
+                    <div class="my-8 p-5 bg-slate-50 rounded-lg border border-slate-200">
+                        <h3 class="mt-0 text-slate-800 text-xl">Classify this Article</h3>
+                        <p class="text-slate-600 mb-5">Based on your analysis, is this article real or fake news?</p>
                         
-                        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                        <div class="flex gap-4 mb-5">
                             <button id="classify-real" 
-                                    style="flex: 1; padding: 12px 20px; background: #10b981; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: background 0.2s;"
-                                    onmouseover="this.style.background='#059669'" 
-                                    onmouseout="this.style.background='#10b981'">
-                                📰 Real News
+                                    class="flex-1 px-5 py-3 bg-emerald-500 text-white border-none rounded-md text-base cursor-pointer transition-colors hover:bg-emerald-600">
+                                <i class="bi bi-newspaper me-2"></i> Real News
                             </button>
                             <button id="classify-fake" 
-                                    style="flex: 1; padding: 12px 20px; background: #ef4444; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: background 0.2s;"
-                                    onmouseover="this.style.background='#dc2626'" 
-                                    onmouseout="this.style.background='#ef4444'">
-                                ⚠️ Fake News
+                                    class="flex-1 px-5 py-3 bg-red-500 text-white border-none rounded-md text-base cursor-pointer transition-colors hover:bg-red-600">
+                                <i class="bi bi-exclamation-triangle me-2"></i> Fake News
                             </button>
                         </div>
                         
-                        <div id="classification-result" style="display: none; padding: 15px; border-radius: 6px; margin-top: 15px;">
+                        <div id="classification-result" class="hidden p-4 rounded-md mt-4">
                             <!-- Result will be shown here -->
                         </div>
                         
-                        <div style="text-align: center; margin-top: 20px;">
-                            <span style="color: #475569; font-size: 14px;">
+                        <div class="text-center mt-5">
+                            <span class="text-slate-600 text-sm">
                                 Article ${this.currentArticleIndex + 1} of ${this.articlesData.length}
                             </span>
                         </div>
@@ -160,19 +156,19 @@ class Challenge1PageClass extends BasePage {
                 </main>
                 
                 <!-- Footer -->
-                <footer style="background: #f8fafc; padding: 20px; text-align: center; color: #475569; border-top: 1px solid #e2e8f0;">
-                    <div style="max-width: 800px; margin: 0 auto;">
-                        <p style="margin-bottom: 10px; font-weight: 500; color: #1e293b;">© 2025 Daily Politico News - CyberQuest Training Environment</p>
-                        <div style="font-size: 12px; line-height: 1.4; color: #334155;">
-                            <p style="margin: 5px 0;">
-                                <span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 3px; font-weight: 500;">⚠️ Training Purpose Only</span>
+                <footer class="bg-slate-50 p-5 text-center text-slate-600 border-t border-slate-200">
+                    <div class="max-w-4xl mx-auto">
+                        <p class="mb-3 font-medium text-slate-800">© 2025 Daily Politico News - CyberQuest Training Environment</p>
+                        <div class="text-xs leading-relaxed text-slate-700">
+                            <p class="my-1">
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-medium"><i class="bi bi-exclamation-triangle"></i> Training Purpose Only</span>
                             </p>
-                            <p style="margin: 5px 0;">
+                            <p class="my-1">
                                 This is a simulated news website for cybersecurity education. 
                                 Articles are sourced from various datasets for educational analysis of misinformation patterns.
                             </p>
-                            <p style="margin: 5px 0; font-style: italic;">
-                                Current article sourced from: <span style="font-family: monospace; background: #f1f5f9; padding: 1px 4px; border-radius: 2px; color: #0f172a;">${currentArticle.source || 'Training Dataset'}</span>
+                            <p class="my-1 italic">
+                                Current article sourced from: <span class="font-mono bg-slate-100 px-1 rounded text-slate-900">${currentArticle.source || 'Training Dataset'}</span>
                             </p>
                         </div>
                     </div>
@@ -257,19 +253,18 @@ class Challenge1PageClass extends BasePage {
         // Disable buttons after classification
         realBtn.disabled = true;
         fakeBtn.disabled = true;
-        realBtn.style.opacity = '0.6';
-        fakeBtn.style.opacity = '0.6';
+        realBtn.classList.add('opacity-60');
+        fakeBtn.classList.add('opacity-60');
         
         // Show result
-        resultDiv.style.display = 'block';
+        resultDiv.classList.remove('hidden');
+        resultDiv.classList.add('block');
         
         if (isCorrect) {
-            resultDiv.style.background = '#dcfce7';
-            resultDiv.style.border = '1px solid #16a34a';
-            resultDiv.style.color = '#15803d';
+            resultDiv.className = 'block p-4 rounded-md mt-4 bg-green-100 border border-green-600 text-green-800';
             resultDiv.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 20px;">✅</span>
+                <div class="flex items-center gap-3">
+                    <i class="bi bi-check-circle text-xl"></i>
                     <div>
                         <strong>Correct!</strong><br>
                         This article is indeed ${currentArticle.is_real ? 'real' : 'fake'} news.
@@ -277,12 +272,10 @@ class Challenge1PageClass extends BasePage {
                 </div>
             `;
         } else {
-            resultDiv.style.background = '#fef2f2';
-            resultDiv.style.border = '1px solid #dc2626';
-            resultDiv.style.color = '#dc2626';
+            resultDiv.className = 'block p-4 rounded-md mt-4 bg-red-50 border border-red-600 text-red-600';
             resultDiv.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 20px;">❌</span>
+                <div class="flex items-center gap-3">
+                    <i class="bi bi-x-circle text-xl"></i>
                     <div>
                         <strong>Incorrect.</strong><br>
                         This article is actually ${currentArticle.is_real ? 'real' : 'fake'} news.
@@ -364,28 +357,25 @@ class Challenge1PageClass extends BasePage {
         
         // Show completion message
         const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
-        modal.style.zIndex = '10000';
+        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-[10000]';
         modal.innerHTML = `
-            <div style="background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 24px; max-width: 500px; margin: 16px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);">
-                <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
-                <h2 style="color: #10b981; font-size: 24px; font-weight: bold; margin-bottom: 16px;">Challenge Complete!</h2>
-                <p style="color: #d1d5db; margin-bottom: 20px; line-height: 1.5;">
+            <div class="bg-gray-800 border border-gray-600 rounded-lg p-6 max-w-lg mx-4 text-center shadow-2xl">
+                <div class="text-5xl mb-4"><i class="bi bi-party-popper"></i></div>
+                <h2 class="text-emerald-400 text-2xl font-bold mb-4">Challenge Complete!</h2>
+                <p class="text-gray-300 mb-5 leading-relaxed">
                     Excellent work! You've successfully classified all ${this.articlesData.length} articles and completed Level 1: The Misinformation Maze!
                 </p>
-                <div style="background: #374151; border: 1px solid #4b5563; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
-                    <div style="color: #f3f4f6; font-size: 18px; font-weight: bold; margin-bottom: 8px;">Final Score: ${finalScore}%</div>
-                    <div style="color: #9ca3af; font-size: 14px;">Correct Classifications: ${this.correctClassifications}/${this.articlesData.length}</div>
+                <div class="bg-gray-600 border border-gray-500 p-4 rounded-md mb-5">
+                    <div class="text-gray-100 text-lg font-bold mb-2">Final Score: ${finalScore}%</div>
+                    <div class="text-gray-400 text-sm">Correct Classifications: ${this.correctClassifications}/${this.articlesData.length}</div>
                 </div>
-                <div style="background: #065f46; border: 1px solid #047857; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
-                    <p style="color: #d1fae5; font-size: 14px; margin: 0;">
-                        🏆 You've earned XP in Information Literacy and unlocked the 'Fact-Checker' badge!
+                <div class="bg-green-900 border border-green-700 p-3 rounded-md mb-5">
+                    <p class="text-green-200 text-sm m-0">
+                        <i class="bi bi-trophy me-2"></i>You've earned XP in Information Literacy and unlocked the 'Fact-Checker' badge!
                     </p>
                 </div>
                 <button onclick="this.closest('.fixed').remove(); window.challenge1Page?.completeLevelOne?.()" 
-                        style="background: #10b981; color: white; padding: 12px 24px; border: 1px solid #059669; border-radius: 6px; font-size: 16px; cursor: pointer; transition: all 0.2s; width: 100%;"
-                        onmouseover="this.style.background='#059669'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)'" 
-                        onmouseout="this.style.background='#10b981'; this.style.boxShadow='none'">
+                        class="bg-emerald-500 text-white px-6 py-3 border border-emerald-600 rounded-md text-base cursor-pointer transition-all w-full hover:bg-emerald-600 hover:shadow-md">
                     Complete Level
                 </button>
             </div>
