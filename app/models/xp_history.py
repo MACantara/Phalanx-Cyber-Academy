@@ -159,31 +159,38 @@ class XPHistory:
 
     @classmethod
     def get_user_history(cls, user_id: int, limit: int = 50, offset: int = 0) -> List['XPHistory']:
-        """Get XP history for a user with pagination (joins with sessions to filter by user_id)"""
+        """Get XP history for a user with pagination (uses session lookup to filter by user_id)"""
         try:
             supabase = get_supabase()
-            # Join with sessions table to filter by user_id
-            response = (supabase.table('xp_history')
-                       .select('xp_history.*, sessions.user_id')
-                       .join('sessions', 'xp_history.session_id', 'sessions.id', join_type='left')
-                       .or_(f'sessions.user_id.eq.{user_id},and(xp_history.session_id.is.null,xp_history.reason.like.%manual%)')
-                       .order('xp_history.created_at', desc=True)
-                       .range(offset, offset + limit - 1)
-                       .execute())
+            
+            # First, get all sessions for this user to get their session IDs
+            user_sessions_response = supabase.table('sessions').select('id').eq('user_id', user_id).execute()
+            user_sessions_data = handle_supabase_error(user_sessions_response)
+            user_session_ids = [session['id'] for session in (user_sessions_data or [])]
+            
+            # Now get XP history entries that either:
+            # 1. Belong to one of the user's sessions, OR
+            # 2. Are manual adjustments (session_id is null and reason contains 'manual')
+            if user_session_ids:
+                # Build a query for entries with session_ids OR manual entries
+                response = (supabase.table('xp_history')
+                           .select('*')
+                           .or_(f"session_id.in.({','.join(map(str, user_session_ids))}),and(session_id.is.null,reason.ilike.%manual%)")
+                           .order('created_at', desc=True)
+                           .range(offset, offset + limit - 1)
+                           .execute())
+            else:
+                # If user has no sessions, only get manual adjustments
+                response = (supabase.table('xp_history')
+                           .select('*')
+                           .is_('session_id', 'null')
+                           .ilike('reason', '%manual%')
+                           .order('created_at', desc=True)
+                           .range(offset, offset + limit - 1)
+                           .execute())
+            
             data = handle_supabase_error(response)
-            
-            # Filter results to only include entries for this user
-            # Note: This includes both session-based entries and manual adjustments
-            filtered_data = []
-            for entry in (data or []):
-                # Include if it's a session-based entry for this user, or a manual entry
-                if (entry.get('user_id') == user_id or 
-                    (entry.get('session_id') is None and 'manual' in entry.get('reason', '').lower())):
-                    # Remove the joined user_id field before creating XPHistory object
-                    entry_data = {k: v for k, v in entry.items() if k != 'user_id'}
-                    filtered_data.append(entry_data)
-            
-            return [cls(entry_data) for entry_data in filtered_data]
+            return [cls(entry) for entry in (data or [])]
         except Exception as e:
             raise DatabaseError(f"Failed to get user XP history: {str(e)}")
             
@@ -223,17 +230,31 @@ class XPHistory:
 
     @classmethod
     def get_user_xp_summary(cls, user_id: int) -> Dict[str, Any]:
-        """Get XP summary for a user (joins with sessions to filter by user_id)"""
+        """Get XP summary for a user (uses session lookup to filter by user_id)"""
         try:
             supabase = get_supabase()
             
-            # Get all XP entries for user through sessions
-            response = (supabase.table('xp_history')
-                       .select('xp_history.xp_change, xp_history.reason, xp_history.created_at, sessions.user_id')
-                       .join('sessions', 'xp_history.session_id', 'sessions.id', join_type='left')
-                       .or_(f'sessions.user_id.eq.{user_id},and(xp_history.session_id.is.null,xp_history.reason.like.%manual%)')
-                       .order('xp_history.created_at', desc=False)
-                       .execute())
+            # First, get all sessions for this user to get their session IDs
+            user_sessions_response = supabase.table('sessions').select('id').eq('user_id', user_id).execute()
+            user_sessions_data = handle_supabase_error(user_sessions_response)
+            user_session_ids = [session['id'] for session in (user_sessions_data or [])]
+            
+            # Get all XP entries for user through sessions or manual adjustments
+            if user_session_ids:
+                response = (supabase.table('xp_history')
+                           .select('xp_change, reason, created_at')
+                           .or_(f"session_id.in.({','.join(map(str, user_session_ids))}),and(session_id.is.null,reason.ilike.%manual%)")
+                           .order('created_at', desc=False)
+                           .execute())
+            else:
+                # If user has no sessions, only get manual adjustments
+                response = (supabase.table('xp_history')
+                           .select('xp_change, reason, created_at')
+                           .is_('session_id', 'null')
+                           .ilike('reason', '%manual%')
+                           .order('created_at', desc=False)
+                           .execute())
+                           
             data = handle_supabase_error(response)
             
             if not data:
@@ -247,21 +268,14 @@ class XPHistory:
                     'last_entry': None
                 }
             
-            # Filter for this user's entries
-            user_entries = []
-            for entry in data:
-                if (entry.get('user_id') == user_id or 
-                    (entry.get('session_id') is None and 'manual' in entry.get('reason', '').lower())):
-                    user_entries.append(entry)
-            
             # Calculate statistics
-            total_xp = sum(entry['xp_change'] for entry in user_entries)
-            xp_gained = sum(entry['xp_change'] for entry in user_entries if entry['xp_change'] > 0)
-            xp_lost = abs(sum(entry['xp_change'] for entry in user_entries if entry['xp_change'] < 0))
+            total_xp = sum(entry['xp_change'] for entry in data)
+            xp_gained = sum(entry['xp_change'] for entry in data if entry['xp_change'] > 0)
+            xp_lost = abs(sum(entry['xp_change'] for entry in data if entry['xp_change'] < 0))
             
             # Group by reason
             by_reason = {}
-            for entry in user_entries:
+            for entry in data:
                 reason = entry['reason']
                 if reason not in by_reason:
                     by_reason[reason] = {'count': 0, 'total_xp': 0}
@@ -270,12 +284,12 @@ class XPHistory:
             
             return {
                 'total_xp': total_xp,
-                'total_entries': len(user_entries),
+                'total_entries': len(data),
                 'xp_gained': xp_gained,
                 'xp_lost': xp_lost,
                 'by_reason': by_reason,
-                'first_entry': user_entries[0]['created_at'] if user_entries else None,
-                'last_entry': user_entries[-1]['created_at'] if user_entries else None
+                'first_entry': data[0]['created_at'] if data else None,
+                'last_entry': data[-1]['created_at'] if data else None
             }
             
         except Exception as e:
@@ -299,28 +313,36 @@ class XPHistory:
 
     @classmethod
     def calculate_user_total_xp(cls, user_id: int) -> int:
-        """Calculate user's total XP from history entries (joins with sessions to filter by user_id)"""
+        """Calculate user's total XP from history entries (uses session lookup to filter by user_id)"""
         try:
             supabase = get_supabase()
             
-            # Get all XP changes for user through sessions
-            response = (supabase.table('xp_history')
-                       .select('xp_history.xp_change, sessions.user_id')
-                       .join('sessions', 'xp_history.session_id', 'sessions.id', join_type='left')
-                       .or_(f'sessions.user_id.eq.{user_id},and(xp_history.session_id.is.null,xp_history.reason.like.%manual%)')
-                       .execute())
+            # First, get all sessions for this user to get their session IDs
+            user_sessions_response = supabase.table('sessions').select('id').eq('user_id', user_id).execute()
+            user_sessions_data = handle_supabase_error(user_sessions_response)
+            user_session_ids = [session['id'] for session in (user_sessions_data or [])]
+            
+            # Get all XP changes for user through sessions or manual adjustments
+            if user_session_ids:
+                response = (supabase.table('xp_history')
+                           .select('xp_change')
+                           .or_(f"session_id.in.({','.join(map(str, user_session_ids))}),and(session_id.is.null,reason.ilike.%manual%)")
+                           .execute())
+            else:
+                # If user has no sessions, only get manual adjustments
+                response = (supabase.table('xp_history')
+                           .select('xp_change')
+                           .is_('session_id', 'null')
+                           .ilike('reason', '%manual%')
+                           .execute())
+                           
             data = handle_supabase_error(response)
             
             if not data:
                 return 0
             
-            # Filter and sum XP changes for this user
-            total_xp = 0
-            for entry in data:
-                if (entry.get('user_id') == user_id or 
-                    (entry.get('session_id') is None and 'manual' in entry.get('reason', '').lower())):
-                    total_xp += entry['xp_change']
-            
+            # Sum all XP changes
+            total_xp = sum(entry['xp_change'] for entry in data)
             return total_xp
             
         except Exception as e:
@@ -429,15 +451,17 @@ class XPHistory:
 
     @classmethod
     def get_xp_leaderboard_data(cls, limit: int = 10) -> List[Dict[str, Any]]:
-        """Get leaderboard data based on XP history (joins with sessions to get user_id)"""
+        """Get leaderboard data based on XP history (uses sessions to map to users)"""
         try:
             supabase = get_supabase()
             
-            # Get total XP by user through sessions
-            response = (supabase.table('xp_history')
-                       .select('xp_history.xp_change, sessions.user_id')
-                       .join('sessions', 'xp_history.session_id', 'sessions.id', join_type='left')
-                       .execute())
+            # Get all sessions to map session_id to user_id
+            sessions_response = supabase.table('sessions').select('id, user_id').execute()
+            sessions_data = handle_supabase_error(sessions_response)
+            session_to_user = {session['id']: session['user_id'] for session in (sessions_data or [])}
+            
+            # Get all XP history entries
+            response = supabase.table('xp_history').select('xp_change, session_id, reason').execute()
             data = handle_supabase_error(response)
             
             if not data:
@@ -446,8 +470,17 @@ class XPHistory:
             # Calculate totals by user
             user_totals = {}
             for entry in data:
-                user_id = entry.get('user_id')
-                if user_id:  # Only include entries with valid user_id from sessions
+                user_id = None
+                
+                # Get user_id from session mapping or manual entry
+                if entry.get('session_id'):
+                    user_id = session_to_user.get(entry['session_id'])
+                elif 'manual' in entry.get('reason', '').lower():
+                    # For manual entries, we would need to track user somehow
+                    # For now, skip manual entries in leaderboard
+                    continue
+                    
+                if user_id:
                     if user_id not in user_totals:
                         user_totals[user_id] = 0
                     user_totals[user_id] += entry['xp_change']
