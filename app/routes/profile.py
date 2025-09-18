@@ -214,16 +214,19 @@ def dashboard():
         levels_progress = []
         user_sessions = Session.get_user_sessions(current_user.id)
         
-        # Create lookup for completed sessions by session name
+        # Create lookup for completed sessions by level_id
         session_lookup = {}
         for session in user_sessions:
-            if session.end_time is not None and session.session_name != 'Blue Team vs Red Team Mode':
-                if session.session_name not in session_lookup:
-                    session_lookup[session.session_name] = session
+            if session.end_time is not None and session.level_id is not None:
+                # Keep the best score for each level (handle None scores)
+                current_score = session.score or 0
+                existing_score = session_lookup[session.level_id].score or 0 if session.level_id in session_lookup else 0
+                if session.level_id not in session_lookup or current_score > existing_score:
+                    session_lookup[session.level_id] = session
         
         for level in levels:
-            # Find session for this level by matching names
-            session = session_lookup.get(level.name)
+            # Find session for this level by level_id
+            session = session_lookup.get(level.level_id)
             
             level_data = {
                 'id': level.level_id,

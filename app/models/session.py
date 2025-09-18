@@ -175,17 +175,23 @@ class Session:
             from app.models.level import Level
             total_levels = len(Level.get_available_levels())
             
-            # Get user's completed sessions (distinct level session names)
+            # Get user's completed sessions with level_id
             response = (supabase.table('sessions')
-                       .select('session_name, score')
+                       .select('level_id, session_name, score')
                        .eq('user_id', user_id)
                        .not_.is_('end_time', 'null')  # Only completed sessions
                        .execute())
             session_data = handle_supabase_error(response)
             
-            # Count unique level sessions (excluding Blue Team vs Red Team Mode)
-            level_sessions = [s for s in session_data if s['session_name'] != 'Blue Team vs Red Team Mode'] if session_data else []
-            completed_levels = len(set([s['session_name'] for s in level_sessions]))
+            # Count unique completed levels based on level_id (excluding null level_ids which are for Blue Team vs Red Team Mode)
+            completed_level_ids = set()
+            if session_data:
+                for session in session_data:
+                    level_id = session.get('level_id')
+                    if level_id is not None:  # Only count sessions with actual level_id
+                        completed_level_ids.add(level_id)
+            
+            completed_levels = len(completed_level_ids)
             
             # Get user's best scores per session type
             best_scores = {}

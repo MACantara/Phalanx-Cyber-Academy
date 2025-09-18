@@ -396,20 +396,20 @@ def levels_overview():
         # Get user's sessions for detailed progress
         user_sessions = Session.get_user_sessions(current_user.id, limit=100)
         
-        # Create lookup for latest session per level (user_sessions is ordered by created_at DESC)
+        # Create lookup for latest session per level_id (user_sessions is ordered by created_at DESC)
         session_lookup = {}
         for session in user_sessions:
-            if session.session_name not in session_lookup and session.end_time is not None:
-                session_lookup[session.session_name] = session
+            if session.level_id not in session_lookup and session.end_time is not None and session.level_id is not None:
+                session_lookup[session.level_id] = session
         
         # Enhance levels with user progress data
         enhanced_levels = []
         for level in levels:
             level_data = level.copy()
             
-            # Check if user has completed this level (by session name)
-            level_name = level.get('name', f"Level {level['id']}")
-            session = session_lookup.get(level_name)
+            # Check if user has completed this level (by level_id)
+            level_id = level.get('id')
+            session = session_lookup.get(level_id)
             
             if session:
                 level_data['user_progress'] = {
