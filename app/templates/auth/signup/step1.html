@@ -41,5 +41,8 @@
                    placeholder="your.email@example.com" value="{{ request.form.email }}">
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">We'll send you important updates and notifications</p>
         </div>
+        
+        <!-- Hidden timezone field for automatic detection -->
+        <input type="hidden" id="detected_timezone" name="timezone" value="">
     </div>
 </div>

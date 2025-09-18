@@ -80,7 +80,25 @@
                     <li><strong>Technical Information:</strong> IP address, browser type, operating system, device information</li>
                     <li><strong>Usage Information:</strong> Pages visited, time spent on site, click patterns, session data</li>
                     <li><strong>Security Information:</strong> Login attempt logs, session tokens, authentication data</li>
+                    <li><strong>Timezone Information:</strong> Your device's timezone setting is automatically detected during account creation using browser APIs to provide personalized time-based features and content. This information is used solely to enhance your user experience by displaying times in your local timezone and is stored securely with your account preferences.</li>
                 </ul>
+
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">4.3 Automatic Timezone Detection</h3>
+                <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6 mb-6">
+                    <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-3">
+                        <i class="bi bi-clock mr-2"></i>How We Detect Your Timezone
+                    </h4>
+                    <p class="text-blue-800 dark:text-blue-200 text-sm mb-4">
+                        During account creation, our system automatically detects your timezone using your browser's built-in timezone API (Intl.DateTimeFormat). This is a standard web technology that provides your device's timezone setting without accessing any sensitive location data.
+                    </p>
+                    <div class="space-y-2 text-blue-700 dark:text-blue-300 text-sm">
+                        <p><strong>What we collect:</strong> IANA timezone identifier (e.g., "Asia/Manila", "America/New_York")</p>
+                        <p><strong>How it's collected:</strong> JavaScript browser API during account setup</p>
+                        <p><strong>Purpose:</strong> Display timestamps, deadlines, and schedules in your local time</p>
+                        <p><strong>Storage:</strong> Stored with your account preferences, can be updated anytime</p>
+                        <p><strong>User control:</strong> You can modify your timezone preference in account settings</p>
+                    </div>
+                </div>
 
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">5. Legal Basis for Processing (Section 12, RA 10173)</h2>
                 <p class="text-gray-700 dark:text-gray-300 mb-4">We process your personal information based on the following lawful grounds under Section 12 of RA 10173:</p>
@@ -145,6 +163,7 @@
                         <ul class="text-orange-700 dark:text-orange-300 text-xs space-y-1">
                             <li>• Correct inaccurate or incomplete data</li>
                             <li>• Update outdated information</li>
+                            <li>• Modify timezone preferences through account settings</li>
                             <li>• Notify third parties of corrections</li>
                         </ul>
                     </div>
@@ -179,6 +198,7 @@
                             <li>• HTTPS encryption for data transmission</li>
                             <li>• Secure session management</li>
                             <li>• Network security safeguards</li>
+                            <li>• Timezone data validation against IANA database</li>
                         </ul>
                     </div>
                     <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-xl">
@@ -188,6 +208,7 @@
                             <li>• Employee confidentiality obligations</li>
                             <li>• Access controls and authorization</li>
                             <li>• Regular security monitoring</li>
+                            <li>• User control over timezone preferences</li>
                         </ul>
                     </div>
                 </div>
@@ -203,9 +224,18 @@
                 </p>
 
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">11. Data Retention</h2>
-                <p class="text-gray-700 dark:text-gray-300 mb-6">
-                    In accordance with Section 11(e) of RA 10173, we retain personal information only for as long as necessary for the fulfillment of the purposes for which the data was obtained, for the establishment, exercise or defense of legal claims, or for legitimate business purposes. Account data is retained until you request deletion, while security logs are automatically deleted after 30 days.
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    In accordance with Section 11(e) of RA 10173, we retain personal information only for as long as necessary for the fulfillment of the purposes for which the data was obtained, for the establishment, exercise or defense of legal claims, or for legitimate business purposes.
                 </p>
+                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl mb-6">
+                    <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-3">Retention Periods by Data Type</h4>
+                    <ul class="text-gray-700 dark:text-gray-300 text-sm space-y-1">
+                        <li>• <strong>Account data (including timezone preferences):</strong> Retained until you request deletion</li>
+                        <li>• <strong>Security logs:</strong> Automatically deleted after 30 days</li>
+                        <li>• <strong>Session data:</strong> Deleted upon logout or session expiry</li>
+                        <li>• <strong>Contact form submissions:</strong> Retained for 2 years for support purposes</li>
+                    </ul>
+                </div>
 
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">12. National Privacy Commission</h2>
                 <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6 mb-6">
