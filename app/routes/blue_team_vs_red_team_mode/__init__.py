@@ -134,11 +134,26 @@ def update_game_state():
 def start_game():
     """Start a new game session"""
     try:
+        # Create a new session for Blue Team vs Red Team mode
+        from app.models.session import Session
+        
+        try:
+            game_session = Session.start_session(
+                user_id=current_user.id,
+                session_name='Blue-Team-vs-Red-Team-Mode'
+            )
+            session_id = game_session.id
+        except Exception as session_error:
+            logger.error(f"Failed to create session for Blue vs Red Team: {session_error}")
+            # Continue without session tracking
+            session_id = None
+        
         # Initialize new game state
         initial_state = {
             'isRunning': True,
             'timeRemaining': 900,
             'startTime': datetime.now().isoformat(),
+            'session_id': session_id,  # Include session ID for tracking
             'assets': {
                 'academy-server': {'status': 'secure', 'integrity': 100},
                 'student-db': {'status': 'secure', 'integrity': 100},
@@ -189,9 +204,25 @@ def stop_game():
             game_state['isRunning'] = False
             game_state['endTime'] = datetime.now().isoformat()
             
-            # Calculate and award completion bonus XP
+            # Calculate final score based on game performance
+            final_score = calculate_final_score(game_state)
+            
+            # End the session if session_id exists
+            session_id = game_state.get('session_id')
+            if session_id:
+                try:
+                    from app.models.session import Session
+                    completed_session = Session.end_session(session_id, score=final_score)
+                    game_state['session_completed'] = True
+                    game_state['xp_awarded'] = completed_session.get_xp_awarded()
+                except Exception as session_error:
+                    logger.error(f"Failed to end session: {session_error}")
+                    game_state['session_completed'] = False
+                    game_state['xp_awarded'] = 0
+            
+            # Calculate and award completion bonus XP (legacy behavior)
             completion_bonus = calculate_completion_bonus(game_state)
-            if completion_bonus > 0:
+            if completion_bonus > 0 and not session_id:  # Only if no session tracking
                 game_state['sessionXP'] = game_state.get('sessionXP', 0) + completion_bonus
                 
                 # Record completion bonus in database
@@ -228,6 +259,9 @@ def stop_game():
             'success': True,
             'message': 'Game stopped successfully',
             'gameState': game_state,
+            'final_score': final_score if 'final_score' in locals() else 0,
+            'session_completed': game_state.get('session_completed', False),
+            'xp_awarded': game_state.get('xp_awarded', 0),
             'completion_bonus': completion_bonus if 'completion_bonus' in locals() else 0
         })
     
