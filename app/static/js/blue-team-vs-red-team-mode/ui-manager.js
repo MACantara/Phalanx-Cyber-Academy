@@ -568,7 +568,7 @@ class UIManager {
 
     showXPNotification(amount, type, reason) {
         const notification = document.createElement('div');
-        notification.className = `fixed top-20 right-4 z-50 p-3 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full ${
+        notification.className = `fixed top-4 right-4 z-50 p-3 rounded-lg shadow-lg max-w-sm animate-fade-in-right ${
             type === 'reward' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
         }`;
         
@@ -585,20 +585,10 @@ class UIManager {
         
         document.body.appendChild(notification);
         
-        // Animate in
-        setTimeout(() => {
-            notification.style.transform = 'translateX(0)';
-        }, 100);
-        
         // Auto remove after 3 seconds
         setTimeout(() => {
             if (notification.parentElement) {
-                notification.style.transform = 'translateX(100%)';
-                setTimeout(() => {
-                    if (notification.parentElement) {
-                        notification.remove();
-                    }
-                }, 300);
+                notification.remove();
             }
         }, 3000);
     }
