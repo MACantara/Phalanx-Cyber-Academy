@@ -109,7 +109,11 @@
     "description": "{{ level_data.description | default('') | safe }}",
     "category": "{{ level_data.category | default('') | safe }}",
     "difficulty": "{{ level_data.difficulty | default('') | safe }}",
-    "xp_reward": {{ level_data.xp_reward if level_data else 100 }}
+    "xp_reward": {{ level_data.xp_reward if level_data else 100 }},
+    "session_id": "{{ level_data.session_id | default('') | safe }}",
+    "is_retry": {{ 'true' if level_data.is_retry else 'false' }},
+    "previous_attempts": {{ level_data.previous_attempts if level_data else 0 }},
+    "previous_score": {{ level_data.previous_score if level_data else 0 }}
 }
 </script>
 
