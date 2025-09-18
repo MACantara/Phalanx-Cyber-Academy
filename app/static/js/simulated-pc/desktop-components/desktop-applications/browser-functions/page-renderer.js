@@ -1,11 +1,9 @@
 import { PageRegistry } from '../../../levels/level-one/pages/page-registry.js';
-import { InteractiveLabeling } from '../../../levels/level-one/tools/interactive-labeling.js';
 
 export class PageRenderer {
     constructor(browserApp) {
         this.browserApp = browserApp;
         this.pageRegistry = new PageRegistry();
-        this.interactiveLabeling = new InteractiveLabeling(browserApp, this.pageRegistry);
     }
 
     async renderPage(url) {
@@ -26,20 +24,6 @@ export class PageRenderer {
                 }
                 
                 contentElement.innerHTML = htmlContent;
-                
-                // Initialize interactive labeling for CyberQuest training if this is challenge1
-                if (url === 'https://daily-politico-news.com/breaking-news') {
-                    const challenge1Page = window.challenge1Page;
-                    
-                    if (challenge1Page && challenge1Page.articlesData && challenge1Page.articlesData.length > 0) {
-                        console.log('Initializing interactive labeling with', challenge1Page.articlesData.length, 'articles');
-                        
-                        // Initialize the interactive labeling system with all articles
-                        await this.interactiveLabeling.initializeWithArticles(challenge1Page.articlesData);
-                    } else {
-                        console.warn('Challenge1 page or articles data not available for interactive labeling');
-                    }
-                }
                 
                 this.updatePageTitle(pageConfig.title);
                 this.bindPageEvents(url);
