@@ -73,9 +73,6 @@ class IntroductionManager {
         startButton.innerHTML = '<i class="bi bi-hourglass-split animate-spin mr-2"></i>Opening Tutorial...';
         startButton.disabled = true;
 
-        // Informative notification so the user knows what happens next
-        this.showNotification('You will be guided through the tutorial before the simulation starts. Follow the steps and the dashboard will open when ready.', 'info');
-
         // Redirect to tutorial with next target
         setTimeout(() => {
             const nextUrl = '/blue-vs-red/tutorial?next=dashboard';
@@ -87,47 +84,6 @@ class IntroductionManager {
         if (e.key === 'Enter') {
             this.startSimulation();
         }
-    }
-    
-    showNotification(message, type = 'info') {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full ${
-            type === 'error' ? 'bg-red-600 text-white' : 
-            type === 'success' ? 'bg-green-600 text-white' : 
-            'bg-blue-600 text-white'
-        }`;
-        
-        notification.innerHTML = `
-            <div class="flex items-center space-x-2">
-                <i class="bi bi-${type === 'error' ? 'exclamation-triangle' : type === 'success' ? 'check-circle' : 'info-circle'}"></i>
-                <span>${message}</span>
-                <button class="ml-2 hover:opacity-75" onclick="this.parentElement.parentElement.remove()">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-        `;
-        
-        // Make notifications feel clickable if needed
-        notification.classList.add('cursor-pointer');
-        document.body.appendChild(notification);
-        
-        // Animate in
-        setTimeout(() => {
-            notification.style.transform = 'translateX(0)';
-        }, 100);
-        
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (notification.parentElement) {
-                notification.style.transform = 'translateX(100%)';
-                setTimeout(() => {
-                    if (notification.parentElement) {
-                        notification.remove();
-                    }
-                }, 300);
-            }
-        }, 5000);
     }
 }
 
