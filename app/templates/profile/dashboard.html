@@ -208,8 +208,8 @@
                          data-session-entry data-session-name="{{ session.session_name }}" 
                          data-score="{{ session.score or 0 }}" 
                          data-date="{{ session.created_at }}">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center text-white font-bold mr-3">
+                        <div class="flex items-center min-w-0 flex-1">
+                            <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center text-white font-bold mr-3 flex-shrink-0">
                                 {% if session.session_name == 'Blue-Team-Vs-Red-Team-Mode' %}
                                     <i class="bi bi-shield-check text-sm"></i>
                                 {% elif session.level_id %}
@@ -218,9 +218,9 @@
                                     <i class="bi bi-gear text-sm"></i>
                                 {% endif %}
                             </div>
-                            <div>
-                                <p class="font-semibold text-gray-900 dark:text-white">{{ session.session_name | format_display_name }}</p>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <div class="min-w-0 flex-1">
+                                <p class="font-semibold text-gray-900 dark:text-white truncate">{{ session.session_name | format_display_name }}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 truncate">
                                     {% if session.level_id %}
                                         <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                                             <i class="bi bi-book mr-1"></i>Level Session
@@ -241,7 +241,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="text-right">
+                        <div class="text-right flex-shrink-0 ml-4">
                             {% if session.score %}
                             <div class="flex items-center text-green-600 dark:text-green-400">
                                 <i class="bi bi-star-fill mr-1"></i>
@@ -290,18 +290,18 @@
                          data-level="{{ entry.level_id or '' }}" 
                          data-session="{{ entry.session_id or '' }}" 
                          data-date="{{ entry.created_at }}">
-                        <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold mr-3
+                        <div class="flex items-center min-w-0 flex-1">
+                            <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold mr-3 flex-shrink-0
                                        {% if entry.xp_change > 0 %}bg-gradient-to-br from-green-500 to-emerald-600
                                        {% else %}bg-gradient-to-br from-red-500 to-red-600{% endif %}">
                                 <i class="{% if entry.xp_change > 0 %}bi bi-plus-lg
                                            {% else %}bi bi-dash-lg{% endif %} text-sm"></i>
                             </div>
-                            <div>
-                                <p class="font-semibold text-gray-900 dark:text-white">
+                            <div class="min-w-0 flex-1">
+                                <p class="font-semibold text-gray-900 dark:text-white truncate">
                                     {{ entry.reason.replace('_', ' ').title() }}
                                 </p>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                <p class="text-sm text-gray-600 dark:text-gray-400 truncate">
                                     {% if entry.created_at %}
                                         {{ entry.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}
                                     {% endif %}
@@ -315,7 +315,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="text-right">
+                        <div class="text-right flex-shrink-0 ml-4">
                             <div class="flex items-center {% if entry.xp_change > 0 %}text-green-600 dark:text-green-400
                                                            {% else %}text-red-600 dark:text-red-400{% endif %}">
                                 <i class="{% if entry.xp_change > 0 %}bi bi-arrow-up-circle-fill
