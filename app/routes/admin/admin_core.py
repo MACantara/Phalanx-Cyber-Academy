@@ -321,29 +321,3 @@ def mark_contact_read(contact_id):
         flash('Error updating contact status.', 'error')
         return redirect(url_for('admin.contacts'))
 
-
-@admin_bp.route('/cleanup', methods=['POST'])
-@login_required
-@admin_required
-def cleanup_logs():
-    """Clean up old logs and expired tokens."""
-    try:
-        # Clean up old login attempts (older than 30 days)
-        old_attempts = LoginAttempt.cleanup_old_attempts(30)
-        
-        # Clean up expired email verification tokens
-        expired_verifications = EmailVerification.cleanup_expired_tokens()
-        
-        # Clean up old contact submissions (older than 1 year)
-        old_contacts = Contact.cleanup_old_submissions(365)
-        
-        flash(f'Cleanup completed: {old_attempts} login attempts, {expired_verifications} verification tokens, and {old_contacts} old contact submissions removed.', 'success')
-        
-    except DatabaseError as e:
-        current_app.logger.error(f'Database error during cleanup: {e}')
-        flash('Error during cleanup process.', 'error')
-    except Exception as e:
-        current_app.logger.error(f'Cleanup error: {e}')
-        flash('Error during cleanup process.', 'error')
-    
-    return redirect(url_for('admin.dashboard'))
