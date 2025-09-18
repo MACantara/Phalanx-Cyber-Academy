@@ -109,8 +109,8 @@ class User(UserMixin):
         return str(self.id)
     
     @classmethod
-    def create(cls, username: str, email: str, password: str) -> 'User':
-        """Create a new user."""
+    def create(cls, username: str, email: str, password: str, timezone: str = 'UTC') -> 'User':
+        """Create a new user with automatic timezone detection."""
         user_data = {
             'username': username,
             'email': email,
@@ -118,7 +118,7 @@ class User(UserMixin):
             'is_active': True,
             'is_admin': False,
             'total_xp': 0,
-            'timezone': 'UTC',  # Default timezone for new users
+            'timezone': timezone,
             'created_at': utc_now(),
             'last_login': None
         }
