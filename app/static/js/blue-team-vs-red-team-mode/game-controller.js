@@ -62,6 +62,32 @@ class GameController {
     }
     
     setupEventListeners() {
+        // Handle page unload to properly end session
+        window.addEventListener('beforeunload', async (e) => {
+            if (this.gameState.isRunning) {
+                // Use fetch with keepalive for more reliable session termination
+                try {
+                    await fetch('/blue-vs-red/api/exit-game', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
+                        },
+                        body: JSON.stringify({
+                            timeRemaining: this.gameState.timeRemaining,
+                            assets: this.gameState.assets,
+                            sessionXP: this.gameState.sessionXP,
+                            attacksMitigated: this.gameState.attacksMitigated,
+                            attacksSuccessful: this.gameState.attacksSuccessful
+                        }),
+                        keepalive: true
+                    });
+                } catch (error) {
+                    console.log('Failed to send exit signal during page unload');
+                }
+            }
+        });
+
         // Game control menu
         const menuButton = document.getElementById('game-menu-button');
         const menuDropdown = document.getElementById('game-menu-dropdown');
@@ -157,9 +183,9 @@ class GameController {
         console.log('🎮 Game paused');
     }
     
-    exitToMenu() {
+    async exitToMenu() {
         if (confirm('Are you sure you want to exit the simulation and return to the main menu?')) {
-            this.stopGame();
+            await this.handleGameExit();
             window.location.href = '/blue-vs-red/';
         }
     }
@@ -182,8 +208,8 @@ class GameController {
         console.log('🎮 Game stopped');
     }
     
-    resetGame() {
-        this.stopGame();
+    async resetGame() {
+        await this.handleGameReset();
         
         // Reset game state
         this.gameState = {
@@ -900,6 +926,62 @@ class GameController {
             }
         } catch (error) {
             console.error('Failed to handle game completion:', error);
+        }
+        return null;
+    }
+
+    async handleGameExit() {
+        try {
+            const response = await fetch('/blue-vs-red/api/exit-game', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify({
+                    timeRemaining: this.gameState.timeRemaining,
+                    assets: this.gameState.assets,
+                    sessionXP: this.gameState.sessionXP,
+                    attacksMitigated: this.gameState.attacksMitigated,
+                    attacksSuccessful: this.gameState.attacksSuccessful
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Game session ended:', data);
+                return data;
+            }
+        } catch (error) {
+            console.error('Failed to handle game exit:', error);
+        }
+        return null;
+    }
+
+    async handleGameReset() {
+        try {
+            const response = await fetch('/blue-vs-red/api/reset-game', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify({
+                    timeRemaining: this.gameState.timeRemaining,
+                    assets: this.gameState.assets,
+                    sessionXP: this.gameState.sessionXP,
+                    attacksMitigated: this.gameState.attacksMitigated,
+                    attacksSuccessful: this.gameState.attacksSuccessful
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Game session reset:', data);
+                return data;
+            }
+        } catch (error) {
+            console.error('Failed to handle game reset:', error);
         }
         return null;
     }
