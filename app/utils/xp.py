@@ -219,7 +219,6 @@ class XPManager:
             
             # Create XP history entry
             xp_entry = XPHistory.create_entry(
-                user_id=user_id,
                 xp_change=xp_earned,
                 reason=reason,
                 balance_before=old_total,
@@ -410,7 +409,6 @@ class XPManager:
             
             # Create XP history entry (with session_id to link to the session)
             xp_entry = XPHistory.create_entry(
-                user_id=user_id,
                 xp_change=xp_earned,
                 reason=reason,
                 balance_before=old_total,
