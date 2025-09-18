@@ -9,7 +9,6 @@ class EmailVerification:
         """Initialize EmailVerification from Supabase data."""
         self.id = data.get('id')
         self.user_id = data.get('user_id')
-        self.email = data.get('email')
         self.token = data.get('token')
         self.created_at = data.get('created_at')
         self.expires_at = data.get('expires_at')
@@ -29,7 +28,6 @@ class EmailVerification:
         try:
             verification_data = {
                 'user_id': self.user_id,
-                'email': self.email,
                 'token': self.token,
                 'created_at': self.created_at.isoformat() if self.created_at else None,
                 'expires_at': self.expires_at.isoformat() if self.expires_at else None,
@@ -50,7 +48,7 @@ class EmailVerification:
             raise DatabaseError(f"Failed to save email verification: {e}")
     
     def __repr__(self):
-        return f'<EmailVerification {self.email} for user {self.user_id}>'
+        return f'<EmailVerification for user {self.user_id}>'
     
     def is_expired(self):
         """Check if the verification token has expired."""
@@ -64,6 +62,26 @@ class EmailVerification:
             return 'Expired'
         else:
             return 'Pending'
+    
+    def get_user(self):
+        """Get the user associated with this verification."""
+        from app.models.user import User
+        return User.find_by_id(self.user_id)
+    
+    def get_email(self):
+        """Get the email from the associated user."""
+        user = self.get_user()
+        return user.email if user else None
+    
+    def get_username(self):
+        """Get the username from the associated user."""
+        user = self.get_user()
+        return user.username if user else None
+    
+    def get_is_verified(self):
+        """Get the verification status from the associated user."""
+        user = self.get_user()
+        return user.is_verified if user else False
     
     def verify(self):
         """Mark this email as verified by updating the user record."""
@@ -83,12 +101,11 @@ class EmailVerification:
         """Create a new email verification entry."""
         supabase = get_supabase()
         try:
-            # Remove any existing unverified tokens for this user/email combo
-            supabase.table(Tables.EMAIL_VERIFICATIONS).delete().eq('user_id', user_id).eq('email', email).is_('verified_at', 'null').execute()
+            # Remove any existing unverified tokens for this user
+            supabase.table(Tables.EMAIL_VERIFICATIONS).delete().eq('user_id', user_id).is_('verified_at', 'null').execute()
             
             verification_data = {
                 'user_id': user_id,
-                'email': email,
                 'token': secrets.token_urlsafe(32),
                 'created_at': utc_now(),
                 'expires_at': utc_now() + timedelta(hours=24),  # 24 hour expiration
@@ -132,9 +149,8 @@ class EmailVerification:
         try:
             query = supabase.table(Tables.EMAIL_VERIFICATIONS).select("*", count='exact')
             
-            # Apply search filter if provided
-            if search:
-                query = query.or_(f"email.ilike.%{search}%,token.ilike.%{search}%")
+            # For search, we'll need to join with users table or filter after retrieval
+            # For now, we'll get all and filter in Python if search is provided
             
             # Calculate offset
             offset = (page - 1) * per_page
@@ -144,6 +160,16 @@ class EmailVerification:
             data = handle_supabase_error(response)
             
             verifications = [cls(verification_data) for verification_data in data]
+            
+            # Apply search filter if provided (filter by username or email from user)
+            if search:
+                filtered_verifications = []
+                for verification in verifications:
+                    user = verification.get_user()
+                    if user and (search.lower() in user.username.lower() or search.lower() in user.email.lower()):
+                        filtered_verifications.append(verification)
+                verifications = filtered_verifications
+            
             total_count = response.count if hasattr(response, 'count') else len(data)
             
             return verifications, total_count
