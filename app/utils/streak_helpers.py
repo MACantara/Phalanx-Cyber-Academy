@@ -25,7 +25,11 @@ def has_active_streak(user_id: int) -> bool:
         recent_xp = XPHistory.get_user_history(user_id, limit=5)
         for entry in recent_xp:
             if entry.created_at:
-                entry_date = datetime.fromisoformat(entry.created_at.replace('Z', '+00:00')).date()
+                # created_at is already a datetime object from the model
+                if isinstance(entry.created_at, str):
+                    entry_date = datetime.fromisoformat(entry.created_at.replace('Z', '+00:00')).date()
+                else:
+                    entry_date = entry.created_at.date()
                 if entry_date >= yesterday:
                     return True
         
@@ -33,7 +37,11 @@ def has_active_streak(user_id: int) -> bool:
         recent_sessions = Session.get_user_sessions(user_id, limit=5)
         for session in recent_sessions:
             if session.created_at:
-                session_date = datetime.fromisoformat(session.created_at.replace('Z', '+00:00')).date()
+                # created_at is already a datetime object from the model
+                if isinstance(session.created_at, str):
+                    session_date = datetime.fromisoformat(session.created_at.replace('Z', '+00:00')).date()
+                else:
+                    session_date = session.created_at.date()
                 if session_date >= yesterday:
                     return True
         
