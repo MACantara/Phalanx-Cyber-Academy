@@ -3,7 +3,6 @@ class UIManager {
     constructor(gameController) {
         this.gameController = gameController;
         this.terminalOutput = [];
-        this.maxTerminalLines = 20;
         
         // XP tracking
         this.sessionXP = 0;
@@ -656,10 +655,6 @@ class UIManager {
             text: `[${timestamp}] ${prefix} ${text}`,
             class: colorClass
         });
-        
-        if (this.terminalOutput.length > this.maxTerminalLines) {
-            this.terminalOutput.shift();
-        }
         
         this.updateTerminal();
     }
