@@ -8,13 +8,13 @@ export class LevelCompletionDialogue extends BaseDialogue {
                 text: "Congratulations, Agent! You've successfully completed Level 1: The Misinformation Maze."
             },
             {
-                text: "Your performance in analyzing news articles shows real promise in cybersecurity awareness."
+                text: "Your performance in classifying news articles shows real promise in cybersecurity awareness and critical thinking."
             },
             {
-                text: "You've demonstrated key skills: identifying suspicious headlines, verifying source credibility, and recognizing emotional manipulation tactics."
+                text: "You've demonstrated key skills: identifying suspicious headlines, recognizing questionable sources, and spotting emotional manipulation tactics."
             },
             {
-                text: "Through the Interactive Analysis system, you learned to spot red flags like biased language, questionable sources, and missing author credentials."
+                text: "Through analyzing real and fake news articles, you learned to spot red flags like biased language, missing author credentials, and sensational claims."
             },
             {
                 text: "These skills are essential in today's digital landscape where misinformation can influence elections, spread conspiracy theories, and undermine public trust."
@@ -69,7 +69,7 @@ export class LevelCompletionDialogue extends BaseDialogue {
 
     static shouldAutoStart() {
         const levelCompleted = localStorage.getItem('cyberquest_level_1_completed');
-        const challenge1Completed = localStorage.getItem('cyberquest_challenge1_interactive_results');
+        const challenge1Completed = localStorage.getItem('cyberquest_challenge1_completed');
         return challenge1Completed && !levelCompleted;
     }
 }

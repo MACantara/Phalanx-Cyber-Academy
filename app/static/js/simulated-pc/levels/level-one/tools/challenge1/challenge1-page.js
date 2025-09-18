@@ -29,6 +29,7 @@ class Challenge1PageClass extends BasePage {
         this.eventHandlers = new EventHandlers(this);
         this.articlesData = []; // Store all 15 articles
         this.currentArticleIndex = 0; // Track which article is being displayed
+        this.classifiedArticles = new Set(); // Track which articles have been classified
         this.fetchPromise = null;
     }
 
@@ -292,6 +293,81 @@ class Challenge1PageClass extends BasePage {
                 `Incorrect. Article ${this.currentArticleIndex + 1} was ${currentArticle.is_real ? 'real' : 'fake'} news.`;
             
             window.ToastManager.showToast(message, isCorrect ? 'success' : 'error');
+        }
+
+        // Track that this article has been classified
+        this.classifiedArticles.add(this.currentArticleIndex);
+        
+        // Check if enough articles have been classified to complete the challenge
+        this.checkChallengeCompletion();
+    }
+
+    checkChallengeCompletion() {
+        // Complete the challenge when the user has classified at least 10 out of 15 articles
+        const minRequiredClassifications = Math.min(10, this.articlesData.length);
+        
+        if (this.classifiedArticles.size >= minRequiredClassifications) {
+            // Mark challenge as completed after a short delay
+            setTimeout(() => {
+                this.completeChallenge();
+            }, 2000);
+        }
+    }
+
+    completeChallenge() {
+        // Mark challenge 1 as completed
+        localStorage.setItem('cyberquest_challenge1_completed', 'true');
+        
+        // Show completion message
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
+        modal.style.zIndex = '10000';
+        modal.innerHTML = `
+            <div style="background: white; border-radius: 8px; padding: 24px; max-width: 500px; margin: 16px; text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
+                <h2 style="color: #16a34a; font-size: 24px; font-weight: bold; margin-bottom: 16px;">Challenge Complete!</h2>
+                <p style="color: #374151; margin-bottom: 20px;">
+                    Excellent work! You've successfully classified ${this.classifiedArticles.size} articles and completed Level 1: The Misinformation Maze!
+                </p>
+                <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">
+                    You've earned 100 XP in Information Literacy and unlocked the 'Fact-Checker' badge.
+                </p>
+                <button onclick="this.closest('.fixed').remove(); window.challenge1Page?.completeLevelOne?.()" 
+                        style="background: #16a34a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer;">
+                    Complete Level
+                </button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    completeLevelOne() {
+        // Mark Level 1 as completed
+        localStorage.setItem('cyberquest_level_1_completed', 'true');
+        localStorage.setItem('cyberquest_challenge1_completed', 'true');
+        
+        console.log('Level 1 marked as completed:', {
+            level_completed: localStorage.getItem('cyberquest_level_1_completed'),
+            challenge_completed: localStorage.getItem('cyberquest_challenge1_completed'),
+            articlesClassified: this.classifiedArticles.size
+        });
+        
+        // Navigate back to levels overview
+        if (window.desktop?.windowManager) {
+            try {
+                const browserApp = window.desktop.windowManager.applications.get('browser');
+                if (browserApp) {
+                    // Navigate to levels overview to see Level 2 unlocked
+                    browserApp.navigation.navigateToUrl('/levels');
+                }
+            } catch (error) {
+                console.error('Failed to navigate to levels:', error);
+                // Fallback navigation
+                window.location.href = '/levels';
+            }
+        } else {
+            // Direct navigation fallback
+            window.location.href = '/levels';
         }
     }
 

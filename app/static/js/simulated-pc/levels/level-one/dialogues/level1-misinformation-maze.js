@@ -9,16 +9,16 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "Welcome to Level 1: The Misinformation Maze. In this level, you'll be working to debunk fake news and stop misinformation from influencing an election."
+                text: "Welcome to Level 1: The Misinformation Maze. In this level, you'll be working to identify fake news and develop critical thinking skills to combat misinformation."
             },
             {
-                text: "As a cybersecurity analyst, you'll need to develop sharp critical thinking skills to identify misleading information and verify sources accurately."
+                text: "As a cybersecurity analyst, you'll need to develop sharp analytical skills to distinguish between legitimate news and misleading information."
             },
             {
-                text: "You'll be presented with various news articles and social media posts. Your task is to determine which ones are legitimate and which are spreading misinformation."
+                text: "You'll be presented with various news articles from real sources. Your task is to determine which ones are legitimate and which are spreading misinformation."
             },
             {
-                text: "Remember to check sources, verify dates, and look for supporting evidence. Misinformation often relies on emotional appeals rather than facts."
+                text: "Remember to check sources, look for author credentials, and watch for emotional manipulation tactics. Misinformation often relies on sensational headlines rather than facts."
             },
             {
                 text: "Successfully completing this level will earn you 100 XP in the Information Literacy category. Are you ready to start?"
