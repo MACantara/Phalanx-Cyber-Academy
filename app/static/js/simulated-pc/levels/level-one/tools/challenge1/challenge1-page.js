@@ -343,21 +343,25 @@ class Challenge1PageClass extends BasePage {
         modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
         modal.style.zIndex = '10000';
         modal.innerHTML = `
-            <div style="background: white; border-radius: 8px; padding: 24px; max-width: 500px; margin: 16px; text-align: center;">
+            <div style="background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 24px; max-width: 500px; margin: 16px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);">
                 <div style="font-size: 48px; margin-bottom: 16px;">🎉</div>
-                <h2 style="color: #16a34a; font-size: 24px; font-weight: bold; margin-bottom: 16px;">Challenge Complete!</h2>
-                <p style="color: #374151; margin-bottom: 20px;">
+                <h2 style="color: #10b981; font-size: 24px; font-weight: bold; margin-bottom: 16px;">Challenge Complete!</h2>
+                <p style="color: #d1d5db; margin-bottom: 20px; line-height: 1.5;">
                     Excellent work! You've successfully classified all ${this.articlesData.length} articles and completed Level 1: The Misinformation Maze!
                 </p>
-                <div style="background: #f3f4f6; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
-                    <div style="color: #374151; font-size: 18px; font-weight: bold;">Final Score: ${finalScore}%</div>
-                    <div style="color: #6b7280; font-size: 14px;">Correct Classifications: ${this.correctClassifications}/${this.articlesData.length}</div>
+                <div style="background: #374151; border: 1px solid #4b5563; padding: 16px; border-radius: 6px; margin-bottom: 20px;">
+                    <div style="color: #f3f4f6; font-size: 18px; font-weight: bold; margin-bottom: 8px;">Final Score: ${finalScore}%</div>
+                    <div style="color: #9ca3af; font-size: 14px;">Correct Classifications: ${this.correctClassifications}/${this.articlesData.length}</div>
                 </div>
-                <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">
-                    You've earned XP in Information Literacy and unlocked the 'Fact-Checker' badge.
-                </p>
+                <div style="background: #065f46; border: 1px solid #047857; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
+                    <p style="color: #d1fae5; font-size: 14px; margin: 0;">
+                        🏆 You've earned XP in Information Literacy and unlocked the 'Fact-Checker' badge!
+                    </p>
+                </div>
                 <button onclick="this.closest('.fixed').remove(); window.challenge1Page?.completeLevelOne?.()" 
-                        style="background: #16a34a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer;">
+                        style="background: #10b981; color: white; padding: 12px 24px; border: 1px solid #059669; border-radius: 6px; font-size: 16px; cursor: pointer; transition: all 0.2s; width: 100%;"
+                        onmouseover="this.style.background='#059669'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1)'" 
+                        onmouseout="this.style.background='#10b981'; this.style.boxShadow='none'">
                     Complete Level
                 </button>
             </div>
