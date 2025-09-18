@@ -8,7 +8,7 @@ from datetime import datetime, timezone, timedelta
 import json
 from app.models.system_test_plan import SystemTestPlan
 from app.models.user import User
-from app.utils.timezone_utils import utc_now
+from app.utils.timezone_utils import utc_now, format_for_user_timezone
 
 system_test_bp = Blueprint('system_test', __name__, url_prefix='/admin/system-test')
 
