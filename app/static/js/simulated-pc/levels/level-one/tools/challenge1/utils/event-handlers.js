@@ -4,21 +4,7 @@ export class EventHandlers {
     }
 
     bindAllEvents(contentElement) {
-        this.bindVerificationTools(contentElement);
         this.bindSubmitButton(contentElement);
-    }
-
-    bindVerificationTools(contentElement) {
-        // Handle cross-reference tool
-        const crossRefBtn = contentElement.querySelector('#cross-reference-tool');
-        if (crossRefBtn) {
-            crossRefBtn.addEventListener('click', () => {
-                const url = crossRefBtn.getAttribute('data-url');
-                if (url) {
-                    window.dispatchEvent(new CustomEvent('navigate-browser', { detail: { url } }));
-                }
-            });
-        }
     }
 
     bindSubmitButton(contentElement) {
