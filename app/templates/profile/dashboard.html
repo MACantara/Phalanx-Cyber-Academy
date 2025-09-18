@@ -307,6 +307,10 @@
                                     {% endif %}
                                     {% if entry.level_id %}
                                         • Level {{ entry.level_id }}
+                                    {% elif entry.session_name %}
+                                        • <span class="inline-flex items-center">
+                                            {{ entry.session_name }}
+                                        </span>
                                     {% endif %}
                                 </p>
                             </div>
