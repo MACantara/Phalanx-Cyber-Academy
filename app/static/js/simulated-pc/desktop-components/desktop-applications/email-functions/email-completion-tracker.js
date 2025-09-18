@@ -1,4 +1,4 @@
-import { ALL_EMAILS } from '../../../levels/level-two/emails/email-registry.js';
+import { ALL_EMAILS, loadEmailsFromCSV } from '../../../levels/level-two/emails/email-registry.js';
 import { EmailSessionSummary } from './email-session-summary.js';
 
 export class EmailCompletionTracker {
