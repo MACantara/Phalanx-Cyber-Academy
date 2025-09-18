@@ -1,8 +1,6 @@
 import { BasePage } from '../../pages/base-page.js';
 import { EventHandlers } from './utils/event-handlers.js';
 import { ArticleFormatter } from './utils/article-formatter.js';
-import { ArticleImage } from './components/article-image.js';
-import { SharingBox } from './components/sharing-box.js';
 import { ProgressBar } from './components/progress-bar.js';
 import { ArticleService } from './services/article-service.js';
 
@@ -109,16 +107,53 @@ class Challenge1PageClass extends BasePage {
                         <span data-element-type="author" data-element-id="author_analysis" style="padding: 2px 4px; border-radius: 3px;">By: ${currentArticle.author || 'Staff Reporter'}</span>
                     </div>
                     
-                    <!-- Article Image -->
-                    ${ArticleImage.create(currentArticle, isFakeNews)}
-                    
                     <!-- Article Text -->
                     <div style="font-size: 18px; line-height: 1.6; color: #374151;" data-element-type="content" data-element-id="content_analysis">
                         ${ArticleFormatter.formatArticleText(displayText, isFakeNews, currentArticle)}
                     </div>
                     
-                    <!-- Social Media Sharing Box -->
-                    ${SharingBox.create(isFakeNews)}
+                    <!-- Classification Interface -->
+                    <div style="margin: 30px 0; padding: 20px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb;">
+                        <h3 style="margin-top: 0; color: #374151; font-size: 20px;">Classify this Article</h3>
+                        <p style="color: #6b7280; margin-bottom: 20px;">Based on your analysis, is this article real or fake news?</p>
+                        
+                        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                            <button id="classify-real" 
+                                    style="flex: 1; padding: 12px 20px; background: #10b981; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: background 0.2s;"
+                                    onmouseover="this.style.background='#059669'" 
+                                    onmouseout="this.style.background='#10b981'">
+                                📰 Real News
+                            </button>
+                            <button id="classify-fake" 
+                                    style="flex: 1; padding: 12px 20px; background: #ef4444; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: background 0.2s;"
+                                    onmouseover="this.style.background='#dc2626'" 
+                                    onmouseout="this.style.background='#ef4444'">
+                                ⚠️ Fake News
+                            </button>
+                        </div>
+                        
+                        <div id="classification-result" style="display: none; padding: 15px; border-radius: 6px; margin-top: 15px;">
+                            <!-- Result will be shown here -->
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                            <button id="prev-article" 
+                                    style="padding: 8px 16px; background: #6b7280; color: white; border: none; border-radius: 4px; cursor: pointer;" 
+                                    ${this.currentArticleIndex === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                ← Previous
+                            </button>
+                            
+                            <span style="color: #6b7280; font-size: 14px;">
+                                Article ${this.currentArticleIndex + 1} of ${this.articlesData.length}
+                            </span>
+                            
+                            <button id="next-article" 
+                                    style="padding: 8px 16px; background: #6b7280; color: white; border: none; border-radius: 4px; cursor: pointer;" 
+                                    ${this.currentArticleIndex === this.articlesData.length - 1 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                                Next →
+                            </button>
+                        </div>
+                    </div>
                 </main>
                 
                 <!-- Footer -->
@@ -155,7 +190,8 @@ class Challenge1PageClass extends BasePage {
         if (browserContent) {
             browserContent.innerHTML = this.generateNewsPageHTML();
             
-            // Re-bind navigation events
+            // Re-bind navigation and classification events
+            this.bindClassificationEvents();
             window.challenge1Page = this;
         }
     }
@@ -178,7 +214,85 @@ class Challenge1PageClass extends BasePage {
         // Events are now handled by the overlay in page-renderer
         setTimeout(() => {
             this.eventHandlers.bindAllEvents(document);
+            this.bindClassificationEvents();
         }, 100);
+    }
+
+    bindClassificationEvents() {
+        // Bind classification buttons
+        const realBtn = document.getElementById('classify-real');
+        const fakeBtn = document.getElementById('classify-fake');
+        const prevBtn = document.getElementById('prev-article');
+        const nextBtn = document.getElementById('next-article');
+
+        if (realBtn) {
+            realBtn.addEventListener('click', () => this.classifyArticle('real'));
+        }
+        if (fakeBtn) {
+            fakeBtn.addEventListener('click', () => this.classifyArticle('fake'));
+        }
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => this.previousArticle());
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => this.nextArticle());
+        }
+    }
+
+    classifyArticle(classification) {
+        const currentArticle = this.articlesData[this.currentArticleIndex];
+        const isCorrect = (classification === 'real' && currentArticle.is_real) || 
+                         (classification === 'fake' && !currentArticle.is_real);
+        
+        const resultDiv = document.getElementById('classification-result');
+        const realBtn = document.getElementById('classify-real');
+        const fakeBtn = document.getElementById('classify-fake');
+        
+        // Disable buttons after classification
+        realBtn.disabled = true;
+        fakeBtn.disabled = true;
+        realBtn.style.opacity = '0.6';
+        fakeBtn.style.opacity = '0.6';
+        
+        // Show result
+        resultDiv.style.display = 'block';
+        
+        if (isCorrect) {
+            resultDiv.style.background = '#dcfce7';
+            resultDiv.style.border = '1px solid #16a34a';
+            resultDiv.style.color = '#15803d';
+            resultDiv.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 20px;">✅</span>
+                    <div>
+                        <strong>Correct!</strong><br>
+                        This article is indeed ${currentArticle.is_real ? 'real' : 'fake'} news.
+                    </div>
+                </div>
+            `;
+        } else {
+            resultDiv.style.background = '#fef2f2';
+            resultDiv.style.border = '1px solid #dc2626';
+            resultDiv.style.color = '#dc2626';
+            resultDiv.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 20px;">❌</span>
+                    <div>
+                        <strong>Incorrect.</strong><br>
+                        This article is actually ${currentArticle.is_real ? 'real' : 'fake'} news.
+                    </div>
+                </div>
+            `;
+        }
+
+        // Show toast notification
+        if (window.ToastManager) {
+            const message = isCorrect ? 
+                `Correct! Article ${this.currentArticleIndex + 1} classified successfully.` :
+                `Incorrect. Article ${this.currentArticleIndex + 1} was ${currentArticle.is_real ? 'real' : 'fake'} news.`;
+            
+            window.ToastManager.showToast(message, isCorrect ? 'success' : 'error');
+        }
     }
 
     toPageObject() {
