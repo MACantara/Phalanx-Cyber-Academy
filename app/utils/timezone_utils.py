@@ -353,7 +353,7 @@ def format_for_user_timezone(dt: datetime, user_timezone: str = 'UTC', format_st
     Format datetime for display in user's timezone.
     
     Args:
-        dt: UTC datetime to format
+        dt: UTC datetime to format (or string to parse first)
         user_timezone: User's timezone string (e.g., 'US/Eastern')
         format_string: Python datetime format string
         
@@ -362,6 +362,13 @@ def format_for_user_timezone(dt: datetime, user_timezone: str = 'UTC', format_st
     """
     if dt is None:
         return ""
+    
+    # Handle string inputs by parsing first
+    if isinstance(dt, str):
+        try:
+            dt = parse_datetime_aware(dt)
+        except Exception:
+            return dt  # Return original string if parsing fails
     
     if dt.tzinfo is None:
         dt = add_timezone_to_naive(dt)
@@ -385,7 +392,7 @@ def format_for_user_timezone_with_tz(dt: datetime, user_timezone: str = 'UTC') -
     Format datetime for display in user's timezone with timezone abbreviation.
     
     Args:
-        dt: UTC datetime to format
+        dt: UTC datetime to format (or string to parse first)
         user_timezone: User's timezone string
         
     Returns:
@@ -393,6 +400,13 @@ def format_for_user_timezone_with_tz(dt: datetime, user_timezone: str = 'UTC') -
     """
     if dt is None:
         return ""
+    
+    # Handle string inputs by parsing first
+    if isinstance(dt, str):
+        try:
+            dt = parse_datetime_aware(dt)
+        except Exception:
+            return dt  # Return original string if parsing fails
     
     if dt.tzinfo is None:
         dt = add_timezone_to_naive(dt)
