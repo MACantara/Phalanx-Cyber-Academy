@@ -2,82 +2,92 @@ from flask import Blueprint, jsonify, current_app
 import json
 import random
 import os
+import pandas as pd
 from pathlib import Path
 
 news_api_bp = Blueprint('news_api', __name__, url_prefix='/api/news')
 
-# Cache for JSON data to avoid reading file multiple times
-_batch_cache = None
+# Cache for CSV data to avoid reading file multiple times
+_csv_cache = None
 
-def load_batch_data():
-    """Load and cache the batch-1.json data"""
-    global _batch_cache
-    if _batch_cache is not None:
-        return _batch_cache
+def load_csv_data():
+    """Load and cache the news_articles_cleaned.csv data"""
+    global _csv_cache
+    if _csv_cache is not None:
+        return _csv_cache
     
     try:
-        # Load the processed batch data
-        batch_path = os.path.join(
+        # Load the cleaned CSV data
+        csv_path = os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
-            'data', 'processed_batches', 'batch-1.json'
+            'app', 'static', 'js', 'simulated-pc', 'levels', 'level-one', 'data', 'processed', 'news_articles_cleaned.csv'
         )
         
-        with open(batch_path, 'r', encoding='utf-8') as file:
-            _batch_cache = json.load(file)
+        # Check if file exists
+        if not os.path.exists(csv_path):
+            print(f"CSV file not found at: {csv_path}")
+            return pd.DataFrame()
         
-        print(f"Loaded {len(_batch_cache)} articles from batch-1.json")
+        # Read CSV with pandas
+        _csv_cache = pd.read_csv(csv_path)
         
-        return _batch_cache
+        # Filter for only Fake and Real labels (case-insensitive)
+        _csv_cache = _csv_cache[_csv_cache['label'].str.lower().isin(['fake', 'real'])].copy()
+        
+        print(f"Loaded {len(_csv_cache)} articles from news_articles_cleaned.csv")
+        print(f"Fake articles: {len(_csv_cache[_csv_cache['label'].str.lower() == 'fake'])}")
+        print(f"Real articles: {len(_csv_cache[_csv_cache['label'].str.lower() == 'real'])}")
+        
+        return _csv_cache
         
     except Exception as e:
-        print(f"Error loading batch-1.json: {e}")
-        return []
+        print(f"Error loading news_articles_cleaned.csv: {e}")
+        import traceback
+        traceback.print_exc()
+        return pd.DataFrame()
 
-def convert_batch_to_article_format(batch_data):
-    """Convert batch JSON format to article format expected by frontend"""
+def convert_csv_to_article_format(df):
+    """Convert CSV dataframe to article format expected by frontend"""
     articles = []
     
-    for article_id, item in batch_data.items():
-        if not item.get('article_metadata'):
+    for index, row in df.iterrows():
+        # Skip rows with missing essential data
+        if pd.isna(row['title_without_stopwords']) or pd.isna(row['text_without_stopwords']):
             continue
-            
-        metadata = item['article_metadata']
         
-        # Try to extract actual text from clickable elements
-        actual_text = 'Sample article text for training purposes. This is a placeholder for the actual article content.'
-        content_element = None
+        # Determine if article is real (case-insensitive check)
+        is_real = str(row['label']).lower() == 'real'
         
-        if item.get('clickable_elements'):
-            content_element = next(
-                (el for el in item['clickable_elements'] if el.get('element_id') == 'content_analysis'),
-                None
-            )
-            if content_element and content_element.get('element_text'):
-                actual_text = content_element['element_text']
-        
-        # Extract main_img_url from metadata, fallback to placeholder if not available
-        main_img_url = metadata.get('main_img_url', 'https://via.placeholder.com/400x200/10b981/ffffff?text=News+Article')
-        
-        # Extract article data
+        # Create article object with required fields
         article = {
-            'id': f'article_{article_id}',
-            'author': metadata.get('author', 'Unknown'),
-            'published': metadata.get('published_date', ''),
-            'title': metadata.get('title', ''),
-            'text': actual_text,
-            'main_img_url': main_img_url,
-            'is_real': metadata.get('actual_label', '').lower() == 'real',
-            'source': metadata.get('source', 'unknown'),
-            'article_type': metadata.get('article_type', 'unknown'),
-            'batchAnalysis': item,  # Preserve original batch structure for interactive labeling
+            'id': f'article_{index}',
+            'author': str(row['author']) if pd.notna(row['author']) else 'Unknown Author',
+            'published': str(row['published']) if pd.notna(row['published']) else '',
+            'title': str(row['title_without_stopwords']) if pd.notna(row['title_without_stopwords']) else 'Untitled',
+            'text': str(row['text_without_stopwords']) if pd.notna(row['text_without_stopwords']) else '',
+            'site_url': str(row['site_url']) if pd.notna(row['site_url']) else '',
+            'main_img_url': 'https://via.placeholder.com/400x200/10b981/ffffff?text=News+Article',
+            'is_real': is_real,
+            'label': str(row['label']),  # For checking purposes (not displayed)
+            'source': str(row['site_url']) if pd.notna(row['site_url']) else 'unknown',
+            'article_type': 'fake' if not is_real else 'real',
             'ai_analysis': {
-                'clickable_elements': item.get('clickable_elements', []),
+                'clickable_elements': [],
                 'article_analysis': {
-                    'overall_credibility': 'medium',
-                    'primary_red_flags': [],
-                    'credibility_factors': [],
-                    'educational_focus': f'This article demonstrates how to analyze {metadata.get("article_type", "news")} content for credibility.',
-                    'misinformation_tactics': [],
+                    'overall_credibility': 'high' if is_real else 'low',
+                    'primary_red_flags': [] if is_real else [
+                        'Questionable source credibility',
+                        'Potentially misleading content'
+                    ],
+                    'credibility_factors': [
+                        'Source verification needed',
+                        'Cross-reference recommended'
+                    ] if is_real else [],
+                    'educational_focus': f'This article demonstrates how to analyze {"real" if is_real else "fake"} news content.',
+                    'misinformation_tactics': [] if is_real else [
+                        'Emotional manipulation',
+                        'Unverified claims'
+                    ],
                     'verification_tips': [
                         'Check the source reputation',
                         'Verify author credentials',
@@ -88,80 +98,70 @@ def convert_batch_to_article_format(batch_data):
             }
         }
         
-        # Extract insights from clickable elements for article analysis
-        if item.get('clickable_elements'):
-            red_flags = []
-            credibility_factors = []
-            
-            for element in item['clickable_elements']:
-                if element.get('expected_label') == 'fake':
-                    red_flags.extend(element.get('red_flags', []))
-                else:
-                    credibility_factors.extend(element.get('credibility_indicators', []))
-            
-            article['ai_analysis']['article_analysis']['primary_red_flags'] = list(set(red_flags))
-            article['ai_analysis']['article_analysis']['credibility_factors'] = list(set(credibility_factors))
-            
-            # Determine overall credibility
-            fake_count = sum(1 for el in item['clickable_elements'] if el.get('expected_label') == 'fake')
-            total_count = len(item['clickable_elements'])
-            
-            if fake_count > total_count / 2:
-                article['ai_analysis']['article_analysis']['overall_credibility'] = 'low'
-            elif fake_count > 0:
-                article['ai_analysis']['article_analysis']['overall_credibility'] = 'medium'
-            else:
-                article['ai_analysis']['article_analysis']['overall_credibility'] = 'high'
-        
         articles.append(article)
     
     return articles
 
 @news_api_bp.route('/mixed-articles', methods=['GET'])
 def get_mixed_news_articles():
-    """Get a balanced mix of news articles from batch-1.json with AI analysis"""
+    """Get a balanced mix of news articles from CSV with 8 fake and 7 real articles"""
     try:
-        batch_data = load_batch_data()
+        df = load_csv_data()
         
-        if not batch_data:
+        if df.empty:
             return jsonify({
                 'success': False,
-                'error': 'No batch data available'
+                'error': 'No CSV data available'
             }), 500
         
+        # Separate fake and real articles
+        fake_articles = df[df['label'].str.lower() == 'fake'].copy()
+        real_articles = df[df['label'].str.lower() == 'real'].copy()
+        
+        # Check if we have enough articles
+        if len(fake_articles) < 8:
+            print(f"Warning: Only {len(fake_articles)} fake articles available, requested 8")
+        if len(real_articles) < 7:
+            print(f"Warning: Only {len(real_articles)} real articles available, requested 7")
+        
+        # Sample the required number of articles
+        selected_fake = fake_articles.sample(n=min(8, len(fake_articles)), random_state=random.randint(1, 1000))
+        selected_real = real_articles.sample(n=min(7, len(real_articles)), random_state=random.randint(1, 1000))
+        
+        # Combine the selected articles
+        selected_df = pd.concat([selected_fake, selected_real], ignore_index=True)
+        
         # Convert to article format
-        articles = convert_batch_to_article_format(batch_data)
+        articles = convert_csv_to_article_format(selected_df)
         
         if not articles:
             return jsonify({
                 'success': False,
-                'error': 'No articles could be processed from batch data'
+                'error': 'No articles could be processed from CSV data'
             }), 500
         
         # Shuffle articles for variety
         random.shuffle(articles)
         
-        # Take up to 15 articles (or all if less than 15)
-        selected_articles = articles[:15]
-        
         # Calculate summary stats
-        real_count = sum(1 for article in selected_articles if article['is_real'])
-        fake_count = len(selected_articles) - real_count
-        ai_analysis_count = sum(1 for article in selected_articles if article.get('ai_analysis'))
+        real_count = sum(1 for article in articles if article['is_real'])
+        fake_count = len(articles) - real_count
         
         return jsonify({
             'success': True,
-            'articles': selected_articles,
+            'articles': articles,
             'summary': {
-                'total': len(selected_articles),
+                'total': len(articles),
                 'real_count': real_count,
                 'fake_count': fake_count,
-                'ai_analysis_available': ai_analysis_count
+                'source': 'news_articles_cleaned.csv'
             }
         })
         
     except Exception as e:
         print(f"Error getting mixed news articles: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': str(e)
@@ -169,10 +169,17 @@ def get_mixed_news_articles():
 
 @news_api_bp.route('/stats', methods=['GET'])
 def get_news_stats():
-    """Get statistics about the batch dataset"""
+    """Get statistics about the CSV dataset"""
     try:
-        batch_data = load_batch_data()
-        articles = convert_batch_to_article_format(batch_data)
+        df = load_csv_data()
+        
+        if df.empty:
+            return jsonify({
+                'success': False,
+                'error': 'No CSV data available'
+            }), 500
+        
+        articles = convert_csv_to_article_format(df)
         
         real_count = sum(1 for article in articles if article['is_real'])
         fake_count = len(articles) - real_count
@@ -184,7 +191,8 @@ def get_news_stats():
                 'real_articles': real_count,
                 'fake_articles': fake_count,
                 'real_percentage': round((real_count / len(articles)) * 100, 2) if articles else 0,
-                'fake_percentage': round((fake_count / len(articles)) * 100, 2) if articles else 0
+                'fake_percentage': round((fake_count / len(articles)) * 100, 2) if articles else 0,
+                'source': 'news_articles_cleaned.csv'
             }
         })
         
@@ -195,32 +203,34 @@ def get_news_stats():
             'error': str(e)
         }), 500
 
-@news_api_bp.route('/analysis-status', methods=['GET'])
-def get_analysis_status():
-    """Get status of AI analysis data"""
+@news_api_bp.route('/csv-status', methods=['GET'])
+def get_csv_status():
+    """Get status of CSV data loading"""
     try:
-        ai_analysis = load_ai_analysis_data()
+        df = load_csv_data()
         
-        if not ai_analysis:
+        if df.empty:
             return jsonify({
                 'success': True,
-                'ai_analysis_available': False,
-                'message': 'No AI analysis data available'
+                'csv_data_available': False,
+                'message': 'No CSV data available'
             })
         
-        metadata = ai_analysis.get('metadata', {})
-        analyses = ai_analysis.get('analyses', [])
+        # Get basic statistics
+        fake_count = len(df[df['label'].str.lower() == 'fake'])
+        real_count = len(df[df['label'].str.lower() == 'real'])
         
         return jsonify({
             'success': True,
-            'ai_analysis_available': True,
-            'metadata': metadata,
-            'total_analyses': len(analyses),
-            'completion_status': metadata.get('completion_status', 'unknown')
+            'csv_data_available': True,
+            'total_articles': len(df),
+            'fake_articles': fake_count,
+            'real_articles': real_count,
+            'source_file': 'news_articles_cleaned.csv'
         })
         
     except Exception as e:
-        print(f"Error getting analysis status: {e}")
+        print(f"Error getting CSV status: {e}")
         return jsonify({
             'success': False,
             'error': str(e)

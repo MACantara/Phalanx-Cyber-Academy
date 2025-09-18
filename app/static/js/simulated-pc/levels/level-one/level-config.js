@@ -6,7 +6,7 @@
 export const Level1Config = {
     id: 1,
     name: "The Misinformation Maze",
-    description: "Navigate through fake news and stop misinformation from influencing an election",
+    description: "Develop critical thinking skills to identify fake news and misinformation",
     
     // Level-specific applications
     requiredApps: [
@@ -26,22 +26,22 @@ export const Level1Config = {
     
     // Level objectives
     objectives: [
-        'Identify fake news articles',
-        'Verify information sources',
-        'Report misinformation',
-        'Protect election integrity'
+        'Analyze news articles for credibility',
+        'Identify fake news warning signs',
+        'Classify articles as real or fake',
+        'Develop critical thinking skills'
     ],
     
     // Scoring criteria
     scoring: {
         maxScore: 1000,
         penalties: {
-            incorrectIdentification: -50,
-            missedMisinformation: -100
+            incorrectClassification: -50,
+            missedFakeNews: -75
         },
         bonuses: {
-            speedBonus: 200,
-            accuracyBonus: 300
+            accuracyBonus: 200,
+            perfectScore: 300
         }
     }
 };

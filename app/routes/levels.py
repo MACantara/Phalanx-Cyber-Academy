@@ -777,6 +777,68 @@ def get_user_xp_history():
         logger.error(f"Unexpected error in get_user_xp_history: {str(e)}")
         return jsonify({'success': False, 'error': 'Internal server error'}), 500
 
+@levels_bp.route('/api/session/start', methods=['POST'])
+@login_required
+def start_session():
+    """API endpoint to start a new learning session."""
+    try:
+        from app.models.session import Session
+        
+        data = request.get_json()
+        session_name = data.get('session_name', 'Unknown Session')
+        level_id = data.get('level_id')
+        
+        if not session_name:
+            return jsonify({'success': False, 'error': 'Session name is required'}), 400
+        
+        # Start new session
+        session = Session.start_session(
+            user_id=current_user.id,
+            session_name=session_name,
+            level_id=level_id
+        )
+        
+        return jsonify({
+            'success': True,
+            'session_id': session.id,
+            'message': 'Session started successfully'
+        })
+        
+    except Exception as e:
+        logger.error(f"Error starting session: {str(e)}")
+        return jsonify({'success': False, 'error': 'Failed to start session'}), 500
+
+@levels_bp.route('/api/session/end', methods=['POST'])
+@login_required
+def end_session():
+    """API endpoint to end a learning session and award XP."""
+    try:
+        from app.models.session import Session
+        
+        data = request.get_json()
+        session_id = data.get('session_id')
+        score = data.get('score')
+        
+        if not session_id:
+            return jsonify({'success': False, 'error': 'Session ID is required'}), 400
+        
+        # End session and award XP
+        session = Session.end_session(session_id, score)
+        
+        return jsonify({
+            'success': True,
+            'session_id': session.id,
+            'score': session.score,
+            'time_spent': session.time_spent,
+            'xp_awarded': session.get_xp_awarded(),
+            'xp_calculation': session.get_xp_calculation_details(),
+            'message': 'Session completed successfully'
+        })
+        
+    except Exception as e:
+        logger.error(f"Error ending session: {str(e)}")
+        return jsonify({'success': False, 'error': 'Failed to end session'}), 500
+
 @levels_bp.route('/api/sessions', methods=['GET'])
 @login_required
 def get_user_sessions():

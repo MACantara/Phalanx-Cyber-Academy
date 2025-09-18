@@ -7,10 +7,6 @@ import { NewsSitePage } from './news-site.js';
 // Import Level 1 Challenge Pages
 import { Challenge1Page } from '../tools/challenge1/challenge1-page.js';
 
-// Import Level 1 Tool Pages
-import { CrossReferenceToolPage } from '../tools/cross-reference-tool.js';
-import { ReverseImageSearchPage } from '../tools/reverse-image-search.js';
-
 export class PageRegistry {
     constructor() {
         this.pages = new Map();
@@ -27,10 +23,6 @@ export class PageRegistry {
         
         // Register Level 1 Challenge Pages
         this.registerPage(Challenge1Page);
-        
-        // Register Level 1 Tool Pages
-        this.registerPage(CrossReferenceToolPage);
-        this.registerPage(ReverseImageSearchPage);
     }
 
     registerPage(pageConfig) {

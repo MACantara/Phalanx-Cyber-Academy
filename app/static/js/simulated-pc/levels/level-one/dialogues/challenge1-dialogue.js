@@ -8,43 +8,31 @@ export class Challenge1Dialogue extends BaseDialogue {
                 text: "Welcome to your first cybersecurity challenge! You'll be analyzing real news articles to develop critical thinking skills for identifying misinformation."
             },
             {
-                text: "You'll analyze multiple news articles using our Interactive Analysis system to identify misinformation and credible sources."
+                text: "You'll be presented with 15 different news articles - some are real, and some are fake news designed to mislead readers."
             },
             {
-                text: "Each article contains different elements that you can label by clicking on them to open a dropdown menu."
+                text: "For each article, read carefully and look for warning signs that might indicate misinformation."
             },
             {
-                text: "When you click an element, a menu will appear with three options: 'Fake News', 'Real News', or 'No Label'."
+                text: "Pay attention to sensational headlines, questionable sources, missing author credentials, and emotional manipulation tactics."
             },
             {
-                text: "Look for titles, author names, content sections, and other parts that can be classified based on credibility indicators."
+                text: "Watch for red flags like biased language, factual inaccuracies, and claims that seem too extreme to be true."
             },
             {
-                text: "Watch for red flags like sensational headlines, questionable sources, and missing author credentials."
+                text: "After reading each article, simply classify it as either 'Real News' or 'Fake News' using the buttons provided."
             },
             {
-                text: "Pay attention to emotional manipulation, biased language, and factual accuracy."
+                text: "You'll get immediate feedback on whether your classification was correct, helping you learn from each decision."
             },
             {
-                text: "The Interactive Analysis panel on the right will guide you through the process and show the color-coded legend."
+                text: "Use the navigation buttons to move between articles at your own pace."
             },
             {
-                text: "It shows your progress and provides feedback as you work. Each article is powered by AI-analyzed training data."
+                text: "Remember: Real journalism includes proper sourcing, balanced reporting, and verifiable facts."
             },
             {
-                text: "Remember: Click any article element to open the labeling dropdown menu."
-            },
-            {
-                text: "Select 'Fake News' (red) for suspicious content, 'Real News' (green) for credible content, or 'No Label' (gray) if uncertain."
-            },
-            {
-                text: "You can always click on a labeled element again to change your selection using the dropdown menu."
-            },
-            {
-                text: "After labeling elements in each article, submit your analysis to get detailed feedback."
-            },
-            {
-                text: "You'll see results and learn from any mistakes before moving to the next article."
+                text: "Take your time to analyze each article thoroughly before making your classification."
             }
         ];
     }
@@ -55,7 +43,7 @@ export class Challenge1Dialogue extends BaseDialogue {
     }
 
     getFinalButtonText() {
-        return 'Begin Interactive Analysis';
+        return 'Begin Article Classification';
     }
 
     static shouldAutoStart() {
