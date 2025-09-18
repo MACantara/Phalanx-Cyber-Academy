@@ -170,7 +170,6 @@ CREATE INDEX IF NOT EXISTS idx_sessions_user_session ON sessions(user_id, sessio
 -- Create xp_history table
 CREATE TABLE IF NOT EXISTS xp_history (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id),
     xp_change INTEGER NOT NULL,
     balance_before INTEGER DEFAULT 0,
     balance_after INTEGER,
@@ -180,7 +179,6 @@ CREATE TABLE IF NOT EXISTS xp_history (
 );
 
 -- Create indexes for xp_history table
-CREATE INDEX IF NOT EXISTS idx_xp_history_user_id ON xp_history(user_id);
 CREATE INDEX IF NOT EXISTS idx_xp_history_created_at ON xp_history(created_at);
 CREATE INDEX IF NOT EXISTS idx_xp_history_reason ON xp_history(reason);
 CREATE INDEX IF NOT EXISTS idx_xp_history_session_id ON xp_history(session_id);
