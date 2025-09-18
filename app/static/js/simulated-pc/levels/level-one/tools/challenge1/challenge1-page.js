@@ -84,8 +84,8 @@ class Challenge1PageClass extends BasePage {
         
         return `
             <div class="font-sans bg-white min-h-screen w-full">
-                <!-- Header -->
-                <header class="bg-gray-800 text-white p-5 w-full">
+                <!-- Header Section -->
+                <section class="bg-gray-800 text-white p-5 w-full">
                     <div class="flex justify-between items-center max-w-4xl mx-auto">
                         <div>
                             <h1 class="m-0 text-3xl">Daily Politico News</h1>
@@ -95,10 +95,10 @@ class Challenge1PageClass extends BasePage {
                         <!-- Progress Bar -->
                         ${ProgressBar.create(this.currentArticleIndex, this.articlesData.length, this.classifiedArticles.size)}
                     </div>
-                </header>
+                </section>
                 
-                <!-- Main Content -->
-                <main class="w-full">
+                <!-- Content Section -->
+                <section class="w-full">
                     <div class="px-8 py-6 max-w-4xl mx-auto">
                         <h2 class="text-slate-900 text-3xl mb-3" data-element-type="title" data-element-id="title_analysis">
                             ${ArticleFormatter.toTitleCase(currentArticle.title)}
@@ -155,10 +155,10 @@ class Challenge1PageClass extends BasePage {
                             </div>
                         </div>
                     </div>
-                </main>
+                </section>
                 
-                <!-- Footer -->
-                <footer class="bg-slate-50 p-5 text-center text-slate-600 border-t border-slate-200">
+                <!-- Footer Section -->
+                <section class="bg-slate-50 p-5 text-center text-slate-600 border-t border-slate-200">
                     <div class="max-w-4xl mx-auto">
                         <p class="mb-3 font-medium text-slate-800">© 2025 Daily Politico News - CyberQuest Training Environment</p>
                         <div class="text-xs leading-relaxed text-slate-700">
@@ -174,7 +174,7 @@ class Challenge1PageClass extends BasePage {
                             </p>
                         </div>
                     </div>
-                </footer>
+                </section>
             </div>
         `;
     }
@@ -321,8 +321,8 @@ class Challenge1PageClass extends BasePage {
     }
 
     updateProgressBar() {
-        // Find and update the progress bar in the header
-        const headerElement = document.querySelector('header');
+        // Find and update the progress bar in the header section
+        const headerElement = document.querySelector('section');
         if (headerElement) {
             const progressBarHtml = ProgressBar.create(this.currentArticleIndex, this.articlesData.length, this.classifiedArticles.size);
             // Extract just the progress bar div from the HTML
