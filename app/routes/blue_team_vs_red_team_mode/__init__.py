@@ -533,7 +533,7 @@ def exit_game():
                     if total_xp > 0:
                         xp_entry = XPHistory.create_entry(
                             xp_change=total_xp,
-                            reason='Blue Team vs Red Team Mode (Early Exit)',
+                            reason='Early Exit',
                             session_id=session_id
                         )
                         game_state['xp_awarded'] = total_xp
