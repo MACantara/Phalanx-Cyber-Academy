@@ -141,43 +141,13 @@ export class SimulatedPC {
     }
 
     showNotification(message, type = 'info') {
-        // Show system notification with Tailwind classes
-        const notification = document.createElement('div');
-        
-        let typeClasses = '';
-        let iconClass = '';
-        
-        switch(type) {
-            case 'error':
-                typeClasses = 'bg-red-900 border-red-600 text-red-200';
-                iconClass = 'bi-exclamation-triangle';
-                break;
-            case 'warning':
-                typeClasses = 'bg-yellow-900 border-yellow-600 text-yellow-200';
-                iconClass = 'bi-exclamation-circle';
-                break;
-            case 'success':
-                typeClasses = 'bg-green-900 border-green-600 text-green-200';
-                iconClass = 'bi-check-circle';
-                break;
-            default:
-                typeClasses = 'bg-blue-900 border-blue-600 text-blue-200';
-                iconClass = 'bi-info-circle';
+        // Use centralized toast utility if available
+        if (window.toastManager && window.toastManager.showToast) {
+            window.toastManager.showToast(message, type);
+        } else {
+            // Fallback to console log if toast manager not available
+            console.log(`SimulatedPC Notification [${type}]: ${message}`);
         }
-        
-        notification.className = `fixed top-5 right-5 ${typeClasses} border rounded p-3 shadow-lg animate-slide-in-right z-50`;
-        notification.innerHTML = `
-            <div class="flex items-center space-x-2">
-                <i class="bi ${iconClass}"></i>
-                <span class="font-medium">${message}</span>
-            </div>
-        `;
-        
-        this.container.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 5000);
     }
 }
 

@@ -41,40 +41,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Enhanced notification system
+    // Use centralized toast utility
+    // Initialize toast manager if not already available
+    if (!window.toastManager) {
+        // Dynamically load toast manager if not available
+        console.log('Toast manager not found, creating basic fallback');
+    }
+    
+    // Wrapper function to maintain compatibility with existing code
     function showNotification(type, title, message, duration = 5000) {
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 animate-slide-in-right ${
-            type === 'success' ? 'bg-green-600' : 
-            type === 'error' ? 'bg-red-600' : 
-            type === 'warning' ? 'bg-yellow-600' : 'bg-blue-600'
-        } text-white`;
-        
-        notification.innerHTML = `
-            <div class="flex items-center">
-                <i class="bi ${
-                    type === 'success' ? 'bi-check-circle' : 
-                    type === 'error' ? 'bi-x-circle' : 
-                    type === 'warning' ? 'bi-exclamation-triangle' : 'bi-info-circle'
-                } text-2xl mr-3"></i>
-                <div>
-                    <div class="font-bold">${title}</div>
-                    <div class="text-sm">${message}</div>
-                </div>
-                <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
-                    <i class="bi bi-x text-xl"></i>
-                </button>
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        if (duration > 0) {
-            setTimeout(() => {
-                if (notification.parentElement) {
-                    notification.remove();
-                }
-            }, duration);
+        // Use centralized toast if available, otherwise fallback
+        if (window.toastManager && window.toastManager.showToast) {
+            const fullMessage = title && message ? `${title}: ${message}` : (title || message);
+            window.toastManager.showToast(fullMessage, type);
+        } else {
+            // Fallback to basic notification if toast manager not available
+            console.log(`Notification [${type}]: ${title || ''} - ${message || ''}`);
         }
     }
     

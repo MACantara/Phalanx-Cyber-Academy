@@ -426,20 +426,13 @@ export class RansomwareDecryptorApp extends WindowBase {
     }
 
     showNotification(message, type = 'info') {
-        // Simple notification system
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 p-4 rounded shadow-lg z-50 ${
-            type === 'success' ? 'bg-green-600' : 
-            type === 'warning' ? 'bg-yellow-600' : 
-            type === 'error' ? 'bg-red-600' : 'bg-blue-600'
-        } text-white`;
-        notification.textContent = message;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
+        // Use centralized toast utility if available
+        if (window.toastManager && window.toastManager.showToast) {
+            window.toastManager.showToast(message, type);
+        } else {
+            // Fallback to console log if toast manager not available
+            console.log(`Ransomware Decryptor Notification [${type}]: ${message}`);
+        }
     }
 
     initialize() {

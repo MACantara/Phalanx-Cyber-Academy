@@ -77,37 +77,13 @@ export class EmailActionHandler {
 
     // Show toast notification for user feedback within the email client
     showActionFeedback(message, type) {
-        // Get the email app window element
-        const emailWindow = this.emailApp.windowElement;
-        if (!emailWindow) return;
-
-        // Remove any existing email toasts first
-        const existingToasts = emailWindow.querySelectorAll('.email-action-toast');
-        existingToasts.forEach(toast => toast.remove());
-
-        const toast = document.createElement('div');
-        toast.className = `email-action-toast absolute top-16 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 ${
-            type === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
-        }`;
-        toast.innerHTML = `
-            <div class="flex items-center">
-                <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-circle'} mr-2"></i>
-                <span>${message}</span>
-            </div>
-        `;
-        
-        // Position relative to email window, not body
-        emailWindow.appendChild(toast);
-        
-        // Auto-remove after 3 seconds
-        setTimeout(() => {
-            toast.classList.add('opacity-0', 'transform', 'translate-x-full');
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.remove();
-                }
-            }, 300);
-        }, 3000);
+        // Use centralized toast utility if available
+        if (window.toastManager && window.toastManager.showToast) {
+            window.toastManager.showToast(message, type);
+        } else {
+            // Fallback to console log if toast manager not available
+            console.log(`Email Action Feedback [${type}]: ${message}`);
+        }
     }
 
     // Handle email opening actions
