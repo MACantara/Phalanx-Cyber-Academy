@@ -171,18 +171,22 @@ def dashboard():
             recent_xp_history = []
             for entry in recent_xp_history_raw:
                 entry_dict = entry.to_dict()
-                # If this XP entry has a session, try to get level info
+                # If this XP entry has a session, try to get session info
                 if entry.session_id:
                     try:
                         session = Session.get_by_id(entry.session_id)
-                        if session and session.level_id:
+                        if session:
                             entry_dict['level_id'] = session.level_id
+                            entry_dict['session_name'] = session.session_name
                         else:
                             entry_dict['level_id'] = None
+                            entry_dict['session_name'] = None
                     except Exception:
                         entry_dict['level_id'] = None
+                        entry_dict['session_name'] = None
                 else:
                     entry_dict['level_id'] = None
+                    entry_dict['session_name'] = None
                 recent_xp_history.append(entry_dict)
             
             # Get XP summary for stats
