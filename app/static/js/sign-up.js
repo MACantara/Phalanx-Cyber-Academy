@@ -20,6 +20,9 @@ class CyberQuestSignup {
         // Initialize password visibility utility first
         this.passwordVisibility = new PasswordVisibility();
         
+        // Initialize timezone detection
+        this.initializeTimezoneDetection();
+        
         // Wait a bit for password visibility toggles to be inserted, then initialize other components
         setTimeout(() => {
             // Initialize password strength checker with cybersecurity theme
@@ -57,6 +60,57 @@ class CyberQuestSignup {
         this.prevBtn = document.getElementById('prev-btn');
         this.usernameInput = document.getElementById('username');
         this.emailInput = document.getElementById('email');
+    }
+
+    initializeTimezoneDetection() {
+        try {
+            // Detect user's timezone using Intl.DateTimeFormat
+            const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            
+            // Set the detected timezone in the hidden field
+            const timezoneInput = document.getElementById('detected_timezone');
+            if (timezoneInput && detectedTimezone) {
+                timezoneInput.value = detectedTimezone;
+                console.log('Detected timezone:', detectedTimezone);
+                
+                // Update summary to show detected timezone
+                this.updateSummary();
+                
+                // Show a subtle notification to the user about timezone detection
+                this.showTimezoneNotification(detectedTimezone);
+            }
+        } catch (error) {
+            console.warn('Timezone detection failed, falling back to UTC:', error);
+            // Fallback to UTC if detection fails
+            const timezoneInput = document.getElementById('detected_timezone');
+            if (timezoneInput) {
+                timezoneInput.value = 'UTC';
+            }
+        }
+    }
+
+    showTimezoneNotification(timezone) {
+        // Create a subtle notification about timezone detection
+        setTimeout(() => {
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 z-40 p-3 rounded-lg shadow-lg max-w-sm bg-blue-100 dark:bg-blue-900/50 border border-blue-300 dark:border-blue-600/50 text-blue-800 dark:text-blue-200 animate-fade-in-up';
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2 text-sm">
+                    <i class="bi bi-clock text-blue-600 dark:text-blue-400"></i>
+                    <span>Timezone detected: <strong>${timezone}</strong></span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 5000);
+        }, 1000); // Delay to avoid overwhelming the user with notifications
     }
 
     setupEventListeners() {
@@ -165,6 +219,11 @@ class CyberQuestSignup {
             };
             document.getElementById('summary-focus').textContent = focusLabels[selectedFocus.value] || '-';
         }
+        
+        // Update timezone summary
+        const timezoneInput = document.getElementById('detected_timezone');
+        const detectedTimezone = timezoneInput ? timezoneInput.value : 'UTC';
+        document.getElementById('summary-timezone').textContent = detectedTimezone || 'UTC';
     }
 
     async handleNext(e) {
