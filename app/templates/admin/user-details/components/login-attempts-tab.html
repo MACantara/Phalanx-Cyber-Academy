@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start sm:text-right ml-9 sm:ml-0 flex-shrink-0">
-                <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{{ attempt.attempted_at.strftime('%m/%d/%Y %H:%M') }}</p>
+                <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{{ attempt.attempted_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %H:%M') }}</p>
                 <span class="px-2 py-1 text-xs rounded-full {{ 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' if attempt.success else 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' }} sm:mt-1 whitespace-nowrap">
                     {{ 'Success' if attempt.success else 'Failed' }}
                 </span>

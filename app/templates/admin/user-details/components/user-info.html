@@ -19,7 +19,7 @@
 
         <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Registered</label>
-            <p class="text-sm text-gray-900 dark:text-white break-words">{{ user.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+            <p class="text-sm text-gray-900 dark:text-white break-words">{{ user.created_at|format_user_timezone(current_user.timezone, '%B %d, %Y at %I:%M %p') }}</p>
         </div>
 
         <div>

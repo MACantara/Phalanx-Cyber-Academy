@@ -186,7 +186,7 @@
                         <!-- Execution Info -->
                         {% if test.execution_date %}
                         <div class="mb-4 text-xs text-gray-500 dark:text-gray-400">
-                            <p>Last executed: {{ test.execution_date.strftime('%m/%d/%Y') }}</p>
+                            <p>Last executed: {{ test.execution_date|format_user_timezone(current_user.timezone, '%m/%d/%Y') }}</p>
                             {% if test.executed_by %}
                             <p>By: {{ test.executed_by }}</p>
                             {% endif %}
