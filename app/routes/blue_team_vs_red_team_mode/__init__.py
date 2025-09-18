@@ -2,6 +2,7 @@
 from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for
 from flask_login import login_required, current_user
 from app.models.xp_history import XPHistory
+from app.models.session import Session
 from app.database import DatabaseError
 import json
 import logging
@@ -134,11 +135,23 @@ def update_game_state():
 def start_game():
     """Start a new game session"""
     try:
+        # Create a new session for Blue Team vs Red Team mode
+        try:
+            game_session = Session.start_session(
+                user_id=current_user.id,
+                session_name='Blue-Team-vs-Red-Team-Mode'
+            )
+            session_id = game_session.id
+        except Exception as session_error:
+            logger.error(f"Failed to create session for Blue vs Red Team: {session_error}")
+            return jsonify({'error': 'Failed to create game session'}), 500
+        
         # Initialize new game state
         initial_state = {
             'isRunning': True,
             'timeRemaining': 900,
             'startTime': datetime.now().isoformat(),
+            'session_id': session_id,  # Include session ID for tracking
             'assets': {
                 'academy-server': {'status': 'secure', 'integrity': 100},
                 'student-db': {'status': 'secure', 'integrity': 100},
@@ -156,17 +169,18 @@ def start_game():
             'currentPhase': 'reconnaissance',
             'playerActions': [],
             'aiActions': [],
-            'currentXP': 0,
+            'accumulatedXP': 0,  # Track XP accumulated during session
             'sessionXP': 0,
             'attacksMitigated': 0,
-            'attacksSuccessful': 0
+            'attacksSuccessful': 0,
+            'blockedIPs': []  # Track blocked IPs
         }
         
         session['blue_vs_red_game_state'] = initial_state
         session.permanent = True
         
         # Log game start
-        logger.info(f"User {current_user.username} started Blue vs Red Team simulation")
+        logger.info(f"User {current_user.username} started Blue vs Red Team simulation (Session ID: {session_id})")
         
         return jsonify({
             'success': True,
@@ -189,46 +203,55 @@ def stop_game():
             game_state['isRunning'] = False
             game_state['endTime'] = datetime.now().isoformat()
             
-            # Calculate and award completion bonus XP
+            # Calculate final score based on game performance
+            final_score = calculate_final_score(game_state)
+            
+            # Calculate completion bonus
             completion_bonus = calculate_completion_bonus(game_state)
-            if completion_bonus > 0:
-                game_state['sessionXP'] = game_state.get('sessionXP', 0) + completion_bonus
-                
-                # Record completion bonus in database
+            total_xp = game_state.get('accumulatedXP', 0) + completion_bonus
+            
+            # End the session and create single XP entry if session_id exists
+            session_id = game_state.get('session_id')
+            if session_id and total_xp > 0:
                 try:
-                    # Get current user's XP balance
-                    current_balance = getattr(current_user, 'total_xp', None) or 0
-                    new_balance = current_balance + completion_bonus
+                    # End the session with final score
+                    completed_session = Session.end_session(session_id, score=final_score)
                     
-                    # Create XP history entry for completion bonus
+                    # Create single XP history entry for the entire session
                     xp_entry = XPHistory.create_entry(
-                        user_id=current_user.id,
-                        xp_change=completion_bonus,
-                        reason='blue_team_completion',
-                        level_id=None,
-                        balance_before=current_balance,
-                        balance_after=new_balance
+                        xp_change=total_xp,
+                        reason='Blue Team vs Red Team Mode',
+                        session_id=session_id
                     )
                     
-                    # Update user's total XP
-                    current_user.total_xp = new_balance
-                    current_user.save()
+                    game_state['session_completed'] = True
+                    game_state['xp_awarded'] = total_xp
+                    game_state['completion_bonus'] = completion_bonus
                     
-                except Exception as db_error:
-                    logger.error(f"Error recording completion bonus: {str(db_error)}")
-                    # Don't fail the stop game if XP recording fails
+                    logger.info(f"User {current_user.username} completed Blue vs Red Team simulation. Session ID: {session_id}, XP awarded: {total_xp}")
+                    
+                except Exception as session_error:
+                    logger.error(f"Failed to end session or record XP: {session_error}")
+                    game_state['session_completed'] = False
+                    game_state['xp_awarded'] = 0
+            else:
+                game_state['session_completed'] = False
+                game_state['xp_awarded'] = 0
             
             session['blue_vs_red_game_state'] = game_state
             session.permanent = True
             
             # Log game stop
-            logger.info(f"User {current_user.username} stopped Blue vs Red Team simulation. Session XP: {game_state.get('sessionXP', 0)}")
+            logger.info(f"User {current_user.username} stopped Blue vs Red Team simulation. Total XP: {total_xp}")
         
         return jsonify({
             'success': True,
             'message': 'Game stopped successfully',
             'gameState': game_state,
-            'completion_bonus': completion_bonus if 'completion_bonus' in locals() else 0
+            'final_score': final_score if 'final_score' in locals() else 0,
+            'session_completed': game_state.get('session_completed', False),
+            'xp_awarded': game_state.get('xp_awarded', 0),
+            'completion_bonus': game_state.get('completion_bonus', 0)
         })
     
     except Exception as e:
@@ -240,6 +263,18 @@ def stop_game():
 def reset_game():
     """Reset game to initial state"""
     try:
+        game_state = session.get('blue_vs_red_game_state', {})
+        
+        # If there's an active session, end it without awarding XP
+        session_id = game_state.get('session_id')
+        if session_id and game_state.get('isRunning'):
+            try:
+                # End session with 0 score to indicate reset/quit
+                Session.end_session(session_id, score=0)
+                logger.info(f"User {current_user.username} reset Blue vs Red Team simulation (Session ID: {session_id})")
+            except Exception as session_error:
+                logger.error(f"Failed to end session on reset: {session_error}")
+        
         # Clear game state from session
         session.pop('blue_vs_red_game_state', None)
         
@@ -258,7 +293,7 @@ def reset_game():
 @blue_team_vs_red_team.route('/api/player-action', methods=['POST'])
 @login_required
 def player_action():
-    """Record a player action and award XP for successful mitigation"""
+    """Record a player action and accumulate XP for successful mitigation"""
     try:
         data = request.get_json()
         
@@ -285,37 +320,22 @@ def player_action():
         
         game_state['playerActions'].append(action)
         
-        # Award XP for successful defensive actions
+        # Handle IP blocking specifically
+        if action['type'] == 'block-ip' and action.get('successful', False):
+            target_ip = action.get('target')
+            if target_ip and 'blockedIPs' in game_state:
+                if target_ip not in game_state['blockedIPs']:
+                    game_state['blockedIPs'].append(target_ip)
+                    logger.info(f"IP {target_ip} blocked by user {current_user.username}")
+        
+        # Accumulate XP for successful defensive actions (don't create DB entry yet)
         xp_awarded = 0
         if action.get('successful', False):
             xp_awarded = calculate_action_xp(action)
             if xp_awarded > 0:
+                game_state['accumulatedXP'] = game_state.get('accumulatedXP', 0) + xp_awarded
                 game_state['sessionXP'] = game_state.get('sessionXP', 0) + xp_awarded
                 game_state['attacksMitigated'] = game_state.get('attacksMitigated', 0) + 1
-                
-                # Record XP in database
-                try:
-                    # Get current user's XP balance
-                    current_balance = getattr(current_user, 'total_xp', None) or 0
-                    new_balance = current_balance + xp_awarded
-                    
-                    # Create XP history entry
-                    xp_entry = XPHistory.create_entry(
-                        user_id=current_user.id,
-                        xp_change=xp_awarded,
-                        reason='blue_team_defense',
-                        level_id=None,
-                        balance_before=current_balance,
-                        balance_after=new_balance
-                    )
-                    
-                    # Update user's total XP
-                    current_user.total_xp = new_balance
-                    current_user.save()
-                    
-                except Exception as db_error:
-                    logger.error(f"Error recording XP: {str(db_error)}")
-                    # Don't fail the entire action if XP recording fails
         
         # Update session
         session['blue_vs_red_game_state'] = game_state
@@ -327,6 +347,7 @@ def player_action():
             'action': action,
             'xpAwarded': xp_awarded,
             'reason': f"Defensive action: {data['action']}",
+            'accumulated_xp': game_state.get('accumulatedXP', 0),
             'total_session_xp': game_state.get('sessionXP', 0)
         })
     
@@ -349,6 +370,11 @@ def ai_action():
         if not game_state.get('isRunning'):
             return jsonify({'error': 'Game is not running'}), 400
         
+        # Check if IP is blocked for this attack
+        source_ip = data.get('sourceIP')
+        blocked_ips = game_state.get('blockedIPs', [])
+        ip_blocked = source_ip in blocked_ips if source_ip else False
+        
         # Record AI action
         action = {
             'timestamp': datetime.now().isoformat(),
@@ -357,7 +383,9 @@ def ai_action():
             'target': data.get('target'),
             'severity': data.get('severity', 'medium'),
             'detected': data.get('detected', False),
-            'successful': data.get('successful', False)
+            'successful': data.get('successful', False) and not ip_blocked,  # Blocked IPs can't succeed
+            'sourceIP': source_ip,
+            'blocked': ip_blocked
         }
         
         if 'aiActions' not in game_state:
@@ -366,6 +394,7 @@ def ai_action():
         game_state['aiActions'].append(action)
         
         # Handle integrity changes for critical/high severity actions
+        xp_penalty = 0
         if action['severity'] in ['critical', 'high'] and action.get('successful', False):
             target_asset = action.get('target')
             if target_asset and target_asset in game_state.get('assets', {}):
@@ -380,33 +409,11 @@ def ai_action():
                 # Track successful attacks
                 game_state['attacksSuccessful'] = game_state.get('attacksSuccessful', 0) + 1
                 
-                # Deduct XP for failed defense (optional penalty)
+                # Accumulate XP penalty for failed defense (don't create DB entry yet)
                 xp_penalty = 5 if action['severity'] == 'critical' else 3
+                current_accumulated = game_state.get('accumulatedXP', 0)
+                game_state['accumulatedXP'] = max(0, current_accumulated - xp_penalty)
                 game_state['sessionXP'] = max(0, game_state.get('sessionXP', 0) - xp_penalty)
-                
-                # Record XP penalty in database
-                try:
-                    # Get current user's XP balance
-                    current_balance = getattr(current_user, 'total_xp', None) or 0
-                    new_balance = max(0, current_balance - xp_penalty)
-                    
-                    # Create XP history entry for penalty
-                    xp_entry = XPHistory.create_entry(
-                        user_id=current_user.id,
-                        xp_change=-xp_penalty,
-                        reason='blue_team_failure',
-                        level_id=None,
-                        balance_before=current_balance,
-                        balance_after=new_balance
-                    )
-                    
-                    # Update user's total XP
-                    current_user.total_xp = new_balance
-                    current_user.save()
-                    
-                except Exception as db_error:
-                    logger.error(f"Error recording XP penalty: {str(db_error)}")
-                    # Don't fail the entire action if XP recording fails
         
         # Update session
         session['blue_vs_red_game_state'] = game_state
@@ -416,7 +423,10 @@ def ai_action():
             'success': True,
             'message': 'AI action recorded',
             'action': action,
-            'integrity_impact': action['severity'] in ['critical', 'high'] and action.get('successful', False)
+            'integrity_impact': action['severity'] in ['critical', 'high'] and action.get('successful', False),
+            'xp_penalty': xp_penalty,
+            'ip_blocked': ip_blocked,
+            'accumulated_xp': game_state.get('accumulatedXP', 0)
         })
     
     except Exception as e:
@@ -469,18 +479,91 @@ def get_xp_status():
     try:
         game_state = session.get('blue_vs_red_game_state', {})
         
+        # Get user's current total XP from database
+        user_total_xp = 0
+        try:
+            from app.models.xp_history import XPHistory
+            user_total_xp = XPHistory.calculate_user_total_xp(current_user.id)
+        except Exception as xp_error:
+            logger.error(f"Error calculating user total XP: {xp_error}")
+        
         return jsonify({
             'success': True,
-            'currentXP': current_user.total_xp or 0,
+            'currentXP': user_total_xp,
             'sessionXP': game_state.get('sessionXP', 0),
-            'userTotalXP': current_user.total_xp or 0,
+            'accumulatedXP': game_state.get('accumulatedXP', 0),
+            'userTotalXP': user_total_xp,
             'attacksMitigated': game_state.get('attacksMitigated', 0),
-            'attacksSuccessful': game_state.get('attacksSuccessful', 0)
+            'attacksSuccessful': game_state.get('attacksSuccessful', 0),
+            'blockedIPs': len(game_state.get('blockedIPs', []))
         })
     
     except Exception as e:
         logger.error(f"Error getting XP status: {str(e)}")
         return jsonify({'error': 'Failed to get XP status'}), 500
+
+@blue_team_vs_red_team.route('/api/exit-game', methods=['POST'])
+@login_required  
+def exit_game():
+    """Handle early exit from the game (browser close, navigation away, etc.)"""
+    try:
+        game_state = session.get('blue_vs_red_game_state', {})
+        
+        if game_state.get('isRunning'):
+            # Mark game as ended
+            game_state['isRunning'] = False
+            game_state['endTime'] = datetime.now().isoformat()
+            game_state['exitReason'] = 'early_exit'
+            
+            # Calculate final score based on current performance
+            final_score = calculate_final_score(game_state)
+            
+            # Award partial XP (reduced completion bonus for early exit)
+            partial_bonus = calculate_completion_bonus(game_state) // 2  # Half the normal bonus
+            total_xp = game_state.get('accumulatedXP', 0) + partial_bonus
+            
+            # End the session and create XP entry if session_id exists and XP was earned
+            session_id = game_state.get('session_id')
+            if session_id:
+                try:
+                    # End the session with final score
+                    completed_session = Session.end_session(session_id, score=final_score)
+                    
+                    # Create single XP history entry for the entire session if XP was earned
+                    if total_xp > 0:
+                        xp_entry = XPHistory.create_entry(
+                            xp_change=total_xp,
+                            reason='Early Exit',
+                            session_id=session_id
+                        )
+                        game_state['xp_awarded'] = total_xp
+                    else:
+                        game_state['xp_awarded'] = 0
+                    
+                    game_state['session_completed'] = True
+                    
+                    logger.info(f"User {current_user.username} exited Blue vs Red Team simulation early. Session ID: {session_id}, XP awarded: {total_xp}")
+                    
+                except Exception as session_error:
+                    logger.error(f"Failed to end session on exit: {session_error}")
+                    game_state['session_completed'] = False
+                    game_state['xp_awarded'] = 0
+            else:
+                game_state['session_completed'] = False
+                game_state['xp_awarded'] = 0
+            
+            session['blue_vs_red_game_state'] = game_state
+            session.permanent = True
+        
+        return jsonify({
+            'success': True,
+            'message': 'Game exit handled successfully',
+            'xp_awarded': game_state.get('xp_awarded', 0)
+        })
+    
+    except Exception as e:
+        logger.error(f"Error handling game exit: {str(e)}")
+        return jsonify({'error': 'Failed to handle game exit'}), 500
 
 def calculate_game_duration(game_state):
     """Calculate game duration in seconds"""
@@ -530,7 +613,7 @@ def calculate_final_score(game_state):
     
     # Score calculation: asset integrity (40%) + time bonus (30%) + detection rate (30%)
     score = (asset_integrity * 0.4) + (min(time_remaining / 9, 100) * 0.3) + (detection_rate * 0.3)
-    return round(score, 1)
+    return int(round(score))
 
 def calculate_action_xp(action):
     """Calculate XP reward for a successful defensive action"""

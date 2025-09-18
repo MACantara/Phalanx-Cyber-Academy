@@ -1,55 +1,52 @@
-# Server-side Tracking of Level Completion and XP
+# Server-side Tracking of Learning Sessions and XP
 
 Status: Draft
 
-This document outlines a plan to implement server-side tracking of level completion and XP in CyberQuest. It relies on the existing client-side level completion logic found under `app/static/js/simulated-pc/levels/` and introduces a robust back-end system to record completions, XP awards, and history.
+This document outlines a plan to implement server-side tracking of learning sessions and XP in CyberQuest. It relies on the existing client-side level completion logic found under `app/static/js/simulated-pc/levels/` and introduces a robust back-end system to record session activity, XP awards, and history.
 
 ## Goals
 
-- Record level completions on the server reliably.
-- Calculate and persist XP awards per completion and maintain XP history for audit and rollback.
-- Support idempotent submission from clients, preventing double-counting.
- - Provide APIs for querying user progress and XP history.
+- Record learning sessions on the server reliably for both levels and Blue Team vs Red Team Mode.
+- Calculate and persist XP awards per session and maintain XP history for audit and rollback.
+- Support idempotent session management, preventing duplicate session creation.
+- Provide APIs for querying user progress and XP history.
 - Ensure secure, authenticated endpoints with input validation and rate limiting.
 - Provide migration scripts and tests.
 
 ## Background / Motivation
 
-Client-side completion events are currently stored or handled in the browser. To support multi-device continuity, anti-fraud measures, and analytics, completions and XP must be persisted server-side.
+Client-side completion events are currently stored or handled in the browser. To support multi-device continuity, anti-fraud measures, and analytics, sessions and XP must be persisted server-side.
 
-The client-side code to inspect: `app/static/js/simulated-pc/levels/` — each level's completion logic should emit an event or call the server API when the level is completed.
+The client-side code to inspect: `app/static/js/simulated-pc/levels/` — each level's completion logic should emit an event or call the server API when the level is started and completed.
 
 ## High-level Design
 
-1. Client emits a completion event (POST) to server with payload: user_id (or inferred server-side), level_id, level_type, score, time_spent, difficulty, metadata (optional), client_generated_event_id (UUID)
-2. Server validates authentication, checks idempotency (based on client_generated_event_id or combination of user_id+level_id+timestamp), records completion if new
-3. Server calculates XP (using same formula as client or centralized service), stores a `xp_change` entry and updates user's total XP
-4. Server responds with the awarded XP and new total
-5. Optional: Server can enqueue post-processing tasks (notifications, achievements, analytics)
+1. Client starts a session (POST) to server when beginning a level or Blue Team vs Red Team Mode
+2. Server validates authentication, creates session record with start_time
+3. Client ends session (POST) with score when level/mode is completed
+4. Server calculates XP (using same formula as client or centralized service), stores session end_time and score, creates `xp_change` entry and updates user's total XP
+5. Server responds with the awarded XP and new total
+6. Optional: Server can enqueue post-processing tasks (notifications, achievements, analytics)
 
 ## Data Model
 
 Proposed new tables (SQL examples provided later):
 
-- `level_completions`
+- `sessions`
   - `id` (PK)
   - `user_id` (FK -> users.id)
-  - `level_id` (string or int)
-  - `level_type` (string)
+  - `session_name` (string) -- Level name or 'Blue Team vs Red Team Mode'
   - `score` (int)
-  - `time_spent` (int) -- seconds
-  - `difficulty` (string)
-  - `metadata` (json)
-  - `client_event_id` (uuid/null) -- optional, for idempotency
+  - `start_time` (timestamp)
+  - `end_time` (timestamp) -- NULL while session is active
   - `created_at` (timestamp)
-  - `source` (string) -- e.g., 'web', 'api'
 
 - `xp_history`
   - `id` (PK)
   - `user_id` (FK -> users.id)
   - `delta` (int) -- positive or negative XP change
-  - `reason` (string) -- e.g., 'level_completion', 'manual_adjustment'
-  - `reference_id` (nullable) -- e.g., level_completions.id
+  - `reason` (string) -- e.g., 'session_completion', 'manual_adjustment'
+  - `reference_id` (nullable) -- e.g., sessions.id
   - `balance_after` (int) -- user total XP after applying delta
   - `metadata` (json)
   - `created_at` (timestamp)
@@ -75,51 +72,59 @@ Proposed new tables (SQL examples provided later):
 
 ## API Contract
 
-- POST /api/levels/complete
+- POST /api/sessions/start
   - Auth: Required (flask-login session or bearer token)
   - Body (JSON):
     {
-      "level_id": "level-1",
-      "level_type": "simulation",
-      "score": 850,
-      "time_spent": 120, // seconds
-      "difficulty": "normal",
-      "metadata": { ... },
-      "client_event_id": "uuid-v4-string"
+      "session_name": "The Misinformation Maze" // or "Blue Team vs Red Team Mode"
     }
   - Response (200):
     {
       "success": true,
+      "session_id": 123,
+      "session_name": "The Misinformation Maze",
+      "start_time": "2025-09-18T14:30:00Z"
+    }
+  - Error codes: 400 (bad request), 401 (unauth), 429 (rate limit)
+
+- POST /api/sessions/end
+  - Auth: Required (flask-login session or bearer token)
+  - Body (JSON):
+    {
+      "session_id": 123,
+      "score": 85 // optional
+    }
+  - Response (200):
+    {
+      "success": true,
+      "session_id": 123,
       "awarded_xp": 50,
       "new_total_xp": 1250,
-      "is_new_completion": true,
-      "level": {
-         "level_id": 1,
-         "name": "The Misinformation Maze",
-         "xp_reward": 100,
-         "icon": "bi-newspaper",
-         "category": "Information Literacy",
-         "estimated_time": "15 minutes",
-         "skills": ["Critical Thinking","Source Verification","Fact Checking"],
-         "unlocked": true,
-         "coming_soon": false
+      "time_spent": 120, // seconds
+      "session": {
+         "session_name": "The Misinformation Maze",
+         "score": 85,
+         "start_time": "2025-09-18T14:30:00Z",
+         "end_time": "2025-09-18T14:32:00Z"
       }
     }
-  - Error codes: 400 (bad request), 401 (unauth), 429 (rate limit), 409 (duplicate)
+  - Error codes: 400 (bad request), 401 (unauth), 404 (session not found), 429 (rate limit)
 
-- GET /api/levels/progress
-  - Returns user's completed levels and XP summary
+- GET /api/sessions/progress
+  - Returns user's completed sessions and XP summary
 
 - GET /api/xp/history
   - Returns paginated XP changes
 
-## Idempotency and Duplication Handling
+## Session Management
 
-- If the client sends `client_event_id`, the server will check `level_completions.client_event_id` for existing record and return existing result.
-- If missing, server will fallback to dedup logic: combination of (user_id, level_id, created_at within short window, score) to detect duplicates.
-- The API should return `is_new_completion: false` when duplicate detected.
+- Sessions are created when a user starts a level or Blue Team vs Red Team Mode
+- Sessions track start_time automatically and end_time when completed
+- time_spent is calculated as the difference between start_time and end_time
+- Active sessions have end_time = NULL
+- Only one active session per user is recommended (though not enforced)
 
-Note: the server will validate `level_id` against the new `levels` table when available and attach canonical level information to the response.
+Note: the server will validate `session_name` against known level names and 'Blue Team vs Red Team Mode' to ensure data consistency.
 
 ## XP Calculation
 
@@ -135,30 +140,26 @@ Note: the server will validate `level_id` against the new `levels` table when av
 ## Security
 
 - Require authentication (Flask-Login current_user) or API tokens
-- Validate level_id against known levels to prevent fake levels
-- Rate-limit submissions per user per minute/IP
+- Validate session_name against known levels to prevent fake sessions
+- Rate-limit session starts/ends per user per minute/IP
 - Verify score is within expected bounds
 - Use server-side XP calculation and only accept metadata fields explicitly whitelisted
 
 ## Migrations
 
-- Provide Alembic migration to add `level_completions` and `xp_history` tables and add `total_xp` to users or user_profiles
+- Provide Alembic migration to add `sessions` and `xp_history` tables and add `total_xp` to users or user_profiles
 
 Example migration SQL (Alembic snippet):
 
--- create level_completions
-CREATE TABLE level_completions (
+-- create sessions
+CREATE TABLE sessions (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),
-    level_id TEXT NOT NULL,
-    level_type TEXT,
+    session_name TEXT NOT NULL,
     score INTEGER,
-    time_spent INTEGER,
-    difficulty TEXT,
-    metadata JSONB,
-    client_event_id UUID,
-    source TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    start_time TIMESTAMPTZ NOT NULL,
+    end_time TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- create xp_history
@@ -170,7 +171,7 @@ CREATE TABLE xp_history (
     reference_id INTEGER,
     balance_after INTEGER,
     metadata JSONB,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- add total_xp to users
@@ -187,28 +188,28 @@ CREATE TABLE levels (
   base_xp INTEGER DEFAULT 0,
   difficulty TEXT,
   metadata JSONB,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- link level_completions.level_id to levels.level_id (application-level foreign key)
--- Optionally, you may migrate level_completions.level_id to a FK using an integer levels.id column for stricter integrity.
+-- Sessions can reference level names or special session types like 'Blue Team vs Red Team Mode'
 
 ## Server-side Implementation Steps
 
-1. Add database models: `LevelCompletion`, `XPHistory` in `app/models/` with CRUD helpers
+1. Add database models: `Session`, `XPHistory` in `app/models/` with CRUD helpers
 2. Add Alembic migration
 3. Implement XP calculation utility in `app/utils/xp.py`
 4. Implement Flask endpoints (`app/routes/levels.py` or `app/routes/api/levels.py`)
-   - Validate, deduplicate, create records, update totals in a transaction
-5. Hook into existing client-side completion logic in `app/static/js/simulated-pc/levels/` to POST completions
+   - Validate, create session records, end sessions and update totals in a transaction
+5. Hook into existing client-side completion logic in `app/static/js/simulated-pc/levels/` to start/end sessions
 6. Add unit tests and integration tests
 7. Rollout: feature flag behind `ENABLE_SERVER_SIDE_TRACKING` config
 
 ## Client Integration (JS)
 
-- After level completion, send POST to `/api/levels/complete` with payload above
-- Include a client_event_id UUID generated per completion attempt
-- Handle server responses: if `is_new_completion` is false, don't award duplicate XP locally
+- Before level start, send POST to `/api/sessions/start` with session_name
+- Store returned session_id for later use
+- After level completion, send POST to `/api/sessions/end` with session_id and score
+- Handle server responses for session tracking
 - Retry logic: exponential backoff for transient failures
 
 Note: Leaderboards are intentionally not implemented as a first-class feature in this design. If needed later, leaderboards can be generated efficiently from `xp_history` aggregates (e.g., daily/weekly/monthly snapshots) or by summing `users.total_xp`. Keeping leaderboards derived rather than primary reduces write amplification and simplifies data integrity.
@@ -216,23 +217,36 @@ Note: Leaderboards are intentionally not implemented as a first-class feature in
 Client sample (pseudo-code):
 
 ```js
-const payload = {
-  level_id: LEVEL_ID,
-  level_type: LEVEL_TYPE,
-  score: score,
-  time_spent: elapsedSeconds,
-  difficulty: difficulty,
-  metadata: { hints_used, mistakes },
-  client_event_id: generateUUID()
+// Start session
+const startPayload = {
+  session_name: LEVEL_NAME // or 'Blue Team vs Red Team Mode'
 };
 
-fetch('/api/levels/complete', {
+const sessionResponse = await fetch('/api/sessions/start', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(payload),
+  body: JSON.stringify(startPayload),
+  credentials: 'include'
+});
+
+const sessionData = await sessionResponse.json();
+const sessionId = sessionData.session_id;
+
+// ... user plays level/mode ...
+
+// End session
+const endPayload = {
+  session_id: sessionId,
+  score: finalScore
+};
+
+fetch('/api/sessions/end', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(endPayload),
   credentials: 'include'
 }).then(r => r.json()).then(data => {
-  if (data.success && data.is_new_completion) {
+  if (data.success) {
     // Update UI, show awarded XP, sync local state
   }
 });

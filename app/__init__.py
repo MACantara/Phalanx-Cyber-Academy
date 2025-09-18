@@ -176,6 +176,15 @@ def create_app(config_name=None):
         formatted = name.replace('-', ' ').replace('_', ' ')
         return ' '.join(word.capitalize() for word in formatted.split())
 
+    @app.template_filter('format_display_name')
+    def format_display_name(name):
+        """Format session and level names by replacing hyphens with spaces"""
+        if not name:
+            return name
+        # Replace hyphens and underscores with spaces, preserve original capitalization
+        formatted = name.replace('-', ' ').replace('_', ' ')
+        return formatted
+
     @app.template_filter('format_user_timezone')
     def format_user_timezone_filter(dt, user_timezone='UTC', format_string='%Y-%m-%d %H:%M:%S'):
         """Format datetime for user's timezone in templates"""
@@ -201,6 +210,50 @@ def create_app(config_name=None):
         except Exception as e:
             # Fallback to string representation if formatting fails
             return str(dt) if dt else ""
+
+    @app.template_filter('format_duration')
+    def format_duration_filter(seconds):
+        """Format duration from seconds to HH:MM:SS or MM:SS format with text labels"""
+        if not seconds or seconds <= 0:
+            return "0s"
+        
+        try:
+            # Convert to integer if it's a float
+            total_seconds = int(seconds)
+            
+            hours = total_seconds // 3600
+            minutes = (total_seconds % 3600) // 60
+            seconds = total_seconds % 60
+            
+            if hours > 0:
+                return f"{hours}h {minutes}m {seconds}s"
+            elif minutes > 0:
+                return f"{minutes}m {seconds}s"
+            else:
+                return f"{seconds}s"
+        except (ValueError, TypeError):
+            return "0s"
+
+    @app.template_filter('format_number')
+    def format_number_filter(number):
+        """Format large numbers with K, M, B suffixes"""
+        if not number:
+            return "0"
+        
+        try:
+            # Convert to float for calculations
+            num = float(number)
+            
+            if abs(num) >= 1_000_000_000:  # Billions
+                return f"{num / 1_000_000_000:.1f}B".rstrip('0').rstrip('.')
+            elif abs(num) >= 1_000_000:  # Millions
+                return f"{num / 1_000_000:.1f}M".rstrip('0').rstrip('.')
+            elif abs(num) >= 1_000:  # Thousands
+                return f"{num / 1_000:.1f}K".rstrip('0').rstrip('.')
+            else:
+                return str(int(num))  # Return as integer for smaller numbers
+        except (ValueError, TypeError):
+            return str(number) if number else "0"
 
     # Make hCaptcha available in templates
     from app.utils.hcaptcha_utils import hcaptcha, is_hcaptcha_enabled

@@ -146,50 +146,50 @@ CREATE INDEX IF NOT EXISTS idx_levels_difficulty ON levels(difficulty);
 CREATE INDEX IF NOT EXISTS idx_levels_created_at ON levels(created_at);
 CREATE INDEX IF NOT EXISTS idx_levels_updated_at ON levels(updated_at);
 
--- Create level_completions table
-CREATE TABLE IF NOT EXISTS level_completions (
+-- Create sessions table
+CREATE TABLE IF NOT EXISTS sessions (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),
-    level_id INTEGER NOT NULL,
-    level_type VARCHAR(50) DEFAULT 'simulation',
+    session_name TEXT NOT NULL, -- Level name or 'Blue-Team-vs-Red-Team-Mode'
+    level_id INTEGER, -- references levels.level_id or NULL for non-level sessions
     score INTEGER,
-    time_spent INTEGER, -- seconds
-    difficulty VARCHAR(20),
-    source VARCHAR(20) DEFAULT 'web',
+    start_time TIMESTAMPTZ NOT NULL,    
+    end_time TIMESTAMPTZ, -- NULL while session is active
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Create indexes for level_completions table
-CREATE INDEX IF NOT EXISTS idx_level_completions_user_id ON level_completions(user_id);
-CREATE INDEX IF NOT EXISTS idx_level_completions_level_id ON level_completions(level_id);
-CREATE INDEX IF NOT EXISTS idx_level_completions_created_at ON level_completions(created_at);
-CREATE INDEX IF NOT EXISTS idx_level_completions_user_level ON level_completions(user_id, level_id);
+-- Create indexes for sessions table
+CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_sessions_session_name ON sessions(session_name);
+CREATE INDEX IF NOT EXISTS idx_sessions_level_id ON sessions(level_id);
+CREATE INDEX IF NOT EXISTS idx_sessions_created_at ON sessions(created_at);
+CREATE INDEX IF NOT EXISTS idx_sessions_start_time ON sessions(start_time);
+CREATE INDEX IF NOT EXISTS idx_sessions_end_time ON sessions(end_time);
+CREATE INDEX IF NOT EXISTS idx_sessions_user_session ON sessions(user_id, session_name);
 
 -- Create xp_history table
 CREATE TABLE IF NOT EXISTS xp_history (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id),
     xp_change INTEGER NOT NULL,
     balance_before INTEGER DEFAULT 0,
     balance_after INTEGER,
     reason VARCHAR(100) NOT NULL,
-    level_id INTEGER, -- references levels.level_id
+    session_id INTEGER REFERENCES sessions(id),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- Create indexes for xp_history table
-CREATE INDEX IF NOT EXISTS idx_xp_history_user_id ON xp_history(user_id);
 CREATE INDEX IF NOT EXISTS idx_xp_history_created_at ON xp_history(created_at);
 CREATE INDEX IF NOT EXISTS idx_xp_history_reason ON xp_history(reason);
-CREATE INDEX IF NOT EXISTS idx_xp_history_level_id ON xp_history(level_id);
+CREATE INDEX IF NOT EXISTS idx_xp_history_session_id ON xp_history(session_id);
 
 -- Populate levels table with initial data from app/routes/levels.py
 INSERT INTO levels (level_id, name, description, category, icon, estimated_time, expected_time_seconds, xp_reward, skills, difficulty, unlocked, coming_soon, requirements, updated_at) VALUES
-(1, 'The Misinformation Maze', 'Debunk fake news and stop misinformation from influencing an election.', 'Information Literacy', 'bi-newspaper', '15 minutes', 900, 100, '["Critical Thinking", "Source Verification", "Fact Checking"]'::jsonb, 'Beginner', true, false, null, NOW()),
-(2, 'Shadow in the Inbox', 'Spot phishing attempts and practice safe email protocols.', 'Email Security', 'bi-envelope-exclamation', '20 minutes', 1200, 150, '["Phishing Detection", "Email Analysis", "Social Engineering"]'::jsonb, 'Beginner', true, false, null, NOW()),
-(3, 'Malware Mayhem', 'Isolate infections and perform digital cleanup during a gaming tournament.', 'Threat Detection', 'bi-bug', '25 minutes', 1500, 200, '["Malware Recognition", "System Security", "Threat Analysis"]'::jsonb, 'Intermediate', true, false, null, NOW()),
-(4, 'The White Hat Test', 'Practice ethical hacking and responsible vulnerability disclosure.', 'Ethical Hacking', 'bi-terminal', '30 minutes', 1800, 350, '["Penetration Testing", "Vulnerability Assessment", "Ethical Hacking"]'::jsonb, 'Expert', true, false, null, NOW()),
-(5, 'The Hunt for The Null', 'Final mission: Use advanced digital forensics to expose The Null''s identity.', 'Digital Forensics', 'bi-trophy', '40 minutes', 2400, 500, '["Digital Forensics", "Evidence Analysis", "Advanced Investigation"]'::jsonb, 'Master', true, false, null, NOW())
+(1, 'The-Misinformation-Maze', 'Debunk fake news and stop misinformation from influencing an election.', 'Information Literacy', 'bi-newspaper', '15 minutes', 900, 100, '["Critical Thinking", "Source Verification", "Fact Checking"]'::jsonb, 'Beginner', true, false, null, NOW()),
+(2, 'Shadow-in-the-Inbox', 'Spot phishing attempts and practice safe email protocols.', 'Email Security', 'bi-envelope-exclamation', '20 minutes', 1200, 150, '["Phishing Detection", "Email Analysis", "Social Engineering"]'::jsonb, 'Beginner', true, false, null, NOW()),
+(3, 'Malware-Mayhem', 'Isolate infections and perform digital cleanup during a gaming tournament.', 'Threat Detection', 'bi-bug', '25 minutes', 1500, 200, '["Malware Recognition", "System Security", "Threat Analysis"]'::jsonb, 'Intermediate', true, false, null, NOW()),
+(4, 'The-White-Hat-Test', 'Practice ethical hacking and responsible vulnerability disclosure.', 'Ethical Hacking', 'bi-terminal', '30 minutes', 1800, 350, '["Penetration Testing", "Vulnerability Assessment", "Ethical Hacking"]'::jsonb, 'Expert', true, false, null, NOW()),
+(5, 'The-Hunt-for-The-Null', 'Final mission: Use advanced digital forensics to expose The Null''s identity.', 'Digital Forensics', 'bi-trophy', '40 minutes', 2400, 500, '["Digital Forensics", "Evidence Analysis", "Advanced Investigation"]'::jsonb, 'Master', true, false, null, NOW())
 ON CONFLICT (level_id) DO UPDATE SET
     name = EXCLUDED.name,
     description = EXCLUDED.description,
@@ -227,7 +227,7 @@ ALTER TABLE login_attempts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE email_verifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE password_reset_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE levels ENABLE ROW LEVEL SECURITY;
-ALTER TABLE level_completions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE xp_history ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies (these are basic examples - adjust based on your security needs)
@@ -287,16 +287,19 @@ CREATE POLICY "Admins can manage levels" ON levels
         SELECT 1 FROM users WHERE id = auth.uid()::integer AND is_admin = true
     ));
 
--- Level completions policies
-CREATE POLICY "Users can view their own completions" ON level_completions
+-- Sessions policies
+CREATE POLICY "Users can view their own sessions" ON sessions
     FOR SELECT USING (user_id = auth.uid()::integer OR EXISTS (
         SELECT 1 FROM users WHERE id = auth.uid()::integer AND is_admin = true
     ));
 
-CREATE POLICY "Users can create their own completions" ON level_completions
+CREATE POLICY "Users can create their own sessions" ON sessions
     FOR INSERT WITH CHECK (user_id = auth.uid()::integer);
 
-CREATE POLICY "Admins can manage all completions" ON level_completions
+CREATE POLICY "Users can update their own sessions" ON sessions
+    FOR UPDATE USING (user_id = auth.uid()::integer);
+
+CREATE POLICY "Admins can manage all sessions" ON sessions
     FOR ALL USING (EXISTS (
         SELECT 1 FROM users WHERE id = auth.uid()::integer AND is_admin = true
     ));
