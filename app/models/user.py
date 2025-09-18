@@ -20,6 +20,7 @@ class User(UserMixin):
         self.created_at = data.get('created_at')
         self.last_login = data.get('last_login')
         self.is_admin = data.get('is_admin', False)
+        self.is_verified = data.get('is_verified', False)
         self.total_xp = data.get('total_xp', 0)
         self.timezone = data.get('timezone', 'UTC')  # Default to UTC if not set
         
@@ -64,6 +65,7 @@ class User(UserMixin):
                 'password_hash': self.password_hash,
                 'is_active': self.is_active,
                 'is_admin': self.is_admin,
+                'is_verified': self.is_verified,
                 'total_xp': self.total_xp,
                 'timezone': self.timezone,
                 'last_login': self.last_login.isoformat() if self.last_login else None
@@ -88,6 +90,15 @@ class User(UserMixin):
         """Update last login timestamp."""
         self.last_login = utc_now()
         self.save()
+    
+    def verify_email(self):
+        """Mark user's email as verified."""
+        self.is_verified = True
+        self.save()
+    
+    def is_email_verified(self):
+        """Check if user's email is verified."""
+        return self.is_verified
     
     def generate_reset_token(self):
         """Generate a password reset token."""
@@ -117,6 +128,7 @@ class User(UserMixin):
             'password_hash': None,
             'is_active': True,
             'is_admin': False,
+            'is_verified': False,  # New users start unverified
             'total_xp': 0,
             'timezone': timezone,
             'created_at': utc_now(),
@@ -259,11 +271,11 @@ class PasswordResetToken:
         
         # Convert string timestamps to datetime objects if needed
         if isinstance(self.created_at, str):
-            self.created_at = parse_datetime_naive(self.created_at)
+            self.created_at = parse_datetime_aware(self.created_at)
         if isinstance(self.expires_at, str):
-            self.expires_at = parse_datetime_naive(self.expires_at)
+            self.expires_at = parse_datetime_aware(self.expires_at)
         if isinstance(self.used_at, str):
-            self.used_at = parse_datetime_naive(self.used_at)
+            self.used_at = parse_datetime_aware(self.used_at)
     
     def save(self):
         """Save token to database."""

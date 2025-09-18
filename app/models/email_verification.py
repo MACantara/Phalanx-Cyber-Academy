@@ -14,7 +14,6 @@ class EmailVerification:
         self.created_at = data.get('created_at')
         self.expires_at = data.get('expires_at')
         self.verified_at = data.get('verified_at')
-        self.is_verified = data.get('is_verified', False)
         
         # Convert string timestamps to datetime objects if needed
         if isinstance(self.created_at, str):
@@ -34,8 +33,7 @@ class EmailVerification:
                 'token': self.token,
                 'created_at': self.created_at.isoformat() if self.created_at else None,
                 'expires_at': self.expires_at.isoformat() if self.expires_at else None,
-                'verified_at': self.verified_at.isoformat() if self.verified_at else None,
-                'is_verified': self.is_verified
+                'verified_at': self.verified_at.isoformat() if self.verified_at else None
             }
             
             if self.id:
@@ -59,8 +57,15 @@ class EmailVerification:
         return is_expired(self.expires_at, 0)  # Already expired if expires_at is in the past
     
     def verify(self):
-        """Mark this email as verified."""
-        self.is_verified = True
+        """Mark this email as verified by updating the user record."""
+        from app.models.user import User
+        
+        # Get the user and mark them as verified
+        user = User.find_by_id(self.user_id)
+        if user:
+            user.verify_email()
+        
+        # Mark this verification token as used
         self.verified_at = utc_now()
         self.save()
     
@@ -70,7 +75,7 @@ class EmailVerification:
         supabase = get_supabase()
         try:
             # Remove any existing unverified tokens for this user/email combo
-            supabase.table(Tables.EMAIL_VERIFICATIONS).delete().eq('user_id', user_id).eq('email', email).eq('is_verified', False).execute()
+            supabase.table(Tables.EMAIL_VERIFICATIONS).delete().eq('user_id', user_id).eq('email', email).is_('verified_at', 'null').execute()
             
             verification_data = {
                 'user_id': user_id,
@@ -78,8 +83,7 @@ class EmailVerification:
                 'token': secrets.token_urlsafe(32),
                 'created_at': utc_now(),
                 'expires_at': utc_now() + timedelta(hours=24),  # 24 hour expiration
-                'verified_at': None,
-                'is_verified': False
+                'verified_at': None
             }
             
             verification = cls(verification_data)
@@ -114,22 +118,21 @@ class EmailVerification:
     
     @classmethod
     def is_email_verified(cls, user_id: int, email: str) -> bool:
-        """Check if a specific email for a user is verified."""
-        supabase = get_supabase()
-        try:
-            response = supabase.table(Tables.EMAIL_VERIFICATIONS).select("*").eq('user_id', user_id).eq('email', email).eq('is_verified', True).execute()
-            data = handle_supabase_error(response)
-            return len(data) > 0
-        except Exception as e:
-            raise DatabaseError(f"Failed to check email verification: {e}")
+        """Check if a specific email for a user is verified by checking the user record."""
+        from app.models.user import User
+        
+        user = User.find_by_id(user_id)
+        if user and user.email == email:
+            return user.is_verified
+        return False
     
     @classmethod
     def cleanup_expired_tokens(cls, days_old: int = 7) -> int:
-        """Clean up expired verification tokens."""
+        """Clean up expired verification tokens (unused tokens only)."""
         supabase = get_supabase()
         try:
             cutoff_date = (utc_now() - timedelta(days=days_old)).isoformat()
-            response = supabase.table(Tables.EMAIL_VERIFICATIONS).delete().lt('expires_at', cutoff_date).eq('is_verified', False).execute()
+            response = supabase.table(Tables.EMAIL_VERIFICATIONS).delete().lt('expires_at', cutoff_date).is_('verified_at', 'null').execute()
             data = handle_supabase_error(response)
             return len(data) if data else 0
         except Exception as e:
@@ -137,20 +140,22 @@ class EmailVerification:
     
     @classmethod
     def count_verified_emails(cls) -> int:
-        """Count verified emails."""
+        """Count verified emails by checking user records."""
+        from app.models.user import User
         supabase = get_supabase()
         try:
-            response = supabase.table(Tables.EMAIL_VERIFICATIONS).select("*", count='exact').eq('is_verified', True).execute()
+            response = supabase.table(Tables.USERS).select("*", count='exact').eq('is_verified', True).execute()
             return response.count if hasattr(response, 'count') else 0
         except Exception as e:
             raise DatabaseError(f"Failed to count verified emails: {e}")
     
     @classmethod
     def count_pending_verifications(cls) -> int:
-        """Count pending verifications."""
+        """Count pending verifications by checking user records."""
+        from app.models.user import User
         supabase = get_supabase()
         try:
-            response = supabase.table(Tables.EMAIL_VERIFICATIONS).select("*", count='exact').eq('is_verified', False).execute()
+            response = supabase.table(Tables.USERS).select("*", count='exact').eq('is_verified', False).execute()
             return response.count if hasattr(response, 'count') else 0
         except Exception as e:
             raise DatabaseError(f"Failed to count pending verifications: {e}")
