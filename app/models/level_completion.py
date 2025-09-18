@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Any, Optional, List
 import uuid
 from app.database import get_supabase, DatabaseError, handle_supabase_error
-from app.utils.timezone_utils import utc_now
+from app.utils.timezone_utils import utc_now, parse_datetime_aware
 
 
 class LevelCompletion:
@@ -23,6 +23,10 @@ class LevelCompletion:
         self.difficulty = data.get('difficulty')
         self.source = data.get('source', 'web')
         self.created_at = data.get('created_at')
+        
+        # Parse datetime fields
+        if self.created_at and isinstance(self.created_at, str):
+            self.created_at = parse_datetime_aware(self.created_at)
 
     def __repr__(self):
         return f'<LevelCompletion {self.user_id}: Level {self.level_id} ({self.score})>'

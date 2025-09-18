@@ -5,7 +5,7 @@ Represents level metadata and configuration for the CyberQuest system
 from datetime import datetime
 from typing import Dict, Any, List, Optional
 from app.database import get_supabase, DatabaseError, handle_supabase_error
-from app.utils.timezone_utils import utc_now
+from app.utils.timezone_utils import utc_now, parse_datetime_aware
 
 
 class Level:
@@ -29,6 +29,12 @@ class Level:
         self.requirements = data.get('requirements')
         self.created_at = data.get('created_at')
         self.updated_at = data.get('updated_at')
+        
+        # Parse datetime fields
+        if self.created_at and isinstance(self.created_at, str):
+            self.created_at = parse_datetime_aware(self.created_at)
+        if self.updated_at and isinstance(self.updated_at, str):
+            self.updated_at = parse_datetime_aware(self.updated_at)
 
     def __repr__(self):
         return f'<Level {self.level_id}: {self.name}>'
