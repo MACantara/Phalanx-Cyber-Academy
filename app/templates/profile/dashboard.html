@@ -210,17 +210,28 @@
                          data-date="{{ session.created_at }}">
                         <div class="flex items-center">
                             <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center text-white font-bold mr-3">
-                                {% if session.session_name == 'Blue Team vs Red Team Mode' %}
+                                {% if session.session_name == 'Blue-Team-vs-Red-Team-Mode' %}
                                     <i class="bi bi-shield-check text-sm"></i>
-                                {% else %}
+                                {% elif session.level_id %}
                                     <i class="bi bi-book text-sm"></i>
+                                {% else %}
+                                    <i class="bi bi-gear text-sm"></i>
                                 {% endif %}
                             </div>
                             <div>
                                 <p class="font-semibold text-gray-900 dark:text-white">{{ session.session_name }}</p>
                                 <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    {% if session.level_id %}
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                            <i class="bi bi-book mr-1"></i>Level Session
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                                            <i class="bi bi-shield-check mr-1"></i>Simulation Mode
+                                        </span>
+                                    {% endif %}
                                     {% if session.created_at %}
-                                        {{ session.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}
+                                        • {{ session.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}
                                     {% endif %}
                                     {% if session.end_time %}
                                         • Completed
