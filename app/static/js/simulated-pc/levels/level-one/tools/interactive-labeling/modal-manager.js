@@ -198,10 +198,16 @@ export class ModalManager {
                             Return to Levels
                         </button>
                     ` : `
-                        <button onclick="window.interactiveLabeling?.retryLevel()" class="bg-orange-600 text-white px-8 py-3 rounded hover:bg-orange-700 transition-colors font-semibold text-lg cursor-pointer flex items-center justify-center gap-2 mx-auto">
-                            <i class="bi bi-arrow-repeat"></i>
-                            Try Level Again
-                        </button>
+                        <div class="space-y-3">
+                            <button onclick="window.interactiveLabeling?.completeLevel()" class="bg-blue-600 text-white px-8 py-3 rounded hover:bg-blue-700 transition-colors font-semibold text-lg cursor-pointer flex items-center justify-center gap-2 mx-auto">
+                                <i class="bi bi-save-fill"></i>
+                                Save Progress & Exit
+                            </button>
+                            <button onclick="window.interactiveLabeling?.retryLevel()" class="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 transition-colors font-semibold cursor-pointer flex items-center justify-center gap-2 mx-auto">
+                                <i class="bi bi-arrow-repeat"></i>
+                                Try Again
+                            </button>
+                        </div>
                     `}
                 </div>
             </div>
