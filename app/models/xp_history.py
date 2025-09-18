@@ -19,7 +19,7 @@ class XPHistory:
         self.balance_before = data.get('balance_before')
         self.balance_after = data.get('balance_after')
         self.reason = data.get('reason')
-        self.level_id = data.get('level_id')
+        self.session_id = data.get('session_id')
         self.created_at = data.get('created_at')
         
         # Parse datetime fields
@@ -38,13 +38,13 @@ class XPHistory:
             'balance_before': self.balance_before,
             'balance_after': self.balance_after,
             'reason': self.reason,
-            'level_id': self.level_id,
+            'session_id': self.session_id,
             'created_at': self.created_at
         }
 
     @classmethod
     def create_entry(cls, user_id: int, xp_change: int, reason: str = 'manual_adjustment', 
-                    level_id: int = None, balance_before: int = None, balance_after: int = None) -> 'XPHistory':
+                    balance_before: int = None, balance_after: int = None, session_id: int = None) -> 'XPHistory':
         """Create a new XP history entry with automatic or provided balance calculation"""
         try:
             # If balance values are not provided, calculate them from user data
@@ -66,7 +66,7 @@ class XPHistory:
                 'balance_before': balance_before,
                 'balance_after': balance_after,
                 'reason': reason,
-                'level_id': level_id,
+                'session_id': session_id,
                 'created_at': utc_now().isoformat()
             }
             
@@ -195,13 +195,13 @@ class XPHistory:
             raise DatabaseError(f"Failed to calculate user total XP: {str(e)}")
 
     @classmethod
-    def get_by_level(cls, level_id: int, limit: int = 50) -> List['XPHistory']:
-        """Get XP history entries for a specific level"""
+    def get_by_session(cls, session_id: int, limit: int = 50) -> List['XPHistory']:
+        """Get XP history entries for a specific session"""
         try:
             supabase = get_supabase()
             response = (supabase.table('xp_history')
                        .select('*')
-                       .eq('level_id', level_id)
+                       .eq('session_id', session_id)
                        .order('created_at', desc=True)
                        .limit(limit)
                        .execute())
@@ -209,7 +209,7 @@ class XPHistory:
             
             return [cls(entry_data) for entry_data in data] if data else []
         except Exception as e:
-            raise DatabaseError(f"Failed to get XP history for level {level_id}: {str(e)}")
+            raise DatabaseError(f"Failed to get XP history for session {session_id}: {str(e)}")
 
     @classmethod
     def get_by_reason(cls, reason: str, limit: int = 50) -> List['XPHistory']:
@@ -238,7 +238,7 @@ class XPHistory:
                 'balance_before': self.balance_before,
                 'balance_after': self.balance_after,
                 'reason': self.reason,
-                'level_id': self.level_id
+                'session_id': self.session_id
             }
             
             if self.id:
