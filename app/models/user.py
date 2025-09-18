@@ -254,6 +254,16 @@ class User(UserMixin):
         except Exception as e:
             raise DatabaseError(f"Failed to count recent registrations: {e}")
     
+    @classmethod
+    def count_verified_emails(cls) -> int:
+        """Count users with verified emails."""
+        supabase = get_supabase()
+        try:
+            response = supabase.table(Tables.USERS).select("*", count='exact').eq('is_verified', True).execute()
+            return response.count if hasattr(response, 'count') else 0
+        except Exception as e:
+            raise DatabaseError(f"Failed to count verified emails: {e}")
+    
     def __repr__(self):
         return f'<User {self.username}>'
 
