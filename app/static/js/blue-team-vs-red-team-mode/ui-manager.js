@@ -567,30 +567,24 @@ class UIManager {
     }
 
     showXPNotification(amount, type, reason) {
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 z-50 p-3 rounded-lg shadow-lg max-w-sm animate-fade-in-right ${
-            type === 'reward' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
-        }`;
-        
-        const icon = type === 'reward' ? 'bi-arrow-up-circle' : 'bi-arrow-down-circle';
-        const sign = amount > 0 ? '+' : '';
-        
-        notification.innerHTML = `
-            <div class="flex items-center space-x-2">
-                <i class="bi ${icon}"></i>
-                <span class="font-semibold">${sign}${amount} XP</span>
-                ${reason ? `<span class="text-sm opacity-90">• ${reason}</span>` : ''}
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Auto remove after 3 seconds
-        setTimeout(() => {
-            if (notification.parentElement) {
-                notification.remove();
-            }
-        }, 3000);
+        // Use centralized toast utility if available
+        if (window.toastManager && window.toastManager.showToast) {
+            const sign = amount > 0 ? '+' : '';
+            const message = reason ? 
+                `${sign}${amount} XP • ${reason}` : 
+                `${sign}${amount} XP`;
+            
+            // Map XP notification types to toast types
+            const toastType = type === 'reward' ? 'success' : 'error';
+            window.toastManager.showToast(message, toastType);
+        } else {
+            // Fallback to console log if toast manager not available
+            const sign = amount > 0 ? '+' : '';
+            const message = reason ? 
+                `${sign}${amount} XP: ${reason}` : 
+                `${sign}${amount} XP`;
+            console.log(`XP Notification [${type}]: ${message}`);
+        }
     }
 
     showCompletionBonus(bonus, breakdown) {

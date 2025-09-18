@@ -177,102 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Server-side data tracking with localStorage fallback for offline compatibility
     const userStats = {{ user_stats | tojson | safe }};
     
-    function updateLevelStates() {
-        const levelCards = document.querySelectorAll('.level-card');
-        let completedCount = 0;
-        let totalXP = 0;
-        
-        levelCards.forEach((card, index) => {
-            const levelId = parseInt(card.dataset.levelId);
-            const levelXP = parseInt(card.dataset.levelXp);
-            const isComingSoon = card.dataset.comingSoon === 'true';
-            const isCompleted = checkLevelCompletion(levelId);
-            const isUnlocked = true; // All levels are always unlocked
-            
-            const levelContent = card.querySelector('.level-content');
-            const levelIcon = card.querySelector('.level-icon');
-            const lockIcon = card.querySelector('.level-lock-icon');
-            const levelButton = card.querySelector('.level-button');
-            
-            if (isCompleted) {
-                completedCount++;
-                totalXP += levelXP;
-                
-                // Mark as completed
-                levelIcon.className = 'level-icon w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl mr-4 bg-gradient-to-br from-green-500 to-emerald-600';
-                lockIcon.className = 'level-lock-icon bi bi-check-circle text-green-500 text-xl';
-                levelContent.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-green-400 dark:border-green-500 level-content';
-                card.className = 'level-card group relative opacity-0 animate-fade-in-up cursor-pointer hover:shadow-2xl hover:scale-105 transform transition-all duration-300';
-                
-                levelButton.innerHTML = '<i class="bi bi-play-circle mr-2"></i>Replay Level';
-                levelButton.className = 'level-button w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-500/25 shadow-lg hover:shadow-xl';
-                levelButton.href = '#';
-                levelButton.style.pointerEvents = 'auto';
-                
-            } else if (isComingSoon) {
-                // Mark as coming soon
-                levelIcon.className = 'level-icon w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl mr-4 bg-gradient-to-br from-purple-500 to-indigo-600';
-                lockIcon.className = 'level-lock-icon bi bi-clock text-purple-500 text-xl';
-                levelContent.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-purple-400 dark:border-purple-500 level-content';
-                card.className = 'level-card group relative opacity-0 animate-fade-in-up cursor-not-allowed';
-                
-                levelButton.innerHTML = '<i class="bi bi-clock mr-2"></i>Coming Soon';
-                levelButton.className = 'level-button w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold rounded-lg cursor-not-allowed opacity-80';
-                levelButton.href = '#';
-                levelButton.style.pointerEvents = 'none';
-                
-            } else if (isUnlocked) {
-                // Mark as unlocked but not completed
-                levelIcon.className = 'level-icon w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl mr-4 bg-gradient-to-br from-blue-500 to-purple-600';
-                lockIcon.className = 'level-lock-icon bi bi-unlock text-blue-500 text-xl';
-                levelContent.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-blue-400 dark:border-blue-500 level-content';
-                card.className = 'level-card group relative opacity-0 animate-fade-in-up cursor-pointer hover:shadow-2xl hover:scale-105 transform transition-all duration-300';
-                
-                levelButton.innerHTML = '<i class="bi bi-play-circle mr-2"></i>Start Level';
-                levelButton.className = 'level-button w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/25 shadow-lg hover:shadow-xl';
-                levelButton.href = '#';
-                levelButton.style.pointerEvents = 'auto';
-                
-            } else {
-                // Mark as available but not completed
-                levelIcon.className = 'level-icon w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl mr-4 bg-gradient-to-br from-blue-500 to-purple-600';
-                lockIcon.className = 'level-lock-icon bi bi-unlock text-blue-500 text-xl';
-                levelContent.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-blue-400 dark:border-blue-500 level-content';
-                card.className = 'level-card group relative opacity-0 animate-fade-in-up cursor-pointer hover:shadow-2xl hover:scale-105 transform transition-all duration-300';
-                
-                levelButton.innerHTML = '<i class="bi bi-play-circle mr-2"></i>Start Level';
-                levelButton.className = 'level-button w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/25 shadow-lg hover:shadow-xl';
-                levelButton.href = '#';
-                levelButton.style.pointerEvents = 'auto';
-            }
-            
-            // Add click handler for level start buttons (all levels except coming soon)
-            if (!isComingSoon) {
-                levelButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    startLevel(levelId);
-                });
-            }
-            
-            // Add click handler for coming soon levels
-            if (isComingSoon) {
-                card.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showComingSoonModal(levelId);
-                });
-            }
-        });
-        
-        // Update progress display
-        const totalLevels = levelCards.length;
-        const progressPercentage = Math.round((completedCount / totalLevels) * 100);
-        
-        document.getElementById('completed-count').textContent = `${completedCount}/${totalLevels}`;
-        document.getElementById('total-xp').textContent = totalXP;
-        document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
-        document.getElementById('progress-percentage').textContent = progressPercentage;
-    }
     
     function startLevel(levelId) {
         // Store autostart flag and navigate to level start
@@ -310,6 +214,28 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         document.body.appendChild(modal);
     }
+    
+    // Add click handlers for level buttons since updateLevelStates was removed
+    document.querySelectorAll('.level-card').forEach(card => {
+        const isComingSoon = card.dataset.comingSoon === 'true';
+        const levelId = parseInt(card.dataset.levelId);
+        const levelButton = card.querySelector('.level-button');
+        
+        if (isComingSoon) {
+            // Coming soon levels show modal
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                showComingSoonModal(levelId);
+            });
+        } else if (levelButton) {
+            // Active levels can be started
+            levelButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                startLevel(levelId);
+            });
+        }
+    });
     
     // API functions for server communication
     window.CyberQuestAPI = {
@@ -477,53 +403,26 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         
         showCompletionNotification(levelId, result) {
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-green-600 text-white p-4 rounded-lg shadow-lg z-50 animate-fade-in-up max-w-sm';
-            
-            // Enhanced notification with XP breakdown and level info
-            let notificationContent = `
-                <div class="flex items-start">
-                    <i class="bi bi-check-circle text-2xl mr-3 flex-shrink-0"></i>
-                    <div class="flex-1">
-                        <div class="font-bold">Level ${levelId} Completed!</div>
-                        <div class="text-sm space-y-1">
-                            <div>+${result.xp_earned} XP • Score: ${result.score}%</div>
-            `;
-            
-            // Add duplicate warning if applicable
-            if (result.duplicate) {
-                notificationContent += `<div class="text-yellow-200"><i class="bi bi-info-circle mr-1"></i>Already completed</div>`;
-            }
-            
-            // Add user level info if available
-            if (result.user_level !== undefined) {
-                notificationContent += `<div>Level ${result.user_level} • ${result.xp_for_next_level} XP to next</div>`;
-            }
-            
-            // Add calculation details if available
-            if (result.calculation_details && result.calculation_details.breakdown) {
-                const breakdown = result.calculation_details.breakdown;
-                notificationContent += `<div class="text-xs mt-1 opacity-80">Base: ${breakdown.base_xp} × ${breakdown.score_multiplier} × ${breakdown.time_multiplier}</div>`;
-            }
-            
-            notificationContent += `
-                        </div>
-                    </div>
-                    <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-white hover:text-gray-200">
-                        <i class="bi bi-x"></i>
-                    </button>
-                </div>
-            `;
-            
-            notification.innerHTML = notificationContent;
-            document.body.appendChild(notification);
-            
-            // Auto-remove after 6 seconds (longer for more info)
-            setTimeout(() => {
-                if (notification.parentElement) {
-                    notification.remove();
+            // Use centralized toast utility if available
+            if (window.toastManager && window.toastManager.showToast) {
+                let message = `Level ${levelId} completed!`;
+                
+                // Add XP and score information
+                if (result.xp_earned && result.score) {
+                    message += ` +${result.xp_earned} XP • Score: ${result.score}%`;
+                } else if (result.xp_earned) {
+                    message += ` Earned ${result.xp_earned} XP`;
                 }
-            }, 6000);
+                
+                // Add duplicate warning if applicable
+                if (result.duplicate) {
+                    message += ' (Already completed)';
+                }
+                
+                window.toastManager.showToast(message, 'success');
+            } else {
+                console.log(`Level completion notification: Level ${levelId} completed!`, result);
+            }
         }
     };
     

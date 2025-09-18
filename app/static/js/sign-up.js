@@ -89,24 +89,7 @@ class CyberQuestSignup {
     showTimezoneNotification(timezone) {
         // Create a subtle notification about timezone detection
         setTimeout(() => {
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 z-60 p-3 rounded-lg shadow-lg max-w-sm bg-blue-100 dark:bg-blue-900/90 border border-blue-300 dark:border-blue-600/50 text-blue-800 dark:text-blue-200 animate-fade-in-right';
-            notification.innerHTML = `
-                <div class="flex items-center space-x-2 text-sm">
-                    <i class="bi bi-clock text-blue-600 dark:text-blue-400"></i>
-                    <span>Timezone detected: <strong>${timezone}</strong></span>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }, 5000);
+            this.showNotification(`Timezone detected: ${timezone}`, 'info');
         }, 1000); // Delay to avoid overwhelming the user with notifications
     }
 
@@ -525,36 +508,13 @@ class CyberQuestSignup {
     }
 
     showNotification(message, type = 'info') {
-        // Create cyber-themed notification
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 z-50 p-4 rounded-xl shadow-lg max-w-sm animate-fade-in-right`;
-        
-        const colors = {
-            success: 'bg-green-900/90 border border-green-500/50 text-green-100',
-            error: 'bg-red-900/90 border border-red-500/50 text-red-100',
-            info: 'bg-blue-900/90 border border-blue-500/50 text-blue-100'
-        };
-        
-        const icons = {
-            success: 'bi-check-circle',
-            error: 'bi-exclamation-triangle',
-            info: 'bi-info-circle'
-        };
-        
-        notification.className += ` ${colors[type]}`;
-        notification.innerHTML = `
-            <div class="flex items-center space-x-3">
-                <i class="bi ${icons[type]} text-lg"></i>
-                <span class="font-medium">${message}</span>
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Auto remove after 4 seconds
-        setTimeout(() => {
-            notification.remove();
-        }, 4000);
+        // Use centralized toast utility if available
+        if (window.toastManager && window.toastManager.showToast) {
+            window.toastManager.showToast(message, type);
+        } else {
+            // Fallback to console log if toast manager not available
+            console.log(`Notification [${type}]: ${message}`);
+        }
     }
 
     isValidEmail(email) {

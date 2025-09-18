@@ -378,39 +378,12 @@ function animateStreakUpdate() {
 }
 
 function showStreakNotification(message, type = 'info') {
-    // Show a temporary notification for streak events
-    const notification = document.createElement('div');
-    notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full`;
-    
-    const typeClasses = {
-        'success': 'bg-green-500 text-white',
-        'warning': 'bg-yellow-500 text-white',
-        'info': 'bg-blue-500 text-white',
-        'error': 'bg-red-500 text-white'
-    };
-    
-    notification.className += ` ${typeClasses[type] || typeClasses.info}`;
-    notification.innerHTML = `
-        <div class="flex items-center">
-            <i class="bi bi-${type === 'success' ? 'check' : type === 'warning' ? 'exclamation' : type === 'error' ? 'x' : 'info'}-circle mr-2"></i>
-            <span>${message}</span>
-        </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Animate in
-    setTimeout(() => {
-        notification.classList.remove('translate-x-full');
-    }, 100);
-    
-    // Animate out and remove
-    setTimeout(() => {
-        notification.classList.add('translate-x-full');
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 4000);
+    // Use centralized toast utility if available
+    if (window.toastManager && window.toastManager.showToast) {
+        window.toastManager.showToast(message, type);
+    } else {
+        console.log(`Streak notification: ${message} (${type})`);
+    }
 }
 
 // Weekly activity chart interaction

@@ -49,19 +49,13 @@ export class FileViewer {
     }
 
     showError(message) {
-        // Create a simple error notification
-        const notification = document.createElement('div');
-        notification.className = 'fixed top-4 right-4 bg-red-600 text-white p-3 rounded shadow-lg z-50';
-        notification.textContent = message;
-        
-        document.body.appendChild(notification);
-        
-        // Auto-remove after 3 seconds
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 3000);
+        // Use centralized toast utility if available
+        if (window.toastManager && window.toastManager.showToast) {
+            window.toastManager.showToast(message, 'error');
+        } else {
+            // Fallback to console log if toast manager not available
+            console.log(`File Viewer Error: ${message}`);
+        }
     }
 
     getDesktop() {
