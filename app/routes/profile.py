@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user
 from app.models.user import User
 from app.database import DatabaseError
-from app.utils.timezone_utils import get_common_timezones
+from app.utils.timezone_utils import get_timezones
 import re
 
 profile_bp = Blueprint('profile', __name__, url_prefix='/profile')
@@ -32,7 +32,7 @@ def edit_profile():
         return redirect(url_for('main.home'))
     
     # Get timezone list for template
-    common_timezones = get_common_timezones()
+    common_timezones = get_timezones()
     
     if request.method == 'POST':
         username = request.form.get('username', '').strip().lower()
