@@ -202,6 +202,29 @@ def create_app(config_name=None):
             # Fallback to string representation if formatting fails
             return str(dt) if dt else ""
 
+    @app.template_filter('format_duration')
+    def format_duration_filter(seconds):
+        """Format duration from seconds to HH:MM:SS or MM:SS format with text labels"""
+        if not seconds or seconds <= 0:
+            return "0s"
+        
+        try:
+            # Convert to integer if it's a float
+            total_seconds = int(seconds)
+            
+            hours = total_seconds // 3600
+            minutes = (total_seconds % 3600) // 60
+            seconds = total_seconds % 60
+            
+            if hours > 0:
+                return f"{hours}h {minutes}m {seconds}s"
+            elif minutes > 0:
+                return f"{minutes}m {seconds}s"
+            else:
+                return f"{seconds}s"
+        except (ValueError, TypeError):
+            return "0s"
+
     # Make hCaptcha available in templates
     from app.utils.hcaptcha_utils import hcaptcha, is_hcaptcha_enabled
     app.jinja_env.globals.update(hcaptcha=hcaptcha, hcaptcha_enabled=is_hcaptcha_enabled)
