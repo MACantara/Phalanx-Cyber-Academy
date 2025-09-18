@@ -239,7 +239,7 @@
                             {% endif %}
                             {% if session.time_spent %}
                             <p class="text-xs text-gray-500 dark:text-gray-400">
-                                <i class="bi bi-clock mr-1"></i>{{ (session.time_spent / 60) | round(1) }}m
+                                <i class="bi bi-clock mr-1"></i>{{ session.time_spent | format_duration }}
                             </p>
                             {% endif %}
                         </div>
