@@ -348,6 +348,123 @@ def format_relative_time(dt: datetime) -> str:
         days = seconds // 86400
         return f"{days} day{'s' if days != 1 else ''} {suffix}"
 
+def format_for_user_timezone(dt: datetime, user_timezone: str = 'UTC', format_string: str = '%Y-%m-%d %H:%M:%S') -> str:
+    """
+    Format datetime for display in user's timezone.
+    
+    Args:
+        dt: UTC datetime to format
+        user_timezone: User's timezone string (e.g., 'US/Eastern')
+        format_string: Python datetime format string
+        
+    Returns:
+        str: Formatted datetime string in user's timezone
+    """
+    if dt is None:
+        return ""
+    
+    if dt.tzinfo is None:
+        dt = add_timezone_to_naive(dt)
+    
+    try:
+        # Convert to user's timezone
+        if user_timezone and user_timezone != 'UTC':
+            from zoneinfo import ZoneInfo
+            user_tz = ZoneInfo(user_timezone)
+            local_dt = dt.astimezone(user_tz)
+        else:
+            local_dt = dt.astimezone(UTC)
+        
+        return local_dt.strftime(format_string)
+    except Exception:
+        # Fallback to UTC if timezone conversion fails
+        return dt.astimezone(UTC).strftime(format_string)
+
+def format_for_user_timezone_with_tz(dt: datetime, user_timezone: str = 'UTC') -> str:
+    """
+    Format datetime for display in user's timezone with timezone abbreviation.
+    
+    Args:
+        dt: UTC datetime to format
+        user_timezone: User's timezone string
+        
+    Returns:
+        str: Formatted datetime string with timezone abbreviation
+    """
+    if dt is None:
+        return ""
+    
+    if dt.tzinfo is None:
+        dt = add_timezone_to_naive(dt)
+    
+    try:
+        # Convert to user's timezone
+        if user_timezone and user_timezone != 'UTC':
+            from zoneinfo import ZoneInfo
+            user_tz = ZoneInfo(user_timezone)
+            local_dt = dt.astimezone(user_tz)
+        else:
+            local_dt = dt.astimezone(UTC)
+        
+        # Format with timezone abbreviation
+        return local_dt.strftime('%Y-%m-%d %H:%M:%S %Z')
+    except Exception:
+        # Fallback to UTC if timezone conversion fails
+        return dt.astimezone(UTC).strftime('%Y-%m-%d %H:%M:%S UTC')
+
+def get_common_timezones():
+    """
+    Get a list of common timezones for user selection.
+    
+    Returns:
+        list: List of timezone strings sorted by offset and name
+    """
+    common_zones = [
+        'UTC',
+        'US/Eastern',
+        'US/Central', 
+        'US/Mountain',
+        'US/Pacific',
+        'US/Alaska',
+        'US/Hawaii',
+        'Europe/London',
+        'Europe/Paris',
+        'Europe/Berlin',
+        'Europe/Rome',
+        'Europe/Madrid',
+        'Europe/Amsterdam',
+        'Europe/Stockholm',
+        'Europe/Moscow',
+        'Asia/Tokyo',
+        'Asia/Shanghai',
+        'Asia/Hong_Kong',
+        'Asia/Singapore',
+        'Asia/Seoul',
+        'Asia/Mumbai',
+        'Asia/Dubai',
+        'Australia/Sydney',
+        'Australia/Melbourne',
+        'Australia/Perth',
+        'Canada/Eastern',
+        'Canada/Central',
+        'Canada/Mountain',
+        'Canada/Pacific',
+        'America/New_York',
+        'America/Chicago',
+        'America/Denver',
+        'America/Los_Angeles',
+        'America/Toronto',
+        'America/Vancouver',
+        'America/Mexico_City',
+        'America/Sao_Paulo',
+        'America/Buenos_Aires',
+        'Pacific/Auckland',
+        'Africa/Cairo',
+        'Africa/Johannesburg'
+    ]
+    
+    return sorted(common_zones)
+
 # Legacy compatibility functions for gradual migration
 def utcnow() -> datetime:
     """
