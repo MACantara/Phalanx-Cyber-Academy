@@ -182,8 +182,12 @@ def create_app(config_name=None):
         if not dt:
             return ""
         
-        from app.utils.timezone_utils import format_for_user_timezone
-        return format_for_user_timezone(dt, user_timezone, format_string)
+        try:
+            from app.utils.timezone_utils import format_for_user_timezone
+            return format_for_user_timezone(dt, user_timezone, format_string)
+        except Exception as e:
+            # Fallback to string representation if formatting fails
+            return str(dt) if dt else ""
 
     @app.template_filter('format_user_timezone_with_tz')
     def format_user_timezone_with_tz_filter(dt, user_timezone='UTC'):
@@ -191,8 +195,12 @@ def create_app(config_name=None):
         if not dt:
             return ""
         
-        from app.utils.timezone_utils import format_for_user_timezone_with_tz
-        return format_for_user_timezone_with_tz(dt, user_timezone)
+        try:
+            from app.utils.timezone_utils import format_for_user_timezone_with_tz
+            return format_for_user_timezone_with_tz(dt, user_timezone)
+        except Exception as e:
+            # Fallback to string representation if formatting fails
+            return str(dt) if dt else ""
 
     # Make hCaptcha available in templates
     from app.utils.hcaptcha_utils import hcaptcha, is_hcaptcha_enabled
