@@ -1,13 +1,16 @@
 export class ProgressBar {
-    static create(currentIndex, totalArticles) {
+    static create(currentIndex, totalArticles, classifiedCount = 0) {
+        const progressPercent = totalArticles > 0 ? Math.round((classifiedCount / totalArticles) * 100) : 0;
+        const progressWidth = totalArticles > 0 ? (classifiedCount / totalArticles) * 100 : 0;
+        
         return `
             <div class="bg-white/10 backdrop-blur-sm rounded p-4 border border-white border-opacity-20">
                 <div class="flex justify-between items-center mb-3">
                     <div class="text-emerald-400 text-sm font-semibold tracking-wide">
-                        Training Progress
+                        Classification Progress
                     </div>
                     <span class="text-gray-300 text-xs font-medium bg-gray-800/50 px-2 py-1 rounded ml-2">
-                        Article ${currentIndex + 1} of ${totalArticles}
+                        ${classifiedCount} of ${totalArticles} classified
                     </span>
                 </div>
                 
@@ -19,12 +22,12 @@ export class ProgressBar {
                         rounded-full
                         transition-all duration-300 ease-out
                         shadow-sm
-                    " style="width: ${((currentIndex + 1) / totalArticles) * 100}%"></div>
+                    " style="width: ${progressWidth}%"></div>
                 </div>
                 
                 <!-- Progress Percentage -->
                 <div class="text-gray-400 text-xs text-center mt-2 font-medium">
-                    <span class="text-emerald-300">${Math.round(((currentIndex + 1) / totalArticles) * 100)}%</span>
+                    <span class="text-emerald-300">${progressPercent}%</span>
                     Complete
                 </div>
             </div>
