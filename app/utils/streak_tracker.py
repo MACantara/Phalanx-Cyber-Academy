@@ -35,13 +35,21 @@ class LearningStreakTracker:
             # Add XP history dates
             for entry in xp_history:
                 if entry.created_at:
-                    activity_date = datetime.fromisoformat(entry.created_at.replace('Z', '+00:00')).date()
+                    # created_at is already a datetime object from the model
+                    if isinstance(entry.created_at, str):
+                        activity_date = datetime.fromisoformat(entry.created_at.replace('Z', '+00:00')).date()
+                    else:
+                        activity_date = entry.created_at.date()
                     activity_dates.add(activity_date)
             
             # Add session dates
             for session in sessions:
                 if session.created_at:
-                    activity_date = datetime.fromisoformat(session.created_at.replace('Z', '+00:00')).date()
+                    # created_at is already a datetime object from the model
+                    if isinstance(session.created_at, str):
+                        activity_date = datetime.fromisoformat(session.created_at.replace('Z', '+00:00')).date()
+                    else:
+                        activity_date = session.created_at.date()
                     activity_dates.add(activity_date)
             
             if not activity_dates:
@@ -194,7 +202,7 @@ class LearningStreakTracker:
             
             # Get activity for the past week
             xp_history = XPHistory.get_user_history(user_id, limit=50)
-            level_completions = LevelCompletion.get_user_completions(user_id, limit=50)
+            sessions = Session.get_user_sessions(user_id, limit=50)
             
             # Track daily activity
             daily_activity = {}
@@ -205,27 +213,35 @@ class LearningStreakTracker:
                 daily_activity[date] = {
                     'date': date.isoformat(),
                     'xp_gained': 0,
-                    'levels_completed': 0,
+                    'sessions_completed': 0,
                     'has_activity': False
                 }
             
             # Add XP history
             for entry in xp_history:
                 if entry.created_at:
-                    entry_date = datetime.fromisoformat(entry.created_at.replace('Z', '+00:00')).date()
+                    # created_at is already a datetime object from the model
+                    if isinstance(entry.created_at, str):
+                        entry_date = datetime.fromisoformat(entry.created_at.replace('Z', '+00:00')).date()
+                    else:
+                        entry_date = entry.created_at.date()
                     if start_date <= entry_date <= end_date:
                         if entry_date in daily_activity:
                             daily_activity[entry_date]['xp_gained'] += entry.xp_change
                             daily_activity[entry_date]['has_activity'] = True
             
-            # Add level completions
-            for completion in level_completions:
-                if completion.created_at:
-                    completion_date = datetime.fromisoformat(completion.created_at.replace('Z', '+00:00')).date()
-                    if start_date <= completion_date <= end_date:
-                        if completion_date in daily_activity:
-                            daily_activity[completion_date]['levels_completed'] += 1
-                            daily_activity[completion_date]['has_activity'] = True
+            # Add completed sessions
+            for session in sessions:
+                if session.created_at and session.end_time:  # Only count completed sessions
+                    # created_at is already a datetime object from the model
+                    if isinstance(session.created_at, str):
+                        session_date = datetime.fromisoformat(session.created_at.replace('Z', '+00:00')).date()
+                    else:
+                        session_date = session.created_at.date()
+                    if start_date <= session_date <= end_date:
+                        if session_date in daily_activity:
+                            daily_activity[session_date]['sessions_completed'] += 1
+                            daily_activity[session_date]['has_activity'] = True
             
             # Convert to list and sort by date
             activity_list = list(daily_activity.values())
@@ -233,13 +249,13 @@ class LearningStreakTracker:
             
             # Calculate summary stats
             total_xp = sum(day['xp_gained'] for day in activity_list)
-            total_levels = sum(day['levels_completed'] for day in activity_list)
+            total_sessions = sum(day['sessions_completed'] for day in activity_list)
             active_days = sum(1 for day in activity_list if day['has_activity'])
             
             return {
                 'daily_activity': activity_list,
                 'total_xp_week': total_xp,
-                'total_levels_week': total_levels,
+                'total_sessions_week': total_sessions,
                 'active_days_week': active_days,
                 'consistency_percentage': round((active_days / 7) * 100, 1)
             }
