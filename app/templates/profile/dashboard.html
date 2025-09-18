@@ -210,7 +210,7 @@
                          data-date="{{ session.created_at }}">
                         <div class="flex items-center min-w-0 flex-1">
                             <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center text-white font-bold mr-3 flex-shrink-0">
-                                <span>{{ session.score }}%</span>
+                                <span>{{ session.score if session.score is not none else 0 }}%</span>
                             </div>
                             <div class="min-w-0 flex-1">
                                 <p class="font-semibold text-gray-900 dark:text-white truncate">{{ session.session_name | format_display_name }}</p>
