@@ -17,6 +17,7 @@ class Session:
         self.id = data.get('id')
         self.user_id = data.get('user_id')
         self.session_name = data.get('session_name')
+        self.level_id = data.get('level_id')
         self.score = data.get('score')
         self.start_time = data.get('start_time')
         self.end_time = data.get('end_time')
@@ -47,6 +48,7 @@ class Session:
             'id': self.id,
             'user_id': self.user_id,
             'session_name': self.session_name,
+            'level_id': self.level_id,
             'score': self.score,
             'start_time': self.start_time,
             'end_time': self.end_time,
@@ -71,13 +73,14 @@ class Session:
         return getattr(self, '_xp_calculation', {})
 
     @classmethod
-    def start_session(cls, user_id: int, session_name: str) -> 'Session':
+    def start_session(cls, user_id: int, session_name: str, level_id: int = None) -> 'Session':
         """Start a new learning session"""
         try:
             supabase = get_supabase()
             session_data = {
                 'user_id': user_id,
                 'session_name': session_name,
+                'level_id': level_id,
                 'start_time': utc_now().isoformat(),
                 'created_at': utc_now().isoformat()
             }
@@ -128,6 +131,8 @@ class Session:
                             session_name=session.session_name,
                             score=score,
                             time_spent=updated_session.time_spent,
+                            level_id=session.level_id,
+                            session_id=updated_session.id,
                             reason='session_completion'
                         )
                         # Store XP info for reference
@@ -269,6 +274,7 @@ class Session:
             session_data = {
                 'user_id': self.user_id,
                 'session_name': self.session_name,
+                'level_id': self.level_id,
                 'score': self.score,
                 'start_time': self.start_time.isoformat() if self.start_time else None,
                 'end_time': self.end_time.isoformat() if self.end_time else None
