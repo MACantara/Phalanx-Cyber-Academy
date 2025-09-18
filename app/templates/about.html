@@ -11,7 +11,14 @@
 <section class="py-20 bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 dark:from-blue-950 dark:via-purple-950 dark:to-indigo-950 relative overflow-hidden transition-colors duration-300">
     <div class="absolute inset-0 bg-black/20"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 opacity-0 animate-fade-in-up">About CyberQuest</h1>
+        <!-- CyberQuest Logo -->
+        <div class="mb-8 opacity-0 animate-fade-in-up">
+            <img src="{{ url_for('static', filename='images/logos/Cyberquest_Logo_No_Background.png') }}" 
+                 alt="CyberQuest Logo" 
+                 class="mx-auto h-24 md:h-32 w-auto drop-shadow-2xl">
+        </div>
+        
+        <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 opacity-0 animate-fade-in-up" style="animation-delay: 0.1s;">About CyberQuest</h1>
         <p class="text-xl md:text-2xl text-gray-100 max-w-3xl mx-auto opacity-0 animate-fade-in-up" style="animation-delay: 0.2s;">Empowering digital citizens through gamified cybersecurity education</p>
     </div>
     <div class="absolute top-20 right-20 w-40 h-40 bg-green-400/10 rounded-full animate-bounce cyber-glow" style="animation-duration: 4s;"></div>
