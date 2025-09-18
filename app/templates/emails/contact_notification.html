@@ -1,9 +1,65 @@
+<!DOCTYPE html>
 <html>
-<body>
-    <h3>New Contact Form Submission</h3>
-    <p><strong>From:</strong> {{ contact.name }} &lt;{{ contact.email }}&gt;</p>
-    <p><strong>Subject:</strong> {{ contact.subject }}</p>
-    <p><strong>Message:</strong></p>
-    <p>{{ contact.message.replace('\n', '<br>')|safe }}</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Contact Form Submission - CyberQuest</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; line-height: 1.6; color: #333333; background-color: #f4f4f4;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f4f4f4; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px;">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background-color: #dc2626; padding: 30px 40px; text-align: center; border-radius: 8px 8px 0 0;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">CyberQuest</h1>
+                            <p style="margin: 8px 0 0 0; color: #fecaca; font-size: 16px;">New Contact Form Submission</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px;">
+                            <h2 style="margin: 0 0 30px 0; color: #1f2937; font-size: 24px;">New Contact Submission</h2>
+                            
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px;">
+                                <tr>
+                                    <td style="padding: 15px 0; border-bottom: 1px solid #e5e7eb;">
+                                        <strong style="color: #374151; font-size: 16px;">From:</strong>
+                                        <span style="margin-left: 10px; font-size: 16px;">{{ contact.name }} &lt;{{ contact.email }}&gt;</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px 0; border-bottom: 1px solid #e5e7eb;">
+                                        <strong style="color: #374151; font-size: 16px;">Subject:</strong>
+                                        <span style="margin-left: 10px; font-size: 16px;">{{ contact.subject }}</span>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <div style="background-color: #f8fafc; border-left: 4px solid #dc2626; padding: 20px; margin: 30px 0; border-radius: 4px;">
+                                <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 18px;">Message:</h3>
+                                <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #4b5563; white-space: pre-wrap;">{{ contact.message.replace('\n', '<br>')|safe }}</p>
+                            </div>
+                            
+                            <p style="margin: 30px 0 0 0; font-size: 14px; color: #6b7280;">
+                                This message was submitted through the CyberQuest contact form.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f8fafc; padding: 20px 40px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #e5e7eb;">
+                            <p style="margin: 0; font-size: 14px; color: #6b7280;">
+                                © 2025 CyberQuest. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
