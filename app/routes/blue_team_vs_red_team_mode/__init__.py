@@ -613,7 +613,7 @@ def calculate_final_score(game_state):
     
     # Score calculation: asset integrity (40%) + time bonus (30%) + detection rate (30%)
     score = (asset_integrity * 0.4) + (min(time_remaining / 9, 100) * 0.3) + (detection_rate * 0.3)
-    return round(score, 1)
+    return int(round(score))
 
 def calculate_action_xp(action):
     """Calculate XP reward for a successful defensive action"""
