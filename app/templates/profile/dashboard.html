@@ -210,13 +210,7 @@
                          data-date="{{ session.created_at }}">
                         <div class="flex items-center min-w-0 flex-1">
                             <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center text-white font-bold mr-3 flex-shrink-0">
-                                {% if session.session_name == 'Blue-Team-Vs-Red-Team-Mode' %}
-                                    <i class="bi bi-shield-check text-sm"></i>
-                                {% elif session.level_id %}
-                                    <i class="bi bi-book text-sm"></i>
-                                {% else %}
-                                    <i class="bi bi-gear text-sm"></i>
-                                {% endif %}
+                                <span>{{ session.score }}%</span>
                             </div>
                             <div class="min-w-0 flex-1">
                                 <p class="font-semibold text-gray-900 dark:text-white truncate">{{ session.session_name | format_display_name }}</p>
@@ -228,12 +222,6 @@
                             </div>
                         </div>
                         <div class="text-right flex-shrink-0 ml-4">
-                            {% if session.score %}
-                            <div class="flex items-center text-green-600 dark:text-green-400">
-                                <i class="bi bi-star-fill mr-1"></i>
-                                <span class="font-bold">{{ session.score }}%</span>
-                            </div>
-                            {% endif %}
                             {% if session.time_spent %}
                             <p class="text-xs text-gray-500 dark:text-gray-400">
                                 <i class="bi bi-clock mr-1"></i>{{ session.time_spent | format_duration }}
