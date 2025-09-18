@@ -67,7 +67,9 @@ def verify_email(token):
         flash('Verification token has expired. Please request a new one.', 'error')
         return redirect(url_for('auth.login'))
     
-    if verification.is_verified:
+    # Check if user is already verified
+    user = User.find_by_id(verification.user_id)
+    if user and user.is_verified:
         flash('Email address has already been verified. You can now log in.', 'info')
         return redirect(url_for('auth.login'))
     

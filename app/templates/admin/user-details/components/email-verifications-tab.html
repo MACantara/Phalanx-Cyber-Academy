@@ -7,14 +7,14 @@
         {% for verification in verifications %}
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 rounded-lg bg-gray-50 dark:bg-gray-700 space-y-2 sm:space-y-0">
             <div class="flex items-center min-w-0 flex-1">
-                <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 {{ 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' if verification.is_verified else ('bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' if verification.is_expired() else 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400') }}">
-                    <i class="bi {{ 'bi-check-circle' if verification.is_verified else ('bi-x-circle' if verification.is_expired() else 'bi-clock') }} text-xs sm:text-sm"></i>
+                <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 {{ 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' if verification.get_is_verified() else ('bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' if verification.is_expired() else 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400') }}">
+                    <i class="bi {{ 'bi-check-circle' if verification.get_is_verified() else ('bi-x-circle' if verification.is_expired() else 'bi-clock') }} text-xs sm:text-sm"></i>
                 </div>
                 <div class="ml-3 min-w-0 flex-1">
-                    <p class="font-medium text-gray-900 dark:text-white text-sm sm:text-base truncate">{{ verification.email }}</p>
+                    <p class="font-medium text-gray-900 dark:text-white text-sm sm:text-base truncate">{{ verification.get_email() }}</p>
                     <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                        {% if verification.is_verified %}
-                            Verified on {{ verification.verified_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}
+                        {% if verification.get_is_verified() %}
+                            Verified on {{ verification.verified_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') if verification.verified_at else 'Unknown date' }}
                         {% else %}
                             {% if verification.is_expired() %}
                                 Expired
@@ -27,8 +27,8 @@
             </div>
             <div class="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start sm:text-right ml-9 sm:ml-0 flex-shrink-0">
                 <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Sent: {{ verification.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}</p>
-                <span class="px-2 py-1 text-xs rounded-full {{ 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' if verification.is_verified else ('bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' if verification.is_expired() else 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400') }} sm:mt-1 whitespace-nowrap">
-                    {% if verification.is_verified %}
+                <span class="px-2 py-1 text-xs rounded-full {{ 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' if verification.get_is_verified() else ('bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' if verification.is_expired() else 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400') }} sm:mt-1 whitespace-nowrap">
+                    {% if verification.get_is_verified() %}
                         Verified
                     {% elif verification.is_expired() %}
                         Expired

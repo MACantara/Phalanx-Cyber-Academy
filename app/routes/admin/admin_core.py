@@ -34,7 +34,7 @@ def dashboard():
         failed_login_attempts = LoginAttempt.count_failed_attempts(24)
         
         # Email verification statistics
-        verified_emails = EmailVerification.count_verified_emails()
+        verified_emails = User.count_verified_emails()
         pending_verifications = EmailVerification.count_pending_verifications()
         
         # Contact form submissions (last 30 days)

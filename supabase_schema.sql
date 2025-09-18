@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     last_login TIMESTAMPTZ,
     is_admin BOOLEAN NOT NULL DEFAULT false,
-    timezone VARCHAR(50) NOT NULL DEFAULT 'UTC'
+    timezone VARCHAR(50) NOT NULL DEFAULT 'UTC',
+    is_verified BOOLEAN NOT NULL DEFAULT false
 );
 
 -- Create indexes for users table
@@ -88,12 +89,10 @@ CREATE INDEX IF NOT EXISTS idx_system_test_plans_updated_at ON system_test_plans
 CREATE TABLE IF NOT EXISTS email_verifications (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    email VARCHAR(120) NOT NULL,
     token VARCHAR(100) UNIQUE NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     expires_at TIMESTAMPTZ NOT NULL,
-    verified_at TIMESTAMPTZ,
-    is_verified BOOLEAN NOT NULL DEFAULT false
+    verified_at TIMESTAMPTZ
 );
 
 -- Create indexes for email_verifications table

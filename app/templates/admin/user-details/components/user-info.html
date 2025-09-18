@@ -36,7 +36,7 @@
         <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Verification</label>
             <p class="text-sm">
-                {% if verifications and verifications[0].is_verified %}
+                {% if user.is_email_verified() %}
                     <span class="text-green-600 dark:text-green-400">✓ Verified</span>
                 {% else %}
                     <span class="text-red-600 dark:text-red-400">✗ Not verified</span>

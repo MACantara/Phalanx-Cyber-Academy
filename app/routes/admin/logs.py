@@ -40,9 +40,7 @@ def logs_management():
             logs_list, total_count = User.get_all_users(page, per_page)
             
         elif log_type == 'email_verifications':
-            # For now, return empty list as we don't have get_all method for email verifications
-            logs_list = []
-            total_count = 0
+            logs_list, total_count = EmailVerification.get_all_verifications(page, per_page)
             
         elif log_type == 'contact_submissions':
             logs_list = Contact.get_recent_submissions(per_page * page)
@@ -122,9 +120,28 @@ def export_logs():
                     created_at_formatted
                 ])
         elif log_type == 'email_verifications':
-            writer.writerow(['Email', 'User ID', 'Verified', 'Created At'])
-            # For now, write header only as we don't have get_all method
-            writer.writerow(['No data available', '', '', ''])
+            writer.writerow(['Username', 'Status', 'Created At', 'Expires At', 'Verified At'])
+            logs = EmailVerification.get_recent_verifications(1000)  # Get recent 1000 for export
+            for log in logs:
+                created_at_formatted = format_for_user_timezone(log.created_at, current_user.timezone, '%m/%d/%Y %I:%M:%S %p') if log.created_at else 'Unknown'
+                expires_at_formatted = format_for_user_timezone(log.expires_at, current_user.timezone, '%m/%d/%Y %I:%M:%S %p') if log.expires_at else 'Unknown'
+                verified_at_formatted = format_for_user_timezone(log.verified_at, current_user.timezone, '%m/%d/%Y %I:%M:%S %p') if log.verified_at else 'Not verified'
+                
+                # Determine simplified status
+                if log.get_is_verified():
+                    status = 'Verified'
+                elif log.get_status() == 'Expired':
+                    status = 'Expired'
+                else:
+                    status = 'Pending'
+                
+                writer.writerow([
+                    log.get_username() or 'Unknown',
+                    status,
+                    created_at_formatted,
+                    expires_at_formatted,
+                    verified_at_formatted
+                ])
         elif log_type == 'contact_submissions':
             writer.writerow(['Name', 'Email', 'Subject', 'Message', 'Created At'])
             logs = Contact.get_recent_submissions(1000)  # Get recent 1000 for export
