@@ -376,11 +376,57 @@ class Challenge1PageClass extends BasePage {
             articlesClassified: this.classifiedArticles.size
         });
         
+        // Get session ID from level data
+        const levelData = window.currentSimulation?.level;
+        const sessionId = levelData?.session_id;
+        
+        // Calculate final score
+        const finalScore = Math.round((this.correctClassifications / this.articlesData.length) * 100);
+        
+        // End the session via API if session ID is available
+        if (sessionId) {
+            this.endSession(sessionId, finalScore);
+        } else {
+            console.warn('No session ID found, skipping session end API call');
+        }
+        
         // Navigate back to levels overview in the actual browser (not simulation)
         setTimeout(() => {
             // Exit the simulation and go to actual levels page
             window.location.href = '/levels';
         }, 1000);
+    }
+
+    async endSession(sessionId, score) {
+        try {
+            const response = await fetch('/levels/api/session/end', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    session_id: sessionId,
+                    score: score
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Session ended successfully:', data);
+                
+                // Show toast with XP earned
+                if (window.ToastManager && data.xp_awarded) {
+                    window.ToastManager.showToast(
+                        `Level completed! You earned ${data.xp_awarded} XP!`, 
+                        'success'
+                    );
+                }
+            } else {
+                console.error('Failed to end session:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error ending session:', error);
+        }
     }
 
     toPageObject() {
