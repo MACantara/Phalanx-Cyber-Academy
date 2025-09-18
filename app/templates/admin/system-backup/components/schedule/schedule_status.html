@@ -34,7 +34,7 @@
                     {% if schedule_info.next_scheduled_backup %}
                         <p class="text-blue-800 dark:text-blue-200">
                             <i class="bi bi-calendar-check mr-2"></i>
-                            {{ schedule_info.next_scheduled_backup.strftime('%Y-%m-%d at %H:%M') }}
+                            {{ schedule_info.next_scheduled_backup|format_user_timezone(current_user.timezone, '%Y-%m-%d at %I:%M %p') }}
                         </p>
                     {% else %}
                         <p class="text-blue-800 dark:text-blue-200">

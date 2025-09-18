@@ -64,7 +64,7 @@ def _list_backup_files(supabase: Client):
                 backup_info = {
                     'filename': file_info['name'],
                     'size': file_info.get('metadata', {}).get('size', 0),
-                    'created_at': datetime.fromisoformat(file_info['created_at'].replace('Z', '+00:00')).replace(tzinfo=None) if file_info.get('created_at') else datetime.now(),
+                    'created_at': datetime.fromisoformat(file_info['created_at'].replace('Z', '+00:00')).replace(tzinfo=None) if file_info.get('created_at') else utc_now().replace(tzinfo=None),
                     'size_mb': round(file_info.get('metadata', {}).get('size', 0) / (1024 * 1024), 2),
                     'size_formatted': _format_file_size(file_info.get('metadata', {}).get('size', 0))
                 }
@@ -217,7 +217,7 @@ def create_backup():
         supabase = get_supabase()
         
         # Generate backup filename with timestamp
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        timestamp = utc_now().strftime('%Y%m%d_%H%M%S')
         backup_filename = f'cyberquest_backup_{timestamp}.zip'
         
         # Create backup data
@@ -233,7 +233,7 @@ def create_backup():
             total_records = sum(len(table_data) for table_data in backup_data.values())
             metadata = {
                 'backup_type': 'full',
-                'created_at': datetime.now().isoformat(),
+                'created_at': utc_now().isoformat(),
                 'created_by': current_user.username,
                 'version': '2.0',  # Updated version
                 'tables_included': list(backup_data.keys()),
@@ -249,7 +249,7 @@ def create_backup():
             # Add application info
             app_info = {
                 'app_name': 'CyberQuest',
-                'backup_created_at': datetime.now().isoformat(),
+                'backup_created_at': utc_now().isoformat(),
                 'python_version': '3.12',
                 'database_type': 'Supabase PostgreSQL'
             }

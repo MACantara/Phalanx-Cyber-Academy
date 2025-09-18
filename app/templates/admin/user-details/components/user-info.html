@@ -26,7 +26,7 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Login</label>
             <p class="text-sm text-gray-900 dark:text-white break-words">
                 {% if user.last_login %}
-                    {{ user.last_login.strftime('%B %d, %Y at %I:%M %p') }}
+                    {{ user.last_login|format_user_timezone(current_user.timezone, '%B %d, %Y at %I:%M %p') }}
                 {% else %}
                     Never logged in
                 {% endif %}

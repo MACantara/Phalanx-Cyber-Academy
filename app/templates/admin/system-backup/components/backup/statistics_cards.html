@@ -45,7 +45,7 @@
                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Last Backup</p>
                 <p class="text-sm font-bold text-gray-900 dark:text-white">
                     {% if stats.last_backup %}
-                        {{ stats.last_backup.strftime('%Y-%m-%d %H:%M') }}
+                        {{ stats.last_backup|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M %p') }}
                     {% else %}
                         Never
                     {% endif %}
