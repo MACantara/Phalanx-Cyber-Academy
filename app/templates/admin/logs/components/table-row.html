@@ -65,32 +65,15 @@
         </div>
     </div>
 </td>
-<td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
-    {{ log.get_email() or 'Unknown' }}
-</td>
 <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-    <div class="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1">
-        <!-- User Verification Status -->
-        {% if log.get_is_verified() %}
-        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 whitespace-nowrap">User Verified</span>
-        {% else %}
-        <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 whitespace-nowrap">User Unverified</span>
-        {% endif %}
-        
-        <!-- Token Status -->
-        {% if log.get_status() == 'Verified' %}
-        <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 whitespace-nowrap">Token Used</span>
-        {% elif log.get_status() == 'Expired' %}
-        <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 whitespace-nowrap">Token Expired</span>
-        {% else %}
-        <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 whitespace-nowrap">Token Pending</span>
-        {% endif %}
-    </div>
-</td>
-<td class="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-400 hidden lg:table-cell">
-    <div class="font-mono text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
-        {{ log.token[:16] }}...
-    </div>
+    <!-- User Verification Status -->
+    {% if log.get_is_verified() %}
+    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 whitespace-nowrap">Verified</span>
+    {% elif log.get_status() == 'Expired' %}
+    <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 whitespace-nowrap">Expired</span>
+    {% else %}
+    <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 whitespace-nowrap">Pending</span>
+    {% endif %}
 </td>
 <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
     <div class="hidden sm:block">{{ log.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M:%S %p') }}</div>
@@ -100,7 +83,7 @@
     <div class="hidden sm:block">{{ log.expires_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M:%S %p') }}</div>
     <div class="sm:hidden">{{ log.expires_at|format_user_timezone(current_user.timezone, '%m/%d %I:%M %p') }}</div>
 </td>
-<td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden xl:table-cell">
+<td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden lg:table-cell">
     {% if log.verified_at %}
     <div class="hidden sm:block">{{ log.verified_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M:%S %p') }}</div>
     <div class="sm:hidden">{{ log.verified_at|format_user_timezone(current_user.timezone, '%m/%d %I:%M %p') }}</div>

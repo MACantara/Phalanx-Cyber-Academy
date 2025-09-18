@@ -120,22 +120,27 @@ def export_logs():
                     created_at_formatted
                 ])
         elif log_type == 'email_verifications':
-            writer.writerow(['Username', 'Email', 'User Verified', 'Token', 'Created At', 'Expires At', 'Verified At', 'Token Status'])
+            writer.writerow(['Username', 'Status', 'Created At', 'Expires At', 'Verified At'])
             logs = EmailVerification.get_recent_verifications(1000)  # Get recent 1000 for export
             for log in logs:
                 created_at_formatted = format_for_user_timezone(log.created_at, current_user.timezone, '%m/%d/%Y %I:%M:%S %p') if log.created_at else 'Unknown'
                 expires_at_formatted = format_for_user_timezone(log.expires_at, current_user.timezone, '%m/%d/%Y %I:%M:%S %p') if log.expires_at else 'Unknown'
                 verified_at_formatted = format_for_user_timezone(log.verified_at, current_user.timezone, '%m/%d/%Y %I:%M:%S %p') if log.verified_at else 'Not verified'
                 
+                # Determine simplified status
+                if log.get_is_verified():
+                    status = 'Verified'
+                elif log.get_status() == 'Expired':
+                    status = 'Expired'
+                else:
+                    status = 'Pending'
+                
                 writer.writerow([
                     log.get_username() or 'Unknown',
-                    log.get_email() or 'Unknown',
-                    'Yes' if log.get_is_verified() else 'No',
-                    log.token[:16] + '...',  # Show partial token for security
+                    status,
                     created_at_formatted,
                     expires_at_formatted,
-                    verified_at_formatted,
-                    log.get_status()
+                    verified_at_formatted
                 ])
         elif log_type == 'contact_submissions':
             writer.writerow(['Name', 'Email', 'Subject', 'Message', 'Created At'])
