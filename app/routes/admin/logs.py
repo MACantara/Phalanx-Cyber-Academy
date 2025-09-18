@@ -120,7 +120,7 @@ def export_logs():
                     created_at_formatted
                 ])
         elif log_type == 'email_verifications':
-            writer.writerow(['Email', 'User ID', 'Token', 'Created At', 'Expires At', 'Verified At', 'Status'])
+            writer.writerow(['Username', 'Email', 'User Verified', 'Token', 'Created At', 'Expires At', 'Verified At', 'Token Status'])
             logs = EmailVerification.get_recent_verifications(1000)  # Get recent 1000 for export
             for log in logs:
                 created_at_formatted = format_for_user_timezone(log.created_at, current_user.timezone, '%m/%d/%Y %I:%M:%S %p') if log.created_at else 'Unknown'
@@ -128,8 +128,9 @@ def export_logs():
                 verified_at_formatted = format_for_user_timezone(log.verified_at, current_user.timezone, '%m/%d/%Y %I:%M:%S %p') if log.verified_at else 'Not verified'
                 
                 writer.writerow([
-                    log.email,
-                    log.user_id,
+                    log.get_username() or 'Unknown',
+                    log.get_email() or 'Unknown',
+                    'Yes' if log.get_is_verified() else 'No',
                     log.token[:16] + '...',  # Show partial token for security
                     created_at_formatted,
                     expires_at_formatted,
