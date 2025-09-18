@@ -10,13 +10,15 @@ CREATE TABLE IF NOT EXISTS users (
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     last_login TIMESTAMPTZ,
-    is_admin BOOLEAN NOT NULL DEFAULT false
+    is_admin BOOLEAN NOT NULL DEFAULT false,
+    timezone VARCHAR(50) NOT NULL DEFAULT 'UTC'
 );
 
 -- Create indexes for users table
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at);
+CREATE INDEX IF NOT EXISTS idx_users_timezone ON users(timezone);
 
 -- Create contact_submissions table
 CREATE TABLE IF NOT EXISTS contact_submissions (
