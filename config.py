@@ -86,6 +86,23 @@ class Config:
         'ADMIN_PANEL': True,  # Enable/disable admin panel
     }
     
+    # Timezone Configuration
+    DEFAULT_TIMEZONE = 'UTC'  # Default timezone for the application
+    USER_TIMEZONE_ENABLED = True  # Allow users to set their own timezone
+    AVAILABLE_TIMEZONES = [
+        'UTC',
+        'US/Eastern',
+        'US/Central', 
+        'US/Mountain',
+        'US/Pacific',
+        'Europe/London',
+        'Europe/Paris',
+        'Europe/Berlin',
+        'Asia/Tokyo',
+        'Asia/Shanghai',
+        'Australia/Sydney'
+    ]
+    
     # hCaptcha Configuration
     HCAPTCHA_ENABLED = True  # Master switch for hCaptcha
     HCAPTCHA_SITE_KEY = os.environ.get('HCAPTCHA_SITE_KEY', '')
