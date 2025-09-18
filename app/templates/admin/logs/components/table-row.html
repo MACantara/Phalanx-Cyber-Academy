@@ -50,33 +50,63 @@
     <div class="sm:hidden">{{ log.created_at|format_user_timezone(current_user.timezone, '%m/%d %I:%M %p') }}</div>
 </td>
 {% elif log_type == 'email_verifications' %}
-<td class="px-3 sm:px-6 py-4 text-sm text-gray-900 dark:text-white">
-    <div class="min-w-0">
-        <div class="font-medium truncate">{{ log.email }}</div>
-        <div class="text-xs text-gray-500 dark:text-gray-400 sm:hidden">
-            {% if log.user %}{{ log.user.username }}{% else %}Unknown{% endif %}
+<td class="px-3 sm:px-6 py-4">
+    <div class="flex items-center min-w-0">
+        <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r from-indigo-500 to-blue-600 flex items-center justify-center text-white font-bold text-xs sm:text-sm flex-shrink-0">
+            {% if log.get_username() %}
+                {{ log.get_username()[0].upper() }}
+            {% else %}
+                U
+            {% endif %}
+        </div>
+        <div class="ml-2 sm:ml-3 min-w-0">
+            <div class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ log.get_username() or 'Unknown' }}</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ log.get_email() or 'Unknown' }}</div>
         </div>
     </div>
 </td>
 <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
-    {% if log.user %}
-    {{ log.user.username }}
-    {% else %}
-    Unknown
-    {% endif %}
+    {{ log.get_email() or 'Unknown' }}
 </td>
 <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-    {% if log.is_verified %}
-    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">Verified</span>
-    {% elif log.is_expired() %}
-    <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">Expired</span>
-    {% else %}
-    <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">Pending</span>
-    {% endif %}
+    <div class="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1">
+        <!-- User Verification Status -->
+        {% if log.get_is_verified() %}
+        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 whitespace-nowrap">User Verified</span>
+        {% else %}
+        <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 whitespace-nowrap">User Unverified</span>
+        {% endif %}
+        
+        <!-- Token Status -->
+        {% if log.get_status() == 'Verified' %}
+        <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 whitespace-nowrap">Token Used</span>
+        {% elif log.get_status() == 'Expired' %}
+        <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 whitespace-nowrap">Token Expired</span>
+        {% else %}
+        <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 whitespace-nowrap">Token Pending</span>
+        {% endif %}
+    </div>
+</td>
+<td class="px-3 sm:px-6 py-4 text-sm text-gray-500 dark:text-gray-400 hidden lg:table-cell">
+    <div class="font-mono text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+        {{ log.token[:16] }}...
+    </div>
 </td>
 <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
     <div class="hidden sm:block">{{ log.created_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M:%S %p') }}</div>
     <div class="sm:hidden">{{ log.created_at|format_user_timezone(current_user.timezone, '%m/%d %I:%M %p') }}</div>
+</td>
+<td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden md:table-cell">
+    <div class="hidden sm:block">{{ log.expires_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M:%S %p') }}</div>
+    <div class="sm:hidden">{{ log.expires_at|format_user_timezone(current_user.timezone, '%m/%d %I:%M %p') }}</div>
+</td>
+<td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden xl:table-cell">
+    {% if log.verified_at %}
+    <div class="hidden sm:block">{{ log.verified_at|format_user_timezone(current_user.timezone, '%m/%d/%Y %I:%M:%S %p') }}</div>
+    <div class="sm:hidden">{{ log.verified_at|format_user_timezone(current_user.timezone, '%m/%d %I:%M %p') }}</div>
+    {% else %}
+    <span class="text-gray-400 dark:text-gray-500">Not verified</span>
+    {% endif %}
 </td>
 {% elif log_type == 'contact_submissions' %}
 <td class="px-3 sm:px-6 py-4 text-sm text-gray-900 dark:text-white">
