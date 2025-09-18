@@ -103,10 +103,23 @@ class Challenge1PageClass extends BasePage {
                         ${ArticleFormatter.toTitleCase(currentArticle.title)}
                     </h2>
                     
-                    <div style="color: #6b7280; margin-bottom: 20px; font-size: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
-                        <span data-element-type="date" data-element-id="date_analysis" style="padding: 2px 4px; border-radius: 3px;">Published: ${formattedDate}</span>
-                        <span style="color: #d1d5db;">|</span>
-                        <span data-element-type="author" data-element-id="author_analysis" style="padding: 2px 4px; border-radius: 3px;">By: ${currentArticle.author || 'Staff Reporter'}</span>
+                    <!-- Article Metadata -->
+                    <div style="color: #6b7280; margin-bottom: 20px; font-size: 14px; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                        <span data-element-type="date" data-element-id="date_analysis" style="padding: 4px 8px; background: #f3f4f6; border-radius: 4px; display: flex; align-items: center; gap: 5px;">
+                            <span style="font-size: 12px;">📅</span>
+                            Published: ${formattedDate}
+                        </span>
+                        <span style="color: #d1d5db;">•</span>
+                        <span data-element-type="author" data-element-id="author_analysis" style="padding: 4px 8px; background: #f3f4f6; border-radius: 4px; display: flex; align-items: center; gap: 5px;">
+                            <span style="font-size: 12px;">✍️</span>
+                            By: ${currentArticle.author || 'Staff Reporter'}
+                        </span>
+                        <span style="color: #d1d5db;">•</span>
+                        <span data-element-type="source" data-element-id="source_analysis" style="padding: 4px 8px; background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 4px; display: flex; align-items: center; gap: 5px;">
+                            <span style="font-size: 12px;">🌐</span>
+                            <strong style="color: #0369a1;">Source:</strong>
+                            <span style="color: #0284c7; font-family: monospace; font-size: 13px;">${currentArticle.source || 'Unknown'}</span>
+                        </span>
                     </div>
                     
                     <!-- Article Text -->
@@ -147,11 +160,22 @@ class Challenge1PageClass extends BasePage {
                 </main>
                 
                 <!-- Footer -->
-                <footer style="background: #f3f4f6; padding: 20px; text-align: center; color: #6b7280;">
-                    <p>© 2025 Daily Politico News</p>
-                    <p style="font-size: 12px;">
-                        This website is for CyberQuest training purposes. Article source: ${currentArticle.source}
-                    </p>
+                <footer style="background: #f3f4f6; padding: 20px; text-align: center; color: #6b7280; border-top: 1px solid #e5e7eb;">
+                    <div style="max-width: 800px; margin: 0 auto;">
+                        <p style="margin-bottom: 10px; font-weight: 500;">© 2025 Daily Politico News - CyberQuest Training Environment</p>
+                        <div style="font-size: 12px; line-height: 1.4; color: #9ca3af;">
+                            <p style="margin: 5px 0;">
+                                <span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 3px; font-weight: 500;">⚠️ Training Purpose Only</span>
+                            </p>
+                            <p style="margin: 5px 0;">
+                                This is a simulated news website for cybersecurity education. 
+                                Articles are sourced from various datasets for educational analysis of misinformation patterns.
+                            </p>
+                            <p style="margin: 5px 0; font-style: italic;">
+                                Current article sourced from: <span style="font-family: monospace; background: #f1f5f9; padding: 1px 4px; border-radius: 2px;">${currentArticle.source || 'Training Dataset'}</span>
+                            </p>
+                        </div>
+                    </div>
                 </footer>
             </div>
         `;
