@@ -137,10 +137,9 @@ export class EmailCompletionTracker {
         // Show the comprehensive session summary
         this.sessionSummary.showSessionSummary(sessionStats, feedbackHistory);
         
-        // Mark Level 2 as completed if criteria are met
-        if (sessionStats.accuracy >= 70) {
-            this.markLevel2Complete(sessionStats);
-        }
+        // Mark Level 2 as completed regardless of score (for analytics)
+        // XP will still only be awarded for passing scores on the server side
+        this.markLevel2Complete(sessionStats);
     }
 
     /**
