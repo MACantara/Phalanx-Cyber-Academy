@@ -376,23 +376,11 @@ class Challenge1PageClass extends BasePage {
             articlesClassified: this.classifiedArticles.size
         });
         
-        // Navigate back to levels overview
-        if (window.desktop?.windowManager) {
-            try {
-                const browserApp = window.desktop.windowManager.applications.get('browser');
-                if (browserApp) {
-                    // Navigate to levels overview to see Level 2 unlocked
-                    browserApp.navigation.navigateToUrl('/levels');
-                }
-            } catch (error) {
-                console.error('Failed to navigate to levels:', error);
-                // Fallback navigation
-                window.location.href = '/levels';
-            }
-        } else {
-            // Direct navigation fallback
+        // Navigate back to levels overview in the actual browser (not simulation)
+        setTimeout(() => {
+            // Exit the simulation and go to actual levels page
             window.location.href = '/levels';
-        }
+        }, 1000);
     }
 
     toPageObject() {
