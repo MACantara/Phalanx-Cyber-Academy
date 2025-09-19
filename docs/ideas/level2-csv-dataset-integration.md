@@ -167,7 +167,7 @@ No new environment variables required - uses existing Flask configuration.
 ## 📋 Future Enhancements
 
 ### Immediate Tasks:
-- [ ] **Update email display format** - Enhance the visual presentation and layout of emails in the email client interface
+- [x] **Update email display format** - Enhance the visual presentation and layout of emails in the email client interface
 - [ ] **Fix issue of missing email details displayed** - Resolve any gaps in email header information or content rendering
 - [ ] **Streamline the classifying of phishing and legit emails** - Improve the classification logic and user feedback for email security assessment
 

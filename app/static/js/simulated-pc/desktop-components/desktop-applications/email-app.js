@@ -308,8 +308,10 @@ export class EmailApp extends WindowBase {
                     ${statusBadge ? `<div class="mt-2">${statusBadge}</div>` : ''}
                 </div>
                 
-                <div class="bg-gray-800 text-white text-sm">
-                    ${email.body}
+                <div class="bg-gray-800 text-white text-sm p-4 rounded-lg border border-gray-600">
+                    <div class="whitespace-pre-wrap break-words">
+${this.formatEmailBody(email.body)}
+                    </div>
                 </div>
             </div>
         `;
@@ -360,6 +362,43 @@ export class EmailApp extends WindowBase {
         
         // If it's already a display name without email, return as-is
         return sender;
+    }
+
+    // Format email body to preserve CSV formatting and handle special characters
+    formatEmailBody(body) {
+        if (!body) return '<em class="text-gray-400">No content available</em>';
+        
+        // Convert to string and handle potential undefined/null values
+        const bodyText = String(body).trim();
+        
+        if (!bodyText) return '<em class="text-gray-400">Empty message</em>';
+        
+        // Escape HTML characters to prevent XSS while preserving content
+        const escapeHtml = (text) => {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        };
+        
+        // Escape the body content first
+        let formattedBody = escapeHtml(bodyText);
+        
+        // Convert newlines to HTML line breaks for proper display
+        formattedBody = formattedBody.replace(/\n/g, '<br>');
+        
+        // Handle multiple consecutive line breaks (preserve spacing but limit excessive spacing)
+        formattedBody = formattedBody.replace(/(<br>\s*){4,}/g, '<br><br><br>');
+        
+        // Handle URLs that might be present in the email body
+        // This will make URLs clickable but still safe (they're already escaped)
+        const urlRegex = /(https?:\/\/[^\s<>]+)/gi;
+        formattedBody = formattedBody.replace(urlRegex, (url) => {
+            // Re-escape any HTML entities that might have been in the URL
+            const safeUrl = url.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+            return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline">${url}</a>`;
+        });
+        
+        return formattedBody;
     }
 
     initialize() {
