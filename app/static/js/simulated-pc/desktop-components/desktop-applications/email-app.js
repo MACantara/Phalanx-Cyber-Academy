@@ -335,7 +335,7 @@ ${this.formatEmailBody(email.body)}
         return email.time;
     }
 
-    // Format sender details to show display name and email address
+    // Format sender details to show full email address
     formatSenderDetails(sender) {
         if (!sender) return 'Unknown Sender';
         
@@ -344,20 +344,9 @@ ${this.formatEmailBody(email.body)}
             return sender;
         }
         
-        // If it's just an email address, format it nicely
+        // If it's just an email address, return the full email address
         if (sender.includes('@')) {
-            // Extract username part before @ and create a display name
-            const emailParts = sender.split('@');
-            const username = emailParts[0];
-            
-            // Create a readable display name from username
-            const displayName = username
-                .replace(/[._-]/g, ' ')
-                .split(' ')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                .join(' ');
-            
-            return `${displayName} <${sender}>`;
+            return sender;
         }
         
         // If it's already a display name without email, return as-is
