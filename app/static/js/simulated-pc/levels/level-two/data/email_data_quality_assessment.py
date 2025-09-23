@@ -1066,7 +1066,206 @@ class EmailDataQualityAssessment:
         
         print(f"📄 Detailed report saved to: {output_file}")
     
-    def run_assessment(self, chunk_size=10000, max_chunks=0, nrows=None):
+    def clean_dataset(self, output_file='CEAS_08_cleaned.csv', strict_mode=True):
+        """
+        Clean the dataset by removing rows with quality issues.
+        
+        Args:
+            output_file (str): Path to save the cleaned dataset
+            strict_mode (bool): If True, applies stricter cleaning criteria
+        
+        Returns:
+            dict: Cleaning statistics
+        """
+        print("🧹 DATASET CLEANING OPERATION")
+        print("="*60)
+        
+        if self.df is None:
+            print("Loading dataset for cleaning...")
+            self._load_data()
+        
+        original_count = len(self.df)
+        print(f"Original dataset size: {original_count:,} rows")
+        
+        # Create a copy for cleaning
+        cleaned_df = self.df.copy()
+        
+        # Track removal reasons
+        removal_stats = {
+            'original_count': original_count,
+            'missing_critical_fields': 0,
+            'non_english_subject': 0,
+            'non_english_body': 0,
+            'invalid_email_format': 0,
+            'empty_subject': 0,
+            'empty_body': 0,
+            'invalid_label': 0,
+            'too_short_content': 0,
+            'duplicate_rows': 0,
+            'final_count': 0,
+            'total_removed': 0,
+            'removal_percentage': 0
+        }
+        
+        print("\n🔍 Applying cleaning filters...")
+        
+        # 1. Remove rows with missing critical fields
+        print("  1. Removing rows with missing critical fields...")
+        critical_fields = ['sender', 'subject', 'body', 'label']
+        before_count = len(cleaned_df)
+        
+        for field in critical_fields:
+            if field in cleaned_df.columns:
+                cleaned_df = cleaned_df.dropna(subset=[field])
+                cleaned_df = cleaned_df[cleaned_df[field].astype(str).str.strip() != '']
+        
+        removal_stats['missing_critical_fields'] = before_count - len(cleaned_df)
+        print(f"     Removed {removal_stats['missing_critical_fields']:,} rows with missing critical fields")
+        
+        # 2. Remove rows with invalid labels
+        print("  2. Removing rows with invalid labels...")
+        before_count = len(cleaned_df)
+        if 'label' in cleaned_df.columns:
+            # Convert to numeric and keep only 0 and 1
+            cleaned_df['label'] = pd.to_numeric(cleaned_df['label'], errors='coerce')
+            cleaned_df = cleaned_df[cleaned_df['label'].isin([0, 1])]
+        
+        removal_stats['invalid_label'] = before_count - len(cleaned_df)
+        print(f"     Removed {removal_stats['invalid_label']:,} rows with invalid labels")
+        
+        # 3. Remove rows with empty or very short content
+        print("  3. Removing rows with empty or very short content...")
+        before_count = len(cleaned_df)
+        
+        # Remove empty subjects
+        if 'subject' in cleaned_df.columns:
+            non_empty_subject = cleaned_df['subject'].astype(str).str.strip().str.len() > 0
+            empty_subject_count = (~non_empty_subject).sum()
+            cleaned_df = cleaned_df[non_empty_subject]
+            removal_stats['empty_subject'] = empty_subject_count
+        
+        # Remove empty bodies
+        if 'body' in cleaned_df.columns:
+            non_empty_body = cleaned_df['body'].astype(str).str.strip().str.len() > 0
+            empty_body_count = (~non_empty_body).sum()
+            cleaned_df = cleaned_df[non_empty_body]
+            removal_stats['empty_body'] = empty_body_count
+        
+        # Remove very short content (less than 10 characters for subject, 20 for body)
+        min_subject_length = 5 if strict_mode else 3
+        min_body_length = 20 if strict_mode else 10
+        
+        if 'subject' in cleaned_df.columns:
+            long_enough_subject = cleaned_df['subject'].astype(str).str.len() >= min_subject_length
+            cleaned_df = cleaned_df[long_enough_subject]
+        
+        if 'body' in cleaned_df.columns:
+            long_enough_body = cleaned_df['body'].astype(str).str.len() >= min_body_length
+            cleaned_df = cleaned_df[long_enough_body]
+        
+        removal_stats['too_short_content'] = before_count - len(cleaned_df)
+        print(f"     Removed {removal_stats['too_short_content']:,} rows with too short content")
+        
+        # 5. Remove non-English content
+        print("  5. Removing rows with non-English content...")
+        before_count = len(cleaned_df)
+        
+        # Check subject language
+        if 'subject' in cleaned_df.columns:
+            print("     Analyzing subject language...")
+            english_subject_mask = cleaned_df['subject'].astype(str).apply(
+                lambda x: self.language_detector.is_likely_english(x)
+            )
+            non_english_subject_count = (~english_subject_mask).sum()
+            cleaned_df = cleaned_df[english_subject_mask]
+            removal_stats['non_english_subject'] = non_english_subject_count
+            print(f"     Removed {non_english_subject_count:,} rows with non-English subjects")
+        
+        # Check body language
+        if 'body' in cleaned_df.columns:
+            print("     Analyzing body language...")
+            english_body_mask = cleaned_df['body'].astype(str).apply(
+                lambda x: self.language_detector.is_likely_english(x)
+            )
+            non_english_body_count = (~english_body_mask).sum()
+            cleaned_df = cleaned_df[english_body_mask]
+            removal_stats['non_english_body'] = non_english_body_count
+            print(f"     Removed {non_english_body_count:,} rows with non-English bodies")
+        
+        # 6. Remove duplicate rows
+        print("  6. Removing duplicate rows...")
+        before_count = len(cleaned_df)
+        
+        # Remove complete duplicates
+        cleaned_df = cleaned_df.drop_duplicates()
+        
+        # Remove duplicates based on sender + subject + body if available
+        if all(col in cleaned_df.columns for col in ['sender', 'subject', 'body']):
+            cleaned_df = cleaned_df.drop_duplicates(subset=['sender', 'subject', 'body'], keep='first')
+        
+        removal_stats['duplicate_rows'] = before_count - len(cleaned_df)
+        print(f"     Removed {removal_stats['duplicate_rows']:,} duplicate rows")
+        
+        # Final statistics
+        removal_stats['final_count'] = len(cleaned_df)
+        removal_stats['total_removed'] = original_count - removal_stats['final_count']
+        removal_stats['removal_percentage'] = (removal_stats['total_removed'] / original_count) * 100
+        
+        print(f"\n📊 CLEANING SUMMARY:")
+        print(f"Original rows:          {removal_stats['original_count']:,}")
+        print(f"Cleaned rows:           {removal_stats['final_count']:,}")
+        print(f"Total removed:          {removal_stats['total_removed']:,} ({removal_stats['removal_percentage']:.1f}%)")
+        
+        print(f"\n📋 REMOVAL BREAKDOWN:")
+        print(f"Missing critical fields: {removal_stats['missing_critical_fields']:,}")
+        print(f"Invalid labels:          {removal_stats['invalid_label']:,}")
+        print(f"Empty/short content:     {removal_stats['too_short_content']:,}")
+        print(f"Non-English subjects:    {removal_stats['non_english_subject']:,}")
+        print(f"Non-English bodies:      {removal_stats['non_english_body']:,}")
+        print(f"Duplicate rows:          {removal_stats['duplicate_rows']:,}")
+        
+        # Analyze cleaned dataset
+        if len(cleaned_df) > 0:
+            print(f"\n🎯 CLEANED DATASET ANALYSIS:")
+            
+            # Label distribution
+            if 'label' in cleaned_df.columns:
+                label_dist = cleaned_df['label'].value_counts().sort_index()
+                print(f"Label distribution:")
+                for label, count in label_dist.items():
+                    pct = (count / len(cleaned_df)) * 100
+                    label_type = "Legitimate" if label == 0 else "Phishing"
+                    print(f"  {label} ({label_type}): {count:,} ({pct:.1f}%)")
+            
+            # Content length statistics
+            if 'subject' in cleaned_df.columns:
+                avg_subject_len = cleaned_df['subject'].astype(str).str.len().mean()
+                print(f"Average subject length: {avg_subject_len:.1f} characters")
+            
+            if 'body' in cleaned_df.columns:
+                avg_body_len = cleaned_df['body'].astype(str).str.len().mean()
+                print(f"Average body length: {avg_body_len:.1f} characters")
+            
+            # Save cleaned dataset
+            try:
+                cleaned_df.to_csv(output_file, index=False, encoding='utf-8')
+                print(f"\n✅ Cleaned dataset saved to: {output_file}")
+                print(f"📏 File size reduction: {((original_count - len(cleaned_df)) / original_count) * 100:.1f}%")
+                
+                # Verify the saved file
+                verification_df = pd.read_csv(output_file, nrows=5)
+                print(f"📋 Verification: Successfully saved {len(cleaned_df):,} rows to {output_file}")
+                print(f"📋 Columns in cleaned file: {list(verification_df.columns)}")
+                
+            except Exception as e:
+                print(f"❌ Error saving cleaned dataset: {str(e)}")
+                
+        else:
+            print(f"\n⚠️  WARNING: No rows remain after cleaning! Consider using less strict criteria.")
+        
+        return removal_stats
+
+    def run_assessment(self, chunk_size=10000, max_chunks=0, nrows=None, clean_data=False, output_cleaned_file='CEAS_08_cleaned.csv'):
         """
         Run the appropriate assessment method based on file size.
         
@@ -1074,6 +1273,8 @@ class EmailDataQualityAssessment:
             chunk_size (int): Size of chunks for chunked processing
             max_chunks (int): Maximum chunks to process (0 = all)
             nrows (int): Number of rows to load for comprehensive analysis
+            clean_data (bool): Whether to clean the data after assessment
+            output_cleaned_file (str): Output file for cleaned data
         """
         print(f"🔍 EMAIL DATASET QUALITY ASSESSMENT")
         print(f"📁 File: {self.csv_file_path}")
@@ -1081,8 +1282,9 @@ class EmailDataQualityAssessment:
         print("="*60)
         
         try:
-            if self.use_chunked_processing:
+            if self.use_chunked_processing and not clean_data:
                 print("🚀 Using chunked processing for large file...")
+                print("⚠️  Note: Data cleaning requires loading full dataset into memory")
                 self.chunked_quality_assessment(chunk_size, max_chunks)
             else:
                 print("🔬 Using comprehensive analysis for manageable file size...")
@@ -1094,6 +1296,17 @@ class EmailDataQualityAssessment:
             # Save report
             self.save_report_to_file()
             
+            # Clean data if requested
+            if clean_data:
+                print("\n" + "="*80)
+                cleaning_stats = self.clean_dataset(output_cleaned_file)
+                
+                # Add cleaning stats to quality report
+                self.quality_report['data_cleaning'] = cleaning_stats
+                
+                print(f"\n🎉 Assessment and cleaning completed!")
+                return self.quality_report, cleaning_stats
+            
             return self.quality_report
             
         except Exception as e:
@@ -1102,16 +1315,18 @@ class EmailDataQualityAssessment:
 
 def main():
     """Main function to run the unified data quality assessment."""
-    csv_file_path = "app\static\js\simulated-pc\levels\level-two\data\CEAS_08.csv"
+    csv_file_path = "CEAS_08.csv"
     
     # Create assessment instance
     assessment = EmailDataQualityAssessment(csv_file_path)
     
-    # Run assessment - automatically chooses method based on file size
+    # Run assessment with data cleaning enabled
     assessment.run_assessment(
         chunk_size=10000,    # Size of chunks for large files
         max_chunks=0,        # 0 = process all chunks, set to 10 for quick preview
-        nrows=None           # None = load all data for small files, set to 50000 for sample
+        nrows=None,          # None = load all data for small files, set to 50000 for sample
+        clean_data=True,     # Enable data cleaning
+        output_cleaned_file='CEAS_08_cleaned.csv'  # Output file for cleaned data
     )
 
 if __name__ == "__main__":
