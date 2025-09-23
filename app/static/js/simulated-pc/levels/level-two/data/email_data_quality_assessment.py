@@ -1102,7 +1102,7 @@ class EmailDataQualityAssessment:
 
 def main():
     """Main function to run the unified data quality assessment."""
-    csv_file_path = "CEAS_08.csv"
+    csv_file_path = "app\static\js\simulated-pc\levels\level-two\data\CEAS_08.csv"
     
     # Create assessment instance
     assessment = EmailDataQualityAssessment(csv_file_path)
