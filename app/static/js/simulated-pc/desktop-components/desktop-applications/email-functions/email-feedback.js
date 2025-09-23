@@ -507,7 +507,7 @@ export class EmailFeedback {
         ];
         
         modal.innerHTML = `
-            <div class="bg-gray-800 rounded-xl border border-gray-600 shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden">
+            <div class="bg-gray-800 rounded border border-gray-600 shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden">
                 <!-- Header -->
                 <div class="bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-red-600 to-pink-600'} px-6 py-4">
                     <div class="flex items-center justify-between">
