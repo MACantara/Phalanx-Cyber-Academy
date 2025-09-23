@@ -14,17 +14,19 @@ export class EmailFeedback {
 
     /**
      * Evaluate player action and provide feedback
-     * @param {Object} email - Email object with suspicious property
+     * @param {Object} email - Email object with suspicious property or is_phishing property
      * @param {string} action - Player action: 'report', 'trust', 'delete', 'ignore'
      * @param {string} reasoning - Optional reasoning for the action
      */
     async evaluateAction(email, action, reasoning = '') {
         const isCorrectAction = this.isActionCorrect(email, action);
+        const isSuspicious = email.suspicious || email.is_phishing === 1;
+        
         const feedbackData = {
             emailId: email.id,
             emailSubject: email.subject,
             emailSender: email.sender,
-            isSuspicious: email.suspicious,
+            isSuspicious: isSuspicious,
             playerAction: action,
             isCorrect: isCorrectAction,
             reasoning: reasoning,
@@ -45,7 +47,10 @@ export class EmailFeedback {
      * @returns {boolean} True if action is correct
      */
     isActionCorrect(email, action) {
-        if (email.suspicious) {
+        // Check both suspicious property and is_phishing property for compatibility
+        const isSuspicious = email.suspicious || email.is_phishing === 1;
+        
+        if (isSuspicious) {
             // For suspicious emails, correct actions are: report, delete
             return ['report', 'delete'].includes(action);
         } else {
@@ -55,8 +60,8 @@ export class EmailFeedback {
     }
 
     /**
-     * Generate detailed feedback based on email and action
-     * @param {Object} email - Email object
+     * Generate detailed feedback based on email and action using AI analysis
+     * @param {Object} email - Email object with ai_analysis property
      * @param {string} action - Player action
      * @param {boolean} isCorrect - Whether action was correct
      * @returns {Object} Feedback object with details
@@ -68,10 +73,15 @@ export class EmailFeedback {
             message: '',
             redFlags: [],
             goodSigns: [],
-            tips: []
+            tips: [],
+            aiAnalysis: email.ai_analysis || null
         };
 
-        if (email.suspicious) {
+        // Use AI analysis data if available, otherwise fall back to basic detection
+        const aiAnalysis = email.ai_analysis;
+        const isSuspicious = email.suspicious || email.is_phishing === 1;
+
+        if (isSuspicious) {
             // Suspicious email feedback
             if (isCorrect) {
                 feedback.title = '✅ Excellent Security Awareness!';
@@ -81,14 +91,27 @@ export class EmailFeedback {
                 feedback.message = `This was a suspicious email that should have been reported or deleted. ${action === 'trust' ? 'Trusting this email could lead to security breaches.' : 'Ignoring suspicious emails allows threats to persist.'}`;
             }
 
-            // Add red flags for suspicious emails
-            feedback.redFlags = this.identifyRedFlags(email);
-            feedback.tips = [
-                'Always verify sender identity through alternative channels',
-                'Be cautious of urgent requests for sensitive information',
-                'Check for spelling errors and suspicious domains',
-                'When in doubt, report to your security team'
-            ];
+            // Use AI analysis red flags if available, otherwise fall back to detection
+            if (aiAnalysis) {
+                feedback.redFlags = [
+                    ...(aiAnalysis.phishing_indicators || []),
+                    ...(aiAnalysis.red_flags || [])
+                ];
+                feedback.tips = aiAnalysis.verification_tips || [
+                    'Always verify sender identity through alternative channels',
+                    'Be cautious of urgent requests for sensitive information',
+                    'Check for spelling errors and suspicious domains',
+                    'When in doubt, report to your security team'
+                ];
+            } else {
+                feedback.redFlags = this.identifyRedFlags(email);
+                feedback.tips = [
+                    'Always verify sender identity through alternative channels',
+                    'Be cautious of urgent requests for sensitive information',
+                    'Check for spelling errors and suspicious domains',
+                    'When in doubt, report to your security team'
+                ];
+            }
         } else {
             // Legitimate email feedback
             if (isCorrect) {
@@ -99,25 +122,45 @@ export class EmailFeedback {
                 feedback.message = `This was a legitimate email that didn't require ${action === 'report' ? 'reporting' : 'deletion'}. While security awareness is good, over-reporting can impact workflow.`;
             }
 
-            // Add good signs for legitimate emails
-            feedback.goodSigns = this.identifyGoodSigns(email);
-            feedback.tips = [
-                'Legitimate emails often come from known domains',
-                'Professional formatting and proper grammar are good signs',
-                'Reasonable requests that align with business needs',
-                'Contact information and proper signatures indicate legitimacy'
-            ];
+            // Use AI analysis safety factors if available, otherwise fall back to detection
+            if (aiAnalysis) {
+                feedback.goodSigns = aiAnalysis.safety_factors || [];
+                feedback.tips = aiAnalysis.verification_tips || [
+                    'Legitimate emails often come from known domains',
+                    'Professional formatting and proper grammar are good signs',
+                    'Reasonable requests that align with business needs',
+                    'Contact information and proper signatures indicate legitimacy'
+                ];
+            } else {
+                feedback.goodSigns = this.identifyGoodSigns(email);
+                feedback.tips = [
+                    'Legitimate emails often come from known domains',
+                    'Professional formatting and proper grammar are good signs',
+                    'Reasonable requests that align with business needs',
+                    'Contact information and proper signatures indicate legitimacy'
+                ];
+            }
         }
 
         return feedback;
     }
 
     /**
-     * Identify red flags in suspicious emails
-     * @param {Object} email - Email object
+     * Identify red flags in suspicious emails using AI analysis when available
+     * @param {Object} email - Email object with optional ai_analysis property
      * @returns {Array} List of red flags
      */
     identifyRedFlags(email) {
+        // Use AI analysis data if available
+        if (email.ai_analysis) {
+            const redFlags = [
+                ...(email.ai_analysis.phishing_indicators || []),
+                ...(email.ai_analysis.red_flags || [])
+            ];
+            return redFlags;
+        }
+
+        // Fallback to hardcoded detection for emails without AI analysis
         const redFlags = [];
         
         // Check sender domain
@@ -157,11 +200,17 @@ export class EmailFeedback {
     }
 
     /**
-     * Identify good signs in legitimate emails
-     * @param {Object} email - Email object
+     * Identify good signs in legitimate emails using AI analysis when available
+     * @param {Object} email - Email object with optional ai_analysis property
      * @returns {Array} List of positive indicators
      */
     identifyGoodSigns(email) {
+        // Use AI analysis data if available
+        if (email.ai_analysis && email.ai_analysis.safety_factors) {
+            return email.ai_analysis.safety_factors;
+        }
+
+        // Fallback to hardcoded detection for emails without AI analysis
         const goodSigns = [];
         
         // Check sender domain
@@ -498,6 +547,31 @@ export class EmailFeedback {
                             ${feedback.tips.map(tip => `<li class="flex items-start"><span class="text-blue-500 mr-2">•</span>${tip}</li>`).join('')}
                         </ul>
                     </div>
+
+                    ${feedback.aiAnalysis ? `
+                    <!-- AI Analysis Insights -->
+                    <div class="bg-purple-900/30 border border-purple-700 rounded-lg p-3">
+                        <h3 class="font-semibold text-purple-400 mb-2">🤖 AI Security Analysis</h3>
+                        <div class="text-sm text-purple-300 space-y-2">
+                            ${feedback.aiAnalysis.risk_level ? `
+                            <div class="flex items-center space-x-2">
+                                <span class="font-medium">Risk Level:</span>
+                                <span class="px-2 py-1 rounded text-xs font-semibold ${
+                                    feedback.aiAnalysis.risk_level === 'high' ? 'bg-red-600 text-white' :
+                                    feedback.aiAnalysis.risk_level === 'medium' ? 'bg-yellow-600 text-white' :
+                                    'bg-green-600 text-white'
+                                }">${feedback.aiAnalysis.risk_level.toUpperCase()}</span>
+                            </div>
+                            ` : ''}
+                            ${feedback.aiAnalysis.educational_focus ? `
+                            <div>
+                                <span class="font-medium text-purple-200">Educational Focus:</span>
+                                <p class="mt-1 text-purple-300">${feedback.aiAnalysis.educational_focus}</p>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    ` : ''}
 
                     <!-- Session Progress -->
                     <div class="bg-gray-700 rounded-lg p-3 border border-gray-600">
