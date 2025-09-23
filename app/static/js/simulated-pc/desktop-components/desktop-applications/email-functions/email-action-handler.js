@@ -33,25 +33,54 @@ export class EmailActionHandler {
 
         // Create modal within email window
         const modal = document.createElement('div');
-        modal.className = 'email-modal absolute inset-0 bg-black/75 flex items-center justify-center z-50';
+        modal.className = 'email-modal absolute inset-0 bg-black/85 flex items-center justify-center z-50 p-4';
         modal.innerHTML = `
-            <div class="bg-white rounded p-6 max-w-md mx-4">
-                <div class="text-center">
-                    <i class="bi bi-shield-exclamation text-4xl text-red-500 mb-4"></i>
-                    <h2 class="text-xl font-bold text-gray-900 mb-4">Report Phishing Email</h2>
-                    <p class="text-gray-700 mb-4">
-                        Are you sure you want to report this email from <strong>${email.sender}</strong> as phishing?
-                    </p>
-                    <p class="text-sm text-gray-600 mb-6">
-                        This will flag the email as dangerous and help protect other users.
-                    </p>
-                    <div class="flex space-x-3 justify-center">
+            <div class="bg-gray-800 rounded border border-gray-600 shadow-2xl max-w-md mx-4 overflow-hidden">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-red-600 to-pink-600 px-6 py-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="text-3xl">🛡️</div>
+                        <div>
+                            <h2 class="text-lg font-bold text-white">Report Phishing Email</h2>
+                            <p class="text-sm text-white/90">Security Action Required</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="p-6">
+                    <div class="bg-gray-700/50 rounded p-4 border border-gray-600/50 mb-4">
+                        <h3 class="text-sm font-semibold text-gray-300 mb-3 flex items-center">
+                            📧 <span class="ml-1">Email Details</span>
+                        </h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">From:</span>
+                                <span class="text-white font-medium break-all">${email.sender}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400">Subject:</span>
+                                <span class="text-white break-words">${email.subject}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-red-900/20 rounded p-4 border border-red-600/30 mb-6">
+                        <h3 class="text-sm font-semibold text-red-400 mb-2 flex items-center">
+                            ⚠️ <span class="ml-1">Confirmation</span>
+                        </h3>
+                        <p class="text-red-300 text-sm leading-relaxed">
+                            Are you sure you want to report this email as phishing? This will flag the email as dangerous and help protect other users.
+                        </p>
+                    </div>
+
+                    <div class="flex space-x-3">
                         <button onclick="this.closest('.email-modal').remove()" 
-                                class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-colors cursor-pointer">
+                                class="flex-1 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 transition-all duration-300 font-medium text-sm cursor-pointer">
                             Cancel
                         </button>
                         <button onclick="window.emailActionHandler?.confirmPhishingReport('${emailId}'); this.closest('.email-modal').remove()" 
-                                class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors cursor-pointer">
+                                class="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white py-2 px-4 rounded hover:shadow-lg transition-all duration-300 font-medium text-sm cursor-pointer">
                             Report Phishing
                         </button>
                     </div>
