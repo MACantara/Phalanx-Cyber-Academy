@@ -575,6 +575,16 @@ export class EmailFeedback {
                                          style="width: ${accuracy}%"></div>
                                 </div>
                             </div>
+
+                            <!-- Education Focus -->
+                            ${feedback.aiAnalysis?.educational_focus ? `
+                            <div class="bg-purple-900/20 rounded p-3 border border-purple-600/30">
+                                <h3 class="text-sm font-semibold text-purple-400 mb-2 flex items-center">
+                                    🎓 <span class="ml-1">Education Focus</span>
+                                </h3>
+                                <p class="text-xs text-purple-300 leading-relaxed">${feedback.aiAnalysis.educational_focus}</p>
+                            </div>
+                            ` : ''}
                         </div>
 
                         <!-- Right Column -->
@@ -612,15 +622,6 @@ export class EmailFeedback {
                                 </div>
                             </div>
 
-                            <!-- AI Analysis -->
-                            ${feedback.aiAnalysis?.educational_focus ? `
-                            <div class="bg-purple-900/20 rounded p-3 border border-purple-600/30">
-                                <h3 class="text-sm font-semibold text-purple-400 mb-2 flex items-center">
-                                    🤖 <span class="ml-1">AI Insight</span>
-                                </h3>
-                                <p class="text-xs text-purple-300 leading-relaxed">${feedback.aiAnalysis.educational_focus}</p>
-                            </div>
-                            ` : ''}
                         </div>
                     </div>
 
