@@ -36,6 +36,116 @@ try:
 except ImportError:
     ENHANCED_DETECTION_AVAILABLE = False
 
+class ProfanityFilter:
+    """
+    Content filter to detect and remove inappropriate content for educational use.
+    Filters profanity, explicit content, and other inappropriate material.
+    """
+    
+    def __init__(self):
+        # Basic profanity and inappropriate content lists
+        # Note: This is a sanitized list for educational content filtering
+        self.profanity_words = {
+            # Mild profanity (asterisked)
+            'damn', 'hell', 'crap', 'piss', 'bloody',
+            # Stronger profanity patterns (partial matching to catch variations)
+            'f*ck', 'f**k', 'f***', 'sh*t', 'sh**', 'b*tch', 'b**ch',
+            'a**hole', 'asshole', 'bastard', 'bitch', 'bullsh*t',
+            # Sexual content
+            'sex', 'porn', 'xxx', 'naked', 'nude', 'explicit',
+            'sexual', 'erotic', 'adult', 'mature', 'nsfw',
+            # Violence-related
+            'kill', 'murder', 'death', 'violence', 'weapon', 'gun',
+            'knife', 'bomb', 'terror', 'threat', 'harm',
+            # Drugs and substances
+            'drug', 'cocaine', 'heroin', 'marijuana', 'weed', 'cannabis',
+            'alcohol', 'beer', 'wine', 'drunk', 'smoking', 'cigarette',
+            # Gambling
+            'casino', 'gambling', 'poker', 'lottery', 'bet', 'betting',
+            # Inappropriate for students
+            'suicide', 'depression', 'self-harm', 'cutting', 'abuse',
+            'hate', 'racist', 'discrimination', 'harassment'
+        }
+        
+        # Compile regex patterns for efficient matching
+        self.profanity_patterns = [
+            re.compile(r'\b' + re.escape(word) + r'\b', re.IGNORECASE) 
+            for word in self.profanity_words
+        ]
+        
+        # Additional patterns for common obfuscation techniques
+        self.obfuscation_patterns = [
+            re.compile(r'f+u+c+k+', re.IGNORECASE),
+            re.compile(r's+h+i+t+', re.IGNORECASE),
+            re.compile(r'b+i+t+c+h+', re.IGNORECASE),
+            re.compile(r'a+s+s+h+o+l+e+', re.IGNORECASE),
+            re.compile(r'\bf+\*+c+k+', re.IGNORECASE),
+            re.compile(r'\bs+\*+i+t+', re.IGNORECASE),
+            re.compile(r'@ss', re.IGNORECASE),
+            re.compile(r'sh1t', re.IGNORECASE),
+            re.compile(r'f4ck', re.IGNORECASE),
+            re.compile(r'b!tch', re.IGNORECASE),
+        ]
+        
+        # Inappropriate content patterns
+        self.inappropriate_patterns = [
+            re.compile(r'\b(adult|mature)\s+(content|material|website)', re.IGNORECASE),
+            re.compile(r'18\+', re.IGNORECASE),
+            re.compile(r'xxx', re.IGNORECASE),
+            re.compile(r'click\s+here\s+for\s+(sex|porn|adult)', re.IGNORECASE),
+            re.compile(r'free\s+(porn|sex|adult)', re.IGNORECASE),
+            re.compile(r'(buy|purchase)\s+(drugs|weapons|illegal)', re.IGNORECASE),
+        ]
+    
+    def contains_inappropriate_content(self, text):
+        """
+        Check if text contains inappropriate content for educational use.
+        
+        Args:
+            text (str): Text to check
+            
+        Returns:
+            tuple: (bool, list) - (contains_inappropriate, list_of_found_issues)
+        """
+        if not text or pd.isna(text):
+            return False, []
+        
+        text_str = str(text).lower()
+        found_issues = []
+        
+        # Check for direct profanity matches
+        for pattern in self.profanity_patterns:
+            if pattern.search(text_str):
+                match = pattern.search(text_str)
+                found_issues.append(f"profanity: {match.group()}")
+        
+        # Check for obfuscated profanity
+        for pattern in self.obfuscation_patterns:
+            if pattern.search(text_str):
+                match = pattern.search(text_str)
+                found_issues.append(f"obfuscated_profanity: {match.group()}")
+        
+        # Check for inappropriate content patterns
+        for pattern in self.inappropriate_patterns:
+            if pattern.search(text_str):
+                match = pattern.search(text_str)
+                found_issues.append(f"inappropriate_content: {match.group()}")
+        
+        return len(found_issues) > 0, found_issues
+    
+    def is_content_appropriate_for_students(self, text):
+        """
+        Determine if content is appropriate for students.
+        
+        Args:
+            text (str): Text to evaluate
+            
+        Returns:
+            bool: True if content is appropriate for students
+        """
+        inappropriate, _ = self.contains_inappropriate_content(text)
+        return not inappropriate
+
 class LanguageDetector:
     """
     Enhanced language detector using multiple methods for accurate English identification.
@@ -272,6 +382,7 @@ class EmailDataQualityAssessment:
         self.file_size_mb = 0
         self.use_chunked_processing = False
         self.language_detector = LanguageDetector()
+        self.profanity_filter = ProfanityFilter()
         
         # Check file size to determine processing method
         if os.path.exists(csv_file_path):
@@ -440,6 +551,7 @@ class EmailDataQualityAssessment:
             self._url_analysis()
             self._text_content_analysis()
             self._language_analysis()
+            self._profanity_analysis()
             
             return self.quality_report
             
@@ -848,6 +960,98 @@ class EmailDataQualityAssessment:
         self.quality_report['language_analysis'] = language_stats
         return language_stats
     
+    def _profanity_analysis(self):
+        """Analyze content for profanity and inappropriate material."""
+        print("\n" + "="*60)
+        print("🚫 PROFANITY & INAPPROPRIATE CONTENT ANALYSIS")
+        print("="*60)
+        
+        profanity_stats = {}
+        
+        for field in ['subject', 'body']:
+            if field not in self.df.columns:
+                continue
+            
+            field_data = self.df[field].fillna('')
+            
+            appropriate_count = 0
+            inappropriate_count = 0
+            empty_count = 0
+            inappropriate_details = []
+            
+            print(f"\n{field.upper()} Content Analysis (analyzing all {len(field_data):,} records):")
+            
+            for idx, text in enumerate(field_data):
+                if not text or pd.isna(text) or str(text).strip() == '':
+                    empty_count += 1
+                    continue
+                    
+                is_appropriate = self.profanity_filter.is_content_appropriate_for_students(str(text))
+                
+                if is_appropriate:
+                    appropriate_count += 1
+                else:
+                    inappropriate_count += 1
+                    # Get details about what was found (for reporting, not logging specific content)
+                    _, issues = self.profanity_filter.contains_inappropriate_content(str(text))
+                    issue_types = [issue.split(':')[0] for issue in issues]
+                    inappropriate_details.extend(issue_types)
+            
+            total_analyzed = appropriate_count + inappropriate_count
+            
+            if total_analyzed > 0:
+                appropriate_pct = (appropriate_count / total_analyzed) * 100
+                inappropriate_pct = (inappropriate_count / total_analyzed) * 100
+                
+                print(f"  Appropriate content:     {appropriate_count:6,} ({appropriate_pct:5.1f}%)")
+                print(f"  Inappropriate content:   {inappropriate_count:6,} ({inappropriate_pct:5.1f}%)")
+                print(f"  Empty/Missing:           {empty_count:6,}")
+                
+                # Count issue types
+                issue_type_counts = {}
+                for issue_type in set(inappropriate_details):
+                    count = inappropriate_details.count(issue_type)
+                    issue_type_counts[issue_type] = count
+                
+                if issue_type_counts:
+                    print(f"  Issue breakdown:")
+                    for issue_type, count in sorted(issue_type_counts.items()):
+                        print(f"    {issue_type}: {count:,} instances")
+                
+                # Provide assessment
+                if inappropriate_pct == 0:
+                    print(f"  ✅ All content is appropriate for students")
+                elif inappropriate_pct <= 1:
+                    print(f"  ⚠️  Very few inappropriate content instances found ({inappropriate_pct:.1f}%)")
+                elif inappropriate_pct <= 5:
+                    print(f"  ⚠️  Some inappropriate content found - consider filtering ({inappropriate_pct:.1f}%)")
+                else:
+                    print(f"  🚨 Significant inappropriate content found - filtering recommended ({inappropriate_pct:.1f}%)")
+                
+                profanity_stats[field] = {
+                    'appropriate_count': appropriate_count,
+                    'inappropriate_count': inappropriate_count,
+                    'empty_count': empty_count,
+                    'appropriate_percentage': appropriate_pct,
+                    'total_analyzed': total_analyzed,
+                    'records_analyzed': len(field_data),
+                    'issue_types': issue_type_counts
+                }
+            else:
+                print(f"  ❌ No valid text found for analysis")
+                profanity_stats[field] = {
+                    'appropriate_count': 0,
+                    'inappropriate_count': 0,
+                    'empty_count': empty_count,
+                    'appropriate_percentage': 0,
+                    'total_analyzed': 0,
+                    'records_analyzed': len(field_data),
+                    'issue_types': {}
+                }
+        
+        self.quality_report['profanity_analysis'] = profanity_stats
+        return profanity_stats
+    
     def _generate_chunked_report(self, total_rows, missing_stats, label_counts, 
                                 email_validation, text_stats, duplicate_subjects, 
                                 url_patterns, duplicate_count, language_stats):
@@ -1045,6 +1249,21 @@ class EmailDataQualityAssessment:
                 url_percentage = (records_with_urls / total_records_url) * 100
                 print(f"• {records_with_urls:,} records contain URLs ({url_percentage:.1f}%)")
         
+        # Profanity analysis
+        profanity_analysis = self.quality_report.get('profanity_analysis', {})
+        if profanity_analysis:
+            for field, stats in profanity_analysis.items():
+                inappropriate_count = stats.get('inappropriate_count', 0)
+                if inappropriate_count > 0:
+                    inappropriate_pct = stats.get('appropriate_percentage', 100)
+                    inappropriate_pct = 100 - inappropriate_pct  # Convert from appropriate to inappropriate percentage
+                    print(f"• ⚠️  {field} field has {inappropriate_count:,} inappropriate content instances ({inappropriate_pct:.1f}%)")
+                    issue_types = stats.get('issue_types', {})
+                    if issue_types:
+                        top_issues = sorted(issue_types.items(), key=lambda x: x[1], reverse=True)[:3]
+                        issue_summary = ", ".join([f"{issue_type} ({count})" for issue_type, count in top_issues])
+                        print(f"  Main issues: {issue_summary}")
+        
         print(f"\n✅ Data quality assessment completed!")
         return self.quality_report
     
@@ -1096,7 +1315,7 @@ class EmailDataQualityAssessment:
             'missing_critical_fields': 0,
             'non_english_subject': 0,
             'non_english_body': 0,
-            'invalid_email_format': 0,
+            'inappropriate_content': 0,
             'empty_subject': 0,
             'empty_body': 0,
             'invalid_label': 0,
@@ -1192,8 +1411,30 @@ class EmailDataQualityAssessment:
             removal_stats['non_english_body'] = non_english_body_count
             print(f"     Removed {non_english_body_count:,} rows with non-English bodies")
         
-        # 6. Remove duplicate rows
-        print("  6. Removing duplicate rows...")
+        # 6. Remove rows with inappropriate content (profanity, explicit content, etc.)
+        print("  6. Removing rows with inappropriate content for students...")
+        before_count = len(cleaned_df)
+        
+        # Check both subject and body for inappropriate content
+        appropriate_mask = pd.Series([True] * len(cleaned_df), index=cleaned_df.index)
+        
+        for field in ['subject', 'body']:
+            if field in cleaned_df.columns:
+                print(f"     Analyzing {field} for inappropriate content...")
+                field_appropriate_mask = cleaned_df[field].astype(str).apply(
+                    lambda x: self.profanity_filter.is_content_appropriate_for_students(x)
+                )
+                appropriate_mask = appropriate_mask & field_appropriate_mask
+                
+                field_inappropriate_count = (~field_appropriate_mask).sum()
+                print(f"     Found {field_inappropriate_count:,} inappropriate {field} entries")
+        
+        cleaned_df = cleaned_df[appropriate_mask]
+        removal_stats['inappropriate_content'] = before_count - len(cleaned_df)
+        print(f"     Removed {removal_stats['inappropriate_content']:,} rows with inappropriate content")
+        
+        # 7. Remove duplicate rows
+        print("  7. Removing duplicate rows...")
         before_count = len(cleaned_df)
         
         # Remove complete duplicates
@@ -1222,6 +1463,7 @@ class EmailDataQualityAssessment:
         print(f"Empty/short content:     {removal_stats['too_short_content']:,}")
         print(f"Non-English subjects:    {removal_stats['non_english_subject']:,}")
         print(f"Non-English bodies:      {removal_stats['non_english_body']:,}")
+        print(f"Inappropriate content:   {removal_stats['inappropriate_content']:,}")
         print(f"Duplicate rows:          {removal_stats['duplicate_rows']:,}")
         
         # Analyze cleaned dataset
