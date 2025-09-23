@@ -13,6 +13,7 @@
         }
     ],
     "env": {
-        "FLASK_ENV": "production"
+        "FLASK_ENV": "production",
+        "CUSTOM_DOMAIN": "cyberquest.live"
     }
 }
