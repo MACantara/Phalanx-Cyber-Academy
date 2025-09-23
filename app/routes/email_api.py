@@ -11,28 +11,46 @@ email_api_bp = Blueprint('email_api', __name__, url_prefix='/api/emails')
 _csv_cache = None
 
 def load_csv_data():
-    """Load and cache the CEAS_08.csv phishing email data"""
+    """Load and cache the phishing and legitimate email data from separate CSV files"""
     global _csv_cache
     if _csv_cache is not None:
         return _csv_cache
     
     try:
-        # Load the CEAS_08 CSV data
-        csv_path = os.path.join(
+        # Load both phishing.csv and legit.csv files
+        csv_base_path = os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
-            'app', 'static', 'js', 'simulated-pc', 'levels', 'level-two', 'data', 'CEAS_08.csv'
+            'app', 'static', 'js', 'simulated-pc', 'levels', 'level-two', 'data'
         )
         
-        # Check if file exists
-        if not os.path.exists(csv_path):
-            print(f"CSV file not found at: {csv_path}")
+        phishing_path = os.path.join(csv_base_path, 'phishing.csv')
+        legit_path = os.path.join(csv_base_path, 'legit.csv')
+        
+        # Check if both files exist
+        if not os.path.exists(phishing_path):
+            print(f"Phishing CSV file not found at: {phishing_path}")
             return pd.DataFrame()
         
-        # Read CSV with pandas
-        _csv_cache = pd.read_csv(csv_path)
+        if not os.path.exists(legit_path):
+            print(f"Legitimate CSV file not found at: {legit_path}")
+            return pd.DataFrame()
+        
+        # Read both CSV files with pandas
+        phishing_df = pd.read_csv(phishing_path)
+        legit_df = pd.read_csv(legit_path)
+        
+        # Add email_type column to distinguish source (ignore the label column as it indicates human/LLM generation)
+        phishing_df['email_type'] = 'phishing'  # All emails in phishing.csv are phishing
+        phishing_df['is_phishing'] = 1
+        
+        legit_df['email_type'] = 'legitimate'    # All emails in legit.csv are legitimate  
+        legit_df['is_phishing'] = 0
+        
+        # Combine both dataframes
+        _csv_cache = pd.concat([phishing_df, legit_df], ignore_index=True)
         
         # Filter out any invalid rows and ensure we have the required columns
-        required_columns = ['sender', 'receiver', 'date', 'subject', 'body', 'label']
+        required_columns = ['sender', 'receiver', 'date', 'subject', 'body']
         missing_columns = [col for col in required_columns if col not in _csv_cache.columns]
         
         if missing_columns:
@@ -42,18 +60,16 @@ def load_csv_data():
         # Filter for valid emails (remove rows with missing essential data)
         _csv_cache = _csv_cache.dropna(subset=['sender', 'subject', 'body']).copy()
         
-        # Ensure label is numeric (1 = phishing, 0 = legitimate)
-        _csv_cache['label'] = pd.to_numeric(_csv_cache['label'], errors='coerce')
-        _csv_cache = _csv_cache.dropna(subset=['label']).copy()
-        
-        print(f"Loaded {len(_csv_cache)} emails from CEAS_08.csv")
-        print(f"Phishing emails: {len(_csv_cache[_csv_cache['label'] == 1])}")
-        print(f"Legitimate emails: {len(_csv_cache[_csv_cache['label'] == 0])}")
+        print(f"Loaded {len(phishing_df)} phishing emails from phishing.csv")
+        print(f"Loaded {len(legit_df)} legitimate emails from legit.csv")
+        print(f"Total emails: {len(_csv_cache)}")
+        print(f"Final phishing emails: {len(_csv_cache[_csv_cache['is_phishing'] == 1])}")
+        print(f"Final legitimate emails: {len(_csv_cache[_csv_cache['is_phishing'] == 0])}")
         
         return _csv_cache
         
     except Exception as e:
-        print(f"Error loading CEAS_08.csv: {e}")
+        print(f"Error loading phishing.csv and legit.csv: {e}")
         import traceback
         traceback.print_exc()
         return pd.DataFrame()
@@ -67,8 +83,8 @@ def convert_csv_to_email_format(df):
         if pd.isna(row['subject']) or pd.isna(row['body']) or pd.isna(row['sender']):
             continue
         
-        # Determine if email is phishing (label 1 = phishing, 0 = legitimate)
-        is_phishing = int(row['label']) == 1
+        # Determine if email is phishing based on source file (not label column)
+        is_phishing = row['is_phishing'] == 1
         
         # Clean and format the email data
         sender = str(row['sender']).strip()
@@ -76,6 +92,9 @@ def convert_csv_to_email_format(df):
         date = str(row['date']).strip() if pd.notna(row['date']) else ''
         subject = str(row['subject']).strip()
         body = str(row['body']).strip()
+        
+        # Get the original label (human vs LLM generated) if it exists
+        original_label = row.get('label', 'Unknown') if 'label' in row else 'Unknown'
         
         # Create email object with required fields
         email = {
@@ -85,7 +104,7 @@ def convert_csv_to_email_format(df):
             'date': date,
             'subject': subject,
             'body': body,
-            'label': int(row['label']),  # For checking purposes (not displayed)
+            'original_label': original_label,  # Human vs LLM generation (not phishing classification)
             'is_phishing': is_phishing,
             'email_type': 'phishing' if is_phishing else 'legitimate',
             'ai_analysis': {
@@ -137,8 +156,8 @@ def get_mixed_emails():
             }), 500
         
         # Separate phishing and legitimate emails
-        phishing_emails = df[df['label'] == 1].copy()
-        legitimate_emails = df[df['label'] == 0].copy()
+        phishing_emails = df[df['is_phishing'] == 1].copy()
+        legitimate_emails = df[df['is_phishing'] == 0].copy()
         
         # Check if we have enough emails
         if len(phishing_emails) < 8:
@@ -176,7 +195,7 @@ def get_mixed_emails():
                 'total': len(emails),
                 'phishing_count': phishing_count,
                 'legitimate_count': legitimate_count,
-                'source': 'CEAS_08.csv'
+                'source': 'phishing.csv + legit.csv'
             }
         })
         
@@ -214,7 +233,7 @@ def get_email_stats():
                 'legitimate_emails': legitimate_count,
                 'phishing_percentage': round((phishing_count / len(emails)) * 100, 2) if emails else 0,
                 'legitimate_percentage': round((legitimate_count / len(emails)) * 100, 2) if emails else 0,
-                'source': 'CEAS_08.csv'
+                'source': 'phishing.csv + legit.csv'
             }
         })
         
@@ -239,8 +258,8 @@ def get_csv_status():
             })
         
         # Get basic statistics
-        phishing_count = len(df[df['label'] == 1])
-        legitimate_count = len(df[df['label'] == 0])
+        phishing_count = len(df[df['is_phishing'] == 1])
+        legitimate_count = len(df[df['is_phishing'] == 0])
         
         return jsonify({
             'success': True,
@@ -248,7 +267,7 @@ def get_csv_status():
             'total_emails': len(df),
             'phishing_emails': phishing_count,
             'legitimate_emails': legitimate_count,
-            'source_file': 'CEAS_08.csv'
+            'source_file': 'phishing.csv + legit.csv'
         })
         
     except Exception as e:
@@ -271,8 +290,8 @@ def get_sample_emails():
             }), 500
         
         # Get a small sample (2 phishing, 2 legitimate)
-        phishing_sample = df[df['label'] == 1].sample(n=min(2, len(df[df['label'] == 1])))
-        legitimate_sample = df[df['label'] == 0].sample(n=min(2, len(df[df['label'] == 0])))
+        phishing_sample = df[df['is_phishing'] == 1].sample(n=min(2, len(df[df['is_phishing'] == 1])))
+        legitimate_sample = df[df['is_phishing'] == 0].sample(n=min(2, len(df[df['is_phishing'] == 0])))
         
         sample_df = pd.concat([phishing_sample, legitimate_sample], ignore_index=True)
         emails = convert_csv_to_email_format(sample_df)
