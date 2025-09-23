@@ -308,7 +308,7 @@ export class EmailSessionSummary {
         const suggestions = this.generateImprovementSuggestions(feedbackHistory);
         
         return `
-            <div class="bg-blue-900/30 border border-blue-600 rounded-lg p-6 mb-6">
+            <div class="bg-blue-900/30 border border-blue-600 rounded p-6 mb-6">
                 <h3 class="text-lg font-semibold text-blue-300 mb-4 flex items-center">
                     <i class="bi bi-lightbulb text-blue-400 mr-2"></i>
                     Areas for Improvement
@@ -551,7 +551,7 @@ export class EmailSessionSummary {
         const loadingModal = document.createElement('div');
         loadingModal.className = 'fixed inset-0 bg-black/90 flex items-center justify-center z-50';
         loadingModal.innerHTML = `
-            <div class="bg-gray-800 p-8 rounded-lg text-center max-w-md mx-4">
+            <div class="bg-gray-800 p-8 rounded text-center max-w-md mx-4">
                 <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-6"></div>
                 <h3 class="text-xl font-semibold text-white mb-2">Preparing Your Training Session</h3>
                 <p class="text-gray-300">Loading your progress and resetting the simulation...</p>
@@ -580,11 +580,11 @@ export class EmailSessionSummary {
             console.error('Error during retry training:', error);
             if (loadingModal && loadingModal.parentNode) {
                 loadingModal.innerHTML = `
-                    <div class="bg-gray-800 p-8 rounded-lg text-center max-w-md mx-4">
+                    <div class="bg-gray-800 p-8 rounded text-center max-w-md mx-4">
                         <div class="text-red-500 text-5xl mb-4">⚠️</div>
                         <h3 class="text-xl font-semibold text-white mb-2">Error Resetting Training</h3>
                         <p class="text-gray-300 mb-4">There was an error preparing your training session. Please try again or refresh the page.</p>
-                        <button onclick="window.location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                        <button onclick="window.location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded transition-colors">
                             <i class="bi bi-arrow-clockwise mr-2"></i> Refresh Page
                         </button>
                     </div>
@@ -630,7 +630,7 @@ export class EmailSessionSummary {
         const mistakes = this.lastFeedbackHistory.filter(f => !f.isCorrect);
         
         modal.innerHTML = `
-            <div class="bg-gray-800 text-white rounded-lg p-6 max-w-2xl mx-4 max-h-96 overflow-y-auto border border-gray-600">
+            <div class="bg-gray-800 text-white rounded p-6 max-w-2xl mx-4 max-h-96 overflow-y-auto border border-gray-600">
                 <h2 class="text-xl font-bold text-white mb-4">Review Your Mistakes</h2>
                 
                 ${mistakes.length === 0 ? `
@@ -642,7 +642,7 @@ export class EmailSessionSummary {
                 ` : `
                     <div class="space-y-4">
                         ${mistakes.map((mistake, index) => `
-                            <div class="border border-gray-600 rounded-lg p-4 bg-gray-700">
+                            <div class="border border-gray-600 rounded p-4 bg-gray-700">
                                 <div class="flex items-start justify-between mb-2">
                                     <div class="font-semibold text-white">Email ${index + 1}</div>
                                     <div class="text-xs text-gray-400">${mistake.timestamp}</div>

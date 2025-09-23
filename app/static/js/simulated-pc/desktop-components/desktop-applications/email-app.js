@@ -310,7 +310,7 @@ export class EmailApp extends WindowBase {
                     </div>
                 </div>
                 
-                <div class="bg-gray-800 text-white text-sm p-4 rounded-lg border border-gray-600">
+                <div class="bg-gray-800 text-white text-sm p-4 rounded border border-gray-600">
                     <div class="whitespace-pre-wrap break-words">
 ${this.formatEmailBody(email.body)}
                     </div>
