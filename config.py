@@ -40,7 +40,7 @@ class Config:
     WTF_CSRF_SSL_STRICT = False  # Allow CSRF over HTTP for development
     
     # Centralized URL generation config for Flask
-    SERVER_NAME = os.environ.get('VERCEL_URL', 'cyber-quest-ten.vercel.app') if IS_VERCEL else os.environ.get('SERVER_NAME', 'localhost:5000')
+    SERVER_NAME = os.environ.get('VERCEL_URL', 'cyberquest.live') if IS_VERCEL else os.environ.get('SERVER_NAME', 'localhost:5000')
     APPLICATION_ROOT = '/'
     PREFERRED_URL_SCHEME = 'https' if IS_VERCEL else 'http'
     
