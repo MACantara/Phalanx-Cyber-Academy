@@ -533,7 +533,7 @@ export class EmailFeedback {
                         <!-- Left Column -->
                         <div class="space-y-3">
                             <!-- Email Info -->
-                            <div class="bg-gray-700/50 rounded-lg p-3 border border-gray-600/50">
+                            <div class="bg-gray-700/50 rounded p-3 border border-gray-600/50">
                                 <h3 class="text-sm font-semibold text-gray-300 mb-2 flex items-center">
                                     📧 <span class="ml-1">Email Analysis</span>
                                 </h3>
@@ -562,7 +562,7 @@ export class EmailFeedback {
                             </div>
 
                             <!-- Session Progress -->
-                            <div class="bg-gray-700/50 rounded-lg p-3 border border-gray-600/50">
+                            <div class="bg-gray-700/50 rounded p-3 border border-gray-600/50">
                                 <h3 class="text-sm font-semibold text-gray-300 mb-2 flex items-center">
                                     📊 <span class="ml-1">Session Progress</span>
                                 </h3>
@@ -581,7 +581,7 @@ export class EmailFeedback {
                         <div class="space-y-3">
                             <!-- Key Insights -->
                             ${insights.length > 0 ? `
-                            <div class="bg-gray-700/50 rounded-lg p-3 border border-gray-600/50">
+                            <div class="bg-gray-700/50 rounded p-3 border border-gray-600/50">
                                 <h3 class="text-sm font-semibold text-gray-300 mb-2 flex items-center">
                                     🔍 <span class="ml-1">Key Insights</span>
                                 </h3>
@@ -598,7 +598,7 @@ export class EmailFeedback {
                             ` : ''}
 
                             <!-- Security Tips -->
-                            <div class="bg-blue-900/20 rounded-lg p-3 border border-blue-600/30">
+                            <div class="bg-blue-900/20 rounded p-3 border border-blue-600/30">
                                 <h3 class="text-sm font-semibold text-blue-400 mb-2 flex items-center">
                                     💡 <span class="ml-1">Quick Tips</span>
                                 </h3>
@@ -614,7 +614,7 @@ export class EmailFeedback {
 
                             <!-- AI Analysis -->
                             ${feedback.aiAnalysis?.educational_focus ? `
-                            <div class="bg-purple-900/20 rounded-lg p-3 border border-purple-600/30">
+                            <div class="bg-purple-900/20 rounded p-3 border border-purple-600/30">
                                 <h3 class="text-sm font-semibold text-purple-400 mb-2 flex items-center">
                                     🤖 <span class="ml-1">AI Insight</span>
                                 </h3>
@@ -625,7 +625,7 @@ export class EmailFeedback {
                     </div>
 
                     <!-- Feedback Message -->
-                    <div class="mt-4 p-3 bg-gray-700/30 rounded-lg border border-gray-600/50">
+                    <div class="mt-4 p-3 bg-gray-700/30 rounded border border-gray-600/50">
                         <p class="text-sm text-gray-300 text-center">${feedback.message}</p>
                     </div>
                 </div>
@@ -633,7 +633,7 @@ export class EmailFeedback {
                 <!-- Footer -->
                 <div class="px-6 py-4 bg-gray-750 border-t border-gray-600">
                     <button onclick="this.closest('.fixed').remove()" 
-                            class="w-full bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-blue-600 to-blue-700'} text-white py-2 px-4 rounded-lg hover:shadow-lg transition-all duration-300 font-medium text-sm">
+                            class="w-full bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-blue-600 to-blue-700'} text-white py-2 px-4 rounded hover:shadow-lg transition-all duration-300 font-medium text-sm">
                         Continue Training →
                     </button>
                 </div>
@@ -748,7 +748,7 @@ export class EmailFeedback {
         const bgGradient = stats.accuracy >= 80 ? 'from-green-600 to-emerald-600' : stats.accuracy >= 60 ? 'from-yellow-600 to-orange-600' : 'from-red-600 to-pink-600';
         
         modal.innerHTML = `
-            <div class="bg-gray-800 rounded-lg border border-gray-600 shadow-2xl p-8 max-w-md mx-4">
+            <div class="bg-gray-800 rounded border border-gray-600 shadow-2xl p-8 max-w-md mx-4">
                 <div class="text-center">
                     <div class="text-6xl mb-4">${emoji}</div>
                     <h2 class="text-2xl font-bold text-white mb-4">Email Security Training Complete!</h2>
@@ -778,7 +778,7 @@ export class EmailFeedback {
                         </div>
                     </div>
                     
-                    <div class="text-sm text-gray-400 mb-6 p-3 bg-gray-700 rounded-lg border border-gray-600">
+                    <div class="text-sm text-gray-400 mb-6 p-3 bg-gray-700 rounded border border-gray-600">
                         ${stats.accuracy >= 80 ? 
                             'Excellent work! You demonstrated strong email security awareness.' :
                             stats.accuracy >= 60 ?
@@ -788,7 +788,7 @@ export class EmailFeedback {
                     </div>
                     
                     <button onclick="this.closest('.fixed').remove()" 
-                            class="bg-gradient-to-r ${bgGradient} text-white px-8 py-3 rounded-lg hover:shadow-lg transition-all duration-300 font-semibold">
+                            class="bg-gradient-to-r ${bgGradient} text-white px-8 py-3 rounded hover:shadow-lg transition-all duration-300 font-semibold">
                         Continue to Next Level
                     </button>
                 </div>
