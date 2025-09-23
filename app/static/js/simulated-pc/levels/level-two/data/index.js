@@ -6,8 +6,7 @@
  * - phishing.csv: Contains confirmed phishing emails 
  * - legit.csv: Contains legitimate emails
  * 
- * Note: The 'label' column in CSV files indicates human vs LLM generation,
- * NOT phishing vs legitimate classification. Email type is determined by source file.
+ * Email classification is determined by source file only.
  */
 
 // Email data loader from CSV API
@@ -105,7 +104,7 @@ export const emailDataStructure = {
     subject: 'Starting IC with wizard',
     body: 'Hi\n\n\t\tI am running the IR test program from Max Davies. To do this I need to start\nIC with thw wizard option. As I have a macintosh, there is a wizard option for\nthe mac version of IC?\n\nJesus\n\n',
     urls: '0', // URL indicator from CSV
-    original_label: 0, // Human vs LLM generation indicator (not phishing classification)
+    source_file: 'legit.csv', // Source file - determines phishing classification
     is_phishing: false, // Boolean flag based on source file (legit.csv = false, phishing.csv = true)
     email_type: 'legitimate', // 'phishing' or 'legitimate' - determined by source file
     ai_analysis: {
@@ -124,12 +123,11 @@ export const dataSourceInfo = {
     legitimate_source: 'legit.csv',
     combined_source: 'phishing.csv + legit.csv',
     structure: {
-        columns: ['sender', 'receiver', 'date', 'subject', 'body', 'urls', 'label'],
+        columns: ['sender', 'receiver', 'date', 'subject', 'body', 'urls', 'source_file'],
         classification_method: 'source_file', // Classification based on which file email comes from
-        label_meaning: 'human_vs_llm_generation', // NOT phishing classification
-        phishing_determination: 'emails_from_phishing_csv',
-        legitimate_determination: 'emails_from_legit_csv',
-        description: 'Combined dataset from separate phishing and legitimate email CSV files. Email type determined by source file, not label column.'
+        phishing_determination: 'emails_from_phishing_csv', // All emails from phishing.csv are phishing
+        legitimate_determination: 'emails_from_legit_csv', // All emails from legit.csv are legitimate
+        description: 'Combined dataset from separate phishing and legitimate email CSV files. Email type determined by source file.'
     }
 };
 
@@ -138,8 +136,8 @@ export const dataSourceInfo = {
 // export { securityAlerts } from './security-alerts.js';
 
 // Dataset Statistics (as of current load):
-// - Total emails: 1,929 (after filtering invalid entries)
-// - Phishing emails: 998 (from phishing.csv - classification by source file)
-// - Legitimate emails: 931 (from legit.csv - classification by source file)  
+// - Total emails: ~1,929 (after filtering invalid entries)
+// - Phishing emails: ~998 (from phishing.csv - classification by source file)
+// - Legitimate emails: ~931 (from legit.csv - classification by source file)  
 // - Mixed emails endpoint returns: 8 phishing + 7 legitimate (15 total) for Level 2
-// - Original 'label' column indicates human (0) vs LLM (1) generation, NOT phishing classification
+// - Phishing classification determined by source file: phishing.csv = phishing, legit.csv = legitimate

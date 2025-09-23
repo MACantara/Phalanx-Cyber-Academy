@@ -17,7 +17,7 @@ def load_csv_data():
         return _csv_cache
     
     try:
-        # Load both phishing.csv and legit.csv files
+        # Load the separate phishing and legitimate email CSV files
         csv_base_path = os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
             'app', 'static', 'js', 'simulated-pc', 'levels', 'level-two', 'data'
@@ -30,7 +30,6 @@ def load_csv_data():
         if not os.path.exists(phishing_path):
             print(f"Phishing CSV file not found at: {phishing_path}")
             return pd.DataFrame()
-        
         if not os.path.exists(legit_path):
             print(f"Legitimate CSV file not found at: {legit_path}")
             return pd.DataFrame()
@@ -39,12 +38,14 @@ def load_csv_data():
         phishing_df = pd.read_csv(phishing_path)
         legit_df = pd.read_csv(legit_path)
         
-        # Add email_type column to distinguish source (ignore the label column as it indicates human/LLM generation)
-        phishing_df['email_type'] = 'phishing'  # All emails in phishing.csv are phishing
-        phishing_df['is_phishing'] = 1
+        # Add source file information and correct classification
+        phishing_df['source_file'] = 'phishing.csv'
+        phishing_df['is_phishing'] = 1  # All emails from phishing.csv are phishing
+        phishing_df['email_type'] = 'phishing'
         
-        legit_df['email_type'] = 'legitimate'    # All emails in legit.csv are legitimate  
-        legit_df['is_phishing'] = 0
+        legit_df['source_file'] = 'legit.csv'
+        legit_df['is_phishing'] = 0  # All emails from legit.csv are legitimate
+        legit_df['email_type'] = 'legitimate'
         
         # Combine both dataframes
         _csv_cache = pd.concat([phishing_df, legit_df], ignore_index=True)
@@ -60,11 +61,12 @@ def load_csv_data():
         # Filter for valid emails (remove rows with missing essential data)
         _csv_cache = _csv_cache.dropna(subset=['sender', 'subject', 'body']).copy()
         
-        print(f"Loaded {len(phishing_df)} phishing emails from phishing.csv")
-        print(f"Loaded {len(legit_df)} legitimate emails from legit.csv")
-        print(f"Total emails: {len(_csv_cache)}")
-        print(f"Final phishing emails: {len(_csv_cache[_csv_cache['is_phishing'] == 1])}")
-        print(f"Final legitimate emails: {len(_csv_cache[_csv_cache['is_phishing'] == 0])}")
+        phishing_count = len(_csv_cache[_csv_cache['is_phishing'] == 1])
+        legit_count = len(_csv_cache[_csv_cache['is_phishing'] == 0])
+        
+        print(f"Loaded {len(_csv_cache)} total emails from phishing.csv and legit.csv")
+        print(f"Phishing emails: {phishing_count}")
+        print(f"Legitimate emails: {legit_count}")
         
         return _csv_cache
         
@@ -83,7 +85,7 @@ def convert_csv_to_email_format(df):
         if pd.isna(row['subject']) or pd.isna(row['body']) or pd.isna(row['sender']):
             continue
         
-        # Determine if email is phishing based on source file (not label column)
+        # Determine if email is phishing based on the source file
         is_phishing = row['is_phishing'] == 1
         
         # Clean and format the email data
@@ -93,8 +95,8 @@ def convert_csv_to_email_format(df):
         subject = str(row['subject']).strip()
         body = str(row['body']).strip()
         
-        # Get the original label (human vs LLM generated) if it exists
-        original_label = row.get('label', 'Unknown') if 'label' in row else 'Unknown'
+        # Get the source file information
+        source_file = row.get('source_file', 'Unknown') if 'source_file' in row else 'Unknown'
         
         # Create email object with required fields
         email = {
@@ -104,7 +106,7 @@ def convert_csv_to_email_format(df):
             'date': date,
             'subject': subject,
             'body': body,
-            'original_label': original_label,  # Human vs LLM generation (not phishing classification)
+            'source_file': source_file,  # Original source file information
             'is_phishing': is_phishing,
             'email_type': 'phishing' if is_phishing else 'legitimate',
             'ai_analysis': {
