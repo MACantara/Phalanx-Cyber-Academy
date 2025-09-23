@@ -35,7 +35,7 @@ export class EmailActionHandler {
         const modal = document.createElement('div');
         modal.className = 'email-modal absolute inset-0 bg-black/75 flex items-center justify-center z-50';
         modal.innerHTML = `
-            <div class="bg-white rounded-lg p-6 max-w-md mx-4">
+            <div class="bg-white rounded p-6 max-w-md mx-4">
                 <div class="text-center">
                     <i class="bi bi-shield-exclamation text-4xl text-red-500 mb-4"></i>
                     <h2 class="text-xl font-bold text-gray-900 mb-4">Report Phishing Email</h2>
