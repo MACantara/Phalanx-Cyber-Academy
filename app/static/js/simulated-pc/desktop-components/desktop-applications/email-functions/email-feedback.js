@@ -496,103 +496,145 @@ export class EmailFeedback {
      */
     showFeedbackModal(feedbackData) {
         const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 bg-black/85 flex items-center justify-center z-50';
+        modal.className = 'fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4';
         
         const { feedback } = feedbackData;
-        const resultClass = feedback.result === 'correct' ? 'correct' : 'incorrect';
         const resultColor = feedback.result === 'correct' ? '#22c55e' : '#ef4444';
-        const bgColor = feedback.result === 'correct' ? '#064e3b' : '#7f1d1d';
+        const accuracy = this.totalActions > 0 ? Math.round((this.sessionScore / this.totalActions) * 100) : 0;
+        
+        // Combine red flags and good signs into a single insights section
+        const insights = [
+            ...(feedback.redFlags.map(flag => ({ type: 'warning', icon: '🚩', text: flag, color: 'text-red-300' }))),
+            ...(feedback.goodSigns.map(sign => ({ type: 'positive', icon: '✅', text: sign, color: 'text-green-300' })))
+        ];
         
         modal.innerHTML = `
-            <div class="bg-gray-800 rounded-lg border border-gray-600 shadow-2xl p-6 max-w-lg mx-4 overflow-y-auto">
-                <div class="text-center mb-6">
-                    <div class="text-6xl mb-3">${feedback.result === 'correct' ? '✅' : '❌'}</div>
-                    <h2 class="text-xl font-bold mb-2 text-white" style="color: ${resultColor}">${feedback.title}</h2>
-                    <p class="text-gray-300">${feedback.message}</p>
-                </div>
-
-                <div class="space-y-4">
-                    <!-- Email Details -->
-                    <div class="bg-gray-700 rounded-lg p-3 border border-gray-600">
-                        <h3 class="font-semibold text-white mb-2">📧 Email Details</h3>
-                        <div class="text-sm text-gray-300 space-y-1">
-                            <div><strong class="text-gray-200">From:</strong> ${feedbackData.emailSender}</div>
-                            <div><strong class="text-gray-200">Subject:</strong> ${feedbackData.emailSubject}</div>
-                            <div><strong class="text-gray-200">Your Action:</strong> ${feedbackData.playerAction.charAt(0).toUpperCase() + feedbackData.playerAction.slice(1)}</div>
-                            <div><strong class="text-gray-200">Email Type:</strong> <span class="${feedbackData.isSuspicious ? 'text-red-400' : 'text-green-400'}">${feedbackData.isSuspicious ? 'Suspicious/Phishing' : 'Legitimate'}</span></div>
-                        </div>
-                    </div>
-
-                    ${feedback.redFlags.length > 0 ? `
-                    <div class="bg-red-900/30 border border-red-700 rounded-lg p-3">
-                        <h3 class="font-semibold text-red-400 mb-2">🚩 Red Flags Identified</h3>
-                        <ul class="text-sm text-red-300 space-y-1">
-                            ${feedback.redFlags.map(flag => `<li class="flex items-start"><span class="text-red-500 mr-2">•</span>${flag}</li>`).join('')}
-                        </ul>
-                    </div>
-                    ` : ''}
-
-                    ${feedback.goodSigns.length > 0 ? `
-                    <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
-                        <h3 class="font-semibold text-green-400 mb-2">✅ Positive Indicators</h3>
-                        <ul class="text-sm text-green-300 space-y-1">
-                            ${feedback.goodSigns.map(sign => `<li class="flex items-start"><span class="text-green-500 mr-2">•</span>${sign}</li>`).join('')}
-                        </ul>
-                    </div>
-                    ` : ''}
-
-                    <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-3">
-                        <h3 class="font-semibold text-blue-400 mb-2">💡 Security Tips</h3>
-                        <ul class="text-sm text-blue-300 space-y-1">
-                            ${feedback.tips.map(tip => `<li class="flex items-start"><span class="text-blue-500 mr-2">•</span>${tip}</li>`).join('')}
-                        </ul>
-                    </div>
-
-                    ${feedback.aiAnalysis ? `
-                    <!-- AI Analysis Insights -->
-                    <div class="bg-purple-900/30 border border-purple-700 rounded-lg p-3">
-                        <h3 class="font-semibold text-purple-400 mb-2">🤖 AI Security Analysis</h3>
-                        <div class="text-sm text-purple-300 space-y-2">
-                            ${feedback.aiAnalysis.risk_level ? `
-                            <div class="flex items-center space-x-2">
-                                <span class="font-medium">Risk Level:</span>
-                                <span class="px-2 py-1 rounded text-xs font-semibold ${
-                                    feedback.aiAnalysis.risk_level === 'high' ? 'bg-red-600 text-white' :
-                                    feedback.aiAnalysis.risk_level === 'medium' ? 'bg-yellow-600 text-white' :
-                                    'bg-green-600 text-white'
-                                }">${feedback.aiAnalysis.risk_level.toUpperCase()}</span>
-                            </div>
-                            ` : ''}
-                            ${feedback.aiAnalysis.educational_focus ? `
+            <div class="bg-gray-800 rounded-xl border border-gray-600 shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden">
+                <!-- Header -->
+                <div class="bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-red-600 to-pink-600'} px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-3xl">${feedback.result === 'correct' ? '✅' : '❌'}</div>
                             <div>
-                                <span class="font-medium text-purple-200">Educational Focus:</span>
-                                <p class="mt-1 text-purple-300">${feedback.aiAnalysis.educational_focus}</p>
+                                <h2 class="text-lg font-bold text-white">${feedback.title}</h2>
+                                <p class="text-sm text-white/90">${feedbackData.emailSubject}</p>
                             </div>
-                            ` : ''}
                         </div>
-                    </div>
-                    ` : ''}
-
-                    <!-- Session Progress -->
-                    <div class="bg-gray-700 rounded-lg p-3 border border-gray-600">
-                        <h3 class="font-semibold text-white mb-2">📊 Your Progress</h3>
-                        <div class="text-sm text-gray-300">
-                            <div class="mb-2">Correct Actions: <span class="text-green-400 font-semibold">${this.sessionScore}</span>/<span class="text-gray-200">${this.totalActions}</span></div>
-                            <div class="mb-3">Accuracy: <span class="text-yellow-400 font-semibold">${this.totalActions > 0 ? Math.round((this.sessionScore / this.totalActions) * 100) : 0}%</span></div>
-                            
-                            <!-- Progress Bar -->
-                            <div class="w-full bg-gray-600 rounded-full h-2">
-                                <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500" 
-                                     style="width: ${this.totalActions > 0 ? (this.sessionScore / this.totalActions) * 100 : 0}%"></div>
-                            </div>
+                        <div class="text-right">
+                            <div class="text-white font-bold text-lg">${accuracy}%</div>
+                            <div class="text-white/80 text-xs">Accuracy</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="text-center mt-6">
+                <!-- Content -->
+                <div class="p-6 overflow-y-auto max-h-[60vh]">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <!-- Left Column -->
+                        <div class="space-y-3">
+                            <!-- Email Info -->
+                            <div class="bg-gray-700/50 rounded-lg p-3 border border-gray-600/50">
+                                <h3 class="text-sm font-semibold text-gray-300 mb-2 flex items-center">
+                                    📧 <span class="ml-1">Email Analysis</span>
+                                </h3>
+                                <div class="space-y-1 text-xs">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400">Action:</span>
+                                        <span class="text-white capitalize">${feedbackData.playerAction}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400">Type:</span>
+                                        <span class="${feedbackData.isSuspicious ? 'text-red-400' : 'text-green-400'} font-medium">
+                                            ${feedbackData.isSuspicious ? 'Phishing' : 'Legitimate'}
+                                        </span>
+                                    </div>
+                                    ${feedback.aiAnalysis?.risk_level ? `
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400">Risk Level:</span>
+                                        <span class="px-2 py-0.5 rounded text-xs font-semibold ${
+                                            feedback.aiAnalysis.risk_level === 'high' ? 'bg-red-600 text-white' :
+                                            feedback.aiAnalysis.risk_level === 'medium' ? 'bg-yellow-600 text-white' :
+                                            'bg-green-600 text-white'
+                                        }">${feedback.aiAnalysis.risk_level.toUpperCase()}</span>
+                                    </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+
+                            <!-- Session Progress -->
+                            <div class="bg-gray-700/50 rounded-lg p-3 border border-gray-600/50">
+                                <h3 class="text-sm font-semibold text-gray-300 mb-2 flex items-center">
+                                    📊 <span class="ml-1">Session Progress</span>
+                                </h3>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-xs text-gray-400">Score:</span>
+                                    <span class="text-sm text-white">${this.sessionScore}/${this.totalActions}</span>
+                                </div>
+                                <div class="w-full bg-gray-600 rounded-full h-1.5">
+                                    <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-1.5 rounded-full transition-all duration-500" 
+                                         style="width: ${accuracy}%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="space-y-3">
+                            <!-- Key Insights -->
+                            ${insights.length > 0 ? `
+                            <div class="bg-gray-700/50 rounded-lg p-3 border border-gray-600/50">
+                                <h3 class="text-sm font-semibold text-gray-300 mb-2 flex items-center">
+                                    🔍 <span class="ml-1">Key Insights</span>
+                                </h3>
+                                <div class="space-y-1 max-h-24 overflow-y-auto">
+                                    ${insights.slice(0, 4).map(insight => `
+                                        <div class="flex items-start space-x-2 text-xs">
+                                            <span class="flex-shrink-0">${insight.icon}</span>
+                                            <span class="${insight.color}">${insight.text}</span>
+                                        </div>
+                                    `).join('')}
+                                    ${insights.length > 4 ? `<div class="text-xs text-gray-500 italic">+${insights.length - 4} more insights...</div>` : ''}
+                                </div>
+                            </div>
+                            ` : ''}
+
+                            <!-- Security Tips -->
+                            <div class="bg-blue-900/20 rounded-lg p-3 border border-blue-600/30">
+                                <h3 class="text-sm font-semibold text-blue-400 mb-2 flex items-center">
+                                    💡 <span class="ml-1">Quick Tips</span>
+                                </h3>
+                                <div class="space-y-1 max-h-24 overflow-y-auto">
+                                    ${feedback.tips.slice(0, 3).map(tip => `
+                                        <div class="flex items-start space-x-2 text-xs">
+                                            <span class="text-blue-400 flex-shrink-0">•</span>
+                                            <span class="text-blue-300">${tip}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <!-- AI Analysis -->
+                            ${feedback.aiAnalysis?.educational_focus ? `
+                            <div class="bg-purple-900/20 rounded-lg p-3 border border-purple-600/30">
+                                <h3 class="text-sm font-semibold text-purple-400 mb-2 flex items-center">
+                                    🤖 <span class="ml-1">AI Insight</span>
+                                </h3>
+                                <p class="text-xs text-purple-300 leading-relaxed">${feedback.aiAnalysis.educational_focus}</p>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Feedback Message -->
+                    <div class="mt-4 p-3 bg-gray-700/30 rounded-lg border border-gray-600/50">
+                        <p class="text-sm text-gray-300 text-center">${feedback.message}</p>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="px-6 py-4 bg-gray-750 border-t border-gray-600">
                     <button onclick="this.closest('.fixed').remove()" 
-                            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors font-semibold">
-                        Continue Training
+                            class="w-full bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-blue-600 to-blue-700'} text-white py-2 px-4 rounded-lg hover:shadow-lg transition-all duration-300 font-medium text-sm">
+                        Continue Training →
                     </button>
                 </div>
             </div>
@@ -600,12 +642,6 @@ export class EmailFeedback {
         
         document.body.appendChild(modal);
         
-        // Auto-remove after 12 seconds if user doesn't interact
-        setTimeout(() => {
-            if (modal.parentNode) {
-                modal.remove();
-            }
-        }, 12000);
     }
 
     /**
