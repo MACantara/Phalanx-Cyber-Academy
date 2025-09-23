@@ -116,10 +116,8 @@ export class EmailFeedback {
             // Legitimate email feedback
             if (isCorrect) {
                 feedback.title = '✅ Good Email Management';
-                feedback.message = `You correctly identified this as a legitimate email. ${action === 'trust' ? 'Proper email processing helps maintain business flow.' : 'Normal processing of legitimate emails is appropriate.'}`;
             } else {
                 feedback.title = '⚠️ Overly Cautious Action';
-                feedback.message = `This was a legitimate email that didn't require ${action === 'report' ? 'reporting' : 'deletion'}. While security awareness is good, over-reporting can impact workflow.`;
             }
 
             // Use AI analysis safety factors if available, otherwise fall back to detection
@@ -623,11 +621,6 @@ export class EmailFeedback {
                             </div>
 
                         </div>
-                    </div>
-
-                    <!-- Feedback Message -->
-                    <div class="mt-4 p-3 bg-gray-700/30 rounded border border-gray-600/50">
-                        <p class="text-sm text-gray-300 text-center">${feedback.message}</p>
                     </div>
                 </div>
 
