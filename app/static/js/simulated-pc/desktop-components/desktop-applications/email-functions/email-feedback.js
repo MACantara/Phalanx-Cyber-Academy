@@ -627,8 +627,8 @@ export class EmailFeedback {
                 <!-- Footer -->
                 <div class="px-6 py-4 bg-gray-750 border-t border-gray-600">
                     <button onclick="this.closest('.fixed').remove()" 
-                            class="w-full bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-blue-600 to-blue-700'} text-white py-2 px-4 rounded hover:shadow-lg transition-all duration-300 font-medium text-sm">
-                        Continue Training →
+                            class="w-full bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-blue-600 to-blue-700'} text-white py-2 px-4 rounded hover:shadow-lg transition-all duration-300 font-medium text-sm cursor-pointer">
+                        Continue Training <i class="bi bi-arrow-right"></i>
                     </button>
                 </div>
             </div>
