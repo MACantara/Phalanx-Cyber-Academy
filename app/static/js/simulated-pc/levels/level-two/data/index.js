@@ -1,6 +1,13 @@
 /**
  * Level 2: Shadow in the Inbox - Data exports
  * Central export file for all Level 2 data modules
+ * 
+ * Data Source: phishing.csv + legit.csv
+ * - phishing.csv: Contains confirmed phishing emails 
+ * - legit.csv: Contains legitimate emails
+ * 
+ * Note: The 'label' column in CSV files indicates human vs LLM generation,
+ * NOT phishing vs legitimate classification. Email type is determined by source file.
  */
 
 // Email data loader from CSV API
@@ -92,24 +99,47 @@ export const level2DataLoaded = true;
 // Email data structure documentation for developers
 export const emailDataStructure = {
     id: 'email_123',
-    sender: 'sender@example.com',
-    receiver: 'receiver@example.com', 
-    date: 'Tue, 05 Aug 2008 16:31:02 -0700',
-    subject: 'Email subject line',
-    body: 'Email body content...',
-    label: 1, // 1 = phishing, 0 = legitimate (not displayed, for checking only)
-    is_phishing: true, // Boolean flag for easy checking
-    email_type: 'phishing', // 'phishing' or 'legitimate'
+    sender: 'Jesus Miguel Recuenco Ezquerra <JMRECU@teleline.es>',
+    receiver: 'handy board <handyboard@media.mit.edu>', 
+    date: '29/10/2019 22:53',
+    subject: 'Starting IC with wizard',
+    body: 'Hi\n\n\t\tI am running the IR test program from Max Davies. To do this I need to start\nIC with thw wizard option. As I have a macintosh, there is a wizard option for\nthe mac version of IC?\n\nJesus\n\n',
+    urls: '0', // URL indicator from CSV
+    original_label: 0, // Human vs LLM generation indicator (not phishing classification)
+    is_phishing: false, // Boolean flag based on source file (legit.csv = false, phishing.csv = true)
+    email_type: 'legitimate', // 'phishing' or 'legitimate' - determined by source file
     ai_analysis: {
-        risk_level: 'high', // 'high' or 'low'
-        phishing_indicators: ['Suspicious sender', 'Urgent language'],
-        safety_factors: ['Verified sender', 'Professional formatting'],
-        educational_focus: 'This email demonstrates phishing email characteristics.',
-        red_flags: ['Poor grammar or spelling', 'Generic greetings'],
-        verification_tips: ['Check sender email address carefully', 'Hover over links before clicking']
+        risk_level: 'low', // 'high' or 'low'
+        phishing_indicators: [], // Empty for legitimate emails
+        safety_factors: ['Verified sender', 'Professional formatting', 'Technical discussion'],
+        educational_focus: 'This email demonstrates legitimate email characteristics.',
+        red_flags: [], // Empty for legitimate emails
+        verification_tips: ['Check sender email address carefully', 'Hover over links before clicking', 'Verify sender through alternative means']
+    }
+};
+
+// Data source information
+export const dataSourceInfo = {
+    phishing_source: 'phishing.csv',
+    legitimate_source: 'legit.csv',
+    combined_source: 'phishing.csv + legit.csv',
+    structure: {
+        columns: ['sender', 'receiver', 'date', 'subject', 'body', 'urls', 'label'],
+        classification_method: 'source_file', // Classification based on which file email comes from
+        label_meaning: 'human_vs_llm_generation', // NOT phishing classification
+        phishing_determination: 'emails_from_phishing_csv',
+        legitimate_determination: 'emails_from_legit_csv',
+        description: 'Combined dataset from separate phishing and legitimate email CSV files. Email type determined by source file, not label column.'
     }
 };
 
 // Future exports will include:
 // export { emailTemplates } from './email-templates.js';
 // export { securityAlerts } from './security-alerts.js';
+
+// Dataset Statistics (as of current load):
+// - Total emails: 1,929 (after filtering invalid entries)
+// - Phishing emails: 998 (from phishing.csv - classification by source file)
+// - Legitimate emails: 931 (from legit.csv - classification by source file)  
+// - Mixed emails endpoint returns: 8 phishing + 7 legitimate (15 total) for Level 2
+// - Original 'label' column indicates human (0) vs LLM (1) generation, NOT phishing classification
