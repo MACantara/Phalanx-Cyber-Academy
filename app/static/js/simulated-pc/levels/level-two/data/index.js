@@ -2,14 +2,14 @@
  * Level 2: Shadow in the Inbox - Data exports
  * Central export file for all Level 2 data modules
  * 
- * Data Source: phishing.csv + legit.csv
- * - phishing.csv: Contains confirmed phishing emails 
- * - legit.csv: Contains legitimate emails
+ * Data Source: phishing_emails.json + legitimate_emails.json
+ * - phishing_emails.json: Contains 20 realistic phishing emails with comprehensive AI analysis
+ * - legitimate_emails.json: Contains 20 legitimate emails with educational safety factors
  * 
- * Email classification is determined by source file only.
+ * Each email includes detailed AI analysis for educational purposes.
  */
 
-// Email data loader from CSV API
+// Email data loader from JSON API
 export async function loadPhishingEmails() {
     try {
         const response = await fetch('/api/emails/mixed-emails');
@@ -57,7 +57,7 @@ export async function getEmailStats() {
     }
 }
 
-// Check CSV data availability
+// Check JSON data availability
 export async function checkEmailDataStatus() {
     try {
         const response = await fetch('/api/emails/csv-status');
@@ -68,7 +68,7 @@ export async function checkEmailDataStatus() {
         console.error('Error checking email data status:', error);
         return {
             success: false,
-            csv_data_available: false,
+            json_data_available: false,
             error: error.message
         };
     }
@@ -97,37 +97,58 @@ export const level2DataLoaded = true;
 
 // Email data structure documentation for developers
 export const emailDataStructure = {
-    id: 'email_123',
-    sender: 'Jesus Miguel Recuenco Ezquerra <JMRECU@teleline.es>',
-    receiver: 'handy board <handyboard@media.mit.edu>', 
-    date: '29/10/2019 22:53',
-    subject: 'Starting IC with wizard',
-    body: 'Hi\n\n\t\tI am running the IR test program from Max Davies. To do this I need to start\nIC with thw wizard option. As I have a macintosh, there is a wizard option for\nthe mac version of IC?\n\nJesus\n\n',
-    urls: '0', // URL indicator from CSV
-    source_file: 'legit.csv', // Source file - determines phishing classification
-    is_phishing: false, // Boolean flag based on source file (legit.csv = false, phishing.csv = true)
-    email_type: 'legitimate', // 'phishing' or 'legitimate' - determined by source file
+    id: 'phish_001',
+    sender: 'security@paypal-verification.com',
+    receiver: 'user@example.com',
+    date: '2024-03-15 09:32:15',
+    subject: 'URGENT: Your PayPal Account Has Been Limited',
+    body: 'Dear PayPal User,\n\nWe have detected suspicious activity on your account...',
+    is_phishing: 1, // 1 for phishing, 0 for legitimate
     ai_analysis: {
-        risk_level: 'low', // 'high' or 'low'
-        phishing_indicators: [], // Empty for legitimate emails
-        safety_factors: ['Verified sender', 'Professional formatting', 'Technical discussion'],
-        educational_focus: 'This email demonstrates legitimate email characteristics.',
-        red_flags: [], // Empty for legitimate emails
-        verification_tips: ['Check sender email address carefully', 'Hover over links before clicking', 'Verify sender through alternative means']
+        risk_level: 'high', // 'high', 'medium', or 'low'
+        phishing_indicators: [
+            'Suspicious domain (@paypal-verification.com vs official @paypal.com)',
+            'Generic greeting without personalization',
+            'Urgent language creating false sense of emergency',
+            'Suspicious URL with non-PayPal domain',
+            'Pressure tactics with time limit'
+        ],
+        safety_factors: [], // Empty for phishing emails, populated for legitimate
+        educational_focus: 'This email demonstrates classic phishing tactics including domain spoofing, urgency, and fear-based manipulation.',
+        red_flags: [
+            'Domain does not match official PayPal domain',
+            'Generic greeting instead of personalized name',
+            'Creates false urgency with threat of account closure',
+            'Suspicious link destination',
+            'Poor grammar and formatting'
+        ],
+        verification_tips: [
+            'Always verify sender domain matches official company domain',
+            'Look for personalized greetings using your actual name',
+            'Be suspicious of urgent deadlines and threats',
+            'Hover over links to check destination before clicking',
+            'Contact company directly through official channels to verify'
+        ]
     }
 };
 
 // Data source information
 export const dataSourceInfo = {
-    phishing_source: 'phishing.csv',
-    legitimate_source: 'legit.csv',
-    combined_source: 'phishing.csv + legit.csv',
+    phishing_source: 'phishing_emails.json',
+    legitimate_source: 'legitimate_emails.json',
+    combined_source: 'phishing_emails.json + legitimate_emails.json',
     structure: {
-        columns: ['sender', 'receiver', 'date', 'subject', 'body', 'urls', 'source_file'],
-        classification_method: 'source_file', // Classification based on which file email comes from
-        phishing_determination: 'emails_from_phishing_csv', // All emails from phishing.csv are phishing
-        legitimate_determination: 'emails_from_legit_csv', // All emails from legit.csv are legitimate
-        description: 'Combined dataset from separate phishing and legitimate email CSV files. Email type determined by source file.'
+        format: 'JSON',
+        email_count: {
+            phishing: 20,
+            legitimate: 20,
+            total: 40
+        },
+        classification_method: 'pre_classified', // All emails pre-classified with comprehensive AI analysis
+        phishing_determination: 'is_phishing_field', // is_phishing: 1 for phishing emails
+        legitimate_determination: 'is_phishing_field', // is_phishing: 0 for legitimate emails
+        ai_analysis_included: true,
+        description: 'Curated dataset of realistic phishing and legitimate emails with detailed AI analysis for educational purposes.'
     }
 };
 
@@ -135,9 +156,11 @@ export const dataSourceInfo = {
 // export { emailTemplates } from './email-templates.js';
 // export { securityAlerts } from './security-alerts.js';
 
-// Dataset Statistics (as of current load):
-// - Total emails: ~1,929 (after filtering invalid entries)
-// - Phishing emails: ~998 (from phishing.csv - classification by source file)
-// - Legitimate emails: ~931 (from legit.csv - classification by source file)  
+// Dataset Statistics:
+// - Total emails: 40 (20 phishing + 20 legitimate)
+// - Phishing emails: 20 realistic examples covering major attack vectors
+// - Legitimate emails: 20 authentic examples from popular services
 // - Mixed emails endpoint returns: 8 phishing + 7 legitimate (15 total) for Level 2
-// - Phishing classification determined by source file: phishing.csv = phishing, legit.csv = legitimate
+// - All emails include comprehensive AI analysis with educational components
+// - Phishing emails cover: PayPal, Amazon, Microsoft, banking, social media, crypto, delivery, lottery scams
+// - Legitimate emails cover: GitHub, Amazon orders, Microsoft security, Slack, Dropbox, LinkedIn, Spotify, etc.
