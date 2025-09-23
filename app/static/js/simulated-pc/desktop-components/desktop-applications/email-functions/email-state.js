@@ -57,9 +57,11 @@ export class EmailState {
         return this.securityManager.getEmailsForFolder(allEmails, folderId);
     }
 
-    // Persistence methods - delegate to security manager
+    // Persistence methods
     async loadFromServer() {
-        await this.securityManager.loadFromServer();
+        // EmailSecurityManager now uses in-memory storage only
+        // No server loading required
+        return Promise.resolve();
     }
 
     // Statistics methods

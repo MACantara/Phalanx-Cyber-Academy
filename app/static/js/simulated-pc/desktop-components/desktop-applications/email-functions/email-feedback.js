@@ -14,17 +14,19 @@ export class EmailFeedback {
 
     /**
      * Evaluate player action and provide feedback
-     * @param {Object} email - Email object with suspicious property
+     * @param {Object} email - Email object with suspicious property or is_phishing property
      * @param {string} action - Player action: 'report', 'trust', 'delete', 'ignore'
      * @param {string} reasoning - Optional reasoning for the action
      */
     async evaluateAction(email, action, reasoning = '') {
         const isCorrectAction = this.isActionCorrect(email, action);
+        const isSuspicious = email.suspicious || email.is_phishing === 1;
+        
         const feedbackData = {
             emailId: email.id,
             emailSubject: email.subject,
             emailSender: email.sender,
-            isSuspicious: email.suspicious,
+            isSuspicious: isSuspicious,
             playerAction: action,
             isCorrect: isCorrectAction,
             reasoning: reasoning,
@@ -45,7 +47,10 @@ export class EmailFeedback {
      * @returns {boolean} True if action is correct
      */
     isActionCorrect(email, action) {
-        if (email.suspicious) {
+        // Check both suspicious property and is_phishing property for compatibility
+        const isSuspicious = email.suspicious || email.is_phishing === 1;
+        
+        if (isSuspicious) {
             // For suspicious emails, correct actions are: report, delete
             return ['report', 'delete'].includes(action);
         } else {
@@ -55,8 +60,8 @@ export class EmailFeedback {
     }
 
     /**
-     * Generate detailed feedback based on email and action
-     * @param {Object} email - Email object
+     * Generate detailed feedback based on email and action using AI analysis
+     * @param {Object} email - Email object with ai_analysis property
      * @param {string} action - Player action
      * @param {boolean} isCorrect - Whether action was correct
      * @returns {Object} Feedback object with details
@@ -68,10 +73,15 @@ export class EmailFeedback {
             message: '',
             redFlags: [],
             goodSigns: [],
-            tips: []
+            tips: [],
+            aiAnalysis: email.ai_analysis || null
         };
 
-        if (email.suspicious) {
+        // Use AI analysis data if available, otherwise fall back to basic detection
+        const aiAnalysis = email.ai_analysis;
+        const isSuspicious = email.suspicious || email.is_phishing === 1;
+
+        if (isSuspicious) {
             // Suspicious email feedback
             if (isCorrect) {
                 feedback.title = '✅ Excellent Security Awareness!';
@@ -81,43 +91,74 @@ export class EmailFeedback {
                 feedback.message = `This was a suspicious email that should have been reported or deleted. ${action === 'trust' ? 'Trusting this email could lead to security breaches.' : 'Ignoring suspicious emails allows threats to persist.'}`;
             }
 
-            // Add red flags for suspicious emails
-            feedback.redFlags = this.identifyRedFlags(email);
-            feedback.tips = [
-                'Always verify sender identity through alternative channels',
-                'Be cautious of urgent requests for sensitive information',
-                'Check for spelling errors and suspicious domains',
-                'When in doubt, report to your security team'
-            ];
+            // Use AI analysis red flags if available, otherwise fall back to detection
+            if (aiAnalysis) {
+                feedback.redFlags = [
+                    ...(aiAnalysis.phishing_indicators || []),
+                    ...(aiAnalysis.red_flags || [])
+                ];
+                feedback.tips = aiAnalysis.verification_tips || [
+                    'Always verify sender identity through alternative channels',
+                    'Be cautious of urgent requests for sensitive information',
+                    'Check for spelling errors and suspicious domains',
+                    'When in doubt, report to your security team'
+                ];
+            } else {
+                feedback.redFlags = this.identifyRedFlags(email);
+                feedback.tips = [
+                    'Always verify sender identity through alternative channels',
+                    'Be cautious of urgent requests for sensitive information',
+                    'Check for spelling errors and suspicious domains',
+                    'When in doubt, report to your security team'
+                ];
+            }
         } else {
             // Legitimate email feedback
             if (isCorrect) {
                 feedback.title = '✅ Good Email Management';
-                feedback.message = `You correctly identified this as a legitimate email. ${action === 'trust' ? 'Proper email processing helps maintain business flow.' : 'Normal processing of legitimate emails is appropriate.'}`;
             } else {
                 feedback.title = '⚠️ Overly Cautious Action';
-                feedback.message = `This was a legitimate email that didn't require ${action === 'report' ? 'reporting' : 'deletion'}. While security awareness is good, over-reporting can impact workflow.`;
             }
 
-            // Add good signs for legitimate emails
-            feedback.goodSigns = this.identifyGoodSigns(email);
-            feedback.tips = [
-                'Legitimate emails often come from known domains',
-                'Professional formatting and proper grammar are good signs',
-                'Reasonable requests that align with business needs',
-                'Contact information and proper signatures indicate legitimacy'
-            ];
+            // Use AI analysis safety factors if available, otherwise fall back to detection
+            if (aiAnalysis) {
+                feedback.goodSigns = aiAnalysis.safety_factors || [];
+                feedback.tips = aiAnalysis.verification_tips || [
+                    'Legitimate emails often come from known domains',
+                    'Professional formatting and proper grammar are good signs',
+                    'Reasonable requests that align with business needs',
+                    'Contact information and proper signatures indicate legitimacy'
+                ];
+            } else {
+                feedback.goodSigns = this.identifyGoodSigns(email);
+                feedback.tips = [
+                    'Legitimate emails often come from known domains',
+                    'Professional formatting and proper grammar are good signs',
+                    'Reasonable requests that align with business needs',
+                    'Contact information and proper signatures indicate legitimacy'
+                ];
+            }
         }
 
         return feedback;
     }
 
     /**
-     * Identify red flags in suspicious emails
-     * @param {Object} email - Email object
+     * Identify red flags in suspicious emails using AI analysis when available
+     * @param {Object} email - Email object with optional ai_analysis property
      * @returns {Array} List of red flags
      */
     identifyRedFlags(email) {
+        // Use AI analysis data if available
+        if (email.ai_analysis) {
+            const redFlags = [
+                ...(email.ai_analysis.phishing_indicators || []),
+                ...(email.ai_analysis.red_flags || [])
+            ];
+            return redFlags;
+        }
+
+        // Fallback to hardcoded detection for emails without AI analysis
         const redFlags = [];
         
         // Check sender domain
@@ -157,11 +198,17 @@ export class EmailFeedback {
     }
 
     /**
-     * Identify good signs in legitimate emails
-     * @param {Object} email - Email object
+     * Identify good signs in legitimate emails using AI analysis when available
+     * @param {Object} email - Email object with optional ai_analysis property
      * @returns {Array} List of positive indicators
      */
     identifyGoodSigns(email) {
+        // Use AI analysis data if available
+        if (email.ai_analysis && email.ai_analysis.safety_factors) {
+            return email.ai_analysis.safety_factors;
+        }
+
+        // Fallback to hardcoded detection for emails without AI analysis
         const goodSigns = [];
         
         // Check sender domain
@@ -447,78 +494,141 @@ export class EmailFeedback {
      */
     showFeedbackModal(feedbackData) {
         const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 bg-black/85 flex items-center justify-center z-50';
+        modal.className = 'fixed inset-0 bg-black/85 flex items-center justify-center z-50 p-4';
         
         const { feedback } = feedbackData;
-        const resultClass = feedback.result === 'correct' ? 'correct' : 'incorrect';
         const resultColor = feedback.result === 'correct' ? '#22c55e' : '#ef4444';
-        const bgColor = feedback.result === 'correct' ? '#064e3b' : '#7f1d1d';
+        const accuracy = this.totalActions > 0 ? Math.round((this.sessionScore / this.totalActions) * 100) : 0;
+        
+        // Combine red flags and good signs into a single insights section
+        const insights = [
+            ...(feedback.redFlags.map(flag => ({ type: 'warning', icon: '🚩', text: flag, color: 'text-red-300' }))),
+            ...(feedback.goodSigns.map(sign => ({ type: 'positive', icon: '✅', text: sign, color: 'text-green-300' })))
+        ];
         
         modal.innerHTML = `
-            <div class="bg-gray-800 rounded-lg border border-gray-600 shadow-2xl p-6 max-w-lg mx-4 overflow-y-auto">
-                <div class="text-center mb-6">
-                    <div class="text-6xl mb-3">${feedback.result === 'correct' ? '✅' : '❌'}</div>
-                    <h2 class="text-xl font-bold mb-2 text-white" style="color: ${resultColor}">${feedback.title}</h2>
-                    <p class="text-gray-300">${feedback.message}</p>
-                </div>
-
-                <div class="space-y-4">
-                    <!-- Email Details -->
-                    <div class="bg-gray-700 rounded-lg p-3 border border-gray-600">
-                        <h3 class="font-semibold text-white mb-2">📧 Email Details</h3>
-                        <div class="text-sm text-gray-300 space-y-1">
-                            <div><strong class="text-gray-200">From:</strong> ${feedbackData.emailSender}</div>
-                            <div><strong class="text-gray-200">Subject:</strong> ${feedbackData.emailSubject}</div>
-                            <div><strong class="text-gray-200">Your Action:</strong> ${feedbackData.playerAction.charAt(0).toUpperCase() + feedbackData.playerAction.slice(1)}</div>
-                            <div><strong class="text-gray-200">Email Type:</strong> <span class="${feedbackData.isSuspicious ? 'text-red-400' : 'text-green-400'}">${feedbackData.isSuspicious ? 'Suspicious/Phishing' : 'Legitimate'}</span></div>
-                        </div>
-                    </div>
-
-                    ${feedback.redFlags.length > 0 ? `
-                    <div class="bg-red-900/30 border border-red-700 rounded-lg p-3">
-                        <h3 class="font-semibold text-red-400 mb-2">🚩 Red Flags Identified</h3>
-                        <ul class="text-sm text-red-300 space-y-1">
-                            ${feedback.redFlags.map(flag => `<li class="flex items-start"><span class="text-red-500 mr-2">•</span>${flag}</li>`).join('')}
-                        </ul>
-                    </div>
-                    ` : ''}
-
-                    ${feedback.goodSigns.length > 0 ? `
-                    <div class="bg-green-900/30 border border-green-700 rounded-lg p-3">
-                        <h3 class="font-semibold text-green-400 mb-2">✅ Positive Indicators</h3>
-                        <ul class="text-sm text-green-300 space-y-1">
-                            ${feedback.goodSigns.map(sign => `<li class="flex items-start"><span class="text-green-500 mr-2">•</span>${sign}</li>`).join('')}
-                        </ul>
-                    </div>
-                    ` : ''}
-
-                    <div class="bg-blue-900/30 border border-blue-700 rounded-lg p-3">
-                        <h3 class="font-semibold text-blue-400 mb-2">💡 Security Tips</h3>
-                        <ul class="text-sm text-blue-300 space-y-1">
-                            ${feedback.tips.map(tip => `<li class="flex items-start"><span class="text-blue-500 mr-2">•</span>${tip}</li>`).join('')}
-                        </ul>
-                    </div>
-
-                    <!-- Session Progress -->
-                    <div class="bg-gray-700 rounded-lg p-3 border border-gray-600">
-                        <h3 class="font-semibold text-white mb-2">📊 Your Progress</h3>
-                        <div class="text-sm text-gray-300">
-                            <div class="mb-2">Correct Actions: <span class="text-green-400 font-semibold">${this.sessionScore}</span>/<span class="text-gray-200">${this.totalActions}</span></div>
-                            <div class="mb-3">Accuracy: <span class="text-yellow-400 font-semibold">${this.totalActions > 0 ? Math.round((this.sessionScore / this.totalActions) * 100) : 0}%</span></div>
-                            
-                            <!-- Progress Bar -->
-                            <div class="w-full bg-gray-600 rounded-full h-2">
-                                <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500" 
-                                     style="width: ${this.totalActions > 0 ? (this.sessionScore / this.totalActions) * 100 : 0}%"></div>
+            <div class="bg-gray-800 rounded border border-gray-600 shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden">
+                <!-- Header -->
+                <div class="bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-red-600 to-pink-600'} px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-3xl">${feedback.result === 'correct' ? '✅' : '❌'}</div>
+                            <div>
+                                <h2 class="text-lg font-bold text-white">${feedback.title}</h2>
+                                <p class="text-sm text-white/90">${feedbackData.emailSubject}</p>
                             </div>
                         </div>
+                        <div class="text-right">
+                            <div class="text-white font-bold text-lg">${accuracy}%</div>
+                            <div class="text-white/80 text-xs">Accuracy</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="text-center mt-6">
+                <!-- Content -->
+                <div class="p-6 overflow-y-auto max-h-[60vh]">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <!-- Left Column -->
+                        <div class="space-y-3">
+                            <!-- Email Info -->
+                            <div class="bg-gray-700/50 rounded p-3 border border-gray-600/50">
+                                <h3 class="text-sm font-semibold text-gray-300 mb-2 flex items-center">
+                                    📧 <span class="ml-1">Email Analysis</span>
+                                </h3>
+                                <div class="space-y-1 text-xs">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400">Action:</span>
+                                        <span class="text-white capitalize">${feedbackData.playerAction}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400">Type:</span>
+                                        <span class="${feedbackData.isSuspicious ? 'text-red-400' : 'text-green-400'} font-medium">
+                                            ${feedbackData.isSuspicious ? 'Phishing' : 'Legitimate'}
+                                        </span>
+                                    </div>
+                                    ${feedback.aiAnalysis?.risk_level ? `
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400">Risk Level:</span>
+                                        <span class="px-2 py-0.5 rounded text-xs font-semibold ${
+                                            feedback.aiAnalysis.risk_level === 'high' ? 'bg-red-600 text-white' :
+                                            feedback.aiAnalysis.risk_level === 'medium' ? 'bg-yellow-600 text-white' :
+                                            'bg-green-600 text-white'
+                                        }">${feedback.aiAnalysis.risk_level.toUpperCase()}</span>
+                                    </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+
+                            <!-- Session Progress -->
+                            <div class="bg-gray-700/50 rounded p-3 border border-gray-600/50">
+                                <h3 class="text-sm font-semibold text-gray-300 mb-2 flex items-center">
+                                    📊 <span class="ml-1">Session Progress</span>
+                                </h3>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-xs text-gray-400">Score:</span>
+                                    <span class="text-sm text-white">${this.sessionScore}/${this.totalActions}</span>
+                                </div>
+                                <div class="w-full bg-gray-600 rounded-full h-1.5">
+                                    <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-1.5 rounded-full transition-all duration-500" 
+                                         style="width: ${accuracy}%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Education Focus -->
+                            ${feedback.aiAnalysis?.educational_focus ? `
+                            <div class="bg-purple-900/20 rounded p-3 border border-purple-600/30">
+                                <h3 class="text-sm font-semibold text-purple-400 mb-2 flex items-center">
+                                    🎓 <span class="ml-1">Education Focus</span>
+                                </h3>
+                                <p class="text-xs text-purple-300 leading-relaxed">${feedback.aiAnalysis.educational_focus}</p>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="space-y-3">
+                            <!-- Key Insights -->
+                            ${insights.length > 0 ? `
+                            <div class="bg-gray-700/50 rounded p-3 border border-gray-600/50">
+                                <h3 class="text-sm font-semibold text-gray-300 mb-2 flex items-center">
+                                    🔍 <span class="ml-1">Key Insights</span>
+                                </h3>
+                                <div class="space-y-1 max-h-24 overflow-y-auto">
+                                    ${insights.slice(0, 4).map(insight => `
+                                        <div class="flex items-start space-x-2 text-xs">
+                                            <span class="flex-shrink-0">${insight.icon}</span>
+                                            <span class="${insight.color}">${insight.text}</span>
+                                        </div>
+                                    `).join('')}
+                                    ${insights.length > 4 ? `<div class="text-xs text-gray-500 italic">+${insights.length - 4} more insights...</div>` : ''}
+                                </div>
+                            </div>
+                            ` : ''}
+
+                            <!-- Security Tips -->
+                            <div class="bg-blue-900/20 rounded p-3 border border-blue-600/30">
+                                <h3 class="text-sm font-semibold text-blue-400 mb-2 flex items-center">
+                                    💡 <span class="ml-1">Quick Tips</span>
+                                </h3>
+                                <div class="space-y-1 max-h-24 overflow-y-auto">
+                                    ${feedback.tips.slice(0, 3).map(tip => `
+                                        <div class="flex items-start space-x-2 text-xs">
+                                            <span class="text-blue-400 flex-shrink-0">•</span>
+                                            <span class="text-blue-300">${tip}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="px-6 py-4 bg-gray-750 border-t border-gray-600">
                     <button onclick="this.closest('.fixed').remove()" 
-                            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors font-semibold">
-                        Continue Training
+                            class="w-full bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-blue-600 to-blue-700'} text-white py-2 px-4 rounded hover:shadow-lg transition-all duration-300 font-medium text-sm cursor-pointer">
+                        Continue Training <i class="bi bi-arrow-right"></i>
                     </button>
                 </div>
             </div>
@@ -526,12 +636,6 @@ export class EmailFeedback {
         
         document.body.appendChild(modal);
         
-        // Auto-remove after 12 seconds if user doesn't interact
-        setTimeout(() => {
-            if (modal.parentNode) {
-                modal.remove();
-            }
-        }, 12000);
     }
 
     /**
@@ -638,7 +742,7 @@ export class EmailFeedback {
         const bgGradient = stats.accuracy >= 80 ? 'from-green-600 to-emerald-600' : stats.accuracy >= 60 ? 'from-yellow-600 to-orange-600' : 'from-red-600 to-pink-600';
         
         modal.innerHTML = `
-            <div class="bg-gray-800 rounded-lg border border-gray-600 shadow-2xl p-8 max-w-md mx-4">
+            <div class="bg-gray-800 rounded border border-gray-600 shadow-2xl p-8 max-w-md mx-4">
                 <div class="text-center">
                     <div class="text-6xl mb-4">${emoji}</div>
                     <h2 class="text-2xl font-bold text-white mb-4">Email Security Training Complete!</h2>
@@ -668,7 +772,7 @@ export class EmailFeedback {
                         </div>
                     </div>
                     
-                    <div class="text-sm text-gray-400 mb-6 p-3 bg-gray-700 rounded-lg border border-gray-600">
+                    <div class="text-sm text-gray-400 mb-6 p-3 bg-gray-700 rounded border border-gray-600">
                         ${stats.accuracy >= 80 ? 
                             'Excellent work! You demonstrated strong email security awareness.' :
                             stats.accuracy >= 60 ?
@@ -678,7 +782,7 @@ export class EmailFeedback {
                     </div>
                     
                     <button onclick="this.closest('.fixed').remove()" 
-                            class="bg-gradient-to-r ${bgGradient} text-white px-8 py-3 rounded-lg hover:shadow-lg transition-all duration-300 font-semibold">
+                            class="bg-gradient-to-r ${bgGradient} text-white px-8 py-3 rounded hover:shadow-lg transition-all duration-300 font-semibold">
                         Continue to Next Level
                     </button>
                 </div>

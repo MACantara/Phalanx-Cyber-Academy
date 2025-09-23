@@ -3,7 +3,7 @@ import { EmailState } from './email-functions/email-state.js';
 import { EmailActionHandler } from './email-functions/email-action-handler.js';
 import { EmailReadTracker } from './email-functions/email-read-tracker.js';
 import { EmailCompletionTracker } from './email-functions/email-completion-tracker.js';
-import { ALL_EMAILS } from '../../levels/level-two/emails/email-registry.js';
+import { ALL_EMAILS, loadEmailsFromCSV } from '../../levels/level-two/emails/email-registry.js';
 import { NavigationUtil } from '../shared-utils/navigation-util.js';
 import { InMemoryFeedbackStore } from './email-functions/email-session-summary.js';
 
@@ -20,8 +20,9 @@ export class EmailApp extends WindowBase {
         this.actionHandler = new EmailActionHandler(this);
         this.completionTracker = new EmailCompletionTracker(this);
         
-        // Load saved email state
-        this.initializeState();
+        // Flag to track initialization
+        this.isInitialized = false;
+        this.initializationPromise = null;
         
         // Expose debug methods globally for testing
         window.emailAppDebug = {
@@ -32,8 +33,32 @@ export class EmailApp extends WindowBase {
         };
     }
 
+    async ensureInitialized() {
+        if (this.isInitialized) {
+            return;
+        }
+        
+        if (this.initializationPromise) {
+            await this.initializationPromise;
+            return;
+        }
+        
+        this.initializationPromise = this.initializeState();
+        try {
+            await this.initializationPromise;
+            this.isInitialized = true;
+        } catch (error) {
+            console.error('Failed to initialize email app:', error);
+            this.initializationPromise = null; // Allow retry
+        }
+    }
+
     async initializeState() {
         try {
+            // First ensure JSON email data is loaded
+            await loadEmailsFromCSV(); // Keeping old name for backward compatibility
+            console.log('EmailApp: Email data loaded from JSON API');
+            
             await this.state.loadFromServer();
             await this.readTracker.ensureLoaded();
             await this.actionHandler.feedback.loadSessionData();
@@ -68,6 +93,29 @@ export class EmailApp extends WindowBase {
     }
 
     createContent() {
+        // Check if data is loaded, if not show loading message
+        if (!this.isInitialized) {
+            // Start initialization if not already started
+            if (!this.initializationPromise) {
+                this.initializationPromise = this.ensureInitialized().then(() => {
+                    // Update content once initialized
+                    this.updateContent();
+                });
+            }
+            
+            return `
+                <div class="h-full flex items-center justify-center">
+                    <div class="text-center">
+                        <div class="text-lg font-medium text-gray-300 mb-2">Loading Email Data...</div>
+                        <div class="text-sm text-gray-500">Fetching emails from JSON database</div>
+                        <div class="mt-4">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400 mx-auto"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
         const currentFolder = this.state.getCurrentFolder();
         const selectedEmailId = this.state.getSelectedEmailId();
         
@@ -226,12 +274,15 @@ export class EmailApp extends WindowBase {
 
         return `
             <div class="p-6">
-                <!-- Action buttons at the top -->
-                <div class="mb-4 flex items-center space-x-2">
-                    <button class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-500 transition-colors text-xs cursor-pointer" id="back-btn">
-                        <i class="bi bi-arrow-left mr-1"></i>Back
-                    </button>
-                    ${this.state.securityManager.createActionButtons(email.id, this.state.getCurrentFolder())}
+                <!-- Action buttons and status in streamlined header -->
+                <div class="mb-4 flex items-start justify-between">
+                    <div class="flex items-center space-x-2">
+                        <button class="px-2 py-1 bg-gray-600 text-white rounded hover:bg-gray-500 transition-colors text-sm cursor-pointer flex items-center" id="back-btn">
+                            <i class="bi bi-arrow-left mr-1 text-md"></i>Back
+                        </button>
+                        ${this.state.securityManager.createActionButtons(email.id, this.state.getCurrentFolder())}
+                    </div>
+                    ${statusBadge ? `<div class="flex-shrink-0">${statusBadge}</div>` : ''}
                 </div>
                 
                 <!-- Security alerts -->
@@ -241,15 +292,28 @@ export class EmailApp extends WindowBase {
                 <!-- Email information -->
                 <div class="mb-4">
                     <div class="font-medium text-lg text-white">${email.subject}</div>
-                    <div class="text-gray-400 text-sm">${email.sender}</div>
-                    <div class="text-gray-500 text-xs mb-2" title="Full timestamp: ${displayTime}">
-                        <i class="bi bi-clock mr-1"></i>${displayTime}
+                    <div class="bg-gray-700 rounded p-3 mt-3 text-sm">
+                        <div class="grid grid-cols-1 gap-2">
+                            <div class="flex">
+                                <span class="text-gray-400 w-16 flex-shrink-0">From:</span>
+                                <span class="text-white break-all">${this.formatSenderDetails(email.sender)}</span>
+                            </div>
+                            <div class="flex">
+                                <span class="text-gray-400 w-16 flex-shrink-0">To:</span>
+                                <span class="text-white">${email.receiver || 'user@company.com'}</span>
+                            </div>
+                            <div class="flex">
+                                <span class="text-gray-400 w-16 flex-shrink-0">Date:</span>
+                                <span class="text-white">${email.date || displayTime}</span>
+                            </div>
+                        </div>
                     </div>
-                    ${statusBadge ? `<div class="mt-2">${statusBadge}</div>` : ''}
                 </div>
                 
-                <div class="bg-gray-800 text-white text-sm">
-                    ${email.body}
+                <div class="bg-gray-800 text-white text-sm p-4 rounded border border-gray-600">
+                    <div class="whitespace-pre-wrap break-words">
+${this.formatEmailBody(email.body)}
+                    </div>
                 </div>
             </div>
         `;
@@ -271,6 +335,61 @@ export class EmailApp extends WindowBase {
             });
         }
         return email.time;
+    }
+
+    // Format sender details to show full email address
+    formatSenderDetails(sender) {
+        if (!sender) return 'Unknown Sender';
+        
+        // If the sender already contains angle brackets, return as-is
+        if (sender.includes('<') && sender.includes('>')) {
+            return sender;
+        }
+        
+        // If it's just an email address, return the full email address
+        if (sender.includes('@')) {
+            return sender;
+        }
+        
+        // If it's already a display name without email, return as-is
+        return sender;
+    }
+
+    // Format email body to preserve CSV formatting and handle special characters
+    formatEmailBody(body) {
+        if (!body) return '<em class="text-gray-400">No content available</em>';
+        
+        // Convert to string and handle potential undefined/null values
+        const bodyText = String(body).trim();
+        
+        if (!bodyText) return '<em class="text-gray-400">Empty message</em>';
+        
+        // Escape HTML characters to prevent XSS while preserving content
+        const escapeHtml = (text) => {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        };
+        
+        // Escape the body content first
+        let formattedBody = escapeHtml(bodyText);
+        
+        // Convert newlines to HTML line breaks for proper display
+        formattedBody = formattedBody.replace(/\n/g, '<br>');
+        
+        // Handle multiple consecutive line breaks (preserve spacing but limit excessive spacing)
+        formattedBody = formattedBody.replace(/(<br>\s*){4,}/g, '<br><br><br>');
+        
+        // Handle URLs that might be present in the email body
+        // This will make URLs clickable but still safe (they're already escaped)
+        const urlRegex = /(https?:\/\/[^\s<>]+)/gi;
+        formattedBody = formattedBody.replace(urlRegex, (url) => {
+            // Re-escape any HTML entities that might have been in the URL
+            const safeUrl = url.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+            return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline">${url}</a>`;
+        });
+        
+        return formattedBody;
     }
 
     initialize() {
