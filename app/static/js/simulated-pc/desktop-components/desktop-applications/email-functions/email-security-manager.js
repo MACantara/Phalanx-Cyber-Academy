@@ -281,16 +281,16 @@ export class EmailSecurityManager {
         
         switch(emailStatus) {
             case 'phishing':
-                statusIndicator = '<i class="bi bi-shield-exclamation text-red-500 text-xs ml-1" title="Reported as Phishing"></i>';
+                statusIndicator = '<i class="bi bi-shield-exclamation text-red-500 text-sm ml-1" title="Reported as Phishing"></i>';
                 statusClass = 'bg-red-500';
                 break;
             case 'legitimate':
-                statusIndicator = '<i class="bi bi-shield-check text-green-500 text-xs ml-1" title="Marked as Legitimate"></i>';
+                statusIndicator = '<i class="bi bi-shield-check text-green-500 text-sm ml-1" title="Marked as Legitimate"></i>';
                 statusClass = 'bg-green-500';
                 break;
             default:
                 // Show different indicator for unclassified emails
-                statusIndicator = '<i class="bi bi-question-circle text-yellow-500 text-xs ml-1" title="Awaiting Classification"></i>';
+                statusIndicator = '<i class="bi bi-question-circle text-yellow-500 text-sm ml-1" title="Awaiting Classification"></i>';
                 statusClass = isRead ? 'bg-yellow-400' : 'bg-blue-500';
         }
 
@@ -302,7 +302,7 @@ export class EmailSecurityManager {
         
         // Only show badge for unverified emails to encourage action
         if (emailStatus === 'unverified') {
-            return '<span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded flex items-center"><i class="bi bi-clock mr-1"></i>Awaiting Classification</span>';
+            return '<span class="bg-yellow-500 bg-opacity-20 text-white font-medium px-2 py-1 rounded-full inline-flex items-center border border-yellow-500 border-opacity-30 text-sm"><i class="bi bi-clock mr-1"></i>Awaiting Classification</span>';
         }
         
         // No badge for classified emails - status is shown in action buttons
@@ -324,11 +324,11 @@ export class EmailSecurityManager {
         } else {
             // In inbox, show classification buttons only if not already categorized
             buttons += `
-                <button class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-500 transition-colors text-xs cursor-pointer" 
+                <button class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-500 transition-colors cursor-pointer flex items-center cursor-pointer text-sm" 
                         id="report-phishing-btn" data-email-id="${emailId}">
                     <i class="bi bi-shield-exclamation mr-1"></i>Report Phishing
                 </button>
-                <button class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-500 transition-colors text-xs cursor-pointer" 
+                <button class="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-500 transition-colors cursor-pointer flex items-center cursor-pointer text-sm" 
                         id="mark-legitimate-btn" data-email-id="${emailId}">
                     <i class="bi bi-shield-check mr-1"></i>Mark Legitimate
                 </button>`;
