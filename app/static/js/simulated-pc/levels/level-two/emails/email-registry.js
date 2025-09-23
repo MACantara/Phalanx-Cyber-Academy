@@ -1,27 +1,27 @@
-// Centralized registry for all emails - now using CSV data
+// Centralized registry for all emails - now using JSON data
 
 // Import data loading functions
 import { loadPhishingEmails } from '../data/index.js';
 
-// Global email storage that will be populated from CSV
+// Global email storage that will be populated from JSON API
 let emailData = [];
 let emailsLoaded = false;
 let loadingPromise = null;
 
-// Load emails from CSV API
-async function loadEmailsFromCSV() {
+// Load emails from JSON API
+async function loadEmailsFromJSON() {
     if (loadingPromise) {
         return loadingPromise;
     }
     
     loadingPromise = (async () => {
         try {
-            console.log('Loading emails from CSV API...');
+            console.log('Loading emails from JSON API...');
             const result = await loadPhishingEmails();
             
             if (result.success && result.emails) {
                 emailData = result.emails.map((email, index) => ({
-                    id: `csv_email_${index + 1}`,
+                    id: email.id || `email_${index + 1}`,
                     folder: 'inbox',
                     sender: email.sender || 'unknown@example.com',
                     receiver: email.receiver || 'user@cyberquest.com',
@@ -30,26 +30,27 @@ async function loadEmailsFromCSV() {
                     time: email.date ? formatEmailTime(email.date) : formatEmailTime(new Date()),
                     fullDateTime: email.date ? formatFullDateTime(email.date) : formatFullDateTime(new Date()),
                     timestamp: email.date ? new Date(email.date) : new Date(),
-                    suspicious: email.label === 1, // 1 = phishing, 0 = legitimate
-                    priority: email.label === 1 ? 'high' : 'normal',
+                    suspicious: email.is_phishing === 1, // 1 = phishing, 0 = legitimate
+                    priority: email.is_phishing === 1 ? 'high' : 'normal',
                     attachments: [],
-                    // Additional CSV data for reference
-                    email_type: email.label === 1 ? 'phishing' : 'legitimate',
-                    originalLabel: email.label
+                    // Additional JSON data for reference
+                    email_type: email.is_phishing === 1 ? 'phishing' : 'legitimate',
+                    originalIsPhishing: email.is_phishing,
+                    ai_analysis: email.ai_analysis || {}
                 }));
                 
                 emailsLoaded = true;
-                console.log(`Loaded ${emailData.length} emails from CSV (${result.summary?.phishing || 0} phishing, ${result.summary?.legitimate || 0} legitimate)`);
+                console.log(`Loaded ${emailData.length} emails from JSON API (${result.summary?.phishing_count || 0} phishing, ${result.summary?.legitimate_count || 0} legitimate)`);
                 return emailData;
             } else {
-                console.error('Failed to load emails from CSV:', result.error);
-                // Fallback to empty array if CSV loading fails
+                console.error('Failed to load emails from JSON API:', result.error);
+                // Fallback to empty array if JSON loading fails
                 emailData = [];
                 emailsLoaded = true;
                 return emailData;
             }
         } catch (error) {
-            console.error('Error loading emails from CSV:', error);
+            console.error('Error loading emails from JSON API:', error);
             // Fallback to empty array on error
             emailData = [];
             emailsLoaded = true;
@@ -89,7 +90,7 @@ function formatFullDateTime(dateString) {
 export const ALL_EMAILS = new Proxy([], {
     get(target, prop) {
         if (!emailsLoaded) {
-            console.warn('Emails not yet loaded from CSV. Use await loadEmailsFromCSV() first.');
+            console.warn('Emails not yet loaded from JSON API. Use await loadEmailsFromCSV() first.');
             // Return empty array for most operations to prevent errors
             if (prop === 'length') return 0;
             if (prop === Symbol.iterator) {
@@ -136,7 +137,10 @@ export const ALL_EMAILS = new Proxy([], {
 });
 
 // Initialize email loading when module is imported
-loadEmailsFromCSV();
+loadEmailsFromJSON();
 
-// Export the loading function for manual initialization
-export { loadEmailsFromCSV };
+// Export the loading function for manual initialization  
+export { loadEmailsFromJSON };
+
+// Also export the old name for backward compatibility
+export { loadEmailsFromJSON as loadEmailsFromCSV };

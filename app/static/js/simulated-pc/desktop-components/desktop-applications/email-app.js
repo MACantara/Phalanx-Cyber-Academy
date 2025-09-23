@@ -55,9 +55,9 @@ export class EmailApp extends WindowBase {
 
     async initializeState() {
         try {
-            // First ensure CSV email data is loaded
-            await loadEmailsFromCSV();
-            console.log('EmailApp: Email data loaded from CSV');
+            // First ensure JSON email data is loaded
+            await loadEmailsFromCSV(); // Keeping old name for backward compatibility
+            console.log('EmailApp: Email data loaded from JSON API');
             
             await this.state.loadFromServer();
             await this.readTracker.ensureLoaded();
@@ -107,7 +107,7 @@ export class EmailApp extends WindowBase {
                 <div class="h-full flex items-center justify-center">
                     <div class="text-center">
                         <div class="text-lg font-medium text-gray-300 mb-2">Loading Email Data...</div>
-                        <div class="text-sm text-gray-500">Fetching emails from security database</div>
+                        <div class="text-sm text-gray-500">Fetching emails from JSON database</div>
                         <div class="mt-4">
                             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400 mx-auto"></div>
                         </div>
