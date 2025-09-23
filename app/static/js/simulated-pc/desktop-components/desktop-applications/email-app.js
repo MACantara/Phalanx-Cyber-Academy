@@ -277,7 +277,7 @@ export class EmailApp extends WindowBase {
                 <!-- Action buttons and status in streamlined header -->
                 <div class="mb-4 flex items-start justify-between">
                     <div class="flex items-center space-x-2">
-                        <button class="px-2 py-1 bg-gray-600 text-white rounded hover:bg-gray-500 transition-colors text-xs cursor-pointer flex items-center" id="back-btn">
+                        <button class="px-2 py-1 bg-gray-600 text-white rounded hover:bg-gray-500 transition-colors text-sm cursor-pointer flex items-center" id="back-btn">
                             <i class="bi bi-arrow-left mr-1 text-md"></i>Back
                         </button>
                         ${this.state.securityManager.createActionButtons(email.id, this.state.getCurrentFolder())}
