@@ -233,7 +233,9 @@ export class RansomwareDecryptorApp extends WindowBase {
         this.showNotification(`${file.originalName} decrypted successfully!`, 'success');
 
         // Check if all files are decrypted
+        console.log(`[RansomwareDecryptor] Decryption check: ${this.decryptedFiles.size} / ${this.encryptedFiles.length} files decrypted`);
         if (this.decryptedFiles.size === this.encryptedFiles.length) {
+            console.log('[RansomwareDecryptor] All files decrypted! Triggering stage completion...');
             this.onStageComplete();
         }
     }
@@ -262,13 +264,12 @@ export class RansomwareDecryptorApp extends WindowBase {
             completedFiles++;
 
             // Apply reputation recovery
-            try {
-                const appLauncher = getApplicationLauncher();
-                if (file.reputationRecovery > 0) {
-                    console.log(`[RansomwareDecryptor] File decrypted, reputation improved by ${file.reputationRecovery}%`);
-                }
-            } catch (error) {
-                console.error('[RansomwareDecryptor] Failed to apply reputation recovery:', error);
+            if (file.reputationRecovery > 0 && this.timer) {
+                // Remove some reputation damage as reward for recovery
+                const currentDamage = this.timer.reputationDamage;
+                this.timer.reputationDamage = Math.max(0, currentDamage - file.reputationRecovery);
+                this.timer.updateDisplay();
+                console.log(`[RansomwareDecryptor] File decrypted, reputation improved by ${file.reputationRecovery}%`);
             }
         }
 
@@ -277,6 +278,13 @@ export class RansomwareDecryptorApp extends WindowBase {
         this.updateContent();
 
         this.showNotification(`Mass decryption complete! ${completedFiles} files recovered.`, 'success');
+        
+        // Check if all files are now decrypted
+        console.log(`[RansomwareDecryptor] Mass decryption check: ${this.decryptedFiles.size} / ${this.encryptedFiles.length} files decrypted`);
+        if (this.decryptedFiles.size === this.encryptedFiles.length) {
+            console.log('[RansomwareDecryptor] All files decrypted! Triggering stage completion...');
+            this.onStageComplete();
+        }
     }
 
     stopOperation() {
@@ -288,21 +296,27 @@ export class RansomwareDecryptorApp extends WindowBase {
     }
     
     onStageComplete() {
+        console.log('[RansomwareDecryptor] Stage completion started');
+        
         // Stop gradual damage
         if (this.damageInterval) {
             clearInterval(this.damageInterval);
             this.damageInterval = null;
+            console.log('[RansomwareDecryptor] Gradual damage stopped');
         }
         
         this.showNotification('All files successfully recovered! Level 3 complete!', 'success');
         
         // Mark level as completed and trigger completion dialogue
         localStorage.setItem('cyberquest_level_3_decryption_completed', 'true');
+        console.log('[RansomwareDecryptor] Set decryption completion flag in localStorage');
         
         setTimeout(() => {
             // Trigger level completion dialogue
+            console.log('[RansomwareDecryptor] Dispatching level3-decryption-complete event');
             const completionEvent = new CustomEvent('level3-decryption-complete');
             window.dispatchEvent(completionEvent);
+            console.log('[RansomwareDecryptor] Event dispatched successfully');
         }, 2000);
     }
 

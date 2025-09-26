@@ -112,4 +112,11 @@ export class LevelThreeCompletionDialogue extends BaseDialogue {
             }
         });
     }
+
+    // Manual trigger for testing
+    static triggerCompletion(desktop) {
+        console.log('[LevelThreeCompletion] Manual completion trigger called');
+        const dialogue = new LevelThreeCompletionDialogue(desktop);
+        dialogue.start();
+    }
 }
