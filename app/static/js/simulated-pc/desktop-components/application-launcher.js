@@ -42,20 +42,9 @@ export class ApplicationLauncher {
 
     // Core application opening functionality moved from window manager
     async openApplication(appId, windowTitle) {
-        let appConfig = this.appRegistry.getApp(appId);
+        const appConfig = this.appRegistry.getApp(appId);
         if (!appConfig) {
             throw new Error(`Application '${appId}' not found in registry`);
-        }
-
-        // Check for level-specific overrides
-        if (this.currentLevel && appConfig.overrides) {
-            const levelSpecificId = `${appConfig.overrides}-level${this.currentLevel}`;
-            const levelSpecificConfig = this.appRegistry.getApp(levelSpecificId);
-            if (levelSpecificConfig) {
-                console.log(`[ApplicationLauncher] Using level-specific override: ${levelSpecificId} instead of ${appId}`);
-                appConfig = levelSpecificConfig;
-                appId = levelSpecificId; // Update appId for window creation
-            }
         }
 
         // Check level restrictions
@@ -191,26 +180,14 @@ export class ApplicationLauncher {
     }
 
     async launchProcessMonitor() {
-        // Use Level 3 version if in Level 3
-        if (this.currentLevel === 3 || this.currentLevel === '3') {
-            return await this.launchApplication('process-monitor-level3');
-        }
         return await this.launchApplication('process-monitor');
     }
 
     async launchMalwareScanner() {
-        // Use Level 3 version if in Level 3
-        if (this.currentLevel === 3 || this.currentLevel === '3') {
-            return await this.launchApplication('malware-scanner-level3');
-        }
         return await this.launchApplication('malware-scanner');
     }
 
     async launchRansomwareDecryptor() {
-        // Use Level 3 version if in Level 3
-        if (this.currentLevel === 3 || this.currentLevel === '3') {
-            return await this.launchApplication('ransomware-decryptor-level3');
-        }
         return await this.launchApplication('ransomware-decryptor');
     }
 
