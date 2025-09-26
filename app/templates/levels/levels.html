@@ -120,7 +120,13 @@
                             </div>
                             <div class="flex items-center justify-between text-sm">
                                 <span class="text-gray-500 dark:text-gray-400">XP Reward:</span>
-                                <span class="font-medium text-blue-600 dark:text-blue-400">{{ level.xp_reward }} XP</span>
+                                <span class="font-medium text-blue-600 dark:text-blue-400">
+                                    {% if level.id <= 3 %}
+                                        <span title="XP reward varies based on your performance: speed, accuracy, and completion time" class="cursor-help">
+                                            Performance-based
+                                        </span>
+                                    {% else %}{{ level.xp_reward }} XP{% endif %}
+                                </span>
                             </div>
                             <div class="flex items-center justify-between text-sm">
                                 <span class="text-gray-500 dark:text-gray-400">Time:</span>
