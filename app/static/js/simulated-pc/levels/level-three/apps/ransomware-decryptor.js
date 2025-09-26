@@ -10,23 +10,25 @@ export class RansomwareDecryptorApp extends WindowBase {
         });
         
         this.encryptedFiles = [];
+        this.availableFiles = []; // Files available but not yet scanned
         this.isScanning = false;
         this.isDecrypting = false;
         this.decryptedFiles = new Set();
         this.scanProgress = 0;
         this.decryptionProgress = 0;
         this.timer = window.level3Timer;
+        this.hasScanned = false; // Track if initial scan has been performed
         
         // Start gradual damage while files remain encrypted
         this.damageInterval = null;
         this.startGradualDamage();
         
-        this.loadEncryptedFiles();
+        this.loadAvailableFiles();
     }
 
-    async loadEncryptedFiles() {
+    async loadAvailableFiles() {
         await level3DataManager.loadData();
-        this.encryptedFiles = level3DataManager.getEncryptedFiles();
+        this.availableFiles = level3DataManager.getEncryptedFiles();
         this.updateContent();
     }
 
@@ -62,13 +64,13 @@ export class RansomwareDecryptorApp extends WindowBase {
                 <div class="bg-gray-800 px-4 py-3 border-b border-gray-700">
                     <div class="flex items-center justify-between">
                         <div class="flex space-x-3">
-                            <button id="scan-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded transition-colors cursor-pointer ${this.isScanning ? 'opacity-50 cursor-not-allowed' : ''}">
-                                <i class="bi bi-search mr-2"></i>Scan for Files
+                            <button id="scan-btn" class="px-4 py-2 rounded transition-colors ${this.isScanning ? 'bg-gray-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'}">
+                                <i class="bi bi-search mr-2"></i>${this.hasScanned ? 'Re-scan Files' : 'Scan for Files'}
                             </button>
-                            <button id="decrypt-all-btn" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded transition-colors cursor-pointer ${this.isDecrypting || encryptedCount === 0 ? 'opacity-50 cursor-not-allowed' : ''}">
+                            <button id="decrypt-all-btn" class="px-4 py-2 rounded transition-colors ${(this.isDecrypting || encryptedCount === 0 || !this.hasScanned) ? 'bg-gray-600 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 cursor-pointer'}">
                                 <i class="bi bi-unlock-fill mr-2"></i>Decrypt All
                             </button>
-                            <button id="stop-btn" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded transition-colors cursor-pointer ${!this.isDecrypting && !this.isScanning ? 'opacity-50 cursor-not-allowed' : ''}">
+                            <button id="stop-btn" class="px-4 py-2 rounded transition-colors ${(!this.isDecrypting && !this.isScanning) ? 'bg-gray-600 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 cursor-pointer'}">
                                 <i class="bi bi-stop-circle mr-2"></i>Stop
                             </button>
                         </div>
@@ -116,7 +118,8 @@ export class RansomwareDecryptorApp extends WindowBase {
                         <span>
                             ${this.isScanning ? 'Scanning for encrypted files...' : 
                               this.isDecrypting ? 'Decryption in progress...' :
-                              `${decryptedCount}/${totalFiles} files recovered`}
+                              this.hasScanned ? `${decryptedCount}/${totalFiles} files recovered` :
+                              'Ready to scan for encrypted files'}
                         </span>
                         <span class="text-gray-300">Level 3 Tournament Recovery</span>
                     </div>
@@ -126,13 +129,29 @@ export class RansomwareDecryptorApp extends WindowBase {
     }
 
     renderFileList() {
+        if (!this.hasScanned) {
+            return `
+                <div class="h-full flex items-center justify-center text-gray-300">
+                    <div class="text-center">
+                        <i class="bi bi-search text-6xl mb-4 text-blue-500"></i>
+                        <p class="text-lg">No scan performed</p>
+                        <p class="text-sm">Click "Scan for Files" to search for encrypted files</p>
+                        <div class="mt-4 p-4 bg-yellow-800/20 border border-yellow-600 rounded-lg">
+                            <i class="bi bi-exclamation-triangle text-yellow-500 mr-2"></i>
+                            <span class="text-yellow-300 text-sm">Encrypted files may be present on the system. Scan to detect them.</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         if (this.encryptedFiles.length === 0) {
             return `
                 <div class="h-full flex items-center justify-center text-gray-300">
                     <div class="text-center">
-                        <i class="bi bi-files text-6xl mb-4"></i>
-                        <p class="text-lg">No encrypted files detected</p>
-                        <p class="text-sm">Click "Scan for Files" to search for encrypted files</p>
+                        <i class="bi bi-check-circle text-6xl mb-4 text-green-500"></i>
+                        <p class="text-lg">No encrypted files found</p>
+                        <p class="text-sm">The system appears to be clean of ransomware encryption</p>
                     </div>
                 </div>
             `;
@@ -142,7 +161,7 @@ export class RansomwareDecryptorApp extends WindowBase {
             <div class="grid gap-3">
                 <h3 class="text-lg font-semibold mb-2 flex items-center">
                     <i class="bi bi-file-lock text-red-500 mr-2"></i>
-                    Encrypted Files (${this.encryptedFiles.length})
+                    Encrypted Files Detected (${this.encryptedFiles.length})
                 </h3>
                 ${this.encryptedFiles.map(file => this.renderFileCard(file)).join('')}
             </div>
@@ -175,8 +194,12 @@ export class RansomwareDecryptorApp extends WindowBase {
                         </div>
                     </div>
                     <div class="flex flex-col space-y-2 ml-4">
-                        ${!isDecrypted ? `
+                        ${!isDecrypted && this.hasScanned ? `
                             <button class="decrypt-btn px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-sm transition-colors cursor-pointer" data-file-id="${file.id}">
+                                <i class="bi bi-unlock mr-1"></i>Decrypt
+                            </button>
+                        ` : !isDecrypted && !this.hasScanned ? `
+                            <button class="px-3 py-1 bg-gray-600 rounded text-sm cursor-not-allowed opacity-50">
                                 <i class="bi bi-unlock mr-1"></i>Decrypt
                             </button>
                         ` : `
@@ -195,21 +218,49 @@ export class RansomwareDecryptorApp extends WindowBase {
 
         this.isScanning = true;
         this.scanProgress = 0;
+        this.encryptedFiles = []; // Clear any previous scan results
         this.updateContent();
 
+        console.log('[RansomwareDecryptor] Starting scan for encrypted files...');
+
         // Simulate scanning process
-        for (let i = 0; i <= 100; i += 10) {
+        for (let i = 0; i <= 100; i += 5) {
             this.scanProgress = i;
             this.updateContent();
-            await this.sleep(100);
+            
+            // Gradually "discover" files during the scan
+            if (i === 20 && this.availableFiles.length > 0) {
+                this.encryptedFiles = this.availableFiles.slice(0, Math.ceil(this.availableFiles.length * 0.3));
+                this.updateContent();
+            } else if (i === 50 && this.availableFiles.length > 1) {
+                this.encryptedFiles = this.availableFiles.slice(0, Math.ceil(this.availableFiles.length * 0.7));
+                this.updateContent();
+            } else if (i === 80) {
+                this.encryptedFiles = [...this.availableFiles];
+                this.updateContent();
+            }
+            
+            await this.sleep(80);
         }
 
         this.isScanning = false;
+        this.hasScanned = true;
         this.updateContent();
-        this.showNotification(`Scan complete! Found ${this.encryptedFiles.length} encrypted files`, 'success');
+        
+        const filesFound = this.encryptedFiles.length;
+        if (filesFound > 0) {
+            this.showNotification(`Scan complete! Found ${filesFound} encrypted files that need recovery`, 'warning');
+        } else {
+            this.showNotification('Scan complete! No encrypted files detected on the system', 'success');
+        }
     }
 
     async decryptFile(fileId) {
+        if (!this.hasScanned) {
+            this.showNotification('Please scan for files first', 'warning');
+            return;
+        }
+        
         const file = this.encryptedFiles.find(f => f.id === fileId);
         if (!file || this.decryptedFiles.has(fileId)) return;
 
@@ -243,10 +294,27 @@ export class RansomwareDecryptorApp extends WindowBase {
     }
 
     async decryptAllFiles() {
-        if (this.isDecrypting) return;
+        console.log('[RansomwareDecryptor] decryptAllFiles called, state:', {
+            isDecrypting: this.isDecrypting,
+            hasScanned: this.hasScanned,
+            encryptedFilesLength: this.encryptedFiles.length,
+            decryptedFilesSize: this.decryptedFiles.size
+        });
+        
+        if (this.isDecrypting || !this.hasScanned) {
+            if (!this.hasScanned) {
+                this.showNotification('Please scan for files first', 'warning');
+            }
+            return;
+        }
 
         const unDecryptedFiles = this.encryptedFiles.filter(file => !this.decryptedFiles.has(file.id));
-        if (unDecryptedFiles.length === 0) return;
+        console.log('[RansomwareDecryptor] Undecrypted files:', unDecryptedFiles.length);
+        
+        if (unDecryptedFiles.length === 0) {
+            this.showNotification('No files available for decryption', 'info');
+            return;
+        }
 
         this.isDecrypting = true;
         this.decryptionProgress = 0;
@@ -287,6 +355,13 @@ export class RansomwareDecryptorApp extends WindowBase {
     }
 
     stopOperation() {
+        if (this.isScanning) {
+            this.showNotification('Scan cancelled', 'info');
+        }
+        if (this.isDecrypting) {
+            this.showNotification('Decryption process stopped', 'info');
+        }
+        
         this.isScanning = false;
         this.isDecrypting = false;
         this.scanProgress = 0;
@@ -350,9 +425,22 @@ export class RansomwareDecryptorApp extends WindowBase {
         const decryptAllBtn = this.windowElement.querySelector('#decrypt-all-btn');
         const stopBtn = this.windowElement.querySelector('#stop-btn');
 
-        scanBtn?.addEventListener('click', () => this.startScan());
-        decryptAllBtn?.addEventListener('click', () => this.decryptAllFiles());
-        stopBtn?.addEventListener('click', () => this.stopOperation());
+        scanBtn?.addEventListener('click', () => {
+            console.log('[RansomwareDecryptor] Scan button clicked, isScanning:', this.isScanning);
+            if (!this.isScanning) {
+                this.startScan();
+            }
+        });
+        decryptAllBtn?.addEventListener('click', () => {
+            console.log('[RansomwareDecryptor] Decrypt All button clicked, isDecrypting:', this.isDecrypting, 'hasScanned:', this.hasScanned);
+            if (!this.isDecrypting && this.hasScanned) {
+                this.decryptAllFiles();
+            }
+        });
+        stopBtn?.addEventListener('click', () => {
+            console.log('[RansomwareDecryptor] Stop button clicked');
+            this.stopOperation();
+        });
 
         // File action buttons
         this.windowElement.addEventListener('click', (e) => {
