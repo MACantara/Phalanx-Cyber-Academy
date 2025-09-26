@@ -1,0 +1,92 @@
+{
+  "level3_ransomware_files": [
+    {
+      "id": "doc_001",
+      "originalName": "Tournament_Strategy_Guide.docx",
+      "encryptedName": "Tournament_Strategy_Guide.docx.locked",
+      "size": "2.4 MB",
+      "priority": "Critical",
+      "description": "Essential tournament strategy document",
+      "decryptionTime": 3000,
+      "reputationRecovery": 5,
+      "status": "encrypted"
+    },
+    {
+      "id": "config_001", 
+      "originalName": "gaming_config.json",
+      "encryptedName": "gaming_config.json.locked",
+      "size": "856 KB",
+      "priority": "High",
+      "description": "Gaming configuration and preferences",
+      "decryptionTime": 2000,
+      "reputationRecovery": 3,
+      "status": "encrypted"
+    },
+    {
+      "id": "save_001",
+      "originalName": "championship_save.dat",
+      "encryptedName": "championship_save.dat.locked", 
+      "size": "5.1 MB",
+      "priority": "Critical",
+      "description": "Championship game save file",
+      "decryptionTime": 4000,
+      "reputationRecovery": 8,
+      "status": "encrypted"
+    },
+    {
+      "id": "video_001",
+      "originalName": "highlight_reel.mp4",
+      "encryptedName": "highlight_reel.mp4.locked",
+      "size": "125 MB", 
+      "priority": "Medium",
+      "description": "Gaming highlight video",
+      "decryptionTime": 2500,
+      "reputationRecovery": 4,
+      "status": "encrypted"
+    },
+    {
+      "id": "data_001",
+      "originalName": "player_stats.db",
+      "encryptedName": "player_stats.db.locked",
+      "size": "12 MB",
+      "priority": "High",
+      "description": "Player statistics database",
+      "decryptionTime": 3500,
+      "reputationRecovery": 6,
+      "status": "encrypted"
+    },
+    {
+      "id": "config_002",
+      "originalName": "team_roster.xlsx",
+      "encryptedName": "team_roster.xlsx.locked",
+      "size": "1.2 MB",
+      "priority": "Medium", 
+      "description": "Team member information",
+      "decryptionTime": 1500,
+      "reputationRecovery": 2,
+      "status": "encrypted"
+    },
+    {
+      "id": "backup_001",
+      "originalName": "system_backup.zip",
+      "encryptedName": "system_backup.zip.locked",
+      "size": "890 MB",
+      "priority": "Critical",
+      "description": "Critical system backup archive",
+      "decryptionTime": 5000,
+      "reputationRecovery": 10,
+      "status": "encrypted"
+    },
+    {
+      "id": "log_001",
+      "originalName": "match_logs.txt", 
+      "encryptedName": "match_logs.txt.locked",
+      "size": "456 KB",
+      "priority": "Low",
+      "description": "Match history logs",
+      "decryptionTime": 1000,
+      "reputationRecovery": 1,
+      "status": "encrypted"
+    }
+  ]
+}

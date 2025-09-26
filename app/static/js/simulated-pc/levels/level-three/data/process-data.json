@@ -1,0 +1,202 @@
+{
+  "system": [
+    {
+      "name": "System",
+      "executable": "System",
+      "cpu": 0.2,
+      "memory": 135,
+      "priority": "System",
+      "category": "system",
+      "description": "Core Windows system process",
+      "trusted": true
+    },
+    {
+      "name": "explorer.exe",
+      "executable": "explorer.exe",
+      "cpu": 3.3,
+      "memory": 52.2,
+      "priority": "Normal",
+      "category": "system",
+      "description": "Windows Explorer shell process",
+      "trusted": true
+    },
+    {
+      "name": "winlogon.exe",
+      "executable": "winlogon.exe",
+      "cpu": 0.1,
+      "memory": 12.8,
+      "priority": "High",
+      "category": "system",
+      "description": "Windows logon process",
+      "trusted": true
+    },
+    {
+      "name": "csrss.exe",
+      "executable": "csrss.exe",
+      "cpu": 0.3,
+      "memory": 18.4,
+      "priority": "High",
+      "category": "system",
+      "description": "Client Server Runtime Process",
+      "trusted": true
+    },
+    {
+      "name": "lsass.exe",
+      "executable": "lsass.exe",
+      "cpu": 0.5,
+      "memory": 22.1,
+      "priority": "High",
+      "category": "system",
+      "description": "Local Security Authority Subsystem",
+      "trusted": true
+    },
+    {
+      "name": "svchost.exe",
+      "executable": "svchost.exe",
+      "cpu": 2.1,
+      "memory": 45.7,
+      "priority": "Normal",
+      "category": "system",
+      "description": "Service Host Process",
+      "trusted": true
+    }
+  ],
+  "gaming": [
+    {
+      "name": "steam.exe",
+      "executable": "program files (x86)\\steam\\steam.exe",
+      "cpu": 4.4,
+      "memory": 102.2,
+      "priority": "Normal",
+      "category": "gaming",
+      "description": "Steam gaming platform client",
+      "trusted": true
+    },
+    {
+      "name": "discord.exe",
+      "executable": "users\\appdata\\local\\discord\\discord.exe",
+      "cpu": 3.1,
+      "memory": 78.3,
+      "priority": "Normal",
+      "category": "gaming",
+      "description": "Discord communication platform",
+      "trusted": true
+    },
+    {
+      "name": "obs64.exe",
+      "executable": "program files\\obs studio\\bin\\64bit\\obs64.exe",
+      "cpu": 11.7,
+      "memory": 189.4,
+      "priority": "High",
+      "category": "gaming",
+      "description": "OBS Studio streaming software",
+      "trusted": true
+    },
+    {
+      "name": "tournament_client.exe",
+      "executable": "program files\\cyberquest\\tournament_client.exe",
+      "cpu": 5.2,
+      "memory": 95.9,
+      "priority": "High",
+      "category": "gaming",
+      "description": "CyberQuest tournament client",
+      "trusted": true
+    }
+  ],
+  "application": [
+    {
+      "name": "chrome.exe",
+      "executable": "program files\\google\\chrome\\application\\chrome.exe",
+      "cpu": 12.7,
+      "memory": 198.8,
+      "priority": "Normal",
+      "category": "application",
+      "description": "Google Chrome web browser",
+      "trusted": true
+    },
+    {
+      "name": "antivirus.exe",
+      "executable": "program files\\windows defender\\antivirus.exe",
+      "cpu": 2.8,
+      "memory": 58.4,
+      "priority": "Normal",
+      "category": "security",
+      "description": "Windows Defender antivirus",
+      "trusted": true
+    }
+  ],
+  "malware": [
+    {
+      "name": "gaming_optimizer_pro.exe",
+      "executable": "temp\\downloads\\gaming_optimizer_pro.exe",
+      "cpu": 28.5,
+      "memory": 245.7,
+      "priority": "High",
+      "category": "malware",
+      "description": "Fake gaming optimizer - actually ransomware",
+      "trusted": false,
+      "malwareType": "Ransomware",
+      "riskFactors": [
+        "Running from suspicious temporary or download location",
+        "Potentially fraudulent gaming enhancement tool",
+        "High priority process with questionable gaming purpose",
+        "Extremely high CPU and memory usage"
+      ],
+      "reputationDamage": 25,
+      "financialDamage": 50000
+    },
+    {
+      "name": "steam_helper.exe",
+      "executable": "temp\\steam_helper.exe",
+      "cpu": 15.8,
+      "memory": 134.1,
+      "priority": "Normal",
+      "category": "malware",
+      "description": "Trojan masquerading as Steam helper",
+      "trusted": false,
+      "malwareType": "Trojan",
+      "riskFactors": [
+        "Process name mimics legitimate gaming software but runs from wrong location",
+        "Not digitally signed by Valve Corporation",
+        "Running from temporary directory instead of Steam installation folder"
+      ],
+      "reputationDamage": 15,
+      "financialDamage": 25000
+    },
+    {
+      "name": "performance_monitor.exe",
+      "executable": "program files\\common files\\performance_monitor.exe",
+      "cpu": 8.2,
+      "memory": 89.6,
+      "priority": "Normal",
+      "category": "malware",
+      "description": "Spyware monitoring gaming activities",
+      "trusted": false,
+      "malwareType": "Spyware",
+      "riskFactors": [
+        "Suspicious network activity patterns",
+        "Monitoring user behavior without consent"
+      ],
+      "reputationDamage": 10,
+      "financialDamage": 10000
+    },
+    {
+      "name": "system_optimizer.exe",
+      "executable": "windows\\system32\\system_optimizer.exe",
+      "cpu": 22.7,
+      "memory": 178.3,
+      "priority": "High",
+      "category": "malware",
+      "description": "Advanced rootkit with kernel-level access",
+      "trusted": false,
+      "malwareType": "Rootkit",
+      "riskFactors": [
+        "Running from system directory with suspicious name",
+        "High privileges and system-level access",
+        "Not a genuine Windows component"
+      ],
+      "reputationDamage": 30,
+      "financialDamage": 75000
+    }
+  ]
+}
