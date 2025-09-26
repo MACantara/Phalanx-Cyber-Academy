@@ -1,13 +1,7 @@
-import { WindowBase } from '../../../desktop-components/window-base.js';
-
-export class Level3TimerApp extends WindowBase {
+export class Level3TimerApp {
     constructor() {
-        super('level3-timer', 'Mission Status', {
-            width: '280px',
-            height: '160px',
-            resizable: false,
-            maximizable: false
-        });
+        this.id = 'level3-timer';
+        this.title = 'Mission Status';
         
         // Timer state
         this.timeRemaining = 15 * 60; // 15 minutes in seconds
@@ -21,13 +15,34 @@ export class Level3TimerApp extends WindowBase {
         this.maxReputation = 100;
         this.maxFinancialHealth = 1000000; // $1M starting budget
         
+        // DOM element
+        this.element = null;
+        
         // Listen for Level 3 dialogue completion
         this.setupDialogueListener();
     }
 
+    // Create the static timer element
+    createElement() {
+        this.element = document.createElement('div');
+        this.element.id = 'level3-timer-static';
+        this.element.className = 'fixed top-5 right-5 w-70 bg-gray-800 border border-gray-600 rounded shadow-2xl z-50 backdrop-blur-lg';
+        this.element.style.width = '280px';
+        
+        this.updateContent();
+        return this.element;
+    }
+
+    // Create content HTML
     createContent() {
         return `
-            <div class="p-3 text-white h-full overflow-hidden">
+            <div class="bg-gradient-to-r from-gray-700 to-gray-600 px-3 py-2 border-b border-gray-600">
+                <div class="text-white text-sm font-semibold flex items-center space-x-2">
+                    <i class="bi bi-stopwatch"></i>
+                    <span>${this.title}</span>
+                </div>
+            </div>
+            <div class="p-3 text-white">
                 <!-- Timer Display -->
                 <div class="mb-3 text-center">
                     <div class="text-xs text-gray-400 mb-1">TIME REMAINING</div>
@@ -67,6 +82,41 @@ export class Level3TimerApp extends WindowBase {
                 </div>
             </div>
         `;
+    }
+
+    // Update content of the element
+    updateContent() {
+        if (this.element) {
+            this.element.innerHTML = this.createContent();
+        }
+    }
+
+    // Append to desktop (called by application launcher)
+    appendTo(container) {
+        if (!container) {
+            console.error('[Level3Timer] No container provided, using document.body');
+            container = document.body;
+        }
+        
+        if (!this.element) {
+            this.createElement();
+        }
+        
+        try {
+            container.appendChild(this.element);
+            console.log('[Level3Timer] Timer element appended to container');
+        } catch (error) {
+            console.error('[Level3Timer] Failed to append timer element:', error);
+            // Fallback to document.body
+            document.body.appendChild(this.element);
+        }
+    }
+
+    // Remove from DOM
+    remove() {
+        if (this.element && this.element.parentNode) {
+            this.element.parentNode.removeChild(this.element);
+        }
     }
 
     // Timer methods
@@ -259,23 +309,18 @@ export class Level3TimerApp extends WindowBase {
 
     // Update the display
     updateDisplay() {
-        if (this.windowElement) {
-            this.updateContent();
-        }
+        this.updateContent();
     }
 
-    // Override initialize - don't auto-start timer
+    // Initialize the timer (called by application launcher)
     initialize() {
-        super.initialize();
-        
-        // Timer will only start after Level 3 dialogue completion
-        console.log('[Level3Timer] Timer initialized, waiting for Level 3 dialogue completion');
+        console.log('[Level3Timer] Timer initialized as static element, waiting for Level 3 dialogue completion');
     }
 
-    // Override cleanup to stop timer
+    // Cleanup when timer is destroyed
     cleanup() {
         this.stopTimer();
-        super.cleanup();
+        this.remove();
     }
 
     // Get current status for saving/API

@@ -62,16 +62,19 @@ export class ApplicationLauncher {
         // Handle level-specific window positioning and properties
         if (appConfig.levelSpecific) {
             if (appId === 'level3-timer') {
-                windowOptions.width = '280px';
-                windowOptions.height = '160px';
-                windowOptions.position = { 
-                    left: 'calc(100% - 300px)', 
-                    top: '20px' 
-                };
-                windowOptions.zIndex = '1000';
-                windowOptions.persistent = true; // Cannot be closed
-                windowOptions.resizable = false; // Cannot be resized
-                windowOptions.maximizable = false; // Cannot be maximized
+                // Level 3 timer is a static element, not a window
+                // Get the desktop container (desktop element or document body as fallback)
+                const desktopContainer = this.windowManager.container || 
+                                       this.windowManager.desktopElement || 
+                                       document.body;
+                
+                app.appendTo(desktopContainer);
+                app.initialize();
+                
+                // Store reference for later access
+                this.level3TimerInstance = app;
+                
+                return app;
             }
         }
 
@@ -286,8 +289,8 @@ export class ApplicationLauncher {
 
     // Get Level 3 timer instance
     getLevel3Timer() {
-        const timerApp = this.windowManager.windows.get('level3-timer');
-        return timerApp || null;
+        // For Level 3 timer, we store it as a property since it's not a window
+        return this.level3TimerInstance || null;
     }
 
     // Level 3 timer control methods (delegated from desktop)
