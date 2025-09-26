@@ -36,15 +36,15 @@ export class RansomwareDecryptorApp extends WindowBase {
                 <div class="bg-green-600 px-4 py-3 border-b border-gray-700">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-3">
-                            <i class="bi bi-unlock text-2xl"></i>
+                            <i class="bi bi-unlock text-2xl text-white"></i>
                             <div>
-                                <h2 class="text-lg font-bold">Ransomware Recovery Tool</h2>
-                                <p class="text-sm text-green-100">Level 3 - Restore Encrypted Files</p>
+                                <h2 class="text-lg font-bold text-white">Ransomware Recovery Tool</h2>
+                                <p class="text-sm text-white">Level 3 - Restore Encrypted Files</p>
                             </div>
                         </div>
                         <div class="text-right text-sm">
-                            <div class="text-red-400">Encrypted: ${encryptedCount}</div>
-                            <div class="text-green-400">Recovered: ${decryptedCount}</div>
+                            <div class="text-white">Encrypted: ${encryptedCount}</div>
+                            <div class="text-white">Recovered: ${decryptedCount}</div>
                         </div>
                     </div>
                 </div>

@@ -33,15 +33,15 @@ export class ProcessMonitorApp extends WindowBase {
                     <div class="bg-green-600 px-4 py-3 border-b border-gray-700">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <i class="bi bi-cpu text-2xl"></i>
+                                <i class="bi bi-cpu text-2xl text-white"></i>
                                 <div>
-                                    <h2 class="text-lg font-bold">Process Monitor</h2>
-                                    <p class="text-sm text-green-100">Level 3 - Hunt Malicious Processes</p>
+                                    <h2 class="text-lg font-bold text-white">Process Monitor</h2>
+                                    <p class="text-sm text-white">Level 3 - Hunt Malicious Processes</p>
                                 </div>
                             </div>
                             <div class="text-right text-sm">
-                                <div class="text-green-400">Total: ${this.processes.length}</div>
-                                <div class="text-red-400">Suspicious: ${this.processes.filter(p => !p.trusted).length}</div>
+                                <div class="text-white">Total: ${this.processes.length}</div>
+                                <div class="text-white">Suspicious: ${this.processes.filter(p => !p.trusted).length}</div>
                             </div>
                         </div>
                     </div>
