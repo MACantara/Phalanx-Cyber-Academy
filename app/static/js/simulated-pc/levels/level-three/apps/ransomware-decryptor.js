@@ -228,6 +228,11 @@ export class RansomwareDecryptorApp extends WindowBase {
             this.timer.updateDisplay();
         }
 
+        // Record action in session summary
+        if (window.level3SessionSummary) {
+            window.level3SessionSummary.recordAction(true); // Decrypting files is a good action
+        }
+
         this.updateContent();
         this.showNotification(`${file.originalName} decrypted successfully!`, 'success');
 
@@ -290,6 +295,12 @@ export class RansomwareDecryptorApp extends WindowBase {
     }
     
     onStageComplete() {
+        // Record stage completion in session summary
+        if (window.level3SessionSummary) {
+            const timeSpent = this.timer ? ((15 * 60) - this.timer.timeRemaining) : 0;
+            window.level3SessionSummary.recordStageCompletion('ransomware-decryptor', timeSpent);
+        }
+        
         // Stop gradual damage
         if (this.damageInterval) {
             clearInterval(this.damageInterval);

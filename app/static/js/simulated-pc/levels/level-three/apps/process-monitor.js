@@ -485,6 +485,16 @@ export class ProcessMonitorApp extends WindowBase {
         // Mark process as killed
         this.killedProcesses.add(pid);
         
+        // Record action in session summary
+        if (window.level3SessionSummary) {
+            const actionType = process.trusted ? 'process_killed_legitimate' : 'process_killed_malicious';
+            window.level3SessionSummary.recordAction(actionType, {
+                processName: process.name,
+                category: process.category,
+                trusted: process.trusted
+            });
+        }
+        
         // Apply damage/recovery based on process type and trust level
         try {
             if (!process.trusted) {
@@ -536,6 +546,12 @@ export class ProcessMonitorApp extends WindowBase {
     }
 
     onStageComplete() {
+        // Record stage completion in session summary
+        if (window.level3SessionSummary) {
+            const timeSpent = this.timer ? ((15 * 60) - this.timer.timeRemaining) : 0;
+            window.level3SessionSummary.recordStageCompletion('process-monitor', timeSpent);
+        }
+        
         // Trigger next stage (malware scanner)
         this.showNotification('All suspicious processes eliminated! Launching malware scanner...', 'success');
         
