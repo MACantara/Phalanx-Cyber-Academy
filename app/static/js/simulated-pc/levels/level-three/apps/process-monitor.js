@@ -75,7 +75,7 @@ export class ProcessMonitorApp extends WindowBase {
                                     <i class="bi bi-x-circle mr-2"></i>${this.getKillButtonText()}
                                 </button>
                             </div>
-                            <div class="text-sm text-gray-400">
+                            <div class="text-sm text-gray-300">
                                 <span>Click a process to select it</span>
                             </div>
                         </div>
@@ -264,7 +264,7 @@ export class ProcessMonitorApp extends WindowBase {
     renderNoSelection() {
         return `
             <div class="w-96 bg-gray-800 border-l border-gray-700 flex items-center justify-center">
-                <div class="text-center text-gray-400">
+                <div class="text-center text-gray-300">
                     <i class="bi bi-mouse text-4xl mb-3"></i>
                     <p>Select a process to view details</p>
                 </div>
