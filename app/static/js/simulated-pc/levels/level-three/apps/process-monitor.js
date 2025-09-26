@@ -41,7 +41,7 @@ export class ProcessMonitorApp extends WindowBase {
                             </div>
                             <div class="text-right text-sm">
                                 <div class="text-white">Total: ${this.processes.length}</div>
-                                <div class="text-white">High Risk: ${this.processes.filter(p => this.getProcessRiskLevel(p) === 'HIGH').length}</div>
+                                <div class="text-white">Running: ${this.processes.filter(p => p.status === 'Running').length}</div>
                             </div>
                         </div>
                     </div>
@@ -84,7 +84,6 @@ export class ProcessMonitorApp extends WindowBase {
                                         Memory ${this.getSortIcon('memory')}
                                     </th>
                                     <th class="px-4 py-3 text-left">Status</th>
-                                    <th class="px-4 py-3 text-left">Risk</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,7 +114,7 @@ export class ProcessMonitorApp extends WindowBase {
                     <td class="px-4 py-3">
                         <div class="flex items-center space-x-2">
                             ${isFlagged ? '<i class="bi bi-flag-fill text-yellow-400"></i>' : ''}
-                            <span class="${this.getProcessNameColor(process)}">${process.name}</span>
+                            <span>${process.name}</span>
                         </div>
                     </td>
                     <td class="px-4 py-3 font-mono">${process.pid}</td>
@@ -130,9 +129,6 @@ export class ProcessMonitorApp extends WindowBase {
                     <td class="px-4 py-3">${process.memory.toFixed(1)} MB</td>
                     <td class="px-4 py-3">
                         <span class="px-2 py-1 rounded text-xs ${this.getStatusColor(process.status)}">${process.status}</span>
-                    </td>
-                    <td class="px-4 py-3">
-                        <span class="px-2 py-1 rounded text-xs ${this.getRiskLevelColor(riskLevel)}">${riskLevel}</span>
                     </td>
                 </tr>
             `;
@@ -198,38 +194,26 @@ export class ProcessMonitorApp extends WindowBase {
                             <p class="text-sm text-gray-300">${process.description}</p>
                         </div>
 
-                        <!-- Security Analysis -->
-                        ${this.getSuspiciousIndicators(process).length > 0 ? `
+                        <!-- Process Analysis -->
+                        ${this.getAllAnalysisData(process).length > 0 || (!process.trusted && (process.reputationDamage || process.financialDamage)) ? `
                             <div>
-                                <h5 class="font-semibold text-yellow-400 mb-2"><i class="bi bi-exclamation-triangle text-yellow-400"></i> Analysis Notes</h5>
+                                <h5 class="font-semibold text-yellow-400 mb-2">Process Analysis</h5>
                                 <div class="bg-yellow-900/20 border border-yellow-700 rounded p-3">
                                     <div class="text-sm space-y-2">
-                                        <div class="text-yellow-200">Review the following observations:</div>
-                                        <ul class="text-yellow-100 space-y-1 ml-2">
-                                            ${this.getSuspiciousIndicators(process).map(indicator => `<li>• ${indicator}</li>`).join('')}
-                                        </ul>
+                                        ${this.getAllAnalysisData(process).length > 0 ? `
+                                            <div class="text-yellow-200">Behavioral observations:</div>
+                                            <ul class="text-yellow-100 space-y-1 ml-2">
+                                                ${this.getAllAnalysisData(process).map(item => `<li>• ${item}</li>`).join('')}
+                                            </ul>
+                                        ` : ''}
+                                        ${!process.trusted && (process.reputationDamage || process.financialDamage) ? `
+                                            <div class="text-orange-200 mt-3 pt-2 border-t border-yellow-600">
+                                                <div class="font-medium mb-1">Potential Impact:</div>
+                                                ${process.reputationDamage ? `<div>• Reputation risk: ${process.reputationDamage}% potential impact</div>` : ''}
+                                                ${process.financialDamage ? `<div>• Financial risk: $${level3DataManager.formatDamage(process.financialDamage)} exposure</div>` : ''}
+                                            </div>
+                                        ` : ''}
                                     </div>
-                                </div>
-                            </div>
-                        ` : ''}
-
-                        <!-- Risk Factors -->
-                        ${riskFactors.length > 0 ? `
-                            <div>
-                                <h5 class="font-semibold text-yellow-400 mb-2">Risk Factors</h5>
-                                <ul class="text-sm text-yellow-200 space-y-1">
-                                    ${riskFactors.map(factor => `<li>• ${factor}</li>`).join('')}
-                                </ul>
-                            </div>
-                        ` : ''}
-
-                        <!-- Potential Impact -->
-                        ${!process.trusted && (process.reputationDamage || process.financialDamage) ? `
-                            <div>
-                                <h5 class="font-semibold text-orange-400 mb-2">Potential Impact Assessment</h5>
-                                <div class="text-sm space-y-1">
-                                    ${process.reputationDamage ? `<div class="text-orange-300">Reputation risk: ${process.reputationDamage}% potential impact</div>` : ''}
-                                    ${process.financialDamage ? `<div class="text-orange-300">Financial risk: $${level3DataManager.formatDamage(process.financialDamage)} exposure</div>` : ''}
                                 </div>
                             </div>
                         ` : ''}
@@ -323,13 +307,22 @@ export class ProcessMonitorApp extends WindowBase {
         return 'LOW';
     }
 
-    getProcessNameColor(process) {
-        const riskLevel = this.getProcessRiskLevel(process);
-        switch (riskLevel) {
-            case 'HIGH': return 'text-red-300';
-            case 'MEDIUM': return 'text-yellow-300';
-            default: return 'text-white';
+    getAllAnalysisData(process) {
+        const allIndicators = [];
+        
+        // Get behavioral indicators
+        const suspicious = this.getSuspiciousIndicators(process);
+        allIndicators.push(...suspicious);
+        
+        // Add risk factors from data if different from suspicious indicators
+        if (process.riskFactors && process.riskFactors.length > 0) {
+            const uniqueRiskFactors = process.riskFactors.filter(factor => 
+                !suspicious.includes(factor)
+            );
+            allIndicators.push(...uniqueRiskFactors);
         }
+        
+        return allIndicators;
     }
 
     getSuspiciousIndicators(process) {
