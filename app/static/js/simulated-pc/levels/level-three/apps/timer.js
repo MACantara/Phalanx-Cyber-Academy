@@ -165,6 +165,12 @@ export class Level3TimerApp {
         this.reputationDamage = Math.min(this.reputationDamage + amount, this.maxReputation);
         this.updateDisplay();
         
+        // Check for game over
+        if (this.reputationDamage >= this.maxReputation) {
+            this.onGameOver('reputation');
+            return;
+        }
+        
         // Emit event for game logic
         this.emitDamageEvent('reputation', amount, this.reputationDamage);
     }
@@ -172,6 +178,12 @@ export class Level3TimerApp {
     addFinancialDamage(amount) {
         this.financialDamage = Math.min(this.financialDamage + amount, this.maxFinancialHealth);
         this.updateDisplay();
+        
+        // Check for game over
+        if (this.financialDamage >= this.maxFinancialHealth) {
+            this.onGameOver('financial');
+            return;
+        }
         
         // Emit event for game logic
         this.emitDamageEvent('financial', amount, this.financialDamage);
@@ -229,21 +241,84 @@ export class Level3TimerApp {
 
     // Event handling
     onTimeUp() {
-        // Emit time up event safely
+        this.stopTimer();
+        this.onGameOver('time');
+    }
+    
+    onGameOver(reason) {
+        this.stopTimer();
+        
+        // Emit game over event safely
         try {
             if (typeof window !== 'undefined' && window.dispatchEvent) {
-                window.dispatchEvent(new CustomEvent('level3-time-up', {
+                window.dispatchEvent(new CustomEvent('level3-game-over', {
                     detail: {
+                        reason: reason,
                         reputationDamage: this.reputationDamage,
-                        financialDamage: this.financialDamage
+                        financialDamage: this.financialDamage,
+                        timeRemaining: this.timeRemaining
                     }
                 }));
             }
         } catch (error) {
-            console.error('[Level3Timer] Error dispatching time up event:', error);
+            console.error('[Level3Timer] Error dispatching game over event:', error);
         }
         
-        console.log('[Level3Timer] Time is up!');
+        // Show game over message
+        this.showGameOverMessage(reason);
+        
+        console.log(`[Level3Timer] Game Over! Reason: ${reason}`);
+    }
+    
+    showGameOverMessage(reason) {
+        let message = '';
+        let title = 'MISSION FAILED';
+        
+        switch (reason) {
+            case 'reputation':
+                message = 'Your organization\'s reputation has been completely destroyed. The tournament has been cancelled and your cybersecurity career is over.';
+                break;
+            case 'financial':
+                message = 'The financial damage from the cyber attack has bankrupted the organization. The tournament is cancelled and lawsuits are pending.';
+                break;
+            case 'time':
+                message = 'Time has run out! The malware has spread throughout the entire tournament network. The championship is cancelled.';
+                break;
+            default:
+                message = 'The cyber attack was not contained in time. Mission failed.';
+        }
+        
+        // Create game over modal
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
+        modal.innerHTML = `
+            <div class="bg-red-900 border-2 border-red-600 rounded-lg p-8 max-w-lg mx-4 text-center">
+                <div class="text-red-300 mb-4">
+                    <i class="bi bi-x-circle text-6xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-4">${title}</h2>
+                <p class="text-red-100 mb-6 leading-relaxed">${message}</p>
+                <div class="space-y-3">
+                    <button id="restart-level" class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors cursor-pointer">
+                        Restart Level 3
+                    </button>
+                    <button id="return-levels" class="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded transition-colors cursor-pointer">
+                        Return to Levels
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Bind events
+        modal.querySelector('#restart-level').addEventListener('click', () => {
+            window.location.reload();
+        });
+        
+        modal.querySelector('#return-levels').addEventListener('click', () => {
+            window.location.href = '/levels';
+        });
     }
 
     emitDamageEvent(type, amount, total) {
