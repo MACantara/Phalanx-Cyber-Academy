@@ -56,7 +56,7 @@ export class Level3TimerApp {
                 </div>
                 
                 <!-- Compact Damage Grid -->
-                <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="grid grid-cols-1 gap-2 text-xs">
                     <!-- Reputation -->
                     <div class="bg-gray-700 rounded p-1.5">
                         <div class="flex justify-between items-center mb-1">
