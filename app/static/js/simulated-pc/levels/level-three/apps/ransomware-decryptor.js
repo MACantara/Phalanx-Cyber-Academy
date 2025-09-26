@@ -53,13 +53,13 @@ export class RansomwareDecryptorApp extends WindowBase {
                 <div class="bg-gray-800 px-4 py-3 border-b border-gray-700">
                     <div class="flex items-center justify-between">
                         <div class="flex space-x-3">
-                            <button id="scan-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded transition-colors ${this.isScanning ? 'opacity-50 cursor-not-allowed' : ''}">
+                            <button id="scan-btn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded transition-colors cursor-pointer ${this.isScanning ? 'opacity-50 cursor-not-allowed' : ''}">
                                 <i class="bi bi-search mr-2"></i>Scan for Files
                             </button>
-                            <button id="decrypt-all-btn" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded transition-colors ${this.isDecrypting || encryptedCount === 0 ? 'opacity-50 cursor-not-allowed' : ''}">
+                            <button id="decrypt-all-btn" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded transition-colors cursor-pointer ${this.isDecrypting || encryptedCount === 0 ? 'opacity-50 cursor-not-allowed' : ''}">
                                 <i class="bi bi-unlock-fill mr-2"></i>Decrypt All
                             </button>
-                            <button id="stop-btn" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded transition-colors ${!this.isDecrypting && !this.isScanning ? 'opacity-50 cursor-not-allowed' : ''}">
+                            <button id="stop-btn" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded transition-colors cursor-pointer ${!this.isDecrypting && !this.isScanning ? 'opacity-50 cursor-not-allowed' : ''}">
                                 <i class="bi bi-stop-circle mr-2"></i>Stop
                             </button>
                         </div>
@@ -167,7 +167,7 @@ export class RansomwareDecryptorApp extends WindowBase {
                     </div>
                     <div class="flex flex-col space-y-2 ml-4">
                         ${!isDecrypted ? `
-                            <button class="decrypt-btn px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-sm transition-colors" data-file-id="${file.id}">
+                            <button class="decrypt-btn px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-sm transition-colors cursor-pointer" data-file-id="${file.id}">
                                 <i class="bi bi-unlock mr-1"></i>Decrypt
                             </button>
                         ` : `

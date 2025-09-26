@@ -50,13 +50,13 @@ export class ProcessMonitorApp extends WindowBase {
                     <div class="bg-gray-800 px-4 py-3 border-b border-gray-700">
                         <div class="flex items-center justify-between">
                             <div class="flex space-x-3">
-                                <button id="refresh-btn" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded transition-colors">
+                                <button id="refresh-btn" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded transition-colors cursor-pointer">
                                     <i class="bi bi-arrow-clockwise mr-2"></i>Refresh
                                 </button>
-                                <button id="flag-suspicious-btn" class="px-3 py-2 bg-yellow-600 hover:bg-yellow-700 rounded transition-colors" ${!this.selectedProcess ? 'disabled' : ''}>
+                                <button id="flag-suspicious-btn" class="px-3 py-2 bg-yellow-600 hover:bg-yellow-700 rounded transition-colors cursor-pointer" ${!this.selectedProcess ? 'disabled' : ''}>
                                     <i class="bi bi-flag mr-2"></i>Flag Process
                                 </button>
-                                <button id="kill-process-btn" class="px-3 py-2 bg-red-600 hover:bg-red-700 rounded transition-colors" ${!this.selectedProcess || this.selectedProcess.category === 'system' ? 'disabled' : ''}>
+                                <button id="kill-process-btn" class="px-3 py-2 bg-red-600 hover:bg-red-700 rounded transition-colors cursor-pointer" ${!this.selectedProcess || this.selectedProcess.category === 'system' ? 'disabled' : ''}>
                                     <i class="bi bi-x-circle mr-2"></i>Kill Process
                                 </button>
                             </div>
@@ -238,11 +238,11 @@ export class ProcessMonitorApp extends WindowBase {
                 <!-- Actions -->
                 <div class="p-4 border-t border-gray-600">
                     <div class="space-y-2">
-                        <button id="flag-btn" class="w-full px-3 py-2 bg-yellow-600 hover:bg-yellow-700 rounded transition-colors">
+                        <button id="flag-btn" class="w-full px-3 py-2 bg-yellow-600 hover:bg-yellow-700 rounded transition-colors cursor-pointer">
                             <i class="bi bi-flag mr-2"></i>Flag as Suspicious
                         </button>
                         ${process.category !== 'system' ? `
-                            <button id="kill-btn" class="w-full px-3 py-2 bg-red-600 hover:bg-red-700 rounded transition-colors">
+                            <button id="kill-btn" class="w-full px-3 py-2 bg-red-600 hover:bg-red-700 rounded transition-colors cursor-pointer">
                                 <i class="bi bi-x-circle mr-2"></i>Kill Process
                             </button>
                         ` : ''}
