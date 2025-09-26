@@ -378,7 +378,12 @@ export class Level3SessionSummary {
      * Action handlers
      */
     async continueToLevel4() {
-        await this.showShutdownSequenceAndNavigate();
+        // Mark Level 3 as completed and set current level to 4
+        localStorage.setItem('cyberquest_level_3_completed', 'true');
+        localStorage.setItem('cyberquest_current_level', '4');
+        
+        // Navigate directly to Level 4
+        window.location.href = '/levels/4/start?autostart=true';
     }
 
     async retryLevel3() {
