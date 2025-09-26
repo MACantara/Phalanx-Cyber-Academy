@@ -411,6 +411,7 @@ export class RansomwareDecryptorApp extends WindowBase {
 
     initialize() {
         super.initialize();
+        this.handleWindowClick = null; // Initialize the handler reference
         this.bindEvents();
         
         // Mark app as opened
@@ -420,36 +421,39 @@ export class RansomwareDecryptorApp extends WindowBase {
     bindEvents() {
         if (!this.windowElement) return;
 
-        // Control buttons
-        const scanBtn = this.windowElement.querySelector('#scan-btn');
-        const decryptAllBtn = this.windowElement.querySelector('#decrypt-all-btn');
-        const stopBtn = this.windowElement.querySelector('#stop-btn');
-
-        scanBtn?.addEventListener('click', () => {
-            console.log('[RansomwareDecryptor] Scan button clicked, isScanning:', this.isScanning);
-            if (!this.isScanning) {
-                this.startScan();
-            }
-        });
-        decryptAllBtn?.addEventListener('click', () => {
-            console.log('[RansomwareDecryptor] Decrypt All button clicked, isDecrypting:', this.isDecrypting, 'hasScanned:', this.hasScanned);
-            if (!this.isDecrypting && this.hasScanned) {
-                this.decryptAllFiles();
-            }
-        });
-        stopBtn?.addEventListener('click', () => {
-            console.log('[RansomwareDecryptor] Stop button clicked');
-            this.stopOperation();
-        });
-
-        // File action buttons
-        this.windowElement.addEventListener('click', (e) => {
-            if (e.target.matches('.decrypt-btn, .decrypt-btn *')) {
+        // Remove any existing event listeners to avoid duplicates
+        this.windowElement.removeEventListener('click', this.handleWindowClick);
+        
+        // Use event delegation for all buttons to survive content updates
+        this.handleWindowClick = (e) => {
+            // Control buttons
+            if (e.target.matches('#scan-btn, #scan-btn *')) {
+                const btn = e.target.closest('#scan-btn');
+                if (btn && !this.isScanning) {
+                    console.log('[RansomwareDecryptor] Scan button clicked, isScanning:', this.isScanning);
+                    this.startScan();
+                }
+            } else if (e.target.matches('#decrypt-all-btn, #decrypt-all-btn *')) {
+                const btn = e.target.closest('#decrypt-all-btn');
+                if (btn && !this.isDecrypting && this.hasScanned) {
+                    console.log('[RansomwareDecryptor] Decrypt All button clicked, isDecrypting:', this.isDecrypting, 'hasScanned:', this.hasScanned);
+                    this.decryptAllFiles();
+                }
+            } else if (e.target.matches('#stop-btn, #stop-btn *')) {
+                const btn = e.target.closest('#stop-btn');
+                if (btn && (this.isDecrypting || this.isScanning)) {
+                    console.log('[RansomwareDecryptor] Stop button clicked');
+                    this.stopOperation();
+                }
+            } else if (e.target.matches('.decrypt-btn, .decrypt-btn *')) {
+                // Individual file decrypt buttons
                 const btn = e.target.closest('.decrypt-btn');
                 const fileId = btn?.dataset.fileId;
                 if (fileId) this.decryptFile(fileId);
             }
-        });
+        };
+        
+        this.windowElement.addEventListener('click', this.handleWindowClick);
     }
 
     showNotification(message, type = 'info') {
@@ -471,6 +475,12 @@ export class RansomwareDecryptorApp extends WindowBase {
         if (this.damageInterval) {
             clearInterval(this.damageInterval);
             this.damageInterval = null;
+        }
+        
+        // Remove event listeners
+        if (this.windowElement && this.handleWindowClick) {
+            this.windowElement.removeEventListener('click', this.handleWindowClick);
+            this.handleWindowClick = null;
         }
         
         super.cleanup();
