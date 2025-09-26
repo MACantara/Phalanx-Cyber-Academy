@@ -118,7 +118,7 @@ export class RansomwareDecryptorApp extends WindowBase {
                               this.isDecrypting ? 'Decryption in progress...' :
                               `${decryptedCount}/${totalFiles} files recovered`}
                         </span>
-                        <span class="text-gray-400">Level 3 Tournament Recovery</span>
+                        <span class="text-gray-300">Level 3 Tournament Recovery</span>
                     </div>
                 </div>
             </div>
@@ -128,7 +128,7 @@ export class RansomwareDecryptorApp extends WindowBase {
     renderFileList() {
         if (this.encryptedFiles.length === 0) {
             return `
-                <div class="h-full flex items-center justify-center text-gray-400">
+                <div class="h-full flex items-center justify-center text-gray-300">
                     <div class="text-center">
                         <i class="bi bi-files text-6xl mb-4"></i>
                         <p class="text-lg">No encrypted files detected</p>
@@ -167,8 +167,8 @@ export class RansomwareDecryptorApp extends WindowBase {
                             </h4>
                             <span class="px-2 py-1 rounded text-xs ${priorityColor} bg-gray-700">${file.priority}</span>
                         </div>
-                        <p class="text-sm text-gray-400 mb-2">${file.description}</p>
-                        <div class="text-xs text-gray-500">
+                        <p class="text-sm text-gray-300 mb-2">${file.description}</p>
+                        <div class="text-xs text-gray-400">
                             <div><strong>Size:</strong> ${file.size}</div>
                             ${!isDecrypted ? `<div><strong>Decrypt Time:</strong> ${file.decryptionTime / 1000}s</div>` : ''}
                             ${file.reputationRecovery > 0 ? `<div class="text-green-400"><strong>Reputation Recovery:</strong> +${file.reputationRecovery}%</div>` : ''}
