@@ -35,7 +35,7 @@ export class Level3SessionSummary {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    session_name: 'Level 3: Malware Mayhem',
+                    session_name: 'Malware-Mayhem',
                     level_id: 3
                 })
             });
