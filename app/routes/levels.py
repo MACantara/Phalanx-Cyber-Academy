@@ -154,42 +154,10 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-three/dialogues/index.js',
             'js/simulated-pc/levels/level-three/dialogues/level3-malware-mayhem.js',
             
-            # Level 3 malware definitions and processes (moved to level-three)
-            'js/simulated-pc/levels/level-three/malware/base-malware.js',
-            'js/simulated-pc/levels/level-three/malware/gaming-optimizer-ransomware.js',
-            'js/simulated-pc/levels/level-three/malware/performance-monitor-spyware.js',
-            'js/simulated-pc/levels/level-three/malware/steam-helper-trojan.js',
-            'js/simulated-pc/levels/level-three/malware/system-optimizer-rootkit.js',
-            
-            'js/simulated-pc/levels/level-three/processes/application-processes.js',
-            'js/simulated-pc/levels/level-three/processes/base-process.js',
-            'js/simulated-pc/levels/level-three/processes/gaming-processes.js',
-            'js/simulated-pc/levels/level-three/processes/malware-processes.js',
-            'js/simulated-pc/levels/level-three/processes/process-factory.js',
-            'js/simulated-pc/levels/level-three/processes/system-processes.js',
-            
-            # Malware Scanner Application (core Level 3 app)
-            'js/simulated-pc/desktop-components/desktop-applications/malware-scanner-app.js',
-            'js/simulated-pc/desktop-components/desktop-applications/malware-scanner-functions/malware-database.js',
-            'js/simulated-pc/desktop-components/desktop-applications/malware-scanner-functions/malware-scanner-actions.js',
-            'js/simulated-pc/desktop-components/desktop-applications/malware-scanner-functions/malware-scanner-activity-emitter.js',
-            'js/simulated-pc/desktop-components/desktop-applications/malware-scanner-functions/malware-scanner-event-handler.js',
-            'js/simulated-pc/desktop-components/desktop-applications/malware-scanner-functions/malware-scanner-ui-manager.js',
-            'js/simulated-pc/desktop-components/desktop-applications/malware-scanner-functions/quarantine-manager.js',
-            'js/simulated-pc/desktop-components/desktop-applications/malware-scanner-functions/scan-engine.js',
-            
-            # Process Monitor Application (core Level 3 app)
-            'js/simulated-pc/desktop-components/desktop-applications/process-monitor-app.js',
-            'js/simulated-pc/desktop-components/desktop-applications/process-monitor-functions/notification-manager.js',
-            'js/simulated-pc/desktop-components/desktop-applications/process-monitor-functions/process-data-manager.js',
-            'js/simulated-pc/desktop-components/desktop-applications/process-monitor-functions/process-event-handler.js',
-            'js/simulated-pc/desktop-components/desktop-applications/process-monitor-functions/process-monitor-activity-emitter.js',
-            'js/simulated-pc/desktop-components/desktop-applications/process-monitor-functions/process-renderer.js',
-            'js/simulated-pc/desktop-components/desktop-applications/process-monitor-functions/process-sorter.js',
-            
-            # Ransomware Decryptor Application (core Level 3 app for recovery)
-            'js/simulated-pc/desktop-components/desktop-applications/ransomware-decryptor-app.js',
-            'js/simulated-pc/desktop-components/desktop-applications/ransomware-decryptor-functions/ransomware-decryptor-activity-emitter.js',
+            # Level 3 applications
+            'js/simulated-pc/levels/level-three/apps/malware-scanner.js',
+            'js/simulated-pc/levels/level-three/apps/process-monitor.js',
+            'js/simulated-pc/levels/level-three/apps/ransomware-decryptor.js',
             
             # Tutorials for Level 3
             'js/simulated-pc/tutorials/malware-scanner-tutorial.js',
