@@ -4,6 +4,7 @@ import { WindowManager } from './desktop-components/window-manager.js';
 import { TutorialManager } from './tutorials/tutorial-manager.js';
 import DialogueManager from './dialogues/dialogue-manager.js';
 import { DialogueIntegration } from './dialogues/dialogue-integration.js';
+import { Level3TimerControls } from './levels/level-three/apps/timer.js';
 
 export class Desktop {
     constructor(container) {
@@ -85,6 +86,27 @@ export class Desktop {
         // Store desktop reference globally for dialogues
         window.desktop = this;
         
+        // Initialize Level 3 timer if this is level 3 (delayed initialization)
+        if (this.level === 3 || this.level === '3') {
+            console.log('[Desktop] Initializing Level 3 timer for level:', this.level);
+            try {
+                // Pass the windowManager and make sure it has desktop reference
+                this.windowManager.desktop = this;
+                this.level3Timer = Level3TimerControls.init(this.windowManager);
+                
+                if (this.level3Timer) {
+                    // Make timer globally accessible only after successful initialization
+                    window.level3Timer = this.level3Timer;
+                    window.Level3TimerControls = Level3TimerControls;
+                    console.log('[Desktop] Level 3 timer successfully initialized');
+                } else {
+                    console.log('[Desktop] Level 3 timer initialization returned null');
+                }
+            } catch (error) {
+                console.error('[Desktop] Error initializing Level 3 timer:', error);
+            }
+        }
+        
         // Start with dialogue flow - this handles the narrative introduction
         await this.dialogueIntegration.initializeDialogueFlow();
         
@@ -104,5 +126,29 @@ export class Desktop {
         if (this.dialogueIntegration) {
             await this.dialogueIntegration.onApplicationOpened(appName);
         }
+    }
+
+    // Level 3 timer control methods (only work in level 3)
+    addReputationDamage(amount) {
+        if (this.level3Timer && (this.level === 3 || this.level === '3')) {
+            this.level3Timer.addReputationDamage(amount);
+        } else {
+            console.warn('[Desktop] addReputationDamage called but not in level 3 or timer not initialized');
+        }
+    }
+
+    addFinancialDamage(amount) {
+        if (this.level3Timer && (this.level === 3 || this.level === '3')) {
+            this.level3Timer.addFinancialDamage(amount);
+        } else {
+            console.warn('[Desktop] addFinancialDamage called but not in level 3 or timer not initialized');
+        }
+    }
+
+    getTimerStatus() {
+        if (this.level3Timer && (this.level === 3 || this.level === '3')) {
+            return this.level3Timer.getStatus();
+        }
+        return null;
     }
 }
