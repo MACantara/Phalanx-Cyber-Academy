@@ -4,7 +4,6 @@ import { WindowManager } from './desktop-components/window-manager.js';
 import { TutorialManager } from './tutorials/tutorial-manager.js';
 import DialogueManager from './dialogues/dialogue-manager.js';
 import { DialogueIntegration } from './dialogues/dialogue-integration.js';
-import { Level3TimerControls } from './levels/level-three/apps/timer.js';
 
 export class Desktop {
     constructor(container) {
@@ -48,6 +47,11 @@ export class Desktop {
         this.windowManager = new WindowManager(this.desktopElement, this.taskbar, this.tutorial);
         this.taskbar.windowManager = this.windowManager;
         
+        // Set level in application launcher for level-specific apps
+        if (this.windowManager.applicationLauncher) {
+            this.windowManager.applicationLauncher.setLevel(this.level);
+        }
+        
         this.desktopIcons = new DesktopIcons(this.desktopElement, this.windowManager, this.level);
 
         // Trigger fade-in effect after all components are loaded
@@ -86,32 +90,12 @@ export class Desktop {
         // Store desktop reference globally for dialogues
         window.desktop = this;
         
-        // Initialize Level 3 timer if this is level 3 (delayed initialization)
-        if (this.level === 3 || this.level === '3') {
-            console.log('[Desktop] Initializing Level 3 timer for level:', this.level);
-            try {
-                // Pass the windowManager and make sure it has desktop reference
-                this.windowManager.desktop = this;
-                this.level3Timer = Level3TimerControls.init(this.windowManager);
-                
-                if (this.level3Timer) {
-                    // Make timer globally accessible only after successful initialization
-                    window.level3Timer = this.level3Timer;
-                    window.Level3TimerControls = Level3TimerControls;
-                    console.log('[Desktop] Level 3 timer successfully initialized');
-                } else {
-                    console.log('[Desktop] Level 3 timer initialization returned null');
-                }
-            } catch (error) {
-                console.error('[Desktop] Error initializing Level 3 timer:', error);
-            }
-        }
-        
         // Start with dialogue flow - this handles the narrative introduction
         await this.dialogueIntegration.initializeDialogueFlow();
         
         // Note: Dialogues will automatically trigger tutorials as needed
         // The flow is: Welcome → Tutorial Intro → Initial Tutorial → App Tutorials → Mission Briefing
+        // Level-specific applications (like Level 3 timer) are auto-opened by the ApplicationLauncher
     }
 
     // Method to trigger mission briefing when all tutorials are complete
@@ -128,27 +112,35 @@ export class Desktop {
         }
     }
 
-    // Level 3 timer control methods (only work in level 3)
+    // Level 3 timer control methods
     addReputationDamage(amount) {
-        if (this.level3Timer && (this.level === 3 || this.level === '3')) {
-            this.level3Timer.addReputationDamage(amount);
-        } else {
-            console.warn('[Desktop] addReputationDamage called but not in level 3 or timer not initialized');
+        if (this.windowManager?.applicationLauncher) {
+            return this.windowManager.applicationLauncher.addReputationDamage(amount);
         }
+        console.warn('[Desktop] ApplicationLauncher not available for damage tracking');
+        return false;
     }
 
     addFinancialDamage(amount) {
-        if (this.level3Timer && (this.level === 3 || this.level === '3')) {
-            this.level3Timer.addFinancialDamage(amount);
-        } else {
-            console.warn('[Desktop] addFinancialDamage called but not in level 3 or timer not initialized');
+        if (this.windowManager?.applicationLauncher) {
+            return this.windowManager.applicationLauncher.addFinancialDamage(amount);
         }
+        console.warn('[Desktop] ApplicationLauncher not available for damage tracking');
+        return false;
     }
 
     getTimerStatus() {
-        if (this.level3Timer && (this.level === 3 || this.level === '3')) {
-            return this.level3Timer.getStatus();
+        if (this.windowManager?.applicationLauncher) {
+            return this.windowManager.applicationLauncher.getTimerStatus();
         }
         return null;
+    }
+
+    // Get level-specific applications
+    getLevelApps() {
+        if (this.windowManager?.applicationLauncher) {
+            return this.windowManager.applicationLauncher.getLevelApps();
+        }
+        return {};
     }
 }
