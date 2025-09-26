@@ -127,8 +127,8 @@
   ],
   "malware": [
     {
-      "name": "gaming_optimizer_pro.exe",
-      "executable": "temp\\downloads\\gaming_optimizer_pro.exe",
+      "name": "performance_boost.exe",
+      "executable": "temp\\downloads\\performance_boost.exe",
       "cpu": 28.5,
       "memory": 245.7,
       "priority": "High",
@@ -146,8 +146,8 @@
       "financialDamage": 50000
     },
     {
-      "name": "steam_helper.exe",
-      "executable": "temp\\steam_helper.exe",
+      "name": "steam_launcher.exe",
+      "executable": "temp\\steam_launcher.exe",
       "cpu": 15.8,
       "memory": 134.1,
       "priority": "Normal",
@@ -164,8 +164,8 @@
       "financialDamage": 25000
     },
     {
-      "name": "performance_monitor.exe",
-      "executable": "program files\\common files\\performance_monitor.exe",
+      "name": "system_monitor.exe",
+      "executable": "program files\\common files\\system_monitor.exe",
       "cpu": 8.2,
       "memory": 89.6,
       "priority": "Normal",
@@ -182,8 +182,8 @@
       "financialDamage": 10000
     },
     {
-      "name": "system_optimizer.exe",
-      "executable": "windows\\system32\\system_optimizer.exe",
+      "name": "windows_optimizer.exe",
+      "executable": "windows\\system32\\windows_optimizer.exe",
       "cpu": 22.7,
       "memory": 178.3,
       "priority": "High",
@@ -201,8 +201,8 @@
       "financialDamage": 75000
     },
     {
-      "name": "game_launcher.exe",
-      "executable": "users\\public\\documents\\game_launcher.exe",
+      "name": "game_platform.exe",
+      "executable": "users\\public\\documents\\game_platform.exe",
       "cpu": 19.4,
       "memory": 156.2,
       "priority": "Normal",
@@ -220,8 +220,8 @@
       "financialDamage": 35000
     },
     {
-      "name": "driver_update.exe",
-      "executable": "program files\\driverupdate\\driver_update.exe",
+      "name": "driver_assistant.exe",
+      "executable": "program files\\driverupdate\\driver_assistant.exe",
       "cpu": 6.3,
       "memory": 72.8,
       "priority": "Normal",
@@ -239,8 +239,8 @@
       "financialDamage": 5000
     },
     {
-      "name": "crypto_miner.exe",
-      "executable": "users\\appdata\\roaming\\system\\crypto_miner.exe",
+      "name": "system_service.exe",
+      "executable": "users\\appdata\\roaming\\system\\system_service.exe",
       "cpu": 85.2,
       "memory": 298.7,
       "priority": "High",
@@ -258,8 +258,8 @@
       "financialDamage": 28000
     },
     {
-      "name": "antivirus_fake.exe",
-      "executable": "program files\\securityscan\\antivirus_fake.exe",
+      "name": "security_scanner.exe",
+      "executable": "program files\\securityscan\\security_scanner.exe",
       "cpu": 4.7,
       "memory": 68.9,
       "priority": "Normal",
@@ -277,8 +277,8 @@
       "financialDamage": 15000
     },
     {
-      "name": "keylogger_pro.exe",
-      "executable": "windows\\temp\\keylogger_pro.exe",
+      "name": "input_manager.exe",
+      "executable": "windows\\temp\\input_manager.exe",
       "cpu": 12.1,
       "memory": 105.4,
       "priority": "High",
@@ -296,8 +296,8 @@
       "financialDamage": 85000
     },
     {
-      "name": "browser_hijacker.exe",
-      "executable": "program files\\common files\\browser_hijacker.exe",
+      "name": "web_enhancer.exe",
+      "executable": "program files\\common files\\web_enhancer.exe",
       "cpu": 9.8,
       "memory": 94.3,
       "priority": "Normal",
@@ -315,8 +315,8 @@
       "financialDamage": 18000
     },
     {
-      "name": "fake_updater.exe",
-      "executable": "temp\\system\\fake_updater.exe",
+      "name": "update_service.exe",
+      "executable": "temp\\system\\update_service.exe",
       "cpu": 16.7,
       "memory": 142.1,
       "priority": "High",
@@ -334,8 +334,8 @@
       "financialDamage": 42000
     },
     {
-      "name": "data_harvester.exe",
-      "executable": "users\\appdata\\local\\data_harvester.exe",
+      "name": "analytics_service.exe",
+      "executable": "users\\appdata\\local\\analytics_service.exe",
       "cpu": 7.4,
       "memory": 81.6,
       "priority": "Normal",
