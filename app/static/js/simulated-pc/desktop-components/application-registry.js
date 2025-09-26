@@ -92,7 +92,7 @@ export class ApplicationRegistry {
                 title: 'Vulnerability Scanner'
             },
             'level3-timer': {
-                module: '../levels/level-three/apps/timer.js',
+                module: '../levels/level-three/apps/index.js',
                 className: 'Level3TimerApp',
                 storageKey: null, // Don't track opened status for timer
                 tutorialMethod: null,
