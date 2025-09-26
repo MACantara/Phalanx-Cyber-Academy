@@ -30,7 +30,7 @@ export class ProcessMonitorApp extends WindowBase {
                 <!-- Process List -->
                 <div class="flex-1 flex flex-col">
                     <!-- Header -->
-                    <div class="bg-gradient-to-r from-green-600 to-blue-600 px-4 py-3 border-b border-gray-700">
+                    <div class="bg-green-600 px-4 py-3 border-b border-gray-700">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-3">
                                 <i class="bi bi-cpu text-2xl"></i>
