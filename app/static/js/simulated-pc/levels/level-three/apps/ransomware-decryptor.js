@@ -15,6 +15,11 @@ export class RansomwareDecryptorApp extends WindowBase {
         this.decryptedFiles = new Set();
         this.scanProgress = 0;
         this.decryptionProgress = 0;
+        this.timer = window.level3Timer;
+        
+        // Start gradual damage while files remain encrypted
+        this.damageInterval = null;
+        this.startGradualDamage();
         
         this.loadEncryptedFiles();
     }
@@ -45,6 +50,10 @@ export class RansomwareDecryptorApp extends WindowBase {
                         <div class="text-right text-sm">
                             <div class="text-white">Encrypted: ${encryptedCount}</div>
                             <div class="text-white">Recovered: ${decryptedCount}</div>
+                            ${encryptedCount === 0 ? 
+                                '<div class="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium mt-1">✓ STAGE COMPLETE</div>' :
+                                `<div class="bg-red-600 text-white px-2 py-1 rounded text-xs font-medium mt-1">${encryptedCount} ENCRYPTED</div>`
+                            }
                         </div>
                     </div>
                 </div>
@@ -212,14 +221,12 @@ export class RansomwareDecryptorApp extends WindowBase {
         this.decryptedFiles.add(fileId);
         
         // Apply reputation recovery
-        try {
-            const appLauncher = getApplicationLauncher();
-            if (file.reputationRecovery > 0) {
-                // Note: Could implement reputation recovery if needed
-                console.log(`[RansomwareDecryptor] File decrypted, reputation improved by ${file.reputationRecovery}%`);
-            }
-        } catch (error) {
-            console.error('[RansomwareDecryptor] Failed to apply reputation recovery:', error);
+        if (file.reputationRecovery > 0 && this.timer) {
+            // Remove some reputation damage as reward for recovery
+            const currentDamage = this.timer.reputationDamage;
+            this.timer.reputationDamage = Math.max(0, currentDamage - file.reputationRecovery);
+            this.timer.updateDisplay();
+            console.log(`[RansomwareDecryptor] File decrypted, reputation improved by ${file.reputationRecovery}%`);
         }
 
         this.updateContent();
@@ -227,7 +234,7 @@ export class RansomwareDecryptorApp extends WindowBase {
 
         // Check if all files are decrypted
         if (this.decryptedFiles.size === this.encryptedFiles.length) {
-            this.showNotification('All files successfully recovered! Tournament data restored.', 'success');
+            this.onStageComplete();
         }
     }
 
@@ -279,6 +286,42 @@ export class RansomwareDecryptorApp extends WindowBase {
         this.decryptionProgress = 0;
         this.updateContent();
     }
+    
+    onStageComplete() {
+        // Stop gradual damage
+        if (this.damageInterval) {
+            clearInterval(this.damageInterval);
+            this.damageInterval = null;
+        }
+        
+        this.showNotification('All files successfully recovered! Level 3 complete!', 'success');
+        
+        // Mark level as completed and trigger completion dialogue
+        localStorage.setItem('cyberquest_level_3_decryption_completed', 'true');
+        
+        setTimeout(() => {
+            // Trigger level completion dialogue
+            const completionEvent = new CustomEvent('level3-decryption-complete');
+            window.dispatchEvent(completionEvent);
+        }, 2000);
+    }
+
+    startGradualDamage() {
+        // Apply gradual damage every 20 seconds while files remain encrypted
+        this.damageInterval = setInterval(() => {
+            const encryptedCount = this.encryptedFiles.length - this.decryptedFiles.size;
+            if (encryptedCount > 0 && this.timer) {
+                // Apply damage based on number of encrypted files
+                const reputationDamage = encryptedCount * 1; // 1% per file per 20 seconds
+                const financialDamage = encryptedCount * 3000; // $3K per file per 20 seconds
+                
+                this.timer.addReputationDamage(reputationDamage);
+                this.timer.addFinancialDamage(financialDamage);
+                
+                console.log(`[RansomwareDecryptor] Gradual damage applied: ${reputationDamage}% reputation, $${financialDamage} financial`);
+            }
+        }, 20000); // Every 20 seconds
+    }
 
     initialize() {
         super.initialize();
@@ -324,6 +367,13 @@ export class RansomwareDecryptorApp extends WindowBase {
 
     cleanup() {
         this.stopOperation();
+        
+        // Stop gradual damage interval
+        if (this.damageInterval) {
+            clearInterval(this.damageInterval);
+            this.damageInterval = null;
+        }
+        
         super.cleanup();
     }
 }
