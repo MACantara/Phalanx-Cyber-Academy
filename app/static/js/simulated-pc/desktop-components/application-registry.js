@@ -90,6 +90,18 @@ export class ApplicationRegistry {
                 startMethod: 'startVulnerabilityScannerTutorial',
                 iconClass: 'bi-bug',
                 title: 'Vulnerability Scanner'
+            },
+            'level3-timer': {
+                module: '../levels/level-three/apps/timer.js',
+                className: 'Level3TimerApp',
+                storageKey: null, // Don't track opened status for timer
+                tutorialMethod: null,
+                startMethod: null,
+                iconClass: 'bi-stopwatch',
+                title: 'Mission Status',
+                levelSpecific: 3, // Only available in level 3
+                autoOpen: true, // Auto-open when available
+                persistent: true // Cannot be closed by user
             }
         };
         this.loadedModules = new Map(); // Cache for loaded modules
