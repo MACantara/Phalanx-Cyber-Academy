@@ -71,8 +71,8 @@ export class ProcessMonitorApp extends WindowBase {
                                 <button id="flag-suspicious-btn" class="px-3 py-2 bg-yellow-600 hover:bg-yellow-700 rounded transition-colors cursor-pointer" ${!this.selectedProcess ? 'disabled' : ''}>
                                     <i class="bi bi-flag mr-2"></i>Flag Process
                                 </button>
-                                <button id="kill-process-btn" class="px-3 py-2 bg-red-600 hover:bg-red-700 rounded transition-colors cursor-pointer" ${!this.selectedProcess || this.selectedProcess.category === 'system' ? 'disabled' : ''}>
-                                    <i class="bi bi-x-circle mr-2"></i>Kill Process
+                                <button id="kill-process-btn" class="px-3 py-2 ${this.getKillButtonClasses()} rounded transition-colors cursor-pointer" ${!this.selectedProcess ? 'disabled' : ''}>
+                                    <i class="bi bi-x-circle mr-2"></i>${this.getKillButtonText()}
                                 </button>
                             </div>
                             <div class="text-sm text-gray-400">
@@ -129,7 +129,13 @@ export class ProcessMonitorApp extends WindowBase {
                     <td class="px-4 py-3">
                         <div class="flex items-center space-x-2">
                             ${isFlagged ? '<i class="bi bi-flag-fill text-yellow-400"></i>' : ''}
-                            <span>${process.name}</span>
+                            ${process.category === 'system' ? 
+                                (process.trusted ? 
+                                    '<i class="bi bi-shield-check text-blue-400" title="System Process"></i>' :
+                                    '<i class="bi bi-shield-exclamation text-orange-400" title="System-Level Malware"></i>'
+                                ) : ''
+                            }
+                            <span class="${!process.trusted && process.category === 'system' ? 'text-orange-300' : ''}">${process.name}</span>
                         </div>
                     </td>
                     <td class="px-4 py-3 font-mono">${process.pid}</td>
@@ -234,10 +240,26 @@ export class ProcessMonitorApp extends WindowBase {
                         <button id="flag-btn" class="w-full px-3 py-2 bg-yellow-600 hover:bg-yellow-700 rounded transition-colors cursor-pointer">
                             <i class="bi bi-flag mr-2"></i>Flag as Suspicious
                         </button>
-                        ${process.category !== 'system' ? `
-                            <button id="kill-btn" class="w-full px-3 py-2 bg-red-600 hover:bg-red-700 rounded transition-colors cursor-pointer">
-                                <i class="bi bi-x-circle mr-2"></i>Kill Process
-                            </button>
+                        
+                        <!-- Kill Process Button with contextual styling -->
+                        <button id="kill-btn" class="w-full px-3 py-2 ${this.getDetailsPanelKillButtonClasses()} rounded transition-colors cursor-pointer">
+                            <i class="bi bi-x-circle mr-2"></i>${this.getDetailsPanelKillButtonText()}
+                        </button>
+                        
+                        <!-- Warning for system processes -->
+                        ${process.category === 'system' ? `
+                            <div class="mt-2 p-2 ${process.trusted ? 'bg-red-900/30 border border-red-700' : 'bg-orange-900/30 border border-orange-700'} rounded text-xs">
+                                <div class="flex items-center">
+                                    <i class="bi bi-exclamation-triangle ${process.trusted ? 'text-red-400' : 'text-orange-400'} mr-2"></i>
+                                    <strong>${process.trusted ? 'CRITICAL WARNING' : 'SYSTEM WARNING'}</strong>
+                                </div>
+                                <div class="text-gray-300 mt-1">
+                                    ${process.trusted ? 
+                                        'Killing this system process may cause system instability and severe penalties.' :
+                                        'This appears to be system-level malware. Killing it may disrupt system operations.'
+                                    }
+                                </div>
+                            </div>
                         ` : ''}
                     </div>
                 </div>
@@ -396,6 +418,78 @@ export class ProcessMonitorApp extends WindowBase {
             default: return 'bg-gray-600 text-white';
         }
     }
+    
+    getKillButtonClasses() {
+        if (!this.selectedProcess) {
+            return 'bg-gray-600 hover:bg-gray-700';
+        }
+        
+        if (this.selectedProcess.category === 'system') {
+            if (!this.selectedProcess.trusted) {
+                // System malware - orange (dangerous but necessary)
+                return 'bg-orange-600 hover:bg-orange-700 border-2 border-orange-400';
+            } else {
+                // Legitimate system process - very dangerous to kill
+                return 'bg-red-800 hover:bg-red-900 border-2 border-red-600';
+            }
+        } else {
+            // Regular process - standard red
+            return 'bg-red-600 hover:bg-red-700';
+        }
+    }
+    
+    getKillButtonText() {
+        if (!this.selectedProcess) {
+            return 'Kill Process';
+        }
+        
+        if (this.selectedProcess.category === 'system') {
+            if (!this.selectedProcess.trusted) {
+                return 'Kill System Malware';
+            } else {
+                return 'Force Kill System';
+            }
+        } else {
+            return 'Kill Process';
+        }
+    }
+    
+    getDetailsPanelKillButtonClasses() {
+        const process = this.selectedProcess;
+        if (!process) {
+            return 'bg-gray-600 hover:bg-gray-700';
+        }
+        
+        if (process.category === 'system') {
+            if (!process.trusted) {
+                // System malware - orange (dangerous but necessary)
+                return 'bg-orange-600 hover:bg-orange-700 border-2 border-orange-400';
+            } else {
+                // Legitimate system process - very dangerous to kill
+                return 'bg-red-800 hover:bg-red-900 border-2 border-red-600';
+            }
+        } else {
+            // Regular process - standard red
+            return 'bg-red-600 hover:bg-red-700';
+        }
+    }
+    
+    getDetailsPanelKillButtonText() {
+        const process = this.selectedProcess;
+        if (!process) {
+            return 'Kill Process';
+        }
+        
+        if (process.category === 'system') {
+            if (!process.trusted) {
+                return 'Kill System Malware';
+            } else {
+                return 'Force Kill System Process';
+            }
+        } else {
+            return 'Kill Process';
+        }
+    }
 
     selectProcess(pid) {
         this.selectedProcess = this.processes.find(p => p.pid == pid);
@@ -412,27 +506,43 @@ export class ProcessMonitorApp extends WindowBase {
         const process = this.processes.find(p => p.pid == pid);
         if (!process) return;
 
-        if (process.category === 'system') {
-            this.showNotification('Cannot kill system process!', 'error');
-            return;
-        }
-
-        // Apply damage if killing malicious process (good) or legitimate process (bad)
+        // Mark process as killed
+        this.killedProcesses.add(pid);
+        
+        // Apply damage/recovery based on process type and trust level
         try {
-            // Mark process as killed
-            this.killedProcesses.add(pid);
-            
             if (!process.trusted) {
-                // Killed malicious process - reduce damage
+                // Killed malicious process - good action
                 const reputationRecovery = Math.min(5, process.reputationDamage || 0);
-                this.showNotification(`Malicious process terminated! Prevented ${process.reputationDamage || 5} reputation damage.`, 'success');
-            } else {
-                // Killed legitimate process - apply damage
-                if (this.timer) {
-                    this.timer.addReputationDamage(5);
-                    this.timer.addFinancialDamage(1000);
+                
+                if (process.category === 'system') {
+                    // Malicious system process (like rootkit) - moderate penalty for being cautious
+                    if (this.timer) {
+                        this.timer.addReputationDamage(3);
+                        this.timer.addFinancialDamage(2000);
+                    }
+                    this.showNotification(`System-level malware terminated! Minor reputation damage from system disruption, but threat eliminated. Good job identifying the rootkit!`, 'warning');
+                } else {
+                    // Regular malicious process - no penalty
+                    this.showNotification(`Malicious process terminated! Prevented ${process.reputationDamage || 5} reputation damage.`, 'success');
                 }
-                this.showNotification('Warning: Legitimate process killed! Reputation and financial damage applied.', 'error');
+            } else {
+                // Killed legitimate process - penalties based on system criticality
+                if (process.category === 'system') {
+                    // Critical system process - severe penalties
+                    if (this.timer) {
+                        this.timer.addReputationDamage(15);
+                        this.timer.addFinancialDamage(10000);
+                    }
+                    this.showNotification('CRITICAL ERROR: Essential system process terminated! Severe reputation and financial damage applied.', 'error');
+                } else {
+                    // Regular legitimate process - standard penalty
+                    if (this.timer) {
+                        this.timer.addReputationDamage(5);
+                        this.timer.addFinancialDamage(1000);
+                    }
+                    this.showNotification('Warning: Legitimate process killed! Reputation and financial damage applied.', 'error');
+                }
             }
         } catch (error) {
             console.error('[ProcessMonitor] Failed to apply damage:', error);
