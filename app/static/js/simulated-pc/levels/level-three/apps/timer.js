@@ -3,62 +3,66 @@ import { WindowBase } from '../../../desktop-components/window-base.js';
 export class Level3TimerApp extends WindowBase {
     constructor() {
         super('level3-timer', 'Mission Status', {
-            width: '320px',
-            height: '200px'
+            width: '280px',
+            height: '160px',
+            resizable: false,
+            maximizable: false
         });
         
         // Timer state
         this.timeRemaining = 15 * 60; // 15 minutes in seconds
         this.timerInterval = null;
         this.isRunning = false;
+        this.canStart = false; // Only start after Level 3 dialogue
         
         // Damage tracking
         this.reputationDamage = 0;
         this.financialDamage = 0;
         this.maxReputation = 100;
         this.maxFinancialHealth = 1000000; // $1M starting budget
+        
+        // Listen for Level 3 dialogue completion
+        this.setupDialogueListener();
     }
 
     createContent() {
         return `
-            <div class="p-4 text-white h-full">
+            <div class="p-3 text-white h-full overflow-hidden">
                 <!-- Timer Display -->
-                <div class="mb-4 text-center">
+                <div class="mb-3 text-center">
                     <div class="text-xs text-gray-400 mb-1">TIME REMAINING</div>
-                    <div class="text-2xl font-bold font-mono ${this.getTimerColor()}" id="timer-display">
+                    <div class="text-xl font-bold font-mono ${this.getTimerColor()}" id="timer-display">
                         ${this.formatTime(this.timeRemaining)}
                     </div>
-                    <div class="text-xs text-gray-400 mt-1">
-                        ${this.isRunning ? 'ACTIVE MISSION' : 'STANDBY'}
+                    <div class="text-xs text-gray-400">
+                        ${this.isRunning ? 'ACTIVE' : this.canStart ? 'READY' : 'STANDBY'}
                     </div>
                 </div>
                 
                 <!-- Damage Indicators -->
-                <div class="space-y-3">
-                    <!-- Reputation Damage -->
-                    <div class="bg-gray-700 rounded p-3">
+                <div class="space-y-2">
+                    <!-- Reputation -->
+                    <div class="bg-gray-700 rounded p-2">
                         <div class="flex justify-between items-center mb-1">
                             <span class="text-xs text-gray-400">REPUTATION</span>
                             <span class="text-xs ${this.getReputationColor()}">${this.maxReputation - this.reputationDamage}%</span>
                         </div>
-                        <div class="w-full bg-gray-600 rounded-full h-2">
-                            <div class="bg-gradient-to-r ${this.getReputationBarColor()} h-2 rounded-full transition-all duration-500" 
+                        <div class="w-full bg-gray-600 rounded-full h-1.5">
+                            <div class="bg-gradient-to-r ${this.getReputationBarColor()} h-1.5 rounded-full transition-all duration-500" 
                                  style="width: ${((this.maxReputation - this.reputationDamage) / this.maxReputation) * 100}%"></div>
                         </div>
-                        ${this.reputationDamage > 0 ? `<div class="text-xs text-red-400 mt-1">-${this.reputationDamage}% damage</div>` : ''}
                     </div>
                     
-                    <!-- Financial Damage -->
-                    <div class="bg-gray-700 rounded p-3">
+                    <!-- Financial -->
+                    <div class="bg-gray-700 rounded p-2">
                         <div class="flex justify-between items-center mb-1">
                             <span class="text-xs text-gray-400">BUDGET</span>
                             <span class="text-xs ${this.getFinancialColor()}">$${this.formatMoney(this.maxFinancialHealth - this.financialDamage)}</span>
                         </div>
-                        <div class="w-full bg-gray-600 rounded-full h-2">
-                            <div class="bg-gradient-to-r ${this.getFinancialBarColor()} h-2 rounded-full transition-all duration-500" 
+                        <div class="w-full bg-gray-600 rounded-full h-1.5">
+                            <div class="bg-gradient-to-r ${this.getFinancialBarColor()} h-1.5 rounded-full transition-all duration-500" 
                                  style="width: ${((this.maxFinancialHealth - this.financialDamage) / this.maxFinancialHealth) * 100}%"></div>
                         </div>
-                        ${this.financialDamage > 0 ? `<div class="text-xs text-red-400 mt-1">-$${this.formatMoney(this.financialDamage)} lost</div>` : ''}
                     </div>
                 </div>
             </div>
@@ -67,7 +71,7 @@ export class Level3TimerApp extends WindowBase {
 
     // Timer methods
     startTimer() {
-        if (this.timerInterval) return; // Already running
+        if (this.timerInterval || !this.canStart) return; // Already running or not ready
         
         this.isRunning = true;
         this.timerInterval = setInterval(() => {
@@ -81,6 +85,49 @@ export class Level3TimerApp extends WindowBase {
         }, 1000);
         
         this.updateDisplay();
+        console.log('[Level3Timer] Timer started after Level 3 dialogue completion');
+    }
+
+    // Enable timer start (called after Level 3 dialogue)
+    enableTimer() {
+        this.canStart = true;
+        this.updateDisplay();
+        
+        // Auto-start after a short delay
+        setTimeout(() => {
+            this.startTimer();
+        }, 1000);
+    }
+
+    // Setup listener for Level 3 dialogue completion
+    setupDialogueListener() {
+        // Listen for storage changes indicating Level 3 dialogue completion
+        const checkDialogueComplete = () => {
+            if (localStorage.getItem('cyberquest_level_3_started')) {
+                this.enableTimer();
+            }
+        };
+
+        // Check immediately and set up interval to check
+        checkDialogueComplete();
+        
+        // Also listen for storage events
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'cyberquest_level_3_started' && e.newValue) {
+                this.enableTimer();
+            }
+        });
+
+        // Backup check every second until dialogue completes
+        const intervalCheck = setInterval(() => {
+            if (localStorage.getItem('cyberquest_level_3_started')) {
+                this.enableTimer();
+                clearInterval(intervalCheck);
+            }
+        }, 1000);
+
+        // Clear interval after 30 seconds to avoid infinite checking
+        setTimeout(() => clearInterval(intervalCheck), 30000);
     }
 
     stopTimer() {
@@ -217,14 +264,12 @@ export class Level3TimerApp extends WindowBase {
         }
     }
 
-    // Override initialize to start timer
+    // Override initialize - don't auto-start timer
     initialize() {
         super.initialize();
         
-        // Auto-start timer for level 3
-        setTimeout(() => {
-            this.startTimer();
-        }, 2000); // Start after 2 seconds
+        // Timer will only start after Level 3 dialogue completion
+        console.log('[Level3Timer] Timer initialized, waiting for Level 3 dialogue completion');
     }
 
     // Override cleanup to stop timer
