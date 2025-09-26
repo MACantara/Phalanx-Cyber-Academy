@@ -62,14 +62,16 @@ export class ApplicationLauncher {
         // Handle level-specific window positioning and properties
         if (appConfig.levelSpecific) {
             if (appId === 'level3-timer') {
-                windowOptions.width = '320px';
-                windowOptions.height = '200px';
+                windowOptions.width = '280px';
+                windowOptions.height = '160px';
                 windowOptions.position = { 
-                    left: 'calc(100% - 340px)', 
+                    left: 'calc(100% - 300px)', 
                     top: '20px' 
                 };
                 windowOptions.zIndex = '1000';
                 windowOptions.persistent = true; // Cannot be closed
+                windowOptions.resizable = false; // Cannot be resized
+                windowOptions.maximizable = false; // Cannot be maximized
             }
         }
 
@@ -79,8 +81,16 @@ export class ApplicationLauncher {
         if (window && appConfig.persistent) {
             const closeBtn = window.querySelector('.close');
             const minimizeBtn = window.querySelector('.minimize');
+            const maximizeBtn = window.querySelector('.maximize');
             if (closeBtn) closeBtn.style.display = 'none';
             if (minimizeBtn) minimizeBtn.style.display = 'none';
+            
+            // Hide maximize button and resize handles for non-resizable windows
+            if (windowOptions.resizable === false) {
+                if (maximizeBtn) maximizeBtn.style.display = 'none';
+                const resizeHandles = window.querySelectorAll('.resize-handle');
+                resizeHandles.forEach(handle => handle.style.display = 'none');
+            }
         }
 
         // Position window if specified
