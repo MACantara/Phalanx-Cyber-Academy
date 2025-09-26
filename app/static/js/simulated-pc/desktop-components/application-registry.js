@@ -64,6 +64,18 @@ export class ApplicationRegistry {
                 iconClass: 'bi-cpu',
                 title: 'Process Monitor'
             },
+            'process-monitor-level3': {
+                module: '../levels/level-three/apps/index.js',
+                className: 'Level3ProcessMonitorApp',
+                storageKey: 'cyberquest_processmonitor_opened',
+                tutorialMethod: null,
+                startMethod: null,
+                iconClass: 'bi-cpu',
+                title: 'Process Monitor',
+                levelSpecific: 3,
+                autoOpen: false,
+                overrides: 'process-monitor'
+            },
             'malware-scanner': {
                 module: './desktop-applications/malware-scanner-app.js',
                 className: 'MalwareScannerApp',
@@ -73,6 +85,18 @@ export class ApplicationRegistry {
                 iconClass: 'bi-shield-exclamation',
                 title: 'Malware Scanner'
             },
+            'malware-scanner-level3': {
+                module: '../levels/level-three/apps/index.js',
+                className: 'Level3MalwareScannerApp',
+                storageKey: 'cyberquest_malwarescanner_opened',
+                tutorialMethod: null,
+                startMethod: null,
+                iconClass: 'bi-shield-exclamation',
+                title: 'Malware Scanner',
+                levelSpecific: 3,
+                autoOpen: false,
+                overrides: 'malware-scanner' // Override the regular malware scanner in Level 3
+            },
             'ransomware-decryptor': {
                 module: './desktop-applications/ransomware-decryptor-app.js',
                 className: 'RansomwareDecryptorApp',
@@ -81,6 +105,18 @@ export class ApplicationRegistry {
                 startMethod: 'startRansomwareDecryptorTutorial',
                 iconClass: 'bi-unlock',
                 title: 'Ransomware Decryptor'
+            },
+            'ransomware-decryptor-level3': {
+                module: '../levels/level-three/apps/index.js',
+                className: 'Level3RansomwareDecryptorApp',
+                storageKey: 'cyberquest_ransomwaredecryptor_opened',
+                tutorialMethod: null,
+                startMethod: null,
+                iconClass: 'bi-unlock',
+                title: 'Ransomware Decryptor',
+                levelSpecific: 3,
+                autoOpen: false,
+                overrides: 'ransomware-decryptor'
             },
             'vulnerability-scanner': {
                 module: './desktop-applications/vulnerability-scanner-app.js',
