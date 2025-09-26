@@ -39,7 +39,7 @@ export class Level3TimerApp {
                         <i class="bi bi-stopwatch text-yellow-400"></i>
                         <span>MISSION</span>
                     </div>
-                    <span class="text-xs ${this.isRunning ? 'text-green-400' : this.canStart ? 'text-yellow-400' : 'text-gray-400'}">
+                    <span class="text-xs ${this.isRunning ? 'text-green-400' : this.canStart ? 'text-yellow-400' : 'text-gray-300'}">
                         ${this.isRunning ? 'ACTIVE' : this.canStart ? 'READY' : 'STANDBY'}
                     </span>
                 </div>
@@ -57,7 +57,7 @@ export class Level3TimerApp {
                     <!-- Reputation -->
                     <div class="bg-gray-700 rounded p-1.5">
                         <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-400">REPUTATION</span>
+                            <span class="text-gray-300">REPUTATION</span>
                             <span class="${this.getReputationColor()}">${this.maxReputation - this.reputationDamage}%</span>
                         </div>
                         <div class="w-full bg-gray-600 rounded-full h-1">
@@ -69,7 +69,7 @@ export class Level3TimerApp {
                     <!-- Financial Cost -->
                     <div class="bg-gray-700 rounded p-1.5">
                         <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-400">COST</span>
+                            <span class="text-gray-300">COST</span>
                             <span class="${this.getFinancialColor()}">$${this.formatMoney(this.financialDamage)}</span>
                         </div>
                         <div class="w-full bg-gray-600 rounded-full h-1">
