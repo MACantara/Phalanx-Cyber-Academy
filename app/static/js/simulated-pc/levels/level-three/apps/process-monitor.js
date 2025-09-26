@@ -14,6 +14,12 @@ export class ProcessMonitorApp extends WindowBase {
         this.sortColumn = 'name';
         this.sortDirection = 'asc';
         this.flaggedProcesses = new Set();
+        this.killedProcesses = new Set();
+        this.timer = window.level3Timer;
+        
+        // Start gradual damage if malware processes exist
+        this.damageInterval = null;
+        this.startGradualDamage();
         
         this.loadProcesses();
     }
@@ -25,6 +31,11 @@ export class ProcessMonitorApp extends WindowBase {
     }
 
     createContent() {
+        const totalProcesses = this.processes.length;
+        const maliciousProcesses = this.processes.filter(p => !p.trusted).length;
+        const killedMalicious = this.processes.filter(p => !p.trusted && this.killedProcesses.has(p.pid)).length;
+        const remainingMalicious = maliciousProcesses - killedMalicious;
+        
         return `
             <div class="h-full flex bg-gray-900 text-white">
                 <!-- Process List -->
@@ -42,6 +53,10 @@ export class ProcessMonitorApp extends WindowBase {
                             <div class="text-right text-sm">
                                 <div class="text-white">Total: ${this.processes.length}</div>
                                 <div class="text-white">Running: ${this.processes.filter(p => p.status === 'Running').length}</div>
+                                ${remainingMalicious === 0 ? 
+                                    '<div class="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium mt-1">✓ STAGE COMPLETE</div>' :
+                                    `<div class="bg-red-600 text-white px-2 py-1 rounded text-xs font-medium mt-1">${remainingMalicious} THREATS</div>`
+                                }
                             </div>
                         </div>
                     </div>
@@ -404,17 +419,19 @@ export class ProcessMonitorApp extends WindowBase {
 
         // Apply damage if killing malicious process (good) or legitimate process (bad)
         try {
-            const appLauncher = getApplicationLauncher();
+            // Mark process as killed
+            this.killedProcesses.add(pid);
             
             if (!process.trusted) {
                 // Killed malicious process - reduce damage
                 const reputationRecovery = Math.min(5, process.reputationDamage || 0);
-                this.showNotification(`Malicious process terminated! Reputation improved by ${reputationRecovery}%`, 'success');
-                // Note: We could implement reputation recovery here if needed
+                this.showNotification(`Malicious process terminated! Prevented ${process.reputationDamage || 5} reputation damage.`, 'success');
             } else {
                 // Killed legitimate process - apply damage
-                appLauncher.addReputationDamage(5);
-                appLauncher.addFinancialDamage(1000);
+                if (this.timer) {
+                    this.timer.addReputationDamage(5);
+                    this.timer.addFinancialDamage(1000);
+                }
                 this.showNotification('Warning: Legitimate process killed! Reputation and financial damage applied.', 'error');
             }
         } catch (error) {
@@ -423,8 +440,53 @@ export class ProcessMonitorApp extends WindowBase {
 
         // Remove process from list
         this.processes = this.processes.filter(p => p.pid !== pid);
-        this.selectedProcess = null;
+        
+        // Clear selection if killed process was selected
+        if (this.selectedProcess && this.selectedProcess.pid == pid) {
+            this.selectedProcess = null;
+        }
+
+        // Check if all malicious processes are killed
+        const remainingMalicious = this.processes.filter(p => !p.trusted).length;
+        if (remainingMalicious === 0) {
+            this.onStageComplete();
+        }
+
         this.updateContent();
+    }
+
+    onStageComplete() {
+        // Trigger next stage (malware scanner)
+        this.showNotification('All malicious processes eliminated! Launching malware scanner...', 'success');
+        
+        // Stop gradual damage
+        if (this.damageInterval) {
+            clearInterval(this.damageInterval);
+            this.damageInterval = null;
+        }
+        
+        setTimeout(async () => {
+            if (window.applicationLauncher) {
+                await window.applicationLauncher.launchForLevel(3, 'malware-scanner', 'Malware Scanner');
+            }
+        }, 2000);
+    }
+
+    startGradualDamage() {
+        // Apply gradual damage every 10 seconds while malicious processes exist
+        this.damageInterval = setInterval(() => {
+            const maliciousProcesses = this.processes.filter(p => !p.trusted && !this.killedProcesses.has(p.pid));
+            if (maliciousProcesses.length > 0 && this.timer) {
+                // Apply damage based on number of active malicious processes
+                const reputationDamage = maliciousProcesses.length * 2; // 2% per process per 10 seconds
+                const financialDamage = maliciousProcesses.length * 5000; // $5K per process per 10 seconds
+                
+                this.timer.addReputationDamage(reputationDamage);
+                this.timer.addFinancialDamage(financialDamage);
+                
+                console.log(`[ProcessMonitor] Gradual damage applied: ${reputationDamage}% reputation, $${financialDamage} financial`);
+            }
+        }, 10000); // Every 10 seconds
     }
 
     refreshProcesses() {
@@ -507,6 +569,12 @@ export class ProcessMonitorApp extends WindowBase {
     }
 
     cleanup() {
+        // Stop gradual damage interval
+        if (this.damageInterval) {
+            clearInterval(this.damageInterval);
+            this.damageInterval = null;
+        }
+        
         super.cleanup();
     }
 }
