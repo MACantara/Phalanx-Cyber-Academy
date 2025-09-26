@@ -41,7 +41,7 @@ export class ProcessMonitorApp extends WindowBase {
                             </div>
                             <div class="text-right text-sm">
                                 <div class="text-white">Total: ${this.processes.length}</div>
-                                <div class="text-white">Suspicious: ${this.processes.filter(p => !p.trusted).length}</div>
+                                <div class="text-white">High Risk: ${this.processes.filter(p => this.getProcessRiskLevel(p) === 'HIGH').length}</div>
                             </div>
                         </div>
                     </div>
@@ -110,13 +110,12 @@ export class ProcessMonitorApp extends WindowBase {
             const riskLevel = this.getProcessRiskLevel(process);
             
             return `
-                <tr class="process-row cursor-pointer hover:bg-gray-800 border-b border-gray-700 ${isSelected ? 'bg-blue-900' : ''} ${isMalicious ? 'bg-red-900/20' : ''}" 
+                <tr class="process-row cursor-pointer hover:bg-gray-800 border-b border-gray-700 ${isSelected ? 'bg-blue-900' : ''}" 
                     data-pid="${process.pid}">
                     <td class="px-4 py-3">
                         <div class="flex items-center space-x-2">
                             ${isFlagged ? '<i class="bi bi-flag-fill text-yellow-400"></i>' : ''}
-                            ${isMalicious ? '<i class="bi bi-exclamation-triangle text-red-400"></i>' : '<i class="bi bi-check-circle text-green-400"></i>'}
-                            <span class="${isMalicious ? 'text-red-300' : ''}">${process.name}</span>
+                            <span class="${this.getProcessNameColor(process)}">${process.name}</span>
                         </div>
                     </td>
                     <td class="px-4 py-3 font-mono">${process.pid}</td>
@@ -150,7 +149,7 @@ export class ProcessMonitorApp extends WindowBase {
                 <!-- Details Header -->
                 <div class="bg-gray-700 px-4 py-3 border-b border-gray-600">
                     <h3 class="font-semibold flex items-center">
-                        ${isMalicious ? '<i class="bi bi-exclamation-triangle text-red-400 mr-2"></i>' : '<i class="bi bi-info-circle text-blue-400 mr-2"></i>'}
+                        <i class="bi bi-info-circle text-blue-400 mr-2"></i>
                         Process Details
                     </h3>
                 </div>
@@ -200,13 +199,15 @@ export class ProcessMonitorApp extends WindowBase {
                         </div>
 
                         <!-- Security Analysis -->
-                        ${isMalicious ? `
+                        ${this.getSuspiciousIndicators(process).length > 0 ? `
                             <div>
-                                <h5 class="font-semibold text-red-400 mb-2">⚠️ Security Alert</h5>
-                                <div class="bg-red-900/20 border border-red-700 rounded p-3">
+                                <h5 class="font-semibold text-yellow-400 mb-2"><i class="bi bi-exclamation-triangle text-yellow-400"></i> Analysis Notes</h5>
+                                <div class="bg-yellow-900/20 border border-yellow-700 rounded p-3">
                                     <div class="text-sm space-y-2">
-                                        <div><strong>Malware Type:</strong> ${process.malwareType}</div>
-                                        <div class="text-red-300">This process is flagged as malicious!</div>
+                                        <div class="text-yellow-200">Review the following observations:</div>
+                                        <ul class="text-yellow-100 space-y-1 ml-2">
+                                            ${this.getSuspiciousIndicators(process).map(indicator => `<li>• ${indicator}</li>`).join('')}
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -222,13 +223,13 @@ export class ProcessMonitorApp extends WindowBase {
                             </div>
                         ` : ''}
 
-                        <!-- Damage Info -->
-                        ${isMalicious && (process.reputationDamage || process.financialDamage) ? `
+                        <!-- Potential Impact -->
+                        ${!process.trusted && (process.reputationDamage || process.financialDamage) ? `
                             <div>
-                                <h5 class="font-semibold text-red-400 mb-2">Potential Damage</h5>
+                                <h5 class="font-semibold text-orange-400 mb-2">Potential Impact Assessment</h5>
                                 <div class="text-sm space-y-1">
-                                    ${process.reputationDamage ? `<div class="text-red-300">Reputation: -${process.reputationDamage}%</div>` : ''}
-                                    ${process.financialDamage ? `<div class="text-red-300">Financial: -$${level3DataManager.formatDamage(process.financialDamage)}</div>` : ''}
+                                    ${process.reputationDamage ? `<div class="text-orange-300">Reputation risk: ${process.reputationDamage}% potential impact</div>` : ''}
+                                    ${process.financialDamage ? `<div class="text-orange-300">Financial risk: $${level3DataManager.formatDamage(process.financialDamage)} exposure</div>` : ''}
                                 </div>
                             </div>
                         ` : ''}
@@ -288,10 +289,87 @@ export class ProcessMonitorApp extends WindowBase {
     }
 
     getProcessRiskLevel(process) {
-        if (!process.trusted) return 'HIGH';
-        if (process.cpu > 20) return 'MEDIUM';
-        if (process.priority === 'High') return 'MEDIUM';
+        // Calculate risk based on multiple factors instead of just trusted flag
+        let riskScore = 0;
+        
+        // High CPU usage is suspicious
+        if (process.cpu > 20) riskScore += 2;
+        if (process.cpu > 50) riskScore += 3;
+        
+        // High memory usage
+        if (process.memory > 100) riskScore += 2;
+        if (process.memory > 200) riskScore += 3;
+        
+        // Suspicious paths
+        if (process.executable.toLowerCase().includes('temp\\') || 
+            process.executable.toLowerCase().includes('downloads\\')) {
+            riskScore += 4;
+        }
+        
+        // High priority without clear justification
+        if (process.priority === 'High' && process.category !== 'system') {
+            riskScore += 2;
+        }
+        
+        // System32 processes that aren't typical Windows components
+        if (process.executable.toLowerCase().includes('system32\\') && 
+            !['csrss.exe', 'lsass.exe', 'winlogon.exe'].includes(process.name.toLowerCase())) {
+            riskScore += 3;
+        }
+        
+        // Return risk level based on score
+        if (riskScore >= 6) return 'HIGH';
+        if (riskScore >= 3) return 'MEDIUM';
         return 'LOW';
+    }
+
+    getProcessNameColor(process) {
+        const riskLevel = this.getProcessRiskLevel(process);
+        switch (riskLevel) {
+            case 'HIGH': return 'text-red-300';
+            case 'MEDIUM': return 'text-yellow-300';
+            default: return 'text-white';
+        }
+    }
+
+    getSuspiciousIndicators(process) {
+        const indicators = [];
+        
+        // High resource usage
+        if (process.cpu > 20) {
+            indicators.push(`High CPU usage (${process.cpu.toFixed(1)}%) for this type of process`);
+        }
+        if (process.memory > 150) {
+            indicators.push(`Unusually high memory consumption (${process.memory.toFixed(1)} MB)`);
+        }
+        
+        // Path analysis
+        if (process.executable.toLowerCase().includes('temp\\')) {
+            indicators.push('Running from temporary directory - unusual for legitimate software');
+        }
+        if (process.executable.toLowerCase().includes('downloads\\')) {
+            indicators.push('Executing from downloads folder - potential security risk');
+        }
+        
+        // System directory analysis
+        if (process.executable.toLowerCase().includes('system32\\')) {
+            const knownSystemProcesses = ['system', 'csrss.exe', 'lsass.exe', 'winlogon.exe', 'svchost.exe'];
+            if (!knownSystemProcesses.some(known => process.name.toLowerCase().includes(known.toLowerCase()))) {
+                indicators.push('Located in System32 but not a recognized Windows component');
+            }
+        }
+        
+        // Priority analysis
+        if (process.priority === 'High' && process.category !== 'system') {
+            indicators.push('Running with high priority without clear system justification');
+        }
+        
+        // Add risk factors from data if available
+        if (process.riskFactors && process.riskFactors.length > 0) {
+            indicators.push(...process.riskFactors);
+        }
+        
+        return indicators;
     }
 
     getCpuColor(cpu) {

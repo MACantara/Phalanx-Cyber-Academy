@@ -132,15 +132,15 @@
       "cpu": 28.5,
       "memory": 245.7,
       "priority": "High",
-      "category": "malware",
-      "description": "Fake gaming optimizer - actually ransomware",
+      "category": "application",
+      "description": "Gaming performance optimization utility",
       "trusted": false,
       "malwareType": "Ransomware",
       "riskFactors": [
-        "Running from suspicious temporary or download location",
-        "Potentially fraudulent gaming enhancement tool",
-        "High priority process with questionable gaming purpose",
-        "Extremely high CPU and memory usage"
+        "Unusually high CPU usage for an optimizer",
+        "Excessive memory consumption",
+        "Running from temporary downloads folder",
+        "High priority process with no clear justification"
       ],
       "reputationDamage": 25,
       "financialDamage": 50000
@@ -151,14 +151,14 @@
       "cpu": 15.8,
       "memory": 134.1,
       "priority": "Normal",
-      "category": "malware",
-      "description": "Trojan masquerading as Steam helper",
+      "category": "gaming",
+      "description": "Steam platform helper service",
       "trusted": false,
       "malwareType": "Trojan",
       "riskFactors": [
-        "Process name mimics legitimate gaming software but runs from wrong location",
-        "Not digitally signed by Valve Corporation",
-        "Running from temporary directory instead of Steam installation folder"
+        "Running from temp directory instead of Steam folder",
+        "Higher resource usage than expected for helper process",
+        "Process path doesn't match legitimate Steam installation"
       ],
       "reputationDamage": 15,
       "financialDamage": 25000
@@ -169,13 +169,14 @@
       "cpu": 8.2,
       "memory": 89.6,
       "priority": "Normal",
-      "category": "malware",
-      "description": "Spyware monitoring gaming activities",
+      "category": "application",
+      "description": "System performance monitoring tool",
       "trusted": false,
       "malwareType": "Spyware",
       "riskFactors": [
-        "Suspicious network activity patterns",
-        "Monitoring user behavior without consent"
+        "Installed in Common Files instead of dedicated folder",
+        "Continuous background activity without user interaction",
+        "No clear manufacturer or digital signature information"
       ],
       "reputationDamage": 10,
       "financialDamage": 10000
@@ -186,14 +187,15 @@
       "cpu": 22.7,
       "memory": 178.3,
       "priority": "High",
-      "category": "malware",
-      "description": "Advanced rootkit with kernel-level access",
+      "category": "system",
+      "description": "Windows system optimization service",
       "trusted": false,
       "malwareType": "Rootkit",
       "riskFactors": [
-        "Running from system directory with suspicious name",
-        "High privileges and system-level access",
-        "Not a genuine Windows component"
+        "Located in System32 but not a genuine Windows component",
+        "Extremely high resource usage for system service",
+        "Running with elevated privileges without clear purpose",
+        "Process name mimics legitimate system tools"
       ],
       "reputationDamage": 30,
       "financialDamage": 75000
