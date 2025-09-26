@@ -49,6 +49,18 @@ export class Level3DataManager {
         return this.malwareData[filename.toLowerCase()] || null;
     }
 
+    getMalwareByPath(filePath) {
+        if (!this.loaded) {
+            console.warn('[Level3DataManager] Data not loaded yet');
+            return null;
+        }
+        
+        // Find malware by matching the full path
+        return Object.values(this.malwareData).find(malware => 
+            malware.path && malware.path.toLowerCase() === filePath.toLowerCase()
+        ) || null;
+    }
+
     getAllMalware() {
         if (!this.loaded) return {};
         return this.malwareData;
