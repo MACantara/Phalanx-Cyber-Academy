@@ -26,8 +26,8 @@ export class Level3TimerApp {
     createElement() {
         this.element = document.createElement('div');
         this.element.id = 'level3-timer-static';
-        this.element.className = 'fixed top-5 right-5 w-70 bg-gray-800 border border-gray-600 rounded shadow-2xl z-50 backdrop-blur-lg';
-        this.element.style.width = '280px';
+        this.element.className = 'fixed top-4 right-4 bg-gray-800 border border-gray-600 rounded shadow-xl z-50 backdrop-blur-sm';
+        this.element.style.width = '220px';
         
         this.updateContent();
         return this.element;
@@ -36,46 +36,47 @@ export class Level3TimerApp {
     // Create content HTML
     createContent() {
         return `
-            <div class="bg-gradient-to-r from-gray-700 to-gray-600 px-3 py-2 border-b border-gray-600">
-                <div class="text-white text-sm font-semibold flex items-center space-x-2">
-                    <i class="bi bi-stopwatch"></i>
-                    <span>${this.title}</span>
+            <div class="bg-gradient-to-r from-gray-700 to-gray-600 px-2 py-1.5 border-b border-gray-600">
+                <div class="text-white text-xs font-semibold flex items-center justify-between">
+                    <div class="flex items-center space-x-1">
+                        <i class="bi bi-stopwatch text-yellow-400"></i>
+                        <span>MISSION</span>
+                    </div>
+                    <span class="text-xs ${this.isRunning ? 'text-green-400' : this.canStart ? 'text-yellow-400' : 'text-gray-400'}">
+                        ${this.isRunning ? 'ACTIVE' : this.canStart ? 'READY' : 'STANDBY'}
+                    </span>
                 </div>
             </div>
-            <div class="p-3 text-white">
+            <div class="p-2 text-white">
                 <!-- Timer Display -->
-                <div class="mb-3 text-center">
-                    <div class="text-xs text-gray-400 mb-1">TIME REMAINING</div>
-                    <div class="text-xl font-bold font-mono ${this.getTimerColor()}" id="timer-display">
+                <div class="text-center mb-2">
+                    <div class="text-lg font-bold font-mono ${this.getTimerColor()}">
                         ${this.formatTime(this.timeRemaining)}
-                    </div>
-                    <div class="text-xs text-gray-400">
-                        ${this.isRunning ? 'ACTIVE' : this.canStart ? 'READY' : 'STANDBY'}
                     </div>
                 </div>
                 
-                <!-- Damage Indicators -->
-                <div class="space-y-2">
+                <!-- Compact Damage Grid -->
+                <div class="grid grid-cols-2 gap-2 text-xs">
                     <!-- Reputation -->
-                    <div class="bg-gray-700 rounded p-2">
+                    <div class="bg-gray-700 rounded p-1.5">
                         <div class="flex justify-between items-center mb-1">
-                            <span class="text-xs text-gray-400">REPUTATION</span>
-                            <span class="text-xs ${this.getReputationColor()}">${this.maxReputation - this.reputationDamage}%</span>
+                            <span class="text-gray-400">REP</span>
+                            <span class="${this.getReputationColor()}">${this.maxReputation - this.reputationDamage}%</span>
                         </div>
-                        <div class="w-full bg-gray-600 rounded-full h-1.5">
-                            <div class="bg-gradient-to-r ${this.getReputationBarColor()} h-1.5 rounded-full transition-all duration-500" 
+                        <div class="w-full bg-gray-600 rounded-full h-1">
+                            <div class="bg-gradient-to-r ${this.getReputationBarColor()} h-1 rounded-full transition-all duration-500" 
                                  style="width: ${((this.maxReputation - this.reputationDamage) / this.maxReputation) * 100}%"></div>
                         </div>
                     </div>
                     
                     <!-- Financial -->
-                    <div class="bg-gray-700 rounded p-2">
+                    <div class="bg-gray-700 rounded p-1.5">
                         <div class="flex justify-between items-center mb-1">
-                            <span class="text-xs text-gray-400">BUDGET</span>
-                            <span class="text-xs ${this.getFinancialColor()}">$${this.formatMoney(this.maxFinancialHealth - this.financialDamage)}</span>
+                            <span class="text-gray-400">BUDGET</span>
+                            <span class="${this.getFinancialColor()}">$${this.formatMoney(this.maxFinancialHealth - this.financialDamage)}</span>
                         </div>
-                        <div class="w-full bg-gray-600 rounded-full h-1.5">
-                            <div class="bg-gradient-to-r ${this.getFinancialBarColor()} h-1.5 rounded-full transition-all duration-500" 
+                        <div class="w-full bg-gray-600 rounded-full h-1">
+                            <div class="bg-gradient-to-r ${this.getFinancialBarColor()} h-1 rounded-full transition-all duration-500" 
                                  style="width: ${((this.maxFinancialHealth - this.financialDamage) / this.maxFinancialHealth) * 100}%"></div>
                         </div>
                     </div>
