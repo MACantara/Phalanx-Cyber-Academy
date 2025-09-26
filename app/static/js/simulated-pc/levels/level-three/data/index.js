@@ -145,7 +145,7 @@ export class Level3DataManager {
             case 'high': return 'text-red-400';
             case 'medium': return 'text-yellow-400';
             case 'low': return 'text-green-400';
-            default: return 'text-gray-400';
+            default: return 'text-gray-300';
         }
     }
 
@@ -155,7 +155,7 @@ export class Level3DataManager {
             case 'high': return 'text-red-400';
             case 'medium': return 'text-yellow-400';
             case 'low': return 'text-green-400';
-            default: return 'text-gray-400';
+            default: return 'text-gray-300';
         }
     }
 }
