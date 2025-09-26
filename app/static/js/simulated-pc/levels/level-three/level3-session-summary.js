@@ -387,7 +387,7 @@ export class Level3SessionSummary {
 
     async showShutdownSequenceAndNavigate() {
         try {
-            const { ShutdownSequence } = await import('../../../shutdown-sequence.js');
+            const { ShutdownSequence } = await import('../../shutdown-sequence.js');
             const shutdownOverlay = document.createElement('div');
             shutdownOverlay.className = 'fixed inset-0 bg-black z-50';
             shutdownOverlay.style.zIndex = '9999';
