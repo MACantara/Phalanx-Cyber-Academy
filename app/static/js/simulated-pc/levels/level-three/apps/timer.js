@@ -271,6 +271,12 @@ export class Level3TimerApp {
     }
     
     showGameOverMessage(reason) {
+        // Remove any existing game over modals first
+        const existingModal = document.querySelector('#level3-game-over-modal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
         let message = '';
         let title = 'MISSION FAILED';
         
@@ -288,8 +294,9 @@ export class Level3TimerApp {
                 message = 'The cyber attack was not contained in time. Mission failed.';
         }
         
-        // Create game over modal
+        // Create game over modal with unique ID
         const modal = document.createElement('div');
+        modal.id = 'level3-game-over-modal';
         modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
         modal.innerHTML = `
             <div class="bg-red-900 border-2 border-red-600 rounded-lg p-8 max-w-lg mx-4 text-center">
