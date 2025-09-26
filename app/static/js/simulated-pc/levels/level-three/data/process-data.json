@@ -199,6 +199,158 @@
       ],
       "reputationDamage": 30,
       "financialDamage": 75000
+    },
+    {
+      "name": "game_launcher.exe",
+      "executable": "users\\public\\documents\\game_launcher.exe",
+      "cpu": 19.4,
+      "memory": 156.2,
+      "priority": "Normal",
+      "category": "gaming",
+      "description": "Game launcher and management utility",
+      "trusted": false,
+      "malwareType": "Trojan",
+      "riskFactors": [
+        "Running from public documents instead of program files",
+        "High memory usage for a launcher application",
+        "Suspicious network activity detected",
+        "No legitimate software publisher information"
+      ],
+      "reputationDamage": 20,
+      "financialDamage": 35000
+    },
+    {
+      "name": "driver_update.exe",
+      "executable": "program files\\driverupdate\\driver_update.exe",
+      "cpu": 6.3,
+      "memory": 72.8,
+      "priority": "Normal",
+      "category": "application",
+      "description": "Automatic driver update utility",
+      "trusted": false,
+      "malwareType": "Adware",
+      "riskFactors": [
+        "Modifies browser settings without permission",
+        "Displays excessive advertising pop-ups",
+        "Contacts suspicious advertising networks",
+        "Installs additional unwanted software"
+      ],
+      "reputationDamage": 8,
+      "financialDamage": 5000
+    },
+    {
+      "name": "crypto_miner.exe",
+      "executable": "users\\appdata\\roaming\\system\\crypto_miner.exe",
+      "cpu": 85.2,
+      "memory": 298.7,
+      "priority": "High",
+      "category": "application",
+      "description": "System resource optimization service",
+      "trusted": false,
+      "malwareType": "Cryptojacking",
+      "riskFactors": [
+        "Extremely high CPU usage (cryptocurrency mining)",
+        "Hidden in user application data folder",
+        "Connects to known cryptocurrency mining pools",
+        "Attempts to use GPU resources without authorization"
+      ],
+      "reputationDamage": 18,
+      "financialDamage": 28000
+    },
+    {
+      "name": "antivirus_fake.exe",
+      "executable": "program files\\securityscan\\antivirus_fake.exe",
+      "cpu": 4.7,
+      "memory": 68.9,
+      "priority": "Normal",
+      "category": "security",
+      "description": "Real-time security scanner",
+      "trusted": false,
+      "malwareType": "Scareware",
+      "riskFactors": [
+        "Displays fake security warnings and alerts",
+        "Attempts to disable legitimate antivirus software",
+        "Prompts user to purchase fake security products",
+        "Creates false positive virus detections"
+      ],
+      "reputationDamage": 12,
+      "financialDamage": 15000
+    },
+    {
+      "name": "keylogger_pro.exe",
+      "executable": "windows\\temp\\keylogger_pro.exe",
+      "cpu": 12.1,
+      "memory": 105.4,
+      "priority": "High",
+      "category": "system",
+      "description": "Input method enhancement service",
+      "trusted": false,
+      "malwareType": "Spyware",
+      "riskFactors": [
+        "Running from Windows temp directory",
+        "Monitors all keyboard and mouse input",
+        "Captures screenshots without user knowledge",
+        "Sends data to external servers regularly"
+      ],
+      "reputationDamage": 35,
+      "financialDamage": 85000
+    },
+    {
+      "name": "browser_hijacker.exe",
+      "executable": "program files\\common files\\browser_hijacker.exe",
+      "cpu": 9.8,
+      "memory": 94.3,
+      "priority": "Normal",
+      "category": "application",
+      "description": "Web browser enhancement utility",
+      "trusted": false,
+      "malwareType": "Browser Hijacker",
+      "riskFactors": [
+        "Modifies browser homepage and search settings",
+        "Redirects web traffic to suspicious websites",
+        "Injects advertisements into legitimate web pages",
+        "Prevents users from changing browser preferences"
+      ],
+      "reputationDamage": 14,
+      "financialDamage": 18000
+    },
+    {
+      "name": "fake_updater.exe",
+      "executable": "temp\\system\\fake_updater.exe",
+      "cpu": 16.7,
+      "memory": 142.1,
+      "priority": "High",
+      "category": "system",
+      "description": "System update management service",
+      "trusted": false,
+      "malwareType": "Trojan",
+      "riskFactors": [
+        "Masquerades as legitimate Windows update service",
+        "Downloads and installs additional malware",
+        "Modifies system security settings",
+        "Creates backdoor access for remote attackers"
+      ],
+      "reputationDamage": 22,
+      "financialDamage": 42000
+    },
+    {
+      "name": "data_harvester.exe",
+      "executable": "users\\appdata\\local\\data_harvester.exe",
+      "cpu": 7.4,
+      "memory": 81.6,
+      "priority": "Normal",
+      "category": "application",
+      "description": "System data collection service",
+      "trusted": false,
+      "malwareType": "Spyware",
+      "riskFactors": [
+        "Collects personal files and sensitive information",
+        "Scans for financial and identity documents",
+        "Transmits collected data to remote servers",
+        "Operates silently in the background"
+      ],
+      "reputationDamage": 26,
+      "financialDamage": 58000
     }
   ]
 }

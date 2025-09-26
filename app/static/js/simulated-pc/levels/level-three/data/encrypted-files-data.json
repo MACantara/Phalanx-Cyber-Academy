@@ -87,6 +87,116 @@
       "decryptionTime": 1000,
       "reputationRecovery": 1,
       "status": "encrypted"
+    },
+    {
+      "id": "stream_001",
+      "originalName": "stream_highlights.mkv",
+      "encryptedName": "stream_highlights.mkv.locked",
+      "size": "3.8 GB",
+      "priority": "High",
+      "description": "Streaming session recordings",
+      "decryptionTime": 6000,
+      "reputationRecovery": 7,
+      "status": "encrypted"
+    },
+    {
+      "id": "config_003",
+      "originalName": "tournament_settings.ini",
+      "encryptedName": "tournament_settings.ini.locked",
+      "size": "128 KB",
+      "priority": "Critical",
+      "description": "Tournament configuration settings",
+      "decryptionTime": 1800,
+      "reputationRecovery": 4,
+      "status": "encrypted"
+    },
+    {
+      "id": "replay_001",
+      "originalName": "championship_replays.rec",
+      "encryptedName": "championship_replays.rec.locked",
+      "size": "18 MB",
+      "priority": "High",
+      "description": "Championship game replay files",
+      "decryptionTime": 3200,
+      "reputationRecovery": 5,
+      "status": "encrypted"
+    },
+    {
+      "id": "audio_001",
+      "originalName": "team_comms.wav",
+      "encryptedName": "team_comms.wav.locked",
+      "size": "245 MB",
+      "priority": "Medium",
+      "description": "Team communication recordings",
+      "decryptionTime": 2800,
+      "reputationRecovery": 3,
+      "status": "encrypted"
+    },
+    {
+      "id": "profile_001",
+      "originalName": "player_profiles.xml",
+      "encryptedName": "player_profiles.xml.locked",
+      "size": "2.1 MB",
+      "priority": "High",
+      "description": "Player profile and statistics data",
+      "decryptionTime": 2200,
+      "reputationRecovery": 4,
+      "status": "encrypted"
+    },
+    {
+      "id": "patch_001",
+      "originalName": "custom_patches.pak",
+      "encryptedName": "custom_patches.pak.locked",
+      "size": "156 MB",
+      "priority": "Medium",
+      "description": "Custom game modifications and patches",
+      "decryptionTime": 3800,
+      "reputationRecovery": 6,
+      "status": "encrypted"
+    },
+    {
+      "id": "cert_001",
+      "originalName": "tournament_certificates.pdf",
+      "encryptedName": "tournament_certificates.pdf.locked",
+      "size": "8.7 MB",
+      "priority": "Critical",
+      "description": "Official tournament certificates and awards",
+      "decryptionTime": 2600,
+      "reputationRecovery": 9,
+      "status": "encrypted"
+    },
+    {
+      "id": "score_001",
+      "originalName": "scoreboard_data.csv",
+      "encryptedName": "scoreboard_data.csv.locked",
+      "size": "892 KB",
+      "priority": "High",
+      "description": "Tournament scoreboard and rankings",
+      "decryptionTime": 1600,
+      "reputationRecovery": 3,
+      "status": "encrypted"
+    },
+    {
+      "id": "screenshot_001",
+      "originalName": "victory_screenshots.zip",
+      "encryptedName": "victory_screenshots.zip.locked",
+      "size": "67 MB",
+      "priority": "Low",
+      "description": "Victory moment screenshots archive",
+      "decryptionTime": 2400,
+      "reputationRecovery": 2,
+      "status": "encrypted"
+    },
+    {
+      "id": "analysis_001",
+      "originalName": "performance_analysis.xlsx",
+      "encryptedName": "performance_analysis.xlsx.locked",
+      "size": "4.3 MB",
+      "priority": "High",
+      "description": "Detailed performance analysis spreadsheets",
+      "decryptionTime": 2900,
+      "reputationRecovery": 5,
+      "status": "encrypted"
     }
   ]
 }
