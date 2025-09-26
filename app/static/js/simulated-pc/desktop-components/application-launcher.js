@@ -26,7 +26,8 @@ export class ApplicationLauncher {
                 config.levelSpecific === this.currentLevel || 
                 config.levelSpecific === this.currentLevel.toString()
             )
-            .filter(([id, config]) => config.autoOpen);
+            .filter(([id, config]) => config.autoOpen)
+            .filter(([id, config]) => id !== 'level3-timer'); // Don't auto-open timer, wait for dialogue
 
         console.log(`[ApplicationLauncher] Auto-opening ${levelApps.length} apps for level ${this.currentLevel}`);
 
