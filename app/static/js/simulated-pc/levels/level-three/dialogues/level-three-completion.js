@@ -31,8 +31,44 @@ export class LevelThreeCompletionDialogue extends BaseDialogue {
         }
         localStorage.setItem('cyberquest_badges', JSON.stringify(badges));
         
-        // Show shutdown sequence before navigation
-        await this.showShutdownSequenceAndNavigate();
+        // Show session summary modal instead of shutdown sequence
+        await this.showSessionSummaryModal();
+    }
+
+    async showSessionSummaryModal() {
+        try {
+            // Import and create the Level 3 session summary
+            const { Level3SessionSummary } = await import('../level3-session-summary.js');
+            
+            // Get the timer reference
+            const timer = window.level3Timer;
+            if (!timer) {
+                console.error('[LevelThreeCompletion] No timer available for session summary');
+                // Fallback to direct navigation
+                await this.showShutdownSequenceAndNavigate();
+                return;
+            }
+            
+            // Create and show the session summary
+            const sessionSummary = new Level3SessionSummary(timer);
+            
+            // If there's an existing session summary instance, use its data
+            if (window.level3SessionSummary) {
+                sessionSummary.sessionData = window.level3SessionSummary.sessionData;
+                sessionSummary.stageCompletionTimes = window.level3SessionSummary.stageCompletionTimes;
+                sessionSummary.totalActions = window.level3SessionSummary.totalActions;
+                sessionSummary.accurateActions = window.level3SessionSummary.accurateActions;
+                sessionSummary.stagesCompleted = window.level3SessionSummary.stagesCompleted;
+            }
+            
+            // Show the session summary modal
+            await sessionSummary.showSessionSummary();
+            
+        } catch (error) {
+            console.error('[LevelThreeCompletion] Failed to show session summary:', error);
+            // Fallback to original shutdown sequence
+            await this.showShutdownSequenceAndNavigate();
+        }
     }
 
     async showShutdownSequenceAndNavigate() {
