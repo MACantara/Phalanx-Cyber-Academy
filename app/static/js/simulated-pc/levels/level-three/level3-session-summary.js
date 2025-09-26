@@ -167,22 +167,22 @@ export class Level3SessionSummary {
                         <div class="text-center">
                             <div class="text-3xl font-bold text-yellow-400">${this.formatTime(totalTimeSpent)}</div>
                             <div class="text-gray-400 text-sm">Time Used</div>
-                            <div class="text-xs text-gray-500">${this.formatTime(timerStatus.timeRemaining)} remaining</div>
+                            <div class="text-xs text-gray-400">${this.formatTime(timerStatus.timeRemaining)} remaining</div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl font-bold ${accuracyClass}">${accuracy}%</div>
                             <div class="text-gray-400 text-sm">Accuracy</div>
-                            <div class="text-xs text-gray-500">${this.accurateActions}/${this.totalActions} actions</div>
+                            <div class="text-xs text-gray-400">${this.accurateActions}/${this.totalActions} actions</div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl font-bold ${this.getReputationColor(100 - timerStatus.reputationDamage)}">${100 - timerStatus.reputationDamage}%</div>
                             <div class="text-gray-400 text-sm">Reputation</div>
-                            <div class="text-xs text-gray-500">${timerStatus.reputationDamage}% damage taken</div>
+                            <div class="text-xs text-gray-400">${timerStatus.reputationDamage}% damage taken</div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl font-bold ${this.getFinancialColor(timerStatus.financialDamage)}">${this.formatMoney(1000000 - timerStatus.financialDamage)}</div>
                             <div class="text-gray-400 text-sm">Budget Saved</div>
-                            <div class="text-xs text-gray-500">${this.formatMoney(timerStatus.financialDamage)} spent</div>
+                            <div class="text-xs text-gray-400">${this.formatMoney(timerStatus.financialDamage)} spent</div>
                         </div>
                     </div>
                 </div>
@@ -240,17 +240,17 @@ export class Level3SessionSummary {
                 <div class="p-6 bg-gray-800 rounded-b-lg">
                     <div class="flex flex-col md:flex-row gap-3 justify-center">
                         ${levelCompleted ? `
-                            <button id="continue-btn" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors flex items-center justify-center">
+                            <button id="continue-btn" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors cursor-pointer flex items-center justify-center">
                                 <i class="bi bi-arrow-right mr-2"></i>
                                 Continue to Level 4
                             </button>
                         ` : `
-                            <button id="retry-btn" class="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-semibold transition-colors flex items-center justify-center">
+                            <button id="retry-btn" class="px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-semibold transition-colors cursor-pointer flex items-center justify-center">
                                 <i class="bi bi-arrow-clockwise mr-2"></i>
                                 Retry Level 3
                             </button>
                         `}
-                        <button id="levels-btn" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors flex items-center justify-center">
+                        <button id="levels-btn" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors cursor-pointer flex items-center justify-center">
                             <i class="bi bi-grid mr-2"></i>
                             Back to Levels
                         </button>
@@ -286,10 +286,10 @@ export class Level3SessionSummary {
                             <i class="${stage.icon} text-lg ${completed ? 'text-green-400' : 'text-gray-400'} mr-2"></i>
                             <span class="font-semibold text-white">${stage.name}</span>
                         </div>
-                        ${completed ? '<i class="bi bi-check-circle-fill text-green-400"></i>' : '<i class="bi bi-circle text-gray-500"></i>'}
+                        ${completed ? '<i class="bi bi-check-circle-fill text-green-400"></i>' : '<i class="bi bi-circle text-gray-400"></i>'}
                     </div>
                     <p class="text-sm text-gray-400 mb-2">${stage.description}</p>
-                    <div class="text-xs text-gray-500">
+                    <div class="text-xs text-gray-400">
                         ${completed ? `Completed in ${this.formatTime(timeSpent)}` : 'Not completed'}
                     </div>
                 </div>
