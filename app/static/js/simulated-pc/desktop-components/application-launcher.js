@@ -5,6 +5,38 @@ export class ApplicationLauncher {
         this.windowManager = windowManager;
         this.appRegistry = appRegistry;
         this.tutorialManager = windowManager.tutorialManager;
+        this.currentLevel = null; // Will be set by desktop
+    }
+
+    // Set current level (called by desktop)
+    setLevel(level) {
+        this.currentLevel = level;
+        console.log('[ApplicationLauncher] Level set to:', level);
+        
+        // Auto-open level-specific applications
+        this.autoOpenLevelApps();
+    }
+
+    // Auto-open applications specific to current level
+    async autoOpenLevelApps() {
+        if (!this.currentLevel) return;
+
+        const levelApps = Object.entries(this.appRegistry.getAllApps())
+            .filter(([id, config]) => 
+                config.levelSpecific === this.currentLevel || 
+                config.levelSpecific === this.currentLevel.toString()
+            )
+            .filter(([id, config]) => config.autoOpen);
+
+        console.log(`[ApplicationLauncher] Auto-opening ${levelApps.length} apps for level ${this.currentLevel}`);
+
+        for (const [appId, config] of levelApps) {
+            try {
+                await this.launchLevelSpecificApp(appId);
+            } catch (error) {
+                console.error(`[ApplicationLauncher] Failed to auto-open ${appId}:`, error);
+            }
+        }
     }
 
     // Core application opening functionality moved from window manager
@@ -14,16 +46,62 @@ export class ApplicationLauncher {
             throw new Error(`Application '${appId}' not found in registry`);
         }
 
-        const isFirstTime = !localStorage.getItem(appConfig.storageKey);
+        // Check level restrictions
+        if (appConfig.levelSpecific && 
+            this.currentLevel !== appConfig.levelSpecific && 
+            this.currentLevel !== appConfig.levelSpecific.toString()) {
+            console.warn(`[ApplicationLauncher] App ${appId} is level-specific (${appConfig.levelSpecific}) but current level is ${this.currentLevel}`);
+            return null;
+        }
+
+        const isFirstTime = appConfig.storageKey ? !localStorage.getItem(appConfig.storageKey) : false;
         const app = await this.appRegistry.createAppInstance(appId);
         
-        this.windowManager.createWindow(appId, windowTitle || appConfig.title, app);
-        this.appRegistry.markAsOpened(appId);
+        const windowOptions = {};
+        
+        // Handle level-specific window positioning and properties
+        if (appConfig.levelSpecific) {
+            if (appId === 'level3-timer') {
+                windowOptions.width = '320px';
+                windowOptions.height = '200px';
+                windowOptions.position = { 
+                    left: 'calc(100% - 340px)', 
+                    top: '20px' 
+                };
+                windowOptions.zIndex = '1000';
+                windowOptions.persistent = true; // Cannot be closed
+            }
+        }
+
+        const window = this.windowManager.createWindow(appId, windowTitle || appConfig.title, app, windowOptions);
+        
+        // Apply level-specific window modifications
+        if (window && appConfig.persistent) {
+            const closeBtn = window.querySelector('.close');
+            const minimizeBtn = window.querySelector('.minimize');
+            if (closeBtn) closeBtn.style.display = 'none';
+            if (minimizeBtn) minimizeBtn.style.display = 'none';
+        }
+
+        // Position window if specified
+        if (window && windowOptions.position) {
+            window.style.left = windowOptions.position.left;
+            window.style.top = windowOptions.position.top;
+            if (windowOptions.zIndex) {
+                window.style.zIndex = windowOptions.zIndex;
+            }
+        }
+
+        if (appConfig.storageKey) {
+            this.appRegistry.markAsOpened(appId);
+        }
 
         // Handle tutorial auto-start if it's the first time and tutorial manager is available
         if (isFirstTime && this.tutorialManager && appConfig.tutorialMethod && appConfig.startMethod) {
             await this.handleTutorialAutoStart(appConfig.tutorialMethod, appConfig.startMethod);
         }
+
+        return app;
     }
 
     // Shared tutorial auto-start logic moved from window manager
@@ -103,6 +181,35 @@ export class ApplicationLauncher {
         return await this.launchApplication('vulnerability-scanner');
     }
 
+    // Level-specific application launcher
+    async launchLevelSpecificApp(appId) {
+        const appConfig = this.appRegistry.getApp(appId);
+        if (!appConfig) {
+            throw new Error(`Application '${appId}' not found`);
+        }
+
+        // Verify level restriction
+        if (appConfig.levelSpecific && 
+            this.currentLevel !== appConfig.levelSpecific && 
+            this.currentLevel !== appConfig.levelSpecific.toString()) {
+            console.warn(`[ApplicationLauncher] Skipping ${appId} - not available for level ${this.currentLevel}`);
+            return false;
+        }
+
+        const app = await this.launchApplication(appId);
+        console.log(`[ApplicationLauncher] Level-specific app ${appId} launched for level ${this.currentLevel}`);
+        return app;
+    }
+
+    // Launch Level 3 timer specifically
+    async launchLevel3Timer() {
+        if (this.currentLevel === 3 || this.currentLevel === '3') {
+            return await this.launchLevelSpecificApp('level3-timer');
+        }
+        console.warn('[ApplicationLauncher] Level 3 timer requested but not in level 3');
+        return false;
+    }
+
     // Level-specific app launching with logging
     async launchForLevel(levelId, appId, appName = null) {
         const success = await this.launchApplication(appId, appName);
@@ -151,6 +258,55 @@ export class ApplicationLauncher {
     // Check if application exists
     applicationExists(appId) {
         return this.appRegistry.hasApp(appId);
+    }
+
+    // Get level-specific applications
+    getLevelApps(level = null) {
+        const targetLevel = level || this.currentLevel;
+        return Object.entries(this.appRegistry.getAllApps())
+            .filter(([id, config]) => 
+                config.levelSpecific === targetLevel || 
+                config.levelSpecific === targetLevel?.toString()
+            )
+            .reduce((acc, [id, config]) => {
+                acc[id] = config;
+                return acc;
+            }, {});
+    }
+
+    // Get Level 3 timer instance
+    getLevel3Timer() {
+        const timerApp = this.windowManager.windows.get('level3-timer');
+        return timerApp || null;
+    }
+
+    // Level 3 timer control methods (delegated from desktop)
+    addReputationDamage(amount) {
+        const timer = this.getLevel3Timer();
+        if (timer && (this.currentLevel === 3 || this.currentLevel === '3')) {
+            timer.addReputationDamage(amount);
+            return true;
+        }
+        console.warn('[ApplicationLauncher] addReputationDamage called but Level 3 timer not available');
+        return false;
+    }
+
+    addFinancialDamage(amount) {
+        const timer = this.getLevel3Timer();
+        if (timer && (this.currentLevel === 3 || this.currentLevel === '3')) {
+            timer.addFinancialDamage(amount);
+            return true;
+        }
+        console.warn('[ApplicationLauncher] addFinancialDamage called but Level 3 timer not available');
+        return false;
+    }
+
+    getTimerStatus() {
+        const timer = this.getLevel3Timer();
+        if (timer && (this.currentLevel === 3 || this.currentLevel === '3')) {
+            return timer.getStatus();
+        }
+        return null;
     }
 }
 
