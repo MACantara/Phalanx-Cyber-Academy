@@ -459,7 +459,6 @@ export class EmailSessionSummary {
                 level_id: 2,
                 score: this.lastSessionStats.accuracy,
                 time_spent: 1800, // 30 minutes estimate
-                xp_earned: 150,
                 completion_data: {
                     sessionStats: this.lastSessionStats,
                     timestamp: new Date().toISOString()
