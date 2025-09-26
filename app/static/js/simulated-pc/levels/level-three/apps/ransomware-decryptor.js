@@ -33,7 +33,7 @@ export class RansomwareDecryptorApp extends WindowBase {
         return `
             <div class="h-full flex flex-col bg-gray-900 text-white">
                 <!-- Header -->
-                <div class="bg-green-600 px-4 py-3 border-b border-gray-700">
+                <div class="bg-green-800 px-4 py-3 border-b border-gray-700">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-3">
                             <i class="bi bi-unlock text-2xl text-white"></i>
