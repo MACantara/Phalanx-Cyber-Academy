@@ -1,0 +1,202 @@
+{
+  "level3_ransomware_files": [
+    {
+      "id": "doc_001",
+      "originalName": "strategy_notes.docx",
+      "encryptedName": "strategy_notes.docx.locked",
+      "size": "2.4 MB",
+      "priority": "Critical",
+      "description": "Important strategy documentation",
+      "decryptionTime": 3000,
+      "reputationRecovery": 5,
+      "status": "encrypted"
+    },
+    {
+      "id": "config_001", 
+      "originalName": "app_settings.json",
+      "encryptedName": "app_settings.json.locked",
+      "size": "856 KB",
+      "priority": "High",
+      "description": "Application configuration and preferences",
+      "decryptionTime": 2000,
+      "reputationRecovery": 3,
+      "status": "encrypted"
+    },
+    {
+      "id": "save_001",
+      "originalName": "user_progress.dat",
+      "encryptedName": "user_progress.dat.locked", 
+      "size": "5.1 MB",
+      "priority": "Critical",
+      "description": "User progress and save data",
+      "decryptionTime": 4000,
+      "reputationRecovery": 8,
+      "status": "encrypted"
+    },
+    {
+      "id": "video_001",
+      "originalName": "presentation_video.mp4",
+      "encryptedName": "presentation_video.mp4.locked",
+      "size": "125 MB", 
+      "priority": "Medium",
+      "description": "Important presentation recording",
+      "decryptionTime": 2500,
+      "reputationRecovery": 4,
+      "status": "encrypted"
+    },
+    {
+      "id": "data_001",
+      "originalName": "user_statistics.db",
+      "encryptedName": "user_statistics.db.locked",
+      "size": "12 MB",
+      "priority": "High",
+      "description": "User statistics and analytics database",
+      "decryptionTime": 3500,
+      "reputationRecovery": 6,
+      "status": "encrypted"
+    },
+    {
+      "id": "config_002",
+      "originalName": "user_accounts.xlsx",
+      "encryptedName": "user_accounts.xlsx.locked",
+      "size": "1.2 MB",
+      "priority": "Medium", 
+      "description": "User account information spreadsheet",
+      "decryptionTime": 1500,
+      "reputationRecovery": 2,
+      "status": "encrypted"
+    },
+    {
+      "id": "backup_001",
+      "originalName": "data_backup.zip",
+      "encryptedName": "data_backup.zip.locked",
+      "size": "890 MB",
+      "priority": "Critical",
+      "description": "Critical data backup archive",
+      "decryptionTime": 5000,
+      "reputationRecovery": 10,
+      "status": "encrypted"
+    },
+    {
+      "id": "log_001",
+      "originalName": "activity_logs.txt", 
+      "encryptedName": "activity_logs.txt.locked",
+      "size": "456 KB",
+      "priority": "Low",
+      "description": "User activity and session logs",
+      "decryptionTime": 1000,
+      "reputationRecovery": 1,
+      "status": "encrypted"
+    },
+    {
+      "id": "stream_001",
+      "originalName": "recording_archive.mkv",
+      "encryptedName": "recording_archive.mkv.locked",
+      "size": "3.8 GB",
+      "priority": "High",
+      "description": "Video recording archive files",
+      "decryptionTime": 6000,
+      "reputationRecovery": 7,
+      "status": "encrypted"
+    },
+    {
+      "id": "config_003",
+      "originalName": "application_config.ini",
+      "encryptedName": "application_config.ini.locked",
+      "size": "128 KB",
+      "priority": "Critical",
+      "description": "Application configuration settings",
+      "decryptionTime": 1800,
+      "reputationRecovery": 4,
+      "status": "encrypted"
+    },
+    {
+      "id": "replay_001",
+      "originalName": "session_replays.rec",
+      "encryptedName": "session_replays.rec.locked",
+      "size": "18 MB",
+      "priority": "High",
+      "description": "Recorded session replay files",
+      "decryptionTime": 3200,
+      "reputationRecovery": 5,
+      "status": "encrypted"
+    },
+    {
+      "id": "audio_001",
+      "originalName": "audio_recordings.wav",
+      "encryptedName": "audio_recordings.wav.locked",
+      "size": "245 MB",
+      "priority": "Medium",
+      "description": "Audio recording files",
+      "decryptionTime": 2800,
+      "reputationRecovery": 3,
+      "status": "encrypted"
+    },
+    {
+      "id": "profile_001",
+      "originalName": "user_profiles.xml",
+      "encryptedName": "user_profiles.xml.locked",
+      "size": "2.1 MB",
+      "priority": "High",
+      "description": "User profile and preference data",
+      "decryptionTime": 2200,
+      "reputationRecovery": 4,
+      "status": "encrypted"
+    },
+    {
+      "id": "patch_001",
+      "originalName": "software_updates.pak",
+      "encryptedName": "software_updates.pak.locked",
+      "size": "156 MB",
+      "priority": "Medium",
+      "description": "Software updates and modifications",
+      "decryptionTime": 3800,
+      "reputationRecovery": 6,
+      "status": "encrypted"
+    },
+    {
+      "id": "cert_001",
+      "originalName": "digital_certificates.pdf",
+      "encryptedName": "digital_certificates.pdf.locked",
+      "size": "8.7 MB",
+      "priority": "Critical",
+      "description": "Official digital certificates and credentials",
+      "decryptionTime": 2600,
+      "reputationRecovery": 9,
+      "status": "encrypted"
+    },
+    {
+      "id": "score_001",
+      "originalName": "leaderboard_data.csv",
+      "encryptedName": "leaderboard_data.csv.locked",
+      "size": "892 KB",
+      "priority": "High",
+      "description": "Leaderboard and ranking data",
+      "decryptionTime": 1600,
+      "reputationRecovery": 3,
+      "status": "encrypted"
+    },
+    {
+      "id": "screenshot_001",
+      "originalName": "screenshot_archive.zip",
+      "encryptedName": "screenshot_archive.zip.locked",
+      "size": "67 MB",
+      "priority": "Low",
+      "description": "Screenshot archive collection",
+      "decryptionTime": 2400,
+      "reputationRecovery": 2,
+      "status": "encrypted"
+    },
+    {
+      "id": "analysis_001",
+      "originalName": "analytics_report.xlsx",
+      "encryptedName": "analytics_report.xlsx.locked",
+      "size": "4.3 MB",
+      "priority": "High",
+      "description": "Detailed analytics and performance reports",
+      "decryptionTime": 2900,
+      "reputationRecovery": 5,
+      "status": "encrypted"
+    }
+  ]
+}

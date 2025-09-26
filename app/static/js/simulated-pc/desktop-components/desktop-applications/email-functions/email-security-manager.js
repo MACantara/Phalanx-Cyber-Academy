@@ -302,7 +302,7 @@ export class EmailSecurityManager {
         
         // Only show badge for unverified emails to encourage action
         if (emailStatus === 'unverified') {
-            return '<span class="bg-yellow-600 bg-opacity-20 text-white font-medium px-2 py-1 rounded-full inline-flex items-center border border-yellow-600 border-opacity-30 text-sm"><i class="bi bi-clock mr-1"></i>Awaiting Classification</span>';
+            return '<span class="bg-yellow-600/20 text-white font-medium px-2 py-1 rounded-full inline-flex items-center border border-yellow-600 border-opacity-30 text-sm"><i class="bi bi-clock mr-1"></i>Awaiting Classification</span>';
         }
         
         // No badge for classified emails - status is shown in action buttons

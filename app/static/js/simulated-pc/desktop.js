@@ -1,6 +1,5 @@
 import { Taskbar } from './desktop-components/taskbar.js';
 import { DesktopIcons } from './desktop-components/desktop-icons.js';
-import { ControlPanel } from './desktop-components/control-panel.js';
 import { WindowManager } from './desktop-components/window-manager.js';
 import { TutorialManager } from './tutorials/tutorial-manager.js';
 import DialogueManager from './dialogues/dialogue-manager.js';
@@ -48,8 +47,12 @@ export class Desktop {
         this.windowManager = new WindowManager(this.desktopElement, this.taskbar, this.tutorial);
         this.taskbar.windowManager = this.windowManager;
         
+        // Set level in application launcher for level-specific apps
+        if (this.windowManager.applicationLauncher) {
+            this.windowManager.applicationLauncher.setLevel(this.level);
+        }
+        
         this.desktopIcons = new DesktopIcons(this.desktopElement, this.windowManager, this.level);
-        this.controlPanel = new ControlPanel(this.desktopElement, this.windowManager, this);
 
         // Trigger fade-in effect after all components are loaded
         setTimeout(() => {
@@ -92,6 +95,7 @@ export class Desktop {
         
         // Note: Dialogues will automatically trigger tutorials as needed
         // The flow is: Welcome → Tutorial Intro → Initial Tutorial → App Tutorials → Mission Briefing
+        // Level-specific applications (like Level 3 timer) are auto-opened by the ApplicationLauncher
     }
 
     // Method to trigger mission briefing when all tutorials are complete
@@ -108,20 +112,35 @@ export class Desktop {
         }
     }
 
-    // Legacy methods for backward compatibility
-    exitSimulation() {
-        this.controlPanel.exitSimulation();
+    // Level 3 timer control methods
+    addReputationDamage(amount) {
+        if (this.windowManager?.applicationLauncher) {
+            return this.windowManager.applicationLauncher.addReputationDamage(amount);
+        }
+        console.warn('[Desktop] ApplicationLauncher not available for damage tracking');
+        return false;
     }
 
-    showHelp() {
-        this.controlPanel.showHelp();
+    addFinancialDamage(amount) {
+        if (this.windowManager?.applicationLauncher) {
+            return this.windowManager.applicationLauncher.addFinancialDamage(amount);
+        }
+        console.warn('[Desktop] ApplicationLauncher not available for damage tracking');
+        return false;
     }
 
-    showHint() {
-        this.controlPanel.showHint();
+    getTimerStatus() {
+        if (this.windowManager?.applicationLauncher) {
+            return this.windowManager.applicationLauncher.getTimerStatus();
+        }
+        return null;
     }
 
-    showProgress() {
-        this.controlPanel.showProgress();
+    // Get level-specific applications
+    getLevelApps() {
+        if (this.windowManager?.applicationLauncher) {
+            return this.windowManager.applicationLauncher.getLevelApps();
+        }
+        return {};
     }
 }

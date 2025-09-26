@@ -56,31 +56,37 @@ export class ApplicationRegistry {
                 title: 'System Logs'
             },
             'process-monitor': {
-                module: './desktop-applications/process-monitor-app.js',
-                className: 'ProcessMonitorApp',
+                module: '../levels/level-three/apps/index.js',
+                className: 'Level3ProcessMonitorApp',
                 storageKey: 'cyberquest_processmonitor_opened',
-                tutorialMethod: 'shouldAutoStartProcessMonitor',
-                startMethod: 'startProcessMonitorTutorial',
+                tutorialMethod: null,
+                startMethod: null,
                 iconClass: 'bi-cpu',
-                title: 'Process Monitor'
+                title: 'Process Monitor',
+                levelSpecific: 3,
+                autoOpen: false
             },
             'malware-scanner': {
-                module: './desktop-applications/malware-scanner-app.js',
-                className: 'MalwareScannerApp',
+                module: '../levels/level-three/apps/index.js',
+                className: 'Level3MalwareScannerApp',
                 storageKey: 'cyberquest_malwarescanner_opened',
-                tutorialMethod: 'shouldAutoStartMalwareScanner',
-                startMethod: 'startMalwareScannerTutorial',
+                tutorialMethod: null,
+                startMethod: null,
                 iconClass: 'bi-shield-exclamation',
-                title: 'Malware Scanner'
+                title: 'Malware Scanner',
+                levelSpecific: 3,
+                autoOpen: false
             },
             'ransomware-decryptor': {
-                module: './desktop-applications/ransomware-decryptor-app.js',
-                className: 'RansomwareDecryptorApp',
+                module: '../levels/level-three/apps/index.js',
+                className: 'Level3RansomwareDecryptorApp',
                 storageKey: 'cyberquest_ransomwaredecryptor_opened',
-                tutorialMethod: 'shouldAutoStartRansomwareDecryptor',
-                startMethod: 'startRansomwareDecryptorTutorial',
+                tutorialMethod: null,
+                startMethod: null,
                 iconClass: 'bi-unlock',
-                title: 'Ransomware Decryptor'
+                title: 'Ransomware Decryptor',
+                levelSpecific: 3,
+                autoOpen: false
             },
             'vulnerability-scanner': {
                 module: './desktop-applications/vulnerability-scanner-app.js',
@@ -90,6 +96,18 @@ export class ApplicationRegistry {
                 startMethod: 'startVulnerabilityScannerTutorial',
                 iconClass: 'bi-bug',
                 title: 'Vulnerability Scanner'
+            },
+            'level3-timer': {
+                module: '../levels/level-three/apps/index.js',
+                className: 'Level3TimerApp',
+                storageKey: null, // Don't track opened status for timer
+                tutorialMethod: null,
+                startMethod: null,
+                iconClass: 'bi-stopwatch',
+                title: 'Mission Status',
+                levelSpecific: 3, // Only available in level 3
+                autoOpen: true, // Auto-open when available
+                persistent: true // Cannot be closed by user
             }
         };
         this.loadedModules = new Map(); // Cache for loaded modules

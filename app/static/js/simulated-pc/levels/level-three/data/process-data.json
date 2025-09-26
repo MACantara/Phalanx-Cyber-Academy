@@ -1,0 +1,356 @@
+{
+  "system": [
+    {
+      "name": "System",
+      "executable": "System",
+      "cpu": 0.2,
+      "memory": 135,
+      "priority": "System",
+      "category": "system",
+      "description": "Core Windows system process",
+      "trusted": true
+    },
+    {
+      "name": "explorer.exe",
+      "executable": "explorer.exe",
+      "cpu": 3.3,
+      "memory": 52.2,
+      "priority": "Normal",
+      "category": "system",
+      "description": "Windows Explorer shell process",
+      "trusted": true
+    },
+    {
+      "name": "winlogon.exe",
+      "executable": "winlogon.exe",
+      "cpu": 0.1,
+      "memory": 12.8,
+      "priority": "High",
+      "category": "system",
+      "description": "Windows logon process",
+      "trusted": true
+    },
+    {
+      "name": "csrss.exe",
+      "executable": "csrss.exe",
+      "cpu": 0.3,
+      "memory": 18.4,
+      "priority": "High",
+      "category": "system",
+      "description": "Client Server Runtime Process",
+      "trusted": true
+    },
+    {
+      "name": "lsass.exe",
+      "executable": "lsass.exe",
+      "cpu": 0.5,
+      "memory": 22.1,
+      "priority": "High",
+      "category": "system",
+      "description": "Local Security Authority Subsystem",
+      "trusted": true
+    },
+    {
+      "name": "svchost.exe",
+      "executable": "svchost.exe",
+      "cpu": 2.1,
+      "memory": 45.7,
+      "priority": "Normal",
+      "category": "system",
+      "description": "Service Host Process",
+      "trusted": true
+    }
+  ],
+  "gaming": [
+    {
+      "name": "steam.exe",
+      "executable": "program files (x86)\\steam\\steam.exe",
+      "cpu": 4.4,
+      "memory": 102.2,
+      "priority": "Normal",
+      "category": "gaming",
+      "description": "Steam gaming platform client",
+      "trusted": true
+    },
+    {
+      "name": "discord.exe",
+      "executable": "users\\appdata\\local\\discord\\discord.exe",
+      "cpu": 3.1,
+      "memory": 78.3,
+      "priority": "Normal",
+      "category": "gaming",
+      "description": "Discord communication platform",
+      "trusted": true
+    },
+    {
+      "name": "obs64.exe",
+      "executable": "program files\\obs studio\\bin\\64bit\\obs64.exe",
+      "cpu": 11.7,
+      "memory": 189.4,
+      "priority": "High",
+      "category": "gaming",
+      "description": "OBS Studio streaming software",
+      "trusted": true
+    },
+    {
+      "name": "tournament_client.exe",
+      "executable": "program files\\cyberquest\\tournament_client.exe",
+      "cpu": 5.2,
+      "memory": 95.9,
+      "priority": "High",
+      "category": "gaming",
+      "description": "CyberQuest tournament client",
+      "trusted": true
+    }
+  ],
+  "application": [
+    {
+      "name": "chrome.exe",
+      "executable": "program files\\google\\chrome\\application\\chrome.exe",
+      "cpu": 12.7,
+      "memory": 198.8,
+      "priority": "Normal",
+      "category": "application",
+      "description": "Google Chrome web browser",
+      "trusted": true
+    },
+    {
+      "name": "antivirus.exe",
+      "executable": "program files\\windows defender\\antivirus.exe",
+      "cpu": 2.8,
+      "memory": 58.4,
+      "priority": "Normal",
+      "category": "security",
+      "description": "Windows Defender antivirus",
+      "trusted": true
+    }
+  ],
+  "malware": [
+    {
+      "name": "performance_boost.exe",
+      "executable": "temp\\downloads\\performance_boost.exe",
+      "cpu": 28.5,
+      "memory": 245.7,
+      "priority": "High",
+      "category": "application",
+      "description": "Gaming performance optimization utility",
+      "trusted": false,
+      "malwareType": "Ransomware",
+      "riskFactors": [
+        "Unusually high CPU usage for an optimizer",
+        "Excessive memory consumption",
+        "Running from temporary downloads folder",
+        "High priority process with no clear justification"
+      ],
+      "reputationDamage": 25,
+      "financialDamage": 50000
+    },
+    {
+      "name": "steam_launcher.exe",
+      "executable": "temp\\steam_launcher.exe",
+      "cpu": 15.8,
+      "memory": 134.1,
+      "priority": "Normal",
+      "category": "gaming",
+      "description": "Steam platform helper service",
+      "trusted": false,
+      "malwareType": "Trojan",
+      "riskFactors": [
+        "Running from temp directory instead of Steam folder",
+        "Higher resource usage than expected for helper process",
+        "Process path doesn't match legitimate Steam installation"
+      ],
+      "reputationDamage": 15,
+      "financialDamage": 25000
+    },
+    {
+      "name": "system_monitor.exe",
+      "executable": "program files\\common files\\system_monitor.exe",
+      "cpu": 8.2,
+      "memory": 89.6,
+      "priority": "Normal",
+      "category": "application",
+      "description": "System performance monitoring tool",
+      "trusted": false,
+      "malwareType": "Spyware",
+      "riskFactors": [
+        "Installed in Common Files instead of dedicated folder",
+        "Continuous background activity without user interaction",
+        "No clear manufacturer or digital signature information"
+      ],
+      "reputationDamage": 10,
+      "financialDamage": 10000
+    },
+    {
+      "name": "windows_optimizer.exe",
+      "executable": "windows\\system32\\windows_optimizer.exe",
+      "cpu": 22.7,
+      "memory": 178.3,
+      "priority": "High",
+      "category": "system",
+      "description": "Windows system optimization service",
+      "trusted": false,
+      "malwareType": "Rootkit",
+      "riskFactors": [
+        "Located in System32 but not a genuine Windows component",
+        "Extremely high resource usage for system service",
+        "Running with elevated privileges without clear purpose",
+        "Process name mimics legitimate system tools"
+      ],
+      "reputationDamage": 30,
+      "financialDamage": 75000
+    },
+    {
+      "name": "game_platform.exe",
+      "executable": "users\\public\\documents\\game_platform.exe",
+      "cpu": 19.4,
+      "memory": 156.2,
+      "priority": "Normal",
+      "category": "gaming",
+      "description": "Game launcher and management utility",
+      "trusted": false,
+      "malwareType": "Trojan",
+      "riskFactors": [
+        "Running from public documents instead of program files",
+        "High memory usage for a launcher application",
+        "Suspicious network activity detected",
+        "No legitimate software publisher information"
+      ],
+      "reputationDamage": 20,
+      "financialDamage": 35000
+    },
+    {
+      "name": "driver_assistant.exe",
+      "executable": "program files\\driverupdate\\driver_assistant.exe",
+      "cpu": 6.3,
+      "memory": 72.8,
+      "priority": "Normal",
+      "category": "application",
+      "description": "Automatic driver update utility",
+      "trusted": false,
+      "malwareType": "Adware",
+      "riskFactors": [
+        "Modifies browser settings without permission",
+        "Displays excessive advertising pop-ups",
+        "Contacts suspicious advertising networks",
+        "Installs additional unwanted software"
+      ],
+      "reputationDamage": 8,
+      "financialDamage": 5000
+    },
+    {
+      "name": "system_service.exe",
+      "executable": "users\\appdata\\roaming\\system\\system_service.exe",
+      "cpu": 85.2,
+      "memory": 298.7,
+      "priority": "High",
+      "category": "application",
+      "description": "System resource optimization service",
+      "trusted": false,
+      "malwareType": "Cryptojacking",
+      "riskFactors": [
+        "Extremely high CPU usage (cryptocurrency mining)",
+        "Hidden in user application data folder",
+        "Connects to known cryptocurrency mining pools",
+        "Attempts to use GPU resources without authorization"
+      ],
+      "reputationDamage": 18,
+      "financialDamage": 28000
+    },
+    {
+      "name": "security_scanner.exe",
+      "executable": "program files\\securityscan\\security_scanner.exe",
+      "cpu": 4.7,
+      "memory": 68.9,
+      "priority": "Normal",
+      "category": "security",
+      "description": "Real-time security scanner",
+      "trusted": false,
+      "malwareType": "Scareware",
+      "riskFactors": [
+        "Displays fake security warnings and alerts",
+        "Attempts to disable legitimate antivirus software",
+        "Prompts user to purchase fake security products",
+        "Creates false positive virus detections"
+      ],
+      "reputationDamage": 12,
+      "financialDamage": 15000
+    },
+    {
+      "name": "input_manager.exe",
+      "executable": "windows\\temp\\input_manager.exe",
+      "cpu": 12.1,
+      "memory": 105.4,
+      "priority": "High",
+      "category": "system",
+      "description": "Input method enhancement service",
+      "trusted": false,
+      "malwareType": "Spyware",
+      "riskFactors": [
+        "Running from Windows temp directory",
+        "Monitors all keyboard and mouse input",
+        "Captures screenshots without user knowledge",
+        "Sends data to external servers regularly"
+      ],
+      "reputationDamage": 35,
+      "financialDamage": 85000
+    },
+    {
+      "name": "web_enhancer.exe",
+      "executable": "program files\\common files\\web_enhancer.exe",
+      "cpu": 9.8,
+      "memory": 94.3,
+      "priority": "Normal",
+      "category": "application",
+      "description": "Web browser enhancement utility",
+      "trusted": false,
+      "malwareType": "Browser Hijacker",
+      "riskFactors": [
+        "Modifies browser homepage and search settings",
+        "Redirects web traffic to suspicious websites",
+        "Injects advertisements into legitimate web pages",
+        "Prevents users from changing browser preferences"
+      ],
+      "reputationDamage": 14,
+      "financialDamage": 18000
+    },
+    {
+      "name": "update_service.exe",
+      "executable": "temp\\system\\update_service.exe",
+      "cpu": 16.7,
+      "memory": 142.1,
+      "priority": "High",
+      "category": "system",
+      "description": "System update management service",
+      "trusted": false,
+      "malwareType": "Trojan",
+      "riskFactors": [
+        "Masquerades as legitimate Windows update service",
+        "Downloads and installs additional malware",
+        "Modifies system security settings",
+        "Creates backdoor access for remote attackers"
+      ],
+      "reputationDamage": 22,
+      "financialDamage": 42000
+    },
+    {
+      "name": "analytics_service.exe",
+      "executable": "users\\appdata\\local\\analytics_service.exe",
+      "cpu": 7.4,
+      "memory": 81.6,
+      "priority": "Normal",
+      "category": "application",
+      "description": "System data collection service",
+      "trusted": false,
+      "malwareType": "Spyware",
+      "riskFactors": [
+        "Collects personal files and sensitive information",
+        "Scans for financial and identity documents",
+        "Transmits collected data to remote servers",
+        "Operates silently in the background"
+      ],
+      "reputationDamage": 26,
+      "financialDamage": 58000
+    }
+  ]
+}
