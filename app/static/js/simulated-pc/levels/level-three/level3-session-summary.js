@@ -74,19 +74,60 @@ export class Level3SessionSummary {
     }
 
     /**
-     * Calculate final score based on performance
+     * Calculate final score based on comprehensive performance metrics
      */
     calculateScore() {
         const timerStatus = this.timer.getStatus();
-        const timeBonus = Math.max(0, (timerStatus.timeRemaining / (15 * 60)) * 30); // Up to 30 points for time
-        const reputationBonus = Math.max(0, ((100 - timerStatus.reputationDamage) / 100) * 40); // Up to 40 points for reputation
-        const financialBonus = Math.max(0, ((1000000 - timerStatus.financialDamage) / 1000000) * 30); // Up to 30 points for financial health
         
-        return Math.round(timeBonus + reputationBonus + financialBonus);
+        // Time Performance (25 points max)
+        // Reward faster completion with more points
+        const timeUsed = (15 * 60) - timerStatus.timeRemaining;
+        const timeEfficiency = Math.max(0, (timerStatus.timeRemaining / (15 * 60))); // 0-1 scale
+        const timeBonus = timeEfficiency * 25; // Up to 25 points for speed
+        
+        // Accuracy Performance (25 points max)
+        // Reward accurate actions (correct process kills, malware identification, file recovery)
+        const accuracy = this.totalActions > 0 ? (this.accurateActions / this.totalActions) : 1;
+        const accuracyBonus = accuracy * 25; // Up to 25 points for accuracy
+        
+        // Reputation Protection (25 points max)
+        // Reward minimizing reputation damage
+        const reputationHealth = Math.max(0, (100 - timerStatus.reputationDamage) / 100);
+        const reputationBonus = reputationHealth * 25; // Up to 25 points for reputation protection
+        
+        // Financial Management (15 points max)
+        // Reward minimizing financial costs
+        const financialHealth = Math.max(0, (1000000 - timerStatus.financialDamage) / 1000000);
+        const financialBonus = financialHealth * 15; // Up to 15 points for cost management
+        
+        // Stage Completion Bonus (10 points max)
+        // Reward completing all three stages (process monitor, malware scanner, ransomware decryptor)
+        const stageCompletionBonus = (this.stagesCompleted.length / 3) * 10; // Up to 10 points for completion
+        
+        const totalScore = Math.round(timeBonus + accuracyBonus + reputationBonus + financialBonus + stageCompletionBonus);
+        
+        // Log performance breakdown for debugging
+        console.log('[Level3SessionSummary] Performance Breakdown:', {
+            timeBonus: Math.round(timeBonus),
+            accuracyBonus: Math.round(accuracyBonus),
+            reputationBonus: Math.round(reputationBonus),
+            financialBonus: Math.round(financialBonus),
+            stageCompletionBonus: Math.round(stageCompletionBonus),
+            totalScore: totalScore,
+            metrics: {
+                timeEfficiency: Math.round(timeEfficiency * 100) + '%',
+                accuracy: Math.round(accuracy * 100) + '%',
+                reputationHealth: Math.round(reputationHealth * 100) + '%',
+                financialHealth: Math.round(financialHealth * 100) + '%',
+                stagesCompleted: this.stagesCompleted.length + '/3'
+            }
+        });
+        
+        return Math.max(0, Math.min(100, totalScore)); // Clamp score between 0-100
     }
 
     /**
-     * End the session and award XP
+     * End the session and award XP based on comprehensive performance
      */
     async endSession() {
         if (!this.sessionData.sessionId) {
@@ -96,20 +137,41 @@ export class Level3SessionSummary {
 
         try {
             const score = this.calculateScore();
+            const timerStatus = this.timer.getStatus();
+            const timeSpent = (15 * 60) - timerStatus.timeRemaining; // Time used in seconds
+            
+            // Prepare detailed performance data for server-side XP calculation
+            const performanceData = {
+                session_id: this.sessionData.sessionId,
+                score: score,
+                time_spent: timeSpent,
+                performance_metrics: {
+                    accuracy: this.totalActions > 0 ? Math.round((this.accurateActions / this.totalActions) * 100) : 100,
+                    stages_completed: this.stagesCompleted.length,
+                    total_stages: 3,
+                    reputation_damage: timerStatus.reputationDamage,
+                    financial_damage: timerStatus.financialDamage,
+                    time_efficiency: Math.round((timerStatus.timeRemaining / (15 * 60)) * 100),
+                    total_actions: this.totalActions,
+                    accurate_actions: this.accurateActions
+                }
+            };
+            
             const response = await fetch('/levels/api/session/end', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    session_id: this.sessionData.sessionId,
-                    score: score
-                })
+                body: JSON.stringify(performanceData)
             });
 
             const data = await response.json();
             if (data.success) {
-                console.log('[Level3SessionSummary] Session ended successfully, XP awarded:', data.xp_awarded);
+                console.log('[Level3SessionSummary] Session ended successfully with performance-based XP:', {
+                    xp_awarded: data.xp_awarded,
+                    score: score,
+                    performance: performanceData.performance_metrics
+                });
                 return data;
             } else {
                 console.error('[Level3SessionSummary] Failed to end session:', data.error);
@@ -194,11 +256,11 @@ export class Level3SessionSummary {
                             <div class="flex items-center justify-center mb-4">
                                 <i class="bi bi-trophy-fill text-4xl text-yellow-400 mr-3"></i>
                                 <div>
-                                    <h3 class="text-2xl font-bold text-white">XP Awarded!</h3>
-                                    <p class="text-green-100">Experience Points Earned</p>
+                                    <h3 class="text-2xl font-bold text-white">Performance-Based XP Awarded!</h3>
+                                    <p class="text-green-100">Your reward reflects speed, accuracy, and crisis management</p>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <div class="bg-green-900/50 rounded-lg p-4">
                                     <div class="text-3xl font-bold text-yellow-400">${sessionResult.xp_awarded || 0}</div>
                                     <div class="text-green-100 text-sm">Total XP Earned</div>
@@ -211,6 +273,15 @@ export class Level3SessionSummary {
                                     <div class="text-2xl font-bold text-white">${this.stagesCompleted.length}/3</div>
                                     <div class="text-green-100 text-sm">Stages Completed</div>
                                 </div>
+                                <div class="bg-green-900/50 rounded-lg p-4">
+                                    <div class="text-2xl font-bold text-white">${Math.round((timerStatus.timeRemaining / (15 * 60)) * 100)}%</div>
+                                    <div class="text-green-100 text-sm">Time Efficiency</div>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <p class="text-green-100 text-sm">
+                                    XP factors: Time Efficiency (25%), Accuracy (25%), Reputation (25%), Budget (15%), Completion (10%)
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -298,47 +369,144 @@ export class Level3SessionSummary {
     }
 
     /**
-     * Generate performance insights
+     * Generate comprehensive performance insights based on new scoring system
      */
     generatePerformanceInsights(score, accuracy, timerStatus) {
         const insights = [];
         
-        // Time performance
+        // Time Performance Analysis
         const timeUsed = (15 * 60) - timerStatus.timeRemaining;
-        const timePercentage = (timeUsed / (15 * 60)) * 100;
+        const timeEfficiency = (timerStatus.timeRemaining / (15 * 60)) * 100;
         
-        if (timePercentage < 50) {
-            insights.push({ icon: 'bi-lightning-fill', color: 'text-yellow-400', text: 'Excellent time management! You completed the crisis response quickly.' });
-        } else if (timePercentage < 80) {
-            insights.push({ icon: 'bi-clock-fill', color: 'text-blue-400', text: 'Good pacing throughout the incident response.' });
+        if (timeEfficiency > 50) {
+            insights.push({ 
+                icon: 'bi-lightning-fill', 
+                color: 'text-yellow-400', 
+                text: `Outstanding speed! Completed with ${Math.round(timeEfficiency)}% time remaining - crucial for incident response.` 
+            });
+        } else if (timeEfficiency > 25) {
+            insights.push({ 
+                icon: 'bi-clock-fill', 
+                color: 'text-blue-400', 
+                text: `Good time management with ${Math.round(timeEfficiency)}% time remaining.` 
+            });
+        } else if (timeEfficiency > 0) {
+            insights.push({ 
+                icon: 'bi-hourglass-split', 
+                color: 'text-orange-400', 
+                text: 'Cutting it close! In real incidents, faster response prevents more damage.' 
+            });
         } else {
-            insights.push({ icon: 'bi-hourglass-split', color: 'text-orange-400', text: 'Consider working more quickly in real-world incidents.' });
+            insights.push({ 
+                icon: 'bi-exclamation-triangle-fill', 
+                color: 'text-red-400', 
+                text: 'Time critical! Real incidents require faster response to prevent escalation.' 
+            });
         }
         
-        // Reputation performance
+        // Accuracy Performance Analysis
+        if (accuracy >= 90) {
+            insights.push({ 
+                icon: 'bi-bullseye', 
+                color: 'text-green-400', 
+                text: `Exceptional precision! ${accuracy}% accuracy shows expert-level threat identification.` 
+            });
+        } else if (accuracy >= 75) {
+            insights.push({ 
+                icon: 'bi-check-circle-fill', 
+                color: 'text-blue-400', 
+                text: `Solid accuracy at ${accuracy}% - good threat assessment skills.` 
+            });
+        } else if (accuracy >= 60) {
+            insights.push({ 
+                icon: 'bi-exclamation-circle', 
+                color: 'text-orange-400', 
+                text: `${accuracy}% accuracy - practice identifying malicious processes and files more carefully.` 
+            });
+        } else {
+            insights.push({ 
+                icon: 'bi-x-circle-fill', 
+                color: 'text-red-400', 
+                text: `Low accuracy (${accuracy}%) - review threat indicators and take more time to analyze.` 
+            });
+        }
+        
+        // Stage Completion Analysis
+        const stagesCompleted = this.stagesCompleted.length;
+        if (stagesCompleted === 3) {
+            insights.push({ 
+                icon: 'bi-trophy-fill', 
+                color: 'text-yellow-400', 
+                text: 'Perfect execution! Completed all three critical response stages successfully.' 
+            });
+        } else if (stagesCompleted === 2) {
+            insights.push({ 
+                icon: 'bi-check2-square', 
+                color: 'text-blue-400', 
+                text: 'Good progress - completed 2/3 stages. Full incident response requires all stages.' 
+            });
+        } else if (stagesCompleted === 1) {
+            insights.push({ 
+                icon: 'bi-exclamation-square', 
+                color: 'text-orange-400', 
+                text: 'Partial response - only 1/3 stages completed. Practice comprehensive incident handling.' 
+            });
+        } else {
+            insights.push({ 
+                icon: 'bi-x-square-fill', 
+                color: 'text-red-400', 
+                text: 'No stages completed - incident response requires systematic approach to all threats.' 
+            });
+        }
+        
+        // Reputation Protection Analysis
         if (timerStatus.reputationDamage < 20) {
-            insights.push({ icon: 'bi-star-fill', color: 'text-green-400', text: 'Outstanding reputation protection! Minimal damage taken.' });
+            insights.push({ 
+                icon: 'bi-shield-fill-check', 
+                color: 'text-green-400', 
+                text: `Outstanding reputation protection! Only ${timerStatus.reputationDamage}% damage taken.` 
+            });
         } else if (timerStatus.reputationDamage < 50) {
-            insights.push({ icon: 'bi-shield-fill-check', color: 'text-blue-400', text: 'Good reputation management with acceptable damage levels.' });
+            insights.push({ 
+                icon: 'bi-shield-check', 
+                color: 'text-blue-400', 
+                text: `Acceptable reputation management with ${timerStatus.reputationDamage}% damage.` 
+            });
         } else {
-            insights.push({ icon: 'bi-exclamation-triangle-fill', color: 'text-red-400', text: 'High reputation damage - faster response needed in real scenarios.' });
+            insights.push({ 
+                icon: 'bi-shield-exclamation', 
+                color: 'text-red-400', 
+                text: `High reputation damage (${timerStatus.reputationDamage}%) - faster response crucial for organization trust.` 
+            });
         }
-        
-        // Financial performance
-        const financialPercentage = (timerStatus.financialDamage / 1000000) * 100;
+
+        // Financial Impact Analysis
+        const financialPercentage = Math.round((timerStatus.financialDamage / 1000000) * 100);
         if (financialPercentage < 20) {
-            insights.push({ icon: 'bi-piggy-bank-fill', color: 'text-green-400', text: 'Excellent cost containment! Minimal financial impact.' });
+            insights.push({ 
+                icon: 'bi-piggy-bank-fill', 
+                color: 'text-green-400', 
+                text: `Excellent cost containment! Only ${financialPercentage}% of budget used for incident response.` 
+            });
         } else if (financialPercentage < 50) {
-            insights.push({ icon: 'bi-cash-stack', color: 'text-blue-400', text: 'Reasonable cost management during the incident.' });
+            insights.push({ 
+                icon: 'bi-cash-stack', 
+                color: 'text-blue-400', 
+                text: `Reasonable cost management with ${financialPercentage}% budget impact.` 
+            });
         } else {
-            insights.push({ icon: 'bi-exclamation-diamond-fill', color: 'text-red-400', text: 'High financial costs - quicker containment crucial for budget protection.' });
+            insights.push({ 
+                icon: 'bi-exclamation-diamond-fill', 
+                color: 'text-red-400', 
+                text: `High financial costs (${financialPercentage}% of budget) - quicker containment crucial for budget protection.` 
+            });
         }
 
         return `
             <div class="grid grid-cols-1 gap-3">
                 ${insights.map(insight => `
-                    <div class="flex items-center p-3 bg-gray-700 rounded-lg">
-                        <i class="${insight.icon} ${insight.color} text-xl mr-3"></i>
+                    <div class="flex items-start p-3 bg-gray-700 rounded-lg">
+                        <i class="${insight.icon} ${insight.color} text-xl mr-3 mt-0.5"></i>
                         <span class="text-gray-200">${insight.text}</span>
                     </div>
                 `).join('')}
