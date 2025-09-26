@@ -382,12 +382,32 @@ export class Level3SessionSummary {
         localStorage.setItem('cyberquest_level_3_completed', 'true');
         localStorage.setItem('cyberquest_current_level', '4');
         
-        // Navigate directly to Level 4
-        window.location.href = '/levels/4/start?autostart=true';
+        // Show shutdown sequence then navigate to Level 4
+        await this.showShutdownSequenceAndNavigateToLevel4();
     }
 
     async retryLevel3() {
         window.location.reload();
+    }
+
+    async showShutdownSequenceAndNavigateToLevel4() {
+        try {
+            const { ShutdownSequence } = await import('../../shutdown-sequence.js');
+            const shutdownOverlay = document.createElement('div');
+            shutdownOverlay.className = 'fixed inset-0 bg-black z-50';
+            shutdownOverlay.style.zIndex = '9999';
+            document.body.appendChild(shutdownOverlay);
+            
+            await ShutdownSequence.runShutdown(shutdownOverlay);
+            
+            // Navigate to Level 4
+            window.location.href = '/levels/4/start?autostart=true';
+        } catch (error) {
+            console.error('Failed to run shutdown sequence:', error);
+            setTimeout(() => {
+                window.location.href = '/levels/4/start?autostart=true';
+            }, 1000);
+        }
     }
 
     async showShutdownSequenceAndNavigate() {
