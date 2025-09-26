@@ -7,7 +7,7 @@ export class Level3TimerApp {
         this.timeRemaining = 15 * 60; // 15 minutes in seconds
         this.timerInterval = null;
         this.isRunning = false;
-        this.canStart = false; // Only start after Level 3 dialogue
+        this.canStart = true; // Can start immediately since created after dialogue
         
         // Damage tracking
         this.reputationDamage = 0;
@@ -17,9 +17,6 @@ export class Level3TimerApp {
         
         // DOM element
         this.element = null;
-        
-        // Listen for Level 3 dialogue completion
-        this.setupDialogueListener();
     }
 
     // Create the static timer element
@@ -136,49 +133,7 @@ export class Level3TimerApp {
         }, 1000);
         
         this.updateDisplay();
-        console.log('[Level3Timer] Timer started after Level 3 dialogue completion');
-    }
-
-    // Enable timer start (called after Level 3 dialogue)
-    enableTimer() {
-        this.canStart = true;
-        this.updateDisplay();
-        
-        // Auto-start after a short delay
-        setTimeout(() => {
-            this.startTimer();
-        }, 1000);
-    }
-
-    // Setup listener for Level 3 dialogue completion
-    setupDialogueListener() {
-        // Listen for storage changes indicating Level 3 dialogue completion
-        const checkDialogueComplete = () => {
-            if (localStorage.getItem('cyberquest_level_3_started')) {
-                this.enableTimer();
-            }
-        };
-
-        // Check immediately and set up interval to check
-        checkDialogueComplete();
-        
-        // Also listen for storage events
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'cyberquest_level_3_started' && e.newValue) {
-                this.enableTimer();
-            }
-        });
-
-        // Backup check every second until dialogue completes
-        const intervalCheck = setInterval(() => {
-            if (localStorage.getItem('cyberquest_level_3_started')) {
-                this.enableTimer();
-                clearInterval(intervalCheck);
-            }
-        }, 1000);
-
-        // Clear interval after 30 seconds to avoid infinite checking
-        setTimeout(() => clearInterval(intervalCheck), 30000);
+        console.log('[Level3Timer] Timer started');
     }
 
     stopTimer() {
@@ -315,7 +270,12 @@ export class Level3TimerApp {
 
     // Initialize the timer (called by application launcher)
     initialize() {
-        console.log('[Level3Timer] Timer initialized as static element, waiting for Level 3 dialogue completion');
+        console.log('[Level3Timer] Timer initialized as static element, starting countdown');
+        
+        // Auto-start after a short delay since timer is created after dialogue
+        setTimeout(() => {
+            this.startTimer();
+        }, 1000);
     }
 
     // Cleanup when timer is destroyed
