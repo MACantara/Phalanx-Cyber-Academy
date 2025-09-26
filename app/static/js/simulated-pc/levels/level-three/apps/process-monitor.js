@@ -488,16 +488,10 @@ export class ProcessMonitorApp extends WindowBase {
         // Apply damage/recovery based on process type and trust level
         try {
             if (!process.trusted) {
-                // Killed malicious process - good action
-                const reputationRecovery = Math.min(5, process.reputationDamage || 0);
-                
+                // Killed malicious process - good action, no penalty regardless of category
                 if (process.category === 'system') {
-                    // Malicious system process (like rootkit) - moderate penalty for being cautious
-                    if (this.timer) {
-                        this.timer.addReputationDamage(3);
-                        this.timer.addFinancialDamage(2000);
-                    }
-                    this.showNotification(`System process terminated. Minor reputation damage from system disruption. Target eliminated.`, 'warning');
+                    // System-level malware (rootkit) - no penalty, correct identification
+                    this.showNotification(`System process terminated. Target eliminated.`, 'success');
                 } else {
                     // Regular malicious process - no penalty
                     this.showNotification(`Process terminated! Target eliminated.`, 'success');
