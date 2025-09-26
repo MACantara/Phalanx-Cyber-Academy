@@ -1,6 +1,5 @@
 import { Taskbar } from './desktop-components/taskbar.js';
 import { DesktopIcons } from './desktop-components/desktop-icons.js';
-import { ControlPanel } from './desktop-components/control-panel.js';
 import { WindowManager } from './desktop-components/window-manager.js';
 import { TutorialManager } from './tutorials/tutorial-manager.js';
 import DialogueManager from './dialogues/dialogue-manager.js';
@@ -49,7 +48,6 @@ export class Desktop {
         this.taskbar.windowManager = this.windowManager;
         
         this.desktopIcons = new DesktopIcons(this.desktopElement, this.windowManager, this.level);
-        this.controlPanel = new ControlPanel(this.desktopElement, this.windowManager, this);
 
         // Trigger fade-in effect after all components are loaded
         setTimeout(() => {
@@ -106,22 +104,5 @@ export class Desktop {
         if (this.dialogueIntegration) {
             await this.dialogueIntegration.onApplicationOpened(appName);
         }
-    }
-
-    // Legacy methods for backward compatibility
-    exitSimulation() {
-        this.controlPanel.exitSimulation();
-    }
-
-    showHelp() {
-        this.controlPanel.showHelp();
-    }
-
-    showHint() {
-        this.controlPanel.showHint();
-    }
-
-    showProgress() {
-        this.controlPanel.showProgress();
     }
 }
