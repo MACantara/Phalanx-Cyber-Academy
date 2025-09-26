@@ -206,13 +206,6 @@ export class ProcessMonitorApp extends WindowBase {
                                                 ${this.getAllAnalysisData(process).map(item => `<li>• ${item}</li>`).join('')}
                                             </ul>
                                         ` : ''}
-                                        ${!process.trusted && (process.reputationDamage || process.financialDamage) ? `
-                                            <div class="text-orange-200 mt-3 pt-2 border-t border-yellow-600">
-                                                <div class="font-medium mb-1">Potential Impact:</div>
-                                                ${process.reputationDamage ? `<div>• Reputation risk: ${process.reputationDamage}% potential impact</div>` : ''}
-                                                ${process.financialDamage ? `<div>• Financial risk: $${level3DataManager.formatDamage(process.financialDamage)} exposure</div>` : ''}
-                                            </div>
-                                        ` : ''}
                                     </div>
                                 </div>
                             </div>
