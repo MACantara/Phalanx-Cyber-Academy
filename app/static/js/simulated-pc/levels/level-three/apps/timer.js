@@ -60,7 +60,7 @@ export class Level3TimerApp {
                     <!-- Reputation -->
                     <div class="bg-gray-700 rounded p-1.5">
                         <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-400">REP</span>
+                            <span class="text-gray-400">REPUTATION</span>
                             <span class="${this.getReputationColor()}">${this.maxReputation - this.reputationDamage}%</span>
                         </div>
                         <div class="w-full bg-gray-600 rounded-full h-1">
@@ -69,15 +69,15 @@ export class Level3TimerApp {
                         </div>
                     </div>
                     
-                    <!-- Financial -->
+                    <!-- Financial Cost -->
                     <div class="bg-gray-700 rounded p-1.5">
                         <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-400">BUDGET</span>
-                            <span class="${this.getFinancialColor()}">$${this.formatMoney(this.maxFinancialHealth - this.financialDamage)}</span>
+                            <span class="text-gray-400">COST</span>
+                            <span class="${this.getFinancialColor()}">$${this.formatMoney(this.financialDamage)}</span>
                         </div>
                         <div class="w-full bg-gray-600 rounded-full h-1">
                             <div class="bg-gradient-to-r ${this.getFinancialBarColor()} h-1 rounded-full transition-all duration-500" 
-                                 style="width: ${((this.maxFinancialHealth - this.financialDamage) / this.maxFinancialHealth) * 100}%"></div>
+                                 style="width: ${(this.financialDamage / this.maxFinancialHealth) * 100}%"></div>
                         </div>
                     </div>
                 </div>
@@ -259,17 +259,17 @@ export class Level3TimerApp {
     }
 
     getFinancialColor() {
-        const remaining = (this.maxFinancialHealth - this.financialDamage) / this.maxFinancialHealth;
-        if (remaining > 0.7) return 'text-green-400';
-        if (remaining > 0.3) return 'text-yellow-400';
-        return 'text-red-400';
+        const costRatio = this.financialDamage / this.maxFinancialHealth;
+        if (costRatio < 0.3) return 'text-green-400'; // Low cost
+        if (costRatio < 0.7) return 'text-yellow-400'; // Medium cost
+        return 'text-red-400'; // High cost
     }
 
     getFinancialBarColor() {
-        const remaining = (this.maxFinancialHealth - this.financialDamage) / this.maxFinancialHealth;
-        if (remaining > 0.7) return 'from-green-400 to-green-500';
-        if (remaining > 0.3) return 'from-yellow-400 to-yellow-500';
-        return 'from-red-400 to-red-500';
+        const costRatio = this.financialDamage / this.maxFinancialHealth;
+        if (costRatio < 0.3) return 'from-green-400 to-green-500'; // Low cost
+        if (costRatio < 0.7) return 'from-yellow-400 to-yellow-500'; // Medium cost
+        return 'from-red-400 to-red-500'; // High cost
     }
 
     // Event handling
