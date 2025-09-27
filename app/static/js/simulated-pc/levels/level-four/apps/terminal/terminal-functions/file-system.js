@@ -1,117 +1,351 @@
 export class FileSystem {
     constructor() {
         this.files = {
-            '/home/trainee': {
+            '/': {
                 type: 'directory',
                 contents: {
-                    'Documents': { type: 'directory', contents: {} },
-                    'Downloads': { type: 'directory', contents: {} },
-                    'Desktop': { type: 'directory', contents: {} },
-                    'Evidence': { type: 'directory', contents: {} },
-                    'suspicious_file.txt': { 
-                        type: 'file', 
-                        content: 'WARNING: This file contains suspicious content!\nDo not execute or share this file.\nReport to security team immediately.',
-                        suspicious: true,
-                        size: 1337
-                    },
-                    'readme.txt': {
+                    'home': { type: 'directory', contents: {} },
+                    'var': { type: 'directory', contents: {} },
+                    'etc': { type: 'directory', contents: {} },
+                    'usr': { type: 'directory', contents: {} },
+                    'tmp': { type: 'directory', contents: {} },
+                    'proc': { type: 'directory', contents: {} }
+                }
+            },
+            '/home': {
+                type: 'directory',
+                contents: {
+                    'researcher': { type: 'directory', contents: {} },
+                    'www-data': { type: 'directory', contents: {} },
+                    'admin': { type: 'directory', contents: {} }
+                }
+            },
+            '/home/researcher': {
+                type: 'directory',
+                contents: {
+                    'disclosure_report.md': {
                         type: 'file',
-                        content: 'Welcome to CyberQuest Training Environment!\n\nThis is a simulated terminal for cybersecurity training.\nExplore the file system and learn basic Linux commands.\n\nFor help, type: help',
-                        size: 256
+                        content: `# Responsible Disclosure Report - Acme Bookshelf Co.
+
+## Executive Summary
+[Document your findings here]
+
+## Discovered Vulnerabilities
+
+### 1. [Issue Title]
+- **Severity**: [Low/Medium/High]
+- **Description**: [Brief description]
+- **Steps to Reproduce**: 
+  1. [Command or steps]
+  2. [Expected output]
+- **Impact**: [What could an attacker do?]
+- **Remediation**: [How to fix it]
+
+---
+
+## Conclusion
+[Summary and FLAG-7 goes here when you find it]
+
+*Report completed by: Security Researcher*
+*Date: ${new Date().toISOString().split('T')[0]}*`,
+                        size: 650
                     },
                     '.bashrc': {
                         type: 'file',
-                        content: '# ~/.bashrc: executed by bash(1) for non-login shells.\nexport PATH=/usr/local/bin:/usr/bin:/bin\nPS1="\\u@\\h:\\w\\$ "',
-                        size: 128,
+                        content: `# ~/.bashrc: executed by bash(1) for non-login shells.
+
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PS1='researcher@sandbox:$PWD$ '
+
+# FLAG-1{enum_services_first} - Hidden in environment
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'`,
+                        size: 312,
+                        hidden: true
+                    },
+                    '.hidden_notes': {
+                        type: 'file',
+                        content: `Personal Research Notes
+======================
+
+Remember to check:
+- Open ports and services (ss, netstat)
+- Web directories (/var/www/)
+- Config files in /etc/
+- SUID binaries
+- Log files in /var/log/
+
+The company mentioned they use nginx on port 8080.`,
+                        size: 245,
                         hidden: true
                     }
                 }
             },
-            '/home/trainee/Documents': {
+            '/home/www-data': {
+                type: 'directory',
+                contents: {}
+            },
+            '/home/admin': {
                 type: 'directory',
                 contents: {
-                    'security_report.txt': {
+                    '.env': {
                         type: 'file',
-                        content: 'SECURITY INCIDENT REPORT\n========================\n\nDate: 2024-12-20\nIncident Type: Phishing Attempt\nStatus: Resolved\n\nA suspicious email was detected and quarantined.\nNo systems were compromised.',
-                        size: 512
+                        content: `# Production Environment Variables
+DB_HOST=localhost
+DB_USER=admin
+DB_PASS=bookshelf123
+API_KEY=FLAG-4{secrets_in_dotenv_files}
+SMTP_SERVER=mail.acme.local
+DEBUG=false`,
+                        size: 156,
+                        hidden: true
+                    },
+                    'backup_script.sh': {
+                        type: 'file',
+                        content: `#!/bin/bash
+# Daily backup script
+# Run with: sudo ./backup_script.sh
+
+tar -czf /tmp/backup-$(date +%Y%m%d).tar.gz /var/www/html
+echo "Backup completed at $(date)"`,
+                        size: 142
                     }
                 }
             },
-            '/home/trainee/Downloads': {
+            '/var': {
                 type: 'directory',
                 contents: {
-                    'malware_sample.exe': {
+                    'www': { type: 'directory', contents: {} },
+                    'log': { type: 'directory', contents: {} }
+                }
+            },
+            '/var/www': {
+                type: 'directory',
+                contents: {
+                    'html': { type: 'directory', contents: {} }
+                }
+            },
+            '/var/www/html': {
+                type: 'directory',
+                contents: {
+                    'index.html': {
                         type: 'file',
-                        content: 'DANGER: This is a malware sample for training purposes only!\nDo not execute this file on a real system!',
-                        suspicious: true,
-                        size: 2048
+                        content: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Acme Bookshelf Co.</title>
+</head>
+<body>
+    <h1>Welcome to Acme Bookshelf Co.</h1>
+    <p>Your premier online bookstore!</p>
+    <!-- Development note: FLAG-2{web_discovery_basics} -->
+    <script src="assets/app.js"></script>
+</body>
+</html>`,
+                        size: 285
+                    },
+                    'admin': { type: 'directory', contents: {} },
+                    'robots.txt': {
+                        type: 'file',
+                        content: `User-agent: *
+Disallow: /admin/
+Disallow: /backup/
+Disallow: /.git/
+
+# FLAG-2{web_discovery_basics} can be found by exploring web directories`,
+                        size: 127
                     }
                 }
             },
-            '/home/trainee/Evidence': {
+            '/var/www/html/admin': {
                 type: 'directory',
                 contents: {
-                    'bot_logs.txt': {
+                    'config.php': {
                         type: 'file',
-                        content: 'Bot Network Activity Log\n========================\n[2024-08-01 14:32:15] Bot ID: N4LL-001 connecting from 192.168.1.100\n[2024-08-01 14:32:16] Command received: SCAN_NETWORK\n[2024-08-01 14:32:17] Target identified: vote.municipality.gov\n[2024-08-01 14:32:18] Payload deployed: exploit_db_v2.3\n[2024-08-01 14:32:19] Escalation attempt: ADMIN_OVERRIDE\n[2024-08-01 14:32:20] Connection established to C&C: nullcommand.onion\n[2024-08-01 14:32:21] Data exfiltration initiated\n[2024-08-01 14:32:22] Bot reporting to master: "THE_NULL"\n[2024-08-01 14:32:23] Next target queued: municipal-backup.local',
-                        suspicious: true,
-                        size: 2458
-                    },
-                    'email_headers.txt': {
-                        type: 'file',
-                        content: 'Email Header Analysis\n====================\nReceived: from unknown-sender.darkweb.onion\nDate: Mon, 01 Aug 2024 14:30:00 +0000\nFrom: "System Administrator" <nullsender@fake-domain.com>\nTo: admin@vote.municipality.gov\nSubject: Urgent Security Update Required\nX-Originating-IP: 192.168.1.100\nX-Spam-Score: 9.8/10.0\nX-Mailer: N4LL_MAILER_v1.2\nMessage-ID: <null001@darkcommand.onion>\nUser-Agent: The Null Command Center\nX-Priority: 1 (Highest)\nX-Custom-Header: SIGNATURE_N4LL_2024',
-                        suspicious: true,
-                        size: 1847
-                    },
-                    'malware_code.txt': {
-                        type: 'file',
-                        content: 'Malware Source Code Analysis\n============================\n// N4LL Backdoor v2.3\n// Author: [REDACTED]\n// Target: Municipal Voting Systems\n\nclass N4llBackdoor {\n    constructor() {\n        this.signature = "N4LL_SIGNATURE_2024";\n        this.command_server = "nullcommand.onion";\n        this.target_systems = ["vote.municipality.gov"];\n    }\n    \n    exploit() {\n        // SQL injection targeting voter database\n        let payload = "\\"; DROP TABLE voters; --";\n        this.executeCommand(payload);\n    }\n    \n    reportToMaster() {\n        // Report successful breach to "THE_NULL"\n        this.sendMessage("Target compromised - The Null");\n    }\n}',
-                        suspicious: true,
-                        size: 3241
-                    },
-                    'login_logs.txt': {
-                        type: 'file',
-                        content: 'Failed Login Attempts\n====================\n[2024-08-04 11:25:30] Failed login for user: admin from 192.168.1.100\n[2024-08-04 11:25:31] Failed login for user: root from 192.168.1.100\n[2024-08-04 11:25:32] Failed login for user: administrator from 192.168.1.100\n[2024-08-04 11:25:33] Failed login for user: dr.cipher from 192.168.1.100\n[2024-08-04 11:25:34] SUCCESSFUL login for user: dr.cipher from 192.168.1.100\n[2024-08-04 11:25:35] User dr.cipher accessed sensitive files\n[2024-08-04 11:25:36] User dr.cipher modified system configurations\n[2024-08-04 11:25:37] User dr.cipher initiated data transfer\n[2024-08-04 11:25:38] Connection terminated by dr.cipher',
-                        suspicious: true,
-                        size: 4187
-                    },
-                    'case_summary.txt': {
-                        type: 'file',
-                        content: 'Investigation Case Summary\n=========================\nCase ID: CYBERQUEST-L5-001\nDate Opened: 2024-08-05\nLead Investigator: [TRAINEE]\nStatus: ACTIVE\n\nSummary:\nA sophisticated cyber attack has been detected targeting municipal voting systems. The attacker, known as "The Null", has left various digital fingerprints across multiple systems. Evidence suggests the use of automated bots, phishing campaigns, and custom malware.\n\nKey Evidence:\n- Bot network logs showing C&C communications\n- Phishing email headers with suspicious origins\n- Custom malware with distinctive signatures\n- Login attempts showing credential stuffing\n\nObjective: Identify "The Null" and trace attack vectors.',
-                        size: 1234
-                    },
-                    'timeline.txt': {
-                        type: 'file',
-                        content: 'Attack Timeline Reconstruction\n=============================\n2024-08-01 14:30:00 - Phishing email sent to admin@vote.municipality.gov\n2024-08-01 14:32:15 - Bot network activation from 192.168.1.100\n2024-08-01 14:32:17 - Initial reconnaissance of target systems\n2024-08-01 14:32:18 - Malware payload deployment\n2024-08-04 11:25:30 - Brute force login attempts begin\n2024-08-04 11:25:34 - Successful compromise of dr.cipher account\n2024-08-04 11:25:35 - Privilege escalation and data access\n2024-08-05 08:12:44 - Evidence of data exfiltration\n2024-08-05 10:00:00 - Investigation initiated',
-                        size: 987
-                    },
-                    '.hidden': {
-                        type: 'directory',
-                        hidden: true,
-                        contents: {
-                            'hidden_message.txt': {
-                                type: 'file',
-                                content: 'CONFIDENTIAL COMMUNICATION LOG\n==============================\n[ENCRYPTED CHANNEL]\nFrom: The Null Command Center\nTo: Agent N4LL-001\n\nMission Status: SUCCESS\nTarget: Municipal Voting Database\nCompromised Accounts: dr.cipher@municipality.gov\nData Extracted: 47,382 voter records\nBackdoor Status: ACTIVE\n\nNext Phase: Prepare for election manipulation\nRendezvous Point: nullcommand.onion/secure\nSignature: THE_NULL_2024\n\n[END ENCRYPTED MESSAGE]\n\nNote: Dr. Cipher appears to be the mastermind behind "The Null" operation.\nReal identity: Dr. Marcus Cipher, Former IT Security Consultant\nKnown aliases: NullMaster, CipherNull, The_Null\nLast known location: Encrypted TOR network',
-                                hidden: true,
-                                size: 1337
-                            }
-                        }
+                        content: `<?php
+// Admin configuration
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', 'toor123');
+
+// FLAG-2{web_discovery_basics} - Found in admin config
+$admin_key = "secret_admin_2024";
+?>`,
+                        size: 198
                     }
                 }
             },
-            '/home/trainee/Evidence/.hidden': {
+            '/etc': {
                 type: 'directory',
-                hidden: true,
                 contents: {
-                    'hidden_message.txt': {
+                    'nginx': { type: 'directory', contents: {} },
+                    'passwd': {
                         type: 'file',
-                        content: 'CONFIDENTIAL COMMUNICATION LOG\n==============================\n[ENCRYPTED CHANNEL]\nFrom: The Null Command Center\nTo: Agent N4LL-001\n\nMission Status: SUCCESS\nTarget: Municipal Voting Database\nCompromised Accounts: dr.cipher@municipality.gov\nData Extracted: 47,382 voter records\nBackdoor Status: ACTIVE\n\nNext Phase: Prepare for election manipulation\nRendezvous Point: nullcommand.onion/secure\nSignature: THE_NULL_2024\n\n[END ENCRYPTED MESSAGE]\n\nNote: O2ymandi4s appears to be the mastermind behind "The Null" operation.\nReal identity: Dr. Clarice "Cipher" Kim, Cybersecurity Instructor at CyberQuest Academy\nKnown aliases: O2ymandi4s, CipherNull, The_Null_Leader\nMotive: Revenge against academy due to dissatisfaction with its direction\nGoal: Wipe cyberspace clean for a fresh start\nStatus: Current employee with ideological grievances against the institution',
-                        hidden: true,
-                        size: 1337
+                        content: `root:x:0:0:root:/root:/bin/bash
+researcher:x:1000:1000:Security Researcher:/home/researcher:/bin/bash
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+admin:x:1001:1001:Admin User:/home/admin:/bin/bash`,
+                        size: 194
+                    }
+                }
+            },
+            '/etc/nginx': {
+                type: 'directory',
+                contents: {
+                    'nginx.conf': {
+                        type: 'file',
+                        content: `user www-data;
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    server {
+        listen 8080;
+        server_name acme.local;
+        root /var/www/html;
+        
+        # FLAG-3{config_file_audit} - Exposed in nginx config
+        access_log /var/log/nginx/access.log;
+        error_log /var/log/nginx/error.log;
+    }
+}`,
+                        size: 298
+                    }
+                }
+            },
+            '/usr': {
+                type: 'directory',
+                contents: {
+                    'local': { type: 'directory', contents: {} }
+                }
+            },
+            '/usr/local': {
+                type: 'directory',
+                contents: {
+                    'bin': { type: 'directory', contents: {} }
+                }
+            },
+            '/usr/local/bin': {
+                type: 'directory',
+                contents: {
+                    'backup_tool': {
+                        type: 'file',
+                        content: `#!/bin/bash
+# SUID Binary - backup_tool
+# Owner: root, SUID bit set
+# FLAG-5{suid_binary_audit} - Found in suspicious SUID binary
+
+if [ "$EUID" -eq 0 ]; then
+    echo "Running backup as root..."
+    tar -czf /tmp/system_backup.tar.gz /etc/ /var/www/
+    echo "Backup completed"
+else
+    echo "This tool requires root privileges"
+fi`,
+                        size: 312,
+                        permissions: 'rwsr-xr-x',
+                        suid: true
+                    },
+                    'system_check': {
+                        type: 'file',
+                        content: `#!/bin/bash
+# System health check utility
+echo "System Check Utility v1.2"
+echo "Checking disk usage..."
+df -h
+echo "Checking memory..."
+free -m
+echo "System check completed"`,
+                        size: 156,
+                        permissions: 'rwxr-xr-x'
+                    }
+                }
+            },
+            '/var/log': {
+                type: 'directory',
+                contents: {
+                    'auth.log': {
+                        type: 'file',
+                        content: `Oct 27 10:15:22 sandbox sshd[1234]: Failed password for admin from 192.168.1.100
+Oct 27 10:15:45 sandbox sshd[1235]: Accepted password for researcher from 192.168.1.50
+Oct 27 10:32:11 sandbox sudo: researcher : TTY=pts/0 ; PWD=/home/researcher ; USER=root ; COMMAND=/usr/bin/cat /etc/shadow
+Oct 27 11:45:33 sandbox auth_error: FLAG-6{log_file_investigation} - Authentication bypass detected
+Oct 27 12:00:01 sandbox CRON[5678]: (root) CMD (/home/admin/backup_script.sh)`,
+                        size: 445
+                    },
+                    'syslog': {
+                        type: 'file',
+                        content: `Oct 27 10:00:01 sandbox systemd[1]: Starting system boot
+Oct 27 10:00:05 sandbox kernel: [    5.123456] Network interface eth0 up
+Oct 27 10:15:00 sandbox cron[999]: (CRON) INFO (pidfile fd = 3)
+Oct 27 10:30:00 sandbox nginx: [error] invalid flag parameter: FLAG-6{log_file_investigation}
+Oct 27 11:00:00 sandbox systemd[1]: Started nginx.service`,
+                        size: 324
+                    },
+                    'nginx': { type: 'directory', contents: {} }
+                }
+            },
+            '/var/log/nginx': {
+                type: 'directory',
+                contents: {
+                    'access.log': {
+                        type: 'file',
+                        content: `192.168.1.50 - - [27/Oct/2024:10:15:23 +0000] "GET / HTTP/1.1" 200 285
+192.168.1.50 - - [27/Oct/2024:10:16:45 +0000] "GET /admin/ HTTP/1.1" 403 146
+192.168.1.100 - - [27/Oct/2024:10:32:11 +0000] "POST /admin/login.php HTTP/1.1" 200 543
+192.168.1.100 - - [27/Oct/2024:11:45:33 +0000] "GET /robots.txt HTTP/1.1" 200 127`,
+                        size: 298
+                    },
+                    'error.log': {
+                        type: 'file',
+                        content: `2024/10/27 10:16:45 [error] 1234#0: *1 directory index of "/var/www/html/admin/" is forbidden
+2024/10/27 11:30:22 [warn] 1234#0: conflicting server name "acme.local" 
+2024/10/27 11:45:33 [error] 1234#0: access denied - FLAG-6{log_file_investigation} logged in error
+2024/10/27 12:00:00 [info] 1234#0: signal process started`,
+                        size: 267
+                    }
+                }
+            },
+            '/tmp': {
+                type: 'directory',
+                contents: {
+                    'final_flag.txt': {
+                        type: 'file',
+                        content: `Congratulations, Security Researcher!
+
+You've successfully completed the enumeration phase of this security assessment.
+
+Your final flag is: FLAG-7{responsible_disclosure_complete}
+
+Remember: A true white hat security researcher always:
+1. Documents findings responsibly
+2. Reports vulnerabilities through proper channels  
+3. Never exploits findings maliciously
+4. Helps improve security for everyone
+
+Add this flag to your disclosure report to complete the challenge.`,
+                        size: 485,
+                        hidden: true
+                    }
+                }
+            },
+            '/proc': {
+                type: 'directory',
+                contents: {
+                    'version': {
+                        type: 'file',
+                        content: 'Linux version 5.4.0-sandbox #1 SMP Ubuntu x86_64 GNU/Linux'
                     }
                 }
             }
         };
+        
+        // Set current directory to researcher home
+        this.currentUser = 'researcher';
     }
 
     listDirectory(path, showHidden = false) {
