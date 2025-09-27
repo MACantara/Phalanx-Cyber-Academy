@@ -39,7 +39,7 @@ export class DisclosureReportApp extends WindowBase {
                             </h2>
                             <div class="space-y-3">
                                 <div>
-                                    <label class="block text-sm font-medium mb-1">Flag Number (1-7):</label>
+                                    <label class="block text-sm font-medium mb-1">Challenge:</label>
                                     <select id="flag-number" class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:border-blue-500 focus:outline-none">
                                         <option value="">Select Challenge</option>
                                     </select>
@@ -153,19 +153,29 @@ export class DisclosureReportApp extends WindowBase {
                 // Clear existing options except the first one
                 flagSelect.innerHTML = '<option value="">Select Challenge</option>';
                 
-                // Add options for selected flags
-                const selectedFlags = ctfConfig.selected_flags || [];
-                selectedFlags.forEach(flagId => {
-                    const flagInfo = ctfConfig.flags[flagId];
-                    if (flagInfo) {
+                // Use all flags instead of just selected_flags to match our system
+                if (ctfConfig.flags) {
+                    Object.entries(ctfConfig.flags).forEach(([flagId, flagInfo]) => {
                         const option = document.createElement('option');
                         option.value = flagId;
-                        option.textContent = `${flagId} - ${flagInfo.name}`;
+                        option.textContent = `${flagId} - ${flagInfo.name || flagId}`;
                         flagSelect.appendChild(option);
-                    }
-                });
+                    });
+                } else if (ctfConfig.selected_flags) {
+                    // Fallback to selected_flags if available
+                    const selectedFlags = ctfConfig.selected_flags || [];
+                    selectedFlags.forEach(flagId => {
+                        const flagInfo = ctfConfig.flags[flagId];
+                        if (flagInfo) {
+                            const option = document.createElement('option');
+                            option.value = flagId;
+                            option.textContent = `${flagId} - ${flagInfo.name}`;
+                            flagSelect.appendChild(option);
+                        }
+                    });
+                }
                 
-                console.log('Flag dropdown populated with selected flags');
+                console.log('Flag dropdown populated with all available flags');
             }
         } catch (error) {
             console.error('Error loading flag configuration for dropdown:', error);
@@ -197,11 +207,19 @@ export class DisclosureReportApp extends WindowBase {
         // Fallback descriptions with WHT format
         this.flagDescriptions = new Map([
             ['WHT-ENV', 'Environment Reconnaissance Challenge - Found in user environment files (.bashrc)'],
-            ['WHT-SRC', 'Source Code Analysis Challenge - Located in HTML comments and PHP config files'],
-            ['WHT-CFG', 'Server Configuration Audit Challenge - Discovered in nginx configuration files'],
             ['WHT-ENV2', 'Environment Variable Exposure Challenge - Found in admin environment configuration'],
-            ['WHT-SUID', 'SUID Binary Security Challenge - Located in system binaries with elevated privileges'],
+            ['WHT-BACKUP', 'Backup Script Analysis Challenge - Analyze automated backup scripts for security issues'],
+            ['WHT-HIST', 'Command History Forensics Challenge - Examine command history for accidentally leaked credentials'],
+            ['WHT-SRC', 'Source Code Analysis Challenge - Located in HTML comments and PHP config files'],
+            ['WHT-DB', 'Database Configuration Challenge - Locate database credentials in configuration files'],
             ['WHT-LOG', 'Log File Analysis Challenge - Discovered in web server access logs'],
+            ['WHT-CFG', 'Server Configuration Audit Challenge - Discovered in nginx configuration files'],
+            ['WHT-SSL', 'SSL Certificate Analysis Challenge - Find sensitive information in SSL configuration'],
+            ['WHT-NET', 'Network Configuration Challenge - Analyze network configuration and host files'],
+            ['WHT-CRON', 'Scheduled Tasks Analysis Challenge - Examine cron jobs and scheduled tasks'],
+            ['WHT-SUID', 'SUID Binary Security Challenge - Located in system binaries with elevated privileges'],
+            ['WHT-PROC', 'Process Information Challenge - Extract information from process environment data'],
+            ['WHT-TEMP', 'Temporary Files Analysis Challenge - Search temporary files for leaked information'],
             ['WHT-COMPL', 'Responsible Disclosure Completion Challenge - Final flag awarded upon successful disclosure']
         ]);
     }
@@ -298,7 +316,9 @@ export class DisclosureReportApp extends WindowBase {
                 }
 
                 // Check if all flags are discovered
-                if (this.submittedFlags.size === 7) {
+                const flagSelect = this.windowElement.querySelector('#flag-number');
+                const totalFlags = Math.max(flagSelect ? flagSelect.options.length - 1 : 7, 7); // Fallback to 7 minimum
+                if (this.submittedFlags.size >= totalFlags) {
                     this.handleAssessmentComplete();
                 }
 
@@ -353,7 +373,11 @@ export class DisclosureReportApp extends WindowBase {
         const statusIndicator = this.windowElement.querySelector('#status-indicator');
 
         const discovered = this.submittedFlags.size;
-        const total = 7;
+        
+        // Get total from the number of options in the dropdown (minus the "Select Challenge" option)
+        const flagSelect = this.windowElement.querySelector('#flag-number');
+        const total = Math.max(flagSelect ? flagSelect.options.length - 1 : 7, 7); // Fallback to 7 minimum
+        
         const percentage = (discovered / total) * 100;
 
         progressCount.textContent = `${discovered}/${total}`;
@@ -363,7 +387,7 @@ export class DisclosureReportApp extends WindowBase {
         if (discovered === 0) {
             statusIndicator.className = 'px-2 py-1 bg-yellow-600 text-yellow-100 rounded-sm';
             statusIndicator.textContent = 'In Progress';
-        } else if (discovered < 7) {
+        } else if (discovered < total) {
             statusIndicator.className = 'px-2 py-1 bg-blue-600 text-blue-100 rounded-sm';
             statusIndicator.textContent = 'Active Assessment';
         } else {
