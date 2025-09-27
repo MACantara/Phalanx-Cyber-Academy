@@ -420,8 +420,8 @@ def load_ctf_flags():
         return None
 
 def get_selected_flags():
-    """Get 7 randomly selected flags"""
-    # Generate new random selection for each request
+    """Get 7 randomly selected flags - truly random for each request"""
+    # Generate new random selection for each request (no caching)
     flags_data = load_ctf_flags()
     if not flags_data:
         return []
@@ -741,6 +741,24 @@ def get_mission_brief():
         return jsonify({
             'success': False,
             'error': str(e)
+        }), 500
+
+@level4_api_bp.route('/clear-session-flags', methods=['POST'])
+def clear_session_flags():
+    """Clear cached session flags (for testing/development) - No longer needed as no caching is used"""
+    try:
+        # No cache to clear since we removed caching for true randomization
+        return jsonify({
+            'success': True,
+            'message': 'No cache to clear - flags are generated fresh for each request',
+            'cache_cleared': False,
+            'note': 'Caching was removed to ensure truly random flag selection'
+        }), 200
+    except Exception as e:
+        print(f"Error in clear_session_flags: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Failed to process request'
         }), 500
 
 @level4_api_bp.route('/calculate-xp', methods=['POST'])
