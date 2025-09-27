@@ -151,7 +151,7 @@ export class Level4ChallengeTracker {
                         </select>
                     </div>
                     ${currentChallenge ? `
-                        <div class="bg-gray-700 rounded p-3 ${this.foundFlagIds.has(currentChallenge.id) ? 'ring-2 ring-green-400 bg-green-900 bg-opacity-20' : ''}">
+                        <div class="bg-gray-700 rounded p-3 ${this.foundFlagIds.has(currentChallenge.id) ? 'ring-2 ring-green-400 bg-green-900/20' : ''}">
                             <div class="flex items-center mb-2">
                                 <div class="flex items-center mr-2">
                                     ${this.foundFlagIds.has(currentChallenge.id) ? 
