@@ -32,9 +32,8 @@ export class EmailSecurityCompletionDialogue extends BaseDialogue {
         localStorage.setItem('cyberquest_level_2_completed', 'true');
         localStorage.setItem('cyberquest_current_level', '3');
         
-        // Award XP and badges
-        const currentXP = parseInt(localStorage.getItem('cyberquest_xp_cybersecurity') || '0');
-        localStorage.setItem('cyberquest_xp_cybersecurity', (currentXP + 150).toString());
+        // End the current session with the backend
+        await this.endCurrentSession();
         
         const badges = JSON.parse(localStorage.getItem('cyberquest_badges') || '[]');
         if (!badges.includes('email-security-expert')) {
@@ -45,19 +44,89 @@ export class EmailSecurityCompletionDialogue extends BaseDialogue {
         // Show email session summary (if session data passed via options, use it)
         this.showEmailSessionSummary(this.options || {});
         
-        // Navigate back to main dashboard after a delay
+        // Navigate back to levels overview after a delay
         setTimeout(() => {
             if (this.desktop?.windowManager) {
                 try {
                     const browserApp = this.desktop.windowManager.applications.get('browser');
                     if (browserApp) {
-                        browserApp.navigation.navigateToUrl('https://cyberquest.com');
+                        browserApp.navigation.navigateToUrl('/levels');
                     }
                 } catch (error) {
-                    console.error('Failed to navigate to dashboard:', error);
+                    console.error('Failed to navigate to levels overview:', error);
+                    window.location.href = '/levels';
                 }
+            } else {
+                window.location.href = '/levels';
             }
         }, 1000);
+    }
+
+    /**
+     * End the current session with backend
+     */
+    async endCurrentSession() {
+        try {
+            const sessionId = this.getActiveSessionId();
+            
+            if (!sessionId) {
+                console.warn('[Level2Completion] No session ID available - cannot end session');
+                return;
+            }
+
+            // Calculate Level 2 performance score
+            const emailTrainingScore = parseInt(localStorage.getItem('cyberquest_email_training_score') || '0');
+            
+            const sessionEndData = {
+                session_id: sessionId,
+                score: emailTrainingScore
+            };
+
+            console.log('[Level2Completion] Ending session:', sessionEndData);
+
+            const response = await fetch('/levels/api/session/end', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify(sessionEndData)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('[Level2Completion] Session ended successfully:', result);
+                
+                // Clear session from storage
+                localStorage.removeItem('cyberquest_active_session_id');
+                sessionStorage.removeItem('active_session_id');
+                window.currentSessionId = null;
+                
+                return result;
+            } else {
+                console.error('[Level2Completion] Failed to end session:', response.status);
+            }
+        } catch (error) {
+            console.error('[Level2Completion] Error ending session:', error);
+        }
+    }
+
+    /**
+     * Get active session ID from storage
+     */
+    getActiveSessionId() {
+        const sessionId = localStorage.getItem('cyberquest_active_session_id') ||
+                         sessionStorage.getItem('active_session_id') ||
+                         window.currentSessionId;
+        
+        if (sessionId) {
+            const numericSessionId = parseInt(sessionId);
+            if (!isNaN(numericSessionId)) {
+                return numericSessionId;
+            }
+        }
+        
+        return null;
     }
 
     showEmailSessionSummary(options = {}) {
