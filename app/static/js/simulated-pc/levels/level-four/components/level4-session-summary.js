@@ -1,4 +1,4 @@
-import { BaseModalComponent } from '../../shared/base-modal-component.js';
+import { BaseModalComponent } from '../../../shared/base-modal-component.js';
 
 export class Level4SessionSummary extends BaseModalComponent {
     constructor(challengeTracker = null) {
@@ -64,11 +64,6 @@ export class Level4SessionSummary extends BaseModalComponent {
         const modalContent = this.createSummaryContent();
         this.showModal('Level 4: White Hat Test - Assessment Complete', modalContent);
         
-        // Auto-close after 15 seconds and navigate
-        setTimeout(() => {
-            this.closeModal();
-            this.navigateToLevels();
-        }, 15000);
     }
 
     createSummaryContent() {
@@ -170,12 +165,6 @@ export class Level4SessionSummary extends BaseModalComponent {
                             <span>View Profile</span>
                         </button>
                     </div>
-                </div>
-
-                <!-- Auto-close notice -->
-                <div class="text-center mt-4 text-xs text-gray-500">
-                    <i class="bi bi-clock mr-1"></i>
-                    This summary will automatically close in 15 seconds
                 </div>
             </div>
         `;
