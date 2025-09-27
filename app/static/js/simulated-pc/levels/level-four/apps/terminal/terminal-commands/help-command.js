@@ -38,7 +38,84 @@ export class HelpCommand extends BaseCommand {
         this.showGeneralHelp();
     }
 
-    showGeneralHelp() {
+    async showGeneralHelp() {
+        let headerLines = [
+            'The White Hat Test - Responsible Disclosure CTF',
+            '==============================================',
+            '',
+            'MISSION: Find 7 randomly selected hidden flags and complete a responsible disclosure report',
+            '',
+            'Available commands (use "help <command>" for detailed information):',
+            ''
+        ];
+
+        try {
+            // Load CTF configuration from API
+            const response = await fetch('/api/level4/flags-config');
+            const configData = await response.json();
+            
+            if (configData.success) {
+                const ctfConfig = configData.ctf_config;
+                const selectedFlags = ctfConfig.selected_flags || [];
+                
+                // Update mission description with dynamic flag count
+                headerLines[3] = `MISSION: Find ${ctfConfig.flags_per_session || 7} randomly selected hidden flags and complete a responsible disclosure report`;
+                
+                // Add header
+                headerLines.forEach(line => this.addOutput(line));
+
+                // Get all registered commands and their info dynamically
+                const commandNames = this.processor.commandRegistry.getAllCommands().sort();
+                const maxNameLength = Math.max(...commandNames.map(name => name.length));
+
+                commandNames.forEach(commandName => {
+                    const commandInstance = this.processor.commandRegistry.getCommand(commandName);
+                    if (commandInstance) {
+                        const help = commandInstance.getHelp();
+                        const paddedName = commandName.padEnd(maxNameLength + 2);
+                        const description = help.description || 'No description available';
+                        
+                        this.addOutput(`  ${paddedName} - ${description}`);
+                    }
+                });
+
+                // Add dynamic CTF objectives based on selected flags
+                const footerLines = [
+                    '',
+                    'Current Session Challenges:',
+                ];
+
+                selectedFlags.forEach((flagId, index) => {
+                    const flagInfo = ctfConfig.flags[flagId];
+                    if (flagInfo) {
+                        footerLines.push(`  ${index + 1}. ${flagInfo.name}: ${flagInfo.challenge_question}`);
+                    }
+                });
+
+                footerLines.push(
+                    '',
+                    'Tips:',
+                    '  - Start by exploring your home directory with "ls -la"',
+                    '  - Check configuration files, logs, and hidden files',
+                    '  - Use find and grep to search for flags',
+                    '  - Read the mission brief with "cat mission_brief.txt"',
+                    '  - Use "hints" command for flag-specific guidance',
+                    '  - Use Tab for command, option, file, and folder completion',
+                    '  - Use ↑/↓ arrow keys to navigate command history'
+                );
+
+                footerLines.forEach(line => this.addOutput(line));
+            } else {
+                // Fallback to static help if API fails
+                this.showStaticHelp();
+            }
+        } catch (error) {
+            console.error('Error loading CTF configuration:', error);
+            this.showStaticHelp();
+        }
+    }
+
+    showStaticHelp() {
         const headerLines = [
             'The White Hat Test - Responsible Disclosure CTF',
             '==============================================',
@@ -71,7 +148,7 @@ export class HelpCommand extends BaseCommand {
         const footerLines = [
             '',
             'CTF Objectives:',
-            '  • Explore the system to find 7 hidden flags (FLAG-1 through FLAG-7)',
+            '  • Explore the system to find hidden flags',
             '  • Complete the responsible disclosure report using the desktop app',
             '  • Document your findings and recommendations',
             '  • Practice ethical security assessment techniques',
