@@ -215,6 +215,9 @@ export class TerminalApp extends WindowBase {
         const output = this.windowElement?.querySelector('#terminal-output');
         if (!output) return;
 
+        // Check for flag patterns in the output
+        this.checkForFlags(text);
+
         // Handle multi-line text by splitting on newlines
         const lines = text.split('\n');
         
@@ -289,6 +292,34 @@ export class TerminalApp extends WindowBase {
         const output = this.windowElement?.querySelector('#terminal-output');
         if (output) {
             output.scrollTop = output.scrollHeight;
+        }
+    }
+
+    // Check for CTF flags in terminal output and notify challenge tracker
+    checkForFlags(text) {
+        // Look for WHT{...} flag pattern
+        const flagPattern = /WHT\{[^}]+\}/g;
+        const matches = text.match(flagPattern);
+        
+        if (matches) {
+            matches.forEach(flag => {
+                console.log('[TerminalApp] Flag discovered in output:', flag);
+                
+                // Dispatch flag discovery event for challenge tracker
+                try {
+                    if (typeof window !== 'undefined' && window.dispatchEvent) {
+                        window.dispatchEvent(new CustomEvent('level4-flag-discovered', {
+                            detail: {
+                                flag: flag,
+                                source: 'terminal',
+                                timestamp: Date.now()
+                            }
+                        }));
+                    }
+                } catch (error) {
+                    console.error('[TerminalApp] Error dispatching flag discovery event:', error);
+                }
+            });
         }
     }
 }
