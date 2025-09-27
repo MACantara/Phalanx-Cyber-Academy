@@ -14,7 +14,7 @@ export class TerminalApp extends WindowBase {
     createContent() {
         return `
             <div class="h-full bg-black text-green-400 font-mono text-sm p-3 flex flex-col" id="terminal-container">
-                <div class="flex-1 overflow-y-auto mb-3 space-y-1" id="terminal-output">
+                <div class="flex-1 overflow-y-auto mb-3 space-y-1 overflow-x-hidden" id="terminal-output">
                     <div class="text-green-400">Welcome to The White Hat Test - Responsible Disclosure CTF</div>
                     <div class="text-yellow-400">Your mission: Find 7 hidden flags and complete a responsible disclosure report</div>
                     <div class="text-gray-400">Type 'help' for available commands | Type 'cat mission_brief.txt' to read the full brief</div>
@@ -225,8 +225,9 @@ export class TerminalApp extends WindowBase {
             const processedText = lineText.replace(/\t/g, '    ');
             line.textContent = processedText;
             
-            // Preserve whitespace formatting for terminal output
-            line.style.whiteSpace = 'pre';
+            // Allow text wrapping while preserving whitespace structure
+            line.style.whiteSpace = 'pre-wrap';
+            line.style.wordBreak = 'break-word';
             
             if (className) {
                 switch (className) {
