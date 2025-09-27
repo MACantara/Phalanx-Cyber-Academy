@@ -72,7 +72,7 @@ export class HelpCommand extends BaseCommand {
             '',
             'CTF Objectives:',
             '  • Explore the system to find 7 hidden flags (FLAG-1 through FLAG-7)',
-            '  • Complete the responsible disclosure report in ~/disclosure_report.md',
+            '  • Complete the responsible disclosure report using the desktop app',
             '  • Document your findings and recommendations',
             '  • Practice ethical security assessment techniques',
             '',
