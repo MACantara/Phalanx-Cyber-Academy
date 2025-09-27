@@ -9,18 +9,12 @@ from app.models.level import Level
 
 level4_api_bp = Blueprint('level4_api', __name__, url_prefix='/api/level4')
 
-# Cache for JSON data to avoid reading files multiple times
 _json_cache = None
-_session_flags_cache = {}  # Cache flags per session to maintain consistency
 
 def load_json_data():
-    """Load and cache the Level 4 CTF file system data"""
-    global _json_cache
-    if _json_cache is not None:
-        return _json_cache
-    
+    """Load Level 4 CTF file system data fresh each time"""
     try:
-        # Load the individual Level 4 JSON files
+        # Load the individual Level 4 JSON files fresh each time
         json_base_path = os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
             'app', 'static', 'js', 'simulated-pc', 'levels', 'level-four', 'data'
@@ -36,19 +30,17 @@ def load_json_data():
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 ctf_data = json.load(f)
-                print(f"Loaded: ctf-file-system.json")
+                print(f"Loaded fresh: ctf-file-system.json")
         except Exception as file_error:
             print(f"Error loading ctf-file-system.json: {file_error}")
             return {'fileSystem': {}}
-        # Cache the data
-        _json_cache = ctf_data
         
         file_count = len(ctf_data.get('fileSystem', {}))
         
-        print(f"Loaded Level 4 CTF file system data successfully")
+        print(f"Loaded Level 4 CTF file system data (no caching)")
         print(f"File system paths: {file_count}")
         
-        return _json_cache
+        return ctf_data
         
     except Exception as e:
         print(f"Error loading Level 4 CTF file system data: {e}")
@@ -420,7 +412,7 @@ def load_ctf_flags():
             
         with open(flags_file_path, 'r', encoding='utf-8') as f:
             flags_data = json.load(f)
-            print(f"Loaded CTF flags configuration")
+            print(f"Loaded fresh CTF flags configuration")
             return flags_data
             
     except Exception as e:
@@ -438,13 +430,6 @@ def get_selected_flags():
         session.get('user_id') or
         f"{request.remote_addr}_{hash(request.user_agent or '')}"
     )
-    
-    # Check if we already have flags for this session
-    if session_id in _session_flags_cache:
-        print(f"Using cached flags for session: {session_id[:20]}...")
-        return _session_flags_cache[session_id]
-    
-    # Generate new random selection for this session
     flags_data = load_ctf_flags()
     if not flags_data:
         return []
@@ -452,20 +437,10 @@ def get_selected_flags():
     all_flags = list(flags_data.get('ctf_flags', {}).get('flags', {}).keys())
     flags_per_session = flags_data.get('ctf_flags', {}).get('flags_per_session', 7)
     
-    # Randomly select flags for this session
+    # Randomly select flags for this request
     selected_flags = random.sample(all_flags, min(flags_per_session, len(all_flags)))
     
-    # Cache the selection for this session
-    _session_flags_cache[session_id] = selected_flags
-    
-    # Clean up old sessions (keep only last 100 to prevent memory issues)
-    if len(_session_flags_cache) > 100:
-        # Remove oldest entries
-        old_keys = list(_session_flags_cache.keys())[:-50]
-        for key in old_keys:
-            del _session_flags_cache[key]
-    
-    print(f"Generated new random flags for session {session_id[:20]}...: {selected_flags}")
+    print(f"Generated truly random flags for request: {selected_flags}")
     
     return selected_flags
 
