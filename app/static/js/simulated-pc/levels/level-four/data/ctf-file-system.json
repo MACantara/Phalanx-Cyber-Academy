@@ -31,7 +31,8 @@
           "type": "file",
           "content": "# ~/.bashrc: executed by bash(1) for non-login shells.\n\nexport PATH=$HOME/bin:/usr/local/bin:$PATH\nexport PS1='researcher@sandbox:$PWD$ '\n\n# WHT-ENV{enum_services_first} - Hidden in environment\nalias ll='ls -alF'\nalias la='ls -A'\nalias l='ls -CF'",
           "size": 312,
-          "hidden": true
+          "hidden": true,
+          "flag_ids": ["WHT-ENV"]
         },
         ".hidden_notes": {
           "type": "file",
@@ -39,7 +40,8 @@
           "size": 245,
           "hidden": true
         }
-      }
+      },
+      "always_visible": true
     },
     "/home/www-data": {
       "type": "directory",
@@ -58,21 +60,25 @@
           "type": "file",
           "content": "# Admin Environment Configuration\nDATABASE_URL=postgresql://admin:secret123@localhost:5432/techcorp\nSECRET_KEY=super-secret-key-for-flask-app\nFLAG_4=WHT-ENV2{environment_variables_leak_secrets}\nADMIN_EMAIL=admin@techcorp.local\nDEBUG=true",
           "size": 234,
-          "hidden": true
+          "hidden": true,
+          "flag_ids": ["WHT-ENV2"]
         },
         "backup_script.sh": {
           "type": "file",
           "content": "#!/bin/bash\n# Daily backup script\n# Run: 0 2 * * * /home/admin/backup_script.sh\n# WHT-BACKUP{backup_script_analysis} - Found in admin automation\n\nBACKUP_DIR=\"/var/backups/daily\"\nDATE=$(date +%Y%m%d)\n\n# Create backup directory\nmkdir -p $BACKUP_DIR\n\n# Backup web files\ntar -czf $BACKUP_DIR/web_$DATE.tar.gz /var/www/html/\n\n# Backup database\npg_dump techcorp > $BACKUP_DIR/db_$DATE.sql\n\necho \"Backup completed: $DATE\"",
           "size": 387,
-          "permissions": "755"
+          "permissions": "755",
+          "flag_ids": ["WHT-BACKUP"]
         },
         ".bash_history": {
           "type": "file",
           "content": "ls -la\ncat /etc/passwd\nmysql -u root -p\n# Accidentally typed password: admin123\n# WHT-HIST{command_history_forensics}\nfind / -name '*.conf'\ngrep -r 'password' /etc/\nsudo systemctl restart nginx\nhistory | grep mysql\nclear",
           "size": 234,
-          "hidden": true
+          "hidden": true,
+          "flag_ids": ["WHT-HIST"]
         }
-      }
+      },
+      "flag_ids": ["WHT-ENV2", "WHT-BACKUP", "WHT-HIST"]
     },
     "/var": {
       "type": "directory",
@@ -93,7 +99,8 @@
         "index.html": {
           "type": "file",
           "content": "<!DOCTYPE html>\n<html>\n<head>\n    <title>TechCorp Web Application</title>\n</head>\n<body>\n    <h1>Welcome to TechCorp</h1>\n    <p>Secure Web Application v2.1</p>\n    <!-- WHT-SRC{source_code_comments} - Check the source! -->\n    <p>Please login to continue.</p>\n</body>\n</html>",
-          "size": 287
+          "size": 287,
+          "flag_ids": ["WHT-SRC"]
         },
         "admin": {
           "type": "directory",
@@ -101,14 +108,16 @@
             "config.php": {
               "type": "file",
               "content": "<?php\n// Admin panel configuration\ndefine('DB_HOST', 'localhost');\ndefine('DB_USER', 'admin');\ndefine('DB_PASS', 'weakpassword123');\ndefine('DB_NAME', 'techcorp');\n\n// Security note: This should be in environment variables!\n// WHT-DB{database_credentials_found}\n\n$admin_key = 'admin_secret_2024';\n?>",
-              "size": 298
+              "size": 298,
+              "flag_ids": ["WHT-DB"]
             },
             "login.php": {
               "type": "file",
               "content": "<?php\nrequire_once 'config.php';\n\nif ($_POST['username'] && $_POST['password']) {\n    // Vulnerable to SQL injection - needs fixing\n    $query = \"SELECT * FROM users WHERE username='\" . $_POST['username'] . \"' AND password='\" . $_POST['password'] . \"'\";\n    // This is a security issue - parameterized queries needed\n}\n?>",
               "size": 289
             }
-          }
+          },
+          "flag_ids": ["WHT-DB"]
         },
         "uploads": {
           "type": "directory",
@@ -120,7 +129,8 @@
             }
           }
         }
-      }
+      },
+      "flag_ids": ["WHT-SRC", "WHT-DB"]
     },
     "/etc": {
       "type": "directory",
@@ -135,7 +145,8 @@
         "hosts": {
           "type": "file",
           "content": "127.0.0.1\tlocalhost\n127.0.1.1\tsandbox\n192.168.1.100\ttechcorp-db\n192.168.1.101\ttechcorp-api\n# WHT-NET{network_configuration_analysis} - Internal network mapping\n10.0.0.5\tinternal-vpn\n172.16.1.10\tadmin-workstation",
-          "size": 189
+          "size": 189,
+          "flag_ids": ["WHT-NET"]
         },
         "resolv.conf": {
           "type": "file",
@@ -145,9 +156,11 @@
         "crontab": {
           "type": "file",
           "content": "# /etc/crontab: system-wide crontab\n# WHT-CRON{scheduled_task_discovery}\nSHELL=/bin/sh\nPATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n\n# m h dom mon dow user\tcommand\n17 *\t* * *\troot    cd / && run-parts --report /etc/cron.hourly\n25 6\t* * *\troot\ttest -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )\n47 6\t* * 7\troot\ttest -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )\n52 6\t1 * *\troot\ttest -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )\n0 2\t* * *\tadmin\t/home/admin/backup_script.sh",
-          "size": 567
+          "size": 567,
+          "flag_ids": ["WHT-CRON"]
         }
-      }
+      },
+      "flag_ids": ["WHT-NET", "WHT-CRON", "WHT-CFG", "WHT-SSL"]
     },
     "/etc/ssl": {
       "type": "directory",
@@ -163,9 +176,11 @@
           "type": "file",
           "content": "-----BEGIN PRIVATE KEY-----\n# WHT-SSL{ssl_certificate_analysis}\n# This is a sample SSL private key file\n# In production, never expose private keys!\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC7VJTUt9Us8cKB\nwwdwuTn3sNrPYc4Pq6f+jY1vV6PpNK7VmrYz9yU7NkKr+OjXNbqKrO1Og5WqL5O\n-----END PRIVATE KEY-----\n",
           "size": 345,
-          "permissions": "600"
+          "permissions": "600",
+          "flag_ids": ["WHT-SSL"]
         }
-      }
+      },
+      "flag_ids": ["WHT-SSL"]
     },
     "/proc": {
       "type": "directory",
@@ -179,9 +194,11 @@
         "environ": {
           "type": "file",
           "content": "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nHOME=/root\nLOGNAME=root\nUSER=root\nSHELL=/bin/bash\n# WHT-PROC{process_memory_analysis}\nSECRET_TOKEN=proc_env_secret_12345",
-          "size": 187
+          "size": 187,
+          "flag_ids": ["WHT-PROC"]
         }
-      }
+      },
+      "flag_ids": ["WHT-PROC"]
     },
     "/etc/nginx": {
       "type": "directory",
@@ -189,7 +206,8 @@
         "nginx.conf": {
           "type": "file",
           "content": "user www-data;\nworker_processes auto;\npid /run/nginx.pid;\n\nevents {\n    worker_connections 768;\n}\n\nhttp {\n    # Basic configuration\n    sendfile on;\n    tcp_nopush on;\n    \n    # Security headers missing - needs improvement\n    # add_header X-Frame-Options DENY;\n    # add_header X-Content-Type-Options nosniff;\n    \n    # WHT-CFG{nginx_config_review} - Found in server config\n    \n    include /etc/nginx/sites-enabled/*;\n}",
-          "size": 398
+          "size": 398,
+          "flag_ids": ["WHT-CFG"]
         },
         "sites-available": {
           "type": "directory",
@@ -201,7 +219,8 @@
             }
           }
         }
-      }
+      },
+      "flag_ids": ["WHT-CFG"]
     },
     "/var/log": {
       "type": "directory",
@@ -225,14 +244,16 @@
         "access.log": {
           "type": "file",
           "content": "192.168.1.100 - - [27/Sep/2025:08:00:00 +0000] \"GET / HTTP/1.1\" 200 287\n192.168.1.101 - - [27/Sep/2025:08:15:23 +0000] \"GET /admin HTTP/1.1\" 200 156\n192.168.1.102 - - [27/Sep/2025:08:30:45 +0000] \"POST /admin/login.php HTTP/1.1\" 302 0\n# WHT-LOG{log_files_reveal_activity} - Check the access patterns\n192.168.1.103 - - [27/Sep/2025:09:00:12 +0000] \"GET /admin/config.php HTTP/1.1\" 403 0\n",
-          "size": 445
+          "size": 445,
+          "flag_ids": ["WHT-LOG"]
         },
         "error.log": {
           "type": "file",
           "content": "2025/09/27 08:30:45 [error] 1234#0: *1 access forbidden by rule, client: 192.168.1.103, server: _, request: \"GET /admin/config.php HTTP/1.1\"\n2025/09/27 09:00:12 [warn] 1234#0: *2 security headers missing in response\n2025/09/27 09:15:30 [error] 1234#0: *3 SQL injection attempt detected in request\n",
           "size": 367
         }
-      }
+      },
+      "flag_ids": ["WHT-LOG"]
     },
     "/usr": {
       "type": "directory",
@@ -253,7 +274,8 @@
           "type": "file",
           "content": "#!/bin/bash\n# System backup utility\n# WHT-SUID{suid_binary_analysis} - Check file permissions\n\n# This script has SUID bit set - potential security issue\nif [ \"$EUID\" -eq 0 ]; then\n    echo \"Running with root privileges\"\n    # Backup operations here\n    tar -czf /tmp/system_backup.tar.gz /etc/ /var/log/\nelse\n    echo \"Backup requires root privileges\"\nfi",
           "size": 378,
-          "permissions": "4755"
+          "permissions": "4755",
+          "flag_ids": ["WHT-SUID"]
         },
         "security_scan.sh": {
           "type": "file",
@@ -261,7 +283,8 @@
           "size": 334,
           "permissions": "755"
         }
-      }
+      },
+      "flag_ids": ["WHT-SUID"]
     },
     "/tmp": {
       "type": "directory",
@@ -269,14 +292,17 @@
         "ctf_completion.txt": {
           "type": "file",
           "content": "Congratulations!\n===============\n\nYou have successfully completed The White Hat Test!\n\nWHT-COMPL{responsible_disclosure_complete}\n\nRemember:\n- Always follow responsible disclosure practices\n- Document findings thoroughly\n- Provide clear remediation steps\n- Respect system boundaries and permissions\n\nThank you for participating in ethical security research!",
-          "size": 356
+          "size": 356,
+          "flag_ids": ["WHT-COMPL"]
         },
         "debug.log": {
           "type": "file",
           "content": "2025-09-27 08:00:01 - Application started\n2025-09-27 08:15:23 - Database connection established\n2025-09-27 08:30:45 - User login attempt: admin\n2025-09-27 09:00:12 - WHT-TEMP{temporary_files_investigation}\n2025-09-27 09:15:30 - Backup process initiated\n2025-09-27 09:30:00 - Security scan completed",
-          "size": 287
+          "size": 287,
+          "flag_ids": ["WHT-TEMP"]
         }
-      }
+      },
+      "flag_ids": ["WHT-COMPL", "WHT-TEMP"]
     }
   }
 }
