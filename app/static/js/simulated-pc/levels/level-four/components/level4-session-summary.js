@@ -399,7 +399,7 @@ export class Level4SessionSummary extends BaseModalComponent {
     async showShutdownSequenceAndNavigateToLevel5() {
         try {
             // Import shutdown sequence
-            const { ShutdownSequence } = await import('../../shutdown-sequence.js');
+            const { ShutdownSequence } = await import('../../../shutdown-sequence.js');
             
             // Create shutdown overlay
             const shutdownOverlay = document.createElement('div');
@@ -428,7 +428,7 @@ export class Level4SessionSummary extends BaseModalComponent {
     async showShutdownSequenceAndNavigate() {
         try {
             // Import shutdown sequence
-            const { ShutdownSequence } = await import('../../shutdown-sequence.js');
+            const { ShutdownSequence } = await import('../../../shutdown-sequence.js');
             
             // Create shutdown overlay
             const shutdownOverlay = document.createElement('div');
@@ -453,17 +453,46 @@ export class Level4SessionSummary extends BaseModalComponent {
 
     async submitToBackend() {
         try {
-            // Prepare completion data for the existing API
+            const sessionId = this.getActiveSessionId();
+            
+            if (!sessionId) {
+                console.warn('[Level4Summary] No session ID available - cannot submit to backend');
+                return null;
+            }
+
+            // First, end the session with score and completion data
+            const sessionEndData = {
+                session_id: sessionId,
+                score: 100 // Perfect score for completing all flags
+            };
+
+            const sessionEndResponse = await fetch('/levels/api/session/end', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify(sessionEndData)
+            });
+
+            let sessionResult = null;
+            if (sessionEndResponse.ok) {
+                sessionResult = await sessionEndResponse.json();
+                console.log('[Level4Summary] Session ended successfully:', sessionResult);
+            } else {
+                console.warn('[Level4Summary] Failed to end session:', sessionEndResponse.status);
+            }
+
+            // Then complete the level to record progress and award XP
             const completionData = {
                 score: 100, // Perfect score for completing all flags
-                session_id: this.getActiveSessionId(),
+                session_id: sessionId,
                 completion_time: this.calculateDuration(),
                 flags_found: this.sessionData.flagsFound,
                 total_flags: this.sessionData.totalFlags
             };
 
-            // Submit to the existing level completion endpoint
-            const response = await fetch('/api/levels/complete/4', {
+            const completionResponse = await fetch('/levels/api/complete/4', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -472,23 +501,37 @@ export class Level4SessionSummary extends BaseModalComponent {
                 body: JSON.stringify(completionData)
             });
 
-            if (response.ok) {
-                const result = await response.json();
-                console.log('[Level4Summary] Level completed successfully:', result);
+            if (completionResponse.ok) {
+                const completionResult = await completionResponse.json();
+                console.log('[Level4Summary] Level completed successfully:', completionResult);
                 
-                // Update XP display if we got the actual XP earned
-                if (result.xp_earned && result.xp_earned !== this.sessionData.xpEarned) {
-                    this.sessionData.xpEarned = result.xp_earned;
+                // Update XP display with the actual XP earned from completion
+                if (completionResult.xp_earned && completionResult.xp_earned !== this.sessionData.xpEarned) {
+                    this.sessionData.xpEarned = completionResult.xp_earned;
+                    
+                    // Update the displayed XP value in real-time
+                    const xpDisplay = document.querySelector('#level4-summary-modal .text-yellow-400');
+                    if (xpDisplay) {
+                        xpDisplay.textContent = completionResult.xp_earned;
+                    }
                 }
                 
-                return result;
+                // Clear the active session since it's now completed
+                localStorage.removeItem('cyberquest_active_session_id');
+                sessionStorage.removeItem('active_session_id');
+                window.currentSessionId = null;
+                
+                return {
+                    session: sessionResult,
+                    completion: completionResult
+                };
             } else {
-                console.warn('[Level4Summary] Failed to complete level:', response.status);
-                return null;
+                console.warn('[Level4Summary] Failed to complete level:', completionResponse.status);
+                return { session: sessionResult, completion: null };
             }
 
         } catch (error) {
-            console.error('[Level4Summary] Error completing level:', error);
+            console.error('[Level4Summary] Error submitting to backend:', error);
             // Continue with local cleanup even if backend submission fails
             return null;
         }
@@ -500,11 +543,23 @@ export class Level4SessionSummary extends BaseModalComponent {
                          sessionStorage.getItem('active_session_id') ||
                          window.currentSessionId;
         
+        console.log('[Level4Summary] Session ID debugging:', {
+            localStorage_session: localStorage.getItem('cyberquest_active_session_id'),
+            sessionStorage_session: sessionStorage.getItem('active_session_id'),
+            window_session: window.currentSessionId,
+            resolved_session: sessionId
+        });
+        
         if (sessionId) {
-            return parseInt(sessionId);
+            const numericSessionId = parseInt(sessionId);
+            if (isNaN(numericSessionId)) {
+                console.warn('[Level4Summary] Session ID is not numeric:', sessionId);
+                return null;
+            }
+            return numericSessionId;
         }
         
-        console.warn('[Level4Summary] No active session ID found');
+        console.warn('[Level4Summary] No active session ID found - session may not have been started properly');
         return null;
     }
 
@@ -517,8 +572,19 @@ export class Level4SessionSummary extends BaseModalComponent {
             window.level4SessionSummary.setupTrackerIntegration(challengeTracker);
         }
         
-        // Submit session data to backend
-        window.level4SessionSummary.submitToBackend();
+        // Submit session data to backend immediately
+        console.log('[Level4Summary] Attempting to submit completion data to backend...');
+        window.level4SessionSummary.submitToBackend()
+            .then(result => {
+                if (result) {
+                    console.log('[Level4Summary] Backend submission successful:', result);
+                } else {
+                    console.warn('[Level4Summary] Backend submission failed or returned null');
+                }
+            })
+            .catch(error => {
+                console.error('[Level4Summary] Backend submission error:', error);
+            });
         
         // Show the summary modal
         window.level4SessionSummary.showSessionSummary(completionStats);
