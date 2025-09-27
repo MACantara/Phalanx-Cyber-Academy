@@ -460,7 +460,7 @@ export class Level4SessionSummary extends BaseModalComponent {
                 return null;
             }
 
-            // First, end the session with score and completion data
+            // End the session with score and completion data
             const sessionEndData = {
                 session_id: sessionId,
                 score: 100 // Perfect score for completing all flags
@@ -475,44 +475,18 @@ export class Level4SessionSummary extends BaseModalComponent {
                 body: JSON.stringify(sessionEndData)
             });
 
-            let sessionResult = null;
             if (sessionEndResponse.ok) {
-                sessionResult = await sessionEndResponse.json();
+                const sessionResult = await sessionEndResponse.json();
                 console.log('[Level4Summary] Session ended successfully:', sessionResult);
-            } else {
-                console.warn('[Level4Summary] Failed to end session:', sessionEndResponse.status);
-            }
-
-            // Then complete the level to record progress and award XP
-            const completionData = {
-                score: 100, // Perfect score for completing all flags
-                session_id: sessionId,
-                completion_time: this.calculateDuration(),
-                flags_found: this.sessionData.flagsFound,
-                total_flags: this.sessionData.totalFlags
-            };
-
-            const completionResponse = await fetch('/levels/api/complete/4', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                },
-                body: JSON.stringify(completionData)
-            });
-
-            if (completionResponse.ok) {
-                const completionResult = await completionResponse.json();
-                console.log('[Level4Summary] Level completed successfully:', completionResult);
                 
-                // Update XP display with the actual XP earned from completion
-                if (completionResult.xp_earned && completionResult.xp_earned !== this.sessionData.xpEarned) {
-                    this.sessionData.xpEarned = completionResult.xp_earned;
+                // Update XP display with the actual XP earned from session completion
+                if (sessionResult.xp_awarded && sessionResult.xp_awarded !== this.sessionData.xpEarned) {
+                    this.sessionData.xpEarned = sessionResult.xp_awarded;
                     
                     // Update the displayed XP value in real-time
                     const xpDisplay = document.querySelector('#level4-summary-modal .text-yellow-400');
                     if (xpDisplay) {
-                        xpDisplay.textContent = completionResult.xp_earned;
+                        xpDisplay.textContent = sessionResult.xp_awarded;
                     }
                 }
                 
@@ -521,13 +495,16 @@ export class Level4SessionSummary extends BaseModalComponent {
                 sessionStorage.removeItem('active_session_id');
                 window.currentSessionId = null;
                 
-                return {
-                    session: sessionResult,
-                    completion: completionResult
-                };
+                // Mark Level 4 as completed in localStorage
+                localStorage.setItem('cyberquest_level_4_completed', 'true');
+                localStorage.setItem('cyberquest_level_4_completion_time', Date.now());
+                
+                return sessionResult;
             } else {
-                console.warn('[Level4Summary] Failed to complete level:', completionResponse.status);
-                return { session: sessionResult, completion: null };
+                console.warn('[Level4Summary] Failed to end session:', sessionEndResponse.status);
+                const errorText = await sessionEndResponse.text();
+                console.error('[Level4Summary] Error details:', errorText);
+                return null;
             }
 
         } catch (error) {
