@@ -116,9 +116,15 @@ export class Level4ChallengeTracker {
                         <i class="bi bi-flag text-yellow-400"></i>
                         <span>WHITE HAT TEST</span>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-xs bg-blue-800 px-2 py-1 rounded">${progress}</span>
-                        <i class="bi bi-chevron-up text-gray-300"></i>
+                    <div class="flex flex-col items-end space-y-1">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs bg-blue-800 px-2 py-1 rounded">${progress}</span>
+                            <i class="bi bi-chevron-up text-gray-300"></i>
+                        </div>
+                        <div class="w-16 bg-gray-600 rounded-full h-1">
+                            <div class="bg-gradient-to-r from-blue-400 to-green-400 h-1 rounded-full transition-all duration-500" 
+                                 style="width: ${this.challenges.length > 0 ? (this.foundFlags.size / this.challenges.length) * 100 : 0}%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -130,19 +136,18 @@ export class Level4ChallengeTracker {
                             <i class="bi bi-search mr-1"></i>
                             Current Challenge
                         </div>
-                        <!-- Navigation arrows -->
+                        <!-- Challenge Dropdown -->
                         <div class="flex items-center space-x-1">
-                            <button onclick="window.level4ChallengeTracker?.previousChallenge()" 
-                                    class="h-6 w-6 bg-gray-600 hover:bg-gray-500 rounded text-xs flex items-center justify-center transition-colors"
-                                    title="Previous Challenge">
-                                <i class="bi bi-chevron-left"></i>
-                            </button>
-                            <span class="text-xs px-2">${this.currentChallengeIndex + 1}/${this.challenges.length}</span>
-                            <button onclick="window.level4ChallengeTracker?.nextChallenge()" 
-                                    class="h-6 w-6 bg-gray-600 hover:bg-gray-500 rounded text-xs flex items-center justify-center transition-colors"
-                                    title="Next Challenge">
-                                <i class="bi bi-chevron-right"></i>
-                            </button>
+                            <select onchange="window.level4ChallengeTracker?.selectChallenge(parseInt(this.value))" 
+                                    class="text-xs bg-gray-600 text-white rounded px-2 py-1 border border-gray-500 focus:outline-none focus:border-blue-400"
+                                    value="${this.currentChallengeIndex}">
+                                ${this.challenges.map((challenge, index) => `
+                                    <option value="${index}" ${index === this.currentChallengeIndex ? 'selected' : ''}>
+                                        ${index + 1}. ${challenge.name || challenge.id || `Challenge ${index + 1}`}
+                                        ${this.foundFlags.has(challenge.value) ? ' ✓' : ''}
+                                    </option>
+                                `).join('')}
+                            </select>
                         </div>
                     </div>
                     ${currentChallenge ? `
@@ -171,54 +176,6 @@ export class Level4ChallengeTracker {
                             <div>Loading challenges...</div>
                         </div>
                     `}
-                </div>
-                
-                <!-- Challenge Grid Navigation -->
-                ${this.challenges.length > 1 ? `
-                    <div class="mb-3">
-                        <div class="text-sm font-semibold text-blue-300 mb-2">All Challenges</div>
-                        <div class="grid grid-cols-5 gap-1">
-                            ${this.challenges.map((challenge, index) => `
-                                <button class="challenge-nav-btn h-8 text-xs rounded transition-colors ${
-                                    this.foundFlags.has(challenge.value) ? 'bg-green-600 text-white' :
-                                    index === this.currentChallengeIndex ? 'bg-blue-600 text-white' :
-                                    'bg-gray-600 text-gray-300 hover:bg-gray-500'
-                                }" 
-                                onclick="window.level4ChallengeTracker?.selectChallenge(${index})"
-                                title="${challenge.name || `Challenge ${index + 1}`}: ${challenge.id || ''}">
-                                    ${this.foundFlags.has(challenge.value) ? 
-                                        '<i class="bi bi-check text-xs"></i>' : 
-                                        (index + 1)
-                                    }
-                                </button>
-                            `).join('')}
-                        </div>
-                    </div>
-                ` : ''}
-                
-                <!-- Progress Summary -->
-                <div class="border-t border-gray-600 pt-3 mb-3">
-                    <div class="flex justify-between items-center text-xs">
-                        <span class="text-gray-300">Progress:</span>
-                        <span class="${this.foundFlags.size === this.challenges.length ? 'text-green-400' : 'text-blue-400'} font-semibold">
-                            ${progress} flags found
-                        </span>
-                    </div>
-                    <div class="w-full bg-gray-600 rounded-full h-2 mt-1">
-                        <div class="bg-gradient-to-r from-blue-400 to-green-400 h-2 rounded-full transition-all duration-500" 
-                             style="width: ${this.challenges.length > 0 ? (this.foundFlags.size / this.challenges.length) * 100 : 0}%"></div>
-                    </div>
-                </div>
-                
-                <!-- Quick Commands -->
-                <div class="mb-3 text-xs">
-                    <div class="text-gray-400 mb-1">Quick commands:</div>
-                    <div class="bg-gray-700 rounded p-2 font-mono text-xs">
-                        help - Show all challenges<br>
-                        ls -la - List files<br>
-                        cat &lt;file&gt; - Read file content<br>
-                        find / -name "*" - Search files
-                    </div>
                 </div>
                 
                 <!-- Disclosure Report Button -->
