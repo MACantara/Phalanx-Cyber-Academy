@@ -189,7 +189,7 @@ export class Level4ChallengeTracker {
                         <input 
                             type="text" 
                             id="flag-input-${this.id}" 
-                            placeholder="Enter flag (e.g., WHT{example})"
+                            placeholder="Enter flag (e.g., WHT-ENV{example})"
                             class="w-full text-xs bg-gray-600 text-white rounded px-2 py-1 border border-gray-500 focus:outline-none focus:border-blue-400"
                             onkeypress="if(event.key==='Enter') window.level4ChallengeTracker?.submitCurrentFlag()"
                         />
