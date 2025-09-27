@@ -307,6 +307,26 @@ def load_ctf_flags():
         print(f"Error loading CTF flags: {e}")
         return None
 
+def get_selected_flags():
+    """Get 7 randomly selected flags for the current session"""
+    # Use a session-based seed for consistency within a session
+    # In production, this could be tied to user session or stored in database
+    session_seed = request.args.get('session_seed', '12345')
+    random.seed(session_seed)
+    
+    flags_data = load_ctf_flags()
+    if not flags_data:
+        return []
+    
+    all_flags = list(flags_data.get('ctf_flags', {}).get('flags', {}).keys())
+    flags_per_session = flags_data.get('ctf_flags', {}).get('flags_per_session', 7)
+    
+    # Randomly select flags for this session
+    selected_flags = random.sample(all_flags, min(flags_per_session, len(all_flags)))
+    print(f"Selected flags for session: {selected_flags}")
+    
+    return selected_flags
+
 @level4_api_bp.route('/validate-flag', methods=['POST'])
 def validate_flag():
     """Validate a CTF flag submission"""
@@ -333,22 +353,17 @@ def validate_flag():
         # Load flags dynamically from JSON
         flags_data = load_ctf_flags()
         if not flags_data:
-            # Fallback to hardcoded flags if JSON fails
-            correct_flags = {
-                'FLAG-1': 'FLAG-1{enum_services_first}',
-                'FLAG-2': 'FLAG-2{source_code_comments}',
-                'FLAG-3': 'FLAG-3{nginx_config_review}',
-                'FLAG-4': 'FLAG-4{environment_variables_leak_secrets}',
-                'FLAG-5': 'FLAG-5{suid_binary_analysis}',
-                'FLAG-6': 'FLAG-6{log_files_reveal_activity}',
-                'FLAG-7': 'FLAG-7{responsible_disclosure_complete}'
-            }
-        else:
-            # Extract flag values from loaded JSON
-            flags_config = flags_data.get('ctf_flags', {}).get('flags', {})
-            correct_flags = {}
-            for flag_id, flag_info in flags_config.items():
-                correct_flags[flag_id] = flag_info.get('value', '')
+            return jsonify({
+                'success': False,
+                'error': 'Unable to load flag configuration',
+                'is_valid': False
+            }), 500
+        
+        # Extract flag values from loaded JSON
+        flags_config = flags_data.get('ctf_flags', {}).get('flags', {})
+        correct_flags = {}
+        for flag_id, flag_info in flags_config.items():
+            correct_flags[flag_id] = flag_info.get('value', '')
         
         # Validate flag
         is_valid = False
@@ -368,7 +383,7 @@ def validate_flag():
         if is_valid and flags_data:
             flag_info = flags_data.get('ctf_flags', {}).get('flags', {}).get(flag_number, {})
             if flag_info:
-                response_data['description'] = flag_info.get('description', '')
+                response_data['description'] = flag_info.get('challenge_question', '')
                 response_data['category'] = flag_info.get('category', '')
         
         return jsonify(response_data), 200
@@ -393,30 +408,38 @@ def get_flags_config():
                 'error': 'Failed to load flags configuration'
             }), 500
         
+        # Get selected flags for this session
+        selected_flag_ids = get_selected_flags()
+        
         # Return config without actual flag values for security
         ctf_config = flags_data.get('ctf_flags', {})
         safe_config = {
             'challenge_name': ctf_config.get('challenge_name', ''),
             'challenge_description': ctf_config.get('challenge_description', ''),
-            'total_flags': ctf_config.get('total_flags', 7),
+            'total_flags_available': ctf_config.get('total_flags_available', 15),
+            'flags_per_session': ctf_config.get('flags_per_session', 7),
+            'selected_flags': selected_flag_ids,
             'flags': {},
             'scoring': ctf_config.get('scoring', {}),
             'metadata': ctf_config.get('metadata', {})
         }
         
-        # Include flag info but exclude actual values
-        for flag_id, flag_info in ctf_config.get('flags', {}).items():
-            safe_config['flags'][flag_id] = {
-                'id': flag_info.get('id'),
-                'name': flag_info.get('name'),
-                'description': flag_info.get('description'),
-                'category': flag_info.get('category'),
-                'difficulty': flag_info.get('difficulty'),
-                'hints': flag_info.get('hints', []),
-                'discovery_commands': flag_info.get('discovery_commands', []),
-                'learning_objectives': flag_info.get('learning_objectives', [])
-                # Exclude 'value' for security
-            }
+        # Include only selected flag info but exclude actual values
+        all_flags = ctf_config.get('flags', {})
+        for flag_id in selected_flag_ids:
+            if flag_id in all_flags:
+                flag_info = all_flags[flag_id]
+                safe_config['flags'][flag_id] = {
+                    'id': flag_info.get('id'),
+                    'name': flag_info.get('name'),
+                    'challenge_question': flag_info.get('challenge_question', ''),
+                    'category': flag_info.get('category'),
+                    'difficulty': flag_info.get('difficulty'),
+                    'hints': flag_info.get('hints', []),
+                    'discovery_commands': flag_info.get('discovery_commands', []),
+                    'learning_objectives': flag_info.get('learning_objectives', [])
+                    # Exclude 'value' for security
+                }
         
         return jsonify({
             'success': True,
