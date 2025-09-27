@@ -17,7 +17,7 @@ export class CommandProcessor {
         this.tabCompletion = new TabCompletion(this);
     }
 
-    executeCommand(commandLine) {
+    async executeCommand(commandLine) {
         if (!commandLine.trim()) return;
 
         this.history.addCommand(commandLine);
@@ -31,7 +31,7 @@ export class CommandProcessor {
         try {
             const commandInstance = this.commandRegistry.getCommand(command);
             if (commandInstance) {
-                commandInstance.execute(args);
+                await commandInstance.execute(args);
             } else {
                 this.addOutput(`bash: ${command}: command not found`, 'error');
             }
