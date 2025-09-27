@@ -159,16 +159,9 @@ export class Level4ChallengeTracker {
                                         '<i class="bi bi-check-circle text-green-400"></i>' : 
                                         '<i class="bi bi-circle text-gray-500"></i>'
                                     }
-                                    ${currentChallenge.id ? `<span class="text-xs bg-gray-600 px-2 py-1 rounded">${currentChallenge.id}</span>` : ''}
                                 </div>
                             </div>
                             <div class="text-sm leading-relaxed mb-2">${currentChallenge.challenge_question || 'Loading challenge...'}</div>
-                            ${currentChallenge.category ? `
-                                <div class="flex items-center space-x-2 text-xs">
-                                    <span class="bg-gray-600 px-2 py-1 rounded">${currentChallenge.category.replace(/_/g, ' ')}</span>
-                                    <span class="text-gray-400">${currentChallenge.difficulty || 'medium'}</span>
-                                </div>
-                            ` : ''}
                         </div>
                     ` : `
                         <div class="bg-gray-700 rounded p-3 text-center text-gray-400">
