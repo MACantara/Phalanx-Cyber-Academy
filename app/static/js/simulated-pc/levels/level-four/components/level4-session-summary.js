@@ -27,7 +27,7 @@ export class Level4SessionSummary extends BaseModalComponent {
             totalFlags: 7,
             completionRate: 100,
             categories: ['Environment Analysis', 'Configuration Review', 'Log Investigation', 'Forensic Analysis'],
-            xpEarned: 350,
+            xpEarned: 0, // Will be calculated dynamically or from backend
             achievements: [
                 'Security Expert',
                 'Flag Hunter',
@@ -99,6 +99,112 @@ export class Level4SessionSummary extends BaseModalComponent {
             totalTime += time;
         }
         return Math.round(totalTime / this.flagTimings.size);
+    }
+
+    /**
+     * Calculate performance-based score for Level 4
+     * Based on efficiency (attempts per flag) and completion time
+     */
+    calculatePerformanceScore() {
+        const totalAttempts = this.calculateTotalAttempts();
+        const totalFlags = this.sessionData.flagsFound;
+        const duration = this.sessionData.endTime - this.sessionData.startTime;
+        const minutesTaken = duration / (1000 * 60);
+        
+        // Base score for completing all flags
+        let score = 100;
+        
+        // Efficiency scoring based on attempts per flag
+        const avgAttemptsPerFlag = totalFlags > 0 ? totalAttempts / totalFlags : 1;
+        
+        if (avgAttemptsPerFlag <= 1.0) {
+            // Perfect efficiency - all flags found on first try
+            score *= 1.25; // 25% bonus
+            console.log('[Level4Summary] Perfect efficiency bonus: 25%');
+        } else if (avgAttemptsPerFlag <= 1.5) {
+            // Excellent efficiency - very few failed attempts
+            score *= 1.15; // 15% bonus
+            console.log('[Level4Summary] Excellent efficiency bonus: 15%');
+        } else if (avgAttemptsPerFlag <= 2.5) {
+            // Good efficiency - some trial and error
+            score *= 1.05; // 5% bonus
+            console.log('[Level4Summary] Good efficiency bonus: 5%');
+        } else if (avgAttemptsPerFlag > 4.0) {
+            // Poor efficiency - many failed attempts
+            score *= 0.8; // 20% penalty
+            console.log('[Level4Summary] Poor efficiency penalty: -20%');
+        } else if (avgAttemptsPerFlag > 3.0) {
+            // Below average efficiency
+            score *= 0.9; // 10% penalty
+            console.log('[Level4Summary] Below average efficiency penalty: -10%');
+        }
+        // Normal efficiency (2.5-3.0 attempts) gets no modifier
+        
+        // Time performance scoring
+        // Expected time ranges: Fast (< 20min), Good (20-30min), Normal (30-45min), Slow (> 45min)
+        if (minutesTaken <= 15) {
+            // Lightning fast completion
+            score *= 1.3; // 30% time bonus
+            console.log('[Level4Summary] Lightning fast completion bonus: 30%');
+        } else if (minutesTaken <= 20) {
+            // Very fast completion
+            score *= 1.2; // 20% time bonus
+            console.log('[Level4Summary] Very fast completion bonus: 20%');
+        } else if (minutesTaken <= 30) {
+            // Fast completion
+            score *= 1.1; // 10% time bonus
+            console.log('[Level4Summary] Fast completion bonus: 10%');
+        } else if (minutesTaken <= 45) {
+            // Normal completion time - no modifier
+            console.log('[Level4Summary] Normal completion time - no modifier');
+        } else if (minutesTaken <= 60) {
+            // Slow completion
+            score *= 0.95; // 5% time penalty
+            console.log('[Level4Summary] Slow completion penalty: -5%');
+        } else {
+            // Very slow completion
+            score *= 0.85; // 15% time penalty
+            console.log('[Level4Summary] Very slow completion penalty: -15%');
+        }
+        
+        // Ensure score stays within reasonable bounds
+        const finalScore = Math.max(50, Math.min(100, Math.round(score)));
+        
+        console.log('[Level4Summary] Performance calculation:', {
+            totalAttempts,
+            totalFlags,
+            avgAttemptsPerFlag: Math.round(avgAttemptsPerFlag * 10) / 10,
+            minutesTaken: Math.round(minutesTaken),
+            rawScore: Math.round(score),
+            finalScore
+        });
+        
+        return finalScore;
+    }
+
+    /**
+     * Get efficiency rating based on attempts per flag
+     */
+    getEfficiencyRating(totalAttempts, totalFlags) {
+        const avgAttempts = totalFlags > 0 ? totalAttempts / totalFlags : 1;
+        
+        if (avgAttempts <= 1.0) return 'perfect';
+        if (avgAttempts <= 1.5) return 'excellent';
+        if (avgAttempts <= 2.5) return 'good';
+        if (avgAttempts <= 3.5) return 'average';
+        return 'poor';
+    }
+
+    /**
+     * Get time performance rating
+     */
+    getTimeRating(minutes) {
+        if (minutes <= 15) return 'lightning';
+        if (minutes <= 20) return 'very_fast';
+        if (minutes <= 30) return 'fast';
+        if (minutes <= 45) return 'normal';
+        if (minutes <= 60) return 'slow';
+        return 'very_slow';
     }
 
     /**
@@ -271,6 +377,9 @@ export class Level4SessionSummary extends BaseModalComponent {
 
     createSummaryContent() {
         const duration = this.calculateDuration();
+        const totalAttempts = this.calculateTotalAttempts();
+        const avgAttemptsPerFlag = this.sessionData.flagsFound > 0 ? totalAttempts / this.sessionData.flagsFound : 0;
+        const performanceScore = this.calculatePerformanceScore();
         
         return `
             <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6 rounded-lg">
@@ -279,6 +388,34 @@ export class Level4SessionSummary extends BaseModalComponent {
                     <div class="text-4xl mb-2">🎉</div>
                     <h2 class="text-2xl font-bold text-green-400 mb-2">Assessment Complete!</h2>
                     <p class="text-gray-300">White Hat Penetration Test Successfully Completed</p>
+                </div>
+
+                <!-- Performance-Based XP Banner -->
+                <div class="bg-gradient-to-r from-purple-900/50 to-blue-900/50 rounded-lg p-4 mb-6 border border-purple-500/30">
+                    <div class="flex items-center justify-center mb-4">
+                        <i class="bi bi-trophy-fill text-4xl text-yellow-400 mr-3"></i>
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Performance-Based XP Awarded!</h3>
+                            <p class="text-green-100">Your reward reflects efficiency, speed, and CTF expertise</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-green-900/50 rounded-lg p-3 text-center">
+                            <div class="text-xl font-bold text-green-400">${Math.round(avgAttemptsPerFlag * 10) / 10}</div>
+                            <div class="text-xs text-green-200">Avg Attempts/Flag</div>
+                            <div class="text-xs text-gray-300">${this.getEfficiencyRating(totalAttempts, this.sessionData.flagsFound)}</div>
+                        </div>
+                        <div class="bg-blue-900/50 rounded-lg p-3 text-center">
+                            <div class="text-xl font-bold text-blue-400">${duration}</div>
+                            <div class="text-xs text-blue-200">Completion Time</div>
+                            <div class="text-xs text-gray-300">${this.getTimeRating((this.sessionData.endTime - this.sessionData.startTime) / (1000 * 60))}</div>
+                        </div>
+                        <div class="bg-purple-900/50 rounded-lg p-3 text-center">
+                            <div class="text-xl font-bold text-purple-400">${performanceScore}%</div>
+                            <div class="text-xs text-purple-200">Performance Score</div>
+                            <div class="text-xs text-gray-300">Dynamic XP Multiplier</div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Performance Metrics -->
@@ -296,7 +433,7 @@ export class Level4SessionSummary extends BaseModalComponent {
                         <div class="text-sm text-gray-400">Success Rate</div>
                     </div>
                     <div class="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
-                        <div class="text-2xl font-bold text-yellow-400">${this.sessionData.xpEarned}</div>
+                        <div class="text-2xl font-bold text-yellow-400">${this.sessionData.xpEarned || '...'}</div>
                         <div class="text-sm text-gray-400">XP Earned</div>
                     </div>
                 </div>
@@ -460,11 +597,31 @@ export class Level4SessionSummary extends BaseModalComponent {
                 return null;
             }
 
-            // End the session with score and completion data
+            // Calculate performance-based score
+            const performanceScore = this.calculatePerformanceScore();
+            const totalAttempts = this.calculateTotalAttempts();
+            const duration = this.sessionData.endTime - this.sessionData.startTime;
+            const timeSpentSeconds = Math.round(duration / 1000);
+            
+            // Prepare comprehensive performance data for backend
             const sessionEndData = {
                 session_id: sessionId,
-                score: 100 // Perfect score for completing all flags
+                score: performanceScore, // Dynamic performance-based score
+                time_spent: timeSpentSeconds,
+                performance_metrics: {
+                    flags_found: this.sessionData.flagsFound,
+                    total_flags: this.sessionData.totalFlags,
+                    total_attempts: totalAttempts,
+                    average_attempts_per_flag: Math.round((totalAttempts / this.sessionData.flagsFound) * 10) / 10,
+                    completion_time_minutes: Math.round(duration / (1000 * 60)),
+                    efficiency_rating: this.getEfficiencyRating(totalAttempts, this.sessionData.flagsFound),
+                    time_rating: this.getTimeRating(duration / (1000 * 60)),
+                    categories_completed: this.categorizeCompletedChallenges(),
+                    performance_score: performanceScore
+                }
             };
+
+            console.log('[Level4Summary] Submitting performance data:', sessionEndData);
 
             const sessionEndResponse = await fetch('/levels/api/session/end', {
                 method: 'POST',
@@ -477,7 +634,7 @@ export class Level4SessionSummary extends BaseModalComponent {
 
             if (sessionEndResponse.ok) {
                 const sessionResult = await sessionEndResponse.json();
-                console.log('[Level4Summary] Session ended successfully:', sessionResult);
+                console.log('[Level4Summary] Session ended successfully with performance-based XP:', sessionResult);
                 
                 // Update XP display with the actual XP earned from session completion
                 if (sessionResult.xp_awarded && sessionResult.xp_awarded !== this.sessionData.xpEarned) {
@@ -488,6 +645,8 @@ export class Level4SessionSummary extends BaseModalComponent {
                     if (xpDisplay) {
                         xpDisplay.textContent = sessionResult.xp_awarded;
                     }
+                    
+                    console.log(`[Level4Summary] XP updated from ${this.sessionData.xpEarned} to ${sessionResult.xp_awarded} based on performance`);
                 }
                 
                 // Clear the active session since it's now completed
