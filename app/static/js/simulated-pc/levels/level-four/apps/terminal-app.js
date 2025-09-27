@@ -48,10 +48,10 @@ export class TerminalApp extends WindowBase {
         const input = this.windowElement?.querySelector('#command-input');
         if (!input) return;
 
-        input.addEventListener('keydown', (e) => {
+        input.addEventListener('keydown', async (e) => {
             switch (e.key) {
                 case 'Enter':
-                    this.executeCommand(input.value);
+                    await this.executeCommand(input.value);
                     input.value = '';
                     break;
                     
@@ -155,14 +155,14 @@ export class TerminalApp extends WindowBase {
         output.forEach(line => this.addOutput(line, 'text-blue-400'));
     }
 
-    executeCommand(command) {
+    async executeCommand(command) {
         if (!command.trim()) {
             this.addPromptLine();
             return;
         }
 
         // Emit terminal command event for system logs
-        const result = this.commandProcessor.executeCommand(command);
+        const result = await this.commandProcessor.executeCommand(command);
         const exitCode = result && result.success !== false ? 0 : 1;
         
         document.dispatchEvent(new CustomEvent('terminal-command', {
