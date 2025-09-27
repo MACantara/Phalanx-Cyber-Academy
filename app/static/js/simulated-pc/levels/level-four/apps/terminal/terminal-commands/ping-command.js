@@ -1,18 +1,39 @@
 import { BaseCommand } from './base-command.js';
-import { targetHostRegistry } from '../nmap-target-hosts/target-host-registry.js';
+import { loadAllLevel4Hosts } from '../../data/index.js';
 
 export class PingCommand extends BaseCommand {
     constructor(processor) {
         super(processor);
-        this.targetRegistry = targetHostRegistry;
+        this.hostsData = null;
         this.pingCount = 4;
         this.interval = 1000;
         this.timeout = 5000;
         this.isRunning = false;
         this.currentPing = 0;
+        this.initializeHosts();
     }
 
-    execute(args) {
+    async initializeHosts() {
+        try {
+            const data = await loadAllLevel4Hosts();
+            this.hostsData = data.level4_municipality_hosts || [];
+            console.log('Ping: Loaded host data:', this.hostsData.length, 'hosts');
+        } catch (error) {
+            console.error('Ping: Failed to load host data:', error);
+            this.hostsData = [];
+        }
+    }
+
+    async waitForHosts() {
+        if (!this.hostsData) {
+            await this.initializeHosts();
+        }
+        while (!this.hostsData) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+    }
+
+    async execute(args) {
         if (args.length === 0) {
             this.showBasicUsage();
             return;
@@ -31,7 +52,7 @@ export class PingCommand extends BaseCommand {
             return;
         }
 
-        this.performPing(options);
+        await this.performPing(options);
     }
 
     parseArguments(args) {
@@ -92,6 +113,8 @@ export class PingCommand extends BaseCommand {
     }
 
     async performPing(options) {
+        await this.waitForHosts();
+        
         const target = this.resolveTarget(options.target);
         
         if (!target) {
@@ -158,11 +181,18 @@ export class PingCommand extends BaseCommand {
     }
 
     resolveTarget(targetStr) {
-        // Try to resolve using the target registry
-        let target = this.targetRegistry.resolveTarget(targetStr);
-        
-        if (target) {
-            return target;
+        // Try to resolve using the loaded hosts data
+        if (this.hostsData) {
+            const host = this.hostsData.find(host => 
+                host.hostname === targetStr || host.ip === targetStr
+            );
+            if (host) {
+                return {
+                    ...host,
+                    reachable: true,
+                    responseTime: this.generateResponseTime()
+                };
+            }
         }
 
         // Check if it looks like an IP address
