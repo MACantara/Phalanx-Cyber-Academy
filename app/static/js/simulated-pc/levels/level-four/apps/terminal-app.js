@@ -215,32 +215,43 @@ export class TerminalApp extends WindowBase {
         const output = this.windowElement?.querySelector('#terminal-output');
         if (!output) return;
 
-        const line = document.createElement('div');
-        line.textContent = text;
+        // Handle multi-line text by splitting on newlines
+        const lines = text.split('\n');
         
-        if (className) {
-            switch (className) {
-                case 'error':
-                    line.className = 'text-red-400';
-                    break;
-                case 'command':
-                    line.className = 'text-white';
-                    break;
-                case 'directory':
-                    line.className = 'text-blue-400';
-                    break;
-                case 'suspicious-file':
-                    line.className = 'text-red-400';
-                    break;
-                case 'file':
-                    line.className = 'text-green-400';
-                    break;
-                default:
-                    line.className = className;
+        lines.forEach((lineText, index) => {
+            const line = document.createElement('div');
+            
+            // Handle tabs by replacing with spaces (4 spaces per tab)
+            const processedText = lineText.replace(/\t/g, '    ');
+            line.textContent = processedText;
+            
+            // Preserve whitespace formatting for terminal output
+            line.style.whiteSpace = 'pre';
+            
+            if (className) {
+                switch (className) {
+                    case 'error':
+                        line.className = 'text-red-400';
+                        break;
+                    case 'command':
+                        line.className = 'text-white';
+                        break;
+                    case 'directory':
+                        line.className = 'text-blue-400';
+                        break;
+                    case 'suspicious-file':
+                        line.className = 'text-red-400';
+                        break;
+                    case 'file':
+                        line.className = 'text-green-400';
+                        break;
+                    default:
+                        line.className = className;
+                }
             }
-        }
-        
-        output.appendChild(line);
+            
+            output.appendChild(line);
+        });
         
         // Auto-scroll to bottom when new output is added
         this.scrollToBottom();
