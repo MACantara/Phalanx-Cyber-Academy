@@ -453,3 +453,118 @@ def get_flags_config():
             'success': False,
             'error': str(e)
         }), 500
+
+@level4_api_bp.route('/mission-brief', methods=['GET'])
+def get_mission_brief():
+    """Get dynamic mission brief with current session challenges"""
+    try:
+        # Load flags data to get selected challenges
+        flags_data = load_ctf_flags()
+        selected_flag_ids = get_selected_flags()
+        
+        if not flags_data:
+            return jsonify({
+                'success': False,
+                'error': 'Failed to load flags configuration'
+            }), 500
+        
+        ctf_config = flags_data.get('ctf_flags', {})
+        all_flags = ctf_config.get('flags', {})
+        
+        # Build dynamic mission brief content
+        content_lines = [
+            "THE WHITE HAT TEST - RESPONSIBLE DISCLOSURE CTF",
+            "============================================",
+            "",
+            "MISSION BRIEFING",
+            "===============",
+            "",
+            "Welcome, Security Researcher!",
+            "",
+            "You have been contracted to perform a security assessment of TechCorp's web application infrastructure.",
+            "Your mission is to conduct an ethical security evaluation and provide a comprehensive responsible disclosure report.",
+            "",
+            "OBJECTIVES:",
+            "----------",
+            f"1. Discover {ctf_config.get('flags_per_session', 7)} randomly selected security flags hidden throughout the system",
+            "2. Document each finding with proper evidence",
+            "3. Complete the responsible disclosure report using the desktop app",
+            "4. Recommend remediation steps for discovered vulnerabilities",
+            "",
+            "CURRENT SESSION CHALLENGES:",
+            "-------------------------"
+        ]
+        
+        # Add selected challenges dynamically
+        for i, flag_id in enumerate(selected_flag_ids, 1):
+            if flag_id in all_flags:
+                flag_info = all_flags[flag_id]
+                name = flag_info.get('name', f'Challenge {i}')
+                question = flag_info.get('challenge_question', 'No question available')
+                category = flag_info.get('category', 'unknown').replace('_', ' ').title()
+                difficulty = flag_info.get('difficulty', 'medium').title()
+                
+                content_lines.extend([
+                    f"{i}. {name}",
+                    f"   Category: {category} | Difficulty: {difficulty}",
+                    f"   Challenge: {question}",
+                    ""
+                ])
+        
+        # Add remaining static content
+        content_lines.extend([
+            "CHALLENGE TYPES:",
+            "---------------",
+            "This assessment includes various security challenges:",
+            "- Environment Analysis: Hidden configuration secrets",
+            "- Source Code Review: Development artifacts and comments", 
+            "- Server Configuration: Misconfigurations and exposed settings",
+            "- Credential Exposure: Database passwords and API keys",
+            "- Privilege Escalation: SUID binaries and elevated access",
+            "- Log Analysis: Security incidents and leaked information",
+            "- Process Investigation: Memory dumps and runtime data",
+            "- Forensic Analysis: Command history and user behavior",
+            "- Network Security: Configuration and routing analysis",
+            "- Cryptographic Analysis: SSL certificates and keys",
+            "- Automation Security: Scripts and scheduled tasks",
+            "- File System Security: Temporary files and artifacts",
+            "",
+            "RULES OF ENGAGEMENT:",
+            "-------------------",
+            "• Only use provided terminal commands",
+            "• Document all findings thoroughly",
+            "• Follow responsible disclosure practices",
+            "• No destructive actions or data modification",
+            "• Report findings through proper channels",
+            "",
+            "ASSESSMENT SCOPE:",
+            "----------------",
+            "• Web application: /var/www/html/*",
+            "• Configuration files: /etc/*",
+            "• System logs: /var/log/*",
+            "• User directories: /home/*",
+            "• System binaries: /usr/local/bin/*",
+            "• Process information: /proc/*",
+            "• Temporary files: /tmp/*",
+            "• SSL certificates: /etc/ssl/*",
+            "",
+            f"Your assessment begins now. Each session presents {ctf_config.get('flags_per_session', 7)} different challenges.",
+            "Good luck, and remember - with great power comes great responsibility!",
+            "",
+            "Security Team Lead",
+            "TechCorp Security Division"
+        ])
+        
+        return jsonify({
+            'success': True,
+            'content': '\n'.join(content_lines),
+            'size': len('\n'.join(content_lines))
+        }), 200
+        
+    except Exception as e:
+        print(f"Error in get_mission_brief: {e}")
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
