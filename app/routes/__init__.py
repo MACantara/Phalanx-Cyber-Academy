@@ -13,6 +13,7 @@ from .csrf_api import csrf_api_bp
 from .news_api import news_api_bp
 from .email_api import email_api_bp
 from .level3_api import level3_api_bp
+from .level4_api import level4_api_bp
 from .blue_team_vs_red_team_mode import blue_team_vs_red_team as blue_red_bp
 
 def register_blueprints(app):
@@ -38,4 +39,5 @@ def register_blueprints(app):
     app.register_blueprint(news_api_bp)
     app.register_blueprint(email_api_bp)
     app.register_blueprint(level3_api_bp)
+    app.register_blueprint(level4_api_bp)
     app.register_blueprint(blue_red_bp)
