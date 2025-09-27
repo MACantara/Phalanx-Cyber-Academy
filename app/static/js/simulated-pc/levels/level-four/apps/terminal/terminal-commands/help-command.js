@@ -34,30 +34,45 @@ export class HelpCommand extends BaseCommand {
             return;
         }
 
-        // Show general help
-        const commands = [
+        // Show general help with dynamically loaded commands
+        this.showGeneralHelp();
+    }
+
+    showGeneralHelp() {
+        const headerLines = [
             'The White Hat Test - Responsible Disclosure CTF',
             '==============================================',
             '',
             'MISSION: Find 7 hidden flags and complete a responsible disclosure report',
             '',
             'Available commands (use "help <command>" for detailed information):',
-            '',
-            '  ls [-la]     - List directory contents',
-            '  pwd          - Print working directory',
-            '  cd [dir]     - Change directory',
-            '  cat <file>   - Display file contents',
-            '  find [opts]  - Search for files and directories',
-            '  grep [opts]  - Search text patterns in files',
-            '  whoami       - Display current user',
-            '  clear        - Clear terminal screen',
-            '  history      - Show command history',
-            '  echo <text>  - Display text',
-            '  date         - Show current date and time',
-            '  uname [-a]   - Show system information',
-            '  nmap [opts]  - Network mapper and security scanner',
-            '  ping [opts]  - Test network connectivity to hosts',
-            '  help [cmd]   - Show this help or help for specific command',
+            ''
+        ];
+
+        // Add header
+        headerLines.forEach(line => this.addOutput(line));
+
+        // Get all registered commands and their info dynamically
+        const commandNames = this.processor.commandRegistry.getAllCommands().sort();
+        const maxNameLength = Math.max(...commandNames.map(name => name.length));
+
+        commandNames.forEach(commandName => {
+            const commandInstance = this.processor.commandRegistry.getCommand(commandName);
+            if (commandInstance) {
+                const help = commandInstance.getHelp();
+                const paddedName = commandName.padEnd(maxNameLength + 2);
+                const shortUsage = this.getShortUsage(help.usage, commandName);
+                const description = help.description || 'No description available';
+                
+                this.addOutput(`  ${paddedName} - ${description}`);
+                if (shortUsage && shortUsage !== commandName) {
+                    this.addOutput(`    Usage: ${shortUsage}`);
+                }
+            }
+        });
+
+        // Add footer information
+        const footerLines = [
             '',
             'CTF Objectives:',
             '  • Explore the system to find 7 hidden flags (FLAG-1 through FLAG-7)',
@@ -70,10 +85,32 @@ export class HelpCommand extends BaseCommand {
             '  - Check configuration files, logs, and hidden files',
             '  - Use find and grep to search for flags',
             '  - Read the mission brief with "cat mission_brief.txt"',
+            '  - Use "hints" command for flag-specific guidance',
             '  - Use Tab for command, option, file, and folder completion',
             '  - Use ↑/↓ arrow keys to navigate command history'
         ];
+
+        footerLines.forEach(line => this.addOutput(line));
+    }
+
+    getShortUsage(fullUsage, commandName) {
+        // Extract a concise usage from the full usage string
+        if (!fullUsage) return commandName;
         
-        commands.forEach(cmd => this.addOutput(cmd));
+        // Remove leading command name if it's repeated
+        let usage = fullUsage.replace(new RegExp(`^${commandName}\\s*`, 'i'), '').trim();
+        
+        // If usage is too long, truncate it intelligently
+        if (usage.length > 40) {
+            // Try to find a good breaking point
+            const parts = usage.split(/[\[\]]/);
+            if (parts.length > 1) {
+                usage = parts[0].trim() + (parts[1] ? ' [...]' : '');
+            } else {
+                usage = usage.substring(0, 37) + '...';
+            }
+        }
+        
+        return usage ? `${commandName} ${usage}` : commandName;
     }
 }
