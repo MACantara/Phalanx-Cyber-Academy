@@ -11,7 +11,7 @@ export class ApplicationRegistry {
                 title: 'Web Browser'
             },
             'terminal': {
-                module: './desktop-applications/terminal-app.js',
+                module: '../levels/level-four/apps/terminal-app.js',
                 className: 'TerminalApp',
                 storageKey: 'cyberquest_terminal_opened',
                 tutorialMethod: 'shouldAutoStartTerminal',
