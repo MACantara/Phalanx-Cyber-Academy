@@ -61,13 +61,9 @@ export class HelpCommand extends BaseCommand {
             if (commandInstance) {
                 const help = commandInstance.getHelp();
                 const paddedName = commandName.padEnd(maxNameLength + 2);
-                const shortUsage = this.getShortUsage(help.usage, commandName);
                 const description = help.description || 'No description available';
                 
                 this.addOutput(`  ${paddedName} - ${description}`);
-                if (shortUsage && shortUsage !== commandName) {
-                    this.addOutput(`    Usage: ${shortUsage}`);
-                }
             }
         });
 
@@ -91,26 +87,5 @@ export class HelpCommand extends BaseCommand {
         ];
 
         footerLines.forEach(line => this.addOutput(line));
-    }
-
-    getShortUsage(fullUsage, commandName) {
-        // Extract a concise usage from the full usage string
-        if (!fullUsage) return commandName;
-        
-        // Remove leading command name if it's repeated
-        let usage = fullUsage.replace(new RegExp(`^${commandName}\\s*`, 'i'), '').trim();
-        
-        // If usage is too long, truncate it intelligently
-        if (usage.length > 40) {
-            // Try to find a good breaking point
-            const parts = usage.split(/[\[\]]/);
-            if (parts.length > 1) {
-                usage = parts[0].trim() + (parts[1] ? ' [...]' : '');
-            } else {
-                usage = usage.substring(0, 37) + '...';
-            }
-        }
-        
-        return usage ? `${commandName} ${usage}` : commandName;
     }
 }
