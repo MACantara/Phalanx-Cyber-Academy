@@ -1,0 +1,165 @@
+{
+  "ctf_flags": {
+    "challenge_name": "The White Hat Test - Responsible Disclosure CTF",
+    "challenge_description": "Ethical security assessment and vulnerability discovery challenge",
+    "total_flags": 7,
+    "flags": {
+      "FLAG-1": {
+        "id": "FLAG-1",
+        "value": "FLAG-1{enum_services_first}",
+        "name": "Environment Configuration Analysis",
+        "description": "Found in user environment files (.bashrc)",
+        "location": "/home/researcher/.bashrc",
+        "category": "environment_analysis",
+        "difficulty": "easy",
+        "hints": [
+          "Check your environment configuration",
+          "Look in hidden files in the home directory",
+          "Environment variables might contain useful information"
+        ],
+        "discovery_commands": ["cat ~/.bashrc", "ls -la ~", "env"],
+        "learning_objectives": [
+          "Understanding environment file analysis",
+          "Recognizing hidden configuration files",
+          "Learning about bash configuration"
+        ]
+      },
+      "FLAG-2": {
+        "id": "FLAG-2",
+        "value": "FLAG-2{source_code_comments}",
+        "name": "Source Code Security Review",
+        "description": "Located in HTML comments and PHP config files",
+        "location": "/var/www/html/index.html",
+        "category": "source_code_review",
+        "difficulty": "easy",
+        "hints": [
+          "Web application source code may reveal secrets",
+          "Check HTML comments and PHP configuration files",
+          "Look in the web application directory structure"
+        ],
+        "discovery_commands": ["cat /var/www/html/index.html", "find /var/www -name '*.php'", "grep -r 'FLAG' /var/www/"],
+        "learning_objectives": [
+          "Understanding source code analysis",
+          "Recognizing information disclosure in comments",
+          "Learning about web application file structure"
+        ]
+      },
+      "FLAG-3": {
+        "id": "FLAG-3",
+        "value": "FLAG-3{nginx_config_review}",
+        "name": "Server Configuration Assessment",
+        "description": "Discovered in nginx configuration files",
+        "location": "/etc/nginx/nginx.conf",
+        "category": "server_configuration",
+        "difficulty": "medium",
+        "hints": [
+          "Server configuration files often contain sensitive data",
+          "Check nginx configuration for security issues",
+          "Look in /etc/ directory for configuration files"
+        ],
+        "discovery_commands": ["cat /etc/nginx/nginx.conf", "find /etc -name '*.conf'", "ls -la /etc/nginx/"],
+        "learning_objectives": [
+          "Understanding server configuration analysis",
+          "Recognizing security misconfigurations",
+          "Learning about nginx configuration structure"
+        ]
+      },
+      "FLAG-4": {
+        "id": "FLAG-4",
+        "value": "FLAG-4{environment_variables_leak_secrets}",
+        "name": "Environment Variable Exposure",
+        "description": "Found in admin environment configuration",
+        "location": "/home/admin/.env",
+        "category": "credential_disclosure",
+        "difficulty": "medium",
+        "hints": [
+          "Environment variables in application configs",
+          "Check admin user directories for configuration files",
+          "Look for .env files that might contain secrets"
+        ],
+        "discovery_commands": ["cat /home/admin/.env", "find /home -name '.env'", "ls -la /home/admin/"],
+        "learning_objectives": [
+          "Understanding environment variable security risks",
+          "Recognizing credential exposure in configuration",
+          "Learning about secure configuration practices"
+        ]
+      },
+      "FLAG-5": {
+        "id": "FLAG-5",
+        "value": "FLAG-5{suid_binary_analysis}",
+        "name": "SUID Binary Analysis",
+        "description": "Located in system binaries with elevated privileges",
+        "location": "/usr/local/bin/backup_script.sh",
+        "category": "privilege_escalation",
+        "difficulty": "hard",
+        "hints": [
+          "System binaries with elevated privileges",
+          "Check for SUID binaries that might be vulnerable",
+          "Look in /usr/local/bin/ for custom scripts"
+        ],
+        "discovery_commands": ["find /usr -perm -4000", "ls -la /usr/local/bin/", "cat /usr/local/bin/backup_script.sh"],
+        "learning_objectives": [
+          "Understanding SUID binary security risks",
+          "Recognizing privilege escalation vulnerabilities",
+          "Learning about file permission analysis"
+        ]
+      },
+      "FLAG-6": {
+        "id": "FLAG-6",
+        "value": "FLAG-6{log_files_reveal_activity}",
+        "name": "Log File Analysis",
+        "description": "Discovered in web server access logs",
+        "location": "/var/log/nginx/access.log",
+        "category": "log_analysis",
+        "difficulty": "medium",
+        "hints": [
+          "Application logs may contain leaked information",
+          "Check web server access logs for suspicious activity",
+          "Look in /var/log/ directory for various log files"
+        ],
+        "discovery_commands": ["cat /var/log/nginx/access.log", "tail -f /var/log/nginx/access.log", "grep -r 'FLAG' /var/log/"],
+        "learning_objectives": [
+          "Understanding log file analysis techniques",
+          "Recognizing information disclosure in logs",
+          "Learning about log monitoring and security"
+        ]
+      },
+      "FLAG-7": {
+        "id": "FLAG-7",
+        "value": "FLAG-7{responsible_disclosure_complete}",
+        "name": "Report Completion",
+        "description": "Final flag awarded upon successful disclosure",
+        "location": "/tmp/ctf_completion.txt",
+        "category": "completion_reward",
+        "difficulty": "special",
+        "hints": [
+          "Final flag available upon report completion",
+          "Complete all other flags first",
+          "Check temporary files for completion certificate"
+        ],
+        "discovery_commands": ["cat /tmp/ctf_completion.txt", "ls -la /tmp/", "find /tmp -name '*completion*'"],
+        "learning_objectives": [
+          "Understanding responsible disclosure process",
+          "Learning about comprehensive security reporting",
+          "Recognizing the importance of ethical security research"
+        ]
+      }
+    },
+    "scoring": {
+      "points_per_flag": 100,
+      "total_points": 700,
+      "bonus_points": {
+        "speed_bonus": 50,
+        "thorough_documentation": 100,
+        "ethical_conduct": 150
+      }
+    },
+    "metadata": {
+      "created_date": "2025-09-27",
+      "version": "1.0",
+      "challenge_type": "responsible_disclosure_ctf",
+      "estimated_duration": "45-90 minutes",
+      "skill_level": "intermediate"
+    }
+  }
+}
