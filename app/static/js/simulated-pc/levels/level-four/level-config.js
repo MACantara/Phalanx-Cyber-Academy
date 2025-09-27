@@ -10,7 +10,8 @@ export const Level4Config = {
     
     // Level-specific applications
     requiredApps: [
-        'terminal-app'
+        'terminal-app',
+        'challenge-tracker-app'
     ],
     
     // Tutorial requirements
