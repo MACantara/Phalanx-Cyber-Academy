@@ -1,0 +1,231 @@
+{
+  "fileSystem": {
+    "/": {
+      "type": "directory",
+      "contents": {
+        "home": { "type": "directory", "contents": {} },
+        "var": { "type": "directory", "contents": {} },
+        "etc": { "type": "directory", "contents": {} },
+        "usr": { "type": "directory", "contents": {} },
+        "tmp": { "type": "directory", "contents": {} },
+        "proc": { "type": "directory", "contents": {} }
+      }
+    },
+    "/home": {
+      "type": "directory",
+      "contents": {
+        "researcher": { "type": "directory", "contents": {} },
+        "www-data": { "type": "directory", "contents": {} },
+        "admin": { "type": "directory", "contents": {} }
+      }
+    },
+    "/home/researcher": {
+      "type": "directory",
+      "contents": {
+        "disclosure_report.md": {
+          "type": "file",
+          "content": "# Responsible Disclosure Report - TechCorp Web Application\n\n## Executive Summary\n[Document your findings here]\n\n## Discovered Vulnerabilities\n\n### 1. [Issue Title]\n- **Severity**: [Low/Medium/High]\n- **Description**: [Brief description]\n- **Steps to Reproduce**: \n  1. [Command or steps]\n  2. [Expected output]\n- **Impact**: [What could an attacker do?]\n- **Remediation**: [How to fix it]\n\n---\n\n## Conclusion\n[Summary and FLAG-7 goes here when you find it]\n\n*Report completed by: Security Researcher*\n*Date: 2025-09-27*",
+          "size": 650
+        },
+        "mission_brief.txt": {
+          "type": "file",
+          "content": "THE WHITE HAT TEST - RESPONSIBLE DISCLOSURE CTF\n============================================\n\nMISSION BRIEFING\n===============\n\nWelcome, Security Researcher!\n\nYou have been contracted to perform a security assessment of TechCorp's web application infrastructure. Your mission is to conduct an ethical security evaluation and provide a comprehensive responsible disclosure report.\n\nOBJECTIVES:\n----------\n1. Discover 7 security flags hidden throughout the system\n2. Document each finding with proper evidence\n3. Complete the responsible disclosure report (~/disclosure_report.md)\n4. Recommend remediation steps for discovered vulnerabilities\n\nFLAG LOCATIONS (HINTS):\n----------------------\n- FLAG-1: Check your environment configuration\n- FLAG-2: Web application source code may reveal secrets\n- FLAG-3: Server configuration files often contain sensitive data\n- FLAG-4: Environment variables in application configs\n- FLAG-5: System binaries with elevated privileges\n- FLAG-6: Application logs may contain leaked information  \n- FLAG-7: Final flag available upon report completion\n\nRULES OF ENGAGEMENT:\n-------------------\n• Only use provided terminal commands\n• Document all findings thoroughly\n• Follow responsible disclosure practices\n• No destructive actions or data modification\n• Report findings through proper channels\n\nASSESSMENT SCOPE:\n----------------\n• Web application: /var/www/html/*\n• Configuration files: /etc/*\n• System logs: /var/log/*\n• User directories: /home/*\n• System binaries: /usr/local/bin/*\n\nYour assessment begins now. Good luck, and remember - with great power comes great responsibility!\n\nSecurity Team Lead\nTechCorp Security Division\n",
+          "size": 1420
+        },
+        ".bashrc": {
+          "type": "file",
+          "content": "# ~/.bashrc: executed by bash(1) for non-login shells.\n\nexport PATH=$HOME/bin:/usr/local/bin:$PATH\nexport PS1='researcher@sandbox:$PWD$ '\n\n# FLAG-1{enum_services_first} - Hidden in environment\nalias ll='ls -alF'\nalias la='ls -A'\nalias l='ls -CF'",
+          "size": 312,
+          "hidden": true
+        },
+        ".hidden_notes": {
+          "type": "file",
+          "content": "Personal Research Notes\n======================\n\nRemember to check:\n- Open ports and services (ss, netstat)\n- Web directories (/var/www/)\n- Config files in /etc/\n- SUID binaries\n- Log files in /var/log/\n\nThe company mentioned they use nginx on port 8080.",
+          "size": 245,
+          "hidden": true
+        }
+      }
+    },
+    "/home/www-data": {
+      "type": "directory",
+      "contents": {
+        ".profile": {
+          "type": "file",
+          "content": "# ~/.profile: executed by the command interpreter for login shells.\n\nexport PATH=\"/usr/local/bin:/usr/bin:/bin\"\nexport USER=\"www-data\"",
+          "size": 156
+        }
+      }
+    },
+    "/home/admin": {
+      "type": "directory",
+      "contents": {
+        ".env": {
+          "type": "file",
+          "content": "# Admin Environment Configuration\nDATABASE_URL=postgresql://admin:secret123@localhost:5432/techcorp\nSECRET_KEY=super-secret-key-for-flask-app\nFLAG_4=FLAG-4{environment_variables_leak_secrets}\nADMIN_EMAIL=admin@techcorp.local\nDEBUG=true",
+          "size": 234,
+          "hidden": true
+        },
+        "backup_script.sh": {
+          "type": "file",
+          "content": "#!/bin/bash\n# Daily backup script\n# Run: 0 2 * * * /home/admin/backup_script.sh\n\nBACKUP_DIR=\"/var/backups/daily\"\nDATE=$(date +%Y%m%d)\n\n# Create backup directory\nmkdir -p $BACKUP_DIR\n\n# Backup web files\ntar -czf $BACKUP_DIR/web_$DATE.tar.gz /var/www/html/\n\n# Backup database\npg_dump techcorp > $BACKUP_DIR/db_$DATE.sql\n\necho \"Backup completed: $DATE\"",
+          "size": 387,
+          "permissions": "755"
+        }
+      }
+    },
+    "/var": {
+      "type": "directory",
+      "contents": {
+        "www": { "type": "directory", "contents": {} },
+        "log": { "type": "directory", "contents": {} }
+      }
+    },
+    "/var/www": {
+      "type": "directory",
+      "contents": {
+        "html": { "type": "directory", "contents": {} }
+      }
+    },
+    "/var/www/html": {
+      "type": "directory",
+      "contents": {
+        "index.html": {
+          "type": "file",
+          "content": "<!DOCTYPE html>\n<html>\n<head>\n    <title>TechCorp Web Application</title>\n</head>\n<body>\n    <h1>Welcome to TechCorp</h1>\n    <p>Secure Web Application v2.1</p>\n    <!-- FLAG-2{source_code_comments} - Check the source! -->\n    <p>Please login to continue.</p>\n</body>\n</html>",
+          "size": 287
+        },
+        "admin": {
+          "type": "directory",
+          "contents": {
+            "config.php": {
+              "type": "file",
+              "content": "<?php\n// Admin panel configuration\ndefine('DB_HOST', 'localhost');\ndefine('DB_USER', 'admin');\ndefine('DB_PASS', 'weakpassword123');\ndefine('DB_NAME', 'techcorp');\n\n// Security note: This should be in environment variables!\n// FLAG-2{config_files_contain_secrets}\n\n$admin_key = 'admin_secret_2024';\n?>",
+              "size": 298
+            },
+            "login.php": {
+              "type": "file",
+              "content": "<?php\nrequire_once 'config.php';\n\nif ($_POST['username'] && $_POST['password']) {\n    // Vulnerable to SQL injection - needs fixing\n    $query = \"SELECT * FROM users WHERE username='\" . $_POST['username'] . \"' AND password='\" . $_POST['password'] . \"'\";\n    // This is a security issue - parameterized queries needed\n}\n?>",
+              "size": 289
+            }
+          }
+        },
+        "uploads": {
+          "type": "directory",
+          "contents": {
+            "readme.txt": {
+              "type": "file",
+              "content": "Upload Directory\n================\n\nThis directory is used for user file uploads.\nMake sure to validate all uploaded files!\n\nSecurity reminder: Check file extensions and content types.",
+              "size": 156
+            }
+          }
+        }
+      }
+    },
+    "/etc": {
+      "type": "directory",
+      "contents": {
+        "nginx": { "type": "directory", "contents": {} },
+        "passwd": {
+          "type": "file",
+          "content": "root:x:0:0:root:/root:/bin/bash\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\nresearcher:x:1000:1000:Security Researcher:/home/researcher:/bin/bash\nadmin:x:1001:1001:System Admin:/home/admin:/bin/bash",
+          "size": 213
+        },
+        "hosts": {
+          "type": "file",
+          "content": "127.0.0.1\tlocalhost\n127.0.1.1\tsandbox\n192.168.1.100\ttechcorp-db\n192.168.1.101\ttechcorp-api",
+          "size": 89
+        }
+      }
+    },
+    "/etc/nginx": {
+      "type": "directory",
+      "contents": {
+        "nginx.conf": {
+          "type": "file",
+          "content": "user www-data;\nworker_processes auto;\npid /run/nginx.pid;\n\nevents {\n    worker_connections 768;\n}\n\nhttp {\n    # Basic configuration\n    sendfile on;\n    tcp_nopush on;\n    \n    # Security headers missing - needs improvement\n    # add_header X-Frame-Options DENY;\n    # add_header X-Content-Type-Options nosniff;\n    \n    # FLAG-3{nginx_config_review} - Found in server config\n    \n    include /etc/nginx/sites-enabled/*;\n}",
+          "size": 398
+        },
+        "sites-available": {
+          "type": "directory",
+          "contents": {
+            "default": {
+              "type": "file",
+              "content": "server {\n    listen 80 default_server;\n    listen [::]:80 default_server;\n    \n    root /var/www/html;\n    index index.html index.htm;\n    \n    server_name _;\n    \n    location / {\n        try_files $uri $uri/ =404;\n    }\n    \n    # Weak security configuration\n    location /admin {\n        # Missing authentication!\n        try_files $uri $uri/ =404;\n    }\n}",
+              "size": 312
+            }
+          }
+        }
+      }
+    },
+    "/var/log": {
+      "type": "directory",
+      "contents": {
+        "nginx": { "type": "directory", "contents": {} },
+        "auth.log": {
+          "type": "file",
+          "content": "Sep 27 08:00:01 sandbox login[1234]: LOGIN researcher on tty1\nSep 27 08:15:23 sandbox sudo[1456]: researcher : TTY=pts/0 ; PWD=/home/researcher ; USER=root ; COMMAND=/bin/ls /var/log\nSep 27 08:30:45 sandbox login[1789]: FAILED LOGIN ATTEMPT for admin from 192.168.1.50\nSep 27 09:00:12 sandbox sudo[2001]: researcher : PASSWORD authentication failure\n",
+          "size": 389
+        },
+        "syslog": {
+          "type": "file",
+          "content": "Sep 27 08:00:00 sandbox systemd[1]: Started Daily apt download activities.\nSep 27 08:15:00 sandbox CRON[1234]: (root) CMD (/usr/local/bin/backup_script.sh)\nSep 27 08:30:00 sandbox nginx[5678]: Configuration reload successful\nSep 27 09:00:00 sandbox systemd[1]: Started Cleanup of Temporary Directories.\n",
+          "size": 312
+        }
+      }
+    },
+    "/var/log/nginx": {
+      "type": "directory",
+      "contents": {
+        "access.log": {
+          "type": "file",
+          "content": "192.168.1.100 - - [27/Sep/2025:08:00:00 +0000] \"GET / HTTP/1.1\" 200 287\n192.168.1.101 - - [27/Sep/2025:08:15:23 +0000] \"GET /admin HTTP/1.1\" 200 156\n192.168.1.102 - - [27/Sep/2025:08:30:45 +0000] \"POST /admin/login.php HTTP/1.1\" 302 0\n# FLAG-6{log_files_reveal_activity} - Check the access patterns\n192.168.1.103 - - [27/Sep/2025:09:00:12 +0000] \"GET /admin/config.php HTTP/1.1\" 403 0\n",
+          "size": 445
+        },
+        "error.log": {
+          "type": "file",
+          "content": "2025/09/27 08:30:45 [error] 1234#0: *1 access forbidden by rule, client: 192.168.1.103, server: _, request: \"GET /admin/config.php HTTP/1.1\"\n2025/09/27 09:00:12 [warn] 1234#0: *2 security headers missing in response\n2025/09/27 09:15:30 [error] 1234#0: *3 SQL injection attempt detected in request\n",
+          "size": 367
+        }
+      }
+    },
+    "/usr": {
+      "type": "directory",
+      "contents": {
+        "local": { "type": "directory", "contents": {} }
+      }
+    },
+    "/usr/local": {
+      "type": "directory",
+      "contents": {
+        "bin": { "type": "directory", "contents": {} }
+      }
+    },
+    "/usr/local/bin": {
+      "type": "directory",
+      "contents": {
+        "backup_script.sh": {
+          "type": "file",
+          "content": "#!/bin/bash\n# System backup utility\n# FLAG-5{suid_binary_analysis} - Check file permissions\n\n# This script has SUID bit set - potential security issue\nif [ \"$EUID\" -eq 0 ]; then\n    echo \"Running with root privileges\"\n    # Backup operations here\n    tar -czf /tmp/system_backup.tar.gz /etc/ /var/log/\nelse\n    echo \"Backup requires root privileges\"\nfi",
+          "size": 378,
+          "permissions": "4755"
+        },
+        "security_scan.sh": {
+          "type": "file",
+          "content": "#!/bin/bash\n# Security scanning utility\n\necho \"TechCorp Security Scanner v1.0\"\necho \"==============================\"\n\n# Basic system checks\necho \"Checking for SUID binaries...\"\nfind /usr -perm -4000 -type f 2>/dev/null\n\necho \"Checking for world-writable files...\"\nfind /var -perm -002 -type f 2>/dev/null\n\necho \"Scan complete.\"",
+          "size": 334,
+          "permissions": "755"
+        }
+      }
+    },
+    "/tmp": {
+      "type": "directory",
+      "contents": {
+        "ctf_completion.txt": {
+          "type": "file",
+          "content": "Congratulations!\n===============\n\nYou have successfully completed The White Hat Test!\n\nFLAG-7{responsible_disclosure_complete}\n\nRemember:\n- Always follow responsible disclosure practices\n- Document findings thoroughly\n- Provide clear remediation steps\n- Respect system boundaries and permissions\n\nThank you for participating in ethical security research!",
+          "size": 356
+        }
+      }
+    }
+  }
+}
