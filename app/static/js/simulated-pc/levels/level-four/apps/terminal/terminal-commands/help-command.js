@@ -82,27 +82,15 @@ export class HelpCommand extends BaseCommand {
                 // Add dynamic CTF objectives based on selected flags
                 const footerLines = [
                     '',
-                    'Current Session Challenges:',
-                ];
-
-                selectedFlags.forEach((flagId, index) => {
-                    const flagInfo = ctfConfig.flags[flagId];
-                    if (flagInfo) {
-                        footerLines.push(`  ${index + 1}. ${flagInfo.name}: ${flagInfo.challenge_question}`);
-                    }
-                });
-
-                footerLines.push(
-                    '',
                     'Tips:',
                     '  - Start by exploring your home directory with "ls -la"',
                     '  - Check configuration files, logs, and hidden files',
                     '  - Use find and grep to search for flags',
-                    '  - Read the mission brief with "cat mission_brief.txt"',
+                    '  - Read the mission brief with "cat mission_brief.txt" for current challenges',
                     '  - Use "hints" command for flag-specific guidance',
                     '  - Use Tab for command, option, file, and folder completion',
                     '  - Use ↑/↓ arrow keys to navigate command history'
-                );
+                ];
 
                 footerLines.forEach(line => this.addOutput(line));
             } else {
@@ -157,7 +145,7 @@ export class HelpCommand extends BaseCommand {
             '  - Start by exploring your home directory with "ls -la"',
             '  - Check configuration files, logs, and hidden files',
             '  - Use find and grep to search for flags',
-            '  - Read the mission brief with "cat mission_brief.txt"',
+            '  - Read the mission brief with "cat mission_brief.txt" for current challenges',
             '  - Use "hints" command for flag-specific guidance',
             '  - Use Tab for command, option, file, and folder completion',
             '  - Use ↑/↓ arrow keys to navigate command history'
