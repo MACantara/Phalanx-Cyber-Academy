@@ -141,7 +141,7 @@ export class Level4ChallengeTracker {
                     <!-- Challenge Dropdown -->
                     <div class="mb-3">
                         <select onchange="window.level4ChallengeTracker?.selectChallenge(parseInt(this.value))" 
-                                class="w-full text-xs bg-gray-600 text-white rounded px-2 py-1 border border-gray-500 focus:outline-none focus:border-blue-400"
+                                class="w-full text-xs bg-gray-600 text-white rounded px-2 py-1 border border-gray-500 focus:outline-none focus:border-blue-400 cursor-pointer"
                                 value="${this.currentChallengeIndex}">
                             ${this.challenges.map((challenge, index) => `
                                 <option value="${index}" ${index === this.currentChallengeIndex ? 'selected' : ''}>
@@ -195,7 +195,7 @@ export class Level4ChallengeTracker {
                         />
                         <button 
                             onclick="window.level4ChallengeTracker?.submitCurrentFlag()" 
-                            class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white text-xs font-semibold py-1 px-2 rounded transition-colors flex items-center justify-center space-x-1 hover:shadow-lg transform hover:scale-105 transition-transform">
+                            class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white text-xs font-semibold py-1 px-2 rounded transition-colors flex items-center justify-center space-x-1 hover:shadow-lg transform hover:scale-105 transition-transform cursor-pointer">>
                             <i class="bi bi-check-circle"></i>
                             <span>Verify Flag</span>
                         </button>
@@ -454,6 +454,37 @@ export class Level4ChallengeTracker {
             }
         } catch (error) {
             console.error('[ChallengeTracker] Error dispatching completion event:', error);
+        }
+        
+        // Show completion dialogue after short delay
+        setTimeout(() => {
+            this.showCompletionDialogue();
+        }, 3000); // Wait 3 seconds to let celebration notification show
+    }
+
+    // Show the completion dialogue
+    async showCompletionDialogue() {
+        try {
+            // Import the completion dialogue
+            const { Level4CompletionDialogue } = await import('../dialogues/level4-completion-dialogue.js');
+            
+            // Get desktop reference from the window
+            const desktop = window.simulatedPC?.desktop;
+            if (desktop) {
+                Level4CompletionDialogue.startLevel4CompletionDialogue(desktop, this);
+            } else {
+                console.warn('[ChallengeTracker] Desktop not available for completion dialogue');
+                // Fallback - just navigate after delay
+                setTimeout(() => {
+                    window.location.href = '/levels';
+                }, 5000);
+            }
+        } catch (error) {
+            console.error('[ChallengeTracker] Failed to load completion dialogue:', error);
+            // Fallback - just navigate after delay
+            setTimeout(() => {
+                window.location.href = '/levels';
+            }, 5000);
         }
     }
 
