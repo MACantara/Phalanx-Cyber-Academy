@@ -13,7 +13,7 @@ export class CatCommand extends BaseCommand {
         };
     }
 
-    execute(args) {
+    async execute(args) {
         if (args.includes('--help')) {
             this.showHelp();
             return;
@@ -25,7 +25,7 @@ export class CatCommand extends BaseCommand {
         }
 
         const filename = args[0];
-        const content = this.fileSystem.readFile(this.getCurrentDirectory(), filename);
+        const content = await this.fileSystem.readFile(this.getCurrentDirectory(), filename);
         
         if (content !== null) {
             this.addOutput(content);

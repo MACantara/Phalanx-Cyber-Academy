@@ -17,7 +17,7 @@ export class GrepCommand extends BaseCommand {
         };
     }
 
-    execute(args) {
+    async execute(args) {
         if (args.includes('--help') || args.length === 0) {
             this.showHelp();
             return;
@@ -62,9 +62,9 @@ export class GrepCommand extends BaseCommand {
         // If no files specified, search in current directory
         if (files.length === 0) {
             if (options.recursive) {
-                files = this.getAllFilesRecursive(this.getCurrentDirectory());
+                files = await this.getAllFilesRecursive(this.getCurrentDirectory());
             } else {
-                const items = this.fileSystem.listDirectory(this.getCurrentDirectory());
+                const items = await this.fileSystem.listDirectory(this.getCurrentDirectory());
                 files = items.filter(item => item.type === 'file').map(item => item.name);
             }
         }
@@ -73,7 +73,7 @@ export class GrepCommand extends BaseCommand {
         let totalMatches = 0;
         const results = [];
 
-        files.forEach(filename => {
+        for (const filename of files) {
             const filePath = this.fileSystem.resolvePath(this.getCurrentDirectory(), filename);
             
             // Check if file exists by trying to extract directory and filename
@@ -81,10 +81,10 @@ export class GrepCommand extends BaseCommand {
             const fileName = pathParts.pop();
             const dirPath = pathParts.join('/') || '/';
             
-            const content = this.fileSystem.readFile(dirPath, fileName);
+            const content = await this.fileSystem.readFile(dirPath, fileName);
             if (content === null) {
                 this.addOutput(`grep: ${filename}: No such file or directory`, 'text-red-500');
-                return;
+                continue;
             }
 
             const matches = this.searchInContent(content, pattern, options, filename);
@@ -92,7 +92,7 @@ export class GrepCommand extends BaseCommand {
                 results.push({ filename, matches });
                 totalMatches += matches.length;
             }
-        });
+        }
 
         // Display results
         if (totalMatches === 0) {
@@ -166,28 +166,28 @@ export class GrepCommand extends BaseCommand {
         });
     }
 
-    getAllFilesRecursive(directory) {
+    async getAllFilesRecursive(directory) {
         const files = [];
         
-        const traverse = (dir) => {
-            const items = this.fileSystem.listDirectory(dir, true); // Include hidden files
+        const traverse = async (dir) => {
+            const items = await this.fileSystem.listDirectory(dir, true); // Include hidden files
             
-            items.forEach(item => {
-                if (item.name === '.' || item.name === '..') return;
+            for (const item of items) {
+                if (item.name === '.' || item.name === '..') continue;
                 
                 const fullPath = dir === '/' ? `/${item.name}` : `${dir}/${item.name}`;
                 
                 if (item.type === 'file') {
                     files.push(fullPath);
                 } else if (item.type === 'directory') {
-                    if (this.fileSystem.directoryExists(fullPath)) {
-                        traverse(fullPath);
+                    if (await this.fileSystem.directoryExists(fullPath)) {
+                        await traverse(fullPath);
                     }
                 }
-            });
+            }
         };
         
-        traverse(directory);
+        await traverse(directory);
         return files;
     }
 

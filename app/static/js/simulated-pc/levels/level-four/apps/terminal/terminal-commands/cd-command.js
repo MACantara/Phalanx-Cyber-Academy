@@ -16,21 +16,21 @@ export class CdCommand extends BaseCommand {
         };
     }
 
-    execute(args) {
+    async execute(args) {
         if (args.includes('--help')) {
             this.showHelp();
             return;
         }
 
         if (args.length === 0) {
-            this.setCurrentDirectory('/home/trainee');
+            this.setCurrentDirectory('/home/researcher');
             return;
         }
 
         const target = args[0];
         const newPath = this.fileSystem.resolvePath(this.getCurrentDirectory(), target);
         
-        if (this.fileSystem.directoryExists(newPath)) {
+        if (await this.fileSystem.directoryExists(newPath)) {
             this.setCurrentDirectory(newPath);
         } else {
             this.addOutput(`bash: cd: ${target}: No such file or directory`, 'error');

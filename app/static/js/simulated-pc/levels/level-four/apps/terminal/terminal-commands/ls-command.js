@@ -15,7 +15,7 @@ export class LsCommand extends BaseCommand {
         };
     }
 
-    execute(args) {
+    async execute(args) {
         if (args.includes('--help')) {
             this.showHelp();
             return;
@@ -24,7 +24,7 @@ export class LsCommand extends BaseCommand {
         const showAll = args.includes('-a') || args.includes('-la') || args.includes('-al');
         const longFormat = args.includes('-l') || args.includes('-la') || args.includes('-al');
         
-        const items = this.fileSystem.listDirectory(this.getCurrentDirectory(), showAll);
+        const items = await this.fileSystem.listDirectory(this.getCurrentDirectory(), showAll);
         
         if (longFormat) {
             items.forEach(item => {

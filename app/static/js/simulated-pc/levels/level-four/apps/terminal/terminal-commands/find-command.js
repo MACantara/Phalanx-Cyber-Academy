@@ -15,7 +15,7 @@ export class FindCommand extends BaseCommand {
         };
     }
 
-    execute(args) {
+    async execute(args) {
         if (args.includes('--help')) {
             this.showHelp();
             return;
@@ -42,7 +42,7 @@ export class FindCommand extends BaseCommand {
         }
 
         // Perform the search
-        const results = this.searchFiles(searchPath, namePattern, typeFilter);
+        const results = await this.searchFiles(searchPath, namePattern, typeFilter);
         
         if (results.length === 0) {
             this.addOutput('No files found matching the criteria.');
@@ -58,11 +58,11 @@ export class FindCommand extends BaseCommand {
         this.trackEvidenceDiscovery(results, namePattern);
     }
 
-    searchFiles(searchPath, namePattern, typeFilter) {
+    async searchFiles(searchPath, namePattern, typeFilter) {
         const results = [];
         
         // Get all files in the search path
-        const items = this.fileSystem.listDirectory(searchPath, true); // Include hidden files
+        const items = await this.fileSystem.listDirectory(searchPath, true); // Include hidden files
         
         items.forEach(item => {
             // Skip . and .. entries
@@ -92,15 +92,15 @@ export class FindCommand extends BaseCommand {
         });
         
         // Also search subdirectories recursively
-        items.forEach(item => {
+        for (const item of items) {
             if (item.type === 'directory' && item.name !== '.' && item.name !== '..') {
                 const subPath = searchPath === '/' ? `/${item.name}` : `${searchPath}/${item.name}`;
-                if (this.fileSystem.directoryExists(subPath)) {
-                    const subResults = this.searchFiles(subPath, namePattern, typeFilter);
+                if (await this.fileSystem.directoryExists(subPath)) {
+                    const subResults = await this.searchFiles(subPath, namePattern, typeFilter);
                     results.push(...subResults);
                 }
             }
-        });
+        }
         
         return results;
     }
