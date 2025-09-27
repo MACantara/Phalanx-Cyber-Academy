@@ -195,7 +195,7 @@ export class Level4ChallengeTracker {
                         />
                         <button 
                             onclick="window.level4ChallengeTracker?.submitCurrentFlag()" 
-                            class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white text-xs font-semibold py-1 px-2 rounded transition-colors flex items-center justify-center space-x-1 hover:shadow-lg transform hover:scale-105 transition-transform cursor-pointer">>
+                            class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white text-xs font-semibold py-1 px-2 rounded transition-colors flex items-center justify-center space-x-1 hover:shadow-lg transform hover:scale-105 transition-transform cursor-pointer">
                             <i class="bi bi-check-circle"></i>
                             <span>Verify Flag</span>
                         </button>
