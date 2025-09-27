@@ -1,5 +1,5 @@
 import { BaseCommand } from './base-command.js';
-import { loadAllLevel4Hosts } from '../../data/index.js';
+import { loadAllLevel4Hosts } from '../../../data/index.js';
 
 export class PingCommand extends BaseCommand {
     constructor(processor) {
