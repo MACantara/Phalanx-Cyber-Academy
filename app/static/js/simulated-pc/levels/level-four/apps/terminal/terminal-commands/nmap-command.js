@@ -1,5 +1,5 @@
 import { BaseCommand } from './base-command.js';
-import { loadAllLevel4Hosts } from '../../../data/index.js';
+import { loadAllLevel4Data } from '../../../data/index.js';
 
 export class NmapCommand extends BaseCommand {
     constructor(processor) {
@@ -13,7 +13,7 @@ export class NmapCommand extends BaseCommand {
 
     async initializeHosts() {
         try {
-            const data = await loadAllLevel4Hosts();
+            const data = await loadAllLevel4Data();
             this.hostsData = data.level4_municipality_hosts || [];
             console.log('Nmap: Loaded host data:', this.hostsData.length, 'hosts');
         } catch (error) {
