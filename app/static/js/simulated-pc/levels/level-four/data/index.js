@@ -39,11 +39,5 @@ export async function loadAllLevel4Data() {
     }
 }
 
-// Legacy compatibility function
-export async function loadAllLevel4Hosts() {
-    console.warn('loadAllLevel4Hosts is deprecated, use loadAllLevel4Data instead');
-    return await loadAllLevel4Data();
-}
-
 // Data loading status
 export const level4DataLoaded = true;
