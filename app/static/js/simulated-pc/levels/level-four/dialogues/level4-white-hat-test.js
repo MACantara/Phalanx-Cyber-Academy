@@ -5,43 +5,44 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "Welcome to Level 4: The White Hat Test. This scenario will challenge your understanding of ethical boundaries in cybersecurity research."
+                text: "Welcome to Level 4: The White Hat Test. This is a comprehensive cybersecurity challenge focused on ethical penetration testing and responsible disclosure."
             },
             {
-                text: "Professional security researchers face complex decisions daily that test their moral compass and professional integrity."
+                text: "You'll be conducting a security assessment of TechCorp's web application infrastructure using professional methodologies."
             },
             {
-                text: "The CyberQuest Academy has received a contract to assess the security of SecureVote Pro, a digital voting platform used by several municipalities."
+                text: "Your mission is to discover 7 randomly selected security flags hidden throughout the system using various reconnaissance and analysis techniques."
             },
             {
-                text: "Your task is to conduct a thorough security assessment using appropriate penetration testing methodologies and tools."
+                text: "Each challenge represents a different aspect of security research - from environment analysis to log investigation, from configuration review to forensic analysis."
             },
             {
-                text: "As with all security research, you'll need to document your findings and follow proper disclosure protocols."
+                text: "Use the integrated Challenge Tracker in the top-right corner to submit discovered flags and monitor your progress throughout the assessment."
             },
             {
-                text: "However, real-world security work often presents unexpected situations that aren't covered in textbooks or training manuals."
+                text: "The terminal provides access to various security tools and commands. Explore the file system methodically to uncover hidden vulnerabilities and exposed information."
             },
             {
-                text: "The choices you make will reflect your commitment to ethical security practices and professional responsibility."
+                text: "Remember: this is an authorized penetration test. All activities are within scope and conducted with proper permission for educational purposes."
             },
             {
-                text: "Remember: the goal isn't just to find vulnerabilities, but to handle them in a way that protects both the public interest and democratic processes."
+                text: "Your findings will be automatically validated, and successful completion demonstrates proficiency in ethical hacking methodologies and responsible security research practices."
             },
             {
-                text: "This assessment will test both your technical skills and your ethical decision-making under pressure."
+                text: "Successfully completing this assessment will earn you 350 XP in Ethical Hacking and showcase your readiness for advanced cybersecurity roles."
             },
             {
-                text: "Use the Terminal and other security tools to begin your assessment. Stay alert for any developments during your testing."
-            },
-            {
-                text: "Successfully completing this evaluation will earn you 350 XP in Ethical Hacking and demonstrate your readiness for advanced security roles."
+                text: "Begin your security assessment by using the Terminal to explore the TechCorp infrastructure. Good hunting, and remember - thorough documentation is key to professional security research."
             }
         ];
     }
 
     onComplete() {
         localStorage.setItem('cyberquest_level_4_started', 'true');
+        localStorage.setItem('cyberquest_level_4_start_time', Date.now());
+        
+        // Start a backend session for Level 4
+        this.startBackendSession();
         
         // Create and start challenge tracker
         this.createAndStartChallengeTracker();
@@ -51,6 +52,39 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
             setTimeout(async () => {
                 await window.applicationLauncher.launchForLevel(4, 'terminal', 'Terminal');
             }, 500);
+        }
+    }
+
+    async startBackendSession() {
+        try {
+            const response = await fetch('/levels/api/session/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify({
+                    session_name: 'The White Hat Test',
+                    level_id: 4
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    // Store session ID for completion tracking
+                    localStorage.setItem('cyberquest_active_session_id', data.session_id);
+                    window.currentSessionId = data.session_id;
+                    console.log('[Level4WhiteHat] Backend session started:', data.session_id);
+                } else {
+                    console.error('[Level4WhiteHat] Failed to start session:', data.error);
+                }
+            } else {
+                console.error('[Level4WhiteHat] Session start request failed:', response.status);
+            }
+        } catch (error) {
+            console.error('[Level4WhiteHat] Error starting session:', error);
+            // Continue without session ID - completion can still work
         }
     }
 
@@ -77,7 +111,7 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
     }
 
     getFinalButtonText() {
-        return 'Begin Security Assessment';
+        return 'Start CTF Assessment';
     }
 
     static shouldAutoStart() {
