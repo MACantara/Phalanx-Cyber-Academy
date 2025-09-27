@@ -123,19 +123,6 @@ export class TutorialRegistry {
             restartMethod: 'restartMalwareScannerTutorial'
         });
 
-        this.registerTutorial('vulnerability-scanner', {
-            className: 'VulnerabilityScannerTutorial',
-            globalVarName: 'vulnerabilityScannerTutorial',
-            title: 'Vulnerability Scanning',
-            description: 'Learn to identify security weaknesses in web applications and generate professional reports',
-            category: 'Security Tools',
-            estimatedTime: '15 minutes',
-            storageKey: 'cyberquest_vulnerabilityscanner_tutorial_completed',
-            tutorialMethod: 'shouldAutoStartVulnerabilityScanner',
-            startMethod: 'startVulnerabilityScannerTutorial',
-            restartMethod: 'restartVulnerabilityScannerTutorial'
-        });
-
         this.registerTutorial('level5-forensics', {
             className: 'Level5ForensicsTutorial',
             globalVarName: 'level5ForensicsTutorial',
