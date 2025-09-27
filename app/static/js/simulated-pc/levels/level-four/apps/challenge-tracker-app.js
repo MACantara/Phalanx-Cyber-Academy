@@ -145,7 +145,7 @@ export class Level4ChallengeTracker {
                                 value="${this.currentChallengeIndex}">
                             ${this.challenges.map((challenge, index) => `
                                 <option value="${index}" ${index === this.currentChallengeIndex ? 'selected' : ''}>
-                                    ${this.foundFlagIds.has(challenge.id) ? '✅' : '📋'} ${index + 1}. ${challenge.name || challenge.id || `Challenge ${index + 1}`}
+                                    ${this.foundFlagIds.has(challenge.id) ? '<i class="bi bi-check-circle-fill text-green-400"></i>' : '<i class="bi bi-circle text-gray-500"></i>'} ${index + 1}. ${challenge.name || challenge.id || `Challenge ${index + 1}`}
                                 </option>
                             `).join('')}
                         </select>
