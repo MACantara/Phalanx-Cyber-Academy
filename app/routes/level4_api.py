@@ -11,43 +11,66 @@ level4_api_bp = Blueprint('level4_api', __name__, url_prefix='/api/level4')
 _json_cache = None
 
 def load_json_data():
-    """Load and cache the Level 4 data from JSON files"""
+    """Load and cache the Level 4 data from individual JSON files"""
     global _json_cache
     if _json_cache is not None:
         return _json_cache
     
     try:
-        # Load the Level 4 hosts data JSON file
+        # Load the individual Level 4 JSON files
         json_base_path = os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
             'app', 'static', 'js', 'simulated-pc', 'levels', 'level-four', 'data'
         )
         
-        hosts_data_path = os.path.join(json_base_path, 'level4-hosts-data.json')
+        # List of individual JSON files to load
+        json_files = [
+            'vote-main-server.json',
+            'vote-database-server.json', 
+            'vote-admin-server.json',
+            'municipality-network.json'
+        ]
         
-        # Check if file exists
-        if not os.path.exists(hosts_data_path):
-            raise FileNotFoundError(f"Level 4 hosts data file not found: {hosts_data_path}")
+        level4_hosts = []
         
-        # Read JSON file
-        with open(hosts_data_path, 'r', encoding='utf-8') as f:
-            hosts_data = json.load(f)
+        # Load each individual JSON file
+        for json_file in json_files:
+            file_path = os.path.join(json_base_path, json_file)
+            
+            if not os.path.exists(file_path):
+                print(f"Warning: Level 4 file not found: {file_path}")
+                continue
+                
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    host_data = json.load(f)
+                    level4_hosts.append(host_data)
+                    print(f"Loaded: {json_file}")
+            except Exception as file_error:
+                print(f"Error loading {json_file}: {file_error}")
+                continue
+        
+        # Create the consolidated data structure
+        hosts_data = {
+            'level4_municipality_hosts': level4_hosts
+        }
         
         # Cache the data
         _json_cache = hosts_data
         
-        hosts_count = len(hosts_data.get('level4_municipality_hosts', []))
+        hosts_count = len(level4_hosts)
         
-        print(f"Loaded Level 4 data from JSON file:")
+        print(f"Loaded Level 4 data from {len(json_files)} individual JSON files:")
         print(f"Municipality hosts: {hosts_count}")
         
         return _json_cache
         
     except Exception as e:
-        print(f"Error loading Level 4 JSON file: {e}")
+        print(f"Error loading Level 4 JSON files: {e}")
         print("Traceback:")
         traceback.print_exc()
-        return {}
+        # Return empty structure rather than None to prevent downstream errors
+        return {'level4_municipality_hosts': []}
 
 def get_random_items(array, count):
     """Get random items from an array"""
