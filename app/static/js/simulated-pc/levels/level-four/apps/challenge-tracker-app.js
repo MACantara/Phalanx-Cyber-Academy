@@ -152,20 +152,20 @@ export class Level4ChallengeTracker {
                     </div>
                     ${currentChallenge ? `
                         <div class="bg-gray-700 rounded p-3">
-                            <div class="flex items-center justify-between mb-2">
-                                <div class="text-xs font-semibold text-gray-300">${currentChallenge.name || 'Challenge'}</div>
-                                <div class="flex items-center space-x-2">
+                            <div class="flex items-center mb-2">
+                                <div class="flex items-center mr-2">
                                     ${this.foundFlags.has(currentChallenge.value) ? 
                                         '<i class="bi bi-check-circle text-green-400"></i>' : 
                                         '<i class="bi bi-circle text-gray-500"></i>'
                                     }
                                 </div>
+                                <div class="text-xs font-semibold text-gray-300">${currentChallenge.name || 'Challenge'}</div>
                             </div>
-                            <div class="text-sm leading-relaxed mb-2">${currentChallenge.challenge_question || 'Loading challenge...'}</div>
+                            <div class="text-sm leading-relaxed">${currentChallenge.challenge_question || 'Loading challenge...'}</div>
                         </div>
                     ` : `
                         <div class="bg-gray-700 rounded p-3 text-center text-gray-400">
-                            <i class="bi bi-hourglass-split mb-2"></i>
+                            <i class="bi bi-hourglass-split"></i>
                             <div>Loading challenges...</div>
                         </div>
                     `}
