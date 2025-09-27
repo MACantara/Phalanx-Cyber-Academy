@@ -30,14 +30,10 @@ export async function loadLevel4Data() {
         return data;
     } catch (error) {
         console.error('Error loading Level 4 data:', error);
-        // Fallback to local JSON file
+        // Fallback to individual JSON files via data index
         try {
-            const response = await fetch('/static/js/simulated-pc/levels/level-four/data/level4-hosts-data.json');
-            if (!response.ok) {
-                throw new Error(`Failed to load fallback Level 4 data: ${response.status}`);
-            }
-            
-            const data = await response.json();
+            const { loadAllLevel4Hosts } = await import('/static/js/simulated-pc/levels/level-four/data/index.js');
+            const data = await loadAllLevel4Hosts();
             _level4DataCache = data;
             return data;
         } catch (fallbackError) {
