@@ -281,6 +281,22 @@ export class DisclosureReportApp extends WindowBase {
                 this.clearForm();
                 this.showNotification('Flag verified and recorded successfully!', 'success');
 
+                // Notify challenge tracker of flag submission
+                try {
+                    if (typeof window !== 'undefined' && window.dispatchEvent) {
+                        window.dispatchEvent(new CustomEvent('level4-flag-submitted', {
+                            detail: {
+                                success: true,
+                                flag: flagValue,
+                                flagId: flagNumber,
+                                timestamp: Date.now()
+                            }
+                        }));
+                    }
+                } catch (error) {
+                    console.error('Error dispatching flag submission event:', error);
+                }
+
                 // Check if all flags are discovered
                 if (this.submittedFlags.size === 7) {
                     this.handleAssessmentComplete();
