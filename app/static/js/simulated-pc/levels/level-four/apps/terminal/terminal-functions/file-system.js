@@ -444,7 +444,21 @@ Add this flag to your disclosure report to complete the challenge.`,
             return null;
         }
 
-        return file.content;
+        // Process escape sequences in file content
+        return this.processEscapeSequences(file.content);
+    }
+
+    processEscapeSequences(content) {
+        if (typeof content !== 'string') {
+            return content;
+        }
+        
+        // Process common escape sequences
+        return content
+            .replace(/\\n/g, '\n')    // Convert \n to actual newlines
+            .replace(/\\t/g, '\t')    // Convert \t to actual tabs
+            .replace(/\\r/g, '\r')    // Convert \r to carriage returns
+            .replace(/\\\\/g, '\\');  // Convert \\ to single backslash
     }
 
     directoryExists(path) {
