@@ -1,0 +1,63 @@
+{
+  "hostname": "vote-admin.municipality.gov",
+  "ip": "192.168.100.12",
+  "description": "SecureVote Pro Admin Panel",
+  "os": "Linux Ubuntu 20.04.3 LTS",
+  "uptime": "15 days, 3:40:18",
+  "ports": {
+    "22": {
+      "port": 22,
+      "service": "ssh",
+      "version": "OpenSSH 8.2",
+      "state": "open",
+      "banner": "SSH-2.0-OpenSSH_8.2"
+    },
+    "80": {
+      "port": 80,
+      "service": "http",
+      "version": "nginx 1.18.0",
+      "state": "open",
+      "banner": "nginx/1.18.0 (Ubuntu)"
+    },
+    "443": {
+      "port": 443,
+      "service": "https",
+      "version": "nginx 1.18.0",
+      "state": "open",
+      "banner": "nginx/1.18.0 (Ubuntu)"
+    },
+    "8080": {
+      "port": 8080,
+      "service": "http-alt",
+      "version": "AdminPanel 3.2.1",
+      "state": "open",
+      "banner": "SecureVote Admin v3.2.1"
+    }
+  },
+  "vulnerabilities": {
+    "http-directory-traversal": {
+      "vote-admin.municipality.gov:8080": [
+        "Directory traversal in admin panel",
+        "Config files accessible via path traversal",
+        "Found: /admin/../config/database.conf",
+        "CRITICAL: Database credentials exposed"
+      ]
+    },
+    "http-default-accounts": {
+      "vote-admin.municipality.gov:8080": [
+        "Default credentials detected:",
+        "Username: admin",
+        "Password: password",
+        "CRITICAL: Default admin credentials active"
+      ]
+    }
+  },
+  "serviceDescriptions": {
+    "22": "SSH access for system administration",
+    "80": "Admin panel web interface (HTTP)",
+    "443": "Secure admin panel web interface (HTTPS)",
+    "8080": "Administrative control panel - high privileges"
+  },
+  "hostType": "single",
+  "category": "admin"
+}

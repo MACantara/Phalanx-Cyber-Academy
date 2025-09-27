@@ -1,0 +1,99 @@
+{
+  "hostname": "vote.municipality.gov",
+  "ip": "192.168.100.10",
+  "description": "SecureVote Pro Main Server",
+  "os": "Linux Ubuntu 20.04.3 LTS",
+  "uptime": "15 days, 3:42:15",
+  "ports": {
+    "22": {
+      "port": 22,
+      "service": "ssh",
+      "version": "OpenSSH 8.2",
+      "state": "open",
+      "banner": "SSH-2.0-OpenSSH_8.2"
+    },
+    "80": {
+      "port": 80,
+      "service": "http",
+      "version": "Apache 2.4.41",
+      "state": "open",
+      "banner": "Apache/2.4.41 (Ubuntu)"
+    },
+    "443": {
+      "port": 443,
+      "service": "https",
+      "version": "Apache 2.4.41",
+      "state": "open",
+      "banner": "Apache/2.4.41 (Ubuntu) SSL/TLS"
+    },
+    "3306": {
+      "port": 3306,
+      "service": "mysql",
+      "version": "MySQL 8.0.25",
+      "state": "open",
+      "banner": "MySQL 8.0.25-0ubuntu0.20.04.1"
+    },
+    "8080": {
+      "port": 8080,
+      "service": "http-alt",
+      "version": "Jetty 9.4.39",
+      "state": "open",
+      "banner": "Jetty(9.4.39.v20210325)"
+    }
+  },
+  "vulnerabilities": {
+    "http-sql-injection": {
+      "vote.municipality.gov:80": [
+        "SQL injection vulnerability found in /voter-lookup endpoint",
+        "Parameter: voter_id appears to be vulnerable to SQL injection",
+        "Payload: ' OR 1=1-- successfully executed",
+        "CRITICAL: Database access possible through injection"
+      ],
+      "vote.municipality.gov:443": [
+        "SQL injection vulnerability found in /voter-lookup endpoint (HTTPS)",
+        "Same vulnerability present on secure connection"
+      ]
+    },
+    "http-stored-xss": {
+      "vote.municipality.gov:80": [
+        "Stored XSS vulnerability found in /results-comments endpoint",
+        "User input not properly sanitized in comment system",
+        "Payload: <script>alert(\"XSS\")</script> successfully stored",
+        "HIGH: Potential for session hijacking and admin impersonation"
+      ]
+    },
+    "http-directory-traversal": {
+      "vote.municipality.gov:80": [
+        "Directory traversal vulnerability found",
+        "Path: /admin/../../../etc/passwd accessible",
+        "MEDIUM: Local file inclusion possible"
+      ]
+    },
+    "ssl-cert": {
+      "vote.municipality.gov:443": [
+        "SSL Certificate Information:",
+        "Subject: CN=vote.municipality.gov",
+        "Issuer: Self-signed certificate",
+        "Valid from: 2024-01-01 to 2025-01-01",
+        "WARNING: Self-signed certificate - potential MITM risk"
+      ]
+    },
+    "mysql-info": {
+      "vote.municipality.gov:3306": [
+        "MySQL Server Information:",
+        "Version: 8.0.25-0ubuntu0.20.04.1",
+        "Authentication: mysql_native_password",
+        "Databases: information_schema, mysql, performance_schema, voting_system"
+      ]
+    }
+  },
+  "serviceDescriptions": {
+    "22": "SSH access for system administration",
+    "80": "Main voting application web interface",
+    "443": "Secure voting application web interface",
+    "3306": "MySQL database containing vote data",
+    "8080": "Application server (Jetty) backend services"
+  },
+  "hostType": "single",
+  "category": "server"
+}

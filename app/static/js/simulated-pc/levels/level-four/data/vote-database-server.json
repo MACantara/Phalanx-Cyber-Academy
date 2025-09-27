@@ -1,0 +1,47 @@
+{
+  "hostname": "vote-db.municipality.gov",
+  "ip": "192.168.100.11",
+  "description": "SecureVote Pro Database Server",
+  "os": "Linux Ubuntu 20.04.3 LTS",
+  "uptime": "15 days, 3:41:02",
+  "ports": {
+    "22": {
+      "port": 22,
+      "service": "ssh",
+      "version": "OpenSSH 8.2",
+      "state": "open",
+      "banner": "SSH-2.0-OpenSSH_8.2"
+    },
+    "3306": {
+      "port": 3306,
+      "service": "mysql",
+      "version": "MySQL 8.0.25",
+      "state": "open",
+      "banner": "MySQL 8.0.25-0ubuntu0.20.04.1"
+    },
+    "5432": {
+      "port": 5432,
+      "service": "postgresql",
+      "version": "PostgreSQL 13.4",
+      "state": "open",
+      "banner": "PostgreSQL 13.4"
+    }
+  },
+  "vulnerabilities": {
+    "mysql-info": {
+      "vote-db.municipality.gov:3306": [
+        "MySQL Server Information:",
+        "Version: 8.0.25-0ubuntu0.20.04.1",
+        "Root access: Possible with weak credentials",
+        "CRITICAL: Weak MySQL root password detected"
+      ]
+    }
+  },
+  "serviceDescriptions": {
+    "22": "SSH access for database administration",
+    "3306": "MySQL database server - primary vote storage",
+    "5432": "PostgreSQL database server - backup vote storage"
+  },
+  "hostType": "single",
+  "category": "database"
+}
