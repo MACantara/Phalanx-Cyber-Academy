@@ -11,7 +11,8 @@ export class Level4ChallengeTracker {
         
         // Challenge state
         this.challenges = [];
-        this.foundFlags = new Set();
+        this.foundFlags = new Set(); // Contains flag values that were submitted
+        this.foundFlagIds = new Set(); // Contains flag IDs that were completed
         this.currentChallengeIndex = 0;
         this.isMinimized = false;
         
@@ -106,7 +107,7 @@ export class Level4ChallengeTracker {
         }
 
         const currentChallenge = this.challenges[this.currentChallengeIndex] || null;
-        const progress = `${this.foundFlags.size}/${this.challenges.length}`;
+        const progress = `${this.foundFlagIds.size}/${this.challenges.length}`;
         
         return `
             <div class="bg-gradient-to-r from-blue-700 to-blue-600 px-3 py-2 border-b border-gray-600 cursor-pointer"
@@ -123,7 +124,7 @@ export class Level4ChallengeTracker {
                         </div>
                         <div class="w-16 bg-gray-600 rounded-full h-1">
                             <div class="bg-gradient-to-r from-blue-400 to-green-400 h-1 rounded-full transition-all duration-500" 
-                                 style="width: ${this.challenges.length > 0 ? (this.foundFlags.size / this.challenges.length) * 100 : 0}%"></div>
+                                 style="width: ${this.challenges.length > 0 ? (this.foundFlagIds.size / this.challenges.length) * 100 : 0}%"></div>
                         </div>
                     </div>
                 </div>
@@ -144,28 +145,28 @@ export class Level4ChallengeTracker {
                                 value="${this.currentChallengeIndex}">
                             ${this.challenges.map((challenge, index) => `
                                 <option value="${index}" ${index === this.currentChallengeIndex ? 'selected' : ''}>
-                                    ${this.foundFlags.has(challenge.value) ? '✅' : '📋'} ${index + 1}. ${challenge.name || challenge.id || `Challenge ${index + 1}`}
+                                    ${this.foundFlagIds.has(challenge.id) ? '✅' : '📋'} ${index + 1}. ${challenge.name || challenge.id || `Challenge ${index + 1}`}
                                 </option>
                             `).join('')}
                         </select>
                     </div>
                     ${currentChallenge ? `
-                        <div class="bg-gray-700 rounded p-3 ${this.foundFlags.has(currentChallenge.value) ? 'ring-2 ring-green-400 bg-green-900 bg-opacity-20' : ''}">
+                        <div class="bg-gray-700 rounded p-3 ${this.foundFlagIds.has(currentChallenge.id) ? 'ring-2 ring-green-400 bg-green-900 bg-opacity-20' : ''}">
                             <div class="flex items-center mb-2">
                                 <div class="flex items-center mr-2">
-                                    ${this.foundFlags.has(currentChallenge.value) ? 
+                                    ${this.foundFlagIds.has(currentChallenge.id) ? 
                                         '<i class="bi bi-check-circle-fill text-green-400 text-lg"></i>' : 
                                         '<i class="bi bi-circle text-gray-500"></i>'
                                     }
                                 </div>
-                                <div class="text-xs font-semibold ${this.foundFlags.has(currentChallenge.value) ? 'text-green-300' : 'text-gray-300'}">${currentChallenge.name || 'Challenge'}</div>
-                                ${this.foundFlags.has(currentChallenge.value) ? 
+                                <div class="text-xs font-semibold ${this.foundFlagIds.has(currentChallenge.id) ? 'text-green-300' : 'text-gray-300'}">${currentChallenge.name || 'Challenge'}</div>
+                                ${this.foundFlagIds.has(currentChallenge.id) ? 
                                     '<div class="ml-auto px-2 py-0.5 bg-green-600 text-green-100 text-xs rounded-full font-medium">COMPLETED</div>' : 
                                     ''
                                 }
                             </div>
-                            <div class="text-sm leading-relaxed ${this.foundFlags.has(currentChallenge.value) ? 'text-gray-300 line-through opacity-75' : ''}">${currentChallenge.challenge_question || 'Loading challenge...'}</div>
-                            ${this.foundFlags.has(currentChallenge.value) ? 
+                            <div class="text-sm leading-relaxed ${this.foundFlagIds.has(currentChallenge.id) ? 'text-gray-300 line-through opacity-75' : ''}">${currentChallenge.challenge_question || 'Loading challenge...'}</div>
+                            ${this.foundFlagIds.has(currentChallenge.id) ? 
                                 '<div class="mt-2 text-xs text-green-400 flex items-center"><i class="bi bi-trophy mr-1"></i>Challenge completed! Well done!</div>' : 
                                 ''
                             }
@@ -296,7 +297,7 @@ export class Level4ChallengeTracker {
 
             if (result.success && result.is_valid) {
                 // Mark flag as found
-                this.markFlagFound(flagValue);
+                this.markFlagFound(flagValue, currentChallenge.id);
                 
                 // Clear the input
                 if (flagInput) {
@@ -317,7 +318,7 @@ export class Level4ChallengeTracker {
                 
                 // Auto-advance to next incomplete challenge
                 const nextIncompleteIndex = this.challenges.findIndex((challenge, index) => 
-                    index > this.currentChallengeIndex && !this.foundFlags.has(challenge.value)
+                    index > this.currentChallengeIndex && !this.foundFlagIds.has(challenge.id)
                 );
                 
                 if (nextIncompleteIndex !== -1) {
@@ -394,14 +395,28 @@ export class Level4ChallengeTracker {
     }
 
     // Mark flag as found
-    markFlagFound(flagValue) {
+    markFlagFound(flagValue, flagId = null) {
         this.foundFlags.add(flagValue);
+        
+        // Try to find the flag ID if not provided
+        if (!flagId) {
+            const challenge = this.challenges.find(c => 
+                flagValue.startsWith(c.id + '{') || flagValue === c.value
+            );
+            flagId = challenge?.id;
+        }
+        
+        if (flagId) {
+            this.foundFlagIds.add(flagId);
+        }
+        
         this.updateContent();
         
         // Move to next unfinished challenge if current one is completed
-        if (this.challenges[this.currentChallengeIndex]?.value === flagValue) {
+        const currentChallenge = this.challenges[this.currentChallengeIndex];
+        if (currentChallenge && (flagValue.startsWith(currentChallenge.id + '{') || this.foundFlagIds.has(currentChallenge.id))) {
             const nextUnfinishedIndex = this.challenges.findIndex((challenge, index) => 
-                index > this.currentChallengeIndex && !this.foundFlags.has(challenge.value)
+                index > this.currentChallengeIndex && !this.foundFlagIds.has(challenge.id)
             );
             
             if (nextUnfinishedIndex !== -1) {
@@ -410,10 +425,10 @@ export class Level4ChallengeTracker {
             }
         }
         
-        console.log('[ChallengeTracker] Flag found:', flagValue);
+        console.log('[ChallengeTracker] Flag found:', flagValue, 'ID:', flagId);
         
         // Check for completion
-        if (this.foundFlags.size === this.challenges.length) {
+        if (this.foundFlagIds.size === this.challenges.length) {
             this.onAllChallengesCompleted();
         }
     }
@@ -432,6 +447,7 @@ export class Level4ChallengeTracker {
                     detail: {
                         totalChallenges: this.challenges.length,
                         foundFlags: Array.from(this.foundFlags),
+                        foundFlagIds: Array.from(this.foundFlagIds),
                         timestamp: Date.now()
                     }
                 }));
@@ -455,9 +471,9 @@ export class Level4ChallengeTracker {
     getProgress() {
         return {
             total: this.challenges.length,
-            found: this.foundFlags.size,
-            remaining: this.challenges.length - this.foundFlags.size,
-            percentage: this.challenges.length > 0 ? (this.foundFlags.size / this.challenges.length) * 100 : 0
+            found: this.foundFlagIds.size,
+            remaining: this.challenges.length - this.foundFlagIds.size,
+            percentage: this.challenges.length > 0 ? (this.foundFlagIds.size / this.challenges.length) * 100 : 0
         };
     }
 
@@ -491,6 +507,7 @@ export class Level4ChallengeTracker {
     getStatus() {
         return {
             foundFlags: Array.from(this.foundFlags),
+            foundFlagIds: Array.from(this.foundFlagIds),
             currentChallengeIndex: this.currentChallengeIndex,
             isMinimized: this.isMinimized
         };
@@ -500,6 +517,7 @@ export class Level4ChallengeTracker {
     setStatus(status) {
         if (status) {
             this.foundFlags = new Set(status.foundFlags || []);
+            this.foundFlagIds = new Set(status.foundFlagIds || []);
             this.currentChallengeIndex = status.currentChallengeIndex || 0;
             this.isMinimized = status.isMinimized || false;
             this.updateContent();
