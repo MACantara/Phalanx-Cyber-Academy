@@ -102,6 +102,27 @@ export class Level4SessionSummary extends BaseModalComponent {
     }
 
     /**
+     * Calculate performance-based XP award
+     * Base XP is 300, multiplied by performance score percentage
+     */
+    calculatePerformanceBasedXP() {
+        const baseXP = 300; // Base XP for completing Level 4
+        const performanceScore = this.calculatePerformanceScore();
+        const performanceMultiplier = performanceScore / 100; // Convert percentage to multiplier
+        
+        const finalXP = Math.round(baseXP * performanceMultiplier);
+        
+        console.log('[Level4Summary] XP calculation:', {
+            baseXP,
+            performanceScore: performanceScore + '%',
+            performanceMultiplier,
+            finalXP
+        });
+        
+        return finalXP;
+    }
+
+    /**
      * Calculate performance-based score for Level 4
      * Based on efficiency (attempts per flag) and completion time
      */
@@ -380,6 +401,7 @@ export class Level4SessionSummary extends BaseModalComponent {
         const totalAttempts = this.calculateTotalAttempts();
         const avgAttemptsPerFlag = this.sessionData.flagsFound > 0 ? totalAttempts / this.sessionData.flagsFound : 0;
         const performanceScore = this.calculatePerformanceScore();
+        const performanceBasedXP = this.calculatePerformanceBasedXP();
         
         return `
             <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6 rounded-lg">
@@ -433,8 +455,9 @@ export class Level4SessionSummary extends BaseModalComponent {
                         <div class="text-sm text-gray-400">Success Rate</div>
                     </div>
                     <div class="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
-                        <div class="text-2xl font-bold text-yellow-400">${this.sessionData.xpEarned || '...'}</div>
+                        <div class="text-2xl font-bold text-yellow-400">${this.sessionData.xpEarned || performanceBasedXP}</div>
                         <div class="text-sm text-gray-400">XP Earned</div>
+                        <div class="text-xs text-gray-500 mt-1">Performance-Based</div>
                     </div>
                 </div>
 
@@ -597,8 +620,9 @@ export class Level4SessionSummary extends BaseModalComponent {
                 return null;
             }
 
-            // Calculate performance-based score
+            // Calculate performance-based score and XP
             const performanceScore = this.calculatePerformanceScore();
+            const performanceBasedXP = this.calculatePerformanceBasedXP();
             const totalAttempts = this.calculateTotalAttempts();
             const duration = this.sessionData.endTime - this.sessionData.startTime;
             const timeSpentSeconds = Math.round(duration / 1000);
@@ -607,6 +631,7 @@ export class Level4SessionSummary extends BaseModalComponent {
             const sessionEndData = {
                 session_id: sessionId,
                 score: performanceScore, // Dynamic performance-based score
+                xp_earned: performanceBasedXP, // Send calculated performance-based XP
                 time_spent: timeSpentSeconds,
                 performance_metrics: {
                     flags_found: this.sessionData.flagsFound,
@@ -617,7 +642,8 @@ export class Level4SessionSummary extends BaseModalComponent {
                     efficiency_rating: this.getEfficiencyRating(totalAttempts, this.sessionData.flagsFound),
                     time_rating: this.getTimeRating(duration / (1000 * 60)),
                     categories_completed: this.categorizeCompletedChallenges(),
-                    performance_score: performanceScore
+                    performance_score: performanceScore,
+                    calculated_xp: performanceBasedXP
                 }
             };
 

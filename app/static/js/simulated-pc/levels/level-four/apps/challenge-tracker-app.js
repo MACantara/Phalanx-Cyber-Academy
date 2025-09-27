@@ -511,7 +511,7 @@ export class Level4ChallengeTracker {
                 const mockStats = {
                     flagsFound: this.foundFlagIds.size,
                     duration: 'completion time unavailable',
-                    xpEarned: 350
+                    xpEarned: 0  // Will be calculated dynamically based on performance
                 };
                 Level4SessionSummary.createAndShow(this, mockStats);
                 console.log('[ChallengeTracker] Direct session summary shown as fallback');

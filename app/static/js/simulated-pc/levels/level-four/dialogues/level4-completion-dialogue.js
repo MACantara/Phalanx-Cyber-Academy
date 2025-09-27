@@ -25,7 +25,7 @@ export class Level4CompletionDialogue extends BaseDialogue {
                 text: "This achievement qualifies you for advanced cybersecurity roles requiring expertise in ethical hacking, vulnerability assessment, and penetration testing."
             },
             {
-                text: "You have earned 350 XP in Ethical Hacking and demonstrated mastery of professional security assessment practices."
+                text: "You have earned performance-based XP in Ethical Hacking, calculated based on your efficiency and speed during the assessment."
             },
             {
                 text: "Congratulations on completing Level 4: The White Hat Test. You're now ready for even more advanced cybersecurity challenges!"
@@ -38,7 +38,7 @@ export class Level4CompletionDialogue extends BaseDialogue {
             flagsFound: 7,
             duration: 'approximately 30 minutes',
             categories: ['Environment Analysis', 'Configuration Review', 'Log Investigation', 'Forensic Analysis'],
-            xpEarned: 350
+            xpEarned: 0  // Will be calculated dynamically based on performance
         };
 
         // If we have access to the challenge tracker, get real stats
