@@ -4,6 +4,8 @@ import json
 import random
 import traceback
 from pathlib import Path
+from app.utils.xp import XPCalculator
+from app.models.level import Level
 
 level4_api_bp = Blueprint('level4_api', __name__, url_prefix='/api/level4')
 
@@ -791,4 +793,69 @@ def clear_session_flags():
         return jsonify({
             'success': False,
             'error': 'Failed to clear session flags'
+        }), 500
+
+@level4_api_bp.route('/calculate-xp', methods=['POST'])
+def calculate_level4_xp():
+    """Calculate performance-based XP for Level 4 completion"""
+    try:
+        # Get request data
+        request_data = request.get_json()
+        if not request_data:
+            return jsonify({
+                'success': False,
+                'error': 'No data provided'
+            }), 400
+        
+        # Extract performance data
+        score = request_data.get('score')  # Performance score (0-100)
+        time_spent = request_data.get('time_spent')  # Time in seconds
+        performance_metrics = request_data.get('performance_metrics', {})
+        
+        # Get Level 4 metadata for difficulty
+        level = Level.get_by_level_id(4)
+        difficulty = level.difficulty if level else 'hard'  # Level 4 is typically hard
+        
+        # Calculate XP using the centralized XP system
+        xp_calculation = XPCalculator.calculate_level_xp(
+            level_id=4,
+            score=score,
+            time_spent=time_spent,
+            difficulty=difficulty
+        )
+        
+        # Add Level 4 specific performance context to the response
+        response_data = {
+            'success': True,
+            'xp_calculation': xp_calculation,
+            'level_info': {
+                'level_id': 4,
+                'difficulty': difficulty,
+                'name': 'The White Hat Test'
+            },
+            'performance_context': {
+                'flags_found': performance_metrics.get('flags_found', 0),
+                'total_flags': performance_metrics.get('total_flags', 7),
+                'total_attempts': performance_metrics.get('total_attempts', 0),
+                'average_attempts_per_flag': performance_metrics.get('average_attempts_per_flag', 0),
+                'completion_time_minutes': performance_metrics.get('completion_time_minutes', 0),
+                'efficiency_rating': performance_metrics.get('efficiency_rating', 'unknown'),
+                'time_rating': performance_metrics.get('time_rating', 'unknown'),
+                'categories_completed': performance_metrics.get('categories_completed', [])
+            }
+        }
+        
+        print(f"[Level4 XP] Calculated XP for Level 4:")
+        print(f"  Score: {score}% | Time: {time_spent}s | Difficulty: {difficulty}")
+        print(f"  XP Earned: {xp_calculation['xp_earned']} | Breakdown: {xp_calculation['breakdown']}")
+        
+        return jsonify(response_data), 200
+        
+    except Exception as e:
+        print(f"Error in calculate_level4_xp: {e}")
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': 'Failed to calculate XP',
+            'details': str(e)
         }), 500

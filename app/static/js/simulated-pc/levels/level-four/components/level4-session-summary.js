@@ -102,24 +102,78 @@ export class Level4SessionSummary extends BaseModalComponent {
     }
 
     /**
-     * Calculate performance-based XP award
-     * Base XP is 300, multiplied by performance score percentage
+     * Calculate performance-based XP using the centralized API
      */
-    calculatePerformanceBasedXP() {
-        const baseXP = 300; // Base XP for completing Level 4
-        const performanceScore = this.calculatePerformanceScore();
-        const performanceMultiplier = performanceScore / 100; // Convert percentage to multiplier
-        
-        const finalXP = Math.round(baseXP * performanceMultiplier);
-        
-        console.log('[Level4Summary] XP calculation:', {
-            baseXP,
-            performanceScore: performanceScore + '%',
-            performanceMultiplier,
-            finalXP
-        });
-        
-        return finalXP;
+    async calculatePerformanceBasedXP() {
+        try {
+            const performanceScore = this.calculatePerformanceScore();
+            const totalAttempts = this.calculateTotalAttempts();
+            const duration = this.sessionData.endTime - this.sessionData.startTime;
+            const timeSpentSeconds = Math.round(duration / 1000);
+            
+            // Prepare performance metrics for API
+            const requestData = {
+                score: performanceScore,
+                time_spent: timeSpentSeconds,
+                performance_metrics: {
+                    flags_found: this.sessionData.flagsFound,
+                    total_flags: this.sessionData.totalFlags,
+                    total_attempts: totalAttempts,
+                    average_attempts_per_flag: Math.round((totalAttempts / this.sessionData.flagsFound) * 10) / 10,
+                    completion_time_minutes: Math.round(duration / (1000 * 60)),
+                    efficiency_rating: this.getEfficiencyRating(totalAttempts, this.sessionData.flagsFound),
+                    time_rating: this.getTimeRating(duration / (1000 * 60)),
+                    categories_completed: this.categorizeCompletedChallenges()
+                }
+            };
+            
+            console.log('[Level4Summary] Requesting XP calculation from API:', requestData);
+            
+            const response = await fetch('/api/level4/calculate-xp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify(requestData)
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success) {
+                    const xpCalculation = result.xp_calculation;
+                    const finalXP = xpCalculation.xp_earned;
+                    
+                    console.log('[Level4Summary] XP calculation from API:', {
+                        performanceScore: performanceScore + '%',
+                        timeSpentSeconds,
+                        finalXP,
+                        breakdown: xpCalculation.breakdown,
+                        calculationDetails: xpCalculation.calculation_details
+                    });
+                    
+                    // Store the full calculation details for potential display
+                    this._xpCalculationDetails = xpCalculation;
+                    
+                    return finalXP;
+                } else {
+                    throw new Error(result.error || 'API returned unsuccessful result');
+                }
+            } else {
+                throw new Error(`API request failed with status: ${response.status}`);
+            }
+            
+        } catch (error) {
+            console.error('[Level4Summary] Failed to calculate XP via API, using fallback:', error);
+            
+            // Fallback to simple calculation if API fails
+            const baseXP = 300;
+            const performanceScore = this.calculatePerformanceScore();
+            const fallbackXP = Math.round(baseXP * (performanceScore / 100));
+            
+            console.warn('[Level4Summary] Using fallback XP calculation:', fallbackXP);
+            return fallbackXP;
+        }
     }
 
     /**
@@ -381,27 +435,66 @@ export class Level4SessionSummary extends BaseModalComponent {
         `;
     }
 
-    showSessionSummary(completionStats = null) {
+    async showSessionSummary(completionStats = null) {
         // Override session data with completion stats if provided
         if (completionStats) {
             this.sessionData = { ...this.sessionData, ...completionStats };
         }
 
-        const modalContent = this.createSummaryContent();
-        this.showModal('Level 4: White Hat Test - Assessment Complete', modalContent);
+        // Show modal with loading state first
+        const loadingContent = this.createLoadingContent();
+        this.showModal('Level 4: White Hat Test - Assessment Complete', loadingContent);
         
-        // Bind navigation events after modal is shown
-        setTimeout(() => {
+        // Calculate XP asynchronously and update content
+        try {
+            const performanceBasedXP = await this.calculatePerformanceBasedXP();
+            const modalContent = this.createSummaryContent(performanceBasedXP);
+            
+            // Update modal content
+            const modalContainer = document.querySelector('#level4-summary-modal .modal-content');
+            if (modalContainer) {
+                modalContainer.innerHTML = modalContent;
+            }
+            
+            // Bind navigation events after content is updated
+            setTimeout(() => {
+                this.bindNavigationEvents();
+            }, 100);
+            
+        } catch (error) {
+            console.error('[Level4Summary] Error loading XP calculation:', error);
+            // Fallback to content without XP calculation
+            const modalContent = this.createSummaryContent(0);
+            const modalContainer = document.querySelector('#level4-summary-modal .modal-content');
+            if (modalContainer) {
+                modalContainer.innerHTML = modalContent;
+            }
             this.bindNavigationEvents();
-        }, 100);
+        }
     }
 
-    createSummaryContent() {
+    createLoadingContent() {
+        return `
+            <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6 rounded-lg">
+                <div class="text-center mb-6">
+                    <div class="text-4xl mb-2">🎉</div>
+                    <h2 class="text-2xl font-bold text-green-400 mb-2">Assessment Complete!</h2>
+                    <p class="text-gray-300">White Hat Penetration Test Successfully Completed</p>
+                </div>
+                
+                <div class="text-center py-8">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+                    <p class="text-gray-400 mt-4">Calculating performance-based XP...</p>
+                </div>
+            </div>
+        `;
+    }
+
+    createSummaryContent(performanceBasedXP = 0) {
         const duration = this.calculateDuration();
         const totalAttempts = this.calculateTotalAttempts();
         const avgAttemptsPerFlag = this.sessionData.flagsFound > 0 ? totalAttempts / this.sessionData.flagsFound : 0;
         const performanceScore = this.calculatePerformanceScore();
-        const performanceBasedXP = this.calculatePerformanceBasedXP();
         
         return `
             <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6 rounded-lg">
@@ -620,9 +713,9 @@ export class Level4SessionSummary extends BaseModalComponent {
                 return null;
             }
 
-            // Calculate performance-based score and XP
+            // Calculate performance-based score and XP using API
             const performanceScore = this.calculatePerformanceScore();
-            const performanceBasedXP = this.calculatePerformanceBasedXP();
+            const performanceBasedXP = await this.calculatePerformanceBasedXP();
             const totalAttempts = this.calculateTotalAttempts();
             const duration = this.sessionData.endTime - this.sessionData.startTime;
             const timeSpentSeconds = Math.round(duration / 1000);
