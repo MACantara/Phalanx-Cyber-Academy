@@ -286,6 +286,27 @@ def get_sample_data():
             'sample': {}
         }), 500
 
+def load_ctf_flags():
+    """Load CTF flags configuration from JSON file"""
+    try:
+        flags_file_path = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
+            'app', 'static', 'js', 'simulated-pc', 'levels', 'level-four', 'data', 'ctf-flags.json'
+        )
+        
+        if not os.path.exists(flags_file_path):
+            print(f"Warning: CTF flags file not found: {flags_file_path}")
+            return None
+            
+        with open(flags_file_path, 'r', encoding='utf-8') as f:
+            flags_data = json.load(f)
+            print(f"Loaded CTF flags configuration")
+            return flags_data
+            
+    except Exception as e:
+        print(f"Error loading CTF flags: {e}")
+        return None
+
 @level4_api_bp.route('/validate-flag', methods=['POST'])
 def validate_flag():
     """Validate a CTF flag submission"""
@@ -309,16 +330,25 @@ def validate_flag():
                 'is_valid': False
             }), 400
         
-        # Define correct flags (matches the CTF file system)
-        correct_flags = {
-            'FLAG-1': 'FLAG-1{enum_services_first}',
-            'FLAG-2': 'FLAG-2{source_code_comments}',
-            'FLAG-3': 'FLAG-3{nginx_config_review}',
-            'FLAG-4': 'FLAG-4{environment_variables_leak_secrets}',
-            'FLAG-5': 'FLAG-5{suid_binary_analysis}',
-            'FLAG-6': 'FLAG-6{log_files_reveal_activity}',
-            'FLAG-7': 'FLAG-7{responsible_disclosure_complete}'
-        }
+        # Load flags dynamically from JSON
+        flags_data = load_ctf_flags()
+        if not flags_data:
+            # Fallback to hardcoded flags if JSON fails
+            correct_flags = {
+                'FLAG-1': 'FLAG-1{enum_services_first}',
+                'FLAG-2': 'FLAG-2{source_code_comments}',
+                'FLAG-3': 'FLAG-3{nginx_config_review}',
+                'FLAG-4': 'FLAG-4{environment_variables_leak_secrets}',
+                'FLAG-5': 'FLAG-5{suid_binary_analysis}',
+                'FLAG-6': 'FLAG-6{log_files_reveal_activity}',
+                'FLAG-7': 'FLAG-7{responsible_disclosure_complete}'
+            }
+        else:
+            # Extract flag values from loaded JSON
+            flags_config = flags_data.get('ctf_flags', {}).get('flags', {})
+            correct_flags = {}
+            for flag_id, flag_info in flags_config.items():
+                correct_flags[flag_id] = flag_info.get('value', '')
         
         # Validate flag
         is_valid = False
@@ -334,19 +364,12 @@ def validate_flag():
             'message': 'Flag validated successfully' if is_valid else 'Invalid flag value'
         }
         
-        # Optional: Add flag description for feedback
-        flag_descriptions = {
-            'FLAG-1': 'Environment Configuration Analysis',
-            'FLAG-2': 'Source Code Security Review',
-            'FLAG-3': 'Server Configuration Assessment', 
-            'FLAG-4': 'Environment Variable Exposure',
-            'FLAG-5': 'SUID Binary Analysis',
-            'FLAG-6': 'Log File Analysis',
-            'FLAG-7': 'Report Completion'
-        }
-        
-        if is_valid and flag_number in flag_descriptions:
-            response_data['description'] = flag_descriptions[flag_number]
+        # Add flag description from loaded data if available
+        if is_valid and flags_data:
+            flag_info = flags_data.get('ctf_flags', {}).get('flags', {}).get(flag_number, {})
+            if flag_info:
+                response_data['description'] = flag_info.get('description', '')
+                response_data['category'] = flag_info.get('category', '')
         
         return jsonify(response_data), 200
         
@@ -357,4 +380,53 @@ def validate_flag():
             'success': False,
             'error': str(e),
             'is_valid': False
+        }), 500
+
+@level4_api_bp.route('/flags-config', methods=['GET'])
+def get_flags_config():
+    """Get CTF flags configuration (without flag values for security)"""
+    try:
+        flags_data = load_ctf_flags()
+        if not flags_data:
+            return jsonify({
+                'success': False,
+                'error': 'Failed to load flags configuration'
+            }), 500
+        
+        # Return config without actual flag values for security
+        ctf_config = flags_data.get('ctf_flags', {})
+        safe_config = {
+            'challenge_name': ctf_config.get('challenge_name', ''),
+            'challenge_description': ctf_config.get('challenge_description', ''),
+            'total_flags': ctf_config.get('total_flags', 7),
+            'flags': {},
+            'scoring': ctf_config.get('scoring', {}),
+            'metadata': ctf_config.get('metadata', {})
+        }
+        
+        # Include flag info but exclude actual values
+        for flag_id, flag_info in ctf_config.get('flags', {}).items():
+            safe_config['flags'][flag_id] = {
+                'id': flag_info.get('id'),
+                'name': flag_info.get('name'),
+                'description': flag_info.get('description'),
+                'category': flag_info.get('category'),
+                'difficulty': flag_info.get('difficulty'),
+                'hints': flag_info.get('hints', []),
+                'discovery_commands': flag_info.get('discovery_commands', []),
+                'learning_objectives': flag_info.get('learning_objectives', [])
+                # Exclude 'value' for security
+            }
+        
+        return jsonify({
+            'success': True,
+            'ctf_config': safe_config
+        }), 200
+        
+    except Exception as e:
+        print(f"Error in get_flags_config: {e}")
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': str(e)
         }), 500
