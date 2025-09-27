@@ -11,7 +11,7 @@ level4_api_bp = Blueprint('level4_api', __name__, url_prefix='/api/level4')
 _json_cache = None
 
 def load_json_data():
-    """Load and cache the Level 4 data from individual JSON files"""
+    """Load and cache the Level 4 CTF file system data"""
     global _json_cache
     if _json_cache is not None:
         return _json_cache
@@ -23,54 +23,36 @@ def load_json_data():
             'app', 'static', 'js', 'simulated-pc', 'levels', 'level-four', 'data'
         )
         
-        # List of individual JSON files to load
-        json_files = [
-            'vote-main-server.json',
-            'vote-database-server.json', 
-            'vote-admin-server.json',
-            'municipality-network.json'
-        ]
+        # Load the CTF file system data
+        file_path = os.path.join(json_base_path, 'ctf-file-system.json')
         
-        level4_hosts = []
-        
-        # Load each individual JSON file
-        for json_file in json_files:
-            file_path = os.path.join(json_base_path, json_file)
-            
-            if not os.path.exists(file_path):
-                print(f"Warning: Level 4 file not found: {file_path}")
-                continue
+        if not os.path.exists(file_path):
+            print(f"Warning: Level 4 CTF file system data not found: {file_path}")
+            return {'fileSystem': {}}
                 
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    host_data = json.load(f)
-                    level4_hosts.append(host_data)
-                    print(f"Loaded: {json_file}")
-            except Exception as file_error:
-                print(f"Error loading {json_file}: {file_error}")
-                continue
-        
-        # Create the consolidated data structure
-        hosts_data = {
-            'level4_municipality_hosts': level4_hosts
-        }
-        
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                ctf_data = json.load(f)
+                print(f"Loaded: ctf-file-system.json")
+        except Exception as file_error:
+            print(f"Error loading ctf-file-system.json: {file_error}")
+            return {'fileSystem': {}}
         # Cache the data
-        _json_cache = hosts_data
+        _json_cache = ctf_data
         
-        hosts_count = len(level4_hosts)
+        file_count = len(ctf_data.get('fileSystem', {}))
         
-        print(f"Loaded Level 4 data from {len(json_files)} individual JSON files:")
-        print(f"Municipality hosts: {hosts_count}")
+        print(f"Loaded Level 4 CTF file system data successfully")
+        print(f"File system paths: {file_count}")
         
         return _json_cache
         
     except Exception as e:
-        print(f"Error loading Level 4 JSON files: {e}")
+        print(f"Error loading Level 4 CTF file system data: {e}")
         print("Traceback:")
         traceback.print_exc()
         # Return empty structure rather than None to prevent downstream errors
-        return {'level4_municipality_hosts': []}
+        return {'fileSystem': {}}
 
 def get_random_items(array, count):
     """Get random items from an array"""
@@ -83,30 +65,23 @@ def get_random_items(array, count):
 
 @level4_api_bp.route('/hosts-data', methods=['GET'])
 def get_level4_hosts_data():
-    """Get Level 4 municipality hosts data (optionally randomized)"""
+    """Get Level 4 CTF file system data"""
     try:
         data = load_json_data()
         if not data:
             return jsonify({
                 'success': False,
-                'error': 'Failed to load Level 4 data',
-                'level4_municipality_hosts': []
+                'error': 'Failed to load CTF file system data',
+                'fileSystem': {}
             }), 500
         
-        hosts = data.get('level4_municipality_hosts', [])
-        
-        # Check if client wants randomized data
-        randomize = request.args.get('randomize', 'false').lower() == 'true'
-        count = int(request.args.get('count', len(hosts)))
-        
-        if randomize and count < len(hosts):
-            hosts = get_random_items(hosts, count)
+        file_system = data.get('fileSystem', {})
         
         return jsonify({
             'success': True,
-            'level4_municipality_hosts': hosts,
-            'total_hosts': len(hosts),
-            'randomized': randomize
+            'fileSystem': file_system,
+            'total_paths': len(file_system),
+            'data_type': 'ctf_file_system'
         })
         
     except Exception as e:
@@ -115,7 +90,7 @@ def get_level4_hosts_data():
         return jsonify({
             'success': False,
             'error': str(e),
-            'level4_municipality_hosts': []
+            'fileSystem': {}
         }), 500
 
 @level4_api_bp.route('/hosts', methods=['GET'])
