@@ -131,24 +131,24 @@ export class Level4ChallengeTracker {
             <div class="p-3 text-white max-h-96 overflow-y-auto">
                 <!-- Current Challenge - Always show -->
                 <div class="mb-3">
-                    <div class="text-sm font-semibold text-blue-300 mb-2 flex items-center justify-between">
+                    <div class="text-sm font-semibold text-blue-300 mb-2">
                         <div class="flex items-center">
                             <i class="bi bi-search mr-1"></i>
                             Current Challenge
                         </div>
-                        <!-- Challenge Dropdown -->
-                        <div class="flex items-center space-x-1">
-                            <select onchange="window.level4ChallengeTracker?.selectChallenge(parseInt(this.value))" 
-                                    class="text-xs bg-gray-600 text-white rounded px-2 py-1 border border-gray-500 focus:outline-none focus:border-blue-400"
-                                    value="${this.currentChallengeIndex}">
-                                ${this.challenges.map((challenge, index) => `
-                                    <option value="${index}" ${index === this.currentChallengeIndex ? 'selected' : ''}>
-                                        ${index + 1}. ${challenge.name || challenge.id || `Challenge ${index + 1}`}
-                                        ${this.foundFlags.has(challenge.value) ? ' ✓' : ''}
-                                    </option>
-                                `).join('')}
-                            </select>
-                        </div>
+                    </div>
+                    <!-- Challenge Dropdown -->
+                    <div class="mb-3">
+                        <select onchange="window.level4ChallengeTracker?.selectChallenge(parseInt(this.value))" 
+                                class="w-full text-xs bg-gray-600 text-white rounded px-2 py-1 border border-gray-500 focus:outline-none focus:border-blue-400"
+                                value="${this.currentChallengeIndex}">
+                            ${this.challenges.map((challenge, index) => `
+                                <option value="${index}" ${index === this.currentChallengeIndex ? 'selected' : ''}>
+                                    ${index + 1}. ${challenge.name || challenge.id || `Challenge ${index + 1}`}
+                                    ${this.foundFlags.has(challenge.value) ? ' ✓' : ''}
+                                </option>
+                            `).join('')}
+                        </select>
                     </div>
                     ${currentChallenge ? `
                         <div class="bg-gray-700 rounded p-3">
