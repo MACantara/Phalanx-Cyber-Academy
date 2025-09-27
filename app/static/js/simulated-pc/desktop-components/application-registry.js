@@ -88,15 +88,6 @@ export class ApplicationRegistry {
                 levelSpecific: 3,
                 autoOpen: false
             },
-            'vulnerability-scanner': {
-                module: './desktop-applications/vulnerability-scanner-app.js',
-                className: 'VulnerabilityScannerApp',
-                storageKey: 'cyberquest_vulnerabilityscanner_opened',
-                tutorialMethod: 'shouldAutoStartVulnerabilityScanner',
-                startMethod: 'startVulnerabilityScannerTutorial',
-                iconClass: 'bi-bug',
-                title: 'Vulnerability Scanner'
-            },
             'level3-timer': {
                 module: '../levels/level-three/apps/index.js',
                 className: 'Level3TimerApp',
