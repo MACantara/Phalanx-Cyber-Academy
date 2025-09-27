@@ -468,23 +468,71 @@ export class Level4ChallengeTracker {
             // Import the completion dialogue
             const { Level4CompletionDialogue } = await import('../dialogues/level4-completion-dialogue.js');
             
-            // Get desktop reference from the window
-            const desktop = window.simulatedPC?.desktop;
+            // Try multiple ways to get desktop reference
+            let desktop = null;
+            
+            // Method 1: Check window.simulatedPC
+            if (window.simulatedPC && window.simulatedPC.desktop) {
+                desktop = window.simulatedPC.desktop;
+                console.log('[ChallengeTracker] Using simulatedPC desktop');
+            }
+            
+            // Method 2: Check global desktop reference
+            if (!desktop && window.desktop) {
+                desktop = window.desktop;
+                console.log('[ChallengeTracker] Using global desktop reference');
+            }
+            
+            // Method 3: Try to find desktop in DOM or create mock desktop
+            if (!desktop) {
+                console.warn('[ChallengeTracker] Desktop not found, creating mock desktop object');
+                // Create a minimal desktop-like object for the dialogue
+                desktop = {
+                    element: document.body,
+                    addWindow: (window) => {
+                        // Just append to body if no real desktop
+                        if (window.element) {
+                            document.body.appendChild(window.element);
+                        }
+                    },
+                    removeWindow: (window) => {
+                        if (window.element && window.element.parentNode) {
+                            window.element.parentNode.removeChild(window.element);
+                        }
+                    }
+                };
+            }
+            
+            // Start the completion dialogue
             if (desktop) {
                 Level4CompletionDialogue.startLevel4CompletionDialogue(desktop, this);
+                console.log('[ChallengeTracker] Completion dialogue started successfully');
             } else {
-                console.warn('[ChallengeTracker] Desktop not available for completion dialogue');
-                // Fallback - just navigate after delay
+                throw new Error('Unable to create desktop reference for dialogue');
+            }
+            
+        } catch (error) {
+            console.error('[ChallengeTracker] Failed to load completion dialogue:', error);
+            
+            // Fallback: Show completion summary directly without dialogue
+            console.log('[ChallengeTracker] Attempting direct session summary fallback...');
+            try {
+                const { Level4SessionSummary } = await import('../components/level4-session-summary.js');
+                const mockStats = {
+                    flagsFound: this.foundFlagIds.size,
+                    duration: 'completion time unavailable',
+                    xpEarned: 350
+                };
+                Level4SessionSummary.createAndShow(this, mockStats);
+                console.log('[ChallengeTracker] Direct session summary shown as fallback');
+            } catch (summaryError) {
+                console.error('[ChallengeTracker] Session summary fallback also failed:', summaryError);
+                // Final fallback - just navigate after delay
+                this.showNotification('Level completed! Redirecting to levels overview...', 'success', 5000);
                 setTimeout(() => {
                     window.location.href = '/levels';
                 }, 5000);
             }
-        } catch (error) {
-            console.error('[ChallengeTracker] Failed to load completion dialogue:', error);
-            // Fallback - just navigate after delay
-            setTimeout(() => {
-                window.location.href = '/levels';
-            }, 5000);
         }
     }
 
