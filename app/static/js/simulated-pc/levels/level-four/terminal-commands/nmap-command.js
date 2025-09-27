@@ -29,11 +29,6 @@ export class NmapCommand extends BaseCommand {
             return;
         }
 
-        if (options.integrate) {
-            this.handleIntegration();
-            return;
-        }
-
         if (!options.target) {
             this.addOutput('nmap: No target specified', 'text-red-400');
             this.addOutput('Try `nmap --help` for more information');
@@ -83,9 +78,6 @@ export class NmapCommand extends BaseCommand {
                     break;
                 case '--script=vuln':
                     options.vulnScan = true;
-                    break;
-                case '--integrate':
-                    options.integrate = true;
                     break;
                 case '-v':
                     options.verbose = true;
@@ -220,13 +212,10 @@ export class NmapCommand extends BaseCommand {
         
         if (hasVulnResults) {
             this.addOutput('• Vulnerabilities detected in scan results!', 'text-yellow-400');
-            this.addOutput('• Use "nmap --integrate" to send results to vulnerability scanner', 'text-blue-400');
+            this.addOutput('• Use --script vuln for vulnerability scanning', 'text-blue-400');
         } else {
             this.addOutput('• No vulnerabilities detected in this scan', 'text-green-400');
-            this.addOutput('• Use "nmap --integrate" to send port/service data to vulnerability scanner', 'text-blue-400');
         }
-        
-        this.addOutput('• Open Vulnerability Scanner app to receive integration', 'text-gray-400');
     }
 
     /**
@@ -243,63 +232,6 @@ export class NmapCommand extends BaseCommand {
         return vulnIndicators.some(indicator => 
             this.lastScanResults.toUpperCase().includes(indicator)
         );
-    }
-
-    /**
-     * Handle integration command
-     */
-    handleIntegration() {
-        if (!this.lastScanResults || !this.lastScanTarget) {
-            this.addOutput('No recent scan results to integrate', 'text-red-400');
-            this.addOutput('Run an nmap scan first, then use --integrate');
-            return;
-        }
-
-        this.addOutput('Attempting to integrate with Vulnerability Scanner...', 'text-blue-400');
-        
-        // Try to integrate with vulnerability scanner
-        const success = this.attemptIntegration();
-        
-        if (success) {
-            this.addOutput('✓ Integration successful!', 'text-green-400');
-            this.addOutput('Check Vulnerability Scanner for updated results');
-        } else {
-            this.addOutput('✗ Integration failed', 'text-red-400');
-            this.addOutput('Ensure Vulnerability Scanner app is open and try again');
-            this.addOutput('Or manually copy the scan results to the scanner');
-        }
-    }
-
-    /**
-     * Attempt to integrate with vulnerability scanner
-     */
-    attemptIntegration() {
-        try {
-            // Try to find vulnerability scanner app
-            const vulnContainer = document.querySelector('#vulnerability-scanner-container');
-            if (!vulnContainer) {
-                this.addOutput('Vulnerability Scanner app not found', 'text-yellow-400');
-                this.addOutput('Please open the Vulnerability Scanner from the desktop');
-                return false;
-            }
-
-            if (!vulnContainer._vulnerabilityApp) {
-                this.addOutput('Vulnerability Scanner not initialized', 'text-yellow-400');
-                this.addOutput('Please wait for the app to fully load');
-                return false;
-            }
-
-            const vulnApp = vulnContainer._vulnerabilityApp;
-            
-            // Integrate the results
-            vulnApp.integrateNmapResults(this.lastScanResults);
-            
-            return true;
-        } catch (error) {
-            console.error('Nmap integration failed:', error);
-            this.addOutput(`Integration error: ${error.message}`, 'text-red-400');
-            return false;
-        }
     }
 
     performPortScan(target, options) {
@@ -470,7 +402,6 @@ export class NmapCommand extends BaseCommand {
                 { flag: '-A', description: 'Enable aggressive scan (OS detection, version detection, script scanning)' },
                 { flag: '-sC', description: 'Equivalent to --script=default' },
                 { flag: '--script=vuln', description: 'Run vulnerability detection scripts' },
-                { flag: '--integrate', description: 'Integrate last scan results with Vulnerability Scanner' },
                 { flag: '-p <ports>', description: 'Only scan specified ports' },
                 { flag: '-v', description: 'Increase verbosity level' },
                 { flag: '--help', description: 'Show this help message' },
@@ -509,10 +440,6 @@ export class NmapCommand extends BaseCommand {
         this.addOutput('  -v     Increase verbosity level');
         this.addOutput('  -h     Show this help summary');
         this.addOutput('  -V     Show version number');
-        this.addOutput('');
-        this.addOutput('INTEGRATION:', 'text-blue-400');
-        this.addOutput('  --integrate       Send last scan results to Vulnerability Scanner app');
-        this.addOutput('                   (Requires Vulnerability Scanner to be open)');
         this.addOutput('');
         this.addOutput('EXAMPLES:', 'text-blue-400');
         this.addOutput('  nmap vote.municipality.gov');
