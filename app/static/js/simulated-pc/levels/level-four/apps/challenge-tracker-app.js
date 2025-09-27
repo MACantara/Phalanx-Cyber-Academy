@@ -31,13 +31,47 @@ export class Level4ChallengeTracker {
             }
             
             const data = await response.json();
-            this.challenges = data.selected_flags || [];
+            
+            // Use all flags instead of just selected_flags to match our 15 flags
+            if (data.success && data.ctf_config && data.ctf_config.flags) {
+                this.challenges = Object.entries(data.ctf_config.flags).map(([id, info]) => ({
+                    id: id,
+                    name: info.name || id,
+                    challenge_question: info.challenge_question || info.name || 'Challenge description loading...',
+                    category: info.category || 'general',
+                    difficulty: info.difficulty || 'medium',
+                    value: info.value || `${id}{...}`
+                }));
+            } else if (data.selected_flags && data.selected_flags.length > 0) {
+                // Fallback to selected_flags if available
+                this.challenges = data.selected_flags.map((flag, index) => ({
+                    id: flag.id || `flag-${index + 1}`,
+                    name: flag.name || `Challenge ${index + 1}`,
+                    challenge_question: flag.challenge_question || flag.name || 'Challenge description loading...',
+                    category: flag.category || 'general',
+                    difficulty: flag.difficulty || 'medium',
+                    value: flag.value || `WHT-${index + 1}{...}`
+                }));
+            } else {
+                // Fallback with all our known flags
+                this.challenges = [
+                    { id: 'WHT-ENV', name: 'Environment Reconnaissance', challenge_question: 'Find hidden information in user environment configuration files', value: 'WHT-ENV{...}' },
+                    { id: 'WHT-ENV2', name: 'Environment Variables Leak', challenge_question: 'Discover secrets exposed in admin environment variables', value: 'WHT-ENV2{...}' },
+                    { id: 'WHT-BACKUP', name: 'Backup Script Analysis', challenge_question: 'Analyze automated backup scripts for security issues', value: 'WHT-BACKUP{...}' },
+                    { id: 'WHT-HIST', name: 'Command History Forensics', challenge_question: 'Examine command history for accidentally leaked credentials', value: 'WHT-HIST{...}' },
+                    { id: 'WHT-SRC', name: 'Source Code Analysis', challenge_question: 'Find flags hidden in HTML comments and source code', value: 'WHT-SRC{...}' },
+                    { id: 'WHT-DB', name: 'Database Configuration', challenge_question: 'Locate database credentials in configuration files', value: 'WHT-DB{...}' },
+                    { id: 'WHT-LOG', name: 'Log File Analysis', challenge_question: 'Search web server logs for security information', value: 'WHT-LOG{...}' }
+                ];
+            }
+            
             console.log('[ChallengeTracker] Loaded', this.challenges.length, 'challenges');
             this.updateContent();
         } catch (error) {
             console.error('[ChallengeTracker] Error loading challenges:', error);
             // Fallback to static message
             this.challenges = [{
+                id: 'loading',
                 challenge_question: "Loading challenges...",
                 name: "Challenge Tracker",
                 value: "WHT{loading}"
@@ -89,41 +123,71 @@ export class Level4ChallengeTracker {
                 </div>
             </div>
             <div class="p-3 text-white max-h-96 overflow-y-auto">
-                ${currentChallenge ? `
-                    <!-- Current Challenge -->
-                    <div class="mb-3">
-                        <div class="text-sm font-semibold text-blue-300 mb-2 flex items-center">
+                <!-- Current Challenge - Always show -->
+                <div class="mb-3">
+                    <div class="text-sm font-semibold text-blue-300 mb-2 flex items-center justify-between">
+                        <div class="flex items-center">
                             <i class="bi bi-search mr-1"></i>
                             Current Challenge
                         </div>
+                        <!-- Navigation arrows -->
+                        <div class="flex items-center space-x-1">
+                            <button onclick="window.level4ChallengeTracker?.previousChallenge()" 
+                                    class="h-6 w-6 bg-gray-600 hover:bg-gray-500 rounded text-xs flex items-center justify-center transition-colors"
+                                    title="Previous Challenge">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <span class="text-xs px-2">${this.currentChallengeIndex + 1}/${this.challenges.length}</span>
+                            <button onclick="window.level4ChallengeTracker?.nextChallenge()" 
+                                    class="h-6 w-6 bg-gray-600 hover:bg-gray-500 rounded text-xs flex items-center justify-center transition-colors"
+                                    title="Next Challenge">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    ${currentChallenge ? `
                         <div class="bg-gray-700 rounded p-3">
-                            <div class="text-xs font-semibold text-gray-300 mb-1">${currentChallenge.name || 'Challenge'}</div>
-                            <div class="text-sm leading-relaxed">${currentChallenge.challenge_question || 'Loading challenge...'}</div>
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-xs font-semibold text-gray-300">${currentChallenge.name || 'Challenge'}</div>
+                                <div class="flex items-center space-x-2">
+                                    ${this.foundFlags.has(currentChallenge.value) ? 
+                                        '<i class="bi bi-check-circle text-green-400"></i>' : 
+                                        '<i class="bi bi-circle text-gray-500"></i>'
+                                    }
+                                    ${currentChallenge.id ? `<span class="text-xs bg-gray-600 px-2 py-1 rounded">${currentChallenge.id}</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="text-sm leading-relaxed mb-2">${currentChallenge.challenge_question || 'Loading challenge...'}</div>
                             ${currentChallenge.category ? `
-                                <div class="mt-2">
-                                    <span class="text-xs bg-gray-600 px-2 py-1 rounded">${currentChallenge.category.replace(/_/g, ' ')}</span>
-                                    <span class="text-xs text-gray-400 ml-2">${currentChallenge.difficulty || 'medium'}</span>
+                                <div class="flex items-center space-x-2 text-xs">
+                                    <span class="bg-gray-600 px-2 py-1 rounded">${currentChallenge.category.replace(/_/g, ' ')}</span>
+                                    <span class="text-gray-400">${currentChallenge.difficulty || 'medium'}</span>
                                 </div>
                             ` : ''}
                         </div>
-                    </div>
-                ` : ''}
+                    ` : `
+                        <div class="bg-gray-700 rounded p-3 text-center text-gray-400">
+                            <i class="bi bi-hourglass-split mb-2"></i>
+                            <div>Loading challenges...</div>
+                        </div>
+                    `}
+                </div>
                 
-                <!-- Challenge Navigation -->
+                <!-- Challenge Grid Navigation -->
                 ${this.challenges.length > 1 ? `
                     <div class="mb-3">
-                        <div class="text-sm font-semibold text-blue-300 mb-2">Challenges</div>
-                        <div class="grid grid-cols-7 gap-1">
+                        <div class="text-sm font-semibold text-blue-300 mb-2">All Challenges</div>
+                        <div class="grid grid-cols-5 gap-1">
                             ${this.challenges.map((challenge, index) => `
-                                <button class="challenge-nav-btn h-8 w-8 text-xs rounded transition-colors ${
+                                <button class="challenge-nav-btn h-8 text-xs rounded transition-colors ${
                                     this.foundFlags.has(challenge.value) ? 'bg-green-600 text-white' :
                                     index === this.currentChallengeIndex ? 'bg-blue-600 text-white' :
                                     'bg-gray-600 text-gray-300 hover:bg-gray-500'
                                 }" 
                                 onclick="window.level4ChallengeTracker?.selectChallenge(${index})"
-                                title="${challenge.name || `Challenge ${index + 1}`}">
+                                title="${challenge.name || `Challenge ${index + 1}`}: ${challenge.id || ''}">
                                     ${this.foundFlags.has(challenge.value) ? 
-                                        '<i class="bi bi-check"></i>' : 
+                                        '<i class="bi bi-check text-xs"></i>' : 
                                         (index + 1)
                                     }
                                 </button>
@@ -133,7 +197,7 @@ export class Level4ChallengeTracker {
                 ` : ''}
                 
                 <!-- Progress Summary -->
-                <div class="border-t border-gray-600 pt-3">
+                <div class="border-t border-gray-600 pt-3 mb-3">
                     <div class="flex justify-between items-center text-xs">
                         <span class="text-gray-300">Progress:</span>
                         <span class="${this.foundFlags.size === this.challenges.length ? 'text-green-400' : 'text-blue-400'} font-semibold">
@@ -147,13 +211,23 @@ export class Level4ChallengeTracker {
                 </div>
                 
                 <!-- Quick Commands -->
-                <div class="mt-3 text-xs">
+                <div class="mb-3 text-xs">
                     <div class="text-gray-400 mb-1">Quick commands:</div>
                     <div class="bg-gray-700 rounded p-2 font-mono text-xs">
                         help - Show all challenges<br>
                         ls -la - List files<br>
-                        cat &lt;file&gt; - Read file content
+                        cat &lt;file&gt; - Read file content<br>
+                        find / -name "*" - Search files
                     </div>
+                </div>
+                
+                <!-- Disclosure Report Button -->
+                <div class="border-t border-gray-600 pt-3">
+                    <button onclick="window.level4ChallengeTracker?.openDisclosureReport()" 
+                            class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white text-xs font-semibold py-2 px-3 rounded transition-colors flex items-center justify-center space-x-2">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span>Open Disclosure Report</span>
+                    </button>
                 </div>
             </div>
         `;
@@ -225,6 +299,28 @@ export class Level4ChallengeTracker {
         if (this.currentChallengeIndex > 0) {
             this.currentChallengeIndex--;
             this.updateContent();
+        }
+    }
+
+    // Open disclosure report application
+    openDisclosureReport() {
+        try {
+            // Try to use the application launcher if available
+            if (typeof window !== 'undefined' && window.appLauncher && window.appLauncher.launchApp) {
+                window.appLauncher.launchApp('disclosure');
+            } else if (typeof window !== 'undefined' && window.dispatchEvent) {
+                // Dispatch event to open disclosure report
+                window.dispatchEvent(new CustomEvent('level4-open-disclosure-report', {
+                    detail: {
+                        app: 'disclosure',
+                        timestamp: Date.now()
+                    }
+                }));
+            } else {
+                console.warn('[ChallengeTracker] No app launcher available');
+            }
+        } catch (error) {
+            console.error('[ChallengeTracker] Error opening disclosure report:', error);
         }
     }
 
