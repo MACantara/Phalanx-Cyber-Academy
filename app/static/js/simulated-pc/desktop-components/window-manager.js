@@ -352,10 +352,6 @@ export class WindowManager {
         return await this.applicationLauncher.launchRansomwareDecryptor();
     }
 
-    async openDisclosureReport() {
-        return await this.applicationLauncher.openApplication('disclosure-report', 'Disclosure Report');
-    }
-
     // Utility methods for batch operations
     closeAllWindows() {
         const windowIds = Array.from(this.windows.keys());

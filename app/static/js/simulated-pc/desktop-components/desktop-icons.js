@@ -15,8 +15,7 @@ export class DesktopIcons {
             { id: 'logs', name: 'System Logs', icon: 'bi-journal-text', action: 'openSystemLogs' },
             { id: 'process-monitor', name: 'Process Monitor', icon: 'bi-cpu', action: 'openProcessMonitor' },
             { id: 'malware-scanner', name: 'Malware Scanner', icon: 'bi-shield-exclamation', action: 'openMalwareScanner' },
-            { id: 'ransomware-decryptor', name: 'Ransomware Decryptor', icon: 'bi-unlock', action: 'openRansomwareDecryptor' },
-            { id: 'disclosure-report', name: 'Disclosure Report', icon: 'bi-shield-check', action: 'openDisclosureReport' }
+            { id: 'ransomware-decryptor', name: 'Ransomware Decryptor', icon: 'bi-unlock', action: 'openRansomwareDecryptor' }
         ];
         
         // Set level-specific icons
@@ -30,7 +29,7 @@ export class DesktopIcons {
             1: ['browser'], // Level 1: Misinformation Maze
             2: ['email'], // Level 2: Shadow in the Inbox
             3: ['malware-scanner', 'process-monitor', 'ransomware-decryptor'], // Level 3: Malware Mayhem
-            4: ['terminal', 'disclosure-report'], // Level 4: White Hat Test
+            4: ['terminal'], // Level 4: White Hat Test
             5: ['files', 'terminal', 'logs'] // Level 5: Hunt for The Null
         };
 
