@@ -5,9 +5,10 @@
 
 import { TerminalApp } from './terminal-app.js';
 import { DisclosureReportApp } from './disclosure-report-app.js';
+import { Level4ChallengeTracker, createLevel4ChallengeTracker } from './challenge-tracker-app.js';
 
-// Export terminal app and disclosure report
-export { TerminalApp, DisclosureReportApp };
+// Export terminal app, disclosure report, and challenge tracker
+export { TerminalApp, DisclosureReportApp, Level4ChallengeTracker, createLevel4ChallengeTracker };
 
 // Level 4 apps loaded flag
 export const level4AppsLoaded = true;
