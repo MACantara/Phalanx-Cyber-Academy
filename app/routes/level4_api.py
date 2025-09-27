@@ -3,13 +3,13 @@ import os
 import json
 import random
 import traceback
-import time
 from pathlib import Path
 
 level4_api_bp = Blueprint('level4_api', __name__, url_prefix='/api/level4')
 
 # Cache for JSON data to avoid reading files multiple times
 _json_cache = None
+_session_flags_cache = {}  # Cache flags per session to maintain consistency
 
 def load_json_data():
     """Load and cache the Level 4 CTF file system data"""
@@ -427,18 +427,22 @@ def load_ctf_flags():
 
 def get_selected_flags():
     """Get 7 randomly selected flags for the current session"""
-    # Use a session-based seed for consistency within a session
-    # Try multiple sources for session identifier
-    session_seed = (
-        request.args.get('session_seed') or 
-        request.headers.get('X-Session-ID') or 
-        session.get('user_id', str(int(time.time() / 3600)))  # Use hourly seed as fallback
+    global _session_flags_cache
+    
+    # Create a session identifier for caching
+    # Use session ID if available, otherwise create one based on request characteristics
+    session_id = (
+        session.get('session_id') or 
+        session.get('user_id') or
+        f"{request.remote_addr}_{hash(request.user_agent or '')}"
     )
     
-    # Convert to string if it's not already
-    session_seed = str(session_seed)
-    random.seed(session_seed)
+    # Check if we already have flags for this session
+    if session_id in _session_flags_cache:
+        print(f"Using cached flags for session: {session_id[:20]}...")
+        return _session_flags_cache[session_id]
     
+    # Generate new random selection for this session
     flags_data = load_ctf_flags()
     if not flags_data:
         return []
@@ -448,7 +452,18 @@ def get_selected_flags():
     
     # Randomly select flags for this session
     selected_flags = random.sample(all_flags, min(flags_per_session, len(all_flags)))
-    print(f"Selected flags for session: {selected_flags}")
+    
+    # Cache the selection for this session
+    _session_flags_cache[session_id] = selected_flags
+    
+    # Clean up old sessions (keep only last 100 to prevent memory issues)
+    if len(_session_flags_cache) > 100:
+        # Remove oldest entries
+        old_keys = list(_session_flags_cache.keys())[:-50]
+        for key in old_keys:
+            del _session_flags_cache[key]
+    
+    print(f"Generated new random flags for session {session_id[:20]}...: {selected_flags}")
     
     return selected_flags
 
@@ -757,4 +772,23 @@ def get_mission_brief():
         return jsonify({
             'success': False,
             'error': str(e)
+        }), 500
+
+@level4_api_bp.route('/clear-session-flags', methods=['POST'])
+def clear_session_flags():
+    """Clear cached session flags (for testing/development)"""
+    global _session_flags_cache
+    try:
+        cache_size = len(_session_flags_cache)
+        _session_flags_cache.clear()
+        return jsonify({
+            'success': True,
+            'message': f'Cleared {cache_size} cached sessions',
+            'cache_cleared': True
+        }), 200
+    except Exception as e:
+        print(f"Error clearing session flags: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Failed to clear session flags'
         }), 500
