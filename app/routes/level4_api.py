@@ -63,9 +63,126 @@ def get_random_items(array, count):
     random.shuffle(shuffled)
     return shuffled[:count]
 
+def filter_file_system_by_flags(file_system, selected_flags):
+    """Filter file system to only show files/directories associated with selected flags"""
+    
+    def should_include_item(item, path=""):
+        """Determine if an item should be included based on flags"""
+        # Always include mission_brief.txt and basic navigation directories
+        if (path.endswith("mission_brief.txt") or 
+            path in ["/", "/home", "/home/researcher"] or
+            item.get("always_visible", False)):
+            return True
+            
+        # Check if item has any of the selected flags
+        item_flags = item.get("flag_ids", [])
+        if any(flag in selected_flags for flag in item_flags):
+            return True
+            
+        # For directories, check if any child items should be included
+        if item.get("type") == "directory" and "contents" in item:
+            for child_name, child_item in item["contents"].items():
+                child_path = f"{path}/{child_name}" if path else child_name
+                if should_include_item(child_item, child_path):
+                    return True
+                    
+        return False
+    
+    def needs_parent_directories(path, selected_flags):
+        """Check if we need to include parent directories for navigation"""
+        parts = path.strip('/').split('/') if path != '/' else ['']
+        
+        for i in range(len(parts)):
+            parent_path = '/' + '/'.join(parts[:i+1]) if parts[0] else '/'
+            if parent_path in file_system:
+                parent_item = file_system[parent_path]
+                if should_include_item(parent_item, parent_path):
+                    # Include all parent directories up to this point
+                    return True
+        return False
+    
+    def filter_item(item, path=""):
+        """Recursively filter an item and its contents"""
+        if not should_include_item(item, path):
+            return None
+            
+        filtered_item = item.copy()
+        
+        # If it's a directory, filter its contents
+        if item.get("type") == "directory" and "contents" in item:
+            filtered_contents = {}
+            for child_name, child_item in item["contents"].items():
+                child_path = f"{path}/{child_name}" if path else child_name
+                filtered_child = filter_item(child_item, child_path)
+                if filtered_child is not None:
+                    filtered_contents[child_name] = filtered_child
+            filtered_item["contents"] = filtered_contents
+        
+        return filtered_item
+    
+    # First pass: identify all paths that need to be included
+    paths_to_include = set()
+    
+    for path, item in file_system.items():
+        if should_include_item(item, path):
+            paths_to_include.add(path)
+            # Add parent directories for navigation
+            parts = path.strip('/').split('/') if path != '/' else ['']
+            for i in range(len(parts)):
+                parent_path = '/' + '/'.join(parts[:i+1]) if parts[0] else '/'
+                parent_path = parent_path.rstrip('/') if parent_path != '/' else '/'
+                paths_to_include.add(parent_path)
+    
+    # Second pass: create filtered file system
+    filtered_system = {}
+    for path in paths_to_include:
+        if path in file_system:
+            filtered_item = filter_item(file_system[path], path)
+            if filtered_item is not None:
+                filtered_system[path] = filtered_item
+    
+    return filtered_system
+
 @level4_api_bp.route('/hosts-data', methods=['GET'])
 def get_level4_hosts_data():
-    """Get Level 4 CTF file system data"""
+    """Get Level 4 CTF file system data filtered by selected flags"""
+    try:
+        data = load_json_data()
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'Failed to load CTF file system data',
+                'fileSystem': {}
+            }), 500
+        
+        file_system = data.get('fileSystem', {})
+        
+        # Get selected flags for filtering
+        selected_flags = get_selected_flags()
+        
+        # Filter file system based on selected flags
+        filtered_system = filter_file_system_by_flags(file_system, selected_flags)
+        
+        return jsonify({
+            'success': True,
+            'fileSystem': filtered_system,
+            'total_paths': len(filtered_system),
+            'selected_flags': selected_flags,
+            'data_type': 'ctf_file_system_filtered'
+        })
+        
+    except Exception as e:
+        print(f"Error in get_level4_hosts_data: {e}")
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'fileSystem': {}
+        }), 500
+
+@level4_api_bp.route('/hosts-data-full', methods=['GET'])
+def get_level4_hosts_data_full():
+    """Get Level 4 CTF file system data without filtering (for debugging)"""
     try:
         data = load_json_data()
         if not data:
@@ -81,11 +198,11 @@ def get_level4_hosts_data():
             'success': True,
             'fileSystem': file_system,
             'total_paths': len(file_system),
-            'data_type': 'ctf_file_system'
+            'data_type': 'ctf_file_system_full'
         })
         
     except Exception as e:
-        print(f"Error in get_level4_hosts_data: {e}")
+        print(f"Error in get_level4_hosts_data_full: {e}")
         traceback.print_exc()
         return jsonify({
             'success': False,
