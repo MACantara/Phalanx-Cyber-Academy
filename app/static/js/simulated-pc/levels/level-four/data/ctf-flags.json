@@ -7,7 +7,7 @@
     "flags": {
       "WHT-ENV": {
         "id": "WHT-ENV",
-        "value": "WHT{enum_services_first}",
+        "value": "WHT-ENV{enum_services_first}",
         "name": "Environment Reconnaissance Challenge",
         "challenge_question": "Can you discover what services and configurations are exposed in the user's shell environment? Hidden files often contain valuable reconnaissance information.",
         "location": "/home/researcher/.bashrc",
@@ -27,7 +27,7 @@
       },
       "WHT-SRC": {
         "id": "WHT-SRC",
-        "value": "WHT{source_code_comments}",
+        "value": "WHT-SRC{source_code_comments}",
         "name": "Source Code Analysis Challenge",
         "challenge_question": "Web applications often contain development artifacts. Can you find sensitive information left behind in HTML comments or configuration files?",
         "location": "/var/www/html/index.html",
@@ -47,7 +47,7 @@
       },
       "WHT-CFG": {
         "id": "WHT-CFG",
-        "value": "WHT{nginx_config_review}",
+        "value": "WHT-CFG{nginx_config_review}",
         "name": "Server Configuration Audit Challenge",
         "challenge_question": "Server configuration files often contain security misconfigurations and sensitive comments. Can you analyze the web server setup for hidden information?",
         "location": "/etc/nginx/nginx.conf",
@@ -67,7 +67,7 @@
       },
       "WHT-ENV2": {
         "id": "WHT-ENV2",
-        "value": "WHT{environment_variables_leak_secrets}",
+        "value": "WHT-ENV2{environment_variables_leak_secrets}",
         "name": "Environment Variable Exposure Challenge",
         "challenge_question": "Application environment files often contain database credentials and API keys. Can you find the administrator's environment configuration that exposes sensitive data?",
         "location": "/home/admin/.env",
@@ -87,7 +87,7 @@
       },
       "WHT-SUID": {
         "id": "WHT-SUID",
-        "value": "WHT{suid_binary_analysis}",
+        "value": "WHT-SUID{suid_binary_analysis}",
         "name": "SUID Binary Security Challenge",
         "challenge_question": "SUID binaries can be a security risk when they contain sensitive information. Can you analyze system binaries for privilege escalation clues and embedded secrets?",
         "location": "/usr/local/bin/backup_script.sh",
@@ -107,7 +107,7 @@
       },
       "WHT-LOG": {
         "id": "WHT-LOG",
-        "value": "WHT{log_files_reveal_activity}",
+        "value": "WHT-LOG{log_files_reveal_activity}",
         "name": "Log File Analysis Challenge",
         "challenge_question": "System and application logs often contain evidence of security incidents and leaked sensitive data. Can you analyze the web server logs for hidden information?",
         "location": "/var/log/nginx/access.log",
@@ -127,7 +127,7 @@
       },
       "WHT-COMPL": {
         "id": "WHT-COMPL",
-        "value": "WHT{responsible_disclosure_complete}",
+        "value": "WHT-COMPL{responsible_disclosure_complete}",
         "name": "Responsible Disclosure Completion Challenge",
         "challenge_question": "The final step of ethical hacking is proper documentation and disclosure. Can you complete the responsible disclosure process to earn the final flag?",
         "location": "/tmp/ctf_completion.txt",
@@ -147,7 +147,7 @@
       },
       "WHT-DB": {
         "id": "WHT-DB",
-        "value": "WHT{database_credentials_found}",
+        "value": "WHT-DB{database_credentials_found}",
         "name": "Database Credential Discovery Challenge",
         "challenge_question": "Database configuration files often contain plaintext credentials. Can you find the database connection details hidden in the application's backend configuration?",
         "location": "/var/www/html/admin/config.php",
@@ -167,7 +167,7 @@
       },
       "WHT-BACKUP": {
         "id": "WHT-BACKUP",
-        "value": "WHT{backup_script_analysis}",
+        "value": "WHT-BACKUP{backup_script_analysis}",
         "name": "Backup Script Security Challenge",
         "challenge_question": "Automated backup scripts often contain sensitive paths and credentials. Can you analyze the system backup procedures for security weaknesses and exposed information?",
         "location": "/home/admin/backup_script.sh",
@@ -187,7 +187,7 @@
       },
       "WHT-SSL": {
         "id": "WHT-SSL",
-        "value": "WHT{ssl_certificate_analysis}",
+        "value": "WHT-SSL{ssl_certificate_analysis}",
         "name": "SSL Certificate Investigation Challenge",
         "challenge_question": "SSL certificates and private keys are critical security components. Can you locate and analyze the web server's SSL configuration for sensitive information?",
         "location": "/etc/ssl/private/server.key",
@@ -207,7 +207,7 @@
       },
       "WHT-CRON": {
         "id": "WHT-CRON",
-        "value": "WHT{scheduled_task_discovery}",
+        "value": "WHT-CRON{scheduled_task_discovery}",
         "name": "Scheduled Task Analysis Challenge",
         "challenge_question": "Scheduled tasks and cron jobs often run with elevated privileges and may expose sensitive operations. Can you discover what automated tasks are configured on the system?",
         "location": "/etc/crontab",
@@ -227,7 +227,7 @@
       },
       "WHT-PROC": {
         "id": "WHT-PROC",
-        "value": "WHT{process_memory_analysis}",
+        "value": "WHT-PROC{process_memory_analysis}",
         "name": "Process Memory Investigation Challenge",
         "challenge_question": "Running processes may leak sensitive information through their memory space or command line arguments. Can you analyze the process information for security artifacts?",
         "location": "/proc/1/environ",
@@ -247,7 +247,7 @@
       },
       "WHT-HIST": {
         "id": "WHT-HIST",
-        "value": "WHT{command_history_forensics}",
+        "value": "WHT-HIST{command_history_forensics}",
         "name": "Command History Forensics Challenge",
         "challenge_question": "User command histories often contain passwords, API keys, and sensitive commands. Can you perform forensic analysis on shell history files to uncover security artifacts?",
         "location": "/home/admin/.bash_history",
@@ -267,7 +267,7 @@
       },
       "WHT-NET": {
         "id": "WHT-NET",
-        "value": "WHT{network_configuration_analysis}",
+        "value": "WHT-NET{network_configuration_analysis}",
         "name": "Network Configuration Security Challenge",
         "challenge_question": "Network configuration files contain routing, firewall, and service information that can reveal attack vectors. Can you analyze the network setup for security misconfigurations?",
         "location": "/etc/hosts",
@@ -287,7 +287,7 @@
       },
       "WHT-TEMP": {
         "id": "WHT-TEMP",
-        "value": "WHT{temporary_files_investigation}",
+        "value": "WHT-TEMP{temporary_files_investigation}",
         "name": "Temporary Files Security Challenge",
         "challenge_question": "Temporary directories often contain sensitive files left behind by applications and users. Can you investigate temporary storage areas for security artifacts?",
         "location": "/tmp/debug.log",
