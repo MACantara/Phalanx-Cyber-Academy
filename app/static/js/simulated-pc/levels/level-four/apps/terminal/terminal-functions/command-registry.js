@@ -14,6 +14,15 @@ import { NmapCommand } from '../terminal-commands/nmap-command.js';
 import { PingCommand } from '../terminal-commands/ping-command.js';
 import { FindCommand } from '../terminal-commands/find-command.js';
 import { GrepCommand } from '../terminal-commands/grep-command.js';
+import { HeadCommand } from '../terminal-commands/head-command.js';
+import { TailCommand } from '../terminal-commands/tail-command.js';
+import { WcCommand } from '../terminal-commands/wc-command.js';
+import { SortCommand } from '../terminal-commands/sort-command.js';
+import { UniqCommand } from '../terminal-commands/uniq-command.js';
+import { CutCommand } from '../terminal-commands/cut-command.js';
+import { AwkCommand } from '../terminal-commands/awk-command.js';
+import { SedCommand } from '../terminal-commands/sed-command.js';
+import { HexdumpCommand } from '../terminal-commands/hexdump-command.js';
 
 export class CommandRegistry {
     constructor(processor) {
@@ -37,7 +46,16 @@ export class CommandRegistry {
             'nmap': new NmapCommand(this.processor),
             'ping': new PingCommand(this.processor),
             'find': new FindCommand(this.processor),
-            'grep': new GrepCommand(this.processor)
+            'grep': new GrepCommand(this.processor),
+            'head': new HeadCommand(this.processor),
+            'tail': new TailCommand(this.processor),
+            'wc': new WcCommand(this.processor),
+            'sort': new SortCommand(this.processor),
+            'uniq': new UniqCommand(this.processor),
+            'cut': new CutCommand(this.processor),
+            'awk': new AwkCommand(this.processor),
+            'sed': new SedCommand(this.processor),
+            'hexdump': new HexdumpCommand(this.processor)
         };
     }
 
