@@ -1,9 +1,9 @@
 /**
  * Level 4: The White Hat Test - Data exports
- * Central export file for all Level 4 data modules
+ * Central export file for CTF file system data
  */
 
-// Individual JSON file loaders
+// Load CTF file system data
 async function loadJSON(filename) {
     try {
         const response = await fetch(`/static/js/simulated-pc/levels/level-four/data/${filename}`);
@@ -17,46 +17,32 @@ async function loadJSON(filename) {
     }
 }
 
-// Load individual host data files
-export async function loadVoteMainServer() {
-    return await loadJSON('vote-main-server.json');
+// Load CTF file system data
+export async function loadCTFFileSystem() {
+    return await loadJSON('ctf-file-system.json');
 }
 
-export async function loadVoteDatabaseServer() {
-    return await loadJSON('vote-database-server.json');
-}
-
-export async function loadVoteAdminServer() {
-    return await loadJSON('vote-admin-server.json');
-}
-
-export async function loadMunicipalityNetwork() {
-    return await loadJSON('municipality-network.json');
-}
-
-// Load all Level 4 host data
-export async function loadAllLevel4Hosts() {
+// Load all Level 4 CTF data
+export async function loadAllLevel4Data() {
     try {
-        const [mainServer, dbServer, adminServer, network] = await Promise.all([
-            loadVoteMainServer(),
-            loadVoteDatabaseServer(),
-            loadVoteAdminServer(),
-            loadMunicipalityNetwork()
-        ]);
+        const fileSystemData = await loadCTFFileSystem();
 
-        // Return in the same format as the consolidated JSON
-        return {
-            level4_municipality_hosts: [
-                mainServer,
-                dbServer,
-                adminServer,
-                network
-            ].filter(host => host !== null) // Filter out any failed loads
-        };
+        if (!fileSystemData) {
+            console.error('Failed to load CTF file system data');
+            return { fileSystem: {} };
+        }
+
+        return fileSystemData;
     } catch (error) {
-        console.error('Error loading all Level 4 hosts:', error);
-        return { level4_municipality_hosts: [] };
+        console.error('Error loading all Level 4 CTF data:', error);
+        return { fileSystem: {} };
     }
+}
+
+// Legacy compatibility function
+export async function loadAllLevel4Hosts() {
+    console.warn('loadAllLevel4Hosts is deprecated, use loadAllLevel4Data instead');
+    return await loadAllLevel4Data();
 }
 
 // Data loading status
