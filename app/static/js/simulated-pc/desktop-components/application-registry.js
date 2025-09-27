@@ -99,6 +99,17 @@ export class ApplicationRegistry {
                 levelSpecific: 3, // Only available in level 3
                 autoOpen: true, // Auto-open when available
                 persistent: true // Cannot be closed by user
+            },
+            'disclosure-report': {
+                module: '../levels/level-four/apps/index.js',
+                className: 'DisclosureReportWindow',
+                storageKey: 'cyberquest_disclosure_opened',
+                tutorialMethod: null,
+                startMethod: null,
+                iconClass: 'bi-shield-check',
+                title: 'Disclosure Report',
+                levelSpecific: 4, // Only available in level 4
+                autoOpen: false
             }
         };
         this.loadedModules = new Map(); // Cache for loaded modules
