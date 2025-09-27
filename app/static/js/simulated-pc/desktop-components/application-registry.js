@@ -102,7 +102,7 @@ export class ApplicationRegistry {
             },
             'disclosure-report': {
                 module: '../levels/level-four/apps/index.js',
-                className: 'DisclosureReportWindow',
+                className: 'DisclosureReportApp',
                 storageKey: 'cyberquest_disclosure_opened',
                 tutorialMethod: null,
                 startMethod: null,

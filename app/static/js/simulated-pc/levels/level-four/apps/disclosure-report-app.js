@@ -1,7 +1,6 @@
 import { WindowBase } from '../../../desktop-components/window-base.js';
-import { DisclosureActivityEmitter } from './disclosure-activity-emitter.js';
 
-export class DisclosureReportWindow extends WindowBase {
+export class DisclosureReportApp extends WindowBase {
     constructor() {
         super('disclosure', 'Responsible Disclosure Report', {
             width: '80%',
@@ -20,9 +19,6 @@ export class DisclosureReportWindow extends WindowBase {
             ['FLAG-6', 'Log File Analysis - Discovered in web server access logs'],
             ['FLAG-7', 'Report Completion - Final flag awarded upon successful disclosure']
         ]);
-
-        // Setup activity emission
-        this.setupActivityEmission(DisclosureActivityEmitter);
     }
 
     createContent() {
@@ -152,12 +148,7 @@ export class DisclosureReportWindow extends WindowBase {
         super.initialize();
         this.attachEventListeners();
         this.updateProgress();
-        
-        // Emit initialization activity
-        this.emitAppActivity('disclosure_app_opened', {}, {
-            total_flags: 7,
-            discovered_flags: 0
-        });
+    
     }
 
     attachEventListeners() {
@@ -235,16 +226,6 @@ export class DisclosureReportWindow extends WindowBase {
                 this.clearForm();
                 this.showNotification('Flag verified and recorded successfully!', 'success');
 
-                // Emit successful flag submission
-                this.emitAppActivity('flag_submitted', {
-                    flag_number: flagNumber,
-                    flag_value: flagValue,
-                    is_correct: true
-                }, {
-                    discovery_method: discoveryMethod,
-                    total_discovered: this.submittedFlags.size
-                });
-
                 // Check if all flags are discovered
                 if (this.submittedFlags.size === 7) {
                     this.handleAssessmentComplete();
@@ -252,26 +233,11 @@ export class DisclosureReportWindow extends WindowBase {
 
             } else {
                 this.showNotification(result.message || 'Incorrect flag value. Please verify and try again.', 'error');
-                
-                // Emit failed flag submission
-                this.emitAppActivity('flag_submission_failed', {
-                    flag_number: flagNumber,
-                    attempted_value: flagValue,
-                    is_correct: false
-                }, {
-                    discovery_method: discoveryMethod
-                });
             }
 
         } catch (error) {
             console.error('Error validating flag:', error);
             this.showNotification('Error validating flag. Please try again.', 'error');
-            
-            // Emit error event
-            this.emitAppActivity('flag_validation_error', {
-                flag_number: flagNumber,
-                error: error.message
-            });
         }
     }
 
@@ -341,15 +307,6 @@ export class DisclosureReportWindow extends WindowBase {
         
         // Scroll to show the completion message
         completionMessage.scrollIntoView({ behavior: 'smooth' });
-        
-        // Emit assessment completion
-        this.emitAppActivity('assessment_completed', {
-            all_flags_discovered: true,
-            completion_time: new Date().toISOString()
-        }, {
-            total_flags: 7,
-            completion_percentage: 100
-        });
 
         // Show special notification
         setTimeout(() => {
@@ -398,11 +355,5 @@ export class DisclosureReportWindow extends WindowBase {
 
     cleanup() {
         super.cleanup();
-        
-        // Emit app close activity
-        this.emitAppActivity('disclosure_app_closed', {
-            flags_submitted: this.submittedFlags.size,
-            assessment_complete: this.submittedFlags.size === 7
-        });
     }
 }
