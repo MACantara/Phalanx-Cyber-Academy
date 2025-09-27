@@ -50,6 +50,58 @@ export class FileSystem {
 *Date: ${new Date().toISOString().split('T')[0]}*`,
                         size: 650
                     },
+                    'mission_brief.txt': {
+                        type: 'file',
+                        content: `THE WHITE HAT TEST - RESPONSIBLE DISCLOSURE CTF
+============================================
+
+MISSION BRIEFING
+===============
+
+Welcome, Security Researcher!
+
+You have been contracted to perform a security assessment of TechCorp's web application infrastructure. Your mission is to conduct an ethical security evaluation and provide a comprehensive responsible disclosure report.
+
+OBJECTIVES:
+----------
+1. Discover 7 security flags hidden throughout the system
+2. Document each finding with proper evidence
+3. Complete the responsible disclosure report (~/disclosure_report.md)
+4. Recommend remediation steps for discovered vulnerabilities
+
+FLAG LOCATIONS (HINTS):
+----------------------
+- FLAG-1: Check your environment configuration
+- FLAG-2: Web application source code may reveal secrets
+- FLAG-3: Server configuration files often contain sensitive data
+- FLAG-4: Environment variables in application configs
+- FLAG-5: System binaries with elevated privileges
+- FLAG-6: Application logs may contain leaked information  
+- FLAG-7: Final flag available upon report completion
+
+RULES OF ENGAGEMENT:
+-------------------
+• Only use provided terminal commands
+• Document all findings thoroughly
+• Follow responsible disclosure practices
+• No destructive actions or data modification
+• Report findings through proper channels
+
+ASSESSMENT SCOPE:
+----------------
+• Web application: /var/www/html/*
+• Configuration files: /etc/*
+• System logs: /var/log/*
+• User directories: /home/*
+• System binaries: /usr/local/bin/*
+
+Your assessment begins now. Good luck, and remember - with great power comes great responsibility!
+
+Security Team Lead
+TechCorp Security Division
+`,
+                        size: 1420
+                    },
                     '.bashrc': {
                         type: 'file',
                         content: `# ~/.bashrc: executed by bash(1) for non-login shells.
