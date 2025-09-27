@@ -316,16 +316,6 @@ export class Level4ChallengeTracker {
                 
                 this.showNotification('🎉 Flag verified successfully!', 'success');
                 
-                // Auto-advance to next incomplete challenge
-                const nextIncompleteIndex = this.challenges.findIndex((challenge, index) => 
-                    index > this.currentChallengeIndex && !this.foundFlagIds.has(challenge.id)
-                );
-                
-                if (nextIncompleteIndex !== -1) {
-                    setTimeout(() => {
-                        this.selectChallenge(nextIncompleteIndex);
-                    }, 1000);
-                }
 
             } else {
                 this.showNotification(result.message || 'Incorrect flag. Please try again.', 'error');
