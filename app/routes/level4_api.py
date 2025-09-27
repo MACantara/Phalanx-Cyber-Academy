@@ -285,3 +285,76 @@ def get_sample_data():
             'error': str(e),
             'sample': {}
         }), 500
+
+@level4_api_bp.route('/validate-flag', methods=['POST'])
+def validate_flag():
+    """Validate a CTF flag submission"""
+    try:
+        # Get request data
+        request_data = request.get_json()
+        if not request_data:
+            return jsonify({
+                'success': False,
+                'error': 'No data provided',
+                'is_valid': False
+            }), 400
+        
+        flag_number = request_data.get('flag_number', '').strip()
+        flag_value = request_data.get('flag_value', '').strip()
+        
+        if not flag_number or not flag_value:
+            return jsonify({
+                'success': False,
+                'error': 'flag_number and flag_value are required',
+                'is_valid': False
+            }), 400
+        
+        # Define correct flags (matches the CTF file system)
+        correct_flags = {
+            'FLAG-1': 'FLAG-1{enum_services_first}',
+            'FLAG-2': 'FLAG-2{source_code_comments}',
+            'FLAG-3': 'FLAG-3{nginx_config_review}',
+            'FLAG-4': 'FLAG-4{environment_variables_leak_secrets}',
+            'FLAG-5': 'FLAG-5{suid_binary_analysis}',
+            'FLAG-6': 'FLAG-6{log_files_reveal_activity}',
+            'FLAG-7': 'FLAG-7{responsible_disclosure_complete}'
+        }
+        
+        # Validate flag
+        is_valid = False
+        expected_flag = correct_flags.get(flag_number)
+        
+        if expected_flag and flag_value == expected_flag:
+            is_valid = True
+        
+        response_data = {
+            'success': True,
+            'is_valid': is_valid,
+            'flag_number': flag_number,
+            'message': 'Flag validated successfully' if is_valid else 'Invalid flag value'
+        }
+        
+        # Optional: Add flag description for feedback
+        flag_descriptions = {
+            'FLAG-1': 'Environment Configuration Analysis',
+            'FLAG-2': 'Source Code Security Review',
+            'FLAG-3': 'Server Configuration Assessment', 
+            'FLAG-4': 'Environment Variable Exposure',
+            'FLAG-5': 'SUID Binary Analysis',
+            'FLAG-6': 'Log File Analysis',
+            'FLAG-7': 'Report Completion'
+        }
+        
+        if is_valid and flag_number in flag_descriptions:
+            response_data['description'] = flag_descriptions[flag_number]
+        
+        return jsonify(response_data), 200
+        
+    except Exception as e:
+        print(f"Error in validate_flag: {e}")
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'is_valid': False
+        }), 500
