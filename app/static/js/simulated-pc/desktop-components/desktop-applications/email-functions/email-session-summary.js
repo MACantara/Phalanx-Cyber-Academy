@@ -454,34 +454,52 @@ export class EmailSessionSummary {
      */
     async completeLevel2(isRetry = false) {
         try {
-            // Mark Level 2 as completed via server API call
-            const completionData = {
-                level_id: 2,
-                score: this.lastSessionStats.accuracy,
-                time_spent: 1800, // 30 minutes estimate
-                completion_data: {
-                    sessionStats: this.lastSessionStats,
-                    timestamp: new Date().toISOString()
+            // Get session ID from localStorage or sessionStorage
+            const sessionId = localStorage.getItem('cyberquest_active_session_id') ||
+                             sessionStorage.getItem('active_session_id') ||
+                             window.currentSessionId;
+            
+            if (sessionId) {
+                // End the session via API call
+                const sessionEndData = {
+                    session_id: parseInt(sessionId),
+                    score: this.lastSessionStats.accuracy
+                };
+                
+                const response = await fetch('/levels/api/session/end', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(sessionEndData)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('Level 2 session ended successfully:', result);
+                    
+                    // Clear session data
+                    localStorage.removeItem('cyberquest_active_session_id');
+                    sessionStorage.removeItem('active_session_id');
+                    window.currentSessionId = null;
+                    
+                    // Mark Level 2 as completed locally
+                    localStorage.setItem('cyberquest_level_2_completed', 'true');
+                    localStorage.setItem('cyberquest_level_2_completion_time', Date.now());
+                } else {
+                    console.error('Failed to end Level 2 session:', response.status);
                 }
-            };
-            
-            // Make API call to complete the level
-            const response = await fetch('/levels/api/complete/2', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(completionData)
-            });
-            
-            if (response.ok) {
-                const result = await response.json();
-                console.log('Level 2 marked as completed:', result);
             } else {
-                console.error('Failed to mark Level 2 as completed');
+                console.warn('No session ID found for Level 2 - marking as completed locally only');
+                // Mark as completed locally even without session
+                localStorage.setItem('cyberquest_level_2_completed', 'true');
+                localStorage.setItem('cyberquest_level_2_completion_time', Date.now());
             }
         } catch (error) {
             console.error('Error completing Level 2:', error);
+            // Mark as completed locally even if API fails
+            localStorage.setItem('cyberquest_level_2_completed', 'true');
+            localStorage.setItem('cyberquest_level_2_completion_time', Date.now());
         }
         
         if (isRetry) {
