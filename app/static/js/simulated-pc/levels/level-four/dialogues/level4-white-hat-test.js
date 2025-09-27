@@ -43,11 +43,36 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
     onComplete() {
         localStorage.setItem('cyberquest_level_4_started', 'true');
         
+        // Create and start challenge tracker
+        this.createAndStartChallengeTracker();
+        
         // Open the Terminal application for ethical hacking tools
         if (window.applicationLauncher) {
             setTimeout(async () => {
                 await window.applicationLauncher.launchForLevel(4, 'terminal', 'Terminal');
             }, 500);
+        }
+    }
+
+    async createAndStartChallengeTracker() {
+        try {
+            // Import and create challenge tracker
+            const { Level4ChallengeTracker } = await import('../apps/challenge-tracker-app.js');
+            const tracker = new Level4ChallengeTracker();
+            
+            // Make tracker globally accessible
+            window.level4ChallengeTracker = tracker;
+            
+            // Create and append tracker element
+            const trackerElement = tracker.createElement();
+            document.body.appendChild(trackerElement);
+            
+            // Initialize tracker
+            tracker.initialize();
+            
+            console.log('[Level4Dialog] Challenge tracker started');
+        } catch (error) {
+            console.error('[Level4Dialog] Failed to create challenge tracker:', error);
         }
     }
 
