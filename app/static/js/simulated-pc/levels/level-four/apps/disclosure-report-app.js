@@ -1,4 +1,5 @@
-import { WindowBase } from '../../../desktop-components/window-base.js';
+import { WindowBase } from '/static/js/simulated-pc/desktop-components/window-base.js';
+import { loadCTFFlags, getFlagDescriptions } from './index.js';
 
 export class DisclosureReportApp extends WindowBase {
     constructor() {
@@ -9,16 +10,7 @@ export class DisclosureReportApp extends WindowBase {
         
         this.submittedFlags = new Set();
         this.flagDetails = new Map();
-        
-        this.flagDescriptions = new Map([
-            ['FLAG-1', 'Environment Configuration Analysis - Found in user environment files (.bashrc)'],
-            ['FLAG-2', 'Source Code Security Review - Located in HTML comments and PHP config files'],
-            ['FLAG-3', 'Server Configuration Assessment - Discovered in nginx configuration files'],
-            ['FLAG-4', 'Environment Variable Exposure - Found in admin environment configuration'],
-            ['FLAG-5', 'SUID Binary Analysis - Located in system binaries with elevated privileges'],
-            ['FLAG-6', 'Log File Analysis - Discovered in web server access logs'],
-            ['FLAG-7', 'Report Completion - Final flag awarded upon successful disclosure']
-        ]);
+        this.flagDescriptions = new Map(); // Will be loaded dynamically
     }
 
     createContent() {
@@ -144,11 +136,40 @@ export class DisclosureReportApp extends WindowBase {
         `;
     }
 
-    initialize() {
+    async initialize() {
         super.initialize();
+        
+        // Load flag descriptions dynamically
+        await this.loadFlagDescriptions();
+        
         this.attachEventListeners();
         this.updateProgress();
-    
+    }
+
+    async loadFlagDescriptions() {
+        try {
+            const descriptions = await getFlagDescriptions();
+            
+            // Convert to Map for consistency with existing code
+            for (const [flagId, description] of Object.entries(descriptions)) {
+                this.flagDescriptions.set(flagId, description);
+            }
+            
+            console.log('Flag descriptions loaded successfully');
+        } catch (error) {
+            console.error('Failed to load flag descriptions:', error);
+            
+            // Fallback descriptions
+            this.flagDescriptions = new Map([
+                ['FLAG-1', 'Environment Configuration Analysis - Found in user environment files (.bashrc)'],
+                ['FLAG-2', 'Source Code Security Review - Located in HTML comments and PHP config files'],
+                ['FLAG-3', 'Server Configuration Assessment - Discovered in nginx configuration files'],
+                ['FLAG-4', 'Environment Variable Exposure - Found in admin environment configuration'],
+                ['FLAG-5', 'SUID Binary Analysis - Located in system binaries with elevated privileges'],
+                ['FLAG-6', 'Log File Analysis - Discovered in web server access logs'],
+                ['FLAG-7', 'Report Completion - Final flag awarded upon successful disclosure']
+            ]);
+        }
     }
 
     attachEventListeners() {
