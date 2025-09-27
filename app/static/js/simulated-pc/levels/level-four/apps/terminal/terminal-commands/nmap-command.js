@@ -1,16 +1,89 @@
 import { BaseCommand } from './base-command.js';
-import { targetHostRegistry } from '../nmap-target-hosts/target-host-registry.js';
+import { loadAllLevel4Hosts } from '../../data/index.js';
 
 export class NmapCommand extends BaseCommand {
     constructor(processor) {
         super(processor);
-        this.targetRegistry = targetHostRegistry;
+        this.hostsData = null;
         this.lastScanResults = null;
         this.lastScanTarget = null;
         this.wasVulnerabilityScan = false;
+        this.initializeHosts();
     }
 
-    execute(args) {
+    async initializeHosts() {
+        try {
+            const data = await loadAllLevel4Hosts();
+            this.hostsData = data.level4_municipality_hosts || [];
+            console.log('Nmap: Loaded host data:', this.hostsData.length, 'hosts');
+        } catch (error) {
+            console.error('Nmap: Failed to load host data:', error);
+            this.hostsData = [];
+        }
+    }
+
+    async waitForHosts() {
+        if (!this.hostsData) {
+            await this.initializeHosts();
+        }
+        while (!this.hostsData) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+    }
+
+    resolveTarget(targetStr) {
+        if (!this.hostsData) {
+            return null;
+        }
+
+        // Handle network ranges
+        if (targetStr.includes('/')) {
+            return this.hostsData.find(host => host.hostname === targetStr || host.ip === targetStr);
+        }
+
+        // Direct lookup by hostname or IP
+        const host = this.hostsData.find(host => 
+            host.hostname === targetStr || host.ip === targetStr
+        );
+
+        return host || null;
+    }
+
+    // Utility methods to replace target registry functionality
+    isNetworkRange(target) {
+        return target && target.hostType === 'range';
+    }
+
+    getNetworkSummary(target) {
+        if (this.isNetworkRange(target) && target.networkRange) {
+            return {
+                activeHosts: target.networkRange.hosts || [],
+                subnet: target.networkRange.subnet,
+                totalHosts: target.networkRange.totalHosts,
+                activeHosts: target.networkRange.activeHosts
+            };
+        }
+        return { activeHosts: [] };
+    }
+
+    getVulnerabilityScripts() {
+        if (!this.hostsData) return {};
+        
+        const scripts = {};
+        this.hostsData.forEach(host => {
+            if (host.vulnerabilities) {
+                for (const [scriptName, targets] of Object.entries(host.vulnerabilities)) {
+                    if (!scripts[scriptName]) {
+                        scripts[scriptName] = {};
+                    }
+                    Object.assign(scripts[scriptName], targets);
+                }
+            }
+        });
+        return scripts;
+    }
+
+    async execute(args) {
         if (args.length === 0) {
             this.showBasicUsage();
             return;
@@ -36,7 +109,7 @@ export class NmapCommand extends BaseCommand {
         }
 
         // Execute the appropriate scan
-        this.performScan(options);
+        await this.performScan(options);
     }
 
     parseArguments(args) {
@@ -109,8 +182,10 @@ export class NmapCommand extends BaseCommand {
         return options;
     }
 
-    performScan(options) {
-        const target = this.targetRegistry.resolveTarget(options.target);
+    async performScan(options) {
+        await this.waitForHosts();
+        
+        const target = this.resolveTarget(options.target);
         
         if (!target) {
             this.addOutput(`nmap: Failed to resolve "${options.target}"`, 'text-red-400');
@@ -166,7 +241,7 @@ export class NmapCommand extends BaseCommand {
         let output = `Starting Nmap 7.80 ( https://nmap.org ) at ${new Date().toLocaleString()}\n`;
         
         // Add the recent scan output by reconstructing it from the target data
-        const target = this.targetRegistry.resolveTarget(this.lastScanTarget);
+        const target = this.resolveTarget(this.lastScanTarget);
         if (target) {
             output += `Nmap scan report for ${target.hostname || this.lastScanTarget} (${target.ip || this.lastScanTarget})\n`;
             output += `Host is up (0.00015s latency).\n`;
@@ -235,13 +310,13 @@ export class NmapCommand extends BaseCommand {
     }
 
     performPortScan(target, options) {
-        if (target.isNetworkRange()) {
+        if (this.isNetworkRange(target)) {
             // Network range scan
             this.addOutput('');
             this.addOutput('HOST DISCOVERY:', 'text-blue-400');
-            const networkSummary = target.getNetworkSummary();
+            const networkSummary = this.getNetworkSummary(target);
             networkSummary.activeHosts.forEach(ip => {
-                const hostData = this.targetRegistry.resolveTarget(ip);
+                const hostData = this.resolveTarget(ip);
                 this.addOutput(`${ip} - ${hostData?.hostname || 'Unknown'} - UP`);
             });
             return;
@@ -264,7 +339,7 @@ export class NmapCommand extends BaseCommand {
     }
 
     performServiceScan(target, options) {
-        if (target.isNetworkRange()) return;
+        if (this.isNetworkRange(target)) return;
 
         this.addOutput('');
         this.addOutput('SERVICE DETECTION:', 'text-blue-400');
@@ -281,7 +356,7 @@ export class NmapCommand extends BaseCommand {
     }
 
     performOsScan(target, options) {
-        if (target.isNetworkRange()) return;
+        if (this.isNetworkRange(target)) return;
 
         this.addOutput('');
         this.addOutput('OS DETECTION:', 'text-blue-400');
@@ -291,7 +366,7 @@ export class NmapCommand extends BaseCommand {
     }
 
     performScriptScan(target, options) {
-        if (target.isNetworkRange()) return;
+        if (this.isNetworkRange(target)) return;
 
         this.addOutput('');
         this.addOutput('SCRIPT SCAN RESULTS:', 'text-blue-400');
@@ -301,7 +376,7 @@ export class NmapCommand extends BaseCommand {
 
         // Run vulnerability scripts if requested
         if (options.vulnScan) {
-            const vulnerabilityScripts = this.targetRegistry.getVulnerabilityScripts();
+            const vulnerabilityScripts = this.getVulnerabilityScripts();
             
             for (const [scriptName, scriptResults] of Object.entries(vulnerabilityScripts)) {
                 for (const [targetPort, results] of Object.entries(scriptResults)) {
@@ -345,9 +420,9 @@ export class NmapCommand extends BaseCommand {
     }
 
     getPortsToScan(target, options) {
-        if (target.isNetworkRange()) return [];
+        if (this.isNetworkRange(target)) return [];
 
-        let portsToCheck = Object.entries(target.ports);
+        let portsToCheck = Object.entries(target.ports || {});
         
         if (options.ports) {
             const requestedPorts = options.ports.split(',').map(p => parseInt(p.trim()));
@@ -358,8 +433,8 @@ export class NmapCommand extends BaseCommand {
     }
 
     getPortCount(target, options) {
-        if (target.isNetworkRange()) {
-            const networkSummary = target.getNetworkSummary();
+        if (this.isNetworkRange(target)) {
+            const networkSummary = this.getNetworkSummary(target);
             return networkSummary.activeHosts.length;
         }
         
