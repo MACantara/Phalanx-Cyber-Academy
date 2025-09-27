@@ -420,16 +420,8 @@ def load_ctf_flags():
         return None
 
 def get_selected_flags():
-    """Get 7 randomly selected flags for the current session"""
-    global _session_flags_cache
-    
-    # Create a session identifier for caching
-    # Use session ID if available, otherwise create one based on request characteristics
-    session_id = (
-        session.get('session_id') or 
-        session.get('user_id') or
-        f"{request.remote_addr}_{hash(request.user_agent or '')}"
-    )
+    """Get 7 randomly selected flags"""
+    # Generate new random selection for each request
     flags_data = load_ctf_flags()
     if not flags_data:
         return []
@@ -749,25 +741,6 @@ def get_mission_brief():
         return jsonify({
             'success': False,
             'error': str(e)
-        }), 500
-
-@level4_api_bp.route('/clear-session-flags', methods=['POST'])
-def clear_session_flags():
-    """Clear cached session flags (for testing/development)"""
-    global _session_flags_cache
-    try:
-        cache_size = len(_session_flags_cache)
-        _session_flags_cache.clear()
-        return jsonify({
-            'success': True,
-            'message': f'Cleared {cache_size} cached sessions',
-            'cache_cleared': True
-        }), 200
-    except Exception as e:
-        print(f"Error clearing session flags: {e}")
-        return jsonify({
-            'success': False,
-            'error': 'Failed to clear session flags'
         }), 500
 
 @level4_api_bp.route('/calculate-xp', methods=['POST'])
