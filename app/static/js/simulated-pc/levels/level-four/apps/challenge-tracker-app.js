@@ -144,24 +144,31 @@ export class Level4ChallengeTracker {
                                 value="${this.currentChallengeIndex}">
                             ${this.challenges.map((challenge, index) => `
                                 <option value="${index}" ${index === this.currentChallengeIndex ? 'selected' : ''}>
-                                    ${index + 1}. ${challenge.name || challenge.id || `Challenge ${index + 1}`}
-                                    ${this.foundFlags.has(challenge.value) ? ' ✓' : ''}
+                                    ${this.foundFlags.has(challenge.value) ? '✅' : '📋'} ${index + 1}. ${challenge.name || challenge.id || `Challenge ${index + 1}`}
                                 </option>
                             `).join('')}
                         </select>
                     </div>
                     ${currentChallenge ? `
-                        <div class="bg-gray-700 rounded p-3">
+                        <div class="bg-gray-700 rounded p-3 ${this.foundFlags.has(currentChallenge.value) ? 'ring-2 ring-green-400 bg-green-900 bg-opacity-20' : ''}">
                             <div class="flex items-center mb-2">
                                 <div class="flex items-center mr-2">
                                     ${this.foundFlags.has(currentChallenge.value) ? 
-                                        '<i class="bi bi-check-circle text-green-400"></i>' : 
+                                        '<i class="bi bi-check-circle-fill text-green-400 text-lg"></i>' : 
                                         '<i class="bi bi-circle text-gray-500"></i>'
                                     }
                                 </div>
-                                <div class="text-xs font-semibold text-gray-300">${currentChallenge.name || 'Challenge'}</div>
+                                <div class="text-xs font-semibold ${this.foundFlags.has(currentChallenge.value) ? 'text-green-300' : 'text-gray-300'}">${currentChallenge.name || 'Challenge'}</div>
+                                ${this.foundFlags.has(currentChallenge.value) ? 
+                                    '<div class="ml-auto px-2 py-0.5 bg-green-600 text-green-100 text-xs rounded-full font-medium">COMPLETED</div>' : 
+                                    ''
+                                }
                             </div>
-                            <div class="text-sm leading-relaxed">${currentChallenge.challenge_question || 'Loading challenge...'}</div>
+                            <div class="text-sm leading-relaxed ${this.foundFlags.has(currentChallenge.value) ? 'text-gray-300 line-through opacity-75' : ''}">${currentChallenge.challenge_question || 'Loading challenge...'}</div>
+                            ${this.foundFlags.has(currentChallenge.value) ? 
+                                '<div class="mt-2 text-xs text-green-400 flex items-center"><i class="bi bi-trophy mr-1"></i>Challenge completed! Well done!</div>' : 
+                                ''
+                            }
                         </div>
                     ` : `
                         <div class="bg-gray-700 rounded p-3 text-center text-gray-400">
@@ -187,7 +194,7 @@ export class Level4ChallengeTracker {
                         />
                         <button 
                             onclick="window.level4ChallengeTracker?.submitCurrentFlag()" 
-                            class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white text-xs font-semibold py-1 px-2 rounded transition-colors flex items-center justify-center space-x-1">
+                            class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white text-xs font-semibold py-1 px-2 rounded transition-colors flex items-center justify-center space-x-1 hover:shadow-lg transform hover:scale-105 transition-transform">
                             <i class="bi bi-check-circle"></i>
                             <span>Verify Flag</span>
                         </button>
@@ -294,6 +301,16 @@ export class Level4ChallengeTracker {
                 // Clear the input
                 if (flagInput) {
                     flagInput.value = '';
+                }
+                
+                // Add celebratory animation to the current challenge
+                const challengeDiv = this.element?.querySelector('.bg-gray-700');
+                if (challengeDiv) {
+                    challengeDiv.style.transform = 'scale(1.05)';
+                    challengeDiv.style.transition = 'transform 0.3s ease';
+                    setTimeout(() => {
+                        challengeDiv.style.transform = 'scale(1)';
+                    }, 300);
                 }
                 
                 this.showNotification('🎉 Flag verified successfully!', 'success');
