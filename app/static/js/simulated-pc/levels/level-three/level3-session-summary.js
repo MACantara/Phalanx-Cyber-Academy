@@ -13,7 +13,7 @@ export class Level3SessionSummary {
             startTime: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),
             levelId: 3,
-            sessionId: null,
+            sessionId: this.getActiveSessionId(), // Use existing session
             totalSessions: 1
         };
 
@@ -25,31 +25,23 @@ export class Level3SessionSummary {
     }
 
     /**
-     * Start a new session with the backend
+     * Get active session ID from storage
      */
-    async startSession() {
-        try {
-            const response = await fetch('/levels/api/session/start', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    session_name: 'Malware-Mayhem',
-                    level_id: 3
-                })
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                this.sessionData.sessionId = data.session_id;
-                console.log('[Level3SessionSummary] Session started:', data.session_id);
-            } else {
-                console.error('[Level3SessionSummary] Failed to start session:', data.error);
+    getActiveSessionId() {
+        const sessionId = localStorage.getItem('cyberquest_active_session_id') ||
+                         sessionStorage.getItem('active_session_id') ||
+                         window.currentSessionId;
+        
+        if (sessionId) {
+            const numericSessionId = parseInt(sessionId);
+            if (!isNaN(numericSessionId)) {
+                console.log('[Level3SessionSummary] Using existing session:', numericSessionId);
+                return numericSessionId;
             }
-        } catch (error) {
-            console.error('[Level3SessionSummary] Error starting session:', error);
         }
+        
+        console.warn('[Level3SessionSummary] No active session found');
+        return null;
     }
 
     /**
