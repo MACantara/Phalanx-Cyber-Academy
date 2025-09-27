@@ -64,6 +64,10 @@ export class Level4SessionSummary extends BaseModalComponent {
         const modalContent = this.createSummaryContent();
         this.showModal('Level 4: White Hat Test - Assessment Complete', modalContent);
         
+        // Bind navigation events after modal is shown
+        setTimeout(() => {
+            this.bindNavigationEvents();
+        }, 100);
     }
 
     createSummaryContent() {
@@ -147,23 +151,36 @@ export class Level4SessionSummary extends BaseModalComponent {
                 <div class="text-center">
                     <p class="text-gray-400 text-sm mb-4">
                         <i class="bi bi-lightbulb mr-1"></i>
-                        Ready for advanced cybersecurity challenges? Continue your journey!
+                        Outstanding performance! You've mastered ethical hacking fundamentals.
                     </p>
-                    <div class="flex space-x-3 justify-center">
+                    <div class="flex flex-col md:flex-row gap-3 justify-center">
                         <button 
-                            onclick="window.level4SessionSummary?.navigateToLevels()" 
-                            class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-4 py-2 rounded font-medium transition-colors flex items-center space-x-2"
+                            id="continue-level5-btn"
+                            class="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white rounded-lg font-semibold transition-colors cursor-pointer flex items-center justify-center"
                         >
-                            <i class="bi bi-arrow-right-circle"></i>
-                            <span>Continue Journey</span>
+                            <i class="bi bi-arrow-right-circle mr-2"></i>
+                            <span>Continue to Level 5</span>
                         </button>
                         <button 
-                            onclick="window.level4SessionSummary?.viewProfile()" 
-                            class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded font-medium transition-colors flex items-center space-x-2"
+                            id="levels-overview-btn"
+                            class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors cursor-pointer flex items-center justify-center"
                         >
-                            <i class="bi bi-person-circle"></i>
+                            <i class="bi bi-grid mr-2"></i>
+                            <span>Back to Levels</span>
+                        </button>
+                        <button 
+                            id="view-profile-btn"
+                            class="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-semibold transition-colors cursor-pointer flex items-center justify-center"
+                        >
+                            <i class="bi bi-person-circle mr-2"></i>
                             <span>View Profile</span>
                         </button>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-gray-500 text-xs">
+                            <i class="bi bi-trophy mr-1"></i>
+                            Level 4 completed! You've earned ${this.sessionData.xpEarned} XP in Advanced Penetration Testing
+                        </p>
                     </div>
                 </div>
             </div>
@@ -178,6 +195,117 @@ export class Level4SessionSummary extends BaseModalComponent {
     viewProfile() {
         this.closeModal();
         window.location.href = '/profile';
+    }
+
+    /**
+     * Bind events for navigation buttons
+     */
+    bindNavigationEvents() {
+        const continueBtn = document.getElementById('continue-level5-btn');
+        const levelsBtn = document.getElementById('levels-overview-btn');
+        const profileBtn = document.getElementById('view-profile-btn');
+
+        if (continueBtn) {
+            continueBtn.addEventListener('click', () => this.continueToLevel5());
+        }
+        
+        if (levelsBtn) {
+            levelsBtn.addEventListener('click', () => this.navigateToLevelsOverview());
+        }
+        
+        if (profileBtn) {
+            profileBtn.addEventListener('click', () => this.viewProfile());
+        }
+    }
+
+    /**
+     * Continue to Level 5 with proper level progression
+     */
+    async continueToLevel5() {
+        try {
+            // Mark Level 4 as completed and set progression
+            localStorage.setItem('cyberquest_level_4_completed', 'true');
+            localStorage.setItem('cyberquest_current_level', '5');
+            
+            // Show shutdown sequence then navigate to Level 5
+            await this.showShutdownSequenceAndNavigateToLevel5();
+        } catch (error) {
+            console.error('[Level4Summary] Error continuing to Level 5:', error);
+            // Fallback navigation
+            this.closeModal();
+            window.location.href = '/levels/5/start?autostart=true';
+        }
+    }
+
+    /**
+     * Navigate to levels overview
+     */
+    async navigateToLevelsOverview() {
+        try {
+            await this.showShutdownSequenceAndNavigate();
+        } catch (error) {
+            console.error('[Level4Summary] Error navigating to levels:', error);
+            this.closeModal();
+            window.location.href = '/levels';
+        }
+    }
+
+    /**
+     * Show shutdown sequence and navigate to Level 5
+     */
+    async showShutdownSequenceAndNavigateToLevel5() {
+        try {
+            // Import shutdown sequence
+            const { ShutdownSequence } = await import('../../shutdown-sequence.js');
+            
+            // Create shutdown overlay
+            const shutdownOverlay = document.createElement('div');
+            shutdownOverlay.className = 'fixed inset-0 bg-black z-50';
+            shutdownOverlay.style.zIndex = '9999';
+            document.body.appendChild(shutdownOverlay);
+            
+            // Run shutdown sequence
+            await ShutdownSequence.runShutdown(shutdownOverlay);
+            
+            // Navigate to Level 5
+            window.location.href = '/levels/5/start?autostart=true';
+        } catch (error) {
+            console.error('[Level4Summary] Failed to run shutdown sequence for Level 5:', error);
+            // Fallback without shutdown sequence
+            this.closeModal();
+            setTimeout(() => {
+                window.location.href = '/levels/5/start?autostart=true';
+            }, 1000);
+        }
+    }
+
+    /**
+     * Show shutdown sequence and navigate to levels overview
+     */
+    async showShutdownSequenceAndNavigate() {
+        try {
+            // Import shutdown sequence
+            const { ShutdownSequence } = await import('../../shutdown-sequence.js');
+            
+            // Create shutdown overlay
+            const shutdownOverlay = document.createElement('div');
+            shutdownOverlay.className = 'fixed inset-0 bg-black z-50';
+            shutdownOverlay.style.zIndex = '9999';
+            document.body.appendChild(shutdownOverlay);
+            
+            // Run shutdown sequence
+            await ShutdownSequence.runShutdown(shutdownOverlay);
+            
+            // Navigate to levels overview
+            window.location.href = '/levels';
+        } catch (error) {
+            console.error('[Level4Summary] Failed to run shutdown sequence for levels:', error);
+            // Fallback without shutdown sequence
+            this.closeModal();
+            setTimeout(() => {
+                window.location.href = '/levels';
+            }, 1000);
+        }
     }
 
     async submitToBackend() {
