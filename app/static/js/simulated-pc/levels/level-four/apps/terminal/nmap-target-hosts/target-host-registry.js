@@ -1,45 +1,74 @@
-import { VoteMainServer } from './vote-main-server.js';
-import { VoteDatabaseServer } from './vote-database-server.js';
-import { VoteAdminServer } from './vote-admin-server.js';
-import { MunicipalityNetwork } from './municipality-network.js';
-
 export class TargetHostRegistry {
     constructor() {
         this.hosts = new Map();
         this.vulnerabilityScripts = new Map();
+        this.jsonData = null;
+        this.initializeFromAPI();
+    }
+
+    async initializeFromAPI() {
+        try {
+            // Try to load from API first
+            const response = await fetch('/api/level4/hosts-data');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    this.jsonData = data.level4_municipality_hosts;
+                    console.log('Loaded Level 4 host data from API:', this.jsonData.length, 'hosts');
+                } else {
+                    throw new Error('API returned error: ' + data.error);
+                }
+            } else {
+                throw new Error('Failed to fetch from API');
+            }
+        } catch (error) {
+            console.warn('Failed to load from API, trying fallback JSON:', error);
+            // Fallback to static JSON file
+            try {
+                const response = await fetch('/static/js/simulated-pc/levels/level-four/data/level4-hosts-data.json');
+                const data = await response.json();
+                this.jsonData = data.level4_municipality_hosts;
+                console.log('Loaded Level 4 host data from JSON file:', this.jsonData.length, 'hosts');
+            } catch (fallbackError) {
+                console.error('Failed to load host data:', fallbackError);
+                this.jsonData = [];
+            }
+        }
+
         this.initializeHosts();
         this.initializeVulnerabilityScripts();
     }
 
     initializeHosts() {
-        // Register individual hosts
-        const voteMainServer = new VoteMainServer();
-        const voteDatabaseServer = new VoteDatabaseServer();
-        const voteAdminServer = new VoteAdminServer();
-        const municipalityNetwork = new MunicipalityNetwork();
+        if (!this.jsonData) return;
 
-        // Register by hostname
-        this.hosts.set('vote.municipality.gov', voteMainServer);
-        this.hosts.set('vote-db.municipality.gov', voteDatabaseServer);
-        this.hosts.set('vote-admin.municipality.gov', voteAdminServer);
-        this.hosts.set('192.168.100.0/24', municipalityNetwork);
+        // Register hosts from JSON data
+        this.jsonData.forEach(hostData => {
+            // Register by hostname
+            if (hostData.hostname) {
+                this.hosts.set(hostData.hostname, hostData);
+            }
 
-        // Register by IP address for reverse lookups
-        this.hosts.set('192.168.100.10', voteMainServer);
-        this.hosts.set('192.168.100.11', voteDatabaseServer);
-        this.hosts.set('192.168.100.12', voteAdminServer);
+            // Register by IP address for reverse lookups
+            if (hostData.ip) {
+                this.hosts.set(hostData.ip, hostData);
+            }
+        });
     }
 
     initializeVulnerabilityScripts() {
+        if (!this.jsonData) return;
+
         // Aggregate all vulnerabilities from hosts for script-based lookup
-        this.hosts.forEach(host => {
-            const vulns = host.vulnerabilities;
-            for (const [scriptName, targets] of Object.entries(vulns)) {
-                if (!this.vulnerabilityScripts.has(scriptName)) {
-                    this.vulnerabilityScripts.set(scriptName, {});
+        this.jsonData.forEach(host => {
+            if (host.vulnerabilities) {
+                for (const [scriptName, targets] of Object.entries(host.vulnerabilities)) {
+                    if (!this.vulnerabilityScripts.has(scriptName)) {
+                        this.vulnerabilityScripts.set(scriptName, {});
+                    }
+                    const existing = this.vulnerabilityScripts.get(scriptName);
+                    Object.assign(existing, targets);
                 }
-                const scriptVulns = this.vulnerabilityScripts.get(scriptName);
-                Object.assign(scriptVulns, targets);
             }
         });
     }
@@ -58,7 +87,7 @@ export class TargetHostRegistry {
 
     // Get hosts by category
     getHostsByCategory(category) {
-        return this.getAllHosts().filter(host => host.getCategory() === category);
+        return this.getAllHosts().filter(host => host.category === category);
     }
 
     // Resolve target (handles both hostnames and IPs)
@@ -82,6 +111,18 @@ export class TargetHostRegistry {
         }
 
         return null;
+    }
+
+    // Check if registry is ready (data loaded)
+    isReady() {
+        return this.jsonData !== null;
+    }
+
+    // Wait for registry to be ready
+    async waitForReady() {
+        while (!this.isReady()) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
     }
 
     // Get vulnerability information for scripts
@@ -160,20 +201,26 @@ export class TargetHostRegistry {
     // Export registry data for debugging
     exportRegistryData() {
         return {
-            hosts: Object.fromEntries(
-                Array.from(this.hosts.entries()).map(([key, host]) => [
-                    key, 
-                    host.toHostObject()
-                ])
-            ),
+            hosts: Object.fromEntries(this.hosts.entries()),
             vulnerabilityScripts: Object.fromEntries(this.vulnerabilityScripts),
-            securitySummary: this.getNetworkSecuritySummary()
+            securitySummary: this.getNetworkSecuritySummary(),
+            dataSource: this.jsonData ? 'JSON loaded' : 'No data'
         };
     }
 }
 
-// Export singleton instance
-export const targetHostRegistry = new TargetHostRegistry();
+// Create and export singleton instance
+let registryInstance = null;
+
+export function getTargetHostRegistry() {
+    if (!registryInstance) {
+        registryInstance = new TargetHostRegistry();
+    }
+    return registryInstance;
+}
+
+// Export singleton instance for compatibility
+export const targetHostRegistry = getTargetHostRegistry();
 
 // Export class for custom instances
 export default TargetHostRegistry;

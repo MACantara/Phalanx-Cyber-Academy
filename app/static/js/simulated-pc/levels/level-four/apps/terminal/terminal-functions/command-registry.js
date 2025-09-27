@@ -1,19 +1,19 @@
-// Import all terminal commands from Level 4 directory
-import { LsCommand } from '../../../levels/level-four/terminal-commands/ls-command.js';
-import { CdCommand } from '../../../levels/level-four/terminal-commands/cd-command.js';
-import { CatCommand } from '../../../levels/level-four/terminal-commands/cat-command.js';
-import { PwdCommand } from '../../../levels/level-four/terminal-commands/pwd-command.js';
-import { WhoamiCommand } from '../../../levels/level-four/terminal-commands/whoami-command.js';
-import { ClearCommand } from '../../../levels/level-four/terminal-commands/clear-command.js';
-import { HelpCommand } from '../../../levels/level-four/terminal-commands/help-command.js';
-import { HistoryCommand } from '../../../levels/level-four/terminal-commands/history-command.js';
-import { EchoCommand } from '../../../levels/level-four/terminal-commands/echo-command.js';
-import { DateCommand } from '../../../levels/level-four/terminal-commands/date-command.js';
-import { UnameCommand } from '../../../levels/level-four/terminal-commands/uname-command.js';
-import { NmapCommand } from '../../../levels/level-four/terminal-commands/nmap-command.js';
-import { PingCommand } from '../../../levels/level-four/terminal-commands/ping-command.js';
-import { FindCommand } from '../../../levels/level-four/terminal-commands/find-command.js';
-import { GrepCommand } from '../../../levels/level-four/terminal-commands/grep-command.js';
+// Import all terminal commands from terminal-commands directory
+import { LsCommand } from '../terminal-commands/ls-command.js';
+import { CdCommand } from '../terminal-commands/cd-command.js';
+import { CatCommand } from '../terminal-commands/cat-command.js';
+import { PwdCommand } from '../terminal-commands/pwd-command.js';
+import { WhoamiCommand } from '../terminal-commands/whoami-command.js';
+import { ClearCommand } from '../terminal-commands/clear-command.js';
+import { HelpCommand } from '../terminal-commands/help-command.js';
+import { HistoryCommand } from '../terminal-commands/history-command.js';
+import { EchoCommand } from '../terminal-commands/echo-command.js';
+import { DateCommand } from '../terminal-commands/date-command.js';
+import { UnameCommand } from '../terminal-commands/uname-command.js';
+import { NmapCommand } from '../terminal-commands/nmap-command.js';
+import { PingCommand } from '../terminal-commands/ping-command.js';
+import { FindCommand } from '../terminal-commands/find-command.js';
+import { GrepCommand } from '../terminal-commands/grep-command.js';
 
 export class CommandRegistry {
     constructor(processor) {

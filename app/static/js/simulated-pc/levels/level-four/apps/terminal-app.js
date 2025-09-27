@@ -1,5 +1,5 @@
-import { WindowBase } from '../window-base.js';
-import { CommandProcessor } from './terminal-functions/command-processor.js';
+import { WindowBase } from '../../../desktop-components/window-base.js';
+import { CommandProcessor } from './terminal/terminal-functions/command-processor.js';
 
 export class TerminalApp extends WindowBase {
     constructor() {
