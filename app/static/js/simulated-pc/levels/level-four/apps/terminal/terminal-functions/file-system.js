@@ -33,22 +33,20 @@ export class FileSystem {
             '/': {
                 type: 'directory',
                 contents: {
-                    'home': { type: 'directory', contents: {} }
-                }
-            },
-            '/home': {
-                type: 'directory',
-                contents: {
-                    'researcher': { type: 'directory', contents: {} }
-                }
-            },
-            '/home/researcher': {
-                type: 'directory',
-                contents: {
-                    'readme.txt': {
-                        type: 'file',
-                        content: 'File system data failed to load. Please refresh the page.',
-                        size: 56
+                    'home': { 
+                        type: 'directory', 
+                        contents: {
+                            'researcher': { 
+                                type: 'directory', 
+                                contents: {
+                                    'readme.txt': {
+                                        type: 'file',
+                                        content: 'File system data failed to load. Please refresh the page.',
+                                        size: 56
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -72,10 +70,41 @@ export class FileSystem {
         }
     }
 
-    async listDirectory(path, showHidden = false) {
+    // Helper method to navigate nested directory structure
+    getDirectoryData(path) {
+        if (path === '/') {
+            return this.files['/'];
+        }
+
+        // Navigate through nested structure
+        const parts = path.split('/').filter(part => part !== '');
+        let current = this.files['/'];
+        
+        for (const part of parts) {
+            if (!current || !current.contents || !current.contents[part]) {
+                return null;
+            }
+            current = current.contents[part];
+        }
+        
+        return current;
+    }
+
+    // Helper method to get file data from nested structure
+    getFileData(directory, filename) {
+        const dirData = this.getDirectoryData(directory);
+        if (!dirData || dirData.type !== 'directory') {
+            return null;
+        }
+
+        const contents = dirData.contents || {};
+        return contents[filename] || null;
+    }
+
+    async   listDirectory(path, showHidden = false) {
         await this.waitForInitialization();
         
-        const dir = this.files[path];
+        const dir = this.getDirectoryData(path);
         if (!dir || dir.type !== 'directory') {
             return [];
         }
@@ -91,7 +120,8 @@ export class FileSystem {
         }
 
         // Add directory contents
-        for (const [name, item] of Object.entries(dir.contents)) {
+        const contents = dir.contents || {};
+        for (const [name, item] of Object.entries(contents)) {
             if (!showHidden && (item.hidden || name.startsWith('.'))) {
                 continue;
             }
@@ -115,12 +145,7 @@ export class FileSystem {
             return await this.getDynamicMissionBrief();
         }
         
-        const dir = this.files[directory];
-        if (!dir || dir.type !== 'directory') {
-            return null;
-        }
-
-        const file = dir.contents[filename];
+        const file = this.getFileData(directory, filename);
         if (!file || file.type !== 'file') {
             return null;
         }
@@ -144,10 +169,10 @@ export class FileSystem {
             }
         } catch (error) {
             console.error('Error loading dynamic mission brief:', error);
-            // Fallback to static content from JSON
-            const dir = this.files['/home/researcher'];
-            if (dir && dir.contents && dir.contents['mission_brief.txt']) {
-                return this.processEscapeSequences(dir.contents['mission_brief.txt'].content);
+            // Fallback to static content from nested JSON structure
+            const file = this.getFileData('/home/researcher', 'mission_brief.txt');
+            if (file) {
+                return this.processEscapeSequences(file.content);
             }
             return 'Error: Unable to load mission brief. Please try again.';
         }
@@ -169,7 +194,7 @@ export class FileSystem {
     async directoryExists(path) {
         await this.waitForInitialization();
         
-        const dir = this.files[path];
+        const dir = this.getDirectoryData(path);
         return dir && dir.type === 'directory';
     }
 
