@@ -41,14 +41,7 @@ export class DisclosureReportApp extends WindowBase {
                                 <div>
                                     <label class="block text-sm font-medium mb-1">Flag Number (1-7):</label>
                                     <select id="flag-number" class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:border-blue-500 focus:outline-none">
-                                        <option value="">Select Flag Number</option>
-                                        <option value="FLAG-1">FLAG-1 - Environment Configuration</option>
-                                        <option value="FLAG-2">FLAG-2 - Source Code Review</option>
-                                        <option value="FLAG-3">FLAG-3 - Server Configuration</option>
-                                        <option value="FLAG-4">FLAG-4 - Environment Variables</option>
-                                        <option value="FLAG-5">FLAG-5 - SUID Binary Analysis</option>
-                                        <option value="FLAG-6">FLAG-6 - Log File Analysis</option>
-                                        <option value="FLAG-7">FLAG-7 - Report Completion</option>
+                                        <option value="">Select Challenge</option>
                                     </select>
                                 </div>
                                 <div>
@@ -56,7 +49,7 @@ export class DisclosureReportApp extends WindowBase {
                                     <input 
                                         type="text" 
                                         id="flag-value" 
-                                        placeholder="Enter the complete flag (e.g., FLAG-1{example})"
+                                        placeholder="Enter the complete flag (e.g., WHT{example})"
                                         class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:border-blue-500 focus:outline-none"
                                     />
                                 </div>
@@ -139,37 +132,78 @@ export class DisclosureReportApp extends WindowBase {
     async initialize() {
         super.initialize();
         
-        // Load flag descriptions dynamically
+        // Load flag descriptions dynamically and populate dropdown
         await this.loadFlagDescriptions();
+        await this.populateFlagDropdown();
         
         this.attachEventListeners();
         this.updateProgress();
     }
 
+    async populateFlagDropdown() {
+        try {
+            // Load CTF configuration from API
+            const response = await fetch('/api/level4/flags-config');
+            const configData = await response.json();
+            
+            if (configData.success) {
+                const ctfConfig = configData.ctf_config;
+                const flagSelect = this.windowElement.querySelector('#flag-number');
+                
+                // Clear existing options except the first one
+                flagSelect.innerHTML = '<option value="">Select Challenge</option>';
+                
+                // Add options for selected flags
+                const selectedFlags = ctfConfig.selected_flags || [];
+                selectedFlags.forEach(flagId => {
+                    const flagInfo = ctfConfig.flags[flagId];
+                    if (flagInfo) {
+                        const option = document.createElement('option');
+                        option.value = flagId;
+                        option.textContent = `${flagId} - ${flagInfo.name}`;
+                        flagSelect.appendChild(option);
+                    }
+                });
+                
+                console.log('Flag dropdown populated with selected flags');
+            }
+        } catch (error) {
+            console.error('Error loading flag configuration for dropdown:', error);
+            // Keep default static options as fallback
+        }
+    }
+
     async loadFlagDescriptions() {
         try {
-            const descriptions = await getFlagDescriptions();
+            // Load from API instead of using hardcoded descriptions
+            const response = await fetch('/api/level4/flags-config');
+            const configData = await response.json();
             
-            // Convert to Map for consistency with existing code
-            for (const [flagId, description] of Object.entries(descriptions)) {
-                this.flagDescriptions.set(flagId, description);
+            if (configData.success) {
+                const ctfConfig = configData.ctf_config;
+                
+                // Convert to Map for consistency with existing code
+                for (const [flagId, flagInfo] of Object.entries(ctfConfig.flags)) {
+                    this.flagDescriptions.set(flagId, flagInfo.challenge_question || flagInfo.name);
+                }
+                
+                console.log('Flag descriptions loaded successfully from API');
+                return;
             }
-            
-            console.log('Flag descriptions loaded successfully');
         } catch (error) {
-            console.error('Failed to load flag descriptions:', error);
-            
-            // Fallback descriptions
-            this.flagDescriptions = new Map([
-                ['FLAG-1', 'Environment Configuration Analysis - Found in user environment files (.bashrc)'],
-                ['FLAG-2', 'Source Code Security Review - Located in HTML comments and PHP config files'],
-                ['FLAG-3', 'Server Configuration Assessment - Discovered in nginx configuration files'],
-                ['FLAG-4', 'Environment Variable Exposure - Found in admin environment configuration'],
-                ['FLAG-5', 'SUID Binary Analysis - Located in system binaries with elevated privileges'],
-                ['FLAG-6', 'Log File Analysis - Discovered in web server access logs'],
-                ['FLAG-7', 'Report Completion - Final flag awarded upon successful disclosure']
-            ]);
+            console.error('Failed to load flag descriptions from API:', error);
         }
+        
+        // Fallback descriptions with WHT format
+        this.flagDescriptions = new Map([
+            ['WHT-ENV', 'Environment Reconnaissance Challenge - Found in user environment files (.bashrc)'],
+            ['WHT-SRC', 'Source Code Analysis Challenge - Located in HTML comments and PHP config files'],
+            ['WHT-CFG', 'Server Configuration Audit Challenge - Discovered in nginx configuration files'],
+            ['WHT-ENV2', 'Environment Variable Exposure Challenge - Found in admin environment configuration'],
+            ['WHT-SUID', 'SUID Binary Security Challenge - Located in system binaries with elevated privileges'],
+            ['WHT-LOG', 'Log File Analysis Challenge - Discovered in web server access logs'],
+            ['WHT-COMPL', 'Responsible Disclosure Completion Challenge - Final flag awarded upon successful disclosure']
+        ]);
     }
 
     attachEventListeners() {
