@@ -110,6 +110,11 @@ export class FileSystem {
     async readFile(directory, filename) {
         await this.waitForInitialization();
         
+        // Special handling for dynamic mission brief
+        if (filename === 'mission_brief.txt' && directory === '/home/researcher') {
+            return await this.getDynamicMissionBrief();
+        }
+        
         const dir = this.files[directory];
         if (!dir || dir.type !== 'directory') {
             return null;
@@ -122,6 +127,30 @@ export class FileSystem {
 
         // Process escape sequences in file content
         return this.processEscapeSequences(file.content);
+    }
+
+    async getDynamicMissionBrief() {
+        try {
+            const response = await fetch('/api/level4/mission-brief');
+            if (!response.ok) {
+                throw new Error(`Failed to load mission brief: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            if (data.success) {
+                return data.content;
+            } else {
+                throw new Error(data.error || 'Unknown error loading mission brief');
+            }
+        } catch (error) {
+            console.error('Error loading dynamic mission brief:', error);
+            // Fallback to static content from JSON
+            const dir = this.files['/home/researcher'];
+            if (dir && dir.contents && dir.contents['mission_brief.txt']) {
+                return this.processEscapeSequences(dir.contents['mission_brief.txt'].content);
+            }
+            return 'Error: Unable to load mission brief. Please try again.';
+        }
     }
 
     processEscapeSequences(content) {
