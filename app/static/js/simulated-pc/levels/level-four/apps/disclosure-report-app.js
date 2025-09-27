@@ -17,12 +17,12 @@ export class DisclosureReportApp extends WindowBase {
         return `
             <div class="disclosure-report-container h-full flex flex-col bg-gray-900 text-white">
                 <!-- Header Section -->
-                <div class="disclosure-header bg-gradient-to-r from-blue-600 to-purple-600 p-4 border-b border-gray-700">
+                <div class="disclosure-header bg-green-800 px-4 py-3 border-b border-gray-700">
                     <div class="flex items-center space-x-3">
-                        <i class="bi bi-shield-check text-2xl"></i>
+                        <i class="bi bi-shield-check text-2xl text-white"></i>
                         <div>
-                            <h1 class="text-xl font-bold">TechCorp Security Assessment</h1>
-                            <p class="text-sm opacity-80">Responsible Disclosure Report Submission</p>
+                            <h1 class="text-xl font-bold text-white">TechCorp Security Assessment</h1>
+                            <p class="text-sm text-white opacity-80">Responsible Disclosure Report Submission</p>
                         </div>
                     </div>
                 </div>
