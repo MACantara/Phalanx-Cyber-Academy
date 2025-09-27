@@ -4,9 +4,10 @@
  */
 
 import { TerminalApp } from './terminal-app.js';
+import { DisclosureReportWindow } from './disclosure-report/disclosure-report-window.js';
 
-// Export terminal app
-export { TerminalApp };
+// Export terminal app and disclosure report
+export { TerminalApp, DisclosureReportWindow };
 
 // Level 4 apps loaded flag
 export const level4AppsLoaded = true;
