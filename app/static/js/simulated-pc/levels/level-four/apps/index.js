@@ -11,7 +11,7 @@ export { TerminalApp };
 // Level 4 apps loaded flag
 export const level4AppsLoaded = true;
 
-// Load Level 4 data from JSON files
+// Load Level 4 CTF data from JSON files
 let _level4DataCache = null;
 
 export async function loadLevel4Data() {
@@ -22,35 +22,39 @@ export async function loadLevel4Data() {
     try {
         const response = await fetch('/api/level4/hosts-data');
         if (!response.ok) {
-            throw new Error(`Failed to load Level 4 data: ${response.status}`);
+            throw new Error(`Failed to load Level 4 CTF data: ${response.status}`);
         }
         
         const data = await response.json();
         _level4DataCache = data;
         return data;
     } catch (error) {
-        console.error('Error loading Level 4 data:', error);
-        // Fallback to individual JSON files via data index
+        console.error('Error loading Level 4 CTF data:', error);
+        // Fallback to direct file loading
         try {
-            const { loadAllLevel4Hosts } = await import('/static/js/simulated-pc/levels/level-four/data/index.js');
-            const data = await loadAllLevel4Hosts();
+            const { loadAllLevel4Data } = await import('/static/js/simulated-pc/levels/level-four/data/index.js');
+            const data = await loadAllLevel4Data();
             _level4DataCache = data;
             return data;
         } catch (fallbackError) {
-            console.error('Error loading fallback Level 4 data:', fallbackError);
-            return { level4_municipality_hosts: [] };
+            console.error('Error loading fallback Level 4 CTF data:', fallbackError);
+            return { fileSystem: {} };
         }
     }
 }
 
-// Get random hosts for variety (similar to Level 3)
-export function getRandomHosts(hosts, count = 3) {
-    if (!hosts || hosts.length <= count) {
-        return hosts || [];
+// Get file system data for CTF
+export function getCTFFileSystem(data) {
+    if (!data || !data.fileSystem) {
+        return {};
     }
-    
-    const shuffled = [...hosts].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, count);
+    return data.fileSystem;
+}
+
+// Legacy compatibility - no longer needed for CTF
+export function getRandomHosts(paths, count = 3) {
+    console.warn('getRandomHosts is deprecated for CTF challenge');
+    return [];
 }
 
 // Future exports will include:
