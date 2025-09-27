@@ -715,26 +715,6 @@ def log_analytics():
     """API endpoint to log user actions for analytics (simplified)."""
     return jsonify({'success': True, 'message': 'Analytics logged'})
 
-@levels_bp.route('/api/level/2/email-actions', methods=['POST'])
-@login_required
-def save_email_actions():
-    """API endpoint to save Level 2 email actions (simplified)."""
-    return jsonify({'success': True, 'message': 'Email actions saved'})
-
-@levels_bp.route('/api/level/2/email-actions', methods=['GET'])
-@login_required
-def get_email_actions():
-    """API endpoint to get Level 2 email actions (simplified)."""
-    return jsonify({
-        'success': True,
-        'email_states': {
-            'reported_phishing': [],
-            'marked_legitimate': [],
-            'spam_emails': [],
-            'read_emails': []
-        }
-    })
-
 @levels_bp.route('/api/level/<int:level_id>/new-session', methods=['POST'])
 @login_required
 def start_new_level_session(level_id):
