@@ -176,14 +176,6 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-four/dialogues/index.js',
             'js/simulated-pc/levels/level-four/dialogues/level4-white-hat-test.js',
             
-            # Level 4 nmap target hosts
-            'js/simulated-pc/levels/level-four/apps/terminal/nmap-target-hosts/base-target-host.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/nmap-target-hosts/municipality-network.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/nmap-target-hosts/target-host-registry.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/nmap-target-hosts/vote-admin-server.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/nmap-target-hosts/vote-database-server.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/nmap-target-hosts/vote-main-server.js',
-            
             # Level 4 terminal commands
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/base-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/cat-command.js',
