@@ -23,6 +23,7 @@ import { CutCommand } from '../terminal-commands/cut-command.js';
 import { AwkCommand } from '../terminal-commands/awk-command.js';
 import { SedCommand } from '../terminal-commands/sed-command.js';
 import { HexdumpCommand } from '../terminal-commands/hexdump-command.js';
+import { HintsCommand } from '../terminal-commands/hints-command.js';
 
 export class CommandRegistry {
     constructor(processor) {
@@ -55,7 +56,8 @@ export class CommandRegistry {
             'cut': new CutCommand(this.processor),
             'awk': new AwkCommand(this.processor),
             'sed': new SedCommand(this.processor),
-            'hexdump': new HexdumpCommand(this.processor)
+            'hexdump': new HexdumpCommand(this.processor),
+            'hints': new HintsCommand(this.processor)
         };
     }
 
