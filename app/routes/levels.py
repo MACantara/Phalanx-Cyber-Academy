@@ -202,30 +202,6 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-four/terminal-commands/uname-command.js',
             'js/simulated-pc/levels/level-four/terminal-commands/whoami-command.js',
             
-            # Level 4 vulnerability scanner targets (moved to level-four)
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/index.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/web-target-base.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/municipality-voting/index.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/municipality-voting/municipality-voting-group.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/municipality-voting/vote-admin-target.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/municipality-voting/vote-api-target.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/municipality-voting/vote-database-target.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/municipality-voting/vote-portal-target.js',
-            
-            # Vulnerability Scanner Application (core Level 4 app)
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-app.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/nmap-integration-utility.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-report-generator.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-data-manager.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-event-handler.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-logic.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-notification-manager.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-tab-manager.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-ui-renderer.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-ui.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/web-target-registry.js',
-            
             # Terminal Application (core Level 4 app)
             'js/simulated-pc/desktop-components/desktop-applications/terminal-app.js',
             'js/simulated-pc/desktop-components/desktop-applications/terminal-functions/command-history.js',
@@ -235,7 +211,6 @@ def get_level_js_files(level_id):
             'js/simulated-pc/desktop-components/desktop-applications/terminal-functions/tab-completion.js',
             
             # Tutorials for Level 4
-            'js/simulated-pc/tutorials/vulnerability-scanner-tutorial.js',
             'js/simulated-pc/tutorials/terminal-tutorial.js',
         ]
     
