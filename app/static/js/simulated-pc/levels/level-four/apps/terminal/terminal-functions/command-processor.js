@@ -8,9 +8,9 @@ export class CommandProcessor {
         this.terminalApp = terminalApp;
         this.fileSystem = new FileSystem();
         this.history = new CommandHistory();
-        this.currentDirectory = '/home/trainee';
-        this.username = 'trainee';
-        this.hostname = 'cyberquest';
+        this.currentDirectory = '/home/researcher';
+        this.username = 'researcher';
+        this.hostname = 'sandbox';
         
         // Initialize command registry and tab completion
         this.commandRegistry = new CommandRegistry(this);
@@ -49,7 +49,7 @@ export class CommandProcessor {
     }
 
     getPrompt() {
-        const shortPath = this.currentDirectory.replace('/home/trainee', '~');
+        const shortPath = this.currentDirectory.replace('/home/researcher', '~');
         return `${this.username}@${this.hostname}:${shortPath}$ `;
     }
 
