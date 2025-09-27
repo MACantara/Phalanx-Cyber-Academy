@@ -653,19 +653,84 @@ def get_mission_brief():
             "• Follow responsible disclosure practices",
             "• No destructive actions or data modification",
             "• Report findings through proper channels",
+            ""
+        ])
+        
+        # Dynamic assessment scope based on selected flags
+        content_lines.extend([
+            "ASSESSMENT SCOPE FOR THIS SESSION:",
+            "----------------------------------"
+        ])
+        
+        # Flag-to-scope mapping
+        flag_scope_map = {
+            'WHT-ENV': "• User environment files: /home/researcher/ (check hidden configuration files)",
+            'WHT-SRC': "• Web application source: /var/www/html/ (examine HTML comments and client-side code)",
+            'WHT-CFG': "• Server configurations: /etc/nginx/ (review web server settings and comments)",
+            'WHT-ENV2': "• Administrator environment: /home/admin/ (investigate admin configuration files)",
+            'WHT-SUID': "• System binaries: /usr/local/bin/ (analyze SUID executables and permissions)",
+            'WHT-LOG': "• Application logs: /var/log/nginx/ (examine access and error logs for patterns)",
+            'WHT-COMPL': "• Completion artifacts: /tmp/ (final challenge validation files)",
+            'WHT-DB': "• Database configurations: /var/www/html/admin/ (check PHP config files for credentials)",
+            'WHT-BACKUP': "• Backup automation: /home/admin/ (review backup scripts and processes)",
+            'WHT-SSL': "• SSL certificates: /etc/ssl/private/ (analyze certificate files and keys)",
+            'WHT-CRON': "• Scheduled tasks: /etc/crontab (examine system automation and job scheduling)",
+            'WHT-PROC': "• Process information: /proc/1/ (investigate running process memory and environment)",
+            'WHT-HIST': "• Command history: /home/admin/ (forensic analysis of user command patterns)",
+            'WHT-NET': "• Network configuration: /etc/hosts (analyze network routing and host mappings)",
+            'WHT-TEMP': "• Temporary files: /tmp/ (investigate debug logs and temporary artifacts)"
+        }
+        
+        # Add scope items for selected flags
+        scope_items = []
+        for flag_id in selected_flag_ids:
+            if flag_id in flag_scope_map:
+                scope_items.append(flag_scope_map[flag_id])
+        
+        # Sort scope items for consistent presentation
+        scope_items.sort()
+        content_lines.extend(scope_items)
+        
+        content_lines.extend([
             "",
-            "ASSESSMENT SCOPE:",
-            "----------------",
-            "• Web application: /var/www/html/*",
-            "• Configuration files: /etc/*",
-            "• System logs: /var/log/*",
-            "• User directories: /home/*",
-            "• System binaries: /usr/local/bin/*",
-            "• Process information: /proc/*",
-            "• Temporary files: /tmp/*",
-            "• SSL certificates: /etc/ssl/*",
+            "FOCUS AREAS FOR YOUR INVESTIGATION:",
+            "----------------------------------"
+        ])
+        
+        # Add specific guidance based on flag categories
+        category_guidance = {
+            'environment_analysis': "→ Look for hidden files (.bashrc, .env) containing environment variables",
+            'source_code_review': "→ Examine HTML source code for developer comments and embedded secrets",
+            'configuration_analysis': "→ Review server config files for misconfigurations and inline documentation",
+            'credential_exposure': "→ Search for hardcoded passwords and API keys in configuration files",
+            'privilege_escalation': "→ Check file permissions (ls -la) and analyze SUID binaries",
+            'log_analysis': "→ Parse log files for suspicious patterns and embedded information",
+            'disclosure_process': "→ Complete the responsible disclosure workflow and documentation",
+            'script_analysis': "→ Review automation scripts for security issues and embedded credentials",
+            'cryptographic_analysis': "→ Examine SSL certificates and private keys for sensitive information",
+            'process_analysis': "→ Investigate process memory dumps and runtime environment data",
+            'forensics': "→ Analyze command history files for evidence of past activities",
+            'network_analysis': "→ Review network configuration files for internal infrastructure details",
+            'file_analysis': "→ Investigate temporary directories for debug files and artifacts"
+        }
+        
+        # Get unique categories from selected flags
+        selected_categories = set()
+        for flag_id in selected_flag_ids:
+            if flag_id in all_flags:
+                category = all_flags[flag_id].get('category', '')
+                if category:
+                    selected_categories.add(category)
+        
+        # Add guidance for selected categories
+        for category in sorted(selected_categories):
+            if category in category_guidance:
+                content_lines.append(category_guidance[category])
+        
+        content_lines.extend([
             "",
             f"Your assessment begins now. Each session presents {ctf_config.get('flags_per_session', 7)} different challenges.",
+            "Use the terminal commands to navigate and investigate the system systematically.",
             "Good luck, and remember - with great power comes great responsibility!",
             "",
             "Security Team Lead",
