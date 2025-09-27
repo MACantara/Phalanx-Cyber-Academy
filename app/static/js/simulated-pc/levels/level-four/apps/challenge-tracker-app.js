@@ -171,13 +171,27 @@ export class Level4ChallengeTracker {
                     `}
                 </div>
                 
-                <!-- Disclosure Report Button -->
+                <!-- Flag Submission Form -->
                 <div class="border-t border-gray-600 pt-3">
-                    <button onclick="window.level4ChallengeTracker?.openDisclosureReport()" 
-                            class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white text-xs font-semibold py-2 px-3 rounded transition-colors flex items-center justify-center space-x-2">
-                        <i class="bi bi-file-earmark-text"></i>
-                        <span>Open Disclosure Report</span>
-                    </button>
+                    <div class="text-sm font-semibold text-blue-300 mb-2 flex items-center">
+                        <i class="bi bi-flag-fill text-yellow-400 mr-1"></i>
+                        Submit Flag
+                    </div>
+                    <div class="space-y-2">
+                        <input 
+                            type="text" 
+                            id="flag-input-${this.id}" 
+                            placeholder="Enter flag (e.g., WHT{example})"
+                            class="w-full text-xs bg-gray-600 text-white rounded px-2 py-1 border border-gray-500 focus:outline-none focus:border-blue-400"
+                            onkeypress="if(event.key==='Enter') window.level4ChallengeTracker?.submitCurrentFlag()"
+                        />
+                        <button 
+                            onclick="window.level4ChallengeTracker?.submitCurrentFlag()" 
+                            class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-500 hover:to-blue-500 text-white text-xs font-semibold py-1 px-2 rounded transition-colors flex items-center justify-center space-x-1">
+                            <i class="bi bi-check-circle"></i>
+                            <span>Verify Flag</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
@@ -236,6 +250,110 @@ export class Level4ChallengeTracker {
         }
     }
 
+    // Submit flag for current challenge
+    async submitCurrentFlag() {
+        const currentChallenge = this.challenges[this.currentChallengeIndex];
+        if (!currentChallenge) {
+            this.showNotification('No challenge selected', 'error');
+            return;
+        }
+
+        const flagInput = this.element?.querySelector(`#flag-input-${this.id}`);
+        const flagValue = flagInput?.value?.trim();
+        
+        if (!flagValue) {
+            this.showNotification('Please enter a flag value', 'error');
+            return;
+        }
+
+        // Check if flag has already been found
+        if (this.foundFlags.has(flagValue)) {
+            this.showNotification('This flag has already been submitted', 'warning');
+            return;
+        }
+
+        try {
+            // Validate flag with API
+            const response = await fetch('/api/level4/validate-flag', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    flag_number: currentChallenge.id,
+                    flag_value: flagValue
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success && result.is_valid) {
+                // Mark flag as found
+                this.markFlagFound(flagValue);
+                
+                // Clear the input
+                if (flagInput) {
+                    flagInput.value = '';
+                }
+                
+                this.showNotification('🎉 Flag verified successfully!', 'success');
+                
+                // Auto-advance to next incomplete challenge
+                const nextIncompleteIndex = this.challenges.findIndex((challenge, index) => 
+                    index > this.currentChallengeIndex && !this.foundFlags.has(challenge.value)
+                );
+                
+                if (nextIncompleteIndex !== -1) {
+                    setTimeout(() => {
+                        this.selectChallenge(nextIncompleteIndex);
+                    }, 1000);
+                }
+
+            } else {
+                this.showNotification(result.message || 'Incorrect flag. Please try again.', 'error');
+            }
+
+        } catch (error) {
+            console.error('[ChallengeTracker] Error validating flag:', error);
+            this.showNotification('Error validating flag. Please try again.', 'error');
+        }
+    }
+
+    // Show notification popup
+    showNotification(message, type = 'info', duration = 3000) {
+        // Create notification element
+        const notification = document.createElement('div');
+        const colors = {
+            success: 'bg-green-600 border-green-500 text-green-100',
+            error: 'bg-red-600 border-red-500 text-red-100',
+            warning: 'bg-yellow-600 border-yellow-500 text-yellow-100',
+            info: 'bg-blue-600 border-blue-500 text-blue-100'
+        };
+
+        notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 ${colors[type]} border px-4 py-3 rounded shadow-lg z-50 max-w-sm transition-all duration-300 -translate-y-full opacity-0`;
+        notification.innerHTML = `
+            <div class="flex items-start space-x-2">
+                <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : type === 'warning' ? 'exclamation-circle' : 'info-circle'} flex-shrink-0 mt-0.5"></i>
+                <span class="text-sm font-medium whitespace-pre-line">${message}</span>
+            </div>
+        `;
+
+        document.body.appendChild(notification);
+
+        // Show notification
+        setTimeout(() => {
+            notification.classList.remove('-translate-y-full', 'opacity-0');
+        }, 100);
+
+        // Hide notification
+        setTimeout(() => {
+            notification.classList.add('-translate-y-full', 'opacity-0');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, duration);
+    }
+
     // Navigate to next challenge
     nextChallenge() {
         if (this.currentChallengeIndex < this.challenges.length - 1) {
@@ -249,28 +367,6 @@ export class Level4ChallengeTracker {
         if (this.currentChallengeIndex > 0) {
             this.currentChallengeIndex--;
             this.updateContent();
-        }
-    }
-
-    // Open disclosure report application
-    openDisclosureReport() {
-        try {
-            // Try to use the application launcher if available
-            if (typeof window !== 'undefined' && window.appLauncher && window.appLauncher.launchApp) {
-                window.appLauncher.launchApp('disclosure');
-            } else if (typeof window !== 'undefined' && window.dispatchEvent) {
-                // Dispatch event to open disclosure report
-                window.dispatchEvent(new CustomEvent('level4-open-disclosure-report', {
-                    detail: {
-                        app: 'disclosure',
-                        timestamp: Date.now()
-                    }
-                }));
-            } else {
-                console.warn('[ChallengeTracker] No app launcher available');
-            }
-        } catch (error) {
-            console.error('[ChallengeTracker] Error opening disclosure report:', error);
         }
     }
 
@@ -308,6 +404,9 @@ export class Level4ChallengeTracker {
     // Handle all challenges completed
     onAllChallengesCompleted() {
         console.log('[ChallengeTracker] All challenges completed!');
+        
+        // Show special completion notification
+        this.showNotification('🎉 ALL CHALLENGES COMPLETED! 🎉\nYou have successfully completed The White Hat Test!', 'success', 8000);
         
         // Dispatch completion event
         try {
