@@ -1,8 +1,9 @@
-from flask import Blueprint, jsonify, current_app, request
+from flask import Blueprint, jsonify, current_app, request, session
 import os
 import json
 import random
 import traceback
+import time
 from pathlib import Path
 
 level4_api_bp = Blueprint('level4_api', __name__, url_prefix='/api/level4')
@@ -427,8 +428,15 @@ def load_ctf_flags():
 def get_selected_flags():
     """Get 7 randomly selected flags for the current session"""
     # Use a session-based seed for consistency within a session
-    # In production, this could be tied to user session or stored in database
-    session_seed = request.args.get('session_seed', '12345')
+    # Try multiple sources for session identifier
+    session_seed = (
+        request.args.get('session_seed') or 
+        request.headers.get('X-Session-ID') or 
+        session.get('user_id', str(int(time.time() / 3600)))  # Use hourly seed as fallback
+    )
+    
+    # Convert to string if it's not already
+    session_seed = str(session_seed)
     random.seed(session_seed)
     
     flags_data = load_ctf_flags()
