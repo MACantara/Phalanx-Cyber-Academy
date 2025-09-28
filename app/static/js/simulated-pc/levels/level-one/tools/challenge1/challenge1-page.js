@@ -431,7 +431,7 @@ class Challenge1PageClass extends BasePage {
                 sessionId,
                 1, // Level ID
                 'The-Misinformation-Maze', // Level name
-                'beginner', // Difficulty
+                'easy', // Difficulty
                 startTime
             );
 
