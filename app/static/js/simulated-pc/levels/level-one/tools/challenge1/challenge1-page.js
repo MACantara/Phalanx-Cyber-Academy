@@ -422,7 +422,7 @@ class Challenge1PageClass extends BasePage {
             console.log('[Challenge1] Ending session:', sessionId, 'with score:', score);
 
             // Import centralized utilities
-            const { GameProgressManager } = await import('../../../../../utils/game-progress-manager.js');
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
             const progressManager = new GameProgressManager();
 
             // First, attach to the existing session that was started externally
