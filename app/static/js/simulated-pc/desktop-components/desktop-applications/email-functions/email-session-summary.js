@@ -454,29 +454,45 @@ export class EmailSessionSummary {
      */
     async completeLevel2(isRetry = false) {
         try {
+            console.log('[EmailSessionSummary] Completing Level 2 with centralized system');
+
             // Get session ID from localStorage or sessionStorage
             const sessionId = localStorage.getItem('cyberquest_active_session_id') ||
                              sessionStorage.getItem('active_session_id') ||
                              window.currentSessionId;
             
             if (sessionId) {
-                // End the session via API call
-                const sessionEndData = {
-                    session_id: parseInt(sessionId),
-                    score: this.lastSessionStats.accuracy
-                };
+                // Import centralized utilities
+                const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+                const progressManager = new GameProgressManager();
+
+                // First, attach to the existing session that was started externally
+                const startTime = parseInt(localStorage.getItem('cyberquest_level_2_start_time') || Date.now());
+                progressManager.attachToExistingSession(
+                    parseInt(sessionId),
+                    2, // Level ID
+                    'Shadow-in-the-Inbox', // Level name
+                    'medium', // Difficulty
+                    startTime
+                );
+
+                // Calculate performance metrics from session stats
+                const accuracy = this.lastSessionStats?.accuracy || 0;
+                const totalActions = this.lastSessionStats?.totalActions || 0;
+                const correctActions = this.lastSessionStats?.correctActions || 0;
                 
-                const response = await fetch('/levels/api/session/end', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(sessionEndData)
+                // Complete level using centralized system
+                const sessionResult = await progressManager.completeLevel(accuracy, {
+                    accuracy: accuracy,
+                    totalActions: totalActions,
+                    correctActions: correctActions,
+                    phishingDetected: this.lastSessionStats?.totalReported || 0,
+                    legitimateMarked: this.lastSessionStats?.totalLegitimate || 0,
+                    completionTime: Date.now() - startTime
                 });
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    console.log('Level 2 session ended successfully:', result);
+
+                if (sessionResult) {
+                    console.log('[EmailSessionSummary] Level 2 completed successfully with centralized system:', sessionResult);
                     
                     // Clear session data
                     localStorage.removeItem('cyberquest_active_session_id');
@@ -486,8 +502,18 @@ export class EmailSessionSummary {
                     // Mark Level 2 as completed locally
                     localStorage.setItem('cyberquest_level_2_completed', 'true');
                     localStorage.setItem('cyberquest_level_2_completion_time', Date.now());
+
+                    // Show XP earned notification
+                    const xpAwarded = sessionResult.xp ? sessionResult.xp.xp_awarded : 
+                                     (sessionResult.session ? sessionResult.session.xp_awarded : null);
+                    if (window.ToastManager && xpAwarded) {
+                        window.ToastManager.showToast(
+                            `Level completed! You earned ${xpAwarded} XP!`, 
+                            'success'
+                        );
+                    }
                 } else {
-                    console.error('Failed to end Level 2 session:', response.status);
+                    console.error('[EmailSessionSummary] Centralized level completion failed: no result returned');
                 }
             } else {
                 console.warn('No session ID found for Level 2 - marking as completed locally only');
@@ -496,10 +522,7 @@ export class EmailSessionSummary {
                 localStorage.setItem('cyberquest_level_2_completion_time', Date.now());
             }
         } catch (error) {
-            console.error('Error completing Level 2:', error);
-            // Mark as completed locally even if API fails
-            localStorage.setItem('cyberquest_level_2_completed', 'true');
-            localStorage.setItem('cyberquest_level_2_completion_time', Date.now());
+            console.error('Error completing Level 2 with centralized system:', error);
         }
         
         if (isRetry) {
@@ -621,23 +644,47 @@ export class EmailSessionSummary {
 
     async startNewSession() {
         try {
-            // Start a new session without clearing previous attempts
-            const response = await fetch('/levels/api/level/2/new-session', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                }
+            console.log('[EmailSessionSummary] Starting new Level 2 session with centralized system');
+
+            // Import centralized utilities
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+            const progressManager = new GameProgressManager();
+
+            // Start new session using centralized system
+            const sessionResult = await progressManager.startLevel({
+                levelId: 2,
+                sessionName: 'Shadow Inbox Email Security Training',
+                resetProgress: true
             });
 
-            if (response.ok) {
-                console.log('New Level 2 retry session started');
+            if (sessionResult.success) {
+                console.log('[EmailSessionSummary] New session started with centralized system:', sessionResult);
+                
+                // Clear previous session data
+                localStorage.removeItem('cyberquest_email_training_score');
+                localStorage.removeItem('cyberquest_email_phishing_reports');
+                localStorage.removeItem('cyberquest_email_legitimate_marks');
+                localStorage.removeItem('cyberquest_email_feedback_history');
+                localStorage.removeItem('cyberquest_email_training_completed');
+                
+                // Set new session ID
+                localStorage.setItem('cyberquest_active_session_id', sessionResult.session_id);
+                window.currentSessionId = sessionResult.session_id;
+                
+                // Reset feedback store
+                if (this.feedbackStore) {
+                    this.feedbackStore.clear();
+                }
+
+                return sessionResult;
             } else {
-                console.warn('Failed to start new Level 2 retry session');
+                console.error('[EmailSessionSummary] Centralized session start failed:', sessionResult.error);
             }
         } catch (error) {
-            console.warn('Failed to start new Level 2 retry session:', error);
+            console.error('[EmailSessionSummary] Error starting session with centralized system:', error);
         }
+        
+        return null;
     }
 
     reviewMistakes() {

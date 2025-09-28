@@ -63,51 +63,131 @@ export class EmailSecurityCompletionDialogue extends BaseDialogue {
     }
 
     /**
-     * End the current session with backend
+     * End the current session with backend using centralized utilities
      */
     async endCurrentSession() {
         try {
+            console.log('[EmailSecurityCompletion] Ending current session with centralized system');
+
             const sessionId = this.getActiveSessionId();
             
             if (!sessionId) {
-                console.warn('[Level2Completion] No session ID available - cannot end session');
+                console.warn('[EmailSecurityCompletion] No session ID available - cannot end session');
                 return;
             }
 
+            // Import centralized utilities
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+            const progressManager = new GameProgressManager();
+
+            // First, attach to the existing session that was started externally
+            const startTime = parseInt(localStorage.getItem('cyberquest_level_2_start_time') || Date.now());
+            progressManager.attachToExistingSession(
+                sessionId,
+                2, // Level ID
+                'Shadow-in-the-Inbox', // Level name
+                'medium', // Difficulty
+                startTime
+            );
+
             // Calculate Level 2 performance score
-            const emailTrainingScore = parseInt(localStorage.getItem('cyberquest_email_training_score') || '0');
+            let emailTrainingScore = 0;
             
-            const sessionEndData = {
-                session_id: sessionId,
-                score: emailTrainingScore
-            };
-
-            console.log('[Level2Completion] Ending session:', sessionEndData);
-
-            const response = await fetch('/levels/api/session/end', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                },
-                body: JSON.stringify(sessionEndData)
+            // Debug: Check what global objects are available
+            console.log('[EmailSecurityCompletion] Debug - window.emailCompletionTracker:', window.emailCompletionTracker);
+            console.log('[EmailSecurityCompletion] Debug - window.emailAppInstance:', window.emailAppInstance);
+            console.log('[EmailSecurityCompletion] Debug - window.emailActionHandler:', window.emailActionHandler);
+            console.log('[EmailSecurityCompletion] Debug - Available window properties:', Object.keys(window).filter(key => key.includes('email')));
+            
+            // Try to access the feedback system through emailActionHandler (which is available globally)
+            if (window.emailActionHandler && window.emailActionHandler.feedback && typeof window.emailActionHandler.feedback.getSessionStats === 'function') {
+                const sessionStats = window.emailActionHandler.feedback.getSessionStats();
+                console.log('[EmailSecurityCompletion] Debug - Direct feedback sessionStats:', sessionStats);
+                emailTrainingScore = sessionStats.accuracy || 0;
+                if (emailTrainingScore === 0 && sessionStats.totalActions > 0) {
+                    emailTrainingScore = Math.round((sessionStats.correctActions / sessionStats.totalActions) * 100);
+                }
+                console.log('[EmailSecurityCompletion] Calculated from emailActionHandler feedback:', emailTrainingScore);
+            }
+            // First fallback: try to use the EmailCompletionTracker which has the correct data
+            else if (window.emailCompletionTracker && typeof window.emailCompletionTracker.calculateLevelScore === 'function') {
+                emailTrainingScore = window.emailCompletionTracker.calculateLevelScore();
+                console.log('[EmailSecurityCompletion] Using EmailCompletionTracker score:', emailTrainingScore);
+            }
+            // If no completion tracker, try to access the email app directly  
+            else if (window.emailAppInstance && window.emailAppInstance.completionTracker && typeof window.emailAppInstance.completionTracker.calculateLevelScore === 'function') {
+                emailTrainingScore = window.emailAppInstance.completionTracker.calculateLevelScore();
+                console.log('[EmailSecurityCompletion] Using emailAppInstance.completionTracker score:', emailTrainingScore);
+            }
+            // Try to access the feedback system directly
+            else if (window.emailAppInstance && window.emailAppInstance.actionHandler && window.emailAppInstance.actionHandler.feedback) {
+                const sessionStats = window.emailAppInstance.actionHandler.feedback.getSessionStats();
+                console.log('[EmailSecurityCompletion] Debug - Direct feedback sessionStats:', sessionStats);
+                emailTrainingScore = sessionStats.accuracy || 0;
+                if (emailTrainingScore === 0 && sessionStats.totalActions > 0) {
+                    emailTrainingScore = Math.round((sessionStats.correctActions / sessionStats.totalActions) * 100);
+                }
+                console.log('[EmailSecurityCompletion] Calculated from direct feedback system:', emailTrainingScore);
+            }
+            // Fallback to the previous calculation methods
+            else {
+                const sessionStats = this.getStoredSessionStats();
+                let feedbackHistory = this.getStoredFeedbackHistory();
+                
+                console.log('[EmailSecurityCompletion] Debug - Fallback sessionStats:', sessionStats);
+                console.log('[EmailSecurityCompletion] Debug - Fallback feedbackHistory:', feedbackHistory);
+                
+                if (feedbackHistory && feedbackHistory.length > 0) {
+                    const totalActions = feedbackHistory.length;
+                    const correctActions = feedbackHistory.filter(f => f.isCorrect).length;
+                    emailTrainingScore = Math.round((correctActions / totalActions) * 100);
+                    console.log('[EmailSecurityCompletion] Calculated from feedbackHistory - total:', totalActions, 'correct:', correctActions, 'score:', emailTrainingScore);
+                } else if (sessionStats.totalActions > 0) {
+                    emailTrainingScore = Math.round((sessionStats.correctActions / sessionStats.totalActions) * 100);
+                    console.log('[EmailSecurityCompletion] Calculated from sessionStats:', emailTrainingScore);
+                } else {
+                    emailTrainingScore = parseInt(localStorage.getItem('cyberquest_email_training_score') || '0');
+                    console.log('[EmailSecurityCompletion] Using stored score as fallback:', emailTrainingScore);
+                }
+            }
+            
+            console.log('[EmailSecurityCompletion] Final calculated score:', emailTrainingScore);
+            
+            // Complete level using centralized system
+            const sessionResult = await progressManager.completeLevel(emailTrainingScore, {
+                accuracy: emailTrainingScore,
+                totalActions: this.getStoredSessionStats().totalActions,
+                correctActions: this.getStoredSessionStats().correctActions,
+                completionTime: Date.now() - startTime
             });
 
-            if (response.ok) {
-                const result = await response.json();
-                console.log('[Level2Completion] Session ended successfully:', result);
+            if (sessionResult) {
+                console.log('[EmailSecurityCompletion] Session ended successfully with centralized system:', sessionResult);
                 
                 // Clear session from storage
                 localStorage.removeItem('cyberquest_active_session_id');
                 sessionStorage.removeItem('active_session_id');
                 window.currentSessionId = null;
+
+                // Show XP earned notification
+                if (window.ToastManager && sessionResult.xp && sessionResult.xp.xp_awarded) {
+                    window.ToastManager.showToast(
+                        `Level completed! You earned ${sessionResult.xp.xp_awarded} XP!`, 
+                        'success'
+                    );
+                } else if (window.ToastManager && sessionResult.session && sessionResult.session.xp_awarded) {
+                    window.ToastManager.showToast(
+                        `Level completed! You earned ${sessionResult.session.xp_awarded} XP!`, 
+                        'success'
+                    );
+                }
                 
-                return result;
+                return sessionResult;
             } else {
-                console.error('[Level2Completion] Failed to end session:', response.status);
+                console.error('[EmailSecurityCompletion] Centralized session end failed: no result returned');
             }
         } catch (error) {
-            console.error('[Level2Completion] Error ending session:', error);
+            console.error('[EmailSecurityCompletion] Error ending session with centralized system:', error);
         }
     }
 
@@ -145,12 +225,24 @@ export class EmailSecurityCompletionDialogue extends BaseDialogue {
 
     getStoredSessionStats() {
         // Reconstruct session stats from stored data
-        const emailTrainingScore = parseInt(localStorage.getItem('cyberquest_email_training_score') || '0');
         const phishingReports = JSON.parse(localStorage.getItem('cyberquest_email_phishing_reports') || '[]');
         const legitimateMarks = JSON.parse(localStorage.getItem('cyberquest_email_legitimate_marks') || '[]');
+        const feedbackHistory = this.getStoredFeedbackHistory();
         
         const totalActions = phishingReports.length + legitimateMarks.length;
-        const correctActions = Math.round((emailTrainingScore / 100) * totalActions);
+        
+        // Calculate accuracy properly from feedback history if available
+        let emailTrainingScore = parseInt(localStorage.getItem('cyberquest_email_training_score') || '0');
+        let correctActions = Math.round((emailTrainingScore / 100) * totalActions);
+        
+        if (emailTrainingScore === 0 && feedbackHistory.length > 0) {
+            correctActions = feedbackHistory.filter(f => f.isCorrect).length;
+            emailTrainingScore = Math.round((correctActions / feedbackHistory.length) * 100);
+        } else if (emailTrainingScore === 0 && totalActions > 0) {
+            // If no feedback history, assume all actions were correct for fallback
+            correctActions = totalActions;
+            emailTrainingScore = 100;
+        }
         
         return {
             accuracy: emailTrainingScore,
