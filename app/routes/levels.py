@@ -87,14 +87,10 @@ def get_level_js_files(level_id):
         # Shared utilities
         'js/simulated-pc/desktop-components/shared-utils/navigation-util.js',
         
-        # Base dialogue and tutorial systems
+        # Base dialogue system
         'js/simulated-pc/dialogues/base-dialogue.js',
         'js/simulated-pc/dialogues/dialogue-manager.js',
         'js/simulated-pc/dialogues/dialogue-integration.js',
-        'js/simulated-pc/tutorials/base-tutorial.js',
-        'js/simulated-pc/tutorials/tutorial-manager.js',
-        'js/simulated-pc/tutorials/tutorial-step-manager.js',
-        'js/simulated-pc/tutorials/tutorial-interaction-manager.js',
         
         # Level management
         'js/simulated-pc/levels/level-manager.js',
