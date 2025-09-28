@@ -739,12 +739,28 @@ export class Level4SessionSummary extends BaseModalComponent {
 
     async submitToBackend() {
         try {
+            console.log('[Level4Summary] Submitting to backend with centralized system');
+
             const sessionId = this.getActiveSessionId();
             
             if (!sessionId) {
                 console.warn('[Level4Summary] No session ID available - cannot submit to backend');
                 return null;
             }
+
+            // Import centralized utilities
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+            const progressManager = new GameProgressManager();
+
+            // First, attach to the existing session that was started externally
+            const startTime = parseInt(localStorage.getItem('cyberquest_level_4_start_time') || Date.now());
+            progressManager.attachToExistingSession(
+                sessionId,
+                4, // Level ID
+                'The-White-Hat-Test', // Level name
+                'hard', // Difficulty
+                startTime
+            );
 
             // Calculate performance-based score and XP
             const performanceScore = this.calculatePerformanceScore();
@@ -754,53 +770,42 @@ export class Level4SessionSummary extends BaseModalComponent {
             const duration = this.sessionData.endTime - this.sessionData.startTime;
             const timeSpentSeconds = Math.round(duration / 1000);
             
-            // Prepare comprehensive performance data for backend
-            const sessionEndData = {
-                session_id: sessionId,
-                score: performanceScore, // Dynamic performance-based score
-                xp_earned: performanceBasedXP, // Send calculated performance-based XP
-                time_spent: timeSpentSeconds,
-                performance_metrics: {
-                    flags_found: this.sessionData.flagsFound,
-                    total_flags: this.sessionData.totalFlags,
-                    total_attempts: totalAttempts,
-                    average_attempts_per_flag: Math.round((totalAttempts / this.sessionData.flagsFound) * 10) / 10,
-                    completion_time_minutes: Math.round(duration / (1000 * 60)),
-                    efficiency_rating: this.getEfficiencyRating(totalAttempts, this.sessionData.flagsFound),
-                    time_rating: this.getTimeRating(duration / (1000 * 60)),
-                    categories_completed: this.categorizeCompletedChallenges(),
-                    performance_score: performanceScore,
-                    calculated_xp: performanceBasedXP,
-                    xp_breakdown: xpCalculation.breakdown
-                }
-            };
-
-            console.log('[Level4Summary] Submitting performance data:', sessionEndData);
-
-            const sessionEndResponse = await fetch('/levels/api/session/end', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                },
-                body: JSON.stringify(sessionEndData)
+            // Complete level using centralized system
+            const sessionResult = await progressManager.completeLevel(performanceScore, {
+                flagsFound: this.sessionData.flagsFound,
+                totalFlags: this.sessionData.totalFlags,
+                totalAttempts: totalAttempts,
+                averageAttemptsPerFlag: Math.round((totalAttempts / this.sessionData.flagsFound) * 10) / 10,
+                completionTimeMinutes: Math.round(duration / (1000 * 60)),
+                efficiencyRating: this.getEfficiencyRating(totalAttempts, this.sessionData.flagsFound),
+                timeRating: this.getTimeRating(duration / (1000 * 60)),
+                categoriesCompleted: this.categorizeCompletedChallenges(),
+                performanceScore: performanceScore,
+                calculatedXP: performanceBasedXP,
+                xpBreakdown: xpCalculation.breakdown,
+                timeSpent: timeSpentSeconds,
+                flagTimings: Object.fromEntries(this.flagTimings),
+                flagAttempts: Object.fromEntries(this.flagAttempts),
+                completionTime: duration
             });
 
-            if (sessionEndResponse.ok) {
-                const sessionResult = await sessionEndResponse.json();
-                console.log('[Level4Summary] Session ended successfully with performance-based XP:', sessionResult);
+            if (sessionResult) {
+                console.log('[Level4Summary] Session ended successfully with centralized system:', sessionResult);
                 
                 // Update XP display with the actual XP earned from session completion
-                if (sessionResult.xp_awarded && sessionResult.xp_awarded !== this.sessionData.xpEarned) {
-                    this.sessionData.xpEarned = sessionResult.xp_awarded;
+                const xpAwarded = sessionResult.xp ? sessionResult.xp.xp_awarded : 
+                                 (sessionResult.session ? sessionResult.session.xp_awarded : null);
+                
+                if (xpAwarded && xpAwarded !== this.sessionData.xpEarned) {
+                    this.sessionData.xpEarned = xpAwarded;
                     
                     // Update the displayed XP value in real-time
                     const xpDisplay = document.querySelector('#level4-summary-modal .text-yellow-400');
                     if (xpDisplay) {
-                        xpDisplay.textContent = sessionResult.xp_awarded;
+                        xpDisplay.textContent = xpAwarded;
                     }
                     
-                    console.log(`[Level4Summary] XP updated from ${this.sessionData.xpEarned} to ${sessionResult.xp_awarded} based on performance`);
+                    console.log(`[Level4Summary] XP updated from ${this.sessionData.xpEarned} to ${xpAwarded} based on performance`);
                 }
                 
                 // Clear the active session since it's now completed
@@ -811,19 +816,21 @@ export class Level4SessionSummary extends BaseModalComponent {
                 // Mark Level 4 as completed in localStorage
                 localStorage.setItem('cyberquest_level_4_completed', 'true');
                 localStorage.setItem('cyberquest_level_4_completion_time', Date.now());
+
+                // Show XP earned notification
+                if (window.ToastManager && xpAwarded) {
+                    window.ToastManager.showToast(
+                        `Level completed! You earned ${xpAwarded} XP!`, 
+                        'success'
+                    );
+                }
                 
                 return sessionResult;
             } else {
-                console.warn('[Level4Summary] Failed to end session:', sessionEndResponse.status);
-                const errorText = await sessionEndResponse.text();
-                console.error('[Level4Summary] Error details:', errorText);
-                return null;
+                console.error('[Level4Summary] Centralized session end failed: no result returned');
             }
-
         } catch (error) {
-            console.error('[Level4Summary] Error submitting to backend:', error);
-            // Continue with local cleanup even if backend submission fails
-            return null;
+            console.error('[Level4Summary] Error submitting with centralized system:', error);
         }
     }
 

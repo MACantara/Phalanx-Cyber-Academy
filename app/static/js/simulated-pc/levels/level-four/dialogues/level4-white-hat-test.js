@@ -37,54 +37,18 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
         ];
     }
 
-    onComplete() {
+    async onComplete() {
         localStorage.setItem('cyberquest_level_4_started', 'true');
         localStorage.setItem('cyberquest_level_4_start_time', Date.now());
         
-        // Start a backend session for Level 4
-        this.startBackendSession();
-        
         // Create and start challenge tracker
-        this.createAndStartChallengeTracker();
+        await this.createAndStartChallengeTracker();
         
         // Open the Terminal application for ethical hacking tools
         if (window.applicationLauncher) {
             setTimeout(async () => {
                 await window.applicationLauncher.launchForLevel(4, 'terminal', 'Terminal');
             }, 500);
-        }
-    }
-
-    async startBackendSession() {
-        try {
-            const response = await fetch('/levels/api/session/start', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                },
-                body: JSON.stringify({
-                    session_name: 'The White Hat Test',
-                    level_id: 4
-                })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    // Store session ID for completion tracking
-                    localStorage.setItem('cyberquest_active_session_id', data.session_id);
-                    window.currentSessionId = data.session_id;
-                    console.log('[Level4WhiteHat] Backend session started:', data.session_id);
-                } else {
-                    console.error('[Level4WhiteHat] Failed to start session:', data.error);
-                }
-            } else {
-                console.error('[Level4WhiteHat] Session start request failed:', response.status);
-            }
-        } catch (error) {
-            console.error('[Level4WhiteHat] Error starting session:', error);
-            // Continue without session ID - completion can still work
         }
     }
 
