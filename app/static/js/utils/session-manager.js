@@ -24,10 +24,11 @@ class SessionManager {
         try {
             console.log(`[SessionManager] Starting session: ${sessionName}, Level ID: ${levelId}`);
             
-            const response = await fetch('/api/session/start', {
+            const response = await fetch('/levels/api/session/start', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
                 },
                 body: JSON.stringify({
                     session_name: sessionName,
@@ -127,10 +128,11 @@ class SessionManager {
                 };
             }
             
-            const response = await fetch('/api/session/end', {
+            const response = await fetch('/levels/api/session/end', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
                 },
                 body: JSON.stringify({
                     session_id: sessionId,
@@ -204,6 +206,27 @@ class SessionManager {
         }
         
         return null;
+    }
+
+    /**
+     * Set the active session ID (for attaching to existing sessions)
+     * @param {number} sessionId - Session ID
+     */
+    setActiveSessionId(sessionId) {
+        console.log(`[SessionManager] Setting active session ID: ${sessionId}`);
+        
+        // Create a basic session object for tracking
+        this.activeSession = {
+            id: sessionId,
+            isExternal: true  // Mark as externally created
+        };
+        
+        // Update all storage locations
+        localStorage.setItem('cyberquest_active_session_id', sessionId.toString());
+        
+        if (typeof window !== 'undefined') {
+            window.currentSessionId = sessionId;
+        }
     }
 
     /**
