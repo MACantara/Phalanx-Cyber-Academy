@@ -4,7 +4,6 @@ export class ApplicationLauncher {
     constructor(windowManager) {
         this.windowManager = windowManager;
         this.appRegistry = appRegistry;
-        this.tutorialManager = windowManager.tutorialManager;
         this.currentLevel = null; // Will be set by desktop
     }
 
@@ -110,37 +109,7 @@ export class ApplicationLauncher {
             this.appRegistry.markAsOpened(appId);
         }
 
-        // Handle tutorial auto-start if it's the first time and tutorial manager is available
-        if (isFirstTime && this.tutorialManager && appConfig.tutorialMethod && appConfig.startMethod) {
-            await this.handleTutorialAutoStart(appConfig.tutorialMethod, appConfig.startMethod);
-        }
-
         return app;
-    }
-
-    // Shared tutorial auto-start logic moved from window manager
-    async handleTutorialAutoStart(tutorialCheckMethod, tutorialStartMethod) {
-        try {
-            // Check if the tutorial manager has the required methods
-            if (typeof this.tutorialManager[tutorialCheckMethod] !== 'function') {
-                console.warn(`Tutorial method ${tutorialCheckMethod} not found on tutorial manager`);
-                return;
-            }
-
-            if (typeof this.tutorialManager[tutorialStartMethod] !== 'function') {
-                console.warn(`Tutorial method ${tutorialStartMethod} not found on tutorial manager`);
-                return;
-            }
-
-            const shouldStart = await this.tutorialManager[tutorialCheckMethod]();
-            if (shouldStart) {
-                setTimeout(async () => {
-                    await this.tutorialManager[tutorialStartMethod]();
-                }, 1500);
-            }
-        } catch (error) {
-            console.warn(`Tutorial auto-start failed: ${error.message}`);
-        }
     }
 
     // Generic application launcher
@@ -165,18 +134,6 @@ export class ApplicationLauncher {
 
     async launchTerminal() {
         return await this.launchApplication('terminal');
-    }
-
-    async launchFileManager() {
-        return await this.launchApplication('files');
-    }
-
-    async launchNetworkMonitor() {
-        return await this.launchApplication('wireshark');
-    }
-
-    async launchSystemLogs() {
-        return await this.launchApplication('logs');
     }
 
     async launchProcessMonitor() {
