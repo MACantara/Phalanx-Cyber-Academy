@@ -16,6 +16,7 @@ The centralized utilities provide consistent XP calculation, session lifecycle m
 #### 1. XP API (`app/routes/xp_api.py`)
 Provides dedicated API endpoints based on the `XPCalculator` and `XPManager` utilities:
 
+- `GET /api/xp/config` - Get XP calculation configuration (base XP, multipliers, thresholds)
 - `POST /api/xp/calculate` - Calculate XP preview without awarding
 - `POST /api/xp/award` - Award XP for level completion
 - `POST /api/xp/session/award` - Award XP for session completion
@@ -57,13 +58,17 @@ const activeSession = sessionManager.getActiveSession();
 - Multiple session ID compatibility
 
 #### 2. XP Calculator (`app/static/js/utils/xp-calculator.js`)
-Client-side XP calculations and API integration:
+Client-side XP calculations and API integration with dynamic backend configuration:
 
 ```javascript
 import { xpCalculator } from './utils/xp-calculator.js';
 
-// Preview XP calculation (client-side)
-const preview = xpCalculator.calculatePerformanceBasedXP(1, 85, 600, 'medium');
+// Configuration is automatically loaded from backend on initialization
+// Preview XP calculation (client-side with backend config)
+const preview = await xpCalculator.calculatePerformanceBasedXPAsync(1, 85, 600, 'medium');
+
+// Sync version (uses loaded config or fallback)
+const previewSync = xpCalculator.calculatePerformanceBasedXP(1, 85, 600, 'medium');
 
 // Calculate XP via API (server-side)
 const calculation = await xpCalculator.calculateXPFromAPI(1, 85, 600, 'medium');
@@ -73,10 +78,11 @@ const award = await xpCalculator.awardXP(1, 85, 600, 'medium', sessionId);
 ```
 
 **Key Features:**
-- Exact backend calculation matching
-- API integration with fallbacks
-- Performance-based calculations
-- Display formatting utilities
+- **Dynamic Backend Configuration**: XP calculation settings loaded from `/api/xp/config`
+- **Automatic Configuration Loading**: Config preloaded on module initialization
+- **Fallback Support**: Graceful fallback to hardcoded values if API fails
+- **Sync/Async Calculations**: Both immediate and configuration-assured calculations
+- **Perfect Backend Matching**: Client calculations exactly match server logic
 
 #### 3. Game Progress Manager (`app/static/js/utils/game-progress-manager.js`)
 Unified interface combining session and XP management:
