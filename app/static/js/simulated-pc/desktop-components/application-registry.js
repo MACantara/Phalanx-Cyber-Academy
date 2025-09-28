@@ -5,8 +5,6 @@ export class ApplicationRegistry {
                 module: './desktop-applications/browser-app.js',
                 className: 'BrowserApp',
                 storageKey: 'cyberquest_browser_opened',
-                tutorialMethod: 'shouldAutoStartBrowser',
-                startMethod: 'startBrowserTutorial',
                 iconClass: 'bi-globe',
                 title: 'Web Browser'
             },
@@ -14,46 +12,15 @@ export class ApplicationRegistry {
                 module: '../levels/level-four/apps/terminal-app.js',
                 className: 'TerminalApp',
                 storageKey: 'cyberquest_terminal_opened',
-                tutorialMethod: 'shouldAutoStartTerminal',
-                startMethod: 'startTerminalTutorial',
                 iconClass: 'bi-terminal',
                 title: 'Terminal'
-            },
-            'files': {
-                module: './desktop-applications/file-manager-app.js',
-                className: 'FileManagerApp',
-                storageKey: 'cyberquest_filemanager_opened',
-                tutorialMethod: 'shouldAutoStartFileManager',
-                startMethod: 'startFileManagerTutorial',
-                iconClass: 'bi-folder',
-                title: 'File Manager'
             },
             'email': {
                 module: './desktop-applications/email-app.js',
                 className: 'EmailApp',
                 storageKey: 'cyberquest_email_opened',
-                tutorialMethod: 'shouldAutoStartEmail',
-                startMethod: 'startEmailTutorial',
                 iconClass: 'bi-envelope',
                 title: 'Email Client'
-            },
-            'wireshark': {
-                module: './desktop-applications/network-monitor-app.js',
-                className: 'NetworkMonitorApp',
-                storageKey: 'cyberquest_networkmonitor_opened',
-                tutorialMethod: 'shouldAutoStartNetworkMonitor',
-                startMethod: 'startNetworkMonitorTutorial',
-                iconClass: 'bi-router',
-                title: 'Network Monitor'
-            },
-            'logs': {
-                module: './desktop-applications/system-logs-app.js',
-                className: 'SystemLogsApp',
-                storageKey: 'cyberquest_systemlogs_opened',
-                tutorialMethod: 'shouldAutoStartSystemLogs',
-                startMethod: 'startSystemLogsTutorial',
-                iconClass: 'bi-journal-text',
-                title: 'System Logs'
             },
             'process-monitor': {
                 module: '../levels/level-three/apps/index.js',
@@ -159,8 +126,6 @@ export class ApplicationRegistry {
         
         const defaultConfig = {
             storageKey: `cyberquest_${appId}_opened`,
-            tutorialMethod: null,
-            startMethod: null,
             iconClass: 'bi-window',
             title: appId.charAt(0).toUpperCase() + appId.slice(1)
         };
@@ -198,16 +163,6 @@ export class ApplicationRegistry {
         return app ? app.title : appId.charAt(0).toUpperCase() + appId.slice(1);
     }
 
-    // Get applications that have tutorial integration
-    getTutorialApps() {
-        return Object.entries(this.registry)
-            .filter(([id, config]) => config.tutorialMethod && config.startMethod)
-            .reduce((acc, [id, config]) => {
-                acc[id] = config;
-                return acc;
-            }, {});
-    }
-
     // Get applications by category (if categorization is needed in the future)
     getAppsByCategory(category) {
         return Object.entries(this.registry)
@@ -221,7 +176,7 @@ export class ApplicationRegistry {
     // Validate application configuration
     validateAppConfig(config) {
         const required = ['class'];
-        const optional = ['storageKey', 'tutorialMethod', 'startMethod', 'iconClass', 'title', 'category'];
+        const optional = ['storageKey', 'iconClass', 'title', 'category'];
         
         for (const prop of required) {
             if (!config.hasOwnProperty(prop)) {
@@ -255,16 +210,6 @@ export class ApplicationRegistry {
         }
     }
 
-    // Check if app should show tutorial on first open
-    shouldShowTutorial(appId) {
-        const config = this.registry[appId];
-        if (!config || !config.storageKey) {
-            return false;
-        }
-
-        return !localStorage.getItem(config.storageKey);
-    }
-
     // Mark app as opened
     markAsOpened(appId) {
         const config = this.registry[appId];
@@ -293,14 +238,11 @@ export class ApplicationRegistry {
     // Get application statistics
     getStats() {
         const total = Object.keys(this.registry).length;
-        const withTutorials = Object.values(this.registry)
-            .filter(config => config.tutorialMethod && config.startMethod).length;
         const opened = Object.values(this.registry)
             .filter(config => config.storageKey && localStorage.getItem(config.storageKey)).length;
 
         return {
             total,
-            withTutorials,
             opened,
             unopened: total - opened
         };
