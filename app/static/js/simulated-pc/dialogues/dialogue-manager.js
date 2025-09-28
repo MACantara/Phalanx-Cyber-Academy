@@ -97,7 +97,28 @@ export class DialogueManager {
     // Utility method to get all available dialogues
     getDialogueList() {
         return [
-            // Removed welcome dialogue entry
+            // Sample dialogues
+            // {
+            //     name: 'desktop-guidance',
+            //     class: 'DesktopGuidanceDialogue',
+            //     title: 'Desktop Guidance',
+            //     description: 'Interactive guidance for the desktop environment',
+            //     defaultCharacter: 'instructor'
+            // },
+            // {
+            //     name: 'mission-briefing',
+            //     class: 'MissionBriefingDialogue',
+            //     title: 'Mission Briefing',
+            //     description: 'Mission introduction and objectives',
+            //     defaultCharacter: 'instructor'
+            // },
+            // {
+            //     name: 'tutorial-intro',
+            //     class: 'TutorialIntroDialogue',
+            //     title: 'Tutorial Introduction',
+            //     description: 'Introduction to the training system',
+            //     defaultCharacter: 'instructor'
+            // }
         ];
     }
 
