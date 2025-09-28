@@ -119,7 +119,7 @@ export class Level3SessionSummary {
     }
 
     /**
-     * End the session and award XP based on comprehensive performance
+     * End the session and award XP based on comprehensive performance using centralized utilities
      */
     async endSession() {
         if (!this.sessionData.sessionId) {
@@ -128,50 +128,74 @@ export class Level3SessionSummary {
         }
 
         try {
+            console.log('[Level3SessionSummary] Ending session with centralized system');
+
+            // Import centralized utilities
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+            const progressManager = new GameProgressManager();
+
+            // First, attach to the existing session that was started externally
+            const startTime = parseInt(localStorage.getItem('cyberquest_level_3_start_time') || Date.now());
+            progressManager.attachToExistingSession(
+                this.sessionData.sessionId,
+                3, // Level ID
+                'Malware-Mayhem', // Level name
+                'intermediate', // Difficulty
+                startTime
+            );
+
+            // Calculate comprehensive performance metrics
             const score = this.calculateScore();
             const timerStatus = this.timer.getStatus();
             const timeSpent = (15 * 60) - timerStatus.timeRemaining; // Time used in seconds
+            const accuracy = this.totalActions > 0 ? Math.round((this.accurateActions / this.totalActions) * 100) : 100;
             
-            // Prepare detailed performance data for server-side XP calculation
-            const performanceData = {
-                session_id: this.sessionData.sessionId,
-                score: score,
-                time_spent: timeSpent,
-                performance_metrics: {
-                    accuracy: this.totalActions > 0 ? Math.round((this.accurateActions / this.totalActions) * 100) : 100,
-                    stages_completed: this.stagesCompleted.length,
-                    total_stages: 3,
-                    reputation_damage: timerStatus.reputationDamage,
-                    financial_damage: timerStatus.financialDamage,
-                    time_efficiency: Math.round((timerStatus.timeRemaining / (15 * 60)) * 100),
-                    total_actions: this.totalActions,
-                    accurate_actions: this.accurateActions
-                }
-            };
-            
-            const response = await fetch('/levels/api/session/end', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(performanceData)
+            // Complete level using centralized system
+            const sessionResult = await progressManager.completeLevel(score, {
+                accuracy: accuracy,
+                stagesCompleted: this.stagesCompleted.length,
+                totalStages: 3,
+                reputationDamage: timerStatus.reputationDamage,
+                financialDamage: timerStatus.financialDamage,
+                timeEfficiency: Math.round((timerStatus.timeRemaining / (15 * 60)) * 100),
+                totalActions: this.totalActions,
+                accurateActions: this.accurateActions,
+                timeSpent: timeSpent,
+                stageCompletionTimes: this.stageCompletionTimes,
+                completionTime: Date.now() - startTime
             });
 
-            const data = await response.json();
-            if (data.success) {
-                console.log('[Level3SessionSummary] Session ended successfully with performance-based XP:', {
-                    xp_awarded: data.xp_awarded,
+            if (sessionResult) {
+                console.log('[Level3SessionSummary] Session ended successfully with centralized system:', {
+                    xp_awarded: sessionResult.xp ? sessionResult.xp.xp_awarded : 'unknown',
                     score: score,
-                    performance: performanceData.performance_metrics
+                    session: sessionResult.session
                 });
-                return data;
+                
+                // Clear session data
+                localStorage.removeItem('cyberquest_active_session_id');
+                sessionStorage.removeItem('active_session_id');
+                window.currentSessionId = null;
+
+                // Show XP earned notification
+                if (window.ToastManager && sessionResult.xp && sessionResult.xp.xp_awarded) {
+                    window.ToastManager.showToast(
+                        `Level completed! You earned ${sessionResult.xp.xp_awarded} XP!`, 
+                        'success'
+                    );
+                } else if (window.ToastManager && sessionResult.session && sessionResult.session.xp_awarded) {
+                    window.ToastManager.showToast(
+                        `Level completed! You earned ${sessionResult.session.xp_awarded} XP!`, 
+                        'success'
+                    );
+                }
+                
+                return sessionResult;
             } else {
-                console.error('[Level3SessionSummary] Failed to end session:', data.error);
-                return null;
+                console.error('[Level3SessionSummary] Centralized session end failed: no result returned');
             }
         } catch (error) {
-            console.error('[Level3SessionSummary] Error ending session:', error);
-            return null;
+            console.error('[Level3SessionSummary] Error ending session with centralized system:', error);
         }
     }
 
@@ -254,7 +278,7 @@ export class Level3SessionSummary {
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <div class="bg-green-900/50 rounded-lg p-4">
-                                    <div class="text-3xl font-bold text-yellow-400">${sessionResult.xp_awarded || 0}</div>
+                                    <div class="text-3xl font-bold text-yellow-400">${(sessionResult.xp && sessionResult.xp.xp_awarded) || (sessionResult.session && sessionResult.session.xp_awarded) || 0}</div>
                                     <div class="text-green-100 text-sm">Total XP Earned</div>
                                 </div>
                                 <div class="bg-green-900/50 rounded-lg p-4">
@@ -547,7 +571,39 @@ export class Level3SessionSummary {
     }
 
     async retryLevel3() {
-        window.location.reload();
+        try {
+            console.log('[Level3SessionSummary] Starting retry with centralized session management');
+
+            // Import centralized utilities
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+            const progressManager = new GameProgressManager();
+
+            // Start new session using centralized system
+            const sessionResult = await progressManager.startLevel({
+                levelId: 3,
+                sessionName: 'Malware Mayhem (Retry)',
+                resetProgress: true
+            });
+
+            if (sessionResult.success) {
+                console.log('[Level3SessionSummary] New retry session started with centralized system:', sessionResult);
+                
+                // Set new session ID
+                localStorage.setItem('cyberquest_active_session_id', sessionResult.session_id);
+                window.currentSessionId = sessionResult.session_id;
+                
+                // Reload the level
+                window.location.reload();
+            } else {
+                console.error('[Level3SessionSummary] Failed to start retry session:', sessionResult.error);
+                // Fallback to simple reload
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('[Level3SessionSummary] Error starting retry with centralized system:', error);
+            // Fallback to simple reload
+            window.location.reload();
+        }
     }
 
     async showShutdownSequenceAndNavigateToLevel4() {
