@@ -57,6 +57,45 @@ class GameProgressManager {
     }
 
     /**
+     * Attach to an existing session that was started externally
+     * @param {number} sessionId - Existing session ID
+     * @param {number} levelId - Level ID
+     * @param {string} levelName - Level name
+     * @param {string} difficulty - Level difficulty
+     * @param {number} startTime - Session start time (timestamp)
+     * @returns {Object} Level data
+     */
+    attachToExistingSession(sessionId, levelId, levelName, difficulty = 'medium', startTime = null) {
+        try {
+            console.log(`[GameProgressManager] Attaching to existing session ${sessionId} for level ${levelId}`);
+            
+            // Set up level data to match existing session
+            this.currentLevel = {
+                id: levelId,
+                name: levelName,
+                difficulty: difficulty,
+                sessionId: sessionId,
+                startTime: startTime || Date.now()
+            };
+            
+            this.startTime = startTime || Date.now();
+            
+            // Update session manager's active session
+            this.sessionManager.setActiveSessionId(sessionId);
+            
+            // Store level info in localStorage for persistence
+            localStorage.setItem('cyberquest_current_level', JSON.stringify(this.currentLevel));
+            
+            console.log('[GameProgressManager] Successfully attached to existing session:', this.currentLevel);
+            return this.currentLevel;
+            
+        } catch (error) {
+            console.error('[GameProgressManager] Failed to attach to existing session:', error);
+            throw error;
+        }
+    }
+
+    /**
      * Complete the current level with XP calculation and awarding
      * @param {number|null} score - Final score (0-100)
      * @param {Object} additionalData - Additional completion data
