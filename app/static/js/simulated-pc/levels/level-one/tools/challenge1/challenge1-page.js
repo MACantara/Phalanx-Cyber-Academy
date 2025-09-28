@@ -430,7 +430,7 @@ class Challenge1PageClass extends BasePage {
             progressManager.attachToExistingSession(
                 sessionId,
                 1, // Level ID
-                'the-misinformation-maze', // Level name
+                'The-Misinformation-Maze', // Level name
                 'beginner', // Difficulty
                 startTime
             );
