@@ -44,7 +44,7 @@ export class Desktop {
         this.tutorial = new TutorialManager(this);
         this.dialogueIntegration = new DialogueIntegration(this);
         
-        this.windowManager = new WindowManager(this.desktopElement, this.taskbar, this.tutorial);
+        this.windowManager = new WindowManager(this.desktopElement, this.taskbar);
         this.taskbar.windowManager = this.windowManager;
         
         // Set level in application launcher for level-specific apps
@@ -64,13 +64,6 @@ export class Desktop {
         window.tutorial = this.tutorial;
         window.dialogueManager = this.dialogueManager;
         window.dialogueIntegration = this.dialogueIntegration;
-        
-        // Make tutorial restart function globally accessible
-        window.restartTutorial = async () => {
-            if (this.tutorial) {
-                await this.tutorial.restartInitialTutorial();
-            }
-        };
 
         // Make dialogue restart function globally accessible
         window.restartDialogues = () => {
