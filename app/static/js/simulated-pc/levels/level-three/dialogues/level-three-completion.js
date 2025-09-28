@@ -7,7 +7,7 @@ export class LevelThreeCompletionDialogue extends BaseDialogue {
             { text: 'Outstanding work, Agent! You\'ve successfully completed Level 3: Malware Mayhem under intense time pressure. Your rapid cybersecurity response saved the gaming championship!' },
             { text: 'You demonstrated exceptional skills in the three critical phases: eliminating malicious processes, performing comprehensive malware scans, and recovering encrypted files using advanced decryption tools.' },
             { text: 'Your swift action prevented catastrophic damage to the organization\'s reputation and avoided financial ruin. The tournament can continue thanks to your expertise!' },
-            { text: 'You\'ve earned 250 XP in Advanced Threat Response and unlocked the \'Malware Hunter\' and \'Crisis Response Specialist\' badges. Your ability to work effectively under pressure is remarkable.' },
+            { text: 'Your performance-based XP reward reflects your speed, accuracy, and efficiency during this high-pressure crisis response. The faster and more accurate you were, the more XP you earned!' },
             { text: 'Remember: In real cybersecurity incidents, time is everything. Every minute of delay allows attackers to cause more damage, steal more data, and spread further through networks.' },
             { text: 'You\'re now ready for the most challenging cybersecurity scenarios. Your proven ability to handle high-stakes, time-critical incidents makes you invaluable to any security team!' }
         ];
@@ -18,9 +18,6 @@ export class LevelThreeCompletionDialogue extends BaseDialogue {
         localStorage.setItem('cyberquest_level_3_completed', 'true');
         localStorage.setItem('cyberquest_current_level', '4');
         
-        // Award XP and badges
-        const currentXP = parseInt(localStorage.getItem('cyberquest_xp_threat_response') || '0');
-        localStorage.setItem('cyberquest_xp_threat_response', (currentXP + 250).toString());
         
         const badges = JSON.parse(localStorage.getItem('cyberquest_badges') || '[]');
         if (!badges.includes('malware-hunter')) {

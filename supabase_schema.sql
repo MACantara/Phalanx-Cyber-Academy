@@ -184,12 +184,13 @@ CREATE INDEX IF NOT EXISTS idx_xp_history_reason ON xp_history(reason);
 CREATE INDEX IF NOT EXISTS idx_xp_history_session_id ON xp_history(session_id);
 
 -- Populate levels table with initial data from app/routes/levels.py
+-- Difficulty levels must match XPCalculator.BASE_XP keys: easy, medium, intermediate, hard, expert
 INSERT INTO levels (level_id, name, description, category, icon, estimated_time, expected_time_seconds, xp_reward, skills, difficulty, unlocked, coming_soon, requirements, updated_at) VALUES
-(1, 'The-Misinformation-Maze', 'Debunk fake news and stop misinformation from influencing an election.', 'Information Literacy', 'bi-newspaper', '15 minutes', 900, 100, '["Critical Thinking", "Source Verification", "Fact Checking"]'::jsonb, 'Beginner', true, false, null, NOW()),
-(2, 'Shadow-in-the-Inbox', 'Spot phishing attempts and practice safe email protocols.', 'Email Security', 'bi-envelope-exclamation', '20 minutes', 1200, 150, '["Phishing Detection", "Email Analysis", "Social Engineering"]'::jsonb, 'Beginner', true, false, null, NOW()),
-(3, 'Malware-Mayhem', 'Isolate infections and perform digital cleanup during a gaming tournament.', 'Threat Detection', 'bi-bug', '25 minutes', 1500, 200, '["Malware Recognition", "System Security", "Threat Analysis"]'::jsonb, 'Intermediate', true, false, null, NOW()),
-(4, 'The-White-Hat-Test', 'Practice ethical hacking and responsible vulnerability disclosure.', 'Ethical Hacking', 'bi-terminal', '30 minutes', 1800, 350, '["Penetration Testing", "Vulnerability Assessment", "Ethical Hacking"]'::jsonb, 'Expert', true, false, null, NOW()),
-(5, 'The-Hunt-for-The-Null', 'Final mission: Use advanced digital forensics to expose The Null''s identity.', 'Digital Forensics', 'bi-trophy', '40 minutes', 2400, 500, '["Digital Forensics", "Evidence Analysis", "Advanced Investigation"]'::jsonb, 'Master', true, false, null, NOW())
+(1, 'The-Misinformation-Maze', 'Debunk fake news and stop misinformation from influencing an election.', 'Information Literacy', 'bi-newspaper', '15 minutes', 900, 100, '["Critical Thinking", "Source Verification", "Fact Checking"]'::jsonb, 'easy', true, false, null, NOW()),
+(2, 'Shadow-in-the-Inbox', 'Spot phishing attempts and practice safe email protocols.', 'Email Security', 'bi-envelope-exclamation', '20 minutes', 1200, 150, '["Phishing Detection", "Email Analysis", "Social Engineering"]'::jsonb, 'medium', true, false, null, NOW()),
+(3, 'Malware-Mayhem', 'Isolate infections and perform digital cleanup during a gaming tournament.', 'Threat Detection', 'bi-bug', '25 minutes', 1500, 200, '["Malware Recognition", "System Security", "Threat Analysis"]'::jsonb, 'intermediate', true, false, null, NOW()),
+(4, 'The-White-Hat-Test', 'Practice ethical hacking and responsible vulnerability disclosure.', 'Ethical Hacking', 'bi-terminal', '30 minutes', 1800, 350, '["Penetration Testing", "Vulnerability Assessment", "Ethical Hacking"]'::jsonb, 'hard', true, false, null, NOW()),
+(5, 'The-Hunt-for-The-Null', 'Final mission: Use advanced digital forensics to expose The Null''s identity.', 'Digital Forensics', 'bi-trophy', '40 minutes', 2400, 500, '["Digital Forensics", "Evidence Analysis", "Advanced Investigation"]'::jsonb, 'expert', true, false, null, NOW())
 ON CONFLICT (level_id) DO UPDATE SET
     name = EXCLUDED.name,
     description = EXCLUDED.description,

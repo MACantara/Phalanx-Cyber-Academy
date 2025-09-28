@@ -13,6 +13,7 @@ class XPCalculator:
     BASE_XP = {
         'easy': 50,
         'medium': 100,
+        'intermediate': 150,
         'hard': 200,
         'expert': 300
     }

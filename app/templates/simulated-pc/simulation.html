@@ -112,8 +112,8 @@
     "xp_reward": {{ level_data.xp_reward if level_data else 100 }},
     "session_id": "{{ level_data.session_id | default('') | safe }}",
     "is_retry": {{ 'true' if level_data.is_retry else 'false' }},
-    "previous_attempts": {{ level_data.previous_attempts if level_data else 0 }},
-    "previous_score": {{ level_data.previous_score if level_data else 0 }}
+    "previous_attempts": {{ level_data.previous_attempts if level_data.previous_attempts is not none else 0 }},
+    "previous_score": {{ level_data.previous_score if level_data.previous_score is not none else 'null' }}
 }
 </script>
 
@@ -139,6 +139,19 @@
     
     console.log('Level data loaded:', levelData);
     console.log('Level-specific JS files loaded for level {{ level.id if level else "unknown" }}');
+    
+    // Store session ID in localStorage for frontend access
+    if (levelData && levelData.session_id) {
+        localStorage.setItem('cyberquest_active_session_id', levelData.session_id.toString());
+        localStorage.setItem('active_session_id', levelData.session_id.toString());
+        window.currentSessionId = levelData.session_id;
+        
+        // Store level-specific start time
+        const levelStartTimeKey = `cyberquest_level_${levelData.id}_start_time`;
+        localStorage.setItem(levelStartTimeKey, Date.now().toString());
+        
+        console.log(`[Simulation] Session ID ${levelData.session_id} stored in localStorage`);
+    }
     
     // Initialize the simulation with the level data
     window.currentSimulation = {

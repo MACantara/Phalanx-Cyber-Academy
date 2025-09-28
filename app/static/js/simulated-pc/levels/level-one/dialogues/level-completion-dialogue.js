@@ -20,7 +20,7 @@ export class LevelCompletionDialogue extends BaseDialogue {
                 text: "These skills are essential in today's digital landscape where misinformation can influence elections, spread conspiracy theories, and undermine public trust."
             },
             {
-                text: "You've earned 100 XP in Information Literacy and unlocked the 'Fact-Checker' badge for your analytical abilities."
+                text: "You've earned performance-based XP in Information Literacy and unlocked the 'Fact-Checker' badge. Your XP reward reflects your accuracy in distinguishing real from fake news!"
             },
             {
                 text: "Remember: Always verify before you share, cross-reference multiple sources, and question information that seems designed to provoke strong emotions."
@@ -36,9 +36,8 @@ export class LevelCompletionDialogue extends BaseDialogue {
         localStorage.setItem('cyberquest_level_1_completed', 'true');
         localStorage.setItem('cyberquest_current_level', '2');
         
-        // Award XP and badges
-        const currentXP = parseInt(localStorage.getItem('cyberquest_xp_info_literacy') || '0');
-        localStorage.setItem('cyberquest_xp_info_literacy', (currentXP + 100).toString());
+        // Note: XP will be awarded through the session completion system based on performance
+        // The challenge completion system should handle XP calculation via the API based on score and accuracy
         
         const badges = JSON.parse(localStorage.getItem('cyberquest_badges') || '[]');
         if (!badges.includes('fact-checker')) {

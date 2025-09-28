@@ -21,7 +21,10 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                 text: "Remember to check sources, look for author credentials, and watch for emotional manipulation tactics. Misinformation often relies on sensational headlines rather than facts."
             },
             {
-                text: "Successfully completing this level will earn you 100 XP in the Information Literacy category. Are you ready to start?"
+                text: "Successfully completing this level will earn you performance-based XP in the Information Literacy category. Your XP reward depends on how accurately you distinguish real from fake news!"
+            },
+            {
+                text: "Are you ready to start?"
             }
         ];
     }

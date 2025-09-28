@@ -147,30 +147,39 @@ class GameController {
     async startGame() {
         if (this.gameState.isRunning) return;
         
-        // Call the server to start a new game session
         try {
-            const response = await fetch('/blue-vs-red/api/start-game', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
-                }
+            console.log('[BlueTeamVsRedTeam] Starting game with centralized session management');
+
+            // Import centralized utilities
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+            const progressManager = new GameProgressManager();
+
+            // Start Blue Team vs Red Team session using centralized system
+            const sessionResult = await progressManager.startLevel({
+                levelId: 'blue-team-vs-red-team',
+                sessionName: 'blue-team-vs-red-team',
+                resetProgress: false,
+                customEndpoint: '/blue-vs-red/api/start-game'
             });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success && data.gameState) {
-                    // Update local game state with server data
-                    this.gameState = { ...this.gameState, ...data.gameState };
-                    console.log('🎮 Session created successfully:', data.gameState.session_id);
-                } else {
-                    console.error('Failed to start session:', data.error || 'Unknown error');
+
+            if (sessionResult.success) {
+                console.log('[BlueTeamVsRedTeam] Game session started with centralized system:', sessionResult);
+                
+                // Update local game state with session data
+                this.gameState.session_id = sessionResult.session_id || sessionResult.gameState?.session_id;
+                if (sessionResult.gameState) {
+                    this.gameState = { ...this.gameState, ...sessionResult.gameState };
                 }
+                
+                // Store session ID
+                localStorage.setItem('blue_red_session_id', this.gameState.session_id);
+                window.currentSessionId = this.gameState.session_id;
+                
             } else {
-                console.error('Failed to start session - HTTP error:', response.status);
+                console.error('[BlueTeamVsRedTeam] Centralized session start failed:', sessionResult.error);
             }
         } catch (error) {
-            console.error('Failed to start session:', error);
+            console.error('[BlueTeamVsRedTeam] Error starting game with centralized system:', error);
         }
         
         this.gameState.isRunning = true;
@@ -924,64 +933,139 @@ class GameController {
 
     async handleGameCompletion() {
         try {
-            const response = await fetch('/blue-vs-red/api/stop-game', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
-                },
-                body: JSON.stringify({
-                    timeRemaining: this.gameState.timeRemaining,
-                    assets: this.gameState.assets,
-                    sessionXP: this.gameState.sessionXP,
-                    attacksMitigated: this.gameState.attacksMitigated,
-                    attacksSuccessful: this.gameState.attacksSuccessful
-                })
-            });
+            console.log('[BlueTeamVsRedTeam] Handling game completion with centralized system');
 
-            if (response.ok) {
-                const data = await response.json();
-                
-                // Show completion bonus
-                if (data.completionBonus && data.completionBonus > 0) {
-                    this.uiManager.showCompletionBonus(data.completionBonus, data.bonusBreakdown);
-                    this.gameState.sessionXP += data.completionBonus;
+            // Import centralized utilities
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+            const progressManager = new GameProgressManager();
+
+            // Calculate performance score based on game metrics
+            const performanceScore = this.calculateGamePerformanceScore();
+            const sessionId = this.gameState.session_id || localStorage.getItem('blue_red_session_id');
+
+            if (sessionId) {
+                // First, attach to the existing session that was started externally
+                const startTime = parseInt(localStorage.getItem('blue_red_session_start_time') || Date.now());
+                progressManager.attachToExistingSession(
+                    sessionId,
+                    'blue-team-vs-red-team', // Level ID
+                    'Blue Team vs Red Team Mode', // Level name
+                    'intermediate', // Difficulty
+                    startTime
+                );
+
+                // Now complete the level using centralized system
+                const sessionResult = await progressManager.completeLevel(performanceScore, {
+                    timeRemaining: this.gameState.timeRemaining,
+                    assetsIntegrity: this.calculateAverageAssetIntegrity(),
+                    attacksMitigated: this.gameState.attacksMitigated,
+                    attacksSuccessful: this.gameState.attacksSuccessful,
+                    sessionXP: this.gameState.sessionXP,
+                    totalActions: this.gameState.attacksMitigated + this.gameState.attacksSuccessful,
+                    defenseEfficiency: this.gameState.attacksMitigated > 0 ? 
+                        (this.gameState.attacksMitigated / (this.gameState.attacksMitigated + this.gameState.attacksSuccessful)) * 100 : 0,
+                    completionTime: 900 - this.gameState.timeRemaining,
+                    assetDetails: this.gameState.assets,
+                    customEndpoint: '/blue-vs-red/api/stop-game'
+                });
+
+                if (sessionResult.success) {
+                    console.log('[BlueTeamVsRedTeam] Game completed with centralized system:', sessionResult);
+                    
+                    // Show completion bonus if awarded
+                    if (sessionResult.completionBonus && sessionResult.completionBonus > 0) {
+                        this.uiManager.showCompletionBonus(sessionResult.completionBonus, sessionResult.bonusBreakdown);
+                        this.gameState.sessionXP += sessionResult.completionBonus;
+                    }
+
+                    // Show total XP earned
+                    if (sessionResult.xp_awarded) {
+                        this.uiManager.showXPReward(sessionResult.xp_awarded, 'Session Completion');
+                    }
+                    
+                    // Clear session data
+                    localStorage.removeItem('blue_red_session_id');
+                    window.currentSessionId = null;
+                    
+                    return sessionResult;
+                } else {
+                    console.error('[BlueTeamVsRedTeam] Centralized completion failed:', sessionResult.error);
                 }
-                
-                return data;
+            } else {
+                console.warn('[BlueTeamVsRedTeam] No session ID for completion');
             }
         } catch (error) {
-            console.error('Failed to handle game completion:', error);
+            console.error('[BlueTeamVsRedTeam] Error handling completion with centralized system:', error);
         }
-        return null;
+    }
+
+    calculateGamePerformanceScore() {
+        // Calculate performance score based on multiple factors
+        const timeBonus = this.gameState.timeRemaining / 900 * 25; // Up to 25 points for time
+        const assetBonus = this.calculateAverageAssetIntegrity() / 100 * 30; // Up to 30 points for asset protection
+        const defenseBonus = this.gameState.attacksMitigated > 0 ? 
+            (this.gameState.attacksMitigated / (this.gameState.attacksMitigated + this.gameState.attacksSuccessful)) * 25 : 0; // Up to 25 points for defense
+        const xpBonus = Math.min(20, this.gameState.sessionXP / 50); // Up to 20 points for XP earned
+        
+        return Math.round(timeBonus + assetBonus + defenseBonus + xpBonus);
+    }
+
+    calculateAverageAssetIntegrity() {
+        const assets = Object.values(this.gameState.assets);
+        const totalIntegrity = assets.reduce((sum, asset) => sum + asset.integrity, 0);
+        return assets.length > 0 ? totalIntegrity / assets.length : 0;
     }
 
     async handleGameExit() {
         try {
-            const response = await fetch('/blue-vs-red/api/exit-game', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('meta[name=csrf-token]')?.getAttribute('content') || ''
-                },
-                body: JSON.stringify({
-                    timeRemaining: this.gameState.timeRemaining,
-                    assets: this.gameState.assets,
-                    sessionXP: this.gameState.sessionXP,
-                    attacksMitigated: this.gameState.attacksMitigated,
-                    attacksSuccessful: this.gameState.attacksSuccessful
-                })
-            });
+            console.log('[BlueTeamVsRedTeam] Handling game exit with centralized system');
 
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Game session ended:', data);
-                return data;
+            // Import centralized utilities
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+            const progressManager = new GameProgressManager();
+
+            const sessionId = this.gameState.session_id || localStorage.getItem('blue_red_session_id');
+            
+            if (sessionId) {
+                // First, attach to the existing session that was started externally
+                const startTime = parseInt(localStorage.getItem('blue_red_session_start_time') || Date.now());
+                progressManager.attachToExistingSession(
+                    sessionId,
+                    'blue-team-vs-red-team', // Level ID
+                    'Blue Team vs Red Team Mode', // Level name
+                    'intermediate', // Difficulty
+                    startTime
+                );
+
+                // End session using centralized system (early exit)
+                const sessionResult = await progressManager.completeLevel(this.calculateGamePerformanceScore(), {
+                    timeRemaining: this.gameState.timeRemaining,
+                    assetsIntegrity: this.calculateAverageAssetIntegrity(),
+                    attacksMitigated: this.gameState.attacksMitigated,
+                    attacksSuccessful: this.gameState.attacksSuccessful,
+                    sessionXP: this.gameState.sessionXP,
+                    earlyExit: true,
+                    completionTime: 900 - this.gameState.timeRemaining,
+                    customEndpoint: '/blue-vs-red/api/exit-game'
+                });
+
+                if (sessionResult.success) {
+                    console.log('[BlueTeamVsRedTeam] Game exit handled with centralized system:', sessionResult);
+                    
+                    // Clear session data
+                    localStorage.removeItem('blue_red_session_id');
+                    window.currentSessionId = null;
+                    
+                    return sessionResult;
+                } else {
+                    console.error('[BlueTeamVsRedTeam] Centralized exit failed:', sessionResult.error);
+                }
+            } else {
+                console.warn('[BlueTeamVsRedTeam] No session ID for exit ');
             }
         } catch (error) {
-            console.error('Failed to handle game exit:', error);
+            console.error('[BlueTeamVsRedTeam] Error handling exit with centralized system:', error);
         }
-        return null;
     }
 
     async handleGameReset() {

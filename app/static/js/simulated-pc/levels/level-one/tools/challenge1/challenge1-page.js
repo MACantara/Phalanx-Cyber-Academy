@@ -419,34 +419,60 @@ class Challenge1PageClass extends BasePage {
 
     async endSession(sessionId, score) {
         try {
-            const response = await fetch('/levels/api/session/end', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    session_id: sessionId,
-                    score: score
-                })
+            console.log('[Challenge1] Ending session:', sessionId, 'with score:', score);
+
+            // Import centralized utilities
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+            const progressManager = new GameProgressManager();
+
+            // First, attach to the existing session that was started externally
+            const startTime = parseInt(localStorage.getItem('challenge1_start_time') || Date.now());
+            progressManager.attachToExistingSession(
+                sessionId,
+                1, // Level ID
+                'The-Misinformation-Maze', // Level name
+                'easy', // Difficulty
+                startTime
+            );
+
+            // Now complete the level using the centralized system
+            const sessionResult = await progressManager.completeLevel(score, {
+                articlesClassified: this.classifiedArticles.size,
+                correctClassifications: this.correctClassifications,
+                accuracy: (this.correctClassifications / this.classifiedArticles.size) * 100,
+                completionTime: Date.now() - startTime,
+                levelId: 1,
+                metrics: {
+                    articlesClassified: this.classifiedArticles.size,
+                    correctClassifications: this.correctClassifications,
+                    accuracy: (this.correctClassifications / this.classifiedArticles.size) * 100,
+                    completionTime: Date.now() - startTime
+                }
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Session ended successfully:', data);
+            if (sessionResult) {
+                console.log('[Challenge1] Session ended successfully with centralized system:', sessionResult);
                 
                 // Show toast with XP earned
-                if (window.ToastManager && data.xp_awarded) {
+                if (window.ToastManager && sessionResult.xp && sessionResult.xp.xp_awarded) {
                     window.ToastManager.showToast(
-                        `Level completed! You earned ${data.xp_awarded} XP!`, 
+                        `Level completed! You earned ${sessionResult.xp.xp_awarded} XP!`, 
+                        'success'
+                    );
+                } else if (window.ToastManager && sessionResult.session && sessionResult.session.xp_awarded) {
+                    window.ToastManager.showToast(
+                        `Level completed! You earned ${sessionResult.session.xp_awarded} XP!`, 
                         'success'
                     );
                 }
+                return sessionResult;
             } else {
-                console.error('Failed to end session:', response.status, response.statusText);
+                console.error('[Challenge1] Centralized session end failed: no result returned');
             }
         } catch (error) {
-            console.error('Error ending session:', error);
+            console.error('[Challenge1] Error ending session with centralized system:', error);
         }
+        return null;
     }
 
     toPageObject() {

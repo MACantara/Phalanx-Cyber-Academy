@@ -11,7 +11,7 @@ export class ApplicationRegistry {
                 title: 'Web Browser'
             },
             'terminal': {
-                module: './desktop-applications/terminal-app.js',
+                module: '../levels/level-four/apps/terminal-app.js',
                 className: 'TerminalApp',
                 storageKey: 'cyberquest_terminal_opened',
                 tutorialMethod: 'shouldAutoStartTerminal',
@@ -87,15 +87,6 @@ export class ApplicationRegistry {
                 title: 'Ransomware Decryptor',
                 levelSpecific: 3,
                 autoOpen: false
-            },
-            'vulnerability-scanner': {
-                module: './desktop-applications/vulnerability-scanner-app.js',
-                className: 'VulnerabilityScannerApp',
-                storageKey: 'cyberquest_vulnerabilityscanner_opened',
-                tutorialMethod: 'shouldAutoStartVulnerabilityScanner',
-                startMethod: 'startVulnerabilityScannerTutorial',
-                iconClass: 'bi-bug',
-                title: 'Vulnerability Scanner'
             },
             'level3-timer': {
                 module: '../levels/level-three/apps/index.js',

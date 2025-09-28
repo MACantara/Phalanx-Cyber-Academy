@@ -10,13 +10,12 @@ export const Level4Config = {
     
     // Level-specific applications
     requiredApps: [
-        'vulnerability-scanner-app',
-        'terminal-app'
+        'terminal-app',
+        'challenge-tracker-app'
     ],
     
     // Tutorial requirements
     tutorials: [
-        'vulnerability-scanner-tutorial',
         'terminal-tutorial'
     ],
     
@@ -27,10 +26,7 @@ export const Level4Config = {
     
     // Level objectives
     objectives: [
-        'Scan targets for vulnerabilities',
         'Use nmap for network reconnaissance',
-        'Analyze vulnerability scan results',
-        'Generate professional security reports',
         'Practice responsible disclosure'
     ],
     

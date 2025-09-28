@@ -191,9 +191,6 @@ export class ApplicationLauncher {
         return await this.launchApplication('ransomware-decryptor');
     }
 
-    async launchVulnerabilityScanner() {
-        return await this.launchApplication('vulnerability-scanner');
-    }
 
     // Level-specific application launcher
     async launchLevelSpecificApp(appId) {

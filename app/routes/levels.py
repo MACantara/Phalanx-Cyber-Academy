@@ -176,66 +176,33 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-four/dialogues/index.js',
             'js/simulated-pc/levels/level-four/dialogues/level4-white-hat-test.js',
             
-            # Level 4 nmap target hosts (moved to level-four)
-            'js/simulated-pc/levels/level-four/nmap-target-hosts/base-target-host.js',
-            'js/simulated-pc/levels/level-four/nmap-target-hosts/municipality-network.js',
-            'js/simulated-pc/levels/level-four/nmap-target-hosts/target-host-registry.js',
-            'js/simulated-pc/levels/level-four/nmap-target-hosts/vote-admin-server.js',
-            'js/simulated-pc/levels/level-four/nmap-target-hosts/vote-database-server.js',
-            'js/simulated-pc/levels/level-four/nmap-target-hosts/vote-main-server.js',
-            
-            # Level 4 terminal commands (moved to level-four)
-            'js/simulated-pc/levels/level-four/terminal-commands/base-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/cat-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/cd-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/clear-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/date-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/echo-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/find-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/grep-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/help-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/history-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/ls-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/nmap-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/ping-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/pwd-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/uname-command.js',
-            'js/simulated-pc/levels/level-four/terminal-commands/whoami-command.js',
-            
-            # Level 4 vulnerability scanner targets (moved to level-four)
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/index.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/web-target-base.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/municipality-voting/index.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/municipality-voting/municipality-voting-group.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/municipality-voting/vote-admin-target.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/municipality-voting/vote-api-target.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/municipality-voting/vote-database-target.js',
-            'js/simulated-pc/levels/level-four/vulnerability-scanner-targets/municipality-voting/vote-portal-target.js',
-            
-            # Vulnerability Scanner Application (core Level 4 app)
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-app.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/nmap-integration-utility.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-report-generator.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-data-manager.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-event-handler.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-logic.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-notification-manager.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-tab-manager.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-ui-renderer.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner-ui.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/vulnerability-scanner.js',
-            'js/simulated-pc/desktop-components/desktop-applications/vulnerability-scanner-functions/web-target-registry.js',
+            # Level 4 terminal commands
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/base-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/cat-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/cd-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/clear-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/date-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/echo-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/find-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/grep-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/help-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/history-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/ls-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/nmap-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/ping-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/pwd-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/uname-command.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/whoami-command.js',
             
             # Terminal Application (core Level 4 app)
-            'js/simulated-pc/desktop-components/desktop-applications/terminal-app.js',
-            'js/simulated-pc/desktop-components/desktop-applications/terminal-functions/command-history.js',
-            'js/simulated-pc/desktop-components/desktop-applications/terminal-functions/command-processor.js',
-            'js/simulated-pc/desktop-components/desktop-applications/terminal-functions/command-registry.js',
-            'js/simulated-pc/desktop-components/desktop-applications/terminal-functions/file-system.js',
-            'js/simulated-pc/desktop-components/desktop-applications/terminal-functions/tab-completion.js',
+            'js/simulated-pc/levels/level-four/apps/terminal-app.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-functions/command-history.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-functions/command-processor.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-functions/command-registry.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-functions/file-system.js',
+            'js/simulated-pc/levels/level-four/apps/terminal/terminal-functions/tab-completion.js',
             
             # Tutorials for Level 4
-            'js/simulated-pc/tutorials/vulnerability-scanner-tutorial.js',
             'js/simulated-pc/tutorials/terminal-tutorial.js',
         ]
     
@@ -521,102 +488,6 @@ def start_level(level_id):
 
 # Simplified API endpoints that return success without actual functionality
 
-@levels_bp.route('/api/complete/<int:level_id>', methods=['POST'])
-@login_required
-def complete_level(level_id):
-    """API endpoint to mark a level as completed by ending the session."""
-    try:
-        from app.models.level import Level
-        from app.models.session import Session
-        from app.utils.xp import award_user_xp, get_user_level_info
-        
-        # Validate level exists
-        level = Level.get_by_level_id(level_id)
-        if not level:
-            return jsonify({'success': False, 'error': 'Level not found'}), 404
-        
-        # Get request data
-        data = request.get_json() or {}
-        score = data.get('score', 100)
-        session_id = data.get('session_id')  # Session ID from client
-        
-        # Validate score
-        if score is not None and (score < 0 or score > 100):
-            return jsonify({'success': False, 'error': 'Score must be between 0 and 100'}), 400
-        
-        # Find the active session or use provided session_id
-        session = None
-        if session_id:
-            session = Session.get_by_id(session_id)
-        
-        if not session:
-            # Try to find active session for this user
-            active_session = Session.get_active_session(current_user.id)
-            if active_session and active_session.session_name == level.name:
-                session = active_session
-        
-        if not session:
-            return jsonify({'success': False, 'error': 'No active session found for this level'}), 400
-        
-        # End the session with the score
-        completed_session = Session.end_session(session.id, score=score)
-        
-        # Get XP awarded (if any)
-        xp_awarded = completed_session.get_xp_awarded()
-        xp_calculation_details = completed_session.get_xp_calculation_details()
-        
-        # Get updated user progress
-        progress_summary = Session.get_user_progress_summary(current_user.id)
-        
-        # Get user's current total XP from database
-        from app.models.user import User
-        updated_user = User.find_by_id(current_user.id)
-        current_total_xp = getattr(updated_user, 'total_xp', 0) if updated_user else 0
-        
-        # Get user level information
-        level_info = get_user_level_info(current_total_xp)
-        
-        # Get updated streak information
-        try:
-            from app.utils.streak_tracker import get_user_learning_streak, LearningStreakTracker
-            streak_info = get_user_learning_streak(current_user.id)
-            streak_message = LearningStreakTracker.get_streak_encouragement_message(streak_info)
-        except Exception as e:
-            logger.warning(f"Failed to get streak info for user {current_user.id}: {str(e)}")
-            streak_info = {'current_streak': 0, 'longest_streak': 0, 'is_active': False}
-            streak_message = "Great job completing this level!"
-        
-        return jsonify({
-            'success': True,
-            'duplicate': False,
-            'level_completed': level_id,
-            'xp_earned': xp_awarded,
-            'score': score,
-            'total_xp': current_total_xp,
-            'completed_levels': progress_summary['completed_levels'],
-            'completion_percentage': progress_summary['completion_percentage'],
-            'user_level': level_info['level'],
-            'xp_for_next_level': level_info['xp_for_next'],
-            'calculation_details': xp_calculation_details,
-            'streak_info': {
-                'current_streak': streak_info['current_streak'],
-                'longest_streak': streak_info['longest_streak'],
-                'is_active': streak_info['is_active'],
-                'message': streak_message
-            },
-            'message': 'Level completed successfully'
-        }), 200
-        
-    except ValueError as e:
-        logger.error(f"Validation error in complete_level: {str(e)}")
-        return jsonify({'success': False, 'error': str(e)}), 400
-    except DatabaseError as e:
-        logger.error(f"Database error in complete_level: {str(e)}")
-        return jsonify({'success': False, 'error': 'Database error occurred'}), 500
-    except Exception as e:
-        logger.error(f"Unexpected error in complete_level: {str(e)}")
-        return jsonify({'success': False, 'error': 'Internal server error'}), 500
-
 @levels_bp.route('/api/progress', methods=['GET'])
 @login_required
 def get_user_progress():
@@ -844,26 +715,6 @@ def log_analytics():
     """API endpoint to log user actions for analytics (simplified)."""
     return jsonify({'success': True, 'message': 'Analytics logged'})
 
-@levels_bp.route('/api/level/2/email-actions', methods=['POST'])
-@login_required
-def save_email_actions():
-    """API endpoint to save Level 2 email actions (simplified)."""
-    return jsonify({'success': True, 'message': 'Email actions saved'})
-
-@levels_bp.route('/api/level/2/email-actions', methods=['GET'])
-@login_required
-def get_email_actions():
-    """API endpoint to get Level 2 email actions (simplified)."""
-    return jsonify({
-        'success': True,
-        'email_states': {
-            'reported_phishing': [],
-            'marked_legitimate': [],
-            'spam_emails': [],
-            'read_emails': []
-        }
-    })
-
 @levels_bp.route('/api/level/<int:level_id>/new-session', methods=['POST'])
 @login_required
 def start_new_level_session(level_id):
@@ -874,27 +725,6 @@ def start_new_level_session(level_id):
         'attempts': 1,
         'message': 'New session started'
     })
-
-@levels_bp.route('/api/level/2/session-data', methods=['POST'])
-@login_required
-def save_level2_session_data():
-    """API endpoint to save Level 2 session data (simplified)."""
-    return jsonify({'success': True, 'message': 'Session data saved'})
-
-@levels_bp.route('/api/level/2/session-data', methods=['GET'])
-@login_required
-def get_level2_session_data():
-    """API endpoint to get Level 2 session data (simplified)."""
-    return jsonify({
-        'success': True,
-        'session_data': {}
-    })
-
-@levels_bp.route('/api/level/2/new-session', methods=['POST'])
-@login_required
-def start_new_level2_session():
-    """API endpoint to start a new Level 2 session (simplified)."""
-    return jsonify({'success': True, 'message': 'New session started'})
 
 # Initialize levels from database when module is imported
 # This ensures CYBERSECURITY_LEVELS is populated for compatibility

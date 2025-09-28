@@ -1,0 +1,326 @@
+{
+  "ctf_flags": {
+    "challenge_name": "The White Hat Test - Responsible Disclosure CTF",
+    "challenge_description": "Ethical security assessment and vulnerability discovery challenge",
+    "total_flags_available": 15,
+    "flags_per_session": 7,
+    "flags": {
+      "WHT-ENV": {
+        "id": "WHT-ENV",
+        "value": "WHT-ENV{enum_services_first}",
+        "name": "Environment Reconnaissance Challenge",
+        "challenge_question": "Can you discover what services and configurations are exposed in the user's shell environment? Hidden files often contain valuable reconnaissance information.",
+        "location": "/home/researcher/.bashrc",
+        "category": "environment_analysis",
+        "difficulty": "easy",
+        "hints": [
+          "Start by examining hidden files in the home directory",
+          "Shell configuration files often contain environment variables",
+          "Environment variables might contain useful information"
+        ],
+        "discovery_commands": ["cat ~/.bashrc", "ls -la ~", "env"],
+        "learning_objectives": [
+          "Understanding environment variable enumeration",
+          "Learning about hidden configuration files",
+          "Recognizing information disclosure in shell configs"
+        ]
+      },
+      "WHT-SRC": {
+        "id": "WHT-SRC",
+        "value": "WHT-SRC{source_code_comments}",
+        "name": "Source Code Analysis Challenge",
+        "challenge_question": "Web applications often contain development artifacts. Can you find sensitive information left behind in HTML comments or configuration files?",
+        "location": "/var/www/html/index.html",
+        "category": "source_code_review",
+        "difficulty": "easy",
+        "hints": [
+          "Web application source code may reveal secrets",
+          "Check HTML comments and PHP configuration files",
+          "Look in the web application directory structure"
+        ],
+        "discovery_commands": ["cat /var/www/html/index.html", "find /var/www -name '*.php'", "grep -r 'WHT' /var/www/"],
+        "learning_objectives": [
+          "Understanding source code analysis",
+          "Recognizing information disclosure in comments",
+          "Learning about web application file structure"
+        ]
+      },
+      "WHT-CFG": {
+        "id": "WHT-CFG",
+        "value": "WHT-CFG{nginx_config_review}",
+        "name": "Server Configuration Audit Challenge",
+        "challenge_question": "Server configuration files often contain security misconfigurations and sensitive comments. Can you analyze the web server setup for hidden information?",
+        "location": "/etc/nginx/nginx.conf",
+        "category": "configuration_analysis",
+        "difficulty": "easy",
+        "hints": [
+          "Server configuration files often contain sensitive data",
+          "Check nginx configuration for comments and misconfigurations",
+          "Configuration files may contain development notes"
+        ],
+        "discovery_commands": ["cat /etc/nginx/nginx.conf", "find /etc -name '*.conf'", "grep -r 'WHT' /etc/"],
+        "learning_objectives": [
+          "Understanding server configuration analysis",
+          "Identifying common configuration vulnerabilities",
+          "Learning about web server security"
+        ]
+      },
+      "WHT-ENV2": {
+        "id": "WHT-ENV2",
+        "value": "WHT-ENV2{environment_variables_leak_secrets}",
+        "name": "Environment Variable Exposure Challenge",
+        "challenge_question": "Application environment files often contain database credentials and API keys. Can you find the administrator's environment configuration that exposes sensitive data?",
+        "location": "/home/admin/.env",
+        "category": "credential_exposure",
+        "difficulty": "medium",
+        "hints": [
+          "Environment variables in application configs often leak credentials",
+          "Check admin directories for environment files",
+          "Look for hidden .env files with database configurations"
+        ],
+        "discovery_commands": ["find /home -name '.env'", "cat /home/admin/.env", "grep -r 'SECRET' /home/"],
+        "learning_objectives": [
+          "Understanding environment variable security",
+          "Learning about credential management issues",
+          "Recognizing common application configuration mistakes"
+        ]
+      },
+      "WHT-SUID": {
+        "id": "WHT-SUID",
+        "value": "WHT-SUID{suid_binary_analysis}",
+        "name": "SUID Binary Security Challenge",
+        "challenge_question": "SUID binaries can be a security risk when they contain sensitive information. Can you analyze system binaries for privilege escalation clues and embedded secrets?",
+        "location": "/usr/local/bin/backup_script.sh",
+        "category": "privilege_escalation",
+        "difficulty": "medium",
+        "hints": [
+          "System binaries with elevated privileges may contain secrets",
+          "Check for SUID bit set on custom scripts",
+          "Examine scripts in /usr/local/bin/ for sensitive comments"
+        ],
+        "discovery_commands": ["find /usr -perm -4000", "cat /usr/local/bin/backup_script.sh", "ls -la /usr/local/bin/"],
+        "learning_objectives": [
+          "Understanding SUID binary analysis",
+          "Learning about privilege escalation vectors",
+          "Recognizing dangerous file permissions"
+        ]
+      },
+      "WHT-LOG": {
+        "id": "WHT-LOG",
+        "value": "WHT-LOG{log_files_reveal_activity}",
+        "name": "Log File Analysis Challenge",
+        "challenge_question": "System and application logs often contain evidence of security incidents and leaked sensitive data. Can you analyze the web server logs for hidden information?",
+        "location": "/var/log/nginx/access.log",
+        "category": "log_analysis",
+        "difficulty": "medium",
+        "hints": [
+          "Application logs may contain leaked information",
+          "Web server access logs can reveal sensitive patterns",
+          "Check nginx logs for unusual requests or comments"
+        ],
+        "discovery_commands": ["cat /var/log/nginx/access.log", "grep -i 'wht' /var/log/nginx/*", "tail -n 20 /var/log/nginx/access.log"],
+        "learning_objectives": [
+          "Understanding log file analysis",
+          "Learning about information disclosure in logs",
+          "Recognizing attack patterns in web logs"
+        ]
+      },
+      "WHT-COMPL": {
+        "id": "WHT-COMPL",
+        "value": "WHT-COMPL{responsible_disclosure_complete}",
+        "name": "Responsible Disclosure Completion Challenge",
+        "challenge_question": "The final step of ethical hacking is proper documentation and disclosure. Can you complete the responsible disclosure process to earn the final flag?",
+        "location": "/tmp/ctf_completion.txt",
+        "category": "disclosure_process",
+        "difficulty": "easy",
+        "hints": [
+          "Final flag available upon report completion",
+          "Check temporary files for completion artifacts",
+          "Complete disclosure process unlocks the final challenge"
+        ],
+        "discovery_commands": ["cat /tmp/ctf_completion.txt", "ls -la /tmp/", "find /tmp -name '*completion*'"],
+        "learning_objectives": [
+          "Understanding responsible disclosure practices",
+          "Learning about proper vulnerability reporting",
+          "Completing the ethical hacking workflow"
+        ]
+      },
+      "WHT-DB": {
+        "id": "WHT-DB",
+        "value": "WHT-DB{database_credentials_found}",
+        "name": "Database Credential Discovery Challenge",
+        "challenge_question": "Database configuration files often contain plaintext credentials. Can you find the database connection details hidden in the application's backend configuration?",
+        "location": "/var/www/html/admin/config.php",
+        "category": "credential_exposure",
+        "difficulty": "easy",
+        "hints": [
+          "PHP configuration files often contain database passwords",
+          "Look for database connection strings in admin directories",
+          "Configuration files may expose sensitive credentials"
+        ],
+        "discovery_commands": ["find /var/www -name 'config.php'", "cat /var/www/html/admin/config.php", "grep -r 'password' /var/www/"],
+        "learning_objectives": [
+          "Understanding database security misconfigurations",
+          "Learning about credential storage vulnerabilities",
+          "Recognizing common web application security issues"
+        ]
+      },
+      "WHT-BACKUP": {
+        "id": "WHT-BACKUP",
+        "value": "WHT-BACKUP{backup_script_analysis}",
+        "name": "Backup Script Security Challenge",
+        "challenge_question": "Automated backup scripts often contain sensitive paths and credentials. Can you analyze the system backup procedures for security weaknesses and exposed information?",
+        "location": "/home/admin/backup_script.sh",
+        "category": "script_analysis",
+        "difficulty": "medium",
+        "hints": [
+          "Backup scripts may contain sensitive file paths",
+          "Check admin user directories for automation scripts",
+          "Scripts often contain hardcoded credentials or paths"
+        ],
+        "discovery_commands": ["find /home -name '*backup*'", "cat /home/admin/backup_script.sh", "grep -r 'backup' /home/"],
+        "learning_objectives": [
+          "Understanding automated script security",
+          "Learning about backup security practices",
+          "Recognizing script-based information disclosure"
+        ]
+      },
+      "WHT-SSL": {
+        "id": "WHT-SSL",
+        "value": "WHT-SSL{ssl_certificate_analysis}",
+        "name": "SSL Certificate Investigation Challenge",
+        "challenge_question": "SSL certificates and private keys are critical security components. Can you locate and analyze the web server's SSL configuration for sensitive information?",
+        "location": "/etc/ssl/private/server.key",
+        "category": "cryptographic_analysis",
+        "difficulty": "hard",
+        "hints": [
+          "SSL private keys are stored in /etc/ssl/private/",
+          "Certificate files may contain embedded comments",
+          "Check certificate metadata for organizational details"
+        ],
+        "discovery_commands": ["find /etc/ssl -name '*.key'", "cat /etc/ssl/private/server.key", "openssl x509 -text -noout -in /etc/ssl/certs/server.crt"],
+        "learning_objectives": [
+          "Understanding SSL/TLS certificate security",
+          "Learning about cryptographic key management",
+          "Recognizing certificate-based vulnerabilities"
+        ]
+      },
+      "WHT-CRON": {
+        "id": "WHT-CRON",
+        "value": "WHT-CRON{scheduled_task_discovery}",
+        "name": "Scheduled Task Analysis Challenge",
+        "challenge_question": "Scheduled tasks and cron jobs often run with elevated privileges and may expose sensitive operations. Can you discover what automated tasks are configured on the system?",
+        "location": "/etc/crontab",
+        "category": "privilege_analysis",
+        "difficulty": "medium",
+        "hints": [
+          "Check system cron jobs for scheduled tasks",
+          "Crontab files may contain sensitive command execution",
+          "Look for user-specific cron configurations"
+        ],
+        "discovery_commands": ["cat /etc/crontab", "crontab -l", "find /var/spool/cron -type f"],
+        "learning_objectives": [
+          "Understanding scheduled task security",
+          "Learning about cron job privilege escalation",
+          "Recognizing automation-based attack vectors"
+        ]
+      },
+      "WHT-PROC": {
+        "id": "WHT-PROC",
+        "value": "WHT-PROC{process_memory_analysis}",
+        "name": "Process Memory Investigation Challenge",
+        "challenge_question": "Running processes may leak sensitive information through their memory space or command line arguments. Can you analyze the process information for security artifacts?",
+        "location": "/proc/1/environ",
+        "category": "process_analysis",
+        "difficulty": "hard",
+        "hints": [
+          "Process information in /proc/ contains runtime details",
+          "Environment variables of processes may leak credentials",
+          "Check process memory maps for sensitive data"
+        ],
+        "discovery_commands": ["cat /proc/*/environ", "ps aux", "find /proc -name 'environ'"],
+        "learning_objectives": [
+          "Understanding process security analysis",
+          "Learning about memory-based information disclosure",
+          "Recognizing runtime security vulnerabilities"
+        ]
+      },
+      "WHT-HIST": {
+        "id": "WHT-HIST",
+        "value": "WHT-HIST{command_history_forensics}",
+        "name": "Command History Forensics Challenge",
+        "challenge_question": "User command histories often contain passwords, API keys, and sensitive commands. Can you perform forensic analysis on shell history files to uncover security artifacts?",
+        "location": "/home/admin/.bash_history",
+        "category": "forensics",
+        "difficulty": "medium",
+        "hints": [
+          "Shell history files contain previously executed commands",
+          "Check all user directories for .bash_history files",
+          "History files may contain accidentally typed credentials"
+        ],
+        "discovery_commands": ["find /home -name '.*history'", "cat /home/admin/.bash_history", "grep -r 'password' /home/*/.*history"],
+        "learning_objectives": [
+          "Understanding shell history forensics",
+          "Learning about credential leakage vectors",
+          "Recognizing user behavior analysis techniques"
+        ]
+      },
+      "WHT-NET": {
+        "id": "WHT-NET",
+        "value": "WHT-NET{network_configuration_analysis}",
+        "name": "Network Configuration Security Challenge",
+        "challenge_question": "Network configuration files contain routing, firewall, and service information that can reveal attack vectors. Can you analyze the network setup for security misconfigurations?",
+        "location": "/etc/hosts",
+        "category": "network_analysis",
+        "difficulty": "easy",
+        "hints": [
+          "Network configuration files in /etc/ contain routing info",
+          "Hosts file may contain internal network mappings",
+          "Check network interfaces and routing tables"
+        ],
+        "discovery_commands": ["cat /etc/hosts", "cat /etc/resolv.conf", "ip route show"],
+        "learning_objectives": [
+          "Understanding network security analysis",
+          "Learning about network reconnaissance techniques",
+          "Recognizing network-based attack vectors"
+        ]
+      },
+      "WHT-TEMP": {
+        "id": "WHT-TEMP",
+        "value": "WHT-TEMP{temporary_files_investigation}",
+        "name": "Temporary Files Security Challenge",
+        "challenge_question": "Temporary directories often contain sensitive files left behind by applications and users. Can you investigate temporary storage areas for security artifacts?",
+        "location": "/tmp/debug.log",
+        "category": "file_analysis",
+        "difficulty": "medium",
+        "hints": [
+          "Temporary directories may contain sensitive debug files",
+          "Applications often leave artifacts in /tmp/",
+          "Check for recently modified files in temporary areas"
+        ],
+        "discovery_commands": ["ls -la /tmp/", "find /tmp -mtime -1", "cat /tmp/debug.log"],
+        "learning_objectives": [
+          "Understanding temporary file security",
+          "Learning about application artifact analysis",
+          "Recognizing data leakage in temporary storage"
+        ]
+      }
+    },
+    "scoring": {
+      "points_per_flag": 100,
+      "total_points": 700,
+      "bonus_points": {
+        "speed_bonus": 50,
+        "thorough_documentation": 100,
+        "ethical_conduct": 150
+      }
+    },
+    "metadata": {
+      "created_date": "2025-09-27",
+      "version": "2.0",
+      "challenge_type": "responsible_disclosure_ctf",
+      "estimated_duration": "45-90 minutes",
+      "skill_level": "intermediate"
+    }
+  }
+}
