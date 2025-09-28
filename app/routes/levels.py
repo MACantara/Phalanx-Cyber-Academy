@@ -726,27 +726,6 @@ def start_new_level_session(level_id):
         'message': 'New session started'
     })
 
-@levels_bp.route('/api/level/2/session-data', methods=['POST'])
-@login_required
-def save_level2_session_data():
-    """API endpoint to save Level 2 session data (simplified)."""
-    return jsonify({'success': True, 'message': 'Session data saved'})
-
-@levels_bp.route('/api/level/2/session-data', methods=['GET'])
-@login_required
-def get_level2_session_data():
-    """API endpoint to get Level 2 session data (simplified)."""
-    return jsonify({
-        'success': True,
-        'session_data': {}
-    })
-
-@levels_bp.route('/api/level/2/new-session', methods=['POST'])
-@login_required
-def start_new_level2_session():
-    """API endpoint to start a new Level 2 session (simplified)."""
-    return jsonify({'success': True, 'message': 'New session started'})
-
 # Initialize levels from database when module is imported
 # This ensures CYBERSECURITY_LEVELS is populated for compatibility
 try:
