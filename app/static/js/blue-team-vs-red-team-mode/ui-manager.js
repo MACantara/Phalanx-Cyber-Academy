@@ -446,9 +446,14 @@ class UIManager {
         this.updateTerminal();
     }
 
-    // XP Tracking Methods
+    // XP Tracking Methods using Centralized System
     updateXPDisplay() {
         const gameState = this.gameController.getGameState();
+        
+        // Try to get accurate XP data from centralized system
+        this.updateXPDisplayWithCentralizedData().catch(error => {
+            console.warn('[UIManager] Could not load centralized XP data, using local values:', error);
+        });
         
         // Update session XP display (both locations)
         const sessionXPElement = document.getElementById('session-xp');
@@ -501,40 +506,93 @@ class UIManager {
         }
     }
 
+    async updateXPDisplayWithCentralizedData() {
+        try {
+            // Import centralized XP calculator for accurate display
+            const { XPCalculator } = await import('/static/js/utils/xp-calculator.js');
+            const xpCalculator = new XPCalculator();
+            await xpCalculator.loadConfig();
+
+            // Get current user's total XP using centralized system
+            const userXPData = await xpCalculator.getUserCurrentXP();
+            if (userXPData && userXPData.success) {
+                this.currentUserXP = userXPData.currentXP;
+                
+                // Update current user XP display with accurate data
+                const currentXPElement = document.getElementById('current-xp');
+                if (currentXPElement) {
+                    currentXPElement.textContent = this.currentUserXP;
+                }
+            }
+        } catch (error) {
+            console.warn('[UIManager] Failed to update XP display with centralized data:', error);
+        }
+    }
+
     showXPReward(amount, reason = '') {
-        // Show floating XP animation
-        this.showFloatingXP(amount, 'reward');
+        try {
+            // Use centralized XP calculation for more accurate rewards
+            this.calculateAndShowXPReward(amount, reason).catch(error => {
+                console.warn('[UIManager] Centralized XP calculation failed, using base amount:', error);
+            });
+        } catch (error) {
+            console.error('[UIManager] Error in XP reward system:', error);
+        }
+    }
+
+    async calculateAndShowXPReward(amount, reason) {
+        // Import centralized XP calculator for accuracy
+        const { XPCalculator } = await import('/static/js/utils/xp-calculator.js');
+        const xpCalculator = new XPCalculator();
+        await xpCalculator.loadConfig();
         
-        // Add to terminal
-        const message = reason ? 
-            `$ +${amount} XP earned: ${reason}` : 
-            `$ +${amount} XP earned`;
-        this.addTerminalOutput(message, 'success');
+        // Calculate performance-based XP
+        const xpData = await xpCalculator.calculatePerformanceBasedXPAsync({
+            baseAmount: amount,
+            difficulty: 'blue-team-vs-red-team',
+            performanceMetrics: {
+                efficiency: this.gameController.getGameState().attacksMitigated > 0 ? 
+                    this.gameController.getGameState().attacksMitigated / 
+                    (this.gameController.getGameState().attacksMitigated + this.gameController.getGameState().attacksSuccessful) : 0,
+                timeSpent: 900 - this.gameController.getGameState().timeRemaining,
+                sessionProgress: Math.min(1.0, this.gameController.getGameState().sessionXP / 200)
+            }
+        });
         
-        // Update session XP
-        this.sessionXP += amount;
-        this.updateXPDisplay();
-        
-        // Show notification
-        this.showXPNotification(amount, 'reward', reason);
+        const actualXP = xpData.success ? xpData.xpEarned : amount;
     }
 
     showXPPenalty(amount, reason = '') {
-        // Show floating XP animation
-        this.showFloatingXP(-amount, 'penalty');
+        try {
+            // Use centralized XP calculation for consistent penalties
+            this.calculateAndShowXPPenalty(amount, reason).catch(error => {
+                console.warn('[UIManager] Centralized XP penalty calculation failed, using base amount:', error);
+            });
+        } catch (error) {
+            console.error('[UIManager] Error in XP penalty system:', error);
+        }
+    }
+
+    async calculateAndShowXPPenalty(amount, reason) {
+        // Import centralized XP calculator
+        const { XPCalculator } = await import('/static/js/utils/xp-calculator.js');
+        const xpCalculator = new XPCalculator();
+        await xpCalculator.loadConfig();
         
-        // Add to terminal
-        const message = reason ? 
-            `$ -${amount} XP lost: ${reason}` : 
-            `$ -${amount} XP lost`;
-        this.addTerminalOutput(message, 'error');
+        // Calculate penalty based on performance and difficulty
+        const penaltyData = await xpCalculator.calculatePerformanceBasedXPAsync({
+            baseAmount: -amount,
+            difficulty: 'blue-team-vs-red-team',
+            performanceMetrics: {
+                efficiency: this.gameController.getGameState().attacksMitigated > 0 ? 
+                    this.gameController.getGameState().attacksMitigated / 
+                    (this.gameController.getGameState().attacksMitigated + this.gameController.getGameState().attacksSuccessful) : 0,
+                timeSpent: 900 - this.gameController.getGameState().timeRemaining,
+                penaltyMultiplier: 1.2 // Penalties slightly more severe
+            }
+        });
         
-        // Update session XP
-        this.sessionXP -= amount;
-        this.updateXPDisplay();
-        
-        // Show notification
-        this.showXPNotification(-amount, 'penalty', reason);
+        const actualPenalty = penaltyData.success ? Math.abs(penaltyData.xpEarned) : amount;
     }
 
     showFloatingXP(amount, type) {
