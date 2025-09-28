@@ -91,20 +91,6 @@ export class LevelManager {
             }
         }
         
-        // Load level-specific tutorials
-        const levelTutorials = config.tutorials.filter(tutorial => 
-            tutorial.startsWith('level') || tutorial.includes(levelId.toString())
-        );
-        
-        for (const tutorial of levelTutorials) {
-            try {
-                const module = await import(`${levelPath}/tutorials/${tutorial}.js`);
-                this.loadedModules.set(`${levelId}-tutorial-${tutorial}`, module);
-            } catch (error) {
-                console.warn(`Failed to load tutorial ${tutorial} for level ${levelId}:`, error);
-            }
-        }
-        
         // Load level-specific apps if they exist
         try {
             const appsModule = await import(`${levelPath}/apps/index.js`);
