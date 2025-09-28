@@ -450,7 +450,7 @@ class Challenge1PageClass extends BasePage {
                 }
             });
 
-            if (sessionResult.success) {
+            if (sessionResult) {
                 console.log('[Challenge1] Session ended successfully with centralized system:', sessionResult);
                 
                 // Show toast with XP earned
@@ -467,7 +467,7 @@ class Challenge1PageClass extends BasePage {
                 }
                 return sessionResult;
             } else {
-                console.error('[Challenge1] Centralized session end failed:', sessionResult.error);
+                console.error('[Challenge1] Centralized session end failed: no result returned');
             }
         } catch (error) {
             console.error('[Challenge1] Error ending session with centralized system:', error);
