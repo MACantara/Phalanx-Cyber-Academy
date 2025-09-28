@@ -112,8 +112,8 @@
     "xp_reward": {{ level_data.xp_reward if level_data else 100 }},
     "session_id": "{{ level_data.session_id | default('') | safe }}",
     "is_retry": {{ 'true' if level_data.is_retry else 'false' }},
-    "previous_attempts": {{ level_data.previous_attempts if level_data else 0 }},
-    "previous_score": {{ level_data.previous_score if level_data else 0 }}
+    "previous_attempts": {{ level_data.previous_attempts if level_data.previous_attempts is not none else 0 }},
+    "previous_score": {{ level_data.previous_score if level_data.previous_score is not none else 'null' }}
 }
 </script>
 
