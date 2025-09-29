@@ -1,4 +1,5 @@
 import { ForensicAppBase } from './forensic-app-base.js';
+import { gameProgressManager } from '../../../../utils/game-progress-manager.js';
 
 /**
  * Report Summary Modal - Level 5
@@ -761,32 +762,111 @@ export class ReportGeneratorApp extends ForensicAppBase {
         }
     }
 
-    submitInvestigation() {
-        // Award XP and close
-        const victoryCondition = this.getVictoryCondition();
-        
-        // Here you would typically call the XP system to award points
-        this.showNotification(`Investigation submitted! Awarded ${victoryCondition.rewards.xp} XP`, 'success');
-        
-        // Emit forensic report submitted event to trigger completion dialogue
-        this.emitForensicEvent('report_submitted', {
-            score: this.investigationScore,
-            evidenceUsed: Array.from(this.droppedEvidence.values()).flat().length,
-            investigationComplete: true,
-            timestamp: new Date().toISOString()
-        });
-        
-        // Also dispatch global event for investigation tracker
-        window.dispatchEvent(new CustomEvent('forensic_report_generated', {
-            detail: {
+    async submitInvestigation() {
+        try {
+            // Get session information (created by backend when level started)
+            const sessionId = localStorage.getItem('cyberquest_active_session_id') ||
+                             sessionStorage.getItem('active_session_id') ||
+                             window.currentSessionId;
+            
+            if (!sessionId) {
+                console.warn('[ReportGenerator] No session ID available - level may not have been properly started');
+                throw new Error('No active session found');
+            }
+
+            // Attach to the existing session created by backend (similar to Level 4 approach)
+            const startTime = parseInt(localStorage.getItem('cyberquest_level_5_start_time')) || Date.now();
+            
+            gameProgressManager.attachToExistingSession(
+                sessionId,
+                5, // Level ID
+                'The-Hunt-for-The-Null', // Level name
+                'expert', // Difficulty for Level 5
+                startTime
+            );
+
+            // Get victory condition for XP calculation
+            const victoryCondition = this.getVictoryCondition();
+            
+            // Calculate normalized score (0-100 scale for game progress manager)
+            const normalizedScore = Math.round((this.investigationScore / 500) * 100);
+            
+            // Prepare additional completion data
+            const additionalData = {
+                investigation_score: this.investigationScore,
+                max_score: 500,
+                evidence_used: Array.from(this.droppedEvidence.values()).flat().length,
+                sections_completed: this.droppedEvidence.size,
+                completion_percentage: Math.round((this.investigationScore / 500) * 100),
+                forensic_methodology: 'digital_forensics',
+                case_id: 'CYBER-2025-NULL-001',
+                completion_time: Date.now() - startTime
+            };
+            
+            console.log('[ReportGenerator] Submitting investigation with centralized progress manager');
+            console.log(`[ReportGenerator] Score: ${this.investigationScore}/500 (${normalizedScore}%)`);
+            
+            // Complete level using centralized game progress manager
+            const completionResult = await gameProgressManager.completeLevel(normalizedScore, additionalData);
+            
+            console.log('[ReportGenerator] Level completion result:', completionResult);
+            
+            // Show success notification with actual XP awarded
+            const actualXP = completionResult.xp?.xp_awarded || victoryCondition.rewards.xp;
+            this.showNotification(`Investigation submitted! Awarded ${actualXP} XP`, 'success');
+            
+            // Emit forensic report submitted event to trigger completion dialogue
+            this.emitForensicEvent('report_submitted', {
+                score: this.investigationScore,
+                normalizedScore: normalizedScore,
+                evidenceUsed: Array.from(this.droppedEvidence.values()).flat().length,
+                investigationComplete: true,
+                timestamp: new Date().toISOString(),
+                xpAwarded: actualXP,
+                completionResult: completionResult
+            });
+            
+            // Also dispatch global event for investigation tracker
+            window.dispatchEvent(new CustomEvent('forensic_report_generated', {
+                detail: {
+                    score: this.investigationScore,
+                    normalizedScore: normalizedScore,
+                    evidenceUsed: Array.from(this.droppedEvidence.values()).flat().length,
+                    app: this.id,
+                    xpAwarded: actualXP,
+                    levelCompleted: true
+                }
+            }));
+            
+            console.log('[ReportGenerator] Investigation submitted successfully, triggering completion dialogue');
+            
+        } catch (error) {
+            console.error('[ReportGenerator] Failed to submit investigation:', error);
+            
+            // Fallback to original behavior if centralized system fails
+            const victoryCondition = this.getVictoryCondition();
+            this.showNotification(`Investigation submitted! Awarded ${victoryCondition.rewards.xp} XP (fallback)`, 'warning');
+            
+            // Still emit events for completion dialogue
+            this.emitForensicEvent('report_submitted', {
                 score: this.investigationScore,
                 evidenceUsed: Array.from(this.droppedEvidence.values()).flat().length,
-                app: this.id
-            }
-        }));
+                investigationComplete: true,
+                timestamp: new Date().toISOString(),
+                error: error.message
+            });
+            
+            window.dispatchEvent(new CustomEvent('forensic_report_generated', {
+                detail: {
+                    score: this.investigationScore,
+                    evidenceUsed: Array.from(this.droppedEvidence.values()).flat().length,
+                    app: this.id,
+                    error: error.message
+                }
+            }));
+        }
         
-        console.log('[ReportGenerator] Investigation submitted, triggering completion dialogue');
-        
+        // Close the modal regardless of success/failure
         this.closeReportModal();
     }
 
