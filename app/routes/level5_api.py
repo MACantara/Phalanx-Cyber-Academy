@@ -8,7 +8,7 @@ level5_api_bp = Blueprint('level5_api', __name__, url_prefix='/api/level5')
 _json_cache = {}
 
 def load_json_data():
-    """Load Level 5 forensic data from JSON files"""
+    """Load Level 5 forensic data from JSON files - centralized data loading matching index.js structure"""
     global _json_cache
     
     try:
@@ -17,12 +17,14 @@ def load_json_data():
         
         # Load all Level 5 JSON datasets
         datasets = {
-            'evidence': 'evidence-data.json',
+            'case_briefing': 'case-briefing.json',
             'disk_analysis': 'disk-analysis-data.json',
+            'evidence': 'evidence-data.json',
+            'investigation_objectives': 'investigation-objectives.json',
             'memory_forensics': 'memory-forensics-data.json',
             'network_analysis': 'network-analysis-data.json',
-            'timeline': 'timeline-data.json',
-            'report_templates': 'report-templates-data.json'
+            'report_templates': 'report-templates-data.json',
+            'timeline': 'timeline-data.json'
         }
         
         data = {}
@@ -202,24 +204,13 @@ def get_all_data():
 def get_case_briefing_data():
     """Get investigation case briefing and objectives"""
     try:
-        # Load case briefing data
-        base_path = Path(current_app.root_path) / 'static' / 'js' / 'simulated-pc' / 'levels' / 'level-five' / 'data'
-        briefing_path = base_path / 'case-briefing.json'
+        data = load_json_data()
+        briefing_data = data.get('case_briefing', {})
         
-        if briefing_path.exists():
-            with open(briefing_path, 'r', encoding='utf-8') as f:
-                briefing_data = json.load(f)
-            
-            return jsonify({
-                'success': True,
-                'data': briefing_data
-            }), 200
-        else:
-            current_app.logger.warning("Case briefing file not found")
-            return jsonify({
-                'success': False,
-                'error': 'Case briefing data not available'
-            }), 404
+        return jsonify({
+            'success': True,
+            'data': briefing_data
+        }), 200
         
     except Exception as e:
         current_app.logger.error(f"Error fetching case briefing data: {str(e)}")
@@ -233,24 +224,13 @@ def get_case_briefing_data():
 def get_investigation_objectives_data():
     """Get investigation objectives and victory conditions"""
     try:
-        # Load investigation objectives data
-        base_path = Path(current_app.root_path) / 'static' / 'js' / 'simulated-pc' / 'levels' / 'level-five' / 'data'
-        objectives_path = base_path / 'investigation-objectives.json'
+        data = load_json_data()
+        objectives_data = data.get('investigation_objectives', {})
         
-        if objectives_path.exists():
-            with open(objectives_path, 'r', encoding='utf-8') as f:
-                objectives_data = json.load(f)
-            
-            return jsonify({
-                'success': True,
-                'data': objectives_data
-            }), 200
-        else:
-            current_app.logger.warning("Investigation objectives file not found")
-            return jsonify({
-                'success': False,
-                'error': 'Investigation objectives data not available'
-            }), 404
+        return jsonify({
+            'success': True,
+            'data': objectives_data
+        }), 200
         
     except Exception as e:
         current_app.logger.error(f"Error fetching investigation objectives data: {str(e)}")
@@ -267,7 +247,8 @@ def get_data_status():
         data = load_json_data()
         
         status = {}
-        for key in ['evidence', 'disk_analysis', 'memory_forensics', 'network_analysis', 'timeline', 'report_templates']:
+        # Check all datasets matching the centralized index.js structure
+        for key in ['case_briefing', 'disk_analysis', 'evidence', 'investigation_objectives', 'memory_forensics', 'network_analysis', 'report_templates', 'timeline']:
             status[key] = {
                 'loaded': key in data and bool(data[key]),
                 'item_count': len(data.get(key, {}))
