@@ -70,18 +70,31 @@ export class ReportGeneratorApp extends ForensicAppBase {
                 </div>
 
                 <!-- Report Generation Modal -->
-                <div id="report-modal-${this.id}" class="fixed inset-0 bg-black/50 hidden z-50 flex justify-center items-center">
-                    <div class="bg-gray-800 rounded-lg p-6 max-w-4xl max-h-[80vh] overflow-y-auto m-4">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-xl font-bold text-orange-400">Final Investigation Report</h3>
-                            <button id="close-report-modal-${this.id}" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                <div id="report-modal-${this.id}" class="fixed inset-0 bg-black/90 hidden z-[10000] flex justify-center items-center p-4" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;">
+                    <div class="bg-gray-900 border border-gray-600 rounded-lg shadow-2xl w-full max-w-6xl max-h-[95vh] overflow-y-auto">
+                        <div class="bg-gradient-to-r from-orange-700 to-red-600 p-6 border-b border-gray-600">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white flex items-center">
+                                        <i class="bi bi-file-earmark-text mr-3 text-orange-300"></i>
+                                        Digital Forensics Investigation Report
+                                    </h3>
+                                    <p class="text-orange-200 mt-1">Case: Hunt for The Null - Review Before Submission</p>
+                                </div>
+                                <button id="close-report-modal-${this.id}" class="text-orange-200 hover:text-white text-3xl font-bold">&times;</button>
+                            </div>
                         </div>
-                        <div id="final-report-content-${this.id}" class="text-sm leading-relaxed">
-                            <!-- Final report will be generated here -->
+                        <div id="final-report-content-${this.id}" class="p-6 text-white">
+                            <!-- Final report preview will be generated here -->
                         </div>
-                        <div class="mt-6 text-center">
-                            <button id="submit-investigation-${this.id}" class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded font-semibold">
-                                Submit Investigation
+                        <div class="bg-gray-800 px-6 py-4 border-t border-gray-600 flex justify-between items-center">
+                            <button id="back-to-editing-${this.id}" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded font-semibold transition-colors">
+                                <i class="bi bi-arrow-left mr-2"></i>
+                                Back to Report Editor
+                            </button>
+                            <button id="submit-investigation-${this.id}" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded font-semibold transition-colors">
+                                <i class="bi bi-check-circle mr-2"></i>
+                                Submit Final Report
                             </button>
                         </div>
                     </div>
@@ -129,10 +142,12 @@ export class ReportGeneratorApp extends ForensicAppBase {
     bindEvents() {
         const generateBtn = this.windowElement.querySelector(`#generate-report-btn-${this.id}`);
         const closeModalBtn = this.windowElement.querySelector(`#close-report-modal-${this.id}`);
+        const backBtn = this.windowElement.querySelector(`#back-to-editing-${this.id}`);
         const submitBtn = this.windowElement.querySelector(`#submit-investigation-${this.id}`);
 
         generateBtn?.addEventListener('click', () => this.generateFinalReport());
         closeModalBtn?.addEventListener('click', () => this.closeReportModal());
+        backBtn?.addEventListener('click', () => this.closeReportModal());
         submitBtn?.addEventListener('click', () => this.submitInvestigation());
     }
 
@@ -442,72 +457,208 @@ export class ReportGeneratorApp extends ForensicAppBase {
     }
 
     generateReportContent() {
-        const victoryConditions = this.getVictoryCondition();
+        const currentDate = new Date().toLocaleDateString();
+        const currentTime = new Date().toLocaleTimeString();
         
         return `
             <div class="space-y-6">
-                <div class="text-center">
-                    <h2 class="text-2xl font-bold text-orange-400 mb-2">Investigation Complete!</h2>
-                    <div class="text-lg text-white mb-4">${victoryConditions.title}</div>
-                    <div class="text-sm text-gray-300 mb-4">${victoryConditions.description}</div>
-                </div>
-
-                <div class="bg-gray-700 p-4 rounded">
-                    <h3 class="font-semibold text-green-400 mb-2">Investigation Summary</h3>
-                    <div class="grid grid-cols-2 gap-4 text-sm">
+                <!-- Report Header -->
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-600">
+                    <div class="grid grid-cols-2 gap-6 text-sm">
                         <div>
-                            <span class="text-gray-400">Final Score:</span>
-                            <span class="text-white font-semibold">${this.investigationScore}/500 points</span>
+                            <div class="text-gray-400 mb-1">Case Number:</div>
+                            <div class="font-semibold text-white">CYBER-2025-NULL-001</div>
                         </div>
                         <div>
-                            <span class="text-gray-400">XP Reward:</span>
-                            <span class="text-green-400 font-semibold">+${victoryConditions.rewards.xp} XP</span>
+                            <div class="text-gray-400 mb-1">Investigation Date:</div>
+                            <div class="font-semibold text-white">${currentDate} ${currentTime}</div>
                         </div>
                         <div>
-                            <span class="text-gray-400">Evidence Used:</span>
-                            <span class="text-blue-400 font-semibold">${Array.from(this.droppedEvidence.values()).reduce((total, list) => total + list.length, 0)} items</span>
+                            <div class="text-gray-400 mb-1">Lead Investigator:</div>
+                            <div class="font-semibold text-white">Digital Forensics Specialist</div>
                         </div>
                         <div>
-                            <span class="text-gray-400">Report Sections:</span>
-                            <span class="text-orange-400 font-semibold">${this.droppedEvidence.size} completed</span>
+                            <div class="text-gray-400 mb-1">Report Status:</div>
+                            <div class="font-semibold text-yellow-400">READY FOR SUBMISSION</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-gray-700 p-4 rounded">
-                    <h3 class="font-semibold text-orange-400 mb-2">Key Findings</h3>
-                    <div class="text-sm text-gray-300 leading-relaxed">
-                        ${this.generateKeyFindings()}
+                <!-- Report Sections Summary -->
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-600">
+                    <h3 class="text-xl font-semibold text-orange-400 mb-4 flex items-center">
+                        <i class="bi bi-list-ul mr-2"></i>
+                        Report Sections Overview
+                    </h3>
+                    <div class="space-y-4">
+                        ${this.generateSectionsSummary()}
                     </div>
                 </div>
 
-                <div class="text-center text-sm text-gray-400">
-                    ${victoryConditions.message}
+                <!-- Evidence Summary -->
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-600">
+                    <h3 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
+                        <i class="bi bi-shield-check mr-2"></i>
+                        Evidence Chain of Custody
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${this.generateEvidenceSummary()}
+                    </div>
+                </div>
+
+                <!-- Investigation Metrics -->
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-600">
+                    <h3 class="text-xl font-semibold text-green-400 mb-4 flex items-center">
+                        <i class="bi bi-bar-chart mr-2"></i>
+                        Investigation Metrics
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div class="bg-gray-700 p-4 rounded">
+                            <div class="text-2xl font-bold text-white">${this.investigationScore}</div>
+                            <div class="text-sm text-gray-400">Investigation Score</div>
+                        </div>
+                        <div class="bg-gray-700 p-4 rounded">
+                            <div class="text-2xl font-bold text-white">${Array.from(this.droppedEvidence.values()).reduce((total, list) => total + list.length, 0)}</div>
+                            <div class="text-sm text-gray-400">Evidence Items</div>
+                        </div>
+                        <div class="bg-gray-700 p-4 rounded">
+                            <div class="text-2xl font-bold text-white">${this.droppedEvidence.size}</div>
+                            <div class="text-sm text-gray-400">Report Sections</div>
+                        </div>
+                        <div class="bg-gray-700 p-4 rounded">
+                            <div class="text-2xl font-bold text-white">${Math.round((this.investigationScore / 500) * 100)}%</div>
+                            <div class="text-sm text-gray-400">Completion</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submission Checklist -->
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-600">
+                    <h3 class="text-xl font-semibold text-purple-400 mb-4 flex items-center">
+                        <i class="bi bi-clipboard-check mr-2"></i>
+                        Submission Checklist
+                    </h3>
+                    ${this.generateSubmissionChecklist()}
+                </div>
+
+                <!-- Legal Disclaimer -->
+                <div class="bg-yellow-900/20 border border-yellow-600 p-4 rounded-lg">
+                    <div class="flex items-start space-x-3">
+                        <i class="bi bi-exclamation-triangle text-yellow-400 text-xl mt-1"></i>
+                        <div>
+                            <div class="font-semibold text-yellow-300 mb-1">Legal Notice</div>
+                            <div class="text-sm text-yellow-200">
+                                This forensic report will be submitted as official evidence in the case against The Null. 
+                                Please review all sections carefully before final submission. Once submitted, this report 
+                                cannot be modified and will become part of the permanent case record.
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
     }
 
-    generateKeyFindings() {
-        const findings = [];
+    generateSectionsSummary() {
+        if (!this.reportTemplate?.sections) return '<div class="text-gray-400">No report sections available</div>';
         
-        if (this.droppedEvidence.has('Executive Summary')) {
-            findings.push("<i class='bi bi-check-circle-fill text-green-400'></i> Successfully identified The Null's true identity through digital forensic analysis");
-        }
+        return this.reportTemplate.sections.map(section => {
+            const sectionEvidence = this.droppedEvidence.get(section.title) || [];
+            const hasEvidence = sectionEvidence.length > 0;
+            const isComplete = hasEvidence && sectionEvidence.length >= (section.min_evidence || 0);
+            
+            return `
+                <div class="flex items-center justify-between p-4 bg-gray-700 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <i class="bi bi-${isComplete ? 'check-circle-fill text-green-400' : hasEvidence ? 'clock text-yellow-400' : 'circle text-gray-500'} text-lg"></i>
+                        <div>
+                            <div class="font-semibold text-white">${section.title}</div>
+                            <div class="text-sm text-gray-400">${section.required ? 'Required Section' : 'Optional Section'}</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm font-semibold ${isComplete ? 'text-green-400' : hasEvidence ? 'text-yellow-400' : 'text-gray-500'}">
+                            ${sectionEvidence.length} Evidence Item${sectionEvidence.length !== 1 ? 's' : ''}
+                        </div>
+                        <div class="text-xs text-gray-400">
+                            ${isComplete ? 'Complete' : hasEvidence ? 'In Progress' : 'Pending'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    generateEvidenceSummary() {
+        const allEvidence = Array.from(this.droppedEvidence.values()).flat();
         
-        if (this.droppedEvidence.has('Findings and Analysis')) {
-            findings.push("<i class='bi bi-check-circle-fill text-green-400'></i> Reconstructed complete attack timeline and methodology");
-        }
-        
-        if (this.droppedEvidence.has('Evidence Acquisition')) {
-            findings.push("<i class='bi bi-check-circle-fill text-green-400'></i> Documented proper chain of custody for all digital evidence");
-        }
-        
-        if (this.droppedEvidence.has('Conclusions')) {
-            findings.push("<i class='bi bi-check-circle-fill text-green-400'></i> Established legal-grade evidence correlation for prosecution");
+        if (allEvidence.length === 0) {
+            return '<div class="col-span-2 text-center text-gray-400 py-8">No evidence added to report sections</div>';
         }
 
-        return findings.length > 0 ? findings.join('<br>') : 'Investigation findings documented in forensic report sections.';
+        return allEvidence.map(evidence => {
+            return `
+                <div class="bg-gray-700 p-4 rounded-lg border border-gray-600">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <div class="text-xl">${this.getEvidenceIcon(evidence.type)}</div>
+                        <div class="flex-1">
+                            <div class="font-semibold text-white text-sm">${evidence.name}</div>
+                            <div class="text-xs text-gray-400">${this.formatEvidenceType(evidence.type)}</div>
+                        </div>
+                        <i class="bi bi-shield-check text-green-400" title="Chain of custody verified"></i>
+                    </div>
+                    <div class="text-xs text-gray-500 space-y-1">
+                        <div>Size: ${evidence.size}</div>
+                        <div>Hash: ${evidence.hash_sha256 ? evidence.hash_sha256.substring(0, 16) + '...' : 'N/A'}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    generateSubmissionChecklist() {
+        const checklist = [
+            {
+                item: 'All required sections completed',
+                status: this.reportTemplate?.sections?.every(section => 
+                    !section.required || (this.droppedEvidence.get(section.title) || []).length > 0
+                ) || false
+            },
+            {
+                item: 'Evidence integrity verified',
+                status: Array.from(this.droppedEvidence.values()).flat().length > 0
+            },
+            {
+                item: 'Minimum investigation score achieved',
+                status: this.investigationScore >= 300
+            },
+            {
+                item: 'Chain of custody documented',
+                status: Array.from(this.droppedEvidence.values()).flat().length > 0
+            },
+            {
+                item: 'Report ready for legal review',
+                status: this.investigationScore >= 400
+            }
+        ];
+
+        return `
+            <div class="space-y-3">
+                ${checklist.map(check => `
+                    <div class="flex items-center space-x-3 p-2 rounded ${check.status ? 'bg-green-900/20' : 'bg-red-900/20'}">
+                        <i class="bi bi-${check.status ? 'check-circle-fill text-green-400' : 'x-circle-fill text-red-400'}"></i>
+                        <span class="${check.status ? 'text-green-200' : 'text-red-200'}">${check.item}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="mt-4 p-3 ${checklist.every(c => c.status) ? 'bg-green-900/20 border-green-600' : 'bg-yellow-900/20 border-yellow-600'} border rounded">
+                <div class="text-sm font-semibold ${checklist.every(c => c.status) ? 'text-green-300' : 'text-yellow-300'}">
+                    ${checklist.every(c => c.status) 
+                        ? '✓ Report is ready for submission' 
+                        : '⚠ Please complete all required items before submission'}
+                </div>
+            </div>
+        `;
     }
 
     getVictoryCondition() {
