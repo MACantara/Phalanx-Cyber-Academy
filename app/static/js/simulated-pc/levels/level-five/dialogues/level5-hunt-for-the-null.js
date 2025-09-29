@@ -25,33 +25,62 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
     onComplete() {
         localStorage.setItem('cyberquest_level_5_started', 'true');
         
-        // Initialize evidence tracker for Level 5
-        if (typeof initializeEvidenceTracker === 'function') {
-            import('../../level5/evidence-tracker.js').then(module => {
-                window.evidenceTracker = module.initializeEvidenceTracker();
-                if (window.evidenceTracker) {
-                    window.evidenceTracker.showTracker();
-                }
-            });
-        }
-        
-        // Open multiple applications for digital forensics
+        // Launch the Evidence Locker as the starting point for Level 5 forensics
         if (window.applicationLauncher) {
             setTimeout(async () => {
-                // Launch multiple apps for comprehensive forensics analysis
-                const apps = ['files', 'logs', 'terminal'];
-                await window.applicationLauncher.launchMultiple(apps);
-                console.log('Digital forensics tools opened for Level 5: Hunt for The Null');
+                console.log('Launching Level 5 Digital Forensics Environment...');
                 
-                // Start forensics guidance through dialogue system instead
-                setTimeout(() => {
-                    // Trigger interactive forensics guidance dialogue
-                    if (this.desktop && this.desktop.dialogueManager) {
-                        this.desktop.dialogueManager.triggerDialogue('level5-forensics-guidance', 'instructor');
-                    }
-                }, 1500);
-            }, 500);
+                try {
+                    // Launch the Evidence Locker app first - this is the central hub for forensic analysis
+                    await window.applicationLauncher.launchEvidenceLocker();
+                    console.log('Evidence Locker launched successfully');
+                    
+                    // Show notification to guide user
+                    this.showForensicNotification(
+                        'Digital forensics investigation initiated. Start by examining evidence in the Evidence Locker.',
+                        'success'
+                    );
+                    
+                    // Optional: Launch additional forensic workflow after Evidence Locker is ready
+                    setTimeout(() => {
+                        if (window.applicationLauncher && window.applicationLauncher.launchForensicWorkflow) {
+                            window.applicationLauncher.launchForensicWorkflow();
+                        }
+                    }, 2000);
+                    
+                } catch (error) {
+                    console.error('Failed to launch Level 5 forensic applications:', error);
+                }
+                
+            }, 1000);
         }
+    }
+
+    showForensicNotification(message, type = 'info') {
+        // Create forensic-themed notification
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 p-4 rounded z-50 ${
+            type === 'success' ? 'bg-green-600' :
+            type === 'warning' ? 'bg-yellow-600' :
+            type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+        } text-white shadow-lg border border-gray-300`;
+        
+        notification.innerHTML = `
+            <div class="flex items-center space-x-2">
+                <i class="bi bi-shield-check text-lg"></i>
+                <span class="font-semibold">FORENSIC SYSTEM:</span>
+            </div>
+            <div class="mt-1 text-sm">${message}</div>
+        `;
+
+        document.body.appendChild(notification);
+
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 5000);
     }
 
     getFinalButtonText() {
