@@ -25,13 +25,13 @@
           "order": 2, 
           "required": true,
           "template": "Case number, investigator details, date range, and scope of investigation.",
-          "evidence_types_accepted": ["case_metadata"],
+          "evidence_types_accepted": ["all"],
           "min_evidence": 0,
-          "max_evidence": 2,
+          "max_evidence": 4,
           "drag_drop_config": {
-            "accepts_any_evidence": false,
-            "priority_evidence": [],
-            "placeholder_text": "This section contains case metadata (auto-filled)"
+            "accepts_any_evidence": true,
+            "priority_evidence": ["evidence_001", "evidence_002", "evidence_003", "evidence_004"],
+            "placeholder_text": "Drag evidence here to establish case context and investigation scope"
           }
         },
         {
@@ -53,13 +53,13 @@
           "order": 4,
           "required": true,
           "template": "Tools used, analysis procedures, and forensic techniques employed.",
-          "evidence_types_accepted": ["methodology"],
-          "min_evidence": 0,
-          "max_evidence": 3,
+          "evidence_types_accepted": ["all"],
+          "min_evidence": 1,
+          "max_evidence": 4,
           "drag_drop_config": {
-            "accepts_any_evidence": false,
-            "priority_evidence": [],
-            "placeholder_text": "Methodology details (auto-generated based on tools used)"
+            "accepts_any_evidence": true,
+            "priority_evidence": ["evidence_001", "evidence_002", "evidence_003", "evidence_004"],
+            "placeholder_text": "Drag evidence here to document analysis methodology and tools used"
           }
         },
         {
