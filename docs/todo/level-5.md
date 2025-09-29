@@ -1,0 +1,8 @@
+- Use the app\static\js\simulated-pc\shutdown-sequence.js when going to the levels overview page from the levels.
+- Streamline the report generation to be based on evidences gathered, not just evidence categories.
+- Improve the mechanics of the evidence locker app
+- Improve the concise and compactness of the investigation tracker app
+- Add more datasets for level 5
+- Implement loading of random data for level 5
+- Create a shared level summary that can be extended as necessary
+- Implement xp tracking of the blue team vs red team mode at the end of the session and not every correct action.
