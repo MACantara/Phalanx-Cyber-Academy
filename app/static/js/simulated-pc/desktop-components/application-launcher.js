@@ -96,30 +96,30 @@ export class ApplicationLauncher {
             }
         }
 
-        const window = this.windowManager.createWindow(appId, windowTitle || appConfig.title, app, windowOptions);
+        const windowElement = this.windowManager.createWindow(appId, windowTitle || appConfig.title, app, windowOptions);
         
         // Apply level-specific window modifications
-        if (window && appConfig.persistent) {
-            const closeBtn = window.querySelector('.close');
-            const minimizeBtn = window.querySelector('.minimize');
-            const maximizeBtn = window.querySelector('.maximize');
+        if (windowElement && appConfig.persistent) {
+            const closeBtn = windowElement.querySelector('.close');
+            const minimizeBtn = windowElement.querySelector('.minimize');
+            const maximizeBtn = windowElement.querySelector('.maximize');
             if (closeBtn) closeBtn.style.display = 'none';
             if (minimizeBtn) minimizeBtn.style.display = 'none';
             
             // Hide maximize button and resize handles for non-resizable windows
             if (windowOptions.resizable === false) {
                 if (maximizeBtn) maximizeBtn.style.display = 'none';
-                const resizeHandles = window.querySelectorAll('.resize-handle');
+                const resizeHandles = windowElement.querySelectorAll('.resize-handle');
                 resizeHandles.forEach(handle => handle.style.display = 'none');
             }
         }
 
         // Position window if specified
-        if (window && windowOptions.position) {
-            window.style.left = windowOptions.position.left;
-            window.style.top = windowOptions.position.top;
+        if (windowElement && windowOptions.position) {
+            windowElement.style.left = windowOptions.position.left;
+            windowElement.style.top = windowOptions.position.top;
             if (windowOptions.zIndex) {
-                window.style.zIndex = windowOptions.zIndex;
+                windowElement.style.zIndex = windowOptions.zIndex;
             }
         }
 
