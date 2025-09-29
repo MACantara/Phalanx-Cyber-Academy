@@ -120,10 +120,7 @@ export class Level5WorkflowSummary {
                                 <div class="space-y-2 max-h-48 overflow-y-auto">
                                     ${correctActionsList.length > 0 ? correctActionsList.map(action => `
                                         <div class="bg-green-800/30 rounded p-2 text-sm">
-                                            <div class="flex items-center justify-between">
-                                                <span class="text-green-300 font-medium">${this.formatActionName(action.action)}</span>
-                                                <span class="text-green-400 text-xs">${new Date(action.timestamp).toLocaleTimeString()}</span>
-                                            </div>
+                                            <div class="text-green-300 font-medium">${this.formatActionName(action.action)}</div>
                                             ${action.details ? `<div class="text-green-200 text-xs mt-1">${this.formatActionDetails(action.details)}</div>` : ''}
                                         </div>
                                     `).join('') : '<div class="text-gray-400 text-sm text-center py-4">No correct actions recorded</div>'}
@@ -139,10 +136,7 @@ export class Level5WorkflowSummary {
                                 <div class="space-y-2 max-h-48 overflow-y-auto">
                                     ${incorrectActionsList.length > 0 ? incorrectActionsList.map(action => `
                                         <div class="bg-red-800/30 rounded p-2 text-sm">
-                                            <div class="flex items-center justify-between">
-                                                <span class="text-red-300 font-medium">${this.formatActionName(action.action)}</span>
-                                                <span class="text-red-400 text-xs">${new Date(action.timestamp).toLocaleTimeString()}</span>
-                                            </div>
+                                            <div class="text-red-300 font-medium">${this.formatActionName(action.action)}</div>
                                             ${action.details ? `<div class="text-red-200 text-xs mt-1">${this.formatActionDetails(action.details)}</div>` : ''}
                                             <div class="text-yellow-300 text-xs mt-1">
                                                 <i class="bi bi-lightbulb mr-1"></i>
@@ -182,21 +176,24 @@ export class Level5WorkflowSummary {
                         </div>
                     </div>
 
-                    <!-- Footer Actions -->
-                    <div class="bg-gray-800 px-6 py-4 border-t border-gray-700 flex justify-between items-center">
-                        <div class="text-gray-400 text-sm">
-                            Investigation completed at ${new Date().toLocaleString()}
-                        </div>
-                        <div class="space-x-3">
-                            <button onclick="window.level5WorkflowSummary?.exportReport()" 
-                                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
-                                <i class="bi bi-download mr-1"></i>
-                                Export Report
+                    <!-- Next Steps -->
+                    <div class="text-center p-6">
+                        <div class="flex flex-col md:flex-row gap-3 justify-center">
+                            <button 
+                                id="retry-level5-btn"
+                                onclick="window.level5WorkflowSummary?.retryLevel()"
+                                class="px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white rounded-lg font-semibold transition-colors cursor-pointer flex items-center justify-center"
+                            >
+                                <i class="bi bi-arrow-clockwise mr-2"></i>
+                                <span>Retry Level 5</span>
                             </button>
-                            <button onclick="window.level5WorkflowSummary?.close()" 
-                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
-                                <i class="bi bi-check-circle mr-1"></i>
-                                Complete Investigation
+                            <button 
+                                id="levels-overview-btn"
+                                onclick="window.level5WorkflowSummary?.navigateToLevels()"
+                                class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors cursor-pointer flex items-center justify-center"
+                            >
+                                <i class="bi bi-grid mr-2"></i>
+                                <span>Back to Levels</span>
                             </button>
                         </div>
                     </div>
@@ -252,35 +249,58 @@ export class Level5WorkflowSummary {
         }, 500);
     }
 
-    exportReport() {
-        try {
-            const reportData = {
-                investigation: 'Hunt for The Null - Digital Forensics Investigation',
-                timestamp: new Date().toISOString(),
-                investigator: 'Digital Forensics Specialist',
-                stats: this.stats,
-                workflow_analysis: {
-                    correct_actions: this.stats.correctActionsList || [],
-                    incorrect_actions: this.stats.incorrectActionsList || [],
-                    compliance_score: this.stats.complianceScore || 0
-                },
-                recommendations: this.generateRecommendations()
-            };
+    retryLevel() {
+        if (!this.isVisible) return;
 
-            const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Level5_Investigation_Report_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-
-            console.log('[Level5WorkflowSummary] Report exported successfully');
-        } catch (error) {
-            console.error('[Level5WorkflowSummary] Failed to export report:', error);
+        console.log('[Level5WorkflowSummary] Retrying Level 5');
+        
+        // Add exit animation
+        if (this.element) {
+            this.element.style.opacity = '0';
+            this.element.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.element.remove();
+            }, 300);
         }
+
+        this.isVisible = false;
+
+        // Clean up global reference
+        if (window.level5WorkflowSummary === this) {
+            window.level5WorkflowSummary = null;
+        }
+
+        // Navigate to Level 5 restart
+        setTimeout(() => {
+            window.location.href = '/levels/5/start';
+        }, 500);
+    }
+
+    navigateToLevels() {
+        if (!this.isVisible) return;
+
+        console.log('[Level5WorkflowSummary] Navigating to levels overview');
+        
+        // Add exit animation
+        if (this.element) {
+            this.element.style.opacity = '0';
+            this.element.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.element.remove();
+            }, 300);
+        }
+
+        this.isVisible = false;
+
+        // Clean up global reference
+        if (window.level5WorkflowSummary === this) {
+            window.level5WorkflowSummary = null;
+        }
+
+        // Navigate to levels overview
+        setTimeout(() => {
+            window.location.href = '/levels';
+        }, 500);
     }
 
     // Helper methods
