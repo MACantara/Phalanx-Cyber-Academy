@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, current_app, request, session
 from functools import wraps
 import json
+import hashlib
 from pathlib import Path
 
 level5_api_bp = Blueprint('level5_api', __name__, url_prefix='/api/level5')
@@ -265,4 +266,47 @@ def get_data_status():
         return jsonify({
             'success': False,
             'error': 'Failed to check data status'
+        }), 500
+
+
+@level5_api_bp.route('/generate-hash', methods=['POST'])
+def generate_hash():
+    """Generate SHA256 hash for forensic evidence verification"""
+    try:
+        # Get JSON data from request
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No data provided for hashing'
+            }), 400
+        
+        # Convert data to consistent JSON string for hashing
+        data_string = json.dumps(data, sort_keys=True, separators=(',', ':'))
+        
+        # Generate SHA256 hash
+        sha256_hash = hashlib.sha256(data_string.encode('utf-8')).hexdigest()
+        
+        # Also generate MD5 for backward compatibility
+        md5_hash = hashlib.md5(data_string.encode('utf-8')).hexdigest()
+        
+        # Log the hash generation
+        current_app.logger.info(f"Generated SHA256 hash for {len(data_string)} bytes of data")
+        
+        return jsonify({
+            'success': True,
+            'data': {
+                'sha256': sha256_hash,
+                'md5': md5_hash,
+                'algorithm': 'SHA256',
+                'input_size': len(data_string)
+            }
+        }), 200
+        
+    except Exception as e:
+        current_app.logger.error(f"Error generating hash: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': 'Failed to generate hash'
         }), 500
