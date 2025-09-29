@@ -150,6 +150,10 @@ export class ApplicationLauncher {
     }
 
     // Level 5 - Digital Forensics Application Launchers
+    async launchInvestigationBriefing() {
+        return await this.launchApplication('investigation-briefing');
+    }
+
     async launchEvidenceLocker() {
         return await this.launchApplication('evidence-locker');
     }
