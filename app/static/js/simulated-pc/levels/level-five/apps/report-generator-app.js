@@ -437,24 +437,7 @@ export class ReportGeneratorApp extends ForensicAppBase {
             content.innerHTML = this.generateReportContent();
             modal.classList.remove('hidden');
             
-            // Emit forensic report generated event to trigger completion dialogue
-            this.emitForensicEvent('report_generated', {
-                score: this.investigationScore,
-                evidenceUsed: Array.from(this.droppedEvidence.values()).flat().length,
-                reportComplete: true,
-                timestamp: new Date().toISOString()
-            });
-            
-            // Also dispatch global event for investigation tracker
-            window.dispatchEvent(new CustomEvent('forensic_report_generated', {
-                detail: {
-                    score: this.investigationScore,
-                    evidenceUsed: Array.from(this.droppedEvidence.values()).flat().length,
-                    app: this.id
-                }
-            }));
-            
-            console.log('[ReportGenerator] Final report generated, investigation completed');
+            console.log('[ReportGenerator] Final report generated, ready for submission');
         }
     }
 
@@ -565,6 +548,25 @@ export class ReportGeneratorApp extends ForensicAppBase {
         
         // Here you would typically call the XP system to award points
         this.showNotification(`Investigation submitted! Awarded ${victoryCondition.rewards.xp} XP`, 'success');
+        
+        // Emit forensic report submitted event to trigger completion dialogue
+        this.emitForensicEvent('report_submitted', {
+            score: this.investigationScore,
+            evidenceUsed: Array.from(this.droppedEvidence.values()).flat().length,
+            investigationComplete: true,
+            timestamp: new Date().toISOString()
+        });
+        
+        // Also dispatch global event for investigation tracker
+        window.dispatchEvent(new CustomEvent('forensic_report_generated', {
+            detail: {
+                score: this.investigationScore,
+                evidenceUsed: Array.from(this.droppedEvidence.values()).flat().length,
+                app: this.id
+            }
+        }));
+        
+        console.log('[ReportGenerator] Investigation submitted, triggering completion dialogue');
         
         this.closeReportModal();
     }
