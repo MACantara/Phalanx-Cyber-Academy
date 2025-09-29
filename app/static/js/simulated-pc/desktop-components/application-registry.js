@@ -66,6 +66,62 @@ export class ApplicationRegistry {
                 levelSpecific: 3, // Only available in level 3
                 autoOpen: true, // Auto-open when available
                 persistent: true // Cannot be closed by user
+            },
+            // Level 5 - Digital Forensics Applications
+            'evidence-locker': {
+                module: '../levels/level-five/apps/evidence-locker-app.js',
+                className: 'EvidenceLockerApp',
+                storageKey: 'cyberquest_evidencelocker_opened',
+                iconClass: 'bi-archive',
+                title: 'Evidence Locker',
+                levelSpecific: 5,
+                autoOpen: true,
+                persistent: true
+            },
+            'disk-analyzer': {
+                module: '../levels/level-five/apps/disk-analyzer-app.js',
+                className: 'DiskAnalyzerApp',
+                storageKey: 'cyberquest_diskanalyzer_opened',
+                iconClass: 'bi-hdd-stack',
+                title: 'Disk Image Analyzer',
+                levelSpecific: 5,
+                autoOpen: false
+            },
+            'memory-forensics': {
+                module: '../levels/level-five/apps/memory-forensics-app.js',
+                className: 'MemoryForensicsApp',
+                storageKey: 'cyberquest_memoryforensics_opened',
+                iconClass: 'bi-memory',
+                title: 'Memory Analysis',
+                levelSpecific: 5,
+                autoOpen: false
+            },
+            'network-analyzer': {
+                module: '../levels/level-five/apps/network-analyzer-app.js',
+                className: 'NetworkAnalyzerApp',
+                storageKey: 'cyberquest_networkanalyzer_opened',
+                iconClass: 'bi-diagram-3',
+                title: 'Network Forensics',
+                levelSpecific: 5,
+                autoOpen: false
+            },
+            'timeline-constructor': {
+                module: '../levels/level-five/apps/timeline-constructor-app.js',
+                className: 'TimelineConstructorApp',
+                storageKey: 'cyberquest_timeline_opened',
+                iconClass: 'bi-clock-history',
+                title: 'Timeline Analysis',
+                levelSpecific: 5,
+                autoOpen: false
+            },
+            'report-generator': {
+                module: '../levels/level-five/apps/report-generator-app.js',
+                className: 'ReportGeneratorApp',
+                storageKey: 'cyberquest_reportgenerator_opened',
+                iconClass: 'bi-file-earmark-text',
+                title: 'Investigation Report',
+                levelSpecific: 5,
+                autoOpen: false
             }
         };
         this.loadedModules = new Map(); // Cache for loaded modules
