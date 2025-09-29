@@ -148,6 +148,72 @@ export class ApplicationLauncher {
         return await this.launchApplication('ransomware-decryptor');
     }
 
+    // Level 5 - Digital Forensics Application Launchers
+    async launchEvidenceLocker() {
+        return await this.launchApplication('evidence-locker');
+    }
+
+    async launchDiskAnalyzer() {
+        return await this.launchApplication('disk-analyzer');
+    }
+
+    async launchMemoryForensics() {
+        return await this.launchApplication('memory-forensics');
+    }
+
+    async launchNetworkAnalyzer() {
+        return await this.launchApplication('network-analyzer');
+    }
+
+    async launchTimelineConstructor() {
+        return await this.launchApplication('timeline-constructor');
+    }
+
+    async launchReportGenerator() {
+        return await this.launchApplication('report-generator');
+    }
+
+    // Level 5 forensic workflow launcher
+    async launchForensicWorkflow() {
+        if (this.currentLevel === 5 || this.currentLevel === '5') {
+            console.log('[ApplicationLauncher] Launching forensic workflow for Level 5');
+            // Auto-open evidence locker first
+            await this.launchApplication('evidence-locker');
+            return true;
+        }
+        console.warn('[ApplicationLauncher] Forensic workflow requested but not in Level 5');
+        return false;
+    }
+
+    // Launch evidence-specific tools based on evidence type
+    async launchEvidenceSpecificTools(evidenceType) {
+        if (this.currentLevel !== 5 && this.currentLevel !== '5') {
+            console.warn('[ApplicationLauncher] Evidence-specific tools only available in Level 5');
+            return false;
+        }
+
+        const toolMapping = {
+            'disk_image': ['disk-analyzer'],
+            'memory_dump': ['memory-forensics'],
+            'network_capture': ['network-analyzer'],
+            'mixed': ['timeline-constructor', 'report-generator']
+        };
+        
+        const tools = toolMapping[evidenceType] || [];
+        const results = [];
+        
+        for (const appId of tools) {
+            try {
+                const success = await this.launchApplication(appId);
+                results.push({ appId, success });
+            } catch (error) {
+                results.push({ appId, success: false, error: error.message });
+            }
+        }
+        
+        console.log(`[ApplicationLauncher] Launched ${tools.length} evidence-specific tools for ${evidenceType}`);
+        return results;
+    }
 
     // Level-specific application launcher
     async launchLevelSpecificApp(appId) {
