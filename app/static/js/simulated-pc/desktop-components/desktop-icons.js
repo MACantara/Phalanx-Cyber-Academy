@@ -14,6 +14,7 @@ export class DesktopIcons {
             { id: 'malware-scanner', name: 'Malware Scanner', icon: 'bi-shield-exclamation', action: 'openMalwareScanner' },
             { id: 'ransomware-decryptor', name: 'Ransomware Decryptor', icon: 'bi-unlock', action: 'openRansomwareDecryptor' },
             // Level 5 - Digital Forensics Applications
+            { id: 'investigation-briefing', name: 'Investigation Briefing', icon: 'bi-clipboard-data', action: 'launchInvestigationBriefing' },
             { id: 'evidence-locker', name: 'Evidence Locker', icon: 'bi-archive', action: 'launchEvidenceLocker' },
             { id: 'disk-analyzer', name: 'Disk Analyzer', icon: 'bi-hdd-stack', action: 'launchDiskAnalyzer' },
             { id: 'memory-forensics', name: 'Memory Analysis', icon: 'bi-memory', action: 'launchMemoryForensics' },
@@ -34,7 +35,7 @@ export class DesktopIcons {
             2: ['email'], // Level 2: Shadow in the Inbox
             3: ['malware-scanner', 'process-monitor', 'ransomware-decryptor'], // Level 3: Malware Mayhem
             4: ['terminal'], // Level 4: White Hat Test
-            5: ['evidence-locker', 'disk-analyzer', 'memory-forensics', 'network-analyzer', 'timeline-constructor', 'report-generator'] // Level 5: Digital Forensics
+            5: ['investigation-briefing', 'evidence-locker', 'disk-analyzer', 'memory-forensics', 'network-analyzer', 'timeline-constructor', 'report-generator'] // Level 5: Digital Forensics
         };
 
         // Get level-specific icon IDs
