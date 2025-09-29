@@ -6,21 +6,27 @@ export class ApplicationRegistry {
                 className: 'BrowserApp',
                 storageKey: 'cyberquest_browser_opened',
                 iconClass: 'bi-globe',
-                title: 'Web Browser'
+                title: 'Web Browser',
+                levelSpecific: 1,
+                autoOpen: false
             },
             'terminal': {
                 module: '../levels/level-four/apps/terminal-app.js',
                 className: 'TerminalApp',
                 storageKey: 'cyberquest_terminal_opened',
                 iconClass: 'bi-terminal',
-                title: 'Terminal'
+                title: 'Terminal',
+                levelSpecific: 4,
+                autoOpen: false
             },
             'email': {
                 module: './desktop-applications/email-app.js',
                 className: 'EmailApp',
                 storageKey: 'cyberquest_email_opened',
                 iconClass: 'bi-envelope',
-                title: 'Email Client'
+                title: 'Email Client',
+                levelSpecific: 2,
+                autoOpen: false
             },
             'process-monitor': {
                 module: '../levels/level-three/apps/index.js',
@@ -75,7 +81,7 @@ export class ApplicationRegistry {
                 iconClass: 'bi-archive',
                 title: 'Evidence Locker',
                 levelSpecific: 5,
-                autoOpen: true,
+                autoOpen: false,
                 persistent: true
             },
             'disk-analyzer': {
