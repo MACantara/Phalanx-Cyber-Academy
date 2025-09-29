@@ -137,6 +137,16 @@ export class ApplicationRegistry {
                 title: 'Investigation Briefing',
                 levelSpecific: 5,
                 autoOpen: false
+            },
+            'investigation-tracker': {
+                module: '../levels/level-five/apps/investigation-tracker-app.js',
+                className: 'Level5InvestigationTracker',
+                storageKey: null, // Don't track opened status for tracker
+                iconClass: 'bi-search',
+                title: 'Investigation Progress',
+                levelSpecific: 5,
+                autoOpen: true, // Auto-open when available
+                persistent: true // Cannot be closed by user
             }
         };
         this.loadedModules = new Map(); // Cache for loaded modules
