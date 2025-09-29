@@ -27,7 +27,8 @@ export class ApplicationLauncher {
             )
             .filter(([id, config]) => config.autoOpen)
             .filter(([id, config]) => id !== 'level3-timer') // Don't auto-open timer, wait for dialogue
-            .filter(([id, config]) => id !== 'evidence-locker'); // Don't auto-open evidence locker, wait for Level 5 dialogue
+            .filter(([id, config]) => id !== 'evidence-locker') // Don't auto-open evidence locker, wait for Level 5 dialogue
+            .filter(([id, config]) => id !== 'investigation-tracker'); // Don't auto-open tracker, wait for Level 5 dialogue
 
         console.log(`[ApplicationLauncher] Auto-opening ${levelApps.length} apps for level ${this.currentLevel}`);
 
@@ -74,6 +75,22 @@ export class ApplicationLauncher {
                 
                 // Store reference for later access
                 this.level3TimerInstance = app;
+                
+                return app;
+            }
+            if (appId === 'investigation-tracker') {
+                // Investigation tracker is a static element, not a window
+                // Get the desktop container (desktop element or document body as fallback)
+                const desktopContainer = this.windowManager.container || 
+                                       this.windowManager.desktopElement || 
+                                       document.body;
+                
+                app.appendTo(desktopContainer);
+                app.initialize();
+                
+                // Store reference for later access and make globally accessible
+                this.level5InvestigationTrackerInstance = app;
+                window.level5InvestigationTracker = app;
                 
                 return app;
             }
@@ -152,6 +169,10 @@ export class ApplicationLauncher {
     // Level 5 - Digital Forensics Application Launchers
     async launchInvestigationBriefing() {
         return await this.launchApplication('investigation-briefing');
+    }
+
+    async launchInvestigationTracker() {
+        return await this.launchApplication('investigation-tracker');
     }
 
     async launchEvidenceLocker() {
@@ -307,6 +328,12 @@ export class ApplicationLauncher {
         return this.level3TimerInstance || null;
     }
 
+    // Get Level 5 investigation tracker instance
+    getLevel5InvestigationTracker() {
+        // For Level 5 investigation tracker, we store it as a property since it's not a window
+        return this.level5InvestigationTrackerInstance || null;
+    }
+
     // Level 3 timer control methods (delegated from desktop)
     addReputationDamage(amount) {
         const timer = this.getLevel3Timer();
@@ -334,6 +361,45 @@ export class ApplicationLauncher {
             return timer.getStatus();
         }
         return null;
+    }
+
+    // Level 5 investigation tracker control methods
+    getInvestigationTrackerStatus() {
+        const tracker = this.getLevel5InvestigationTracker();
+        if (tracker && (this.currentLevel === 5 || this.currentLevel === '5')) {
+            return tracker.getStatus();
+        }
+        return null;
+    }
+
+    completeObjective(objectiveId, score = 0) {
+        const tracker = this.getLevel5InvestigationTracker();
+        if (tracker && (this.currentLevel === 5 || this.currentLevel === '5')) {
+            tracker.completeObjective(objectiveId, score);
+            return true;
+        }
+        console.warn('[ApplicationLauncher] completeObjective called but Level 5 tracker not available');
+        return false;
+    }
+
+    trackForensicAction(action, details, isCorrect) {
+        const tracker = this.getLevel5InvestigationTracker();
+        if (tracker && (this.currentLevel === 5 || this.currentLevel === '5')) {
+            tracker.trackForensicAction(action, details, isCorrect);
+            return true;
+        }
+        console.warn('[ApplicationLauncher] trackForensicAction called but Level 5 tracker not available');
+        return false;
+    }
+
+    markEvidenceAnalyzed(evidenceId) {
+        const tracker = this.getLevel5InvestigationTracker();
+        if (tracker && (this.currentLevel === 5 || this.currentLevel === '5')) {
+            tracker.markEvidenceAnalyzed(evidenceId);
+            return true;
+        }
+        console.warn('[ApplicationLauncher] markEvidenceAnalyzed called but Level 5 tracker not available');
+        return false;
     }
 }
 
