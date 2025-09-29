@@ -178,18 +178,6 @@ export class ApplicationLauncher {
         return await this.launchApplication('report-generator');
     }
 
-    // Level 5 forensic workflow launcher
-    async launchForensicWorkflow() {
-        if (this.currentLevel === 5 || this.currentLevel === '5') {
-            console.log('[ApplicationLauncher] Launching forensic workflow for Level 5');
-            // Auto-open evidence locker first
-            await this.launchApplication('evidence-locker');
-            return true;
-        }
-        console.warn('[ApplicationLauncher] Forensic workflow requested but not in Level 5');
-        return false;
-    }
-
     // Launch evidence-specific tools based on evidence type
     async launchEvidenceSpecificTools(evidenceType) {
         if (this.currentLevel !== 5 && this.currentLevel !== '5') {

@@ -82,12 +82,7 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                         );
                     }
                     
-                    // Optional: Launch additional forensic workflow after Investigation Briefing is ready
-                    setTimeout(() => {
-                        if (window.applicationLauncher && window.applicationLauncher.launchForensicWorkflow) {
-                            window.applicationLauncher.launchForensicWorkflow();
-                        }
-                    }, 2000);
+
                     
                 } catch (error) {
                     console.error('Failed to launch Level 5 forensic applications:', error);
