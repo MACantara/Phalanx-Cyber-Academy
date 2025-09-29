@@ -198,6 +198,68 @@ def get_all_data():
         }), 500
 
 
+@level5_api_bp.route('/case-briefing-data', methods=['GET'])
+def get_case_briefing_data():
+    """Get investigation case briefing and objectives"""
+    try:
+        # Load case briefing data
+        base_path = Path(current_app.root_path) / 'static' / 'js' / 'simulated-pc' / 'levels' / 'level-five' / 'data'
+        briefing_path = base_path / 'case-briefing.json'
+        
+        if briefing_path.exists():
+            with open(briefing_path, 'r', encoding='utf-8') as f:
+                briefing_data = json.load(f)
+            
+            return jsonify({
+                'success': True,
+                'data': briefing_data
+            }), 200
+        else:
+            current_app.logger.warning("Case briefing file not found")
+            return jsonify({
+                'success': False,
+                'error': 'Case briefing data not available'
+            }), 404
+        
+    except Exception as e:
+        current_app.logger.error(f"Error fetching case briefing data: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': 'Failed to load case briefing data'
+        }), 500
+
+
+@level5_api_bp.route('/investigation-objectives-data', methods=['GET'])
+def get_investigation_objectives_data():
+    """Get investigation objectives and victory conditions"""
+    try:
+        # Load investigation objectives data
+        base_path = Path(current_app.root_path) / 'static' / 'js' / 'simulated-pc' / 'levels' / 'level-five' / 'data'
+        objectives_path = base_path / 'investigation-objectives.json'
+        
+        if objectives_path.exists():
+            with open(objectives_path, 'r', encoding='utf-8') as f:
+                objectives_data = json.load(f)
+            
+            return jsonify({
+                'success': True,
+                'data': objectives_data
+            }), 200
+        else:
+            current_app.logger.warning("Investigation objectives file not found")
+            return jsonify({
+                'success': False,
+                'error': 'Investigation objectives data not available'
+            }), 404
+        
+    except Exception as e:
+        current_app.logger.error(f"Error fetching investigation objectives data: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': 'Failed to load investigation objectives data'
+        }), 500
+
+
 @level5_api_bp.route('/data-status', methods=['GET'])
 def get_data_status():
     """Check if Level 5 data is loaded and available"""
