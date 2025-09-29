@@ -223,7 +223,7 @@ export class NetworkAnalyzerApp extends ForensicAppBase {
         }
     }
 
-    loadSelectedCapture() {
+    async loadSelectedCapture() {
         if (!this.selectedCapture) {
             this.showNotification('Please select a network capture first', 'warning');
             return;
@@ -232,9 +232,9 @@ export class NetworkAnalyzerApp extends ForensicAppBase {
         const evidence = this.evidenceStore.getEvidence(this.selectedCapture);
         if (!evidence) return;
 
-        const integrity = this.verifyEvidenceIntegrity(this.selectedCapture);
+        const integrity = await this.verifyEvidenceIntegrity(this.selectedCapture);
         if (!integrity.valid) {
-            this.showNotification('Cannot load compromised evidence', 'error');
+            this.showNotification(`Cannot load compromised evidence: ${integrity.reason}`, 'error');
             return;
         }
 

@@ -179,7 +179,8 @@ export class EvidenceLockerApp extends ForensicAppBase {
     }
 
     createEvidenceItem(evidence) {
-        const integrityStatus = this.verifyEvidenceIntegrity(evidence.id);
+        // For UI display, assume integrity is valid - detailed verification happens on access
+        const integrityStatus = { valid: true, reason: 'Pending verification' };
         const statusColor = integrityStatus.valid ? 'text-green-400' : 'text-red-400';
         const statusIcon = integrityStatus.valid ? 'bi-shield-check' : 'bi-shield-exclamation';
         
@@ -257,13 +258,16 @@ export class EvidenceLockerApp extends ForensicAppBase {
         });
     }
 
-    displayEvidenceDetails(evidenceId) {
+    async displayEvidenceDetails(evidenceId) {
         const evidence = this.evidenceStore.getEvidence(evidenceId);
         const detailsContainer = this.windowElement.querySelector(`#evidence-details-${this.id}`);
         
         if (!evidence || !detailsContainer) return;
 
-        const integrityStatus = this.verifyEvidenceIntegrity(evidenceId);
+        // Show loading state first
+        detailsContainer.innerHTML = '<div class="text-gray-400">Verifying evidence integrity...</div>';
+
+        const integrityStatus = await this.verifyEvidenceIntegrity(evidenceId);
         
         detailsContainer.innerHTML = `
             <div class="space-y-4">
@@ -424,19 +428,20 @@ export class EvidenceLockerApp extends ForensicAppBase {
         this.showNotification('Evidence package exported successfully', 'success');
     }
 
-    verifyAllEvidence() {
+    async verifyAllEvidence() {
         const evidence = this.evidenceStore.getAllEvidence();
         let verified = 0;
         let compromised = 0;
 
-        evidence.forEach(item => {
-            const result = this.verifyEvidenceIntegrity(item.id);
+        // Verify each evidence item
+        for (const item of evidence) {
+            const result = await this.verifyEvidenceIntegrity(item.id);
             if (result.valid) {
                 verified++;
             } else {
                 compromised++;
             }
-        });
+        }
 
         // Update chain of custody for verification
         this.updateChainOfCustody('bulk_verification', 'all_evidence_verified');

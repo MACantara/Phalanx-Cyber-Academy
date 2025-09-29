@@ -230,7 +230,7 @@ export class MemoryForensicsApp extends ForensicAppBase {
         }
     }
 
-    loadSelectedDump() {
+    async loadSelectedDump() {
         if (!this.selectedDump) {
             this.showNotification('Please select a memory dump first', 'warning');
             return;
@@ -240,9 +240,9 @@ export class MemoryForensicsApp extends ForensicAppBase {
         if (!evidence) return;
 
         // Verify evidence integrity before loading
-        const integrity = this.verifyEvidenceIntegrity(this.selectedDump);
+        const integrity = await this.verifyEvidenceIntegrity(this.selectedDump);
         if (!integrity.valid) {
-            this.showNotification('Cannot load compromised evidence', 'error');
+            this.showNotification(`Cannot load compromised evidence: ${integrity.reason}`, 'error');
             return;
         }
 

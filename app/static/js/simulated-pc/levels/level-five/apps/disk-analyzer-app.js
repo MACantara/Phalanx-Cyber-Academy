@@ -228,7 +228,7 @@ export class DiskAnalyzerApp extends ForensicAppBase {
         }
     }
 
-    mountSelectedImage() {
+    async mountSelectedImage() {
         if (!this.selectedImage) {
             this.showNotification('Please select a disk image first', 'warning');
             return;
@@ -238,9 +238,9 @@ export class DiskAnalyzerApp extends ForensicAppBase {
         if (!evidence) return;
 
         // Verify evidence integrity before mounting
-        const integrity = this.verifyEvidenceIntegrity(this.selectedImage);
+        const integrity = await this.verifyEvidenceIntegrity(this.selectedImage);
         if (!integrity.valid) {
-            this.showNotification('Cannot mount compromised evidence', 'error');
+            this.showNotification(`Cannot mount compromised evidence: ${integrity.reason}`, 'error');
             return;
         }
 

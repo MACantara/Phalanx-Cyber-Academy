@@ -31,32 +31,44 @@ export class ForensicAppBase extends WindowBase {
     }
 
     // Verify evidence integrity using hash validation
-    verifyEvidenceIntegrity(evidenceId) {
+    async verifyEvidenceIntegrity(evidenceId) {
         const evidence = this.evidenceStore.getEvidence(evidenceId);
         if (!evidence) {
             return { valid: false, reason: 'Evidence not found' };
         }
 
-        // Simulate hash verification
-        const currentHash = this.calculateHash(evidence.data);
-        const originalHash = evidence.hash_sha256;
-        
-        const isValid = currentHash === originalHash;
-        
-        if (!isValid) {
-            this.emitSecurityEvent('high', 'Evidence integrity compromised', {
-                evidenceId,
-                originalHash,
-                currentHash
-            });
-        }
+        try {
+            // Calculate current hash using SHA256 API
+            const currentHash = await this.calculateHash(evidence.data);
+            const originalHash = evidence.hash_sha256;
+            
+            const isValid = currentHash === originalHash;
+            
+            if (!isValid) {
+                this.emitSecurityEvent('high', 'Evidence integrity compromised', {
+                    evidenceId,
+                    originalHash,
+                    currentHash
+                });
+            }
 
-        return {
-            valid: isValid,
-            originalHash,
-            currentHash,
-            reason: isValid ? 'Hash verification passed' : 'Hash mismatch detected'
-        };
+            return {
+                valid: isValid,
+                originalHash,
+                currentHash,
+                reason: isValid ? 'Hash verification passed' : 'Hash mismatch detected'
+            };
+        } catch (error) {
+            console.error('[ForensicApp] Evidence integrity verification failed:', error);
+            
+            // Return failure if hash calculation fails
+            return {
+                valid: false,
+                originalHash: evidence.hash_sha256,
+                currentHash: 'calculation_failed',
+                reason: 'Hash calculation failed - cannot verify integrity'
+            };
+        }
     }
 
     // Update chain of custody for evidence
@@ -174,17 +186,33 @@ export class ForensicAppBase extends WindowBase {
         };
     }
 
-    // Simulate hash calculation
-    calculateHash(data) {
-        // Simple hash simulation - in real implementation this would use crypto libraries
-        let hash = 0;
-        const str = JSON.stringify(data);
-        for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; // Convert to 32-bit integer
+    // Generate cryptographic hash using SHA256
+    async calculateHash(data) {
+        try {
+            // Use API endpoint for proper SHA256 hash generation
+            const response = await fetch('/api/level5/generate-hash', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Hash generation failed: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                return result.data.sha256;
+            } else {
+                throw new Error('Hash generation API returned error');
+            }
+            
+        } catch (error) {
+            console.error('[ForensicApp] Hash calculation failed:', error);
         }
-        return Math.abs(hash).toString(16).padStart(8, '0');
     }
 
     // Emit forensic-specific events
