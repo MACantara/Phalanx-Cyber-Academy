@@ -128,6 +128,15 @@ export class ApplicationRegistry {
                 title: 'Investigation Report',
                 levelSpecific: 5,
                 autoOpen: false
+            },
+            'investigation-briefing': {
+                module: '../levels/level-five/apps/investigation-briefing-app.js',
+                className: 'InvestigationBriefingApp',
+                storageKey: 'cyberquest_investigationbriefing_opened',
+                iconClass: 'bi-clipboard-data',
+                title: 'Investigation Briefing',
+                levelSpecific: 5,
+                autoOpen: false
             }
         };
         this.loadedModules = new Map(); // Cache for loaded modules
