@@ -122,7 +122,7 @@ export class MemoryForensicsApp extends ForensicAppBase {
                 </div>
 
                 <!-- Analysis Progress Modal -->
-                <div id="analysis-modal-${this.id}" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center">
+                <div id="analysis-modal-${this.id}" class="fixed inset-0 bg-black/75 hidden z-50 flex items-center justify-center">
                     <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
                         <h3 class="text-lg font-semibold mb-4 text-purple-400">Analyzing Memory Dump</h3>
                         <div class="space-y-4">
@@ -555,7 +555,7 @@ export class MemoryForensicsApp extends ForensicAppBase {
             </div>
             <div class="space-y-4">
                 ${malwareFindings.map(finding => `
-                    <div class="malware-finding bg-red-900 bg-opacity-30 p-4 rounded border border-red-600">
+                    <div class="malware-finding bg-red-900/30 p-4 rounded border border-red-600">
                         <div class="flex justify-between items-start mb-2">
                             <div>
                                 <div class="font-semibold text-red-400">${finding.threat}</div>
@@ -632,7 +632,7 @@ export class MemoryForensicsApp extends ForensicAppBase {
                 ${process.suspicious ? `
                     <div class="border-t border-gray-600 pt-3">
                         <h5 class="font-semibold text-white mb-2">Threat Assessment</h5>
-                        <div class="bg-red-900 bg-opacity-50 p-3 rounded">
+                        <div class="bg-red-900/50 p-3 rounded">
                             <div class="text-sm text-red-200">This process exhibits suspicious behavior and may be malicious.</div>
                         </div>
                     </div>

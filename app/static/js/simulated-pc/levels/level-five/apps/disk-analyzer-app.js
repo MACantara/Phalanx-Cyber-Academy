@@ -120,7 +120,7 @@ export class DiskAnalyzerApp extends ForensicAppBase {
                 </div>
 
                 <!-- Scan Progress Modal -->
-                <div id="scan-modal-${this.id}" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center">
+                <div id="scan-modal-${this.id}" class="fixed inset-0 bg-black/75 hidden z-50 flex items-center justify-center">
                     <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
                         <h3 class="text-lg font-semibold mb-4 text-blue-400">Analyzing Disk Image</h3>
                         <div class="space-y-4">
@@ -599,7 +599,7 @@ export class DiskAnalyzerApp extends ForensicAppBase {
                 <!-- Forensic Significance -->
                 <div class="border-t border-gray-600 pt-3">
                     <h5 class="font-semibold text-white mb-2">Forensic Analysis</h5>
-                    <div class="bg-yellow-900 bg-opacity-50 p-3 rounded">
+                    <div class="bg-yellow-900/50 p-3 rounded">
                         <div class="text-sm text-yellow-200">${file.significance}</div>
                     </div>
                 </div>

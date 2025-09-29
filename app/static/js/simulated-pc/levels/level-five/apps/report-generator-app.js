@@ -70,7 +70,7 @@ export class ReportGeneratorApp extends ForensicAppBase {
                 </div>
 
                 <!-- Report Generation Modal -->
-                <div id="report-modal-${this.id}" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex justify-center items-center">
+                <div id="report-modal-${this.id}" class="fixed inset-0 bg-black/50 hidden z-50 flex justify-center items-center">
                     <div class="bg-gray-800 rounded-lg p-6 max-w-4xl max-h-[80vh] overflow-y-auto m-4">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-xl font-bold text-orange-400">Final Investigation Report</h3>
@@ -223,18 +223,18 @@ export class ReportGeneratorApp extends ForensicAppBase {
     setupDropZone(dropZone) {
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropZone.classList.add('border-blue-500', 'bg-blue-900', 'bg-opacity-20');
+            dropZone.classList.add('border-blue-500', 'bg-blue-900/20');
         });
 
         dropZone.addEventListener('dragleave', (e) => {
             if (!dropZone.contains(e.relatedTarget)) {
-                dropZone.classList.remove('border-blue-500', 'bg-blue-900', 'bg-opacity-20');
+                dropZone.classList.remove('border-blue-500', 'bg-blue-900/20');
             }
         });
 
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.classList.remove('border-blue-500', 'bg-blue-900', 'bg-opacity-20');
+            dropZone.classList.remove('border-blue-500', 'bg-blue-900/20');
 
             const evidenceData = JSON.parse(e.dataTransfer.getData('text/plain'));
             this.handleEvidenceDrop(dropZone, evidenceData);

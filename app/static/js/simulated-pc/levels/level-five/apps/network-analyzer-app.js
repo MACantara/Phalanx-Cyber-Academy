@@ -568,7 +568,7 @@ export class NetworkAnalyzerApp extends ForensicAppBase {
                 <!-- Forensic Analysis -->
                 <div class="border-t border-gray-600 pt-3">
                     <h5 class="font-semibold text-white mb-2">Analysis</h5>
-                    <div class="${packet.suspicious ? 'bg-red-900 bg-opacity-50' : 'bg-green-900 bg-opacity-50'} p-3 rounded">
+                    <div class="${packet.suspicious ? 'bg-red-900/50' : 'bg-green-900/50'} p-3 rounded">
                         <div class="text-sm ${packet.suspicious ? 'text-red-200' : 'text-green-200'}">${packet.description}</div>
                     </div>
                 </div>

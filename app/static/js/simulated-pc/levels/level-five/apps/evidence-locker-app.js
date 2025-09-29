@@ -81,7 +81,7 @@ export class EvidenceLockerApp extends ForensicAppBase {
                 </div>
 
                 <!-- Chain of Custody Modal -->
-                <div id="custody-modal-${this.id}" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center">
+                <div id="custody-modal-${this.id}" class="fixed inset-0 bg-black/75 hidden z-50 flex items-center justify-center">
                     <div class="bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
                         <h3 class="text-lg font-semibold mb-4 text-green-400">Chain of Custody</h3>
                         <div id="custody-details-${this.id}">

@@ -125,7 +125,7 @@ export class TimelineConstructorApp extends ForensicAppBase {
                 </div>
 
                 <!-- Correlation Modal -->
-                <div id="correlation-modal-${this.id}" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center">
+                <div id="correlation-modal-${this.id}" class="fixed inset-0 bg-black/75 hidden z-50 flex items-center justify-center">
                     <div class="bg-gray-800 rounded-lg p-6 max-w-4xl w-full mx-4 max-h-96 overflow-y-auto">
                         <h3 class="text-lg font-semibold mb-4 text-orange-400">Event Correlations</h3>
                         <div id="correlation-results-${this.id}">
@@ -505,7 +505,7 @@ export class TimelineConstructorApp extends ForensicAppBase {
 
         return `
             <div class="timeline-event bg-gray-700 border-l-4 ${significanceColor[event.significance] || 'border-gray-500 bg-gray-900'} 
-                        bg-opacity-20 p-3 rounded cursor-pointer hover:bg-gray-600 transition-colors"
+                        bg-gray-900/20 p-3 rounded cursor-pointer hover:bg-gray-600 transition-colors"
                  data-event-id="${event.id}">
                 <div class="flex items-start justify-between">
                     <div class="flex items-start space-x-3">

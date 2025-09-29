@@ -78,7 +78,7 @@ export class InvestigationBriefingApp extends ForensicAppBase {
                                 <p id="mission-background-${this.id}" class="text-gray-300 leading-relaxed">Loading background information...</p>
                             </div>
 
-                            <div class="success-criteria bg-green-900 bg-opacity-30 border border-green-600 p-4 rounded">
+                            <div class="success-criteria bg-green-900/30 border border-green-600 p-4 rounded">
                                 <h4 class="font-semibold text-green-400 mb-2">Success Criteria</h4>
                                 <p id="success-criteria-${this.id}" class="text-gray-300 leading-relaxed">Loading success criteria...</p>
                             </div>
@@ -158,7 +158,7 @@ export class InvestigationBriefingApp extends ForensicAppBase {
                                 </div>
                             </div>
 
-                            <div class="scoring-guide bg-yellow-900 bg-opacity-30 border border-yellow-600 p-4 rounded">
+                            <div class="scoring-guide bg-yellow-900/30 border border-yellow-600 p-4 rounded">
                                 <h4 class="font-semibold text-yellow-400 mb-2">Scoring Guide</h4>
                                 <div id="scoring-guide-${this.id}" class="text-sm text-gray-300">
                                     <!-- Scoring guidance will be populated here -->
