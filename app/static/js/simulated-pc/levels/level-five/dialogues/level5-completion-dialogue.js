@@ -1,4 +1,4 @@
-import { BaseDialogue } from '../../dialogues/base-dialogue.js';
+import { BaseDialogue } from '../../../dialogues/base-dialogue.js';
 
 /**
  * Level 5 Completion Dialogue - Hunt for The Null Investigation Complete
