@@ -7,8 +7,8 @@ import { ForensicAppBase } from './forensic-app-base.js';
 export class TimelineConstructorApp extends ForensicAppBase {
     constructor() {
         super('timeline-constructor', 'Timeline Constructor', {
-            width: '95%',
-            height: '90%'
+            width: '80%',
+            height: '75%'
         });
         
         this.timelineEvents = [];

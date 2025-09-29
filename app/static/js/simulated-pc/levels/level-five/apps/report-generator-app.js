@@ -7,8 +7,8 @@ import { ForensicAppBase } from './forensic-app-base.js';
 export class ReportGeneratorApp extends ForensicAppBase {
     constructor() {
         super('report-generator', 'Report Generator', {
-            width: '95%',
-            height: '90%'
+            width: '80%',
+            height: '75%'
         });
         
         this.currentReport = null;

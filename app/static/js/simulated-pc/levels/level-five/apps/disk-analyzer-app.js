@@ -7,8 +7,8 @@ import { ForensicAppBase } from './forensic-app-base.js';
 export class DiskAnalyzerApp extends ForensicAppBase {
     constructor() {
         super('disk-analyzer', 'Disk Image Analyzer', {
-            width: '90%',
-            height: '85%'
+            width: '75%',
+            height: '70%'
         });
         
         this.mountedImage = null;

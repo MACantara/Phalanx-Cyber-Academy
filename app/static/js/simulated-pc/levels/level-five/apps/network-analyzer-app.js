@@ -7,8 +7,8 @@ import { ForensicAppBase } from './forensic-app-base.js';
 export class NetworkAnalyzerApp extends ForensicAppBase {
     constructor() {
         super('network-analyzer', 'Network Traffic Analyzer', {
-            width: '95%',
-            height: '90%'
+            width: '80%',
+            height: '75%'
         });
         
         this.loadedCapture = null;

@@ -7,8 +7,8 @@ import { WindowBase } from '../../../desktop-components/window-base.js';
 export class ForensicAppBase extends WindowBase {
     constructor(id, title, options = {}) {
         super(id, title, {
-            width: '80%',
-            height: '70%',
+            width: '70%',
+            height: '60%',
             ...options
         });
         
@@ -338,14 +338,42 @@ class Level5EvidenceContext {
         this.correlations = [];
         this.chainOfCustodyLog = [];
         this.events = [];
+        this.dataLoaded = false;
         
         // Initialize with sample evidence for demonstration
-        this.initializeSampleEvidence();
+        this.initializeSampleEvidence().then(() => {
+            this.dataLoaded = true;
+            this.notifyDataLoaded();
+        });
+    }
+
+    // Notify applications that data has been loaded
+    notifyDataLoaded() {
+        window.dispatchEvent(new CustomEvent('forensic-data-loaded'));
     }
 
     // Initialize sample evidence for the investigation
-    initializeSampleEvidence() {
-        const sampleEvidence = [
+    async initializeSampleEvidence() {
+        try {
+            // Load evidence data from external JSON file
+            const response = await fetch('/static/js/simulated-pc/levels/level-five/data/evidence-data.json');
+            const evidenceData = await response.json();
+            
+            evidenceData.evidence_items.forEach(evidence => {
+                this.evidenceItems.set(evidence.id, evidence);
+            });
+            
+            console.log(`[EvidenceContext] Loaded ${evidenceData.evidence_items.length} evidence items from external data`);
+        } catch (error) {
+            console.error('[EvidenceContext] Failed to load evidence data, using fallback:', error);
+            // Fallback to embedded data if external file fails
+            this.initializeFallbackEvidence();
+        }
+    }
+
+    // Fallback evidence data if external file loading fails
+    initializeFallbackEvidence() {
+        const fallbackEvidence = [
             {
                 id: 'evidence_001',
                 type: 'disk_image',
@@ -359,38 +387,10 @@ class Level5EvidenceContext {
                 analysis_complete: false,
                 findings: [],
                 data: { type: 'disk_image', sectors: 1000000, filesystem: 'NTFS' }
-            },
-            {
-                id: 'evidence_002',
-                type: 'memory_dump',
-                source: 'suspects_laptop',
-                name: 'RAM Memory Dump',
-                hash_md5: 'b2c3d4e5f6789012345678901',
-                hash_sha256: '2b3c4d5e6f789012345678901234567890abcdef1234567890abcdef1234567',
-                acquisition_time: new Date().toISOString(),
-                size: '16GB',
-                relevance_score: 0.85,
-                analysis_complete: false,
-                findings: [],
-                data: { type: 'memory_dump', processes: 245, connections: 15 }
-            },
-            {
-                id: 'evidence_003',
-                type: 'network_capture',
-                source: 'router_logs',
-                name: 'Network Traffic Capture',
-                hash_md5: 'c3d4e5f6789012345678901234',
-                hash_sha256: '3c4d5e6f789012345678901234567890abcdef1234567890abcdef12345678',
-                acquisition_time: new Date().toISOString(),
-                size: '2.5GB',
-                relevance_score: 0.75,
-                analysis_complete: false,
-                findings: [],
-                data: { type: 'network_capture', packets: 50000, protocols: ['TCP', 'UDP', 'HTTPS'] }
             }
         ];
 
-        sampleEvidence.forEach(evidence => {
+        fallbackEvidence.forEach(evidence => {
             this.evidenceItems.set(evidence.id, evidence);
         });
     }

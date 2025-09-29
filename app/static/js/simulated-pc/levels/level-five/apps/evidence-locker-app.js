@@ -7,8 +7,8 @@ import { ForensicAppBase } from './forensic-app-base.js';
 export class EvidenceLockerApp extends ForensicAppBase {
     constructor() {
         super('evidence-locker', 'Digital Evidence Locker', {
-            width: '85%',
-            height: '80%'
+            width: '75%',
+            height: '65%'
         });
         
         this.selectedEvidence = null;

@@ -7,8 +7,8 @@ import { ForensicAppBase } from './forensic-app-base.js';
 export class MemoryForensicsApp extends ForensicAppBase {
     constructor() {
         super('memory-forensics', 'Memory Forensics Suite', {
-            width: '90%',
-            height: '85%'
+            width: '75%',
+            height: '70%'
         });
         
         this.loadedDump = null;
