@@ -451,28 +451,10 @@ export class InvestigationBriefingApp extends ForensicAppBase {
     }
 
     showNotification(message, type = 'info') {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 z-50 p-4 rounded shadow-lg transition-all duration-300 ${
-            type === 'success' ? 'bg-green-600' :
-            type === 'error' ? 'bg-red-600' :
-            type === 'warning' ? 'bg-yellow-600' :
-            'bg-blue-600'
-        } text-white`;
-        
-        notification.textContent = message;
-        
-        document.body.appendChild(notification);
-        
-        // Remove after 4 seconds
-        setTimeout(() => {
-            notification.style.opacity = '0';
-            setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    document.body.removeChild(notification);
-                }
-            }, 300);
-        }, 4000);
+        // Use centralized toast manager
+        if (window.toastManager) {
+            window.toastManager.showToast(message, type);
+        }
     }
 }
 
