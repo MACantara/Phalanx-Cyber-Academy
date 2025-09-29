@@ -21,7 +21,7 @@ export class NetworkAnalyzerApp extends ForensicAppBase {
 
     createContent() {
         return `
-            <div class="network-analyzer-app h-full bg-black text-white p-4 overflow-hidden">
+            <div class="network-analyzer-app h-full bg-black text-white p-4 overflow-auto flex flex-col">
                 <!-- Header -->
                 <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-2">
                     <h2 class="text-xl font-bold text-cyan-400">Network Traffic Analyzer</h2>
