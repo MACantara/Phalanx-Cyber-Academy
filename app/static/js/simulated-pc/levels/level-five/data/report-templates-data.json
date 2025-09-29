@@ -1,0 +1,245 @@
+{
+  "report_templates": [
+    {
+      "id": "forensic_investigation_report",
+      "name": "Digital Forensic Investigation Report",
+      "type": "investigation",
+      "compliance": ["NIST SP 800-86", "ISO/IEC 27037:2012"],
+      "sections": [
+        {
+          "title": "Executive Summary",
+          "order": 1,
+          "required": true,
+          "template": "Brief overview of the investigation, key findings, and recommendations."
+        },
+        {
+          "title": "Case Information",
+          "order": 2, 
+          "required": true,
+          "template": "Case number, investigator details, date range, and scope of investigation."
+        },
+        {
+          "title": "Evidence Acquisition",
+          "order": 3,
+          "required": true,
+          "template": "Details of how evidence was collected, chain of custody, and preservation methods."
+        },
+        {
+          "title": "Methodology",
+          "order": 4,
+          "required": true,
+          "template": "Tools used, analysis procedures, and forensic techniques employed."
+        },
+        {
+          "title": "Findings and Analysis",
+          "order": 5,
+          "required": true, 
+          "template": "Detailed technical findings, timeline reconstruction, and evidence correlation."
+        },
+        {
+          "title": "Conclusions", 
+          "order": 6,
+          "required": true,
+          "template": "Summary of key findings and their implications for the investigation."
+        },
+        {
+          "title": "Recommendations",
+          "order": 7,
+          "required": true,
+          "template": "Security improvements and remediation steps based on findings."
+        },
+        {
+          "title": "Appendices",
+          "order": 8,
+          "required": false,
+          "template": "Supporting documentation, detailed logs, and technical artifacts."
+        }
+      ]
+    },
+    {
+      "id": "incident_response_report",
+      "name": "Security Incident Response Report", 
+      "type": "incident",
+      "compliance": ["NIST SP 800-61", "ISO/IEC 27035"],
+      "sections": [
+        {
+          "title": "Incident Summary",
+          "order": 1,
+          "required": true,
+          "template": "High-level overview of the security incident and immediate impact."
+        },
+        {
+          "title": "Incident Details",
+          "order": 2,
+          "required": true,
+          "template": "Timeline of events, affected systems, and initial indicators."
+        },
+        {
+          "title": "Response Actions",
+          "order": 3,
+          "required": true,
+          "template": "Containment, eradication, and recovery actions taken during response."
+        },
+        {
+          "title": "Impact Assessment", 
+          "order": 4,
+          "required": true,
+          "template": "Business impact, data compromise assessment, and affected stakeholders."
+        },
+        {
+          "title": "Root Cause Analysis",
+          "order": 5,
+          "required": true,
+          "template": "Technical analysis of how the incident occurred and contributing factors."
+        },
+        {
+          "title": "Lessons Learned",
+          "order": 6,
+          "required": true,
+          "template": "What worked well, what could be improved, and process enhancements."
+        }
+      ]
+    },
+    {
+      "id": "malware_analysis_report",
+      "name": "Malware Analysis Report",
+      "type": "malware", 
+      "compliance": ["SANS Malware Analysis"],
+      "sections": [
+        {
+          "title": "Sample Information",
+          "order": 1,
+          "required": true,
+          "template": "File hashes, names, sizes, and acquisition details of malware samples."
+        },
+        {
+          "title": "Static Analysis",
+          "order": 2,
+          "required": true,
+          "template": "File structure analysis, strings, imports, and signature analysis."
+        },
+        {
+          "title": "Dynamic Analysis",
+          "order": 3,
+          "required": true,
+          "template": "Behavioral analysis, network communications, and system modifications."
+        },
+        {
+          "title": "Code Analysis", 
+          "order": 4,
+          "required": false,
+          "template": "Reverse engineering findings, algorithms, and encryption methods."
+        },
+        {
+          "title": "Indicators of Compromise",
+          "order": 5,
+          "required": true,
+          "template": "File hashes, network indicators, registry keys, and behavioral signatures."
+        },
+        {
+          "title": "Attribution and Classification",
+          "order": 6,
+          "required": true,
+          "template": "Malware family classification and potential threat actor attribution."
+        }
+      ]
+    }
+  ],
+  "citation_formats": [
+    {
+      "type": "evidence_item",
+      "format": "[Evidence ID: {evidence_id}] {item_name} - {acquisition_method} on {date} by {investigator}",
+      "example": "[Evidence ID: EV001] Hard Drive Image - DD imaging on 2024-03-14 by J. Smith"
+    },
+    {
+      "type": "log_entry", 
+      "format": "[{source_system}] {timestamp} - {event_description} (Log ID: {log_id})",
+      "example": "[Windows Security] 2024-03-14T18:30:15Z - Failed logon attempt (Log ID: 4625)"
+    },
+    {
+      "type": "network_packet",
+      "format": "[Network] Packet #{packet_id} at {timestamp} - {src_ip}:{src_port} → {dst_ip}:{dst_port}",
+      "example": "[Network] Packet #12345 at 2024-03-14T18:30:15Z - 192.168.1.100:4444 → 185.243.67.89:443"
+    },
+    {
+      "type": "file_hash",
+      "format": "[File Hash] {algorithm}: {hash_value} - {filename}",
+      "example": "[File Hash] SHA256: d41d8cd98f00b204e9800998ecf8427e - malware.exe"
+    },
+    {
+      "type": "registry_key",
+      "format": "[Registry] {key_path}\\{value_name} = '{value_data}' (Modified: {timestamp})",
+      "example": "[Registry] HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\Malware = 'C:\\temp\\evil.exe' (Modified: 2024-03-14T18:30:15Z)"
+    }
+  ],
+  "compliance_templates": {
+    "NIST_SP_800_86": {
+      "name": "NIST Special Publication 800-86",
+      "title": "Guide to Integrating Forensic Techniques into Incident Response",
+      "required_sections": [
+        "Collection procedures and chain of custody",
+        "Examination methodology and tools",
+        "Analysis techniques and validation",
+        "Reporting standards and documentation"
+      ],
+      "documentation_requirements": [
+        "Detailed chain of custody forms", 
+        "Tool validation and calibration records",
+        "Hash verification of evidence",
+        "Audit trail of all analysis steps"
+      ]
+    },
+    "ISO_27037": {
+      "name": "ISO/IEC 27037:2012",
+      "title": "Guidelines for identification, collection, acquisition and preservation of digital evidence",
+      "required_sections": [
+        "Evidence identification and documentation",
+        "Collection and acquisition procedures", 
+        "Preservation and handling protocols",
+        "Chain of custody maintenance"
+      ],
+      "documentation_requirements": [
+        "Evidence identification forms",
+        "Acquisition logs and verification",
+        "Storage and handling procedures",
+        "Access control and audit logs"
+      ]
+    }
+  },
+  "formatting_guidelines": {
+    "font_family": "Times New Roman, Arial",
+    "font_size": "12pt",
+    "line_spacing": "1.5",
+    "margins": "1 inch",
+    "page_numbers": "bottom center",
+    "header_footer": true,
+    "table_formatting": {
+      "borders": "thin black",
+      "header_style": "bold, centered",
+      "alternating_rows": true
+    },
+    "image_guidelines": {
+      "max_width": "6.5 inches",
+      "caption_required": true,
+      "high_resolution": "300 DPI minimum"
+    }
+  },
+  "standard_disclaimers": [
+    {
+      "type": "general",
+      "text": "This report contains the professional opinions and findings of the digital forensic examiner based on the available evidence and analysis conducted. The conclusions are based on the evidence examined and the methodologies employed at the time of analysis."
+    },
+    {
+      "type": "evidence_limitation",
+      "text": "The analysis is limited to the evidence provided and may not represent the complete picture of activities on the examined systems. Additional evidence may alter or supplement these findings."
+    },
+    {
+      "type": "tool_limitation", 
+      "text": "The forensic tools and techniques used are industry-standard but may not detect all possible artifacts or evidence. The absence of evidence for a particular activity does not conclusively prove that activity did not occur."
+    },
+    {
+      "type": "confidentiality",
+      "text": "This report contains confidential and sensitive information. Distribution should be limited to authorized personnel only and in accordance with applicable laws and organizational policies."
+    }
+  ]
+}

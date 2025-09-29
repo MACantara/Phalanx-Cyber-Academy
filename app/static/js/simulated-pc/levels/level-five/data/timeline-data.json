@@ -1,0 +1,196 @@
+{
+  "correlation_rules": [
+    {
+      "id": "rule_001",
+      "name": "Malware Installation Pattern",
+      "description": "Detect file downloads followed by execution and network communication",
+      "conditions": [
+        "File download within 5 minutes of execution",
+        "New process creation", 
+        "Outbound network connection"
+      ],
+      "time_window": 300,
+      "severity": "high"
+    },
+    {
+      "id": "rule_002", 
+      "name": "Data Exfiltration Pattern",
+      "description": "Large file access followed by network transmission",
+      "conditions": [
+        "File access of sensitive documents",
+        "Data compression activity",
+        "Large outbound network transfer"
+      ],
+      "time_window": 600,
+      "severity": "critical"
+    },
+    {
+      "id": "rule_003",
+      "name": "Credential Harvesting",
+      "description": "Browser process memory access with network activity", 
+      "conditions": [
+        "Browser process memory dump",
+        "Keylogger process activity",
+        "Small encrypted transmissions"
+      ],
+      "time_window": 180,
+      "severity": "high"
+    }
+  ],
+  "event_templates": [
+    {
+      "category": "file_system",
+      "type": "file_created",
+      "template": "File '{filename}' created in {path} by process {process_name} (PID: {pid})",
+      "fields": ["filename", "path", "process_name", "pid", "size", "hash"]
+    },
+    {
+      "category": "network", 
+      "type": "connection_established",
+      "template": "Network connection from {src_ip}:{src_port} to {dst_ip}:{dst_port} using {protocol}",
+      "fields": ["src_ip", "src_port", "dst_ip", "dst_port", "protocol", "bytes_sent", "bytes_received"]
+    },
+    {
+      "category": "process",
+      "type": "process_created",
+      "template": "Process '{process_name}' (PID: {pid}) started by {parent_process} with command line: {command_line}",
+      "fields": ["process_name", "pid", "parent_process", "command_line", "user", "integrity_level"]
+    },
+    {
+      "category": "registry",
+      "type": "registry_modified", 
+      "template": "Registry key '{key_path}' modified. Value '{value_name}' changed to '{new_value}'",
+      "fields": ["key_path", "value_name", "old_value", "new_value", "process_name"]
+    }
+  ],
+  "sample_events": [
+    {
+      "timestamp": "2024-03-14T18:30:15.123Z",
+      "category": "network",
+      "type": "connection_established", 
+      "source": "Network Logs",
+      "description": "Suspicious outbound connection to known C&C server",
+      "details": {
+        "src_ip": "192.168.1.100",
+        "src_port": 4444,
+        "dst_ip": "185.243.67.89", 
+        "dst_port": 443,
+        "protocol": "TCP",
+        "bytes_sent": 2048,
+        "bytes_received": 512
+      },
+      "severity": "high",
+      "tags": ["malware", "c2", "suspicious"]
+    },
+    {
+      "timestamp": "2024-03-14T18:29:30.456Z",
+      "category": "process",
+      "type": "process_created",
+      "source": "Windows Event Logs",
+      "description": "Suspicious process execution from temp directory",
+      "details": {
+        "process_name": "svchost.exe",
+        "pid": 1337,
+        "parent_process": "winlogon.exe",
+        "command_line": "C:\\Windows\\Temp\\svchost.exe -k netsvcs", 
+        "user": "SYSTEM",
+        "integrity_level": "System"
+      },
+      "severity": "critical",
+      "tags": ["malware", "masquerading", "persistence"]
+    },
+    {
+      "timestamp": "2024-03-14T18:28:45.789Z",
+      "category": "file_system",
+      "type": "file_created",
+      "source": "File System Monitor",
+      "description": "Suspicious executable created in temp directory",
+      "details": {
+        "filename": "svchost.exe",
+        "path": "C:\\Windows\\Temp\\",
+        "process_name": "powershell.exe",
+        "pid": 2048,
+        "size": 524288,
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      "severity": "high", 
+      "tags": ["malware", "dropper", "suspicious"]
+    },
+    {
+      "timestamp": "2024-03-14T18:50:00.234Z",
+      "category": "registry",
+      "type": "registry_modified",
+      "source": "Registry Monitor", 
+      "description": "Persistence mechanism created via Run key",
+      "details": {
+        "key_path": "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+        "value_name": "WindowsUpdate",
+        "old_value": "",
+        "new_value": "C:\\Windows\\Temp\\svchost.exe",
+        "process_name": "svchost.exe"
+      },
+      "severity": "high",
+      "tags": ["persistence", "malware", "registry"]
+    }
+  ],
+  "analysis_patterns": [
+    {
+      "name": "Attack Chain Reconstruction", 
+      "description": "Identify sequence of events in cyber attack",
+      "steps": [
+        "Initial compromise (email, web, removable media)",
+        "Malware execution and persistence",
+        "Privilege escalation",
+        "Lateral movement", 
+        "Data collection and exfiltration"
+      ]
+    },
+    {
+      "name": "IOC Timeline Analysis",
+      "description": "Track indicators of compromise over time",
+      "steps": [
+        "Collect all IOC occurrences",
+        "Sort by timestamp",
+        "Identify patterns and clusters",
+        "Correlate with external threat intelligence"
+      ]
+    },
+    {
+      "name": "User Behavior Analysis",
+      "description": "Analyze user activities for anomalies", 
+      "steps": [
+        "Baseline normal user behavior",
+        "Identify deviations from baseline",
+        "Correlate with security events",
+        "Determine if compromise or insider threat"
+      ]
+    }
+  ],
+  "timeline_filters": [
+    {
+      "name": "High Severity Events",
+      "criteria": "severity >= 'high'",
+      "description": "Show only critical and high severity events"
+    },
+    {
+      "name": "Malware Activity",
+      "criteria": "tags.includes('malware')",
+      "description": "Events related to malware detection and analysis"
+    },
+    {
+      "name": "Network Communications", 
+      "criteria": "category == 'network'",
+      "description": "All network-related events and connections"
+    },
+    {
+      "name": "File System Changes",
+      "criteria": "category == 'file_system'",
+      "description": "File creation, modification, and deletion events"
+    },
+    {
+      "name": "Process Activity",
+      "criteria": "category == 'process'", 
+      "description": "Process creation and termination events"
+    }
+  ]
+}
