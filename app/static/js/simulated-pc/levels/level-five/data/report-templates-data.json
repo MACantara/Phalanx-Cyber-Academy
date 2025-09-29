@@ -10,49 +10,113 @@
           "title": "Executive Summary",
           "order": 1,
           "required": true,
-          "template": "Brief overview of the investigation, key findings, and recommendations."
+          "template": "Brief overview of the investigation, key findings, and recommendations.",
+          "evidence_types_accepted": ["all"],
+          "min_evidence": 1,
+          "max_evidence": 5,
+          "drag_drop_config": {
+            "accepts_any_evidence": true,
+            "priority_evidence": ["evidence_001"],
+            "placeholder_text": "Drag key evidence here to summarize your investigation findings"
+          }
         },
         {
           "title": "Case Information",
           "order": 2, 
           "required": true,
-          "template": "Case number, investigator details, date range, and scope of investigation."
+          "template": "Case number, investigator details, date range, and scope of investigation.",
+          "evidence_types_accepted": ["case_metadata"],
+          "min_evidence": 0,
+          "max_evidence": 2,
+          "drag_drop_config": {
+            "accepts_any_evidence": false,
+            "priority_evidence": [],
+            "placeholder_text": "This section contains case metadata (auto-filled)"
+          }
         },
         {
           "title": "Evidence Acquisition",
           "order": 3,
           "required": true,
-          "template": "Details of how evidence was collected, chain of custody, and preservation methods."
+          "template": "Details of how evidence was collected, chain of custody, and preservation methods.",
+          "evidence_types_accepted": ["disk_image", "memory_dump", "network_capture", "log_files"],
+          "min_evidence": 2,
+          "max_evidence": 10,
+          "drag_drop_config": {
+            "accepts_any_evidence": false,
+            "priority_evidence": ["evidence_001", "evidence_002", "evidence_003", "evidence_004"],
+            "placeholder_text": "Drag evidence items here to document acquisition and chain of custody"
+          }
         },
         {
           "title": "Methodology",
           "order": 4,
           "required": true,
-          "template": "Tools used, analysis procedures, and forensic techniques employed."
+          "template": "Tools used, analysis procedures, and forensic techniques employed.",
+          "evidence_types_accepted": ["methodology"],
+          "min_evidence": 0,
+          "max_evidence": 3,
+          "drag_drop_config": {
+            "accepts_any_evidence": false,
+            "priority_evidence": [],
+            "placeholder_text": "Methodology details (auto-generated based on tools used)"
+          }
         },
         {
           "title": "Findings and Analysis",
           "order": 5,
           "required": true, 
-          "template": "Detailed technical findings, timeline reconstruction, and evidence correlation."
+          "template": "Detailed technical findings, timeline reconstruction, and evidence correlation.",
+          "evidence_types_accepted": ["disk_image", "memory_dump", "network_capture"],
+          "min_evidence": 3,
+          "max_evidence": 15,
+          "drag_drop_config": {
+            "accepts_any_evidence": false,
+            "priority_evidence": ["evidence_001", "evidence_002", "evidence_003"],
+            "placeholder_text": "Drag analysis results here - disk artifacts, memory processes, network traffic"
+          }
         },
         {
           "title": "Conclusions", 
           "order": 6,
           "required": true,
-          "template": "Summary of key findings and their implications for the investigation."
+          "template": "Summary of key findings and their implications for the investigation.",
+          "evidence_types_accepted": ["all"],
+          "min_evidence": 2,
+          "max_evidence": 8,
+          "drag_drop_config": {
+            "accepts_any_evidence": true,
+            "priority_evidence": ["evidence_001", "evidence_002"],
+            "placeholder_text": "Drag critical evidence here to support your conclusions about The Null's identity"
+          }
         },
         {
           "title": "Recommendations",
           "order": 7,
           "required": true,
-          "template": "Security improvements and remediation steps based on findings."
+          "template": "Security improvements and remediation steps based on findings.",
+          "evidence_types_accepted": ["network_capture", "memory_dump"],
+          "min_evidence": 1,
+          "max_evidence": 5,
+          "drag_drop_config": {
+            "accepts_any_evidence": false,
+            "priority_evidence": ["evidence_002", "evidence_003"],
+            "placeholder_text": "Drag security-related evidence to support remediation recommendations"
+          }
         },
         {
           "title": "Appendices",
           "order": 8,
           "required": false,
-          "template": "Supporting documentation, detailed logs, and technical artifacts."
+          "template": "Supporting documentation, detailed logs, and technical artifacts.",
+          "evidence_types_accepted": ["log_files", "disk_image", "memory_dump", "network_capture"],
+          "min_evidence": 0,
+          "max_evidence": 20,
+          "drag_drop_config": {
+            "accepts_any_evidence": true,
+            "priority_evidence": ["evidence_004"],
+            "placeholder_text": "Drag supporting evidence, logs, and technical details here"
+          }
         }
       ]
     },
@@ -241,5 +305,82 @@
       "type": "confidentiality",
       "text": "This report contains confidential and sensitive information. Distribution should be limited to authorized personnel only and in accordance with applicable laws and organizational policies."
     }
-  ]
+  ],
+  "drag_drop_config": {
+    "evidence_types": {
+      "disk_image": {
+        "label": "Disk Image",
+        "icon": "💾",
+        "color": "#3B82F6",
+        "description": "Hard drive forensic images and filesystem artifacts"
+      },
+      "memory_dump": {
+        "label": "Memory Dump", 
+        "icon": "🧠",
+        "color": "#10B981",
+        "description": "RAM memory dumps and process analysis"
+      },
+      "network_capture": {
+        "label": "Network Capture",
+        "icon": "🌐", 
+        "color": "#F59E0B",
+        "description": "Network packet captures and traffic analysis"
+      },
+      "log_files": {
+        "label": "Log Files",
+        "icon": "📋",
+        "color": "#8B5CF6",
+        "description": "System logs and event records"
+      }
+    },
+    "critical_evidence_mapping": {
+      "the_null_identity": {
+        "evidence_ids": ["evidence_001", "evidence_002"],
+        "required_sections": ["Executive Summary", "Findings and Analysis", "Conclusions"],
+        "points": 150
+      },
+      "attack_timeline": {
+        "evidence_ids": ["evidence_001", "evidence_002", "evidence_003"],
+        "required_sections": ["Findings and Analysis", "Appendices"],
+        "points": 100
+      },
+      "malware_analysis": {
+        "evidence_ids": ["evidence_001", "evidence_002"],
+        "required_sections": ["Findings and Analysis", "Conclusions"],
+        "points": 100
+      },
+      "network_compromise": {
+        "evidence_ids": ["evidence_002", "evidence_003"],
+        "required_sections": ["Findings and Analysis", "Recommendations"],
+        "points": 75
+      },
+      "data_exfiltration": {
+        "evidence_ids": ["evidence_001", "evidence_003"],
+        "required_sections": ["Findings and Analysis", "Conclusions", "Recommendations"],
+        "points": 75
+      }
+    },
+    "section_requirements": {
+      "Executive Summary": {
+        "min_critical_evidence": 1,
+        "recommended_evidence": ["evidence_001"],
+        "auto_score": true
+      },
+      "Evidence Acquisition": {
+        "min_critical_evidence": 2,
+        "recommended_evidence": ["evidence_001", "evidence_002", "evidence_003", "evidence_004"],
+        "auto_score": false
+      },
+      "Findings and Analysis": {
+        "min_critical_evidence": 3,
+        "recommended_evidence": ["evidence_001", "evidence_002", "evidence_003"],
+        "auto_score": true
+      },
+      "Conclusions": {
+        "min_critical_evidence": 2,
+        "recommended_evidence": ["evidence_001", "evidence_002"],
+        "auto_score": true
+      }
+    }
+  }
 }
