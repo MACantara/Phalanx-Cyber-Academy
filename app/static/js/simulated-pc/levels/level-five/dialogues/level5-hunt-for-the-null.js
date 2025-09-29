@@ -64,25 +64,25 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
     onComplete() {
         localStorage.setItem('cyberquest_level_5_started', 'true');
         
-        // Launch the Evidence Locker as the starting point for Level 5 forensics
+        // Launch the Investigation Briefing as the starting point for Level 5 forensics
         if (window.applicationLauncher) {
             setTimeout(async () => {
                 console.log('Launching Level 5 Digital Forensics Environment...');
                 
                 try {
-                    // Launch the Evidence Locker app first - this is the central hub for forensic analysis
-                    await window.applicationLauncher.launchEvidenceLocker();
-                    console.log('Evidence Locker launched successfully');
+                    // Launch the Investigation Briefing app first - this provides mission guidance and context
+                    await window.applicationLauncher.launchInvestigationBriefing();
+                    console.log('Investigation Briefing launched successfully');
                     
                     // Show notification to guide user using centralized toast system
                     if (window.toastManager) {
                         window.toastManager.showToast(
-                            '🛡️ FORENSIC SYSTEM: Digital forensics investigation initiated. Start by examining evidence in the Evidence Locker.',
+                            ' INVESTIGATION BRIEFING: Mission briefing loaded. Review objectives and evidence guide before starting investigation.',
                             'success'
                         );
                     }
                     
-                    // Optional: Launch additional forensic workflow after Evidence Locker is ready
+                    // Optional: Launch additional forensic workflow after Investigation Briefing is ready
                     setTimeout(() => {
                         if (window.applicationLauncher && window.applicationLauncher.launchForensicWorkflow) {
                             window.applicationLauncher.launchForensicWorkflow();
