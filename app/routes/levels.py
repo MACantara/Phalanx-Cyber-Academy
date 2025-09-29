@@ -207,6 +207,15 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-five/apps/index.js',
             'js/simulated-pc/levels/level-five/data/index.js',
             
+            # Level 5 forensic applications
+            'js/simulated-pc/levels/level-five/apps/evidence-locker-app.js',
+            'js/simulated-pc/levels/level-five/apps/disk-analyzer-app.js',
+            'js/simulated-pc/levels/level-five/apps/memory-forensics-app.js',
+            'js/simulated-pc/levels/level-five/apps/network-analyzer-app.js',
+            'js/simulated-pc/levels/level-five/apps/timeline-constructor-app.js',
+            'js/simulated-pc/levels/level-five/apps/report-generator-app.js',
+            'js/simulated-pc/levels/level-five/apps/forensic-app-base.js',
+            
             # Level 5 dialogues
             'js/simulated-pc/levels/level-five/dialogues/index.js',
             'js/simulated-pc/levels/level-five/dialogues/level5-hunt-for-the-null.js',
