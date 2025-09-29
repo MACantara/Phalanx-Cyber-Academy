@@ -4,16 +4,20 @@
  */
 
 // Import all Level 5 JSON datasets using import assertions
+import caseBriefingData from './case-briefing.json' with { type: 'json' };
 import diskAnalysisData from './disk-analysis-data.json' with { type: 'json' };
 import evidenceData from './evidence-data.json' with { type: 'json' };
+import investigationObjectivesData from './investigation-objectives.json' with { type: 'json' };
 import memoryForensicsData from './memory-forensics-data.json' with { type: 'json' };
 import networkAnalysisData from './network-analysis-data.json' with { type: 'json' };
 import reportTemplatesData from './report-templates-data.json' with { type: 'json' };
 import timelineData from './timeline-data.json' with { type: 'json' };
 
 // Export individual datasets
+export { caseBriefingData };
 export { diskAnalysisData };
 export { evidenceData };
+export { investigationObjectivesData };
 export { memoryForensicsData };
 export { networkAnalysisData };
 export { reportTemplatesData };
@@ -21,8 +25,10 @@ export { timelineData };
 
 // Combined Level 5 data object for bulk operations
 export const level5Data = {
+    case_briefing: caseBriefingData,
     disk_analysis: diskAnalysisData,
     evidence: evidenceData,
+    investigation_objectives: investigationObjectivesData,
     memory_forensics: memoryForensicsData,
     network_analysis: networkAnalysisData,
     report_templates: reportTemplatesData,
@@ -32,8 +38,10 @@ export const level5Data = {
 // Data validation and status checking
 export function validateDataIntegrity() {
     const datasets = {
+        case_briefing: caseBriefingData,
         disk_analysis: diskAnalysisData,
         evidence: evidenceData,
+        investigation_objectives: investigationObjectivesData,
         memory_forensics: memoryForensicsData,
         network_analysis: networkAnalysisData,
         report_templates: reportTemplatesData,
@@ -60,8 +68,10 @@ export function validateDataIntegrity() {
 // Get specific dataset by name
 export function getDataset(name) {
     const datasets = {
+        'case_briefing': caseBriefingData,
         'disk_analysis': diskAnalysisData,
         'evidence': evidenceData,
+        'investigation_objectives': investigationObjectivesData,
         'memory_forensics': memoryForensicsData,
         'network_analysis': networkAnalysisData,
         'report_templates': reportTemplatesData,
