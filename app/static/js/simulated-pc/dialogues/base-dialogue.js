@@ -18,6 +18,9 @@ export class BaseDialogue {
         this.interactionBlocker = null;
         this.allowedInteractions = new Set();
         
+        // First-time viewing tracking
+        this.isFirstViewing = !this.hasBeenViewed();
+        
         this.initializeInteractionCSS();
     }
 
@@ -90,11 +93,7 @@ export class BaseDialogue {
                     ${this.shouldTypeMessage(message) ? '' : message.text}
                 </div>
                 
-                <div class="flex justify-between items-center mt-auto">
-                    <div class="text-green-400 text-md">
-                        ${this.currentMessageIndex + 1} / ${this.messages.length}
-                    </div>
-                    
+                <div class="flex justify-end items-center mt-auto">
                     <div class="flex gap-6">
                         ${this.currentMessageIndex > 0 ? 
                             `<button class="text-gray-300 hover:text-white transition-colors duration-200 cursor-pointer text-md" onclick="${this.getPreviousHandler()}">
@@ -104,9 +103,11 @@ export class BaseDialogue {
                         <button class="text-green-400 hover:text-green-300 transition-colors duration-200 cursor-pointer text-md" onclick="${this.getNextHandler()}">
                             ${isLastMessage ? this.getFinalButtonText() : 'Next →'}
                         </button>
-                        <button class="text-gray-300 hover:text-white transition-colors duration-200 cursor-pointer text-md" onclick="${this.getSkipHandler()}">
-                            Skip
-                        </button>
+                        ${!this.isFirstViewing ? 
+                            `<button class="text-gray-300 hover:text-white transition-colors duration-200 cursor-pointer text-md" onclick="${this.getSkipHandler()}">
+                                Skip
+                            </button>` : ''
+                        }
                     </div>
                 </div>
             </div>
@@ -163,6 +164,9 @@ export class BaseDialogue {
     }
 
     complete() {
+        // Mark this dialogue as viewed
+        this.markAsViewed();
+        
         this.cleanup();
         this.onComplete();
     }
@@ -246,6 +250,31 @@ export class BaseDialogue {
 
     static restart() {
         // Override in child classes
+    }
+
+    // First-time viewing tracking methods
+    getDialogueStorageKey() {
+        // Generate a unique key based on the dialogue class name
+        return `cyberquest_dialogue_viewed_${this.constructor.name}`;
+    }
+
+    hasBeenViewed() {
+        try {
+            const key = this.getDialogueStorageKey();
+            return localStorage.getItem(key) === 'true';
+        } catch (e) {
+            console.warn('localStorage not available:', e);
+            return false; // Default to not viewed if localStorage fails
+        }
+    }
+
+    markAsViewed() {
+        try {
+            const key = this.getDialogueStorageKey();
+            localStorage.setItem(key, 'true');
+        } catch (e) {
+            console.warn('Failed to mark dialogue as viewed:', e);
+        }
     }
 
     // Interactive guidance methods
