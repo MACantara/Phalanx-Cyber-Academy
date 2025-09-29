@@ -63,6 +63,8 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
 
     onComplete() {
         localStorage.setItem('cyberquest_level_5_started', 'true');
+        // Store the start time for performance tracking (similar to Level 4)
+        localStorage.setItem('cyberquest_level_5_start_time', Date.now());
         
         // Launch the Investigation Briefing as the starting point for Level 5 forensics
         if (window.applicationLauncher) {
