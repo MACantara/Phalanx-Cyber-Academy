@@ -151,7 +151,7 @@ export class ReportGeneratorApp extends ForensicAppBase {
                         <div class="font-semibold text-white text-sm">${evidence.name}</div>
                         <div class="text-xs text-gray-400 mb-2">${this.formatEvidenceType(evidence.type)}</div>
                         <div class="text-xs text-gray-500">Size: ${evidence.size}</div>
-                        <div class="text-xs text-gray-500">Hash: ${evidence.hash_md5?.substring(0, 8)}...</div>
+                        <div class="text-xs text-gray-500">Hash: ${evidence.hash_md5}...</div>
                     </div>
                 </div>
             </div>
@@ -436,6 +436,25 @@ export class ReportGeneratorApp extends ForensicAppBase {
         if (modal && content) {
             content.innerHTML = this.generateReportContent();
             modal.classList.remove('hidden');
+            
+            // Emit forensic report generated event to trigger completion dialogue
+            this.emitForensicEvent('report_generated', {
+                score: this.investigationScore,
+                evidenceUsed: Array.from(this.droppedEvidence.values()).flat().length,
+                reportComplete: true,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Also dispatch global event for investigation tracker
+            window.dispatchEvent(new CustomEvent('forensic_report_generated', {
+                detail: {
+                    score: this.investigationScore,
+                    evidenceUsed: Array.from(this.droppedEvidence.values()).flat().length,
+                    app: this.id
+                }
+            }));
+            
+            console.log('[ReportGenerator] Final report generated, investigation completed');
         }
     }
 
