@@ -74,6 +74,10 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                     await window.applicationLauncher.launchInvestigationBriefing();
                     console.log('Investigation Briefing launched successfully');
                     
+                    // Launch the Investigation Tracker - provides progress monitoring throughout the investigation
+                    await window.applicationLauncher.launchInvestigationTracker();
+                    console.log('Investigation Tracker launched successfully');
+                    
                     // Show notification to guide user using centralized toast system
                     if (window.toastManager) {
                         window.toastManager.showToast(
