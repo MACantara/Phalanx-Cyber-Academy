@@ -806,14 +806,23 @@ export class ReportGeneratorApp extends ForensicAppBase {
             console.log('[ReportGenerator] Submitting investigation with centralized progress manager');
             console.log(`[ReportGenerator] Score: ${this.investigationScore}/500 (${normalizedScore}%)`);
             
-            // Complete level using centralized game progress manager
-            const completionResult = await gameProgressManager.completeLevel(normalizedScore, additionalData);
+            // End the session
+            const completionResult = await gameProgressManager.sessionManager.endSession(normalizedScore, additionalData);
             
-            console.log('[ReportGenerator] Level completion result:', completionResult);
+            console.log('[ReportGenerator] Session completion result:', completionResult);
             
-            // Show success notification with actual XP awarded
-            const actualXP = completionResult.xp?.xp_awarded || victoryCondition.rewards.xp;
+            // Extract XP from session completion result
+            const actualXP = completionResult?.xp_awarded || victoryCondition.rewards.xp;
             this.showNotification(`Investigation submitted! Awarded ${actualXP} XP`, 'success');
+            
+            // Mark Level 5 as completed (since we're not using gameProgressManager.completeLevel)
+            localStorage.setItem('cyberquest_level_5_completed', 'true');
+            localStorage.setItem('cyberquest_level_5_completion_time', Date.now());
+            
+            // Clear session data
+            localStorage.removeItem('cyberquest_active_session_id');
+            sessionStorage.removeItem('active_session_id');
+            window.currentSessionId = null;
             
             // Emit forensic report submitted event to trigger completion dialogue
             this.emitForensicEvent('report_submitted', {
@@ -823,7 +832,7 @@ export class ReportGeneratorApp extends ForensicAppBase {
                 investigationComplete: true,
                 timestamp: new Date().toISOString(),
                 xpAwarded: actualXP,
-                completionResult: completionResult
+                sessionResult: completionResult
             });
             
             // Also dispatch global event for investigation tracker
