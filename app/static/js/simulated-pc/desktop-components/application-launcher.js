@@ -26,7 +26,8 @@ export class ApplicationLauncher {
                 config.levelSpecific === this.currentLevel.toString()
             )
             .filter(([id, config]) => config.autoOpen)
-            .filter(([id, config]) => id !== 'level3-timer'); // Don't auto-open timer, wait for dialogue
+            .filter(([id, config]) => id !== 'level3-timer') // Don't auto-open timer, wait for dialogue
+            .filter(([id, config]) => id !== 'evidence-locker'); // Don't auto-open evidence locker, wait for Level 5 dialogue
 
         console.log(`[ApplicationLauncher] Auto-opening ${levelApps.length} apps for level ${this.currentLevel}`);
 
