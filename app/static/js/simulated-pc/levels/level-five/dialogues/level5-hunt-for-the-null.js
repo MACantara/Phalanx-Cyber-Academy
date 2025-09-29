@@ -35,11 +35,13 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                     await window.applicationLauncher.launchEvidenceLocker();
                     console.log('Evidence Locker launched successfully');
                     
-                    // Show notification to guide user
-                    this.showForensicNotification(
-                        'Digital forensics investigation initiated. Start by examining evidence in the Evidence Locker.',
-                        'success'
-                    );
+                    // Show notification to guide user using centralized toast system
+                    if (window.toastManager) {
+                        window.toastManager.showToast(
+                            '🛡️ FORENSIC SYSTEM: Digital forensics investigation initiated. Start by examining evidence in the Evidence Locker.',
+                            'success'
+                        );
+                    }
                     
                     // Optional: Launch additional forensic workflow after Evidence Locker is ready
                     setTimeout(() => {
@@ -54,33 +56,6 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                 
             }, 1000);
         }
-    }
-
-    showForensicNotification(message, type = 'info') {
-        // Create forensic-themed notification
-        const notification = document.createElement('div');
-        notification.className = `fixed top-4 right-4 p-4 rounded z-50 ${
-            type === 'success' ? 'bg-green-600' :
-            type === 'warning' ? 'bg-yellow-600' :
-            type === 'error' ? 'bg-red-600' : 'bg-blue-600'
-        } text-white shadow-lg border border-gray-300`;
-        
-        notification.innerHTML = `
-            <div class="flex items-center space-x-2">
-                <i class="bi bi-shield-check text-lg"></i>
-                <span class="font-semibold">FORENSIC SYSTEM:</span>
-            </div>
-            <div class="mt-1 text-sm">${message}</div>
-        `;
-
-        document.body.appendChild(notification);
-
-        // Auto-remove after 5 seconds
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 5000);
     }
 
     getFinalButtonText() {
