@@ -355,15 +355,18 @@ class Level5EvidenceContext {
     // Initialize sample evidence for the investigation
     async initializeSampleEvidence() {
         try {
-            // Load evidence data from external JSON file
-            const response = await fetch('/static/js/simulated-pc/levels/level-five/data/evidence-data.json');
-            const evidenceData = await response.json();
+            // Load evidence data from centralized API
+            const response = await fetch('/api/level5/evidence-data');
+            const result = await response.json();
             
-            evidenceData.evidence_items.forEach(evidence => {
-                this.evidenceItems.set(evidence.id, evidence);
-            });
-            
-            console.log(`[EvidenceContext] Loaded ${evidenceData.evidence_items.length} evidence items from external data`);
+            if (result.success && result.data && result.data.evidence) {
+                result.data.evidence.forEach(evidence => {
+                    this.evidenceItems.set(evidence.id, evidence);
+                });
+                console.log(`[EvidenceContext] Loaded ${result.data.evidence.length} evidence items from centralized API`);
+            } else {
+                throw new Error('Failed to load evidence data from API');
+            }
         } catch (error) {
             console.error('[EvidenceContext] Failed to load evidence data, using fallback:', error);
             // Fallback to embedded data if external file fails
