@@ -83,7 +83,7 @@ class Challenge1PageClass extends BasePage {
         const isFakeNews = !currentArticle.is_real;
         
         return `
-            <div class="font-sans bg-white min-h-screen w-full">
+            <div class="font-sans bg-white min-h-full w-full overflow-y-auto">
                 <!-- Header Section -->
                 <section class="bg-gray-800 text-white p-5 w-full">
                     <div class="flex justify-between items-center max-w-4xl mx-auto">
