@@ -4,7 +4,7 @@ export class Level3TimerApp {
         this.title = 'Mission Status';
         
         // Timer state
-        this.timeRemaining = 1 * 60; // 1 minute in seconds
+        this.timeRemaining = 2 * 60; // 2 minutes in seconds
         this.timerInterval = null;
         this.isRunning = false;
         this.canStart = true; // Can start immediately since created after dialogue
