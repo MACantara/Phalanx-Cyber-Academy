@@ -7,7 +7,7 @@ import logging
 from flask import Blueprint, render_template, jsonify
 from flask_login import login_required
 from app.routes.admin.admin_utils import admin_required
-from app.utils.player_analytics import player_analytics
+from app.utils.player_analytics import player_analytics as analytics_engine
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ data_analytics_bp = Blueprint('data_analytics', __name__, url_prefix='/admin')
 def player_analytics():
     """Player Data Analytics dashboard with comprehensive metrics."""
     # Get real analytics data from the analytics engine
-    general_data = asyncio.run(player_analytics.get_general_analytics())
+    general_data = asyncio.run(analytics_engine.get_general_analytics())
     
     # Structure data for the dashboard template
     general_stats = {
@@ -71,7 +71,7 @@ def player_analytics():
 def player_analytics_levels():
     """Detailed level-specific analytics."""
     # Get real level analytics data
-    level_data = asyncio.run(player_analytics.get_level_analytics())
+    level_data = asyncio.run(analytics_engine.get_level_analytics())
     
     # Transform the data to match template expectations
     level_details = {}
@@ -104,6 +104,6 @@ def player_analytics_levels():
 def player_analytics_blue_vs_red():
     """Blue vs Red Team mode analytics."""
     # Get real blue vs red analytics data
-    blue_vs_red_data = asyncio.run(player_analytics.get_blue_vs_red_analytics())
+    blue_vs_red_data = asyncio.run(analytics_engine.get_blue_vs_red_analytics())
     
     return render_template('admin/player-data-analytics/blue-vs-red.html', blue_vs_red_data=blue_vs_red_data)
