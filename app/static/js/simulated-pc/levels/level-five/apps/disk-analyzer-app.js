@@ -21,11 +21,11 @@ export class DiskAnalyzerApp extends ForensicAppBase {
 
     createContent() {
         return `
-            <div class="disk-analyzer-app h-full bg-black text-white p-4 overflow-auto flex flex-col">
+            <div class="disk-analyzer-app h-full bg-black text-white p-2 sm:p-4 overflow-auto flex flex-col">
                 <!-- Header -->
-                <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-2">
-                    <h2 class="text-xl font-bold text-blue-400">Disk Image Analyzer</h2>
-                    <div class="flex space-x-4 text-sm">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 sm:mb-4 border-b border-gray-600 pb-2 gap-2 sm:gap-0">
+                    <h2 class="text-lg sm:text-xl font-bold text-blue-400">Disk Image Analyzer</h2>
+                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs sm:text-sm">
                         <div>
                             <span class="text-gray-300">Mounted:</span>
                             <span class="text-blue-400 font-semibold" id="mounted-image">None</span>
@@ -41,54 +41,54 @@ export class DiskAnalyzerApp extends ForensicAppBase {
                 ${this.createForensicUI().evidencePanel}
 
                 <!-- Analysis Mode Selector -->
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex space-x-2">
-                        <button id="mode-filesystem-${this.id}" class="analysis-mode-btn bg-blue-600 px-4 py-2 rounded text-sm font-semibold">
+                <div class="flex flex-col lg:flex-row gap-3 lg:gap-0 lg:justify-between lg:items-center mb-3 sm:mb-4">
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <button id="mode-filesystem-${this.id}" class="analysis-mode-btn bg-blue-600 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation">
                             File System
                         </button>
-                        <button id="mode-deleted-${this.id}" class="analysis-mode-btn bg-gray-600 px-4 py-2 rounded text-sm">
+                        <button id="mode-deleted-${this.id}" class="analysis-mode-btn bg-gray-600 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm touch-manipulation">
                             Deleted Files
                         </button>
-                        <button id="mode-timeline-${this.id}" class="analysis-mode-btn bg-gray-600 px-4 py-2 rounded text-sm">
+                        <button id="mode-timeline-${this.id}" class="analysis-mode-btn bg-gray-600 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm touch-manipulation">
                             Timeline
                         </button>
                     </div>
-                    <div class="flex space-x-2">
-                        <button id="mount-image-btn-${this.id}" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm font-semibold">
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <button id="mount-image-btn-${this.id}" class="bg-green-600 hover:bg-green-700 active:bg-green-800 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation">
                             Mount Image
                         </button>
-                        <button id="deep-scan-btn-${this.id}" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-sm font-semibold">
+                        <button id="deep-scan-btn-${this.id}" class="bg-purple-600 hover:bg-purple-700 active:bg-purple-800 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation">
                             Deep Scan
                         </button>
                     </div>
                 </div>
 
                 <!-- Main Content Grid -->
-                <div class="grid grid-cols-12 gap-4 h-full">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 h-full">
                     <!-- Left Panel - Image Selection / Navigation -->
-                    <div class="col-span-3 bg-gray-800 rounded p-4 overflow-y-auto">
-                        <h3 class="text-lg font-semibold mb-3 text-yellow-400">Evidence Images</h3>
-                        <div id="image-list-${this.id}" class="space-y-2 mb-4">
+                    <div class="lg:col-span-3 bg-gray-800 rounded p-3 sm:p-4 overflow-y-auto">
+                        <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-yellow-400">Evidence Images</h3>
+                        <div id="image-list-${this.id}" class="space-y-2 mb-3 sm:mb-4">
                             <!-- Available disk images will be populated here -->
                         </div>
                         
                         <!-- Navigation for mounted image -->
                         <div id="navigation-${this.id}" class="hidden">
-                            <h4 class="font-semibold mb-2 text-green-400">Navigation</h4>
-                            <div class="text-xs text-gray-300 mb-2" id="current-path-${this.id}">/</div>
-                            <div id="directory-tree-${this.id}" class="text-sm">
+                            <h4 class="font-semibold mb-2 text-green-400 text-sm sm:text-base">Navigation</h4>
+                            <div class="text-xs text-gray-300 mb-2 break-all" id="current-path-${this.id}">/</div>
+                            <div id="directory-tree-${this.id}" class="text-xs sm:text-sm">
                                 <!-- Directory tree will be populated here -->
                             </div>
                         </div>
                     </div>
 
                     <!-- Center Panel - File Browser / Results -->
-                    <div class="col-span-6 bg-gray-800 rounded p-4 overflow-y-auto">
-                        <h3 class="text-lg font-semibold mb-3 text-yellow-400" id="center-panel-title">File System Browser</h3>
+                    <div class="lg:col-span-6 bg-gray-800 rounded p-3 sm:p-4 overflow-y-auto">
+                        <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-yellow-400" id="center-panel-title">File System Browser</h3>
                         
                         <!-- File System View -->
                         <div id="filesystem-view-${this.id}" class="analysis-view">
-                            <div class="text-center text-gray-500 mt-8">
+                            <div class="text-center text-gray-500 mt-6 sm:mt-8 text-sm">
                                 Mount a disk image to begin analysis
                             </div>
                         </div>
@@ -109,10 +109,10 @@ export class DiskAnalyzerApp extends ForensicAppBase {
                     </div>
 
                     <!-- Right Panel - File Details / Metadata -->
-                    <div class="col-span-3 bg-gray-800 rounded p-4 overflow-y-auto">
-                        <h3 class="text-lg font-semibold mb-3 text-yellow-400">File Analysis</h3>
+                    <div class="lg:col-span-3 bg-gray-800 rounded p-3 sm:p-4 overflow-y-auto">
+                        <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-yellow-400">File Analysis</h3>
                         <div id="file-details-${this.id}">
-                            <div class="text-center text-gray-500 mt-8">
+                            <div class="text-center text-gray-500 mt-6 sm:mt-8 text-sm">
                                 Select a file to view details
                             </div>
                         </div>
@@ -120,20 +120,20 @@ export class DiskAnalyzerApp extends ForensicAppBase {
                 </div>
 
                 <!-- Scan Progress Modal -->
-                <div id="scan-modal-${this.id}" class="fixed inset-0 bg-black/75 hidden z-50 flex items-center justify-center">
-                    <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
-                        <h3 class="text-lg font-semibold mb-4 text-blue-400">Analyzing Disk Image</h3>
-                        <div class="space-y-4">
-                            <div class="bg-gray-700 rounded p-3">
-                                <div class="flex justify-between text-sm mb-1">
+                <div id="scan-modal-${this.id}" class="fixed inset-0 bg-black/75 hidden z-50 flex items-center justify-center p-4">
+                    <div class="bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-xs sm:max-w-md">
+                        <h3 class="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-blue-400">Analyzing Disk Image</h3>
+                        <div class="space-y-3 sm:space-y-4">
+                            <div class="bg-gray-700 rounded p-2 sm:p-3">
+                                <div class="flex justify-between text-xs sm:text-sm mb-1">
                                     <span>Progress</span>
                                     <span id="scan-progress-${this.id}">0%</span>
                                 </div>
-                                <div class="w-full bg-gray-600 rounded h-2">
-                                    <div id="scan-progress-bar-${this.id}" class="bg-blue-400 h-2 rounded transition-all duration-300" style="width: 0%"></div>
+                                <div class="w-full bg-gray-600 rounded h-1 sm:h-2">
+                                    <div id="scan-progress-bar-${this.id}" class="bg-blue-400 h-1 sm:h-2 rounded transition-all duration-300" style="width: 0%"></div>
                                 </div>
                             </div>
-                            <div class="text-sm text-gray-300" id="scan-status-${this.id}">Initializing scan...</div>
+                            <div class="text-xs sm:text-sm text-gray-300" id="scan-status-${this.id}">Initializing scan...</div>
                         </div>
                     </div>
                 </div>
