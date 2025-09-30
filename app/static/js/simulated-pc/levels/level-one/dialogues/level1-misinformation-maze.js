@@ -1,6 +1,5 @@
 import { BaseDialogue } from '../../../dialogues/base-dialogue.js';
 import { 
-    Challenge1Dialogue, 
     LevelCompletionDialogue 
 } from './index.js';
 
@@ -84,10 +83,6 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                     // Navigate directly to the challenge1 page
                     browserApp.navigation.navigateToUrl('https://daily-politico-news.com/breaking-news');
                     
-                    // Wait for page to load, then trigger challenge1 dialogue
-                    setTimeout(() => {
-                        this.triggerChallenge1Dialogue();
-                    }, 1000);
                 }
                 
                 // Mark the challenge as started
@@ -98,17 +93,6 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
         }
     }
 
-    triggerChallenge1Dialogue() {
-        // Ensure no other dialogue is active
-        if (window.currentDialogue) {
-            window.currentDialogue.cleanup();
-        }
-        
-        // Start the challenge1 dialogue
-        const challenge1Dialogue = new Challenge1Dialogue(this.desktop);
-        window.currentDialogue = challenge1Dialogue;
-        challenge1Dialogue.start();
-    }
 
     getFinalButtonText() {
         return 'Start Simulation';
@@ -144,18 +128,6 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
         }
     }
 
-    static async startChallenge1Dialogue(desktop) {
-        if (Challenge1Dialogue.shouldAutoStart()) {
-            // Ensure no other dialogue is active
-            if (window.currentDialogue) {
-                window.currentDialogue.cleanup();
-            }
-            
-            const dialogue = new Challenge1Dialogue(desktop);
-            window.currentDialogue = dialogue;
-            dialogue.start();
-        }
-    }
 
     static async startLevelCompletionDialogue(desktop) {
         if (LevelCompletionDialogue.shouldAutoStart()) {

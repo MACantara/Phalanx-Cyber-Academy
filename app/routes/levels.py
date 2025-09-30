@@ -108,7 +108,6 @@ def get_level_js_files(level_id):
             # Level 1 dialogues
             'js/simulated-pc/levels/level-one/dialogues/index.js',
             'js/simulated-pc/levels/level-one/dialogues/level1-misinformation-maze.js',
-            'js/simulated-pc/levels/level-one/dialogues/challenge1-dialogue.js',
             'js/simulated-pc/levels/level-one/dialogues/level-completion-dialogue.js',
         ]
     
