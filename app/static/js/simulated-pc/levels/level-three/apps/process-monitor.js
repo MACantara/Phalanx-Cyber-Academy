@@ -37,74 +37,78 @@ export class ProcessMonitorApp extends WindowBase {
         const remainingMalicious = maliciousProcesses - killedMalicious;
         
         return `
-            <div class="h-full flex bg-gray-900 text-white">
+            <div class="h-full flex flex-col lg:flex-row bg-gray-900 text-white">
                 <!-- Process List -->
                 <div class="flex-1 flex flex-col">
                     <!-- Header -->
-                    <div class="bg-green-800 px-4 py-3 border-b border-gray-700">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <i class="bi bi-cpu text-2xl text-white"></i>
+                    <div class="bg-green-800 px-3 sm:px-4 py-3 border-b border-gray-700">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+                            <div class="flex items-center space-x-2 sm:space-x-3">
+                                <i class="bi bi-cpu text-xl sm:text-2xl text-white"></i>
                                 <div>
-                                    <h2 class="text-lg font-bold text-white">Process Monitor</h2>
-                                    <p class="text-sm text-white">Level 3 - Process Analysis</p>
+                                    <h2 class="text-base sm:text-lg font-bold text-white">Process Monitor</h2>
+                                    <p class="text-xs sm:text-sm text-white">Level 3 - Process Analysis</p>
                                 </div>
                             </div>
-                            <div class="text-right text-sm">
-                                <div class="text-white">Total: ${this.processes.length}</div>
-                                <div class="text-white">Running: ${this.processes.filter(p => p.status === 'Running').length}</div>
+                            <div class="text-left sm:text-right text-xs sm:text-sm">
+                                <div class="text-white">Total: ${this.processes.length} | Running: ${this.processes.filter(p => p.status === 'Running').length}</div>
                                 ${remainingMalicious === 0 ? 
-                                    '<div class="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium mt-1">✓ ANALYSIS COMPLETE</div>' :
-                                    `<div class="bg-yellow-600 text-white px-2 py-1 rounded text-xs font-medium mt-1">${remainingMalicious} TO REVIEW</div>`
+                                    '<div class="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium mt-1 inline-block">✓ ANALYSIS COMPLETE</div>' :
+                                    `<div class="bg-yellow-600 text-white px-2 py-1 rounded text-xs font-medium mt-1 inline-block">${remainingMalicious} TO REVIEW</div>`
                                 }
                             </div>
                         </div>
                     </div>
 
                     <!-- Controls -->
-                    <div class="bg-gray-800 px-4 py-3 border-b border-gray-700">
-                        <div class="flex items-center justify-between">
-                            <div class="flex space-x-3">
-                                <button id="refresh-btn" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded transition-colors cursor-pointer">
-                                    <i class="bi bi-arrow-clockwise mr-2"></i>Refresh
+                    <div class="bg-gray-800 px-3 sm:px-4 py-3 border-b border-gray-700">
+                        <div class="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:items-center sm:justify-between">
+                            <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                                <button id="refresh-btn" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded transition-colors cursor-pointer touch-manipulation text-sm">
+                                    <i class="bi bi-arrow-clockwise mr-1 sm:mr-2"></i>Refresh
                                 </button>
-                                <button id="flag-suspicious-btn" class="px-3 py-2 bg-yellow-600 hover:bg-yellow-700 rounded transition-colors cursor-pointer" ${!this.selectedProcess ? 'disabled' : ''}>
-                                    <i class="bi bi-flag mr-2"></i>Flag Process
+                                <button id="flag-suspicious-btn" class="px-3 py-2 bg-yellow-600 hover:bg-yellow-700 active:bg-yellow-800 rounded transition-colors cursor-pointer touch-manipulation text-sm" ${!this.selectedProcess ? 'disabled' : ''}>
+                                    <i class="bi bi-flag mr-1 sm:mr-2"></i>Flag Process
                                 </button>
-                                <button id="kill-process-btn" class="px-3 py-2 ${this.getKillButtonClasses()} rounded transition-colors cursor-pointer" ${!this.selectedProcess ? 'disabled' : ''}>
-                                    <i class="bi bi-x-circle mr-2"></i>${this.getKillButtonText()}
+                                <button id="kill-process-btn" class="px-3 py-2 ${this.getKillButtonClasses()} rounded transition-colors cursor-pointer touch-manipulation text-sm" ${!this.selectedProcess ? 'disabled' : ''}>
+                                    <i class="bi bi-x-circle mr-1 sm:mr-2"></i>${this.getKillButtonText()}
                                 </button>
                             </div>
-                            <div class="text-sm text-gray-300">
-                                <span>Click a process to select it</span>
+                            <div class="text-xs sm:text-sm text-gray-300">
+                                <span class="hidden sm:inline">Click a process to select it</span>
+                                <span class="sm:hidden">Tap to select</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Process Table -->
                     <div class="flex-1 overflow-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-gray-800 sticky top-0">
-                                <tr>
-                                    <th class="px-4 py-3 text-left cursor-pointer hover:bg-gray-700 sortable" data-column="name">
-                                        Process Name ${this.getSortIcon('name')}
-                                    </th>
-                                    <th class="px-4 py-3 text-left cursor-pointer hover:bg-gray-700 sortable" data-column="pid">
-                                        PID ${this.getSortIcon('pid')}
-                                    </th>
-                                    <th class="px-4 py-3 text-left cursor-pointer hover:bg-gray-700 sortable" data-column="cpu">
-                                        CPU % ${this.getSortIcon('cpu')}
-                                    </th>
-                                    <th class="px-4 py-3 text-left cursor-pointer hover:bg-gray-700 sortable" data-column="memory">
-                                        Memory ${this.getSortIcon('memory')}
-                                    </th>
-                                    <th class="px-4 py-3 text-left">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${this.renderProcessRows()}
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table class="w-full min-w-[600px] text-xs sm:text-sm">
+                                <thead class="bg-gray-800 sticky top-0">
+                                    <tr>
+                                        <th class="px-2 sm:px-4 py-2 sm:py-3 text-left cursor-pointer hover:bg-gray-700 sortable touch-manipulation" data-column="name">
+                                            <span class="hidden sm:inline">Process Name</span>
+                                            <span class="sm:hidden">Name</span> ${this.getSortIcon('name')}
+                                        </th>
+                                        <th class="px-2 sm:px-4 py-2 sm:py-3 text-left cursor-pointer hover:bg-gray-700 sortable touch-manipulation" data-column="pid">
+                                            PID ${this.getSortIcon('pid')}
+                                        </th>
+                                        <th class="px-2 sm:px-4 py-2 sm:py-3 text-left cursor-pointer hover:bg-gray-700 sortable touch-manipulation" data-column="cpu">
+                                            CPU % ${this.getSortIcon('cpu')}
+                                        </th>
+                                        <th class="px-2 sm:px-4 py-2 sm:py-3 text-left cursor-pointer hover:bg-gray-700 sortable touch-manipulation" data-column="memory">
+                                            <span class="hidden sm:inline">Memory</span>
+                                            <span class="sm:hidden">Mem</span> ${this.getSortIcon('memory')}
+                                        </th>
+                                        <th class="px-2 sm:px-4 py-2 sm:py-3 text-left">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${this.renderProcessRows()}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -124,29 +128,29 @@ export class ProcessMonitorApp extends WindowBase {
             const riskLevel = this.getProcessRiskLevel(process);
             
             return `
-                <tr class="process-row cursor-pointer hover:bg-gray-800 border-b border-gray-700 ${isSelected ? 'bg-blue-900' : ''}" 
+                <tr class="process-row cursor-pointer hover:bg-gray-800 border-b border-gray-700 ${isSelected ? 'bg-blue-900' : ''} touch-manipulation" 
                     data-pid="${process.pid}">
-                    <td class="px-4 py-3">
-                        <div class="flex items-center space-x-2">
-                            ${isFlagged ? '<i class="bi bi-flag-fill text-yellow-400"></i>' : ''}
+                    <td class="px-2 sm:px-4 py-2 sm:py-3">
+                        <div class="flex items-center space-x-1 sm:space-x-2">
+                            ${isFlagged ? '<i class="bi bi-flag-fill text-yellow-400 text-xs sm:text-sm"></i>' : ''}
                             ${process.category === 'system' ? 
-                                '<i class="bi bi-shield text-blue-400" title="System Process"></i>' : ''
+                                '<i class="bi bi-shield text-blue-400 text-xs sm:text-sm" title="System Process"></i>' : ''
                             }
-                            <span>${process.name}</span>
+                            <span class="truncate max-w-[100px] sm:max-w-none">${process.name}</span>
                         </div>
                     </td>
-                    <td class="px-4 py-3 font-mono">${process.pid}</td>
-                    <td class="px-4 py-3">
-                        <div class="flex items-center space-x-2">
-                            <span>${process.cpu.toFixed(1)}%</span>
-                            <div class="w-12 bg-gray-700 rounded-full h-2">
-                                <div class="bg-${this.getCpuColor(process.cpu)} h-2 rounded-full" style="width: ${Math.min(process.cpu, 100)}%"></div>
+                    <td class="px-2 sm:px-4 py-2 sm:py-3 font-mono text-xs sm:text-sm">${process.pid}</td>
+                    <td class="px-2 sm:px-4 py-2 sm:py-3">
+                        <div class="flex items-center space-x-1 sm:space-x-2">
+                            <span class="text-xs sm:text-sm">${process.cpu.toFixed(1)}%</span>
+                            <div class="w-8 sm:w-12 bg-gray-700 rounded-full h-1 sm:h-2">
+                                <div class="bg-${this.getCpuColor(process.cpu)} h-1 sm:h-2 rounded-full" style="width: ${Math.min(process.cpu, 100)}%"></div>
                             </div>
                         </div>
                     </td>
-                    <td class="px-4 py-3">${process.memory.toFixed(1)} MB</td>
-                    <td class="px-4 py-3">
-                        <span class="px-2 py-1 rounded text-xs ${this.getStatusColor(process.status)}">${process.status}</span>
+                    <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm">${process.memory.toFixed(1)} MB</td>
+                    <td class="px-2 sm:px-4 py-2 sm:py-3">
+                        <span class="px-1 sm:px-2 py-0.5 sm:py-1 rounded text-xs ${this.getStatusColor(process.status)}">${process.status}</span>
                     </td>
                 </tr>
             `;
@@ -159,24 +163,24 @@ export class ProcessMonitorApp extends WindowBase {
         const riskFactors = process.riskFactors || [];
         
         return `
-            <div class="w-96 bg-gray-800 border-l border-gray-700 flex flex-col">
+            <div class="w-full lg:w-96 bg-gray-800 border-t lg:border-t-0 lg:border-l border-gray-700 flex flex-col">
                 <!-- Details Header -->
-                <div class="bg-gray-700 px-4 py-3 border-b border-gray-600">
-                    <h3 class="font-semibold flex items-center">
+                <div class="bg-gray-700 px-3 sm:px-4 py-3 border-b border-gray-600">
+                    <h3 class="font-semibold flex items-center text-sm sm:text-base">
                         <i class="bi bi-info-circle text-blue-400 mr-2"></i>
                         Process Details
                     </h3>
                 </div>
 
                 <!-- Process Info -->
-                <div class="flex-1 overflow-auto p-4">
-                    <div class="space-y-4">
+                <div class="flex-1 overflow-auto p-3 sm:p-4">
+                    <div class="space-y-3 sm:space-y-4">
                         <!-- Basic Info -->
                         <div>
-                            <h4 class="font-semibold text-white mb-2">${process.name}</h4>
-                            <div class="space-y-2 text-sm">
+                            <h4 class="font-semibold text-white mb-2 text-sm sm:text-base truncate">${process.name}</h4>
+                            <div class="space-y-1 sm:space-y-2 text-xs sm:text-sm">
                                 <div><strong>PID:</strong> ${process.pid}</div>
-                                <div><strong>Path:</strong> ${process.executable}</div>
+                                <div class="break-all"><strong>Path:</strong> ${process.executable}</div>
                                 <div><strong>Category:</strong> ${process.category}</div>
                                 <div><strong>Priority:</strong> ${process.priority}</div>
                                 <div><strong>Threads:</strong> ${process.threads}</div>
@@ -186,15 +190,15 @@ export class ProcessMonitorApp extends WindowBase {
 
                         <!-- Resource Usage -->
                         <div>
-                            <h5 class="font-semibold text-white mb-2">Resource Usage</h5>
-                            <div class="space-y-2 text-sm">
+                            <h5 class="font-semibold text-white mb-2 text-sm">Resource Usage</h5>
+                            <div class="space-y-1 sm:space-y-2 text-xs sm:text-sm">
                                 <div>
                                     <div class="flex justify-between">
                                         <span>CPU:</span>
                                         <span>${process.cpu.toFixed(1)}%</span>
                                     </div>
-                                    <div class="w-full bg-gray-700 rounded-full h-2 mt-1">
-                                        <div class="bg-blue-500 h-2 rounded-full" style="width: ${Math.min(process.cpu, 100)}%"></div>
+                                    <div class="w-full bg-gray-700 rounded-full h-1 sm:h-2 mt-1">
+                                        <div class="bg-blue-500 h-1 sm:h-2 rounded-full" style="width: ${Math.min(process.cpu, 100)}%"></div>
                                     </div>
                                 </div>
                                 <div>
@@ -208,20 +212,20 @@ export class ProcessMonitorApp extends WindowBase {
 
                         <!-- Description -->
                         <div>
-                            <h5 class="font-semibold text-white mb-2">Description</h5>
-                            <p class="text-sm text-gray-300">${process.description}</p>
+                            <h5 class="font-semibold text-white mb-2 text-sm">Description</h5>
+                            <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">${process.description}</p>
                         </div>
 
                         <!-- Process Analysis -->
                         ${this.getAllAnalysisData(process).length > 0 || (!process.trusted && (process.reputationDamage || process.financialDamage)) ? `
                             <div>
-                                <h5 class="font-semibold text-yellow-400 mb-2">Process Analysis</h5>
-                                <div class="bg-yellow-900/20 border border-yellow-700 rounded p-3">
-                                    <div class="text-sm space-y-2">
+                                <h5 class="font-semibold text-yellow-400 mb-2 text-sm">Process Analysis</h5>
+                                <div class="bg-yellow-900/20 border border-yellow-700 rounded p-2 sm:p-3">
+                                    <div class="text-xs sm:text-sm space-y-1 sm:space-y-2">
                                         ${this.getAllAnalysisData(process).length > 0 ? `
                                             <div class="text-yellow-200">Behavioral observations:</div>
-                                            <ul class="text-yellow-100 space-y-1 ml-2">
-                                                ${this.getAllAnalysisData(process).map(item => `<li>• ${item}</li>`).join('')}
+                                            <ul class="text-yellow-100 space-y-0.5 sm:space-y-1 ml-2">
+                                                ${this.getAllAnalysisData(process).map(item => `<li class="break-words">• ${item}</li>`).join('')}
                                             </ul>
                                         ` : ''}
                                     </div>
@@ -232,25 +236,25 @@ export class ProcessMonitorApp extends WindowBase {
                 </div>
 
                 <!-- Actions -->
-                <div class="p-4 border-t border-gray-600">
+                <div class="p-3 sm:p-4 border-t border-gray-600">
                     <div class="space-y-2">
-                        <button id="flag-btn" class="w-full px-3 py-2 bg-yellow-600 hover:bg-yellow-700 rounded transition-colors cursor-pointer">
-                            <i class="bi bi-flag mr-2"></i>Flag as Suspicious
+                        <button id="flag-btn" class="w-full px-3 py-2 bg-yellow-600 hover:bg-yellow-700 active:bg-yellow-800 rounded transition-colors cursor-pointer touch-manipulation text-sm">
+                            <i class="bi bi-flag mr-1 sm:mr-2"></i>Flag as Suspicious
                         </button>
                         
                         <!-- Kill Process Button with contextual styling -->
-                        <button id="kill-btn" class="w-full px-3 py-2 ${this.getDetailsPanelKillButtonClasses()} rounded transition-colors cursor-pointer">
-                            <i class="bi bi-x-circle mr-2"></i>${this.getDetailsPanelKillButtonText()}
+                        <button id="kill-btn" class="w-full px-3 py-2 ${this.getDetailsPanelKillButtonClasses()} rounded transition-colors cursor-pointer touch-manipulation text-sm">
+                            <i class="bi bi-x-circle mr-1 sm:mr-2"></i>${this.getDetailsPanelKillButtonText()}
                         </button>
                         
                         <!-- Warning for system processes -->
                         ${process.category === 'system' ? `
                             <div class="mt-2 p-2 bg-red-900/30 border border-red-700 rounded text-xs">
                                 <div class="flex items-center">
-                                    <i class="bi bi-exclamation-triangle text-red-400 mr-2"></i>
+                                    <i class="bi bi-exclamation-triangle text-red-400 mr-1 sm:mr-2"></i>
                                     <strong>SYSTEM WARNING</strong>
                                 </div>
-                                <div class="text-gray-300 mt-1">
+                                <div class="text-gray-300 mt-1 leading-relaxed">
                                     This is a system process. Killing system processes may cause system instability and penalties. Analyze carefully before proceeding.
                                 </div>
                             </div>
@@ -263,10 +267,13 @@ export class ProcessMonitorApp extends WindowBase {
 
     renderNoSelection() {
         return `
-            <div class="w-96 bg-gray-800 border-l border-gray-700 flex items-center justify-center">
+            <div class="w-full lg:w-96 bg-gray-800 border-t lg:border-t-0 lg:border-l border-gray-700 flex items-center justify-center p-4">
                 <div class="text-center text-gray-300">
-                    <i class="bi bi-mouse text-4xl mb-3"></i>
-                    <p>Select a process to view details</p>
+                    <i class="bi bi-mouse text-3xl sm:text-4xl mb-3"></i>
+                    <p class="text-sm sm:text-base">
+                        <span class="hidden sm:inline">Select a process to view details</span>
+                        <span class="sm:hidden">Tap process for details</span>
+                    </p>
                 </div>
             </div>
         `;
