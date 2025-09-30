@@ -54,7 +54,7 @@ export class WindowBase {
     // Create the window structure
     createWindow() {
         this.windowElement = document.createElement('div');
-        this.windowElement.className = 'absolute bg-gray-800 border border-gray-600 rounded shadow-2xl overflow-hidden min-w-72 min-h-48 backdrop-blur-lg';
+        this.windowElement.className = 'absolute bg-gray-800 border border-gray-600 shadow-2xl overflow-hidden min-w-72 min-h-48';
         // Make window maximized, accounting for taskbar height (48px)
         this.windowElement.style.width = '100%';
         this.windowElement.style.height = 'calc(100% - 48px)';
