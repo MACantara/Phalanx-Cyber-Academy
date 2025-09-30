@@ -20,22 +20,22 @@ export class MemoryForensicsApp extends ForensicAppBase {
 
     createContent() {
         return `
-            <div class="memory-forensics-app h-full bg-black text-white p-4 overflow-auto flex flex-col">
+            <div class="memory-forensics-app h-full bg-black text-white p-2 sm:p-4 overflow-auto flex flex-col touch-manipulation">
                 <!-- Header -->
-                <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-2">
-                    <h2 class="text-xl font-bold text-purple-400">Memory Forensics Suite</h2>
-                    <div class="flex space-x-4 text-sm">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 sm:mb-4 border-b border-gray-600 pb-2">
+                    <h2 class="text-lg sm:text-xl font-bold text-purple-400 mb-2 sm:mb-0">Memory Forensics Suite</h2>
+                    <div class="grid grid-cols-3 sm:flex sm:space-x-4 gap-2 sm:gap-0 text-xs sm:text-sm">
                         <div>
                             <span class="text-gray-300">Loaded:</span>
-                            <span class="text-purple-400 font-semibold" id="loaded-dump">None</span>
+                            <span class="text-purple-400 font-semibold block sm:inline" id="loaded-dump">None</span>
                         </div>
                         <div>
                             <span class="text-gray-300">Processes:</span>
-                            <span class="text-green-400 font-semibold" id="process-count">0</span>
+                            <span class="text-green-400 font-semibold block sm:inline" id="process-count">0</span>
                         </div>
                         <div>
                             <span class="text-gray-300">Threats:</span>
-                            <span class="text-red-400 font-semibold" id="threat-count">0</span>
+                            <span class="text-red-400 font-semibold block sm:inline" id="threat-count">0</span>
                         </div>
                     </div>
                 </div>
@@ -44,53 +44,53 @@ export class MemoryForensicsApp extends ForensicAppBase {
                 ${this.createForensicUI().evidencePanel}
 
                 <!-- Analysis Mode Selector -->
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex space-x-2">
-                        <button id="mode-processes-${this.id}" class="analysis-mode-btn bg-purple-600 px-4 py-2 rounded text-sm font-semibold">
+                <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-3 sm:mb-4 space-y-2 lg:space-y-0">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 lg:flex lg:space-x-2 gap-1 sm:gap-2 lg:gap-0">
+                        <button id="mode-processes-${this.id}" class="analysis-mode-btn bg-purple-600 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation">
                             Process Analysis
                         </button>
-                        <button id="mode-network-${this.id}" class="analysis-mode-btn bg-gray-600 px-4 py-2 rounded text-sm">
+                        <button id="mode-network-${this.id}" class="analysis-mode-btn bg-gray-600 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm touch-manipulation">
                             Network Connections
                         </button>
-                        <button id="mode-malware-${this.id}" class="analysis-mode-btn bg-gray-600 px-4 py-2 rounded text-sm">
+                        <button id="mode-malware-${this.id}" class="analysis-mode-btn bg-gray-600 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm touch-manipulation">
                             Malware Detection
                         </button>
                     </div>
-                    <div class="flex space-x-2">
-                        <button id="load-dump-btn-${this.id}" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm font-semibold">
+                    <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-1 sm:space-y-0">
+                        <button id="load-dump-btn-${this.id}" class="bg-green-600 hover:bg-green-700 active:bg-green-800 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation">
                             Load Memory Dump
                         </button>
-                        <button id="analyze-dump-btn-${this.id}" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-semibold">
+                        <button id="analyze-dump-btn-${this.id}" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation">
                             Analyze Memory
                         </button>
                     </div>
                 </div>
 
                 <!-- Main Content Grid -->
-                <div class="grid grid-cols-12 gap-4 h-full">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 h-full">
                     <!-- Left Panel - Memory Dumps / Process Tree -->
-                    <div class="col-span-3 bg-gray-800 rounded p-4 overflow-y-auto">
-                        <h3 class="text-lg font-semibold mb-3 text-yellow-400">Memory Dumps</h3>
-                        <div id="dump-list-${this.id}" class="space-y-2 mb-4">
+                    <div class="lg:col-span-3 bg-gray-800 rounded p-3 sm:p-4 overflow-y-auto">
+                        <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-yellow-400">Memory Dumps</h3>
+                        <div id="dump-list-${this.id}" class="space-y-1 sm:space-y-2 mb-3 sm:mb-4">
                             <!-- Available memory dumps will be populated here -->
                         </div>
                         
                         <!-- Process Tree for loaded dump -->
                         <div id="process-tree-${this.id}" class="hidden">
-                            <h4 class="font-semibold mb-2 text-green-400">Process Tree</h4>
-                            <div id="process-hierarchy-${this.id}" class="text-sm">
+                            <h4 class="font-semibold mb-1 sm:mb-2 text-green-400 text-sm sm:text-base">Process Tree</h4>
+                            <div id="process-hierarchy-${this.id}" class="text-xs sm:text-sm">
                                 <!-- Process hierarchy will be populated here -->
                             </div>
                         </div>
                     </div>
 
                     <!-- Center Panel - Analysis Results -->
-                    <div class="col-span-6 bg-gray-800 rounded p-4 overflow-y-auto">
-                        <h3 class="text-lg font-semibold mb-3 text-yellow-400" id="center-panel-title">Process Analysis</h3>
+                    <div class="lg:col-span-6 bg-gray-800 rounded p-3 sm:p-4 overflow-y-auto">
+                        <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-yellow-400" id="center-panel-title">Process Analysis</h3>
                         
                         <!-- Process Analysis View -->
                         <div id="processes-view-${this.id}" class="analysis-view">
-                            <div class="text-center text-gray-500 mt-8">
+                            <div class="text-center text-gray-500 mt-6 sm:mt-8 text-xs sm:text-sm">
                                 Load a memory dump to begin process analysis
                             </div>
                         </div>
@@ -111,10 +111,10 @@ export class MemoryForensicsApp extends ForensicAppBase {
                     </div>
 
                     <!-- Right Panel - Process Details / Analysis -->
-                    <div class="col-span-3 bg-gray-800 rounded p-4 overflow-y-auto">
-                        <h3 class="text-lg font-semibold mb-3 text-yellow-400">Analysis Details</h3>
+                    <div class="lg:col-span-3 bg-gray-800 rounded p-3 sm:p-4 overflow-y-auto">
+                        <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-yellow-400">Analysis Details</h3>
                         <div id="analysis-details-${this.id}">
-                            <div class="text-center text-gray-500 mt-8">
+                            <div class="text-center text-gray-500 mt-6 sm:mt-8 text-xs sm:text-sm">
                                 Select a process to view details
                             </div>
                         </div>
@@ -122,20 +122,20 @@ export class MemoryForensicsApp extends ForensicAppBase {
                 </div>
 
                 <!-- Analysis Progress Modal -->
-                <div id="analysis-modal-${this.id}" class="fixed inset-0 bg-black/75 hidden z-50 flex items-center justify-center">
-                    <div class="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
-                        <h3 class="text-lg font-semibold mb-4 text-purple-400">Analyzing Memory Dump</h3>
-                        <div class="space-y-4">
-                            <div class="bg-gray-700 rounded p-3">
-                                <div class="flex justify-between text-sm mb-1">
+                <div id="analysis-modal-${this.id}" class="fixed inset-0 bg-black/75 hidden z-50 flex items-center justify-center p-4">
+                    <div class="bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-xs sm:max-w-md">
+                        <h3 class="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-purple-400">Analyzing Memory Dump</h3>
+                        <div class="space-y-3 sm:space-y-4">
+                            <div class="bg-gray-700 rounded p-2 sm:p-3">
+                                <div class="flex justify-between text-xs sm:text-sm mb-1">
                                     <span>Progress</span>
                                     <span id="analysis-progress-${this.id}">0%</span>
                                 </div>
-                                <div class="w-full bg-gray-600 rounded h-2">
-                                    <div id="analysis-progress-bar-${this.id}" class="bg-purple-400 h-2 rounded transition-all duration-300" style="width: 0%"></div>
+                                <div class="w-full bg-gray-600 rounded h-1 sm:h-2">
+                                    <div id="analysis-progress-bar-${this.id}" class="bg-purple-400 h-1 sm:h-2 rounded transition-all duration-300" style="width: 0%"></div>
                                 </div>
                             </div>
-                            <div class="text-sm text-gray-300" id="analysis-status-${this.id}">Initializing analysis...</div>
+                            <div class="text-xs sm:text-sm text-gray-300" id="analysis-status-${this.id}">Initializing analysis...</div>
                         </div>
                     </div>
                 </div>
@@ -449,25 +449,25 @@ export class MemoryForensicsApp extends ForensicAppBase {
         if (!processView || !this.loadedDump) return;
 
         processView.innerHTML = this.processes.length === 0 ? 
-            '<div class="text-center text-gray-500 mt-8">No processes found</div>' :
+            '<div class="text-center text-gray-500 mt-6 sm:mt-8 text-xs sm:text-sm">No processes found</div>' :
             `
-                <div class="space-y-2">
+                <div class="space-y-1 sm:space-y-2">
                     ${this.processes.map(process => `
-                        <div class="process-item bg-gray-700 p-3 rounded cursor-pointer hover:bg-gray-600 transition-colors ${
-                            process.suspicious ? 'border-l-4 border-red-500' : ''
+                        <div class="process-item bg-gray-700 p-2 sm:p-3 rounded cursor-pointer hover:bg-gray-600 active:bg-gray-500 transition-colors touch-manipulation ${
+                            process.suspicious ? 'border-l-2 sm:border-l-4 border-red-500' : ''
                         }" data-pid="${process.pid}">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <i class="bi ${process.suspicious ? 'bi-exclamation-triangle text-red-400' : 'bi-gear text-green-400'}"></i>
-                                    <div>
-                                        <div class="font-semibold text-white text-sm flex items-center">
-                                            ${process.name}
-                                            ${process.suspicious ? '<span class="ml-2 bg-red-600 text-xs px-2 py-1 rounded">THREAT</span>' : ''}
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-1 sm:space-y-0">
+                                <div class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                                    <i class="bi ${process.suspicious ? 'bi-exclamation-triangle text-red-400' : 'bi-gear text-green-400'} flex-shrink-0"></i>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="font-semibold text-white text-xs sm:text-sm flex flex-col sm:flex-row sm:items-center">
+                                            <span class="break-all">${process.name}</span>
+                                            ${process.suspicious ? '<span class="mt-1 sm:mt-0 sm:ml-2 bg-red-600 text-xs px-2 py-1 rounded w-fit">THREAT</span>' : ''}
                                         </div>
                                         <div class="text-xs text-gray-300">PID: ${process.pid} • Memory: ${process.memory} • CPU: ${process.cpu}</div>
                                     </div>
                                 </div>
-                                <div class="text-xs text-gray-400">
+                                <div class="text-xs text-gray-400 sm:ml-2">
                                     Priority: ${process.priority}
                                 </div>
                             </div>
@@ -489,30 +489,30 @@ export class MemoryForensicsApp extends ForensicAppBase {
         if (!networkView) return;
 
         networkView.innerHTML = this.networkConnections.length === 0 ?
-            '<div class="text-center text-gray-500 mt-8">No network connections found</div>' :
+            '<div class="text-center text-gray-500 mt-6 sm:mt-8 text-xs sm:text-sm">No network connections found</div>' :
             `
-                <div class="mb-4">
-                    <div class="text-sm text-yellow-400 mb-2">
+                <div class="mb-3 sm:mb-4">
+                    <div class="text-xs sm:text-sm text-yellow-400 mb-2">
                         Found ${this.networkConnections.length} network connections
                     </div>
                 </div>
-                <div class="space-y-2">
+                <div class="space-y-1 sm:space-y-2">
                     ${this.networkConnections.map(conn => `
-                        <div class="network-item bg-gray-700 p-3 rounded ${
-                            conn.suspicious ? 'border-l-4 border-red-500' : ''
+                        <div class="network-item bg-gray-700 p-2 sm:p-3 rounded ${
+                            conn.suspicious ? 'border-l-2 sm:border-l-4 border-red-500' : ''
                         }">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <div class="font-semibold text-white text-sm flex items-center">
-                                        ${conn.process} (PID: ${conn.pid})
-                                        ${conn.suspicious ? '<span class="ml-2 bg-red-600 text-xs px-2 py-1 rounded">SUSPICIOUS</span>' : ''}
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-1 sm:space-y-0">
+                                <div class="min-w-0 flex-1">
+                                    <div class="font-semibold text-white text-xs sm:text-sm flex flex-col sm:flex-row sm:items-center">
+                                        <span class="break-all">${conn.process} (PID: ${conn.pid})</span>
+                                        ${conn.suspicious ? '<span class="mt-1 sm:mt-0 sm:ml-2 bg-red-600 text-xs px-2 py-1 rounded w-fit">SUSPICIOUS</span>' : ''}
                                     </div>
-                                    <div class="text-xs text-gray-300">
+                                    <div class="text-xs text-gray-300 break-all">
                                         ${conn.protocol} ${conn.localAddress}:${conn.localPort} → ${conn.remoteAddress}:${conn.remotePort}
                                     </div>
                                     <div class="text-xs text-yellow-400 mt-1">${conn.description}</div>
                                 </div>
-                                <div class="text-xs text-gray-400">
+                                <div class="text-xs text-gray-400 sm:ml-2">
                                     ${conn.state}
                                 </div>
                             </div>
