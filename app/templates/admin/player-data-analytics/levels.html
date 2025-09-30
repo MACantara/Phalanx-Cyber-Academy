@@ -12,7 +12,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900 dark:text-white">📊 Level Analytics</h1>
-                    <p class="text-gray-600 dark:text-gray-400 mt-2">Detailed performance metrics for each cybersecurity level</p>
+                    <p class="text-gray-700 dark:text-gray-300 mt-2">Detailed performance metrics for each cybersecurity level</p>
                 </div>
                 <div class="flex space-x-3">
                     <a href="{{ url_for('admin.dashboard') }}" 
@@ -46,8 +46,8 @@
                             <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ level.completion_rate }}%</span>
                         </div>
                     </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Completion Rate</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">Avg: {{ ((level.avg_time or 0) / 60) | round(1) }}m</p>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">Completion Rate</p>
+                    <p class="text-xs text-gray-700 dark:text-gray-300 mt-1">Avg: {{ ((level.avg_time or 0) / 60) | round(1) }}m</p>
                 </div>
             </div>
             {% endfor %}
@@ -65,15 +65,15 @@
                     <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Information Literacy Skills</h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Fact-check Accuracy</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Fact-check Accuracy</span>
                             <span class="text-sm font-medium text-green-600">{{ level.fact_check_accuracy }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Detection Speed</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Detection Speed</span>
                             <span class="text-sm font-medium text-blue-600">{{ level.misinformation_detection_speed }}s</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Critical Thinking Score</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Critical Thinking Score</span>
                             <span class="text-sm font-medium text-purple-600">{{ level.critical_thinking_score }}/10</span>
                         </div>
                     </div>
@@ -82,11 +82,11 @@
                     <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Source Verification</h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Verification Attempts</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Verification Attempts</span>
                             <span class="text-sm font-medium text-orange-600">{{ level.source_verification_attempts }}</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Bias Recognition</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Bias Recognition</span>
                             <span class="text-sm font-medium text-red-600">{{ level.news_bias_recognition }}%</span>
                         </div>
                     </div>
@@ -99,15 +99,15 @@
                     <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Email Security</h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Phishing Detection</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Phishing Detection</span>
                             <span class="text-sm font-medium text-green-600">{{ level.phishing_detection_rate }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">False Positives</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">False Positives</span>
                             <span class="text-sm font-medium text-red-600">{{ level.false_positive_rate }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Analysis Thoroughness</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Analysis Thoroughness</span>
                             <span class="text-sm font-medium text-blue-600">{{ level.email_analysis_thoroughness }}%</span>
                         </div>
                     </div>
@@ -116,11 +116,11 @@
                     <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Social Engineering</h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Susceptibility</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Susceptibility</span>
                             <span class="text-sm font-medium text-orange-600">{{ level.social_engineering_susceptibility }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Safe Protocol Adherence</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Safe Protocol Adherence</span>
                             <span class="text-sm font-medium text-green-600">{{ level.safe_protocol_adherence }}%</span>
                         </div>
                     </div>
@@ -133,15 +133,15 @@
                     <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Threat Detection</h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Malware ID Accuracy</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Malware ID Accuracy</span>
                             <span class="text-sm font-medium text-green-600">{{ level.malware_identification_accuracy }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Quarantine Effectiveness</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Quarantine Effectiveness</span>
                             <span class="text-sm font-medium text-blue-600">{{ level.quarantine_effectiveness }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Cleanup Thoroughness</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Cleanup Thoroughness</span>
                             <span class="text-sm font-medium text-purple-600">{{ level.system_cleanup_thoroughness }}%</span>
                         </div>
                     </div>
@@ -150,11 +150,11 @@
                     <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Network Security</h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Propagation Prevention</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Propagation Prevention</span>
                             <span class="text-sm font-medium text-orange-600">{{ level.threat_propagation_prevention }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Tool Utilization</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Tool Utilization</span>
                             <span class="text-sm font-medium text-red-600">{{ level.security_tool_utilization }}%</span>
                         </div>
                     </div>
@@ -167,15 +167,15 @@
                     <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Ethical Hacking</h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Vulnerabilities Found</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Vulnerabilities Found</span>
                             <span class="text-sm font-medium text-green-600">{{ level.vulnerability_discovery_rate }}</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Methodology Score</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Methodology Score</span>
                             <span class="text-sm font-medium text-blue-600">{{ level.ethical_methodology_score }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Disclosure Rate</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Disclosure Rate</span>
                             <span class="text-sm font-medium text-purple-600">{{ level.responsible_disclosure_rate }}%</span>
                         </div>
                     </div>
@@ -184,11 +184,11 @@
                     <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Assessment Quality</h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Risk Assessment</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Risk Assessment</span>
                             <span class="text-sm font-medium text-orange-600">{{ level.risk_assessment_accuracy }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Documentation Quality</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Documentation Quality</span>
                             <span class="text-sm font-medium text-red-600">{{ level.documentation_quality }}%</span>
                         </div>
                     </div>
@@ -201,15 +201,15 @@
                     <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Digital Forensics</h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Evidence Collection</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Evidence Collection</span>
                             <span class="text-sm font-medium text-green-600">{{ level.evidence_collection_score }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Data Analysis Depth</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Data Analysis Depth</span>
                             <span class="text-sm font-medium text-blue-600">{{ level.data_analysis_depth }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Timeline Accuracy</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Timeline Accuracy</span>
                             <span class="text-sm font-medium text-purple-600">{{ level.timeline_accuracy }}%</span>
                         </div>
                     </div>
@@ -218,11 +218,11 @@
                     <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Investigation</h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Attribution Confidence</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Attribution Confidence</span>
                             <span class="text-sm font-medium text-orange-600">{{ level.attribution_confidence }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Methodology Score</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Methodology Score</span>
                             <span class="text-sm font-medium text-red-600">{{ level.investigation_methodology }}%</span>
                         </div>
                     </div>
@@ -234,12 +234,12 @@
                     <h4 class="text-md font-medium text-gray-900 dark:text-white mb-3">Performance</h4>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Completion Rate</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Completion Rate</span>
                             <span class="text-sm font-medium text-indigo-600">{{ level.completion_rate }}%</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Average Time</span>
-                            <span class="text-sm font-medium text-gray-600">{{ (level.avg_time / 60) | round(1) }} min</span>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Average Time</span>
+                            <span class="text-sm font-medium text-gray-700">{{ (level.avg_time / 60) | round(1) }} min</span>
                         </div>
                     </div>
                 </div>

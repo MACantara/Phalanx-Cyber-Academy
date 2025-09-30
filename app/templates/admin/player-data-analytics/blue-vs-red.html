@@ -12,7 +12,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900 dark:text-white">⚔️ Blue vs Red Team Analytics</h1>
-                    <p class="text-gray-600 dark:text-gray-400 mt-2">Performance metrics for cybersecurity simulation battles</p>
+                    <p class="text-gray-700 dark:text-gray-300 mt-2">Performance metrics for cybersecurity simulation battles</p>
                 </div>
                 <div class="flex space-x-3">
                     <a href="{{ url_for('admin.dashboard') }}" 
@@ -35,7 +35,7 @@
                         <i class="bi bi-controller text-blue-500 text-2xl"></i>
                     </div>
                     <div class="ml-4">
-                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Games</dt>
+                        <dt class="text-sm font-medium text-gray-700 dark:text-gray-300">Total Games</dt>
                         <dd class="text-2xl font-bold text-gray-900 dark:text-white">{{ blue_vs_red_data.overview.total_games }}</dd>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                         <i class="bi bi-clock text-green-500 text-2xl"></i>
                     </div>
                     <div class="ml-4">
-                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Avg Game Duration</dt>
+                        <dt class="text-sm font-medium text-gray-700 dark:text-gray-300">Avg Game Duration</dt>
                         <dd class="text-2xl font-bold text-gray-900 dark:text-white">{{ (blue_vs_red_data.overview.avg_game_duration / 60) | round(1) }}m</dd>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                         <i class="bi bi-shield-check text-blue-500 text-2xl"></i>
                     </div>
                     <div class="ml-4">
-                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Player Win Rate</dt>
+                        <dt class="text-sm font-medium text-gray-700 dark:text-gray-300">Player Win Rate</dt>
                         <dd class="text-2xl font-bold text-blue-600">{{ blue_vs_red_data.overview.player_win_rate }}%</dd>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                         <i class="bi bi-server text-purple-500 text-2xl"></i>
                     </div>
                     <div class="ml-4">
-                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Asset Protection</dt>
+                        <dt class="text-sm font-medium text-gray-700 dark:text-gray-300">Asset Protection</dt>
                         <dd class="text-2xl font-bold text-purple-600">{{ blue_vs_red_data.overview.asset_protection_rate }}%</dd>
                     </div>
                 </div>
@@ -84,11 +84,11 @@
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">🛡️ Defense Performance</h3>
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Threat Detection Speed</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Threat Detection Speed</span>
                         <span class="text-sm font-medium text-green-600">{{ blue_vs_red_data.performance_metrics.threat_detection_speed }}s</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Incident Response Effectiveness</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Incident Response Effectiveness</span>
                         <div class="flex items-center">
                             <div class="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
                                 <div class="bg-green-500 h-2 rounded-full" style="width: {{ blue_vs_red_data.performance_metrics.incident_response_effectiveness }}%"></div>
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Security Control Optimization</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Security Control Optimization</span>
                         <div class="flex items-center">
                             <div class="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
                                 <div class="bg-blue-500 h-2 rounded-full" style="width: {{ blue_vs_red_data.performance_metrics.security_control_optimization }}%"></div>
@@ -106,7 +106,7 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Alert Prioritization Accuracy</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Alert Prioritization Accuracy</span>
                         <div class="flex items-center">
                             <div class="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
                                 <div class="bg-purple-500 h-2 rounded-full" style="width: {{ blue_vs_red_data.performance_metrics.alert_prioritization_accuracy }}%"></div>
@@ -121,7 +121,7 @@
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">⚔️ Attack Metrics</h3>
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">AI Attack Success Rate</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">AI Attack Success Rate</span>
                         <div class="flex items-center">
                             <div class="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
                                 <div class="bg-red-500 h-2 rounded-full" style="width: {{ blue_vs_red_data.performance_metrics.ai_attack_success_rate }}%"></div>
@@ -130,19 +130,19 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Player Action Efficiency</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Player Action Efficiency</span>
                         <span class="text-sm font-medium text-blue-600">{{ (blue_vs_red_data.performance_metrics.player_action_efficiency * 100) | round(1) }}%</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Mean Time to Detection (MTTD)</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Mean Time to Detection (MTTD)</span>
                         <span class="text-sm font-medium text-orange-600">{{ blue_vs_red_data.performance_metrics.mttd }}s</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Mean Time to Response (MTTR)</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Mean Time to Response (MTTR)</span>
                         <span class="text-sm font-medium text-yellow-600">{{ blue_vs_red_data.performance_metrics.mttr }}s</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Recovery Time Objective (RTO)</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Recovery Time Objective (RTO)</span>
                         <span class="text-sm font-medium text-indigo-600">{{ blue_vs_red_data.performance_metrics.rto }}s</span>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">�️ Asset Protection Rates</h3>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div class="text-center hover:scale-105 transition-transform duration-300">
-                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Academy Server</div>
+                    <div class="text-sm text-gray-700 dark:text-gray-300 mb-2">Academy Server</div>
                     <div class="relative">
                         <div class="w-20 h-20 mx-auto">
                             <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
@@ -173,7 +173,7 @@
                 </div>
 
                 <div class="text-center hover:scale-105 transition-transform duration-300">
-                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Student Database</div>
+                    <div class="text-sm text-gray-700 dark:text-gray-300 mb-2">Student Database</div>
                     <div class="relative">
                         <div class="w-20 h-20 mx-auto">
                             <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
@@ -192,7 +192,7 @@
                 </div>
 
                 <div class="text-center hover:scale-105 transition-transform duration-300">
-                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Research Files</div>
+                    <div class="text-sm text-gray-700 dark:text-gray-300 mb-2">Research Files</div>
                     <div class="relative">
                         <div class="w-20 h-20 mx-auto">
                             <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
@@ -211,7 +211,7 @@
                 </div>
 
                 <div class="text-center hover:scale-105 transition-transform duration-300">
-                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Learning Platform</div>
+                    <div class="text-sm text-gray-700 dark:text-gray-300 mb-2">Learning Platform</div>
                     <div class="relative">
                         <div class="w-20 h-20 mx-auto">
                             <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
@@ -238,16 +238,16 @@
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 Attack Phase
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 AI Success Rate
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 Player Detection Rate
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 Defense Effectiveness
                             </th>
                         </tr>
