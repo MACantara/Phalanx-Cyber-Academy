@@ -2,7 +2,6 @@ import { WindowBase } from '../window-base.js';
 import { BrowserNavigation } from './browser-functions/navigation.js';
 import { PageRenderer } from './browser-functions/page-renderer.js';
 import { SecurityChecker } from './browser-functions/security-checker.js';
-import { NavigationUtil } from '../shared-utils/navigation-util.js';
 
 export class BrowserApp extends WindowBase {
     constructor() {
@@ -253,9 +252,6 @@ export class BrowserApp extends WindowBase {
                 }
             });
         }
-
-        // Use shared navigation utility for data-url handling
-        NavigationUtil.bindDataUrlHandlers(windowElement, { source: 'browser' });
     }
 
     cleanup() {
