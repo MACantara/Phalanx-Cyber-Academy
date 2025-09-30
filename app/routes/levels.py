@@ -143,11 +143,7 @@ def get_level_js_files(level_id):
             # Level 3 applications
             'js/simulated-pc/levels/level-three/apps/malware-scanner.js',
             'js/simulated-pc/levels/level-three/apps/process-monitor.js',
-            'js/simulated-pc/levels/level-three/apps/ransomware-decryptor.js',
             
-            # Tutorials for Level 3
-            'js/simulated-pc/tutorials/malware-scanner-tutorial.js',
-            'js/simulated-pc/tutorials/process-monitor-tutorial.js',
         ]
     
     elif level_id == 4:
