@@ -153,7 +153,7 @@ export class EmailApp extends WindowBase {
                 </div>
                 
                 <!-- Email content area -->
-                <div class="flex-1 overflow-y-auto" id="email-list">
+                <div class="flex-1 overflow-y-auto min-h-0" id="email-list" style="max-height: calc(100vh - 95px);">
                     ${selectedEmail
                         ? this.createEmailDetail(selectedEmail, currentFolder)
                         : emails.map(email => this.createEmailListItem(email)).join('')}
@@ -276,7 +276,7 @@ export class EmailApp extends WindowBase {
         const displayTime = email.fullDateTime || this.formatDetailTime(email);
 
         return `
-            <div class="p-3 sm:p-6">
+            <div class="p-3 sm:p-6 h-full overflow-y-auto">
                 <!-- Action buttons and status - mobile responsive -->
                 <div class="mb-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                     <div class="flex items-center space-x-2 flex-wrap">
