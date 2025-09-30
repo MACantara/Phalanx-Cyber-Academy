@@ -18,16 +18,16 @@ export class EvidenceLockerApp extends ForensicAppBase {
 
     createContent() {
         return `
-            <div class="evidence-locker-app h-full bg-black text-white p-4 overflow-auto flex flex-col">
+            <div class="evidence-locker-app h-full bg-black text-white p-2 sm:p-4 overflow-auto flex flex-col touch-manipulation">
                 <!-- Header -->
-                <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-2">
-                    <h2 class="text-xl font-bold text-green-400">Digital Evidence Locker</h2>
-                    <div class="flex space-x-4">
-                        <div class="text-sm">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 sm:mb-4 border-b border-gray-600 pb-2">
+                    <h2 class="text-lg sm:text-xl font-bold text-green-400 mb-2 sm:mb-0">Digital Evidence Locker</h2>
+                    <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-1 sm:space-y-0">
+                        <div class="text-xs sm:text-sm">
                             <span class="text-gray-300">Total Evidence:</span>
                             <span class="text-green-400 font-semibold" id="evidence-count">0</span>
                         </div>
-                        <div class="text-sm">
+                        <div class="text-xs sm:text-sm">
                             <span class="text-gray-300">Analyzed:</span>
                             <span class="text-blue-400 font-semibold" id="analyzed-count">0</span>
                         </div>
@@ -39,41 +39,41 @@ export class EvidenceLockerApp extends ForensicAppBase {
                 ${this.createForensicUI().complianceIndicator}
 
                 <!-- Controls -->
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex space-x-4">
-                        <select id="evidence-filter-${this.id}" class="bg-gray-700 text-white px-3 py-1 rounded">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 sm:mb-4 space-y-2 sm:space-y-0">
+                    <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0">
+                        <select id="evidence-filter-${this.id}" class="bg-gray-700 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm">
                             <option value="all">All Evidence</option>
                             <option value="disk_image">Disk Images</option>
                             <option value="memory_dump">Memory Dumps</option>
                             <option value="network_capture">Network Captures</option>
                         </select>
-                        <select id="evidence-sort-${this.id}" class="bg-gray-700 text-white px-3 py-1 rounded">
+                        <select id="evidence-sort-${this.id}" class="bg-gray-700 text-white px-2 sm:px-3 py-1 rounded text-xs sm:text-sm">
                             <option value="acquisition_time">Sort by Time</option>
                             <option value="relevance_score">Sort by Relevance</option>
                             <option value="name">Sort by Name</option>
                             <option value="size">Sort by Size</option>
                         </select>
                     </div>
-                    <button id="verify-all-btn-${this.id}" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm font-semibold">
+                    <button id="verify-all-btn-${this.id}" class="bg-green-600 hover:bg-green-700 active:bg-green-800 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation">
                         Verify All Evidence
                     </button>
                 </div>
 
                 <!-- Evidence Grid -->
-                <div class="grid grid-cols-12 gap-4 h-full">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 h-full">
                     <!-- Evidence List -->
-                    <div class="col-span-8 bg-gray-800 rounded p-4 overflow-y-auto">
-                        <h3 class="text-lg font-semibold mb-3 text-yellow-400">Evidence Inventory</h3>
-                        <div id="evidence-list-${this.id}" class="space-y-2">
+                    <div class="lg:col-span-8 bg-gray-800 rounded p-3 sm:p-4 overflow-y-auto">
+                        <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-yellow-400">Evidence Inventory</h3>
+                        <div id="evidence-list-${this.id}" class="space-y-1 sm:space-y-2">
                             <!-- Evidence items will be populated here -->
                         </div>
                     </div>
 
                     <!-- Evidence Details -->
-                    <div class="col-span-4 bg-gray-800 rounded p-4 overflow-y-auto">
-                        <h3 class="text-lg font-semibold mb-3 text-yellow-400">Evidence Details</h3>
-                        <div id="evidence-details-${this.id}" class="text-sm text-gray-300">
-                            <div class="text-center text-gray-500 mt-8">
+                    <div class="lg:col-span-4 bg-gray-800 rounded p-3 sm:p-4 overflow-y-auto">
+                        <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-yellow-400">Evidence Details</h3>
+                        <div id="evidence-details-${this.id}" class="text-xs sm:text-sm text-gray-300">
+                            <div class="text-center text-gray-500 mt-6 sm:mt-8 text-xs sm:text-sm">
                                 Select evidence to view details
                             </div>
                         </div>
@@ -81,14 +81,14 @@ export class EvidenceLockerApp extends ForensicAppBase {
                 </div>
 
                 <!-- Chain of Custody Modal -->
-                <div id="custody-modal-${this.id}" class="fixed inset-0 bg-black/75 hidden z-50 flex items-center justify-center">
-                    <div class="bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
-                        <h3 class="text-lg font-semibold mb-4 text-green-400">Chain of Custody</h3>
-                        <div id="custody-details-${this.id}">
+                <div id="custody-modal-${this.id}" class="fixed inset-0 bg-black/75 hidden z-50 flex items-center justify-center p-4">
+                    <div class="bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-xs sm:max-w-2xl max-h-80 sm:max-h-96 overflow-y-auto">
+                        <h3 class="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-green-400">Chain of Custody</h3>
+                        <div id="custody-details-${this.id}" class="text-xs sm:text-sm">
                             <!-- Chain of custody details will be populated here -->
                         </div>
-                        <div class="flex justify-end mt-4">
-                            <button id="close-custody-modal-${this.id}" class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded">Close</button>
+                        <div class="flex justify-end mt-3 sm:mt-4">
+                            <button id="close-custody-modal-${this.id}" class="bg-gray-600 hover:bg-gray-700 active:bg-gray-800 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm touch-manipulation">Close</button>
                         </div>
                     </div>
                 </div>
@@ -185,22 +185,22 @@ export class EvidenceLockerApp extends ForensicAppBase {
         const statusIcon = integrityStatus.valid ? 'bi-shield-check' : 'bi-shield-exclamation';
         
         return `
-            <div class="evidence-item bg-gray-700 p-3 rounded cursor-pointer hover:bg-gray-600 transition-colors" 
+            <div class="evidence-item bg-gray-700 p-2 sm:p-3 rounded cursor-pointer hover:bg-gray-600 active:bg-gray-500 transition-colors touch-manipulation" 
                  data-evidence-id="${evidence.id}">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <i class="bi ${this.getEvidenceIcon(evidence.type)} text-2xl text-blue-400"></i>
-                        <div>
-                            <div class="font-semibold text-white">${evidence.name}</div>
-                            <div class="text-sm text-gray-300">${evidence.type} • ${evidence.size}</div>
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                    <div class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                        <i class="bi ${this.getEvidenceIcon(evidence.type)} text-lg sm:text-2xl text-blue-400 flex-shrink-0"></i>
+                        <div class="min-w-0 flex-1">
+                            <div class="font-semibold text-white text-sm sm:text-base break-all">${evidence.name}</div>
+                            <div class="text-xs sm:text-sm text-gray-300">${evidence.type} • ${evidence.size}</div>
                             <div class="text-xs text-gray-400">
                                 ${new Date(evidence.acquisition_time).toLocaleString()}
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <div class="text-right">
-                            <div class="text-sm ${statusColor}">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-1 sm:space-y-0">
+                        <div class="flex flex-col sm:text-right">
+                            <div class="text-xs sm:text-sm ${statusColor}">
                                 <i class="bi ${statusIcon}"></i>
                                 ${integrityStatus.valid ? 'Verified' : 'Compromised'}
                             </div>
@@ -208,7 +208,7 @@ export class EvidenceLockerApp extends ForensicAppBase {
                                 Relevance: ${(evidence.relevance_score * 100).toFixed(0)}%
                             </div>
                         </div>
-                        <button class="custody-btn bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded text-xs"
+                        <button class="custody-btn bg-blue-600 hover:bg-blue-700 active:bg-blue-800 px-2 py-1 rounded text-xs touch-manipulation w-fit"
                                 data-evidence-id="${evidence.id}">
                             Chain
                         </button>
@@ -270,21 +270,21 @@ export class EvidenceLockerApp extends ForensicAppBase {
         const integrityStatus = await this.verifyEvidenceIntegrity(evidenceId);
         
         detailsContainer.innerHTML = `
-            <div class="space-y-4">
+            <div class="space-y-3 sm:space-y-4">
                 <!-- Basic Information -->
                 <div>
-                    <h4 class="font-semibold text-white mb-2">${evidence.name}</h4>
-                    <div class="space-y-1 text-sm">
+                    <h4 class="font-semibold text-white mb-1 sm:mb-2 text-sm sm:text-base break-all">${evidence.name}</h4>
+                    <div class="space-y-1 text-xs sm:text-sm">
                         <div><span class="text-gray-300">Type:</span> <span class="text-blue-400">${evidence.type}</span></div>
-                        <div><span class="text-gray-300">Source:</span> <span class="text-blue-400">${evidence.source}</span></div>
+                        <div><span class="text-gray-300">Source:</span> <span class="text-blue-400 break-all">${evidence.source}</span></div>
                         <div><span class="text-gray-300">Size:</span> <span class="text-blue-400">${evidence.size}</span></div>
-                        <div><span class="text-gray-300">Acquired:</span> <span class="text-blue-400">${new Date(evidence.acquisition_time).toLocaleString()}</span></div>
+                        <div><span class="text-gray-300">Acquired:</span> <span class="text-blue-400 text-xs">${new Date(evidence.acquisition_time).toLocaleString()}</span></div>
                     </div>
                 </div>
 
                 <!-- Hash Verification -->
-                <div class="border-t border-gray-600 pt-3">
-                    <h5 class="font-semibold text-white mb-2">Hash Verification</h5>
+                <div class="border-t border-gray-600 pt-2 sm:pt-3">
+                    <h5 class="font-semibold text-white mb-1 sm:mb-2 text-sm sm:text-base">Hash Verification</h5>
                     <div class="space-y-1 text-xs">
                         <div class="flex justify-between">
                             <span class="text-gray-300">Status:</span>
@@ -292,15 +292,15 @@ export class EvidenceLockerApp extends ForensicAppBase {
                                 ${integrityStatus.valid ? 'Verified' : 'Failed'}
                             </span>
                         </div>
-                        <div><span class="text-gray-300">MD5:</span> <span class="text-blue-400 font-mono">${evidence.hash_md5}</span></div>
-                        <div><span class="text-gray-300">SHA256:</span> <span class="text-blue-400 font-mono break-all">${evidence.hash_sha256}</span></div>
+                        <div><span class="text-gray-300">MD5:</span> <span class="text-blue-400 font-mono text-xs break-all">${evidence.hash_md5}</span></div>
+                        <div><span class="text-gray-300">SHA256:</span> <span class="text-blue-400 font-mono text-xs break-all">${evidence.hash_sha256}</span></div>
                     </div>
                 </div>
 
                 <!-- Analysis Status -->
-                <div class="border-t border-gray-600 pt-3">
-                    <h5 class="font-semibold text-white mb-2">Analysis Status</h5>
-                    <div class="space-y-1 text-sm">
+                <div class="border-t border-gray-600 pt-2 sm:pt-3">
+                    <h5 class="font-semibold text-white mb-1 sm:mb-2 text-sm sm:text-base">Analysis Status</h5>
+                    <div class="space-y-1 text-xs sm:text-sm">
                         <div class="flex justify-between">
                             <span class="text-gray-300">Complete:</span>
                             <span class="${evidence.analysis_complete ? 'text-green-400' : 'text-yellow-400'}">
@@ -316,16 +316,16 @@ export class EvidenceLockerApp extends ForensicAppBase {
                 </div>
 
                 <!-- Actions -->
-                <div class="border-t border-gray-600 pt-3 space-y-2">
-                    <button class="w-full bg-green-600 hover:bg-green-700 py-2 rounded text-sm font-semibold"
+                <div class="border-t border-gray-600 pt-2 sm:pt-3 space-y-1 sm:space-y-2">
+                    <button class="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation"
                             onclick="window.evidenceLocker.analyzeEvidence('${evidenceId}')">
                         Analyze Evidence
                     </button>
-                    <button class="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded text-sm font-semibold"
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation"
                             onclick="window.evidenceLocker.showChainOfCustody('${evidenceId}')">
                         View Chain of Custody
                     </button>
-                    <button class="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded text-sm font-semibold"
+                    <button class="w-full bg-purple-600 hover:bg-purple-700 active:bg-purple-800 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation"
                             onclick="window.evidenceLocker.exportEvidence('${evidenceId}')">
                         Export Evidence
                     </button>
