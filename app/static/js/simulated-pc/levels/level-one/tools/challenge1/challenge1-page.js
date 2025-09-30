@@ -73,54 +73,79 @@ class Challenge1PageClass extends BasePage {
 
         const currentArticle = this.articlesData[this.currentArticleIndex];
         
-        // Format the published date for display
-        const formattedDate = ArticleFormatter.formatDate(currentArticle.published);
+        // Format the published date for display (use new JSON format)
+        const formattedDate = ArticleFormatter.formatDate(currentArticle.date || currentArticle.published);
         
-        // Truncate text if too long for better display
-        const displayText = ArticleFormatter.truncateText(currentArticle.text, 1200);
+        // Truncate text if too long for better display (use new JSON format)
+        const displayText = ArticleFormatter.truncateText(currentArticle.content || currentArticle.text, 1200);
         
-        // Add suspicious elements only subtly for fake news
-        const isFakeNews = !currentArticle.is_real;
+        // Determine if fake news (use new JSON format: label 0=real, 1=fake)
+        const isFakeNews = currentArticle.label === 1;
         
         return `
             <div class="font-sans bg-white min-h-full w-full overflow-y-auto">
-                <!-- Header Section -->
-                <section class="bg-gray-800 text-white p-5 w-full">
-                    <div class="flex justify-between items-center max-w-4xl mx-auto">
-                        <div>
-                            <h1 class="m-0 text-3xl">Daily Politico News</h1>
-                            <p class="mt-1 mb-0 text-gray-400">Your Source for News and Analysis</p>
+                <!-- Streamlined Header Section -->
+                <section class="bg-gradient-to-r from-gray-800 to-gray-700 text-white py-4 px-5 w-full shadow-lg">
+                    <div class="max-w-5xl mx-auto">
+                        <!-- Top row: Site branding and progress -->
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
+                            <div class="flex-shrink-0">
+                                <h1 class="m-0 text-2xl sm:text-3xl font-bold">Daily Politico News</h1>
+                                <p class="mt-1 mb-0 text-gray-300 text-sm">Breaking News & Analysis</p>
+                            </div>
+                            
+                            <!-- Streamlined Progress Bar -->
+                            <div class="flex-grow max-w-md">
+                                ${ProgressBar.create(this.currentArticleIndex, this.articlesData.length, this.classifiedArticles.size)}
+                            </div>
                         </div>
                         
-                        <!-- Progress Bar -->
-                        ${ProgressBar.create(this.currentArticleIndex, this.articlesData.length, this.classifiedArticles.size)}
+                        <!-- Article navigation indicator -->
+                        <div class="flex justify-between items-center text-sm text-gray-300 border-t border-gray-600 pt-2">
+                            <span class="flex items-center gap-2">
+                                <i class="bi bi-newspaper"></i>
+                                Article ${this.currentArticleIndex + 1} of ${this.articlesData.length}
+                            </span>
+                            <span class="text-xs">
+                                ${this.classifiedArticles.size} classified
+                            </span>
+                        </div>
                     </div>
                 </section>
                 
                 <!-- Content Section -->
                 <section class="w-full">
                     <div class="px-8 py-6 max-w-4xl mx-auto">
-                        <h2 class="text-slate-900 text-3xl mb-3" data-element-type="title" data-element-id="title_analysis">
+                        <h2 class="text-slate-900 text-2xl sm:text-3xl mb-4" data-element-type="title" data-element-id="title_analysis">
                             ${ArticleFormatter.toTitleCase(currentArticle.title)}
                         </h2>
                         
-                        <!-- Article Metadata -->
-                        <div class="text-gray-700 mb-4 sm:mb-5 text-xs sm:text-sm flex flex-col sm:flex-row gap-2 sm:gap-4 sm:flex-wrap sm:items-center">
-                            <span data-element-type="date" data-element-id="date_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800 self-start">
-                                <i class="bi bi-calendar-event text-xs"></i>
-                                <span class="hidden sm:inline">Published:</span> ${formattedDate}
-                            </span>
-                            <span class="text-slate-500 hidden sm:inline">•</span>
-                            <span data-element-type="author" data-element-id="author_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800 self-start">
-                                <i class="bi bi-pencil text-xs"></i>
-                                <span class="hidden sm:inline">By:</span> ${currentArticle.author || 'Staff Reporter'}
-                            </span>
-                            <span class="text-slate-500 hidden sm:inline">•</span>
-                            <span data-element-type="source" data-element-id="source_analysis" class="px-2 py-1 bg-sky-50 border border-sky-500 rounded flex items-center gap-1 self-start">
-                                <i class="bi bi-globe text-xs"></i>
-                                <strong class="text-sky-800">Source:</strong>
-                                <span class="text-sky-800 font-mono text-xs truncate max-w-32 sm:max-w-none">${currentArticle.source || 'Unknown'}</span>
-                            </span>
+                        <!-- Enhanced Article Metadata -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 mb-5">
+                            <!-- Author Information with Credentials -->
+                            <div class="mb-3 pb-3 border-b border-slate-200">
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                                    <span data-element-type="author" data-element-id="author_analysis" class="flex items-center gap-2 text-slate-800">
+                                        <i class="bi bi-person-badge text-slate-600"></i>
+                                        <strong class="text-sm sm:text-base">${currentArticle.author || 'Staff Reporter'}</strong>
+                                    </span>
+                                    ${currentArticle.author_credentials ? `
+                                        <span class="text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded-full self-start sm:self-auto">
+                                            ${currentArticle.author_credentials}
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs text-slate-600">
+                                    <span data-element-type="date" data-element-id="date_analysis" class="flex items-center gap-1">
+                                        <i class="bi bi-calendar-event"></i>
+                                        Published: ${formattedDate}
+                                    </span>
+                                    <span data-element-type="source" data-element-id="source_analysis" class="flex items-center gap-1">
+                                        <i class="bi bi-globe2"></i>
+                                        Source: <span class="font-mono text-blue-700">${currentArticle.website || currentArticle.source || 'Unknown'}</span>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Article Text -->
@@ -170,7 +195,8 @@ class Challenge1PageClass extends BasePage {
                                 Articles are sourced from various datasets for educational analysis of misinformation patterns.
                             </p>
                             <p class="my-1 italic">
-                                Current article sourced from: <span class="font-mono bg-slate-100 px-1 rounded text-slate-900">${currentArticle.source || 'Training Dataset'}</span>
+                                Current article ID: <span class="font-mono bg-slate-100 px-1 rounded text-slate-900">${currentArticle.id || 'N/A'}</span> | 
+                                Source: <span class="font-mono bg-slate-100 px-1 rounded text-slate-900">${currentArticle.website || 'Training Dataset'}</span>
                             </p>
                         </div>
                     </div>
@@ -245,8 +271,10 @@ class Challenge1PageClass extends BasePage {
 
     classifyArticle(classification) {
         const currentArticle = this.articlesData[this.currentArticleIndex];
-        const isCorrect = (classification === 'real' && currentArticle.is_real) || 
-                         (classification === 'fake' && !currentArticle.is_real);
+        // Use new JSON format: label 0=real, 1=fake
+        const isRealArticle = currentArticle.label === 0;
+        const isCorrect = (classification === 'real' && isRealArticle) || 
+                         (classification === 'fake' && !isRealArticle);
         
         const resultDiv = document.getElementById('classification-result');
         const realBtn = document.getElementById('classify-real');
@@ -269,7 +297,7 @@ class Challenge1PageClass extends BasePage {
                     <i class="bi bi-check-circle text-xl"></i>
                     <div>
                         <strong>Correct!</strong><br>
-                        This article is indeed ${currentArticle.is_real ? 'real' : 'fake'} news.
+                        This article is indeed ${isRealArticle ? 'real' : 'fake'} news.
                     </div>
                 </div>
             `;
@@ -280,7 +308,7 @@ class Challenge1PageClass extends BasePage {
                     <i class="bi bi-x-circle text-xl"></i>
                     <div>
                         <strong>Incorrect.</strong><br>
-                        This article is actually ${currentArticle.is_real ? 'real' : 'fake'} news.
+                        This article is actually ${isRealArticle ? 'real' : 'fake'} news.
                     </div>
                 </div>
             `;
@@ -295,7 +323,7 @@ class Challenge1PageClass extends BasePage {
         if (window.ToastManager) {
             const message = isCorrect ? 
                 `Correct! Article ${this.currentArticleIndex + 1} classified successfully.` :
-                `Incorrect. Article ${this.currentArticleIndex + 1} was ${currentArticle.is_real ? 'real' : 'fake'} news.`;
+                `Incorrect. Article ${this.currentArticleIndex + 1} was ${isRealArticle ? 'real' : 'fake'} news.`;
             
             window.ToastManager.showToast(message, isCorrect ? 'success' : 'error');
         }
