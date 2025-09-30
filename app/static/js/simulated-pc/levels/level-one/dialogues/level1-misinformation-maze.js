@@ -9,30 +9,30 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "🎯 **Mission Brief: Level 1 - The Misinformation Maze**\n\nWelcome to your first cybersecurity challenge! As a junior security analyst, you've been assigned to investigate a coordinated disinformation campaign targeting upcoming elections."
+                text: "🎯 Mission Brief: Level 1 - The Misinformation Maze\n\nWelcome to your first cybersecurity challenge! As a junior security analyst, you've been assigned to investigate a coordinated disinformation campaign targeting upcoming elections."
             },
             {
-                text: "📚 **Learning Objectives:**\n• Master critical thinking techniques for information verification\n• Identify common misinformation tactics and manipulation strategies"
+                text: "📚 Learning Objectives:\n• Master critical thinking techniques for information verification\n• Identify common misinformation tactics and manipulation strategies"
             },
             {
                 text: "• Develop skills to assess source credibility and author credentials\n• Learn to spot emotional manipulation and bias in content"
             },
             {
-                text: "🔍 **Your Mission:**\nIntelligence reports indicate that foreign adversaries are spreading false information through fake news websites."
+                text: "🔍 Your Mission:\nIntelligence reports indicate that foreign adversaries are spreading false information through fake news websites."
             },
             {
                 text: "You'll analyze various news articles to distinguish legitimate journalism from fabricated content designed to influence public opinion."
             },
             {
-                text: "🛠️ **Detection Techniques:**\n\n**Source Analysis:** Check domain authority and publication history\n**Author Verification:** Look for real credentials and bylines",
+                text: "🛠️ Detection Techniques:\n\nSource Analysis: Check domain authority and publication history\nAuthor Verification: Look for real credentials and bylines",
                 example: "Legitimate: 'By Sarah Johnson, Political Reporter, Associated Press'\nSuspicious: 'By Staff Writer' or no author listed"
             },
             {
-                text: "**Fact Correlation:** Cross-reference with reputable news sources\n**Language Patterns:** Watch for sensational headlines and emotional manipulation",
+                text: "Fact Correlation: Cross-reference with reputable news sources\nLanguage Patterns: Watch for sensational headlines and emotional manipulation",
                 example: "Professional: 'Senator Proposes New Healthcare Bill'\nManipulative: 'SHOCKING: Politicians HATE This Simple Healthcare Trick!'"
             },
             {
-                text: "⚠️ **Warning Signs to Watch For:**\n\n• Suspicious URLs or domain names\n• Missing author information or fake credentials",
+                text: "⚠️ Warning Signs to Watch For:\n\n• Suspicious URLs or domain names\n• Missing author information or fake credentials",
                 example: "Suspicious: 'realcnnews.com' (mimicking cnn.com)\nLegitimate: 'reuters.com', 'apnews.com', 'bbc.com'"
             },
             {
@@ -40,25 +40,25 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                 example: "Red flags: 'OUTRAGEOUS!', 'They don't want you to know!'\nBalanced: 'Study shows', 'According to officials'"
             },
             {
-                text: "🎮 **How to Play:**\nUse the Web Browser to navigate between news sites. Read each article carefully, then use your analytical skills to determine if it's legitimate journalism or misinformation."
+                text: "🎮 How to Play:\nUse the Web Browser to navigate between news sites. Read each article carefully, then use your analytical skills to determine if it's legitimate journalism or misinformation."
             },
             {
                 text: "Click 'Legitimate' or 'Misinformation' based on your assessment. Take your time to analyze all the evidence before making a decision."
             },
             {
-                text: "🏆 **Scoring System:**\n\n**Correct identification:** +100 XP per article\n**Speed bonus:** Extra points for quick, accurate decisions"
+                text: "🏆 Scoring System:\n\nCorrect identification: +100 XP per article\nSpeed bonus: Extra points for quick, accurate decisions"
             },
             {
-                text: "**Streak multiplier:** Consecutive correct answers increase your score\n**Perfect score:** Earn the 'Truth Seeker' badge for 100% accuracy"
+                text: "Streak multiplier: Consecutive correct answers increase your score\nPerfect score: Earn the 'Truth Seeker' badge for 100% accuracy"
             },
             {
-                text: "💡 **Pro Tips:**\n\n• Take time to read carefully - rushing leads to mistakes\n• Check multiple indicators, not just one red flag"
+                text: "💡 Pro Tips:\n\n• Take time to read carefully - rushing leads to mistakes\n• Check multiple indicators, not just one red flag"
             },
             {
                 text: "• When in doubt, err on the side of caution\n• Real news includes multiple credible sources and balanced reporting"
             },
             {
-                text: "🚀 **Ready for Action?**\nThis mission is crucial for national security. Disinformation campaigns can influence elections, cause social unrest, and undermine public trust."
+                text: "🚀 Ready for Action?\nThis mission is crucial for national security. Disinformation campaigns can influence elections, cause social unrest, and undermine public trust."
             },
             {
                 text: "Your ability to identify fake news helps protect democracy itself. Are you ready to enter the Misinformation Maze?"
