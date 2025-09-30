@@ -46,7 +46,7 @@ class PlayerAnalytics:
         level_progress = [p for p in progress_data if p.get('level_id') == level_id]
         
         if not level_progress:
-            return self._get_mock_single_level_data(level_id)
+            return await self._get_empty_level_data(level_id)
             
         total_attempts = len(level_progress)
         completed = len([p for p in level_progress if p.get('completed', False)])
@@ -59,6 +59,20 @@ class PlayerAnalytics:
         completion_times = [p.get('completion_time_seconds', 0) for p in level_progress if p.get('completion_time_seconds')]
         avg_completion_time = sum(completion_times) / len(completion_times) if completion_times else 0
         
+        # Calculate attempts to complete
+        attempts_per_user = defaultdict(int)
+        completed_users = set()
+        for p in level_progress:
+            user_id = p.get('user_id')
+            attempts_per_user[user_id] += 1
+            if p.get('completed'):
+                completed_users.add(user_id)
+        
+        avg_attempts_to_complete = 0
+        if completed_users:
+            total_attempts_for_completed = sum(attempts_per_user[user] for user in completed_users)
+            avg_attempts_to_complete = total_attempts_for_completed / len(completed_users)
+        
         # Level-specific metrics based on level type
         level_specific = await self._get_level_specific_metrics(level_id, level_progress)
         
@@ -70,6 +84,8 @@ class PlayerAnalytics:
             'completion_rate': round(completion_rate, 1),
             'average_score': round(avg_score, 1),
             'average_completion_time': round(avg_completion_time / 60, 1),  # Convert to minutes
+            'avg_time_seconds': round(avg_completion_time),
+            'attempts_to_complete': round(avg_attempts_to_complete, 1),
             'difficulty_rating': self._calculate_difficulty(completion_rate, avg_completion_time),
             'player_count': len(set(p.get('user_id') for p in level_progress)),
             'recent_activity': await self._get_recent_level_activity(level_id),
@@ -84,35 +100,63 @@ class PlayerAnalytics:
                 'articles_analyzed': sum(p.get('articles_analyzed', 0) for p in progress_data),
                 'accuracy_rate': self._calculate_accuracy_rate(progress_data, 'correct_classifications'),
                 'fake_news_detected': sum(p.get('fake_news_detected', 0) for p in progress_data),
-                'critical_thinking_score': self._calculate_avg_metric(progress_data, 'critical_thinking_score')
+                'critical_thinking_score': self._calculate_avg_metric(progress_data, 'critical_thinking_score'),
+                'fact_check_accuracy': self._calculate_accuracy_rate(progress_data, 'correct_fact_checks'),
+                'misinformation_detection_speed': self._calculate_avg_metric(progress_data, 'avg_detection_time'),
+                'source_verification_attempts': self._calculate_avg_metric(progress_data, 'source_verification_count'),
+                'news_bias_recognition': self._calculate_accuracy_rate(progress_data, 'bias_recognition_correct')
             }
         elif level_id == 2:  # Shadow in the Inbox
             return {
                 'emails_processed': sum(p.get('emails_processed', 0) for p in progress_data),
                 'phishing_detected': sum(p.get('phishing_detected', 0) for p in progress_data),
                 'false_positives': sum(p.get('false_positives', 0) for p in progress_data),
-                'security_awareness_score': self._calculate_avg_metric(progress_data, 'security_awareness_score')
+                'security_awareness_score': self._calculate_avg_metric(progress_data, 'security_awareness_score'),
+                'phishing_detection_rate': self._calculate_accuracy_rate(progress_data, 'phishing_correctly_identified'),
+                'false_positive_rate': self._calculate_false_positive_rate(progress_data),
+                'email_analysis_thoroughness': self._calculate_avg_metric(progress_data, 'analysis_thoroughness'),
+                'social_engineering_susceptibility': 100 - self._calculate_accuracy_rate(progress_data, 'social_engineering_resisted'),
+                'safe_protocol_adherence': self._calculate_avg_metric(progress_data, 'protocol_adherence')
             }
         elif level_id == 3:  # Malware Mayhem
             return {
                 'threats_neutralized': sum(p.get('threats_neutralized', 0) for p in progress_data),
                 'systems_cleaned': sum(p.get('systems_cleaned', 0) for p in progress_data),
                 'response_time': self._calculate_avg_metric(progress_data, 'avg_response_time'),
-                'cleanup_efficiency': self._calculate_avg_metric(progress_data, 'cleanup_efficiency')
+                'cleanup_efficiency': self._calculate_avg_metric(progress_data, 'cleanup_efficiency'),
+                'malware_identification_accuracy': self._calculate_accuracy_rate(progress_data, 'malware_correctly_identified'),
+                'quarantine_effectiveness': self._calculate_avg_metric(progress_data, 'quarantine_success_rate'),
+                'system_cleanup_thoroughness': self._calculate_avg_metric(progress_data, 'cleanup_thoroughness'),
+                'threat_propagation_prevention': self._calculate_avg_metric(progress_data, 'propagation_prevention_score'),
+                'security_tool_utilization': self._calculate_avg_metric(progress_data, 'tool_usage_efficiency')
             }
         elif level_id == 4:  # White Hat Test
             return {
                 'vulnerabilities_found': sum(p.get('vulnerabilities_found', 0) for p in progress_data),
                 'ethical_score': self._calculate_avg_metric(progress_data, 'ethical_score'),
                 'documentation_quality': self._calculate_avg_metric(progress_data, 'documentation_quality'),
-                'responsible_disclosure': sum(p.get('responsible_disclosure', 0) for p in progress_data)
+                'responsible_disclosure': sum(p.get('responsible_disclosure', 0) for p in progress_data),
+                'vulnerability_discovery_rate': self._calculate_avg_metric(progress_data, 'discovery_success_rate'),
+                'reporting_accuracy': self._calculate_avg_metric(progress_data, 'report_accuracy'),
+                'ethical_compliance_score': self._calculate_avg_metric(progress_data, 'ethical_compliance'),
+                'technical_skill_demonstration': self._calculate_avg_metric(progress_data, 'technical_skill_score'),
+                'ethical_methodology_score': self._calculate_avg_metric(progress_data, 'methodology_score'),
+                'responsible_disclosure_rate': self._calculate_accuracy_rate(progress_data, 'proper_disclosure'),
+                'risk_assessment_accuracy': self._calculate_avg_metric(progress_data, 'risk_assessment_score')
             }
         elif level_id == 5:  # Hunt for The Null
             return {
                 'evidence_collected': sum(p.get('evidence_collected', 0) for p in progress_data),
                 'forensic_accuracy': self._calculate_avg_metric(progress_data, 'forensic_accuracy'),
                 'timeline_accuracy': self._calculate_avg_metric(progress_data, 'timeline_accuracy'),
-                'investigation_thoroughness': self._calculate_avg_metric(progress_data, 'investigation_thoroughness')
+                'investigation_thoroughness': self._calculate_avg_metric(progress_data, 'investigation_thoroughness'),
+                'digital_forensics_proficiency': self._calculate_avg_metric(progress_data, 'forensics_proficiency'),
+                'investigation_methodology': self._calculate_avg_metric(progress_data, 'methodology_score'),
+                'evidence_chain_preservation': self._calculate_avg_metric(progress_data, 'chain_preservation_score'),
+                'case_resolution_efficiency': self._calculate_avg_metric(progress_data, 'resolution_efficiency'),
+                'evidence_collection_score': self._calculate_avg_metric(progress_data, 'collection_score'),
+                'data_analysis_depth': self._calculate_avg_metric(progress_data, 'analysis_depth'),
+                'attribution_confidence': self._calculate_avg_metric(progress_data, 'attribution_confidence')
             }
         
         return {}
@@ -141,7 +185,7 @@ class PlayerAnalytics:
         total_sessions = len(sessions)
         
         if total_sessions == 0:
-            return self._get_mock_blue_vs_red_data()
+            return await self._get_empty_blue_vs_red_data()
         
         # Basic metrics
         completed_sessions = len([s for s in sessions if s.get('completed', False)])
@@ -157,21 +201,42 @@ class PlayerAnalytics:
         # Asset protection analysis
         asset_stats = await self._analyze_asset_protection(sessions)
         
+        # Performance metrics
+        performance_stats = await self._analyze_performance_metrics(sessions)
+        
+        # Attack pattern analysis
+        attack_patterns = await self._analyze_attack_patterns(sessions)
+        
         # Recent activity
         recent_activity = await self._get_recent_blue_vs_red_activity()
         
+        # Calculate additional overview metrics
+        player_wins = len([s for s in sessions if s.get('player_won', False)])
+        player_win_rate = (player_wins / total_sessions * 100) if total_sessions > 0 else 0
+        
+        # Calculate asset protection rate
+        total_assets = 4 * total_sessions  # 4 assets per session
+        assets_protected = sum(s.get('assets_protected', 0) for s in sessions)
+        asset_protection_rate = (assets_protected / total_assets * 100) if total_assets > 0 else 0
+        
         return {
             'overview': {
+                'total_games': total_sessions,
                 'total_sessions': total_sessions,
                 'completed_sessions': completed_sessions,
                 'completion_rate': round((completed_sessions / total_sessions) * 100, 1),
+                'avg_game_duration': round(avg_session_duration * 60),  # Convert to seconds
                 'avg_session_duration': round(avg_session_duration, 1),
                 'avg_xp_earned': round(avg_xp_earned, 1),
                 'active_players': len(set(s.get('user_id') for s in sessions)),
+                'player_win_rate': round(player_win_rate, 1),
+                'asset_protection_rate': round(asset_protection_rate, 1)
             },
+            'performance_metrics': performance_stats,
             'defensive_actions': defensive_stats,
             'ai_performance': ai_stats,
             'asset_protection': asset_stats,
+            'attack_patterns': attack_patterns,
             'recent_activity': recent_activity
         }
     
@@ -267,25 +332,64 @@ class PlayerAnalytics:
         
         # Calculate active users (logged in within last 7 days)
         week_ago = datetime.now() - timedelta(days=7)
+        day_ago = datetime.now() - timedelta(days=1)
+        month_ago = datetime.now() - timedelta(days=30)
+        
         active_users = 0
+        daily_active_users = 0
+        monthly_active_users = 0
+        
         if users:
             active_users = len([u for u in users if u.get('last_login') and 
                               datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) > week_ago])
+            daily_active_users = len([u for u in users if u.get('last_login') and 
+                                    datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) > day_ago])
+            monthly_active_users = len([u for u in users if u.get('last_login') and 
+                                      datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) > month_ago])
         
         # Calculate engagement metrics
         total_sessions = len(level_sessions) + len(blue_red_sessions) if level_sessions and blue_red_sessions else 0
         
-        # Weekly trends (mock data for now - would need proper time-series analysis)
-        weekly_trends = await self._generate_weekly_trends()
+        # Calculate session duration in seconds
+        all_durations = []
+        if level_sessions:
+            all_durations.extend([s.get('completion_time_seconds', 0) for s in level_sessions if s.get('completion_time_seconds')])
+        if blue_red_sessions:
+            all_durations.extend([s.get('duration_minutes', 0) * 60 for s in blue_red_sessions if s.get('duration_minutes')])
+        
+        avg_session_duration_seconds = sum(all_durations) / len(all_durations) if all_durations else 0
+        avg_completion_time_minutes = avg_session_duration_seconds / 60 if avg_session_duration_seconds else 0
+        
+        # Calculate retention rates
+        retention_rates = await self._calculate_retention_rates(users)
+        
+        # Calculate level completion rates
+        level_completion_rates = await self._calculate_level_completion_rates(level_sessions)
+        
+        # Weekly trends
+        weekly_trends = await self._generate_weekly_trends(users, level_sessions, blue_red_sessions)
         
         return {
             'total_users': total_users,
             'active_users': active_users,
+            'daily_active_users': daily_active_users,
+            'weekly_active_users': active_users,
+            'monthly_active_users': monthly_active_users,
             'total_sessions': total_sessions,
             'completion_rate': self._calculate_overall_completion_rate(level_sessions, blue_red_sessions),
             'average_score': self._calculate_overall_average_score(level_sessions, blue_red_sessions),
+            'average_session_duration_seconds': round(avg_session_duration_seconds),
+            'average_completion_time_minutes': round(avg_completion_time_minutes, 1),
+            'retry_rate': await self._calculate_retry_rate(level_sessions, blue_red_sessions),
+            'hint_usage_rate': await self._calculate_hint_usage_rate(level_sessions),
+            'drop_off_rate': 100 - self._calculate_overall_completion_rate(level_sessions, blue_red_sessions),
+            'churn_rate': await self._calculate_churn_rate(users),
+            'retention_day_1': retention_rates.get('day_1', 0),
+            'retention_day_7': retention_rates.get('day_7', 0),
+            'retention_day_30': retention_rates.get('day_30', 0),
             'weekly_trends': weekly_trends,
-            'user_engagement': await self._calculate_user_engagement(users, level_sessions, blue_red_sessions)
+            'user_engagement': await self._calculate_user_engagement(users, level_sessions, blue_red_sessions),
+            **level_completion_rates
         }
     
     # ======================
@@ -340,30 +444,143 @@ class PlayerAnalytics:
             logger.error(f"Error getting recent blue vs red activity: {e}")
             return []
     
-    async def _generate_weekly_trends(self) -> List[Dict]:
-        """Generate weekly trend data"""
-        # This would normally pull from time-series data
-        # For now, generating realistic mock data
+    async def _generate_weekly_trends(self, users: List[Dict], level_sessions: List[Dict], 
+                                    blue_red_sessions: List[Dict]) -> List[Dict]:
+        """Generate weekly trend data from actual user and session data"""
         weeks = []
-        base_date = datetime.now() - timedelta(weeks=7)
         
         for i in range(8):
-            week_date = base_date + timedelta(weeks=i)
+            week_start = datetime.now() - timedelta(weeks=8-i)
+            week_end = week_start + timedelta(weeks=1)
+            
+            # Count sessions in this week
+            week_level_sessions = [s for s in (level_sessions or []) 
+                                 if s.get('created_at') and 
+                                 week_start <= datetime.fromisoformat(s['created_at'].replace('Z', '+00:00')) < week_end]
+            
+            week_blue_red_sessions = [s for s in (blue_red_sessions or []) 
+                                    if s.get('created_at') and 
+                                    week_start <= datetime.fromisoformat(s['created_at'].replace('Z', '+00:00')) < week_end]
+            
+            # Count new users in this week
+            week_new_users = [u for u in (users or []) 
+                            if u.get('created_at') and 
+                            week_start <= datetime.fromisoformat(u['created_at'].replace('Z', '+00:00')) < week_end]
+            
+            # Count DAU for this week (approximate)
+            week_active_users = [u for u in (users or []) 
+                               if u.get('last_login') and 
+                               week_start <= datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) < week_end]
+            
+            total_sessions = len(week_level_sessions) + len(week_blue_red_sessions)
+            completions = len([s for s in week_level_sessions if s.get('completed')]) + \
+                         len([s for s in week_blue_red_sessions if s.get('completed')])
+            
             weeks.append({
-                'week': week_date.strftime('%Y-W%U'),
-                'sessions': max(10, 50 + (i * 5) + (i % 3 * 10)),
-                'completions': max(5, 30 + (i * 3) + (i % 2 * 8)),
-                'new_users': max(1, 5 + (i % 4 * 3))
+                'date': week_start.strftime('%Y-%m-%d'),
+                'week': week_start.strftime('%Y-W%U'),
+                'sessions': total_sessions,
+                'completions': completions,
+                'new_users': len(week_new_users),
+                'dau': len(week_active_users)
             })
         
         return weeks
     
+    async def _calculate_retention_rates(self, users: List[Dict]) -> Dict[str, float]:
+        """Calculate user retention rates for 1, 7, and 30 days"""
+        if not users:
+            return {'day_1': 0, 'day_7': 0, 'day_30': 0}
+        
+        now = datetime.now()
+        day_1_ago = now - timedelta(days=1)
+        day_7_ago = now - timedelta(days=7)
+        day_30_ago = now - timedelta(days=30)
+        
+        # Users who registered at least X days ago
+        users_1_day_ago = [u for u in users if u.get('created_at') and 
+                          datetime.fromisoformat(u['created_at'].replace('Z', '+00:00')) <= day_1_ago]
+        users_7_days_ago = [u for u in users if u.get('created_at') and 
+                           datetime.fromisoformat(u['created_at'].replace('Z', '+00:00')) <= day_7_ago]
+        users_30_days_ago = [u for u in users if u.get('created_at') and 
+                            datetime.fromisoformat(u['created_at'].replace('Z', '+00:00')) <= day_30_ago]
+        
+        # Users who have been active since registration
+        retained_1_day = [u for u in users_1_day_ago if u.get('last_login') and 
+                         datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) >= day_1_ago]
+        retained_7_days = [u for u in users_7_days_ago if u.get('last_login') and 
+                          datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) >= day_7_ago]
+        retained_30_days = [u for u in users_30_days_ago if u.get('last_login') and 
+                           datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) >= day_30_ago]
+        
+        return {
+            'day_1': round((len(retained_1_day) / len(users_1_day_ago) * 100), 1) if users_1_day_ago else 0,
+            'day_7': round((len(retained_7_days) / len(users_7_days_ago) * 100), 1) if users_7_days_ago else 0,
+            'day_30': round((len(retained_30_days) / len(users_30_days_ago) * 100), 1) if users_30_days_ago else 0
+        }
+    
+    async def _calculate_level_completion_rates(self, level_sessions: List[Dict]) -> Dict[str, float]:
+        """Calculate completion rates for each level"""
+        level_rates = {}
+        
+        for level_id in range(1, 6):
+            level_progress = [s for s in (level_sessions or []) if s.get('level_id') == level_id]
+            if level_progress:
+                completed = len([s for s in level_progress if s.get('completed')])
+                completion_rate = (completed / len(level_progress)) * 100
+                level_rates[f'level_{level_id}_completion_rate'] = round(completion_rate, 1)
+            else:
+                level_rates[f'level_{level_id}_completion_rate'] = 0
+        
+        return level_rates
+    
+    async def _calculate_retry_rate(self, level_sessions: List[Dict], blue_red_sessions: List[Dict]) -> float:
+        """Calculate overall retry rate across all sessions"""
+        total_attempts = 0
+        total_successes = 0
+        
+        for session in (level_sessions or []):
+            attempts = session.get('attempt_count', 1)
+            total_attempts += attempts
+            if session.get('completed'):
+                total_successes += 1
+        
+        for session in (blue_red_sessions or []):
+            attempts = session.get('attempt_count', 1)
+            total_attempts += attempts
+            if session.get('completed'):
+                total_successes += 1
+        
+        if total_attempts > 0:
+            retry_rate = ((total_attempts - total_successes) / total_attempts) * 100
+            return round(retry_rate, 1)
+        return 0
+    
+    async def _calculate_hint_usage_rate(self, level_sessions: List[Dict]) -> float:
+        """Calculate hint usage rate in level sessions"""
+        if not level_sessions:
+            return 0
+        
+        sessions_with_hints = len([s for s in level_sessions if s.get('hints_used', 0) > 0])
+        return round((sessions_with_hints / len(level_sessions)) * 100, 1)
+    
+    async def _calculate_churn_rate(self, users: List[Dict]) -> float:
+        """Calculate user churn rate (users inactive for 30+ days)"""
+        if not users:
+            return 0
+        
+        month_ago = datetime.now() - timedelta(days=30)
+        churned_users = [u for u in users if not u.get('last_login') or 
+                        datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) < month_ago]
+        
+        return round((len(churned_users) / len(users)) * 100, 1)
+    
     def _calculate_overall_completion_rate(self, level_sessions: List[Dict], 
                                          blue_red_sessions: List[Dict]) -> float:
         """Calculate overall completion rate across all modes"""
-        total_sessions = len(level_sessions) + len(blue_red_sessions) if level_sessions and blue_red_sessions else 0
+        total_sessions = len(level_sessions or []) + len(blue_red_sessions or [])
         if total_sessions == 0:
-            return 72.5  # Mock data
+            return 0
             
         level_completed = len([s for s in (level_sessions or []) if s.get('completed')])
         blue_red_completed = len([s for s in (blue_red_sessions or []) if s.get('completed')])
@@ -380,17 +597,17 @@ class PlayerAnalytics:
         if blue_red_sessions:
             all_scores.extend([s.get('total_xp_earned', 0) for s in blue_red_sessions if s.get('total_xp_earned')])
             
-        return round(sum(all_scores) / len(all_scores), 1) if all_scores else 85.3
+        return round(sum(all_scores) / len(all_scores), 1) if all_scores else 0
     
     async def _calculate_user_engagement(self, users: List[Dict], level_sessions: List[Dict], 
                                        blue_red_sessions: List[Dict]) -> Dict[str, Any]:
         """Calculate user engagement metrics"""
         if not users:
             return {
-                'daily_active_users': 42,
-                'weekly_active_users': 89,
-                'average_session_duration': 18.5,
-                'retention_rate': 68.3
+                'daily_active_users': 0,
+                'weekly_active_users': 0,
+                'average_session_duration': 0,
+                'retention_rate': 0
             }
         
         # Calculate DAU (users active in last 24 hours)
@@ -410,13 +627,13 @@ class PlayerAnalytics:
         if blue_red_sessions:
             all_durations.extend([s.get('duration_minutes', 0) * 60 for s in blue_red_sessions])
             
-        avg_duration = sum(all_durations) / len(all_durations) / 60 if all_durations else 18.5
+        avg_duration = sum(all_durations) / len(all_durations) / 60 if all_durations else 0
         
         return {
             'daily_active_users': dau,
             'weekly_active_users': wau,
             'average_session_duration': round(avg_duration, 1),
-            'retention_rate': round((wau / len(users) * 100), 1) if len(users) > 0 else 68.3
+            'retention_rate': round((wau / len(users) * 100), 1) if len(users) > 0 else 0
         }
     
     # ======================
@@ -446,163 +663,129 @@ class PlayerAnalytics:
         return descriptions.get(level_id, f"Level {level_id} description")
     
     # ======================
-    # MOCK DATA FALLBACKS
+    # HELPER FUNCTIONS
     # ======================
     
-    def _get_mock_level_data(self) -> Dict[str, Any]:
-        """Return mock data when database is unavailable"""
+    async def _get_empty_level_data(self, level_id: int) -> Dict[str, Any]:
+        """Return empty data structure for a level with no data"""
         return {
-            f"level_{i}": self._get_mock_single_level_data(i) for i in range(1, 6)
-        }
-    
-    def _get_mock_single_level_data(self, level_id: int) -> Dict[str, Any]:
-        """Get mock data for a single level"""
-        base_data = {
             'name': self._get_level_name(level_id),
             'description': self._get_level_description(level_id),
-            'total_attempts': 150 + (level_id * 20),
-            'completed_sessions': 120 + (level_id * 15),
-            'completion_rate': max(60, 85 - (level_id * 3)),
-            'average_score': max(70, 90 - (level_id * 2)),
-            'average_completion_time': 15 + (level_id * 5),
-            'difficulty_rating': ["Easy", "Easy", "Medium", "Hard", "Very Hard"][level_id - 1],
-            'player_count': 50 + (level_id * 8),
-            'recent_activity': []
+            'total_attempts': 0,
+            'completed_sessions': 0,
+            'completion_rate': 0,
+            'average_score': 0,
+            'average_completion_time': 0,
+            'avg_time_seconds': 0,
+            'attempts_to_complete': 0,
+            'difficulty_rating': 'Unknown',
+            'player_count': 0,
+            'recent_activity': [],
+            **await self._get_empty_level_specific_metrics(level_id)
         }
-        
-        # Add level-specific mock metrics
-        if level_id == 1:
-            base_data.update({
-                'articles_analyzed': 1200,
-                'accuracy_rate': 87.3,
-                'fake_news_detected': 450,
-                'critical_thinking_score': 82.1
-            })
-        elif level_id == 2:
-            base_data.update({
-                'emails_processed': 980,
-                'phishing_detected': 340,
-                'false_positives': 45,
-                'security_awareness_score': 79.8
-            })
-        elif level_id == 3:
-            base_data.update({
-                'threats_neutralized': 560,
-                'systems_cleaned': 180,
-                'response_time': 4.2,
-                'cleanup_efficiency': 91.5
-            })
-        elif level_id == 4:
-            base_data.update({
-                'vulnerabilities_found': 290,
-                'ethical_score': 94.2,
-                'documentation_quality': 88.7,
-                'responsible_disclosure': 275
-            })
-        elif level_id == 5:
-            base_data.update({
-                'evidence_collected': 420,
-                'forensic_accuracy': 93.1,
-                'timeline_accuracy': 89.4,
-                'investigation_thoroughness': 87.9
-            })
-        
-        return base_data
     
-    def _get_mock_blue_vs_red_data(self) -> Dict[str, Any]:
-        """Return mock blue vs red team data"""
+    async def _get_empty_level_specific_metrics(self, level_id: int) -> Dict[str, Any]:
+        """Get empty metrics for level-specific fields"""
+        base_metrics = {
+            'articles_analyzed': 0, 'accuracy_rate': 0, 'fake_news_detected': 0, 'critical_thinking_score': 0,
+            'fact_check_accuracy': 0, 'misinformation_detection_speed': 0, 'source_verification_attempts': 0,
+            'news_bias_recognition': 0, 'emails_processed': 0, 'phishing_detected': 0, 'false_positives': 0,
+            'security_awareness_score': 0, 'phishing_detection_rate': 0, 'false_positive_rate': 0,
+            'email_analysis_thoroughness': 0, 'social_engineering_susceptibility': 0, 'safe_protocol_adherence': 0,
+            'threats_neutralized': 0, 'systems_cleaned': 0, 'response_time': 0, 'cleanup_efficiency': 0,
+            'malware_identification_accuracy': 0, 'quarantine_effectiveness': 0, 'system_cleanup_thoroughness': 0,
+            'threat_propagation_prevention': 0, 'security_tool_utilization': 0, 'vulnerabilities_found': 0,
+            'ethical_score': 0, 'documentation_quality': 0, 'responsible_disclosure': 0, 'vulnerability_discovery_rate': 0,
+            'reporting_accuracy': 0, 'ethical_compliance_score': 0, 'technical_skill_demonstration': 0,
+            'ethical_methodology_score': 0, 'responsible_disclosure_rate': 0, 'risk_assessment_accuracy': 0,
+            'evidence_collected': 0, 'forensic_accuracy': 0, 'timeline_accuracy': 0, 'investigation_thoroughness': 0,
+            'digital_forensics_proficiency': 0, 'investigation_methodology': 0, 'evidence_chain_preservation': 0,
+            'case_resolution_efficiency': 0, 'evidence_collection_score': 0, 'data_analysis_depth': 0,
+            'attribution_confidence': 0
+        }
+        return {k: v for k, v in base_metrics.items()}
+    
+    def _calculate_false_positive_rate(self, data: List[Dict]) -> float:
+        """Calculate false positive rate"""
+        total_negatives = sum(d.get('true_negatives', 0) + d.get('false_positives', 0) for d in data)
+        false_positives = sum(d.get('false_positives', 0) for d in data)
+        return round((false_positives / total_negatives * 100) if total_negatives > 0 else 0, 1)
+    
+    async def _get_empty_blue_vs_red_data(self) -> Dict[str, Any]:
+        """Return empty data structure for blue vs red with no data"""
         return {
             'overview': {
-                'total_sessions': 145,
-                'completed_sessions': 122,
-                'completion_rate': 84.1,
-                'avg_session_duration': 22.3,
-                'avg_xp_earned': 287.4,
-                'active_players': 67,
+                'total_games': 0, 'total_sessions': 0, 'completed_sessions': 0, 'completion_rate': 0,
+                'avg_game_duration': 0, 'avg_session_duration': 0, 'avg_xp_earned': 0, 'active_players': 0,
+                'player_win_rate': 0, 'asset_protection_rate': 0
+            },
+            'performance_metrics': {
+                'threat_detection_speed': 0, 'incident_response_effectiveness': 0, 'security_control_optimization': 0,
+                'ai_attack_success_rate': 0, 'player_action_efficiency': 0, 'alert_prioritization_accuracy': 0,
+                'mttd': 0, 'mttr': 0, 'rto': 0
             },
             'defensive_actions': {
-                'asset_isolation': {
-                    'total_attempts': 890,
-                    'correct_actions': 734,
-                    'accuracy_rate': 82.5,
-                    'avg_per_session': 6.1
-                },
-                'vulnerability_patching': {
-                    'total_attempts': 567,
-                    'correct_actions': 445,
-                    'accuracy_rate': 78.5,
-                    'avg_per_session': 3.9
-                },
-                'credential_resets': {
-                    'total_attempts': 234,
-                    'correct_actions': 198,
-                    'accuracy_rate': 84.6,
-                    'avg_per_session': 1.6
-                }
+                'asset_isolation': {'total_attempts': 0, 'correct_actions': 0, 'accuracy_rate': 0, 'avg_per_session': 0},
+                'vulnerability_patching': {'total_attempts': 0, 'correct_actions': 0, 'accuracy_rate': 0, 'avg_per_session': 0},
+                'credential_resets': {'total_attempts': 0, 'correct_actions': 0, 'accuracy_rate': 0, 'avg_per_session': 0}
             },
             'ai_performance': {
-                'attacks_launched': 2340,
-                'successful_attacks': 892,
-                'detected_attacks': 1448,
-                'success_rate': 38.1,
-                'detection_rate': 61.9,
-                'avg_attacks_per_session': 16.1,
-                'difficulty_adaptation': 3.2
+                'attacks_launched': 0, 'successful_attacks': 0, 'detected_attacks': 0, 'success_rate': 0,
+                'detection_rate': 0, 'avg_attacks_per_session': 0, 'difficulty_adaptation': 0
             },
             'asset_protection': {
-                'academy-server': {
-                    'total_sessions': 145,
-                    'times_compromised': 23,
-                    'times_protected': 122,
-                    'protection_rate': 84.1
-                },
-                'student-db': {
-                    'total_sessions': 145,
-                    'times_compromised': 34,
-                    'times_protected': 111,
-                    'protection_rate': 76.6
-                },
-                'research-files': {
-                    'total_sessions': 145,
-                    'times_compromised': 18,
-                    'times_protected': 127,
-                    'protection_rate': 87.6
-                },
-                'learning-platform': {
-                    'total_sessions': 145,
-                    'times_compromised': 29,
-                    'times_protected': 116,
-                    'protection_rate': 80.0
-                }
+                'academy_server': 0, 'student_db': 0, 'research_files': 0, 'learning_platform': 0
             },
+            'attack_patterns': [],
             'recent_activity': []
         }
     
-    def _get_mock_general_data(self) -> Dict[str, Any]:
-        """Return mock general analytics data"""
-        return {
-            'total_users': 247,
-            'active_users': 89,
-            'total_sessions': 1456,
-            'completion_rate': 72.5,
-            'average_score': 85.3,
-            'weekly_trends': [
-                {'week': '2025-W35', 'sessions': 45, 'completions': 32, 'new_users': 8},
-                {'week': '2025-W36', 'sessions': 52, 'completions': 38, 'new_users': 11},
-                {'week': '2025-W37', 'sessions': 48, 'completions': 35, 'new_users': 7},
-                {'week': '2025-W38', 'sessions': 61, 'completions': 44, 'new_users': 13},
-                {'week': '2025-W39', 'sessions': 58, 'completions': 41, 'new_users': 9},
-                {'week': '2025-W40', 'sessions': 67, 'completions': 49, 'new_users': 15},
-                {'week': '2025-W41', 'sessions': 73, 'completions': 53, 'new_users': 12},
-                {'week': '2025-W42', 'sessions': 79, 'completions': 58, 'new_users': 18}
-            ],
-            'user_engagement': {
-                'daily_active_users': 42,
-                'weekly_active_users': 89,
-                'average_session_duration': 18.5,
-                'retention_rate': 68.3
+    async def _analyze_performance_metrics(self, sessions: List[Dict]) -> Dict[str, Any]:
+        """Analyze performance metrics for blue vs red sessions"""
+        if not sessions:
+            return {
+                'threat_detection_speed': 0, 'incident_response_effectiveness': 0, 'security_control_optimization': 0,
+                'ai_attack_success_rate': 0, 'player_action_efficiency': 0, 'alert_prioritization_accuracy': 0,
+                'mttd': 0, 'mttr': 0, 'rto': 0
             }
+        
+        return {
+            'threat_detection_speed': self._calculate_avg_metric(sessions, 'threat_detection_speed'),
+            'incident_response_effectiveness': self._calculate_avg_metric(sessions, 'incident_response_score'),
+            'security_control_optimization': self._calculate_avg_metric(sessions, 'security_optimization_score'),
+            'ai_attack_success_rate': self._calculate_avg_metric(sessions, 'ai_success_rate'),
+            'player_action_efficiency': self._calculate_avg_metric(sessions, 'action_efficiency'),
+            'alert_prioritization_accuracy': self._calculate_avg_metric(sessions, 'alert_accuracy'),
+            'mttd': self._calculate_avg_metric(sessions, 'mean_time_to_detect'),
+            'mttr': self._calculate_avg_metric(sessions, 'mean_time_to_respond'),
+            'rto': self._calculate_avg_metric(sessions, 'recovery_time_objective')
         }
+    
+    async def _analyze_attack_patterns(self, sessions: List[Dict]) -> List[Dict]:
+        """Analyze attack patterns across sessions"""
+        if not sessions:
+            return []
+        
+        phases = ['reconnaissance', 'initial_access', 'persistence', 'privilege_escalation', 'data_exfiltration']
+        patterns = []
+        
+        for phase in phases:
+            phase_attempts = sum(s.get(f'{phase}_attempts', 0) for s in sessions)
+            phase_successes = sum(s.get(f'{phase}_successes', 0) for s in sessions)
+            phase_detections = sum(s.get(f'{phase}_detections', 0) for s in sessions)
+            
+            success_rate = (phase_successes / phase_attempts * 100) if phase_attempts > 0 else 0
+            detection_rate = (phase_detections / phase_attempts * 100) if phase_attempts > 0 else 0
+            
+            patterns.append({
+                'phase': phase,
+                'success_rate': round(success_rate, 1),
+                'detection_rate': round(detection_rate, 1)
+            })
+        
+        return patterns
+    
+
 
 
 # Global analytics instance
