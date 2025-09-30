@@ -127,10 +127,31 @@ export class BaseDialogue {
             this.exampleContainer = null;
         }
 
-        // Add separate centered example container if example exists
+        // Add separate example container positioned relative to dialogue if example exists
         if (hasExample) {
             const exampleContainer = document.createElement('div');
-            exampleContainer.className = 'fixed inset-0 flex items-center justify-center z-[10001] pointer-events-none';
+            
+            // Get dialogue container position and dimensions
+            const dialogueRect = this.dialogueContainer.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            const spaceBelow = viewportHeight - dialogueRect.bottom;
+            const spaceAbove = dialogueRect.top;
+            
+            // Position example container below dialogue if there's space, otherwise above
+            const positionBelow = spaceBelow >= 200; // Need at least 200px for example container
+            
+            if (positionBelow) {
+                exampleContainer.className = 'absolute flex items-start justify-center z-[10001] pointer-events-none';
+                exampleContainer.style.top = `${dialogueRect.bottom + window.scrollY + 8}px`; // 8px gap
+                exampleContainer.style.left = `${Math.max(8, dialogueRect.left + window.scrollX)}px`;
+                exampleContainer.style.right = `${Math.max(8, window.innerWidth - dialogueRect.right - window.scrollX)}px`;
+            } else {
+                exampleContainer.className = 'absolute flex items-end justify-center z-[10001] pointer-events-none';
+                exampleContainer.style.bottom = `${viewportHeight - dialogueRect.top - window.scrollY + 8}px`; // 8px gap above
+                exampleContainer.style.left = `${Math.max(8, dialogueRect.left + window.scrollX)}px`;
+                exampleContainer.style.right = `${Math.max(8, window.innerWidth - dialogueRect.right - window.scrollX)}px`;
+            }
+            
             exampleContainer.innerHTML = `
                 <div class="bg-gray-800 border-2 border-yellow-500 rounded-lg p-4 sm:p-6 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-4 shadow-2xl pointer-events-auto">
                     <div class="text-yellow-400 text-sm sm:text-base font-semibold mb-3 flex items-center justify-center">
