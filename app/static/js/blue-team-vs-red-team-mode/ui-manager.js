@@ -682,6 +682,48 @@ class UIManager {
         this.updateXPDisplay();
     }
 
+    showVulnerabilityPatchReward(baseAmount, exploitBonus, cveId) {
+        const totalAmount = baseAmount + exploitBonus;
+        
+        // Show floating XP reward animation
+        this.showFloatingXP(totalAmount, 'reward');
+        
+        // Show reward notification with CVE details
+        const message = `Vulnerability patched: ${cveId}`;
+        this.showXPNotification(totalAmount, 'reward', message);
+        
+        // Add specialized terminal feedback with tactical information
+        this.addTerminalOutput(`🛡️  VULNERABILITY PATCHED: ${cveId} mitigated`);
+        this.addTerminalOutput(`   🎯 Base Patch Reward: +${baseAmount} XP`);
+        
+        if (exploitBonus > 0) {
+            this.addTerminalOutput(`   ⚡ Active Exploit Bonus: +${exploitBonus} XP`);
+            this.addTerminalOutput(`   🔥 HIGH PRIORITY: Active exploitation prevented!`);
+        }
+        
+        this.addTerminalOutput(`   📊 Total Reward: +${totalAmount} XP`);
+        
+        // Update session stats display
+        this.updateXPDisplay();
+    }
+
+    showVulnerabilityPatchPenalty(amount, cveId) {
+        // Show floating XP penalty animation
+        this.showFloatingXP(-amount, 'penalty');
+        
+        // Show penalty notification
+        const message = `Unnecessary patch: ${cveId} not actively exploited`;
+        this.showXPNotification(-amount, 'penalty', message);
+        
+        // Add specialized terminal feedback with learning guidance
+        this.addTerminalOutput(`🔧  EFFICIENCY WARNING: Unnecessary patching wastes resources`);
+        this.addTerminalOutput(`   💸 Preventive Penalty: -${amount} XP lost`);
+        this.addTerminalOutput(`   💡 TIP: Focus on actively exploited vulnerabilities first`);
+        
+        // Update session stats display
+        this.updateXPDisplay();
+    }
+
     // Update XP display to include isolation accuracy stats
     updateIsolationAccuracy() {
         const isolationStats = this.gameController.getIsolationStats();
