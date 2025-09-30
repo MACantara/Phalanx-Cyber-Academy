@@ -1,7 +1,7 @@
 [
   {
     "id": "phish_001",
-    "sender": "security@paypal-verification.com",
+    "sender": "security@paypaI-verification.com",
     "receiver": "user@example.com",
     "date": "2024-03-15 09:32:15",
     "subject": "URGENT: Your PayPal Account Has Been Limited",
@@ -10,25 +10,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Suspicious domain (paypal-verification.com)",
-        "Urgent language and threats",
-        "Suspicious link to .tk domain",
-        "Generic greeting",
+        "Suspicious domain with uppercase 'I' instead of lowercase 'l' (paypaI vs paypal)",
+        "Generic greeting 'Dear PayPal User' instead of actual name",
+        "Urgent threats about account closure",
+        "Suspicious domain (.tk) for verification link",
         "Pressure tactics with time limit"
       ],
       "safety_factors": [],
-      "educational_focus": "This email demonstrates classic phishing tactics using urgency, fake security warnings, and suspicious links.",
+      "educational_focus": "Perfect example from dialogue training - demonstrates paypaI.com vs paypal.com domain spoofing and generic greetings instead of personalized names.",
       "red_flags": [
-        "Misspelled or suspicious sender domain",
-        "Urgent threats about account closure",
-        "Suspicious shortened or foreign domain links",
-        "Generic greetings instead of personalized"
+        "Domain spoofing: paypaI-verification.com (uppercase I instead of l)",
+        "External suspicious domain for account verification",
+        "Generic customer greetings instead of your name",
+        "Urgent time-based threats",
+        "Requests to click suspicious links for account access"
       ],
       "verification_tips": [
-        "Check sender domain carefully - legitimate PayPal emails come from @paypal.com",
-        "Hover over links to see real destination",
-        "Log into PayPal directly through official website",
-        "PayPal never asks for verification via email links"
+        "Always check for exact spelling of official domains",
+        "PayPal will never use .tk or similar domains for verification",
+        "Legitimate emails address you by your registered name",
+        "Never click suspicious links - login directly to PayPal instead"
       ]
     }
   },
@@ -43,25 +44,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Amazon domain (amazon-security.net)",
-        "Suspicious external payment link",
-        "High-value order to create urgency",
+        "Non-Amazon domain (amazon-security.net vs amazon.com)",
+        "Fake high-value order to create urgency",
+        "External domain for payment updates",
         "Generic greeting without customer name",
         "Fake order number format"
       ],
       "safety_factors": [],
-      "educational_focus": "Demonstrates order confirmation phishing using fake high-value purchases to create urgency.",
+      "educational_focus": "Shows how attackers use fake high-value orders and pressure tactics combined with domain spoofing to steal payment information.",
       "red_flags": [
-        "Non-Amazon domain in sender address",
-        "External payment update links",
-        "Unexpected high-value orders",
-        "Generic customer greetings"
+        "Wrong domain: amazon-security.net instead of amazon.com",
+        "Suspicious payment update domain (.org instead of official Amazon)",
+        "Generic greeting instead of your actual name",
+        "Unexpected high-value order you didn't make",
+        "External links for payment sensitive operations"
       ],
       "verification_tips": [
-        "Check your actual Amazon account for real orders",
-        "Amazon emails come from @amazon.com domains",
-        "Never click payment links in emails",
-        "Verify orders through official Amazon app or website"
+        "Amazon only sends order emails from @amazon.com",
+        "Check your actual Amazon account for this order number",
+        "Never update payment info through email links",
+        "Amazon addresses customers by their registered name"
       ]
     }
   },
@@ -76,26 +78,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Microsoft domain",
-        "Malicious download link (.exe file)",
-        "Extreme urgency (2 hours)",
-        "Scare tactics about file damage",
+        "Fake Microsoft domain (microsoft-security.org vs microsoft.com)",
+        "Requests to download executable files (.exe)",
+        "Extreme urgency with 2-hour deadline",
+        "Fear tactics about file damage",
         "Fake phone number"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows tech support scam tactics using fear and fake security alerts to distribute malware.",
+      "educational_focus": "Demonstrates tech support scam tactics using fear, fake security alerts, and malware distribution through executable downloads.",
       "red_flags": [
+        "Wrong domain: microsoft-security.org vs official microsoft.com",
+        "Requests to download .exe files from external sites",
+        "Extreme urgency tactics (2-hour deadline)",
         "Microsoft doesn't send virus alerts via email",
-        "Executable file downloads in emails",
-        "Extreme time pressure tactics",
-        "Non-Microsoft domains",
-        "Generic support phone numbers"
+        "Suspicious phone numbers for 'support'"
       ],
       "verification_tips": [
-        "Microsoft never sends security alerts via email",
-        "Never download executable files from emails",
-        "Use official Microsoft support channels",
-        "Run legitimate antivirus software regularly"
+        "Microsoft never sends virus detection emails",
+        "Never download .exe files from email links",
+        "Official Microsoft emails come from microsoft.com domain",
+        "Use official antivirus software, not email downloads"
       ]
     }
   },
@@ -110,26 +112,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Chase domain (chase-alert.com)",
-        "Suspicious geographic location",
+        "Fake Chase domain (chase-alert.com vs chase.com)",
+        "Geographic scare tactics (Nigeria reference)",
+        "Urgent 30-minute deadline pressure",
         "Invalid IP address format",
-        "Urgent time limit threat",
         "Suspicious verification link"
       ],
       "safety_factors": [],
-      "educational_focus": "Demonstrates banking security phishing using fake login alerts and geographic scare tactics.",
+      "educational_focus": "Shows banking security phishing using geographic fears, fake login alerts, and urgent time pressure to steal banking credentials.",
       "red_flags": [
-        "Non-bank domains in sender address",
-        "Suspicious foreign login locations",
-        "Time pressure tactics",
-        "External verification links",
-        "Invalid IP address formats"
+        "Wrong domain: chase-alert.com instead of official chase.com",
+        "Uses geographic stereotypes to create fear",
+        "Invalid IP address format (should not end in .456)",
+        "External domain for banking security operations",
+        "Extreme urgency with 30-minute threat"
       ],
       "verification_tips": [
-        "Log into your bank account directly through official website",
-        "Banks use their official domains for communications",
-        "Verify suspicious activity through official bank app",
-        "Never click verification links in emails"
+        "Chase bank emails come from chase.com domain only",
+        "Login directly to Chase website to check alerts",
+        "IP addresses don't end in numbers over 255",
+        "Banks don't lock accounts with 30-minute email warnings"
       ]
     }
   },
@@ -144,536 +146,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Facebook domain",
-        "Account deletion threats",
-        "Emotional manipulation (losing memories)",
-        "Suspicious .tk domain link",
+        "Fake Facebook domain (facebook-security.net vs facebook.com)",
+        "Emotional manipulation about losing photos/memories",
+        "Generic greeting instead of your actual name",
+        "Suspicious .tk domain for verification",
         "Urgent 24-hour deadline"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows emotional manipulation phishing using fear of losing personal data and memories.",
+      "educational_focus": "Demonstrates emotional manipulation phishing using fear of data loss and personal memories to bypass logical thinking.",
       "red_flags": [
-        "Facebook doesn't delete accounts without warning",
-        "Non-Facebook domains in sender",
-        "Threats about losing personal data",
-        "External verification requirements",
-        "Urgent time limits"
+        "Wrong domain: facebook-security.net vs official facebook.com",
+        "Generic greeting 'Facebook User' instead of your name",
+        "Emotional manipulation about losing personal data",
+        "Suspicious .tk domain for account verification",
+        "Fake privacy regulation claims"
       ],
       "verification_tips": [
-        "Check Facebook notifications within the app",
-        "Facebook emails come from @facebook.com or @facebookmail.com",
-        "Log into Facebook directly to check account status",
-        "Facebook provides advance notice for policy changes"
-      ]
-    }
-  },
-  {
-    "id": "phish_006",
-    "sender": "billing@netflix-support.org",
-    "receiver": "subscriber@email.com",
-    "date": "2024-03-20 12:18:55",
-    "subject": "Netflix Payment Failed - Service Suspended",
-    "body": "Hi there,\n\nYour Netflix subscription payment was declined by your bank.\n\nYour account has been temporarily suspended. To restore service:\n\n1. Update your payment method\n2. Confirm your billing information\n\nRestore Service: https://netflix-billing.net/update\n\nNote: Failure to update within 48 hours will result in account cancellation.\n\nNetflix Billing Team",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake Netflix domain (netflix-support.org)",
-        "Generic greeting 'Hi there'",
-        "Suspicious billing update link",
-        "Account cancellation threats",
-        "External domain for sensitive operations"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Demonstrates subscription service phishing using payment failure scare tactics.",
-      "red_flags": [
-        "Netflix emails come from @netflix.com",
-        "Generic greetings instead of account holder name",
-        "External payment update links",
-        "Immediate suspension threats",
-        "Suspicious billing domains"
-      ],
-      "verification_tips": [
-        "Check your Netflix account directly through the app",
-        "Netflix sends payment reminders, not immediate suspensions",
-        "Update payment info only through official Netflix website",
-        "Verify payment status with your bank directly"
-      ]
-    }
-  },
-  {
-    "id": "phish_007",
-    "sender": "security@apple-id-verification.com",
-    "receiver": "customer@email.com",
-    "date": "2024-03-21 09:41:33",
-    "subject": "Apple ID Locked Due to Suspicious Activity",
-    "body": "Dear Apple Customer,\n\nYour Apple ID has been locked due to multiple failed login attempts from an unknown device.\n\nDevice Information:\n- iPhone 13 Pro\n- Location: Moscow, Russia\n- Date: March 21, 2024\n\nUnlock your Apple ID now:\nhttps://appleid-security-unlock.com/restore\n\nImportant: Your account will be permanently disabled if not verified within 12 hours.\n\nApple Security",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake Apple domain with extra words",
-        "Suspicious foreign location (Moscow)",
-        "Account disabling threats",
-        "External unlock link",
-        "Urgent 12-hour deadline"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Shows Apple ID phishing using device security alerts and geographic scare tactics.",
-      "red_flags": [
-        "Apple emails come from @apple.com",
-        "Suspicious login locations",
-        "External unlock links",
-        "Immediate permanent disabling threats",
-        "Generic Apple Customer greeting"
-      ],
-      "verification_tips": [
-        "Check Apple ID status through official Apple website",
-        "Apple provides secure account recovery methods",
-        "Log into iCloud directly to verify account status",
-        "Use official Apple Support app for assistance"
-      ]
-    }
-  },
-  {
-    "id": "phish_008",
-    "sender": "noreply@googlesecurity-alert.net",
-    "receiver": "user@gmail.com",
-    "date": "2024-03-22 15:27:09",
-    "subject": "Google Account: Sign-in Blocked",
-    "body": "Hello,\n\nWe blocked a sign-in attempt to your Google Account.\n\nDetails:\n- Email: user@gmail.com\n- Time: March 22, 2024 10:15 AM\n- Location: Lagos, Nigeria\n- Device: Windows PC\n\nIf this wasn't you, secure your account:\nhttps://google-account-recovery.org/secure\n\nYour account may be compromised. Act immediately.\n\nGoogle Account Team",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake Google domain (googlesecurity-alert.net)",
-        "Suspicious African location",
-        "External recovery link",
-        "Account compromise threats",
-        "Non-Google security domain"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Demonstrates Google account phishing using blocked sign-in alerts and compromise fears.",
-      "red_flags": [
-        "Google emails come from @google.com",
-        "Suspicious international locations",
-        "External account recovery links",
-        "Compromise scare tactics",
-        "Non-Google domains for security"
-      ],
-      "verification_tips": [
-        "Check Google account activity through myaccount.google.com",
-        "Google provides official security notifications",
-        "Use Google's official account recovery process",
-        "Enable two-factor authentication for added security"
-      ]
-    }
-  },
-  {
-    "id": "phish_009",
-    "sender": "customerservice@ebay-resolution.com",
-    "receiver": "seller@email.com",
-    "date": "2024-03-23 13:14:46",
-    "subject": "eBay Dispute: Customer Claims Item Not Received",
-    "body": "Dear eBay Seller,\n\nA buyer has opened a dispute claiming they never received item #394857291.\n\nDispute Amount: $1,247.50\nBuyer: john_smith_2024\nItem: MacBook Pro 16-inch\n\nYou must respond within 48 hours or funds will be automatically refunded to buyer.\n\nRespond to Dispute: https://ebay-seller-center.net/dispute\n\neBay Customer Service",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake eBay domain (ebay-resolution.com)",
-        "High-value dispute to create urgency",
-        "External dispute response link",
-        "Automatic refund threats",
-        "48-hour pressure deadline"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Shows eBay seller phishing using fake disputes and financial pressure tactics.",
-      "red_flags": [
-        "eBay communications come from @ebay.com",
-        "High-value disputes to create panic",
-        "External dispute resolution links",
-        "Immediate automatic refund threats",
-        "Suspicious seller center domains"
-      ],
-      "verification_tips": [
-        "Log into eBay seller account directly",
-        "Check eBay messages within the platform",
-        "eBay disputes are handled through official resolution center",
-        "Verify buyer information through eBay's system"
-      ]
-    }
-  },
-  {
-    "id": "phish_010",
-    "sender": "fraud@visa-security.org",
-    "receiver": "cardholder@email.com",
-    "date": "2024-03-24 10:55:18",
-    "subject": "FRAUD ALERT: Unauthorized Transaction Detected",
-    "body": "URGENT FRAUD ALERT\n\nWe have detected a suspicious transaction on your Visa card:\n\nTransaction Details:\n- Amount: $2,899.00\n- Merchant: Bitcoin Exchange\n- Location: Romania\n- Date: March 24, 2024\n\nIf you did not authorize this transaction, immediately secure your card:\n\nhttps://visa-fraud-protection.net/secure\n\nWARNING: Additional unauthorized charges may occur if not addressed within 1 hour.\n\nVisa Fraud Protection",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake Visa domain (visa-security.org)",
-        "High-value cryptocurrency transaction",
-        "Suspicious foreign location",
-        "External security link",
-        "Extreme 1-hour urgency"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Demonstrates credit card fraud phishing using cryptocurrency and foreign transaction fears.",
-      "red_flags": [
-        "Visa doesn't use visa-security.org",
-        "High-value cryptocurrency transactions",
-        "Suspicious Eastern European locations",
-        "External fraud protection links",
-        "Extreme urgency tactics"
-      ],
-      "verification_tips": [
-        "Contact your bank directly using the number on your card",
-        "Check your actual card statements through bank app",
-        "Banks provide official fraud alert systems",
-        "Never click links in fraud alert emails"
-      ]
-    }
-  },
-  {
-    "id": "phish_011",
-    "sender": "support@crypto-exchange.org",
-    "receiver": "investor@email.com",
-    "date": "2024-03-25 16:42:27",
-    "subject": "Limited Time: 300% Bitcoin Investment Returns",
-    "body": "Congratulations!\n\nYou've been selected for our exclusive Bitcoin investment program.\n\nInvestment Details:\n- Minimum Investment: $500\n- Guaranteed Return: 300% in 30 days\n- Risk Level: ZERO\n- Spots Available: Only 50 remaining\n\nStart earning today:\nhttps://crypto-profit-max.com/invest\n\nThis offer expires in 24 hours. Don't miss out on guaranteed profits!\n\nCrypto Investment Team",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Too good to be true investment returns",
-        "Guaranteed 300% returns (impossible)",
-        "Zero risk claims (unrealistic)",
-        "Limited time pressure tactics",
-        "Suspicious crypto domain"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Shows cryptocurrency investment scam using unrealistic return promises and urgency.",
-      "red_flags": [
-        "Guaranteed high returns are always scams",
-        "No legitimate investment has zero risk",
-        "Pressure tactics with limited time offers",
-        "Unsolicited investment opportunities",
-        "Cryptocurrency get-rich-quick schemes"
-      ],
-      "verification_tips": [
-        "All investments carry risk - no guarantees exist",
-        "Research any investment company thoroughly",
-        "Consult licensed financial advisors",
-        "Be skeptical of unsolicited investment offers"
-      ]
-    }
-  },
-  {
-    "id": "phish_012",
-    "sender": "shipping@fedex-delivery.net",
-    "receiver": "customer@email.com",
-    "date": "2024-03-26 11:18:44",
-    "subject": "FedEx Package Delivery Failed - Action Required",
-    "body": "Dear Customer,\n\nYour FedEx package delivery failed due to an incorrect address.\n\nPackage Information:\n- Tracking: FX-9847562301\n- From: Apple Store\n- Contents: iPhone 15 Pro\n- Value: $1,199\n\nTo reschedule delivery and confirm your address:\nhttps://fedex-redelivery.org/schedule\n\nPackage will be returned to sender if not rescheduled within 72 hours.\n\nFedEx Customer Service",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake FedEx domain (fedex-delivery.net)",
-        "High-value package to create interest",
-        "External rescheduling link",
-        "Package return threats",
-        "Fake tracking number format"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Demonstrates shipping scam using fake delivery failures and valuable package claims.",
-      "red_flags": [
-        "FedEx emails come from @fedex.com",
-        "Unexpected high-value packages",
-        "External delivery scheduling links",
-        "Package return threats",
-        "Suspicious tracking number formats"
-      ],
-      "verification_tips": [
-        "Track packages only through official FedEx website",
-        "Verify any deliveries you're actually expecting",
-        "FedEx provides official tracking and rescheduling",
-        "Don't click links for unexpected packages"
-      ]
-    }
-  },
-  {
-    "id": "phish_013",
-    "sender": "security@whatsapp-verification.com",
-    "receiver": "user@email.com",
-    "date": "2024-03-27 14:33:51",
-    "subject": "WhatsApp Account Verification Required",
-    "body": "Hello WhatsApp User,\n\nDue to new security policies, all accounts must be verified to continue using WhatsApp.\n\nVerification Code: WA-Ver-8829341\n\nVerify your account to avoid suspension:\nhttps://whatsapp-verify.tk/confirm?code=WA-Ver-8829341\n\nUnverified accounts will be deleted after 48 hours.\n\nWhatsApp Security Team\n\nNote: This is an automated message. Do not reply.",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake WhatsApp domain",
-        "Unnecessary verification requirements",
-        "Suspicious .tk domain",
-        "Account deletion threats",
-        "Fake verification codes"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Shows messaging app phishing using fake security policy changes and verification requirements.",
-      "red_flags": [
-        "WhatsApp doesn't require email verification",
-        "Non-WhatsApp domains for verification",
-        "Account deletion threats",
-        "External verification links",
-        "Fake security policy changes"
-      ],
-      "verification_tips": [
-        "WhatsApp verification happens within the app",
-        "WhatsApp doesn't use email for account verification",
-        "Check WhatsApp official communications through the app",
-        "Contact WhatsApp support through official channels"
-      ]
-    }
-  },
-  {
-    "id": "phish_014",
-    "sender": "taxrefund@irs-treasury.org",
-    "receiver": "taxpayer@email.com",
-    "date": "2024-03-28 09:27:15",
-    "subject": "IRS Tax Refund: $3,247.89 Ready for Deposit",
-    "body": "Dear Taxpayer,\n\nGood news! You are eligible for a tax refund of $3,247.89.\n\nRefund Processing ID: IRS-REF-2024-7829\n\nTo receive your refund quickly, please verify your banking information:\n\nhttps://irs-refund-portal.net/claim\n\nYou must claim your refund within 30 days or it will be forfeited to the US Treasury.\n\nInternal Revenue Service\nTax Refund Department",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake IRS domain (irs-treasury.org)",
-        "Unsolicited refund claims",
-        "External banking verification",
-        "Refund forfeiture threats",
-        "Generic taxpayer greeting"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Demonstrates tax refund scam using government impersonation and financial incentives.",
-      "red_flags": [
-        "IRS emails come from @irs.gov only",
-        "IRS doesn't initiate contact via email",
-        "External banking information requests",
-        "Refund forfeiture threats",
-        "Generic government greetings"
-      ],
-      "verification_tips": [
-        "Check refund status only through official IRS website",
-        "IRS communicates primarily through postal mail",
-        "Verify tax information through official IRS channels",
-        "Never provide banking info via email links"
-      ]
-    }
-  },
-  {
-    "id": "phish_015",
-    "sender": "support@instagram-help.org",
-    "receiver": "influencer@email.com",
-    "date": "2024-03-29 12:45:38",
-    "subject": "Instagram Verification Badge Available",
-    "body": "Congratulations!\n\nYour Instagram account has been approved for the blue verification badge.\n\nAccount: @your_username\nFollowers: 25,847\nEngagement Rate: 4.2%\n\nTo activate your verification badge:\nhttps://instagram-verification.net/activate\n\nThis offer is valid for 7 days only. After that, you'll need to reapply and wait 6 months.\n\nInstagram Verification Team",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake Instagram domain (instagram-help.org)",
-        "Unsolicited verification offers",
-        "External activation links",
-        "Limited time verification offer",
-        "Fake follower statistics"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Shows social media verification scam targeting influencers and content creators.",
-      "red_flags": [
-        "Instagram emails come from @instagram.com",
-        "Verification is done through Instagram app",
-        "External verification activation links",
-        "Unsolicited verification offers",
-        "Time pressure for verification"
-      ],
-      "verification_tips": [
-        "Apply for verification only through Instagram app",
-        "Instagram doesn't email about verification approvals",
-        "Check verification status within Instagram settings",
-        "Be cautious of unsolicited social media offers"
-      ]
-    }
-  },
-  {
-    "id": "phish_016",
-    "sender": "billing@spotify-premium.net",
-    "receiver": "subscriber@email.com",
-    "date": "2024-03-30 15:52:41",
-    "subject": "Spotify Premium: Payment Declined",
-    "body": "Hi,\n\nYour Spotify Premium payment was declined.\n\nSubscription Details:\n- Plan: Premium Family\n- Monthly Cost: $15.99\n- Billing Date: March 30, 2024\n\nUpdate your payment method to continue enjoying Premium features:\n\nhttps://spotify-billing.org/update\n\nYour account will downgrade to free tier in 24 hours if payment is not updated.\n\nSpotify Billing Team",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake Spotify domain (spotify-premium.net)",
-        "Generic greeting without name",
-        "External payment update link",
-        "Account downgrade threats",
-        "Immediate 24-hour pressure"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Shows subscription payment scam using service downgrade fears and payment urgency.",
-      "red_flags": [
-        "Spotify emails come from @spotify.com",
-        "Generic greetings without subscriber name",
-        "External payment update links",
-        "Immediate downgrade threats",
-        "Suspicious billing domains"
-      ],
-      "verification_tips": [
-        "Check Spotify account directly through the app",
-        "Update payment info only through official Spotify website",
-        "Spotify provides grace periods for payment issues",
-        "Verify payment status with your bank or card company"
-      ]
-    }
-  },
-  {
-    "id": "phish_017",
-    "sender": "security@linkedin-professional.com",
-    "receiver": "professional@email.com",
-    "date": "2024-03-31 08:19:33",
-    "subject": "LinkedIn: Your Profile Has Been Viewed 247 Times",
-    "body": "Hello Professional,\n\nGreat news! Your LinkedIn profile has been viewed 247 times this week.\n\nProfile Views This Week:\n- Recruiters: 89 views\n- Hiring Managers: 124 views\n- Industry Professionals: 34 views\n\nUpgrade to LinkedIn Premium to see who viewed your profile:\n\nhttps://linkedin-premium-upgrade.net/offer\n\nSpecial Offer: 50% off Premium for new subscribers (expires today)\n\nLinkedIn Professional Team",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake LinkedIn domain (linkedin-professional.com)",
-        "Inflated profile view numbers",
-        "External premium upgrade link",
-        "Limited time discount pressure",
-        "Generic professional greeting"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Shows professional networking scam using career advancement and profile visibility tactics.",
-      "red_flags": [
-        "LinkedIn emails come from @linkedin.com",
-        "Inflated or fake profile statistics",
-        "External upgrade links",
-        "Pressure tactics with expiring offers",
-        "Generic professional greetings"
-      ],
-      "verification_tips": [
-        "Check LinkedIn notifications within the app",
-        "Upgrade to Premium only through official LinkedIn website",
-        "Verify profile view statistics through LinkedIn dashboard",
-        "Be cautious of unsolicited professional offers"
-      ]
-    }
-  },
-  {
-    "id": "phish_018",
-    "sender": "support@zoom-security.org",
-    "receiver": "user@company.com",
-    "date": "2024-04-01 13:41:27",
-    "subject": "Zoom Meeting Security Update Required",
-    "body": "Dear Zoom User,\n\nDue to recent security vulnerabilities, all Zoom accounts must install a critical security update.\n\nSecurity Update Details:\n- Version: Zoom Security Patch 5.14.2\n- Release Date: April 1, 2024\n- Priority: CRITICAL\n\nDownload the security update:\nhttps://zoom-security-update.com/download\n\nWarning: Accounts without this update will be suspended after April 3, 2024.\n\nZoom Security Team",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake Zoom domain (zoom-security.org)",
-        "Malicious software download link",
-        "Account suspension threats",
-        "Fake security vulnerability claims",
-        "External download requirements"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Shows software update scam using fake security vulnerabilities to distribute malware.",
-      "red_flags": [
-        "Zoom emails come from @zoom.us",
-        "Software downloads through external links",
-        "Account suspension threats",
-        "Fake security update requirements",
-        "Non-Zoom domains for security"
-      ],
-      "verification_tips": [
-        "Download Zoom updates only from official Zoom website",
-        "Check Zoom app for legitimate update notifications",
-        "Verify security news through official Zoom communications",
-        "Never download software from email links"
-      ]
-    }
-  },
-  {
-    "id": "phish_019",
-    "sender": "lottery@international-winners.org",
-    "receiver": "winner@email.com",
-    "date": "2024-04-02 10:33:19",
-    "subject": "CONGRATULATIONS! You've Won $750,000 USD",
-    "body": "CONGRATULATIONS!!!\n\nYou have won the International Email Lottery!\n\nWinning Details:\n- Prize Amount: $750,000 USD\n- Ticket Number: INT-2024-7829\n- Draw Date: April 1, 2024\n- Winning Numbers: 7, 14, 23, 31, 42, 49\n\nTo claim your prize, contact our claims agent:\nEmail: claims@lottery-winners.net\nPhone: +44-700-123-4567\n\nYou must claim within 14 days or forfeit your winnings.\n\nInternational Lottery Commission",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Unsolicited lottery win claims",
-        "Large monetary prizes",
-        "International lottery scam",
-        "Prize forfeiture threats",
-        "External claims contact"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Classic lottery scam using large prize claims and urgency to extract personal information or fees.",
-      "red_flags": [
-        "You cannot win lotteries you didn't enter",
-        "International lottery claims via email",
-        "Large unsolicited monetary prizes",
-        "Prize forfeiture pressure tactics",
-        "External claims agents"
-      ],
-      "verification_tips": [
-        "Legitimate lotteries require ticket purchases",
-        "Never provide personal information for unsolicited prizes",
-        "Research any lottery organization thoroughly",
-        "Be extremely skeptical of large unsolicited prizes"
-      ]
-    }
-  },
-  {
-    "id": "phish_020",
-    "sender": "admin@windows-update.net",
-    "receiver": "user@email.com",
-    "date": "2024-04-03 16:28:45",
-    "subject": "Critical Windows Security Update - Install Now",
-    "body": "Important Security Notice\n\nMicrosoft has released a critical security update for Windows.\n\nUpdate Information:\n- Update ID: KB2024-CRITICAL\n- Severity: CRITICAL\n- Affects: All Windows versions\n- CVE Score: 9.8/10\n\nInstall immediately:\nhttps://windows-critical-update.com/install\n\nThis vulnerability allows remote attackers to take complete control of your computer.\n\nMicrosoft Windows Update Team\n\nDO NOT DELAY - INSTALL NOW",
-    "is_phishing": 1,
-    "ai_analysis": {
-      "risk_level": "high",
-      "phishing_indicators": [
-        "Fake Microsoft domain (windows-update.net)",
-        "Malicious update download link",
-        "Fake CVE vulnerability scores",
-        "Extreme urgency and fear tactics",
-        "Remote control scare tactics"
-      ],
-      "safety_factors": [],
-      "educational_focus": "Shows operating system update scam using fake security vulnerabilities and fear of system compromise.",
-      "red_flags": [
-        "Microsoft doesn't send update emails",
-        "Windows updates come through Windows Update",
-        "External update download links",
-        "Fake security vulnerability claims",
-        "Extreme urgency in technical communications"
-      ],
-      "verification_tips": [
-        "Windows updates only through Windows Update system",
-        "Microsoft doesn't email about individual updates",
-        "Verify security news through official Microsoft channels",
-        "Never download system updates from email links"
+        "Facebook emails come from facebook.com or facebookmail.com",
+        "Facebook addresses users by their registered names",
+        "Never use .tk domains for account verification",
+        "Check Facebook directly for account status notifications"
       ]
     }
   }

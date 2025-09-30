@@ -1,561 +1,146 @@
 [
   {
     "id": "legit_001",
-    "sender": "noreply@github.com",
-    "receiver": "developer@company.com",
-    "date": "2024-03-15 14:22:33",
-    "subject": "GitHub Security Alert: New SSH key added",
-    "body": "Hi developer,\n\nA new SSH key was added to your GitHub account.\n\nKey details:\n- Title: MacBook Pro - Work\n- Fingerprint: SHA256:ABC123def456...\n- Added: March 15, 2024 at 14:20 UTC\n\nIf you did not add this key, please review your account security settings.\n\nView your SSH keys: https://github.com/settings/keys\n\nThanks,\nThe GitHub Team",
+    "sender": "security@microsoft.com",
+    "receiver": "sarah.johnson@company.com",
+    "date": "2024-03-17 09:18:42",
+    "subject": "Microsoft 365 sign-in from new device",
+    "body": "Hi Sarah,\n\nWe noticed a sign-in to your Microsoft 365 account from a new device.\n\nSign-in details:\n- Device: iPhone (iOS 17.3)\n- Location: San Francisco, CA, United States\n- Date and time: March 17, 2024, 9:15 AM PST\n- App: Outlook Mobile\n\nIf this was you, no action is needed. If this wasn't you, please secure your account.\n\nReview recent activity: https://account.microsoft.com/security\n\nBest regards,\nMicrosoft Account Team",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
-        "Legitimate GitHub domain (@github.com)",
-        "Specific technical details (SSH fingerprint)",
-        "Official GitHub branding and format",
-        "Links to actual GitHub settings",
-        "Personalized with username"
+        "Official microsoft.com domain",
+        "Specific device and location details",
+        "Personalized with user's actual name",
+        "Professional Microsoft branding",
+        "Links to official Microsoft account pages",
+        "No urgent threats or pressure tactics"
       ],
-      "educational_focus": "This demonstrates a legitimate security notification with proper domain, specific details, and official links.",
+      "educational_focus": "Perfect example of legitimate security notification - uses real name, specific details, official domain, and professional tone without creating panic.",
       "red_flags": [],
       "verification_tips": [
-        "Verify sender domain matches official service",
-        "Check for specific technical details vs generic messages",
-        "Links should go to official service domains",
-        "Security notifications should reference specific actions"
+        "Verify the sign-in actually occurred in your recent activity",
+        "Check if you recognize the device and location",
+        "Official Microsoft emails always use microsoft.com domain",
+        "Look for specific technical details rather than vague warnings"
       ]
     }
   },
   {
-    "id": "legit_002",
+    "id": "legit_002", 
     "sender": "receipts@amazon.com",
-    "receiver": "customer@email.com",
+    "receiver": "john.smith@email.com",
     "date": "2024-03-16 11:45:17",
     "subject": "Your order #112-7894563-1234567 has shipped",
-    "body": "Hello John,\n\nYour order has shipped and is on the way.\n\nOrder Details:\n- Order #: 112-7894563-1234567\n- Shipped: March 16, 2024\n- Carrier: UPS\n- Tracking: 1Z999AA1234567890\n- Estimated Delivery: March 18, 2024\n\nItems in this shipment:\n- JavaScript: The Definitive Guide (1 of 1)\n\nTrack your package: https://www.amazon.com/gp/css/order-history\n\nThanks for shopping with us!\nAmazon Customer Service",
+    "body": "Hello John Smith,\n\nYour order has shipped and is on the way.\n\nOrder Details:\n- Order #: 112-7894563-1234567\n- Shipped: March 16, 2024\n- Carrier: UPS\n- Tracking: 1Z999AA1234567890\n- Estimated Delivery: March 18, 2024\n\nItems in this shipment:\n- JavaScript: The Definitive Guide (Paperback) - $34.99\n\nYou can track your package or manage your orders in Your Account.\n\nTrack your package: https://www.amazon.com/gp/css/order-history\n\nThanks for shopping with us!\nAmazon Customer Service",
     "is_phishing": 0,
     "ai_analysis": {
-      "risk_level": "low",
+      "risk_level": "low", 
       "phishing_indicators": [],
       "safety_factors": [
-        "Official Amazon domain (@amazon.com)",
-        "Personalized greeting with customer name",
-        "Specific order number and tracking details",
-        "Real tracking number format",
-        "Links to official Amazon pages"
+        "Legitimate amazon.com domain",
+        "Proper Amazon order number format",
+        "Specific shipping and item details",
+        "Personalized greeting with full name",
+        "Links to official Amazon account pages",
+        "Professional business communication"
       ],
-      "educational_focus": "Shows legitimate order confirmation with proper personalization, specific details, and official domains.",
+      "educational_focus": "Excellent example of legitimate e-commerce communication - personalized, detailed, and uses official domains with no urgency tactics.",
       "red_flags": [],
       "verification_tips": [
-        "Look for personalized greetings with your actual name",
-        "Verify order numbers match your actual purchases",
-        "Check tracking numbers with official carrier websites",
-        "Confirm links go to official company domains"
+        "Verify order number exists in your Amazon account",
+        "Check that you actually made this purchase",
+        "Confirm tracking number with UPS directly",
+        "Amazon always uses amazon.com for order notifications"
       ]
     }
   },
   {
     "id": "legit_003",
-    "sender": "security@microsoft.com",
-    "receiver": "user@company.com",
-    "date": "2024-03-17 09:18:42",
-    "subject": "Microsoft 365 sign-in from new device",
-    "body": "Hi Sarah,\n\nWe noticed a sign-in to your Microsoft 365 account from a new device.\n\nSign-in details:\n- Device: iPhone (iOS 17.3)\n- Location: San Francisco, CA, United States\n- Date and time: March 17, 2024, 9:15 AM PST\n- App: Outlook Mobile\n\nIf this was you, no action is needed. If this wasn't you, please secure your account.\n\nReview recent activity: https://account.microsoft.com/security\n\nMicrosoft Account Team",
+    "sender": "notifications@slack.com", 
+    "receiver": "alex.chen@company.com",
+    "date": "2024-03-18 16:33:28",
+    "subject": "Weekly digest for Tech Team workspace",
+    "body": "Hi Alex,\n\nHere's what happened in your Tech Team workspace this week:\n\n📊 Workspace Activity:\n- 147 messages sent\n- 23 files shared\n- 8 channels active\n- 12 team members participated\n\n🔥 Most Active Channels:\n1. #development (45 messages)\n2. #general (32 messages)  \n3. #design-review (28 messages)\n\n📎 Recent Files:\n- API Documentation v2.1.pdf\n- Sprint Planning Notes.docx\n- UI Mockups.sketch\n\nOpen Slack: https://app.slack.com/client/T1234567/C1234567\n\nManage your notification preferences anytime in your account settings.\n\nBest,\nThe Slack Team",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
-        "Official Microsoft domain (@microsoft.com)",
-        "Personalized with user's actual name",
-        "Specific device and location information",
-        "Realistic timestamp and app details",
-        "Links to official Microsoft account pages"
+        "Official slack.com domain",
+        "Detailed workspace statistics that can be verified", 
+        "Personalized with actual workspace information",
+        "Professional Slack branding and language",
+        "Links to legitimate Slack application URLs",
+        "Includes unsubscribe/preference options"
       ],
-      "educational_focus": "Legitimate security notification with specific details and proper Microsoft branding.",
+      "educational_focus": "Shows how legitimate automated emails provide verifiable, specific information about your actual account activity.",
       "red_flags": [],
       "verification_tips": [
-        "Verify the sender uses official company domains",
-        "Look for specific device and location details",
-        "Check that timestamps match your actual activity",
-        "Ensure links go to official account management pages"
+        "Verify you're actually a member of this workspace",
+        "Check if channel names match your actual workspace",
+        "Confirm recent activity aligns with your usage",
+        "Slack notifications always come from slack.com"
       ]
     }
   },
   {
     "id": "legit_004",
-    "sender": "notifications@slack.com",
-    "receiver": "teamlead@company.com",
-    "date": "2024-03-18 16:33:28",
-    "subject": "Weekly digest for Tech Team workspace",
-    "body": "Hi Alex,\n\nHere's what happened in your Tech Team workspace this week:\n\n📊 Workspace Activity:\n- 147 messages sent\n- 23 files shared\n- 8 channels active\n- 12 team members participated\n\n🔥 Most Active Channels:\n1. #development (45 messages)\n2. #general (32 messages)\n3. #design-review (28 messages)\n\n📎 Recent Files:\n- API Documentation v2.1.pdf\n- Sprint Planning Notes.docx\n- UI Mockups.sketch\n\nOpen Slack: https://app.slack.com/client/T1234567/C1234567\n\nBest,\nThe Slack Team",
+    "sender": "billing@dropbox.com",
+    "receiver": "admin@startup.com", 
+    "date": "2024-03-19 12:15:55",
+    "subject": "Dropbox Business invoice for March 2024",
+    "body": "Hello,\n\nYour Dropbox Business invoice is ready for the March billing period.\n\nInvoice Summary:\n- Invoice #: INV-2024-03-19-789456\n- Billing Period: March 1-31, 2024\n- Plan: Business Plus (5 users)\n- Amount: $60.00\n- Payment Method: •••• 4567 (Visa ending in 4567)\n- Due Date: April 2, 2024\n\nTo view your complete invoice with itemized charges:\nView Invoice: https://www.dropbox.com/business/billing\n\nQuestions about your bill? Contact our Business Support team at support@dropbox.com\n\nThank you for your business,\nDropbox Business Team",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
-        "Official Slack domain (@slack.com)",
-        "Personalized with actual workspace details",
-        "Realistic activity statistics",
-        "Proper Slack branding and formatting",
-        "Links to legitimate Slack application"
+        "Official dropbox.com domain", 
+        "Detailed and realistic invoice information",
+        "Professional business language and formatting",
+        "Legitimate payment method display (partial card number)",
+        "Links to official Dropbox business portal",
+        "Includes customer service contact information"
       ],
-      "educational_focus": "Shows legitimate automated digest email with specific workspace data and official branding.",
+      "educational_focus": "Demonstrates legitimate business billing communication with proper formatting, realistic amounts, and official contact information.",
       "red_flags": [],
       "verification_tips": [
-        "Automated digests should reference real workspace activity",
-        "Look for specific channel names and realistic statistics",
-        "Verify links go to official application URLs",
-        "Check that sender domain matches the service"
+        "Verify you have an active Dropbox Business subscription",
+        "Check that billing amounts match your plan",
+        "Confirm payment method matches your records",
+        "Login directly to Dropbox to verify invoice details"
       ]
     }
   },
   {
     "id": "legit_005",
-    "sender": "billing@dropbox.com",
-    "receiver": "admin@startup.com",
-    "date": "2024-03-19 12:15:55",
-    "subject": "Dropbox Business invoice for March 2024",
-    "body": "Hello,\n\nYour Dropbox Business invoice is ready.\n\nInvoice Summary:\n- Invoice #: INV-2024-03-19-789456\n- Billing Period: March 1-31, 2024\n- Plan: Business Plus (5 users)\n- Amount: $60.00\n- Payment Method: •••• 4567 (Visa)\n- Due Date: April 2, 2024\n\nView Invoice: https://www.dropbox.com/business/billing\n\nQuestions about your bill? Contact our Business Support team.\n\nDropbox Business Team",
+    "sender": "support@paypal.com",
+    "receiver": "maria.garcia@business.com",
+    "date": "2024-03-20 14:28:33", 
+    "subject": "Payment received - Transaction ID: 8XY47291JK5623847",
+    "body": "Hello Maria Garcia,\n\nYou've received a payment.\n\nTransaction Details:\n- Amount: $450.00 USD\n- From: David Wilson (david.wilson@client.com)\n- Transaction ID: 8XY47291JK5623847\n- Date: March 20, 2024\n- Time: 2:25 PM PST\n- Note: \"Payment for March consulting services\"\n\nThis payment has been added to your PayPal balance. You can transfer it to your bank account or use it for purchases.\n\nView transaction details: https://www.paypal.com/myaccount/transactions\n\nIf you have questions about this payment, you can contact the sender directly or visit our Resolution Center.\n\nThank you for using PayPal,\nPayPal Customer Service",
     "is_phishing": 0,
     "ai_analysis": {
-      "risk_level": "low",
+      "risk_level": "low", 
       "phishing_indicators": [],
       "safety_factors": [
-        "Official Dropbox domain (@dropbox.com)",
-        "Specific invoice number and billing details",
-        "Realistic pricing for business plan",
-        "Partial credit card number (security best practice)",
-        "Links to official Dropbox billing pages"
+        "Official paypal.com domain (note: correct spelling)",
+        "Specific transaction ID and realistic details", 
+        "Personalized with recipient's full name",
+        "Professional PayPal branding and language",
+        "Links to official PayPal account pages",
+        "No urgency or suspicious requests"
       ],
-      "educational_focus": "Legitimate billing email with proper invoice details and official company information.",
+      "educational_focus": "Perfect example referenced in training - shows legitimate paypal.com vs suspicious misspellings. Professional tone with verifiable transaction details.",
       "red_flags": [],
       "verification_tips": [
-        "Check invoice numbers match your account records",
-        "Verify billing amounts with your actual subscription",
-        "Look for partial payment method details (not full numbers)",
-        "Confirm links go to official billing pages"
-      ]
-    }
-  },
-  {
-    "id": "legit_006",
-    "sender": "updates@linkedin.com",
-    "receiver": "professional@email.com",
-    "date": "2024-03-20 08:44:21",
-    "subject": "Your LinkedIn weekly update",
-    "body": "Hi Maria,\n\nHere's what's happening in your network:\n\n👥 Network Activity:\n- 3 new connections this week\n- 12 profile views\n- 2 post likes\n- 1 comment on your article\n\n📈 Your Posts:\n- \"5 Tips for Remote Team Management\" - 24 likes, 3 comments\n- \"Industry Trends in 2024\" - 18 likes, 1 share\n\n🎯 Jobs You Might Like:\n- Senior Product Manager at TechCorp\n- Marketing Director at StartupXYZ\n\nView your activity: https://www.linkedin.com/notifications/\n\nKeep building your network!\nLinkedIn Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official LinkedIn domain (@linkedin.com)",
-        "Personalized with user's actual name",
-        "Realistic networking activity statistics",
-        "Specific post titles and engagement metrics",
-        "Links to official LinkedIn pages"
-      ],
-      "educational_focus": "Legitimate social network digest with personalized activity data and proper branding.",
-      "red_flags": [],
-      "verification_tips": [
-        "Weekly digests should reflect your actual platform activity",
-        "Look for specific post titles and realistic engagement numbers",
-        "Verify job recommendations match your profile",
-        "Check links go to official platform pages"
-      ]
-    }
-  },
-  {
-    "id": "legit_007",
-    "sender": "no-reply@spotify.com",
-    "receiver": "music_lover@email.com",
-    "date": "2024-03-21 19:27:14",
-    "subject": "Your Spotify Wrapped - March Edition",
-    "body": "Hey David,\n\n🎵 Your March music stats are in!\n\nTop Artists:\n1. Arctic Monkeys (12 hours)\n2. Taylor Swift (8 hours)\n3. The Weeknd (6 hours)\n\nTop Songs:\n1. \"Do I Wanna Know?\" - 47 plays\n2. \"Anti-Hero\" - 32 plays\n3. \"Blinding Lights\" - 28 plays\n\nGenres:\n- Indie Rock: 45%\n- Pop: 30%\n- Alternative: 25%\n\nTotal listening time: 87 hours 🎧\n\nDiscover more music: https://open.spotify.com/browse/discover\n\nKeep listening!\nSpotify",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official Spotify domain (@spotify.com)",
-        "Personalized with listener's name",
-        "Realistic music listening statistics",
-        "Popular artists and songs",
-        "Links to official Spotify features"
-      ],
-      "educational_focus": "Legitimate music service digest with personalized listening data and official branding.",
-      "red_flags": [],
-      "verification_tips": [
-        "Music stats should reflect your actual listening habits",
-        "Look for realistic artist names and song titles",
-        "Check that listening hours seem reasonable",
-        "Verify links go to official music service pages"
-      ]
-    }
-  },
-  {
-    "id": "legit_008",
-    "sender": "support@zoom.us",
-    "receiver": "host@company.com",
-    "date": "2024-03-22 10:52:39",
-    "subject": "Meeting recording ready: Team Standup - March 22",
-    "body": "Hi Jennifer,\n\nYour Zoom meeting recording is ready to view.\n\nMeeting Details:\n- Title: Team Standup - March 22\n- Date: March 22, 2024\n- Duration: 28 minutes\n- Participants: 8\n- Recording Size: 156 MB\n\nThe recording will be available for 30 days.\n\nView Recording: https://zoom.us/rec/share/abc123def456\nDownload: https://zoom.us/rec/download/abc123def456\n\nNeed help? Visit our Help Center: https://support.zoom.us\n\nZoom Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official Zoom domain (@zoom.us)",
-        "Specific meeting details and duration",
-        "Realistic file size and participant count",
-        "Standard Zoom recording features",
-        "Links to official Zoom recording platform"
-      ],
-      "educational_focus": "Legitimate video conferencing notification with specific meeting data and official features.",
-      "red_flags": [],
-      "verification_tips": [
-        "Meeting details should match your actual hosted meetings",
-        "Check recording timestamps and durations for accuracy",
-        "Verify participant counts match your meeting",
-        "Ensure links go to official Zoom recording system"
-      ]
-    }
-  },
-  {
-    "id": "legit_009",
-    "sender": "noreply@trello.com",
-    "receiver": "projectmanager@team.com",
-    "date": "2024-03-23 15:18:46",
-    "subject": "Daily digest for Website Redesign board",
-    "body": "Good afternoon Rachel,\n\nHere's what happened on your Website Redesign board today:\n\n📋 Board Activity:\n- 4 cards moved\n- 2 new comments\n- 1 card completed\n- 3 due dates approaching\n\n✅ Completed:\n- \"User research interviews\" by Mike\n\n🔄 In Progress:\n- \"Wireframe homepage\" (Due: March 25)\n- \"Design system update\" (Due: March 26)\n- \"Content audit\" (Due: March 27)\n\n💬 Recent Comments:\n- Sarah: \"Updated the color palette based on feedback\"\n- Tom: \"Ready for design review\"\n\nView Board: https://trello.com/b/abc123/website-redesign\n\nStay organized!\nTrello Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official Trello domain (@trello.com)",
-        "Specific project board activity details",
-        "Realistic task names and team member actions",
-        "Proper Trello board URL structure",
-        "Consistent project management terminology"
-      ],
-      "educational_focus": "Legitimate project management digest with specific board activity and team collaboration details.",
-      "red_flags": [],
-      "verification_tips": [
-        "Board activity should match your actual project work",
-        "Check that team member names and actions are realistic",
-        "Verify due dates align with your project timeline",
-        "Ensure board links go to official Trello platform"
-      ]
-    }
-  },
-  {
-    "id": "legit_010",
-    "sender": "billing@adobe.com",
-    "receiver": "creative@agency.com",
-    "date": "2024-03-24 11:33:52",
-    "subject": "Adobe Creative Cloud payment receipt",
-    "body": "Thank you for your payment.\n\nPayment Details:\n- Plan: Creative Cloud All Apps\n- Billing Period: March 24 - April 23, 2024\n- Amount Paid: $52.99\n- Payment Method: •••• 1234 (Mastercard)\n- Transaction ID: ACC-2024-789456123\n\nYour subscription is active and all apps are ready to use.\n\nApps Included:\n- Photoshop, Illustrator, InDesign\n- Premiere Pro, After Effects\n- XD, Lightroom, and more\n\nManage Subscription: https://account.adobe.com/subscription\n\nAdobe Customer Care",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official Adobe domain (@adobe.com)",
-        "Specific payment amount and billing period",
-        "Realistic subscription plan details",
-        "Partial credit card number (security practice)",
-        "Links to official Adobe account management"
-      ],
-      "educational_focus": "Legitimate software subscription receipt with proper payment details and official company information.",
-      "red_flags": [],
-      "verification_tips": [
-        "Payment amounts should match your actual subscription cost",
-        "Check billing periods align with your subscription cycle",
-        "Verify included apps match your actual plan",
-        "Ensure links go to official account management pages"
-      ]
-    }
-  },
-  {
-    "id": "legit_011",
-    "sender": "hello@calendly.com",
-    "receiver": "consultant@freelance.com",
-    "date": "2024-03-25 13:47:18",
-    "subject": "New meeting scheduled: Client Discovery Call",
-    "body": "Hi Emma,\n\nSomeone just scheduled a meeting with you!\n\nMeeting Details:\n- Event: Client Discovery Call\n- Attendee: John Smith (john@newclient.com)\n- Date & Time: March 28, 2024 at 2:00 PM EST\n- Duration: 45 minutes\n- Location: Zoom (link will be sent 1 hour before)\n\nAttendee's Details:\n- Company: NewClient Solutions\n- Phone: +1 (555) 123-4567\n- Notes: \"Looking to discuss website redesign project\"\n\nCancel or Reschedule: https://calendly.com/emma-consultant/discovery-call\n\nHappy scheduling!\nCalendly Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official Calendly domain (@calendly.com)",
-        "Specific meeting details and attendee information",
-        "Realistic business context and notes",
-        "Professional meeting scheduling format",
-        "Links to official Calendly booking system"
-      ],
-      "educational_focus": "Legitimate meeting scheduling notification with specific attendee details and proper service branding.",
-      "red_flags": [],
-      "verification_tips": [
-        "Meeting details should match your available booking slots",
-        "Check attendee information seems realistic and professional",
-        "Verify meeting times align with your calendar settings",
-        "Ensure links go to your actual Calendly booking pages"
-      ]
-    }
-  },
-  {
-    "id": "legit_012",
-    "sender": "notifications@figma.com",
-    "receiver": "designer@studio.com",
-    "date": "2024-03-26 16:22:35",
-    "subject": "You've been added to \"Mobile App Redesign\" project",
-    "body": "Hey Chris,\n\nYou've been invited to collaborate on a new Figma project!\n\nProject Details:\n- Project: Mobile App Redesign\n- Team: Digital Design Studio\n- Invited by: Lisa Chen (lisa@studio.com)\n- Role: Editor\n- Files: 3 design files, 1 prototype\n\nRecent Activity:\n- \"Homepage Wireframes\" updated 2 hours ago\n- \"User Flow Diagram\" created yesterday\n- \"Design System\" shared with team\n\nOpen Project: https://www.figma.com/file/abc123/mobile-app-redesign\n\nHappy designing!\nFigma Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official Figma domain (@figma.com)",
-        "Specific project and team member details",
-        "Realistic design file names and activity",
-        "Proper Figma file URL structure",
-        "Professional design collaboration context"
-      ],
-      "educational_focus": "Legitimate design collaboration invitation with specific project details and team member information.",
-      "red_flags": [],
-      "verification_tips": [
-        "Project invitations should come from known team members",
-        "Check that project names and file types seem realistic",
-        "Verify the inviting person's email address",
-        "Ensure links go to official Figma file sharing system"
-      ]
-    }
-  },
-  {
-    "id": "legit_013",
-    "sender": "digest@stackoverflow.com",
-    "receiver": "developer@tech.com",
-    "date": "2024-03-27 07:15:41",
-    "subject": "The Overflow #87: JavaScript frameworks, AI debugging",
-    "body": "Hi Kevin,\n\nWelcome to The Overflow, a newsletter by Stack Overflow.\n\n📚 This Week's Top Articles:\n- \"Modern JavaScript Frameworks: React vs Vue vs Angular\"\n- \"Using AI to Debug Complex Code Issues\"\n- \"Database Optimization Tips for Large Applications\"\n\n💡 Featured Questions:\n- \"How to handle async/await errors in Node.js?\"\n- \"Best practices for React component testing\"\n- \"SQL query performance optimization techniques\"\n\n🔥 Trending Tags:\n#javascript #react #nodejs #python #sql\n\nRead the full newsletter: https://stackoverflow.blog/newsletter/overflow-87\n\nUnsubscribe: https://stackoverflow.com/users/preferences\n\nStack Overflow Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official Stack Overflow domain (@stackoverflow.com)",
-        "Technical content relevant to developers",
-        "Realistic programming topics and questions",
-        "Professional newsletter format",
-        "Links to official Stack Overflow pages"
-      ],
-      "educational_focus": "Legitimate technical newsletter with relevant programming content and proper developer community branding.",
-      "red_flags": [],
-      "verification_tips": [
-        "Technical newsletters should contain relevant programming content",
-        "Check that article titles and topics seem realistic",
-        "Verify questions match common developer challenges",
-        "Ensure links go to official community platforms"
-      ]
-    }
-  },
-  {
-    "id": "legit_014",
-    "sender": "team@notion.so",
-    "receiver": "organizer@productivity.com",
-    "date": "2024-03-28 14:38:29",
-    "subject": "Your weekly Notion workspace digest",
-    "body": "Hello Taylor,\n\n📊 Here's what happened in your \"Personal Productivity\" workspace this week:\n\nPages Activity:\n- 12 pages created\n- 8 pages edited\n- 3 templates used\n- 2 databases updated\n\n📝 Most Active Pages:\n1. \"Project Planning Dashboard\" (15 edits)\n2. \"Meeting Notes - March\" (8 edits)\n3. \"Reading List 2024\" (5 new entries)\n\n🔧 Recently Used Templates:\n- Meeting Notes Template\n- Project Task Template\n- Weekly Review Template\n\n📈 Workspace Stats:\n- Total pages: 127\n- Total blocks: 1,834\n- Team members: 1 (you)\n\nOpen Workspace: https://www.notion.so/personal-productivity\n\nStay productive!\nNotion Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official Notion domain (@notion.so)",
-        "Specific workspace activity statistics",
-        "Realistic page names and editing patterns",
-        "Proper Notion workspace URL structure",
-        "Consistent productivity tool terminology"
-      ],
-      "educational_focus": "Legitimate productivity tool digest with specific workspace activity and realistic usage patterns.",
-      "red_flags": [],
-      "verification_tips": [
-        "Workspace activity should reflect your actual Notion usage",
-        "Check that page names and templates match your work",
-        "Verify statistics seem reasonable for your workspace size",
-        "Ensure links go to your actual Notion workspace"
-      ]
-    }
-  },
-  {
-    "id": "legit_015",
-    "sender": "security@1password.com",
-    "receiver": "security_admin@company.com",
-    "date": "2024-03-29 09:44:16",
-    "subject": "Watchtower Alert: 3 vulnerable passwords detected",
-    "body": "Hi Alex,\n\n🔐 Watchtower has found some items that need your attention:\n\nVulnerable Items:\n- Netflix account: Password appears in known data breaches\n- Old Gmail account: Password is weak (6 characters)\n- Shopping site: Password is reused (also used for 2 other accounts)\n\nRecommended Actions:\n1. Update Netflix password immediately\n2. Generate strong password for Gmail account\n3. Create unique password for shopping site\n\n🛡️ Your Security Score: 78/100 (Good)\n- 156 strong, unique passwords\n- 12 items using two-factor authentication\n- 3 items need attention\n\nOpen 1Password: https://my.1password.com/vaults\n\nStay secure!\n1Password Security Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official 1Password domain (@1password.com)",
-        "Specific password security recommendations",
-        "Realistic vulnerability types and descriptions",
-        "Professional security scoring system",
-        "Links to official 1Password vault management"
-      ],
-      "educational_focus": "Legitimate password manager security alert with specific vulnerability details and actionable recommendations.",
-      "red_flags": [],
-      "verification_tips": [
-        "Security alerts should reference your actual accounts",
-        "Check that vulnerability types match common password issues",
-        "Verify security scores and statistics seem realistic",
-        "Ensure links go to official password manager interface"
-      ]
-    }
-  },
-  {
-    "id": "legit_016",
-    "sender": "no-reply@docker.com",
-    "receiver": "devops@tech.com",
-    "date": "2024-03-30 12:57:43",
-    "subject": "Docker Hub: New image pushed to your repository",
-    "body": "Hi Morgan,\n\nA new image has been pushed to your Docker Hub repository.\n\nRepository: morgan/web-app-frontend\nTag: v2.1.0\nPushed by: morgan (you)\nPush time: March 30, 2024 at 12:55 PM UTC\nImage size: 287 MB\nLayers: 12\n\nImage Details:\n- Base image: node:18-alpine\n- Architecture: linux/amd64\n- Vulnerabilities: 0 critical, 2 medium, 5 low\n\nView Repository: https://hub.docker.com/r/morgan/web-app-frontend\nScan Results: https://hub.docker.com/r/morgan/web-app-frontend/tags\n\nHappy containerizing!\nDocker Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official Docker domain (@docker.com)",
-        "Specific repository and image details",
-        "Realistic container image specifications",
-        "Technical vulnerability scan results",
-        "Links to official Docker Hub repository"
-      ],
-      "educational_focus": "Legitimate container registry notification with specific technical details and proper development tool branding.",
-      "red_flags": [],
-      "verification_tips": [
-        "Repository names should match your actual Docker projects",
-        "Check image sizes and layer counts seem reasonable",
-        "Verify vulnerability scan results match security expectations",
-        "Ensure links go to your actual Docker Hub repositories"
-      ]
-    }
-  },
-  {
-    "id": "legit_017",
-    "sender": "digest@medium.com",
-    "receiver": "writer@content.com",
-    "date": "2024-03-31 18:21:55",
-    "subject": "Your story stats for March 2024",
-    "body": "Hi Jordan,\n\n📖 Here's how your stories performed this month:\n\nTop Performing Story:\n\"10 JavaScript Tips Every Developer Should Know\"\n- 2,847 views\n- 156 claps\n- 23 responses\n- 12 new followers from this story\n\nMarch Totals:\n- Stories published: 4\n- Total views: 5,234\n- Total claps: 289\n- New followers: 47\n- Reading time: 18 minutes average\n\nYour Most Engaged Readers:\n- @tech_enthusiast (clapped 15 times)\n- @coding_beginner (left 3 thoughtful responses)\n- @web_developer_pro (shared 2 stories)\n\nWrite your next story: https://medium.com/new-story\n\nKeep writing!\nMedium Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official Medium domain (@medium.com)",
-        "Specific article performance statistics",
-        "Realistic engagement metrics and reader interactions",
-        "Professional content creator analytics format",
-        "Links to official Medium writing platform"
-      ],
-      "educational_focus": "Legitimate content platform analytics with specific performance data and realistic engagement metrics.",
-      "red_flags": [],
-      "verification_tips": [
-        "Story statistics should match your actual published content",
-        "Check that engagement numbers seem realistic for your audience",
-        "Verify reader usernames and interaction patterns",
-        "Ensure links go to official Medium writing interface"
-      ]
-    }
-  },
-  {
-    "id": "legit_018",
-    "sender": "support@stripe.com",
-    "receiver": "finance@ecommerce.com",
-    "date": "2024-04-01 14:15:37",
-    "subject": "Stripe payout: $2,847.36 transferred to your bank",
-    "body": "Hello,\n\nYour Stripe payout has been processed.\n\nPayout Details:\n- Amount: $2,847.36\n- Period: March 25-31, 2024\n- Transfer ID: po_1P2B3c4D5e6F7g8H9\n- Bank Account: •••• 7890 (Business Checking)\n- Expected Arrival: April 2, 2024\n\nTransaction Summary (March 25-31):\n- Successful charges: 247\n- Gross volume: $3,156.82\n- Stripe fees: -$91.46\n- Refunds: -$218.00\n- Net payout: $2,847.36\n\nView Details: https://dashboard.stripe.com/payouts/po_1P2B3c4D5e6F7g8H9\n\nStripe Support Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official Stripe domain (@stripe.com)",
-        "Specific payout amount and transaction details",
-        "Realistic payment processing fees and volumes",
-        "Proper Stripe transaction ID format",
-        "Links to official Stripe dashboard"
-      ],
-      "educational_focus": "Legitimate payment processor notification with specific financial details and proper transaction tracking.",
-      "red_flags": [],
-      "verification_tips": [
-        "Payout amounts should match your actual business transactions",
-        "Check that transaction volumes seem realistic for your business",
-        "Verify fee calculations align with Stripe's pricing",
-        "Ensure links go to official Stripe dashboard"
-      ]
-    }
-  },
-  {
-    "id": "legit_019",
-    "sender": "education@coursera.org",
-    "receiver": "student@university.edu",
-    "date": "2024-04-02 10:42:18",
-    "subject": "Course reminder: Machine Learning assignment due tomorrow",
-    "body": "Hi Sam,\n\n📚 Friendly reminder about your upcoming assignment:\n\nCourse: Machine Learning (Stanford University)\nAssignment: Programming Assignment 3 - Neural Networks\nDue: April 3, 2024 at 11:59 PM PDT\nTime remaining: 1 day, 13 hours\n\nAssignment Details:\n- Implement backpropagation algorithm\n- Train neural network on handwritten digits\n- Achieve >95% accuracy on test set\n- Submit .py file and written report\n\nProgress:\n- Video lectures: 8/8 completed ✅\n- Programming exercises: 2/3 completed\n- Quiz: Not started\n\nContinue Assignment: https://www.coursera.org/learn/machine-learning/assignment/abc123\n\nGood luck!\nCoursera Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official Coursera domain (@coursera.org)",
-        "Specific course and assignment details",
-        "Realistic academic timeline and requirements",
-        "Technical assignment specifications",
-        "Links to official Coursera course platform"
-      ],
-      "educational_focus": "Legitimate educational platform reminder with specific course progress and assignment details.",
-      "red_flags": [],
-      "verification_tips": [
-        "Course reminders should match your actual enrolled courses",
-        "Check assignment details align with course curriculum",
-        "Verify due dates match your academic calendar",
-        "Ensure links go to official course platform pages"
-      ]
-    }
-  },
-  {
-    "id": "legit_020",
-    "sender": "noreply@github.com",
-    "receiver": "maintainer@opensource.org",
-    "date": "2024-04-03 16:33:44",
-    "subject": "GitHub Sponsors: You received $25 from @tech_supporter",
-    "body": "Hi Alex,\n\n🎉 Great news! You have a new sponsor.\n\nSponsor Details:\n- Sponsor: @tech_supporter\n- Amount: $25.00 USD (one-time)\n- Date: April 3, 2024\n- Message: \"Thanks for the amazing work on the React UI library!\"\n\nYour Sponsorship Stats:\n- Total sponsors: 23\n- Monthly recurring: $180/month\n- One-time contributions: $125 this month\n- Goal progress: $180 of $500 monthly goal (36%)\n\nTop Sponsored Repositories:\n1. react-ui-components (15 sponsors)\n2. data-visualization-tools (8 sponsors)\n\nManage Sponsorships: https://github.com/sponsors/alex\nSay Thanks: https://github.com/tech_supporter\n\nThank you for your open source contributions!\nGitHub Sponsors Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official GitHub domain (@github.com)",
-        "Specific sponsorship amount and contributor details",
-        "Realistic open source project context",
-        "Professional sponsorship platform features",
-        "Links to official GitHub profiles and sponsor management"
-      ],
-      "educational_focus": "Legitimate open source sponsorship notification with specific contributor details and platform statistics.",
-      "red_flags": [],
-      "verification_tips": [
-        "Sponsorship notifications should match your actual GitHub projects",
-        "Check sponsor usernames and messages seem genuine",
-        "Verify contribution amounts align with sponsorship tiers",
-        "Ensure links go to official GitHub profiles and sponsor pages"
+        "Verify transaction appears in your PayPal account",
+        "Check that sender information matches expected client", 
+        "Confirm transaction ID exists in your payment history",
+        "Always look for exact paypal.com spelling (not paypaI.com or similar)"
       ]
     }
   }
