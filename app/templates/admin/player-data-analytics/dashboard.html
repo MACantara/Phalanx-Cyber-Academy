@@ -18,7 +18,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Player Data Analytics</h1>
-                    <p class="text-gray-600 dark:text-gray-400 mt-2">Comprehensive insights into player engagement and learning outcomes</p>
+                    <p class="text-gray-700 dark:text-gray-300 mt-2">Comprehensive insights into player engagement and learning outcomes</p>
                 </div>
                 <div class="flex space-x-3">
                     <a href="{{ url_for('admin.dashboard') }}" 
@@ -47,7 +47,7 @@
                             <i class="bi bi-people text-blue-500 text-2xl"></i>
                         </div>
                         <div class="ml-4">
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Daily Active Users</dt>
+                            <dt class="text-sm font-medium text-gray-700 dark:text-gray-300">Daily Active Users</dt>
                             <dd class="text-2xl font-bold text-gray-900 dark:text-white">{{ general_stats.dau }}</dd>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                             <i class="bi bi-calendar-week text-green-500 text-2xl"></i>
                         </div>
                         <div class="ml-4">
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Weekly Active Users</dt>
+                            <dt class="text-sm font-medium text-gray-700 dark:text-gray-300">Weekly Active Users</dt>
                             <dd class="text-2xl font-bold text-gray-900 dark:text-white">{{ general_stats.wau }}</dd>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                             <i class="bi bi-calendar-month text-purple-500 text-2xl"></i>
                         </div>
                         <div class="ml-4">
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Monthly Active Users</dt>
+                            <dt class="text-sm font-medium text-gray-700 dark:text-gray-300">Monthly Active Users</dt>
                             <dd class="text-2xl font-bold text-gray-900 dark:text-white">{{ general_stats.mau }}</dd>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
                             <i class="bi bi-clock text-orange-500 text-2xl"></i>
                         </div>
                         <div class="ml-4">
-                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Avg Session Length</dt>
+                            <dt class="text-sm font-medium text-gray-700 dark:text-gray-300">Avg Session Length</dt>
                             <dd class="text-2xl font-bold text-gray-900 dark:text-white">{{ ((general_stats.avg_session_length or 0) / 60) | round(1) }}m</dd>
                         </div>
                     </div>
@@ -91,13 +91,13 @@
             </div>
         </div>
 
-        <!-- Retention & Engagement -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
+        <!-- Retention Rates -->
+        <div class="mb-8 opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">📈 Retention Rates</h3>
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Day 1</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Day 1</span>
                         <div class="flex items-center">
                             <div class="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
                                 <div class="bg-green-500 h-2 rounded-full" style="width: {{ general_stats.retention_rates.day_1 }}%"></div>
@@ -106,7 +106,7 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Day 7</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Day 7</span>
                         <div class="flex items-center">
                             <div class="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
                                 <div class="bg-yellow-500 h-2 rounded-full" style="width: {{ general_stats.retention_rates.day_7 }}%"></div>
@@ -115,7 +115,7 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Day 30</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Day 30</span>
                         <div class="flex items-center">
                             <div class="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
                                 <div class="bg-red-500 h-2 rounded-full" style="width: {{ general_stats.retention_rates.day_30 }}%"></div>
@@ -126,34 +126,6 @@
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">💖 Engagement Quality</h3>
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Net Promoter Score</span>
-                        <span class="text-2xl font-bold text-green-600">{{ engagement_stats.nps_score }}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Average Rating</span>
-                        <div class="flex items-center">
-                            <span class="text-lg font-semibold text-gray-900 dark:text-white mr-2">{{ engagement_stats.avg_rating }}</span>
-                            <div class="flex text-yellow-400">
-                                {% for i in range(5) %}
-                                    {% if i < engagement_stats.avg_rating %}
-                                        <i class="bi bi-star-fill"></i>
-                                    {% else %}
-                                        <i class="bi bi-star"></i>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Total Ratings</span>
-                        <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ engagement_stats.total_ratings }}</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Level Completion Overview -->
@@ -162,7 +134,7 @@
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 {% for level, rate in gameplay_stats.levels_completed.items() %}
                 <div class="text-center">
-                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">{{ level.replace('_', ' ').title() }}</div>
+                    <div class="text-sm text-gray-700 dark:text-gray-300 mb-2">{{ level.replace('_', ' ').title() }}</div>
                     <div class="relative">
                         <div class="w-20 h-20 mx-auto">
                             <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 36 36">
@@ -191,58 +163,22 @@
             </div>
         </div>
 
-        <!-- Quick Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 opacity-0 animate-fade-in-up" style="animation-delay: 0.6s;">
+        <!-- Performance Metrics -->
+        <div class="mb-8 opacity-0 animate-fade-in-up" style="animation-delay: 0.6s;">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-3">⚡ Performance Metrics</h4>
-                <div class="space-y-2">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="flex justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Completion Rate</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Completion Rate</span>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ general_stats.completion_rate }}%</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Drop-off Rate</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Drop-off Rate</span>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ general_stats.drop_off_rate }}%</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Churn Rate</span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Churn Rate</span>
                         <span class="text-sm font-medium text-gray-900 dark:text-white">{{ general_stats.churn_rate }}%</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-3">📊 Interaction Stats</h4>
-                <div class="space-y-2">
-                    <div class="flex justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Avg Actions/Session</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ gameplay_stats.avg_actions_per_session }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Hint Usage Rate</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ gameplay_stats.hint_usage_rate }}%</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Retry Rate</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ gameplay_stats.failure_retry_rate }}%</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-3">🔒 Security Training</h4>
-                <div class="space-y-2">
-                    <div class="flex justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Phishing Detection</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ cybersec_stats.level_2_metrics.phishing_detection_rate }}%</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Malware ID Accuracy</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ cybersec_stats.level_3_metrics.malware_identification_accuracy }}%</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Asset Protection</span>
-                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ cybersec_stats.blue_vs_red_metrics.asset_protection_rate }}%</span>
                     </div>
                 </div>
             </div>
