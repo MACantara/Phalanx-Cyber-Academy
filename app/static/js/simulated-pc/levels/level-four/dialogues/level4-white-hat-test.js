@@ -99,6 +99,10 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 example: "Flag Discovery Checklist:\n/home/*/.*           # Hidden user files\n/etc/*.conf          # Configuration files\n/var/log/*           # System & app logs\n/tmp/*               # Temporary files\n/proc/*/environ      # Process environments\n/usr/local/bin/*     # Custom scripts"
             },
             {
+                text: "🆘 BUILT-IN HELP SYSTEM:\n• hints - Get specific guidance for each CTF challenge\n• submit-flag --help - Flag submission assistance\n• help - General terminal command reference",
+                example: "Help Commands:\nhints                    # CTF-specific guidance\nhints 3                  # Hints for flag #3\nsubmit-flag --challenges # List all challenges\nhelp                     # Terminal command help\nman <command>           # Command manual (if available)"
+            },
+            {
                 text: "🏆 CTF SUCCESS METHODOLOGY:\n• Start with Reconnaissance: env, ls -la ~/, cat /etc/passwd\n• Check Configuration Files: /etc/*, ~/.bashrc, ~/.profile",
                 example: "Systematic Approach:\n1. env                    # Check environment\n2. ls -la ~/              # User home directory\n3. find /etc -name \"*.conf\"  # All config files\n4. cat /var/log/*/access.log  # Web server logs"
             },
@@ -119,6 +123,14 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
             {
                 text: "📋 CHALLENGE SUBMISSION:\nUse the integrated submit-flag terminal command for all flag submissions:",
                 example: "Submit-Flag Command Usage:\nsubmit-flag WHT{flag_value}     # Submit a flag\nsubmit-flag --progress          # Check progress\nsubmit-flag --challenges        # List challenges\nsubmit-flag --status           # Session status\nsubmit-flag --help             # Show all options"
+            },
+            {
+                text: "💡 GETTING HINTS & GUIDANCE:\nUse the hints command when you need assistance with specific challenges:",
+                example: "Hints Command Usage:\nhints                    # Show all available challenges\nhints 1                  # Get hints for flag #1\nhints WHT-ENV           # Get hints for specific flag ID\nhints --all             # Show hints for all flags\nhints --help            # Display command help"
+            },
+            {
+                text: "🎯 STRATEGIC HINT USAGE:\n• Start with 'hints' to see challenge overview\n• Use specific flag hints when stuck on a particular challenge\n• Hints include discovery commands and learning objectives",
+                example: "Smart Hint Strategy:\n1. hints                 # See all challenges first\n2. Try your own approach # Attempt flag discovery\n3. hints 2              # Get specific help if needed\n4. hints --all          # Review all hints for patterns"
             },
             {
                 text: "🚀 Professional Engagement:\nThis assessment simulates real-world penetration testing engagements. Your professionalism, methodology, and ethical approach demonstrate readiness for cybersecurity consulting roles."
