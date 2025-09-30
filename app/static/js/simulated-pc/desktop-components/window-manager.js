@@ -24,6 +24,9 @@ export class WindowManager {
         
         // Make launcher globally accessible
         window.applicationLauncher = this.applicationLauncher;
+        
+        // Set up keyboard shortcuts for window switching
+        this.setupKeyboardShortcuts();
     }
 
     // Ensure window styles are loaded
@@ -70,6 +73,9 @@ export class WindowManager {
         // Bind window events
         this.bindWindowEvents(windowElement, id);
 
+        // Hide all other windows and show this new one
+        this.switchToWindow(id);
+
         // Initialize application if it exists
         if (app && typeof app.initialize === 'function') {
             app.initialize();
@@ -86,9 +92,66 @@ export class WindowManager {
         });
     }
 
+    // Switch to a specific window (bring it to front)
+    switchToWindow(id) {
+        const window = this.windows.get(id);
+        
+        if (window) {
+            // Hide all other windows
+            this.windows.forEach((otherWindow, otherId) => {
+                if (otherId !== id) {
+                    otherWindow.style.display = 'none';
+                }
+            });
+            
+            // Show and bring the selected window to front
+            window.style.display = 'block';
+            window.style.zIndex = ++this.zIndex;
+            this.taskbar.setActiveWindow(id);
+        }
+    }
 
+    // Toggle window (for taskbar clicks) - now switches to the window
+    toggleWindow(id) {
+        this.switchToWindow(id);
+    }
 
+    // Set up keyboard shortcuts for window switching
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Alt + Tab to cycle through windows
+            if (e.altKey && e.key === 'Tab') {
+                e.preventDefault();
+                this.cycleWindows();
+            }
+            
+            // Alt + Number keys (1-9) to switch to specific window
+            if (e.altKey && e.key >= '1' && e.key <= '9') {
+                e.preventDefault();
+                const windowIndex = parseInt(e.key) - 1;
+                const windowIds = Array.from(this.windows.keys());
+                if (windowIds[windowIndex]) {
+                    this.switchToWindow(windowIds[windowIndex]);
+                }
+            }
+        });
+    }
 
+    // Cycle through open windows
+    cycleWindows() {
+        const windowIds = Array.from(this.windows.keys());
+        if (windowIds.length <= 1) return;
+        
+        const currentActiveId = this.taskbar.activeWindowId;
+        let nextIndex = 0;
+        
+        if (currentActiveId) {
+            const currentIndex = windowIds.indexOf(currentActiveId);
+            nextIndex = (currentIndex + 1) % windowIds.length;
+        }
+        
+        this.switchToWindow(windowIds[nextIndex]);
+    }
 
     // Simplified application launchers that delegate to application launcher
     async openBrowser() {
@@ -163,6 +226,13 @@ export class WindowManager {
                     this.taskbar.activeWindowId = null;
                 }
             }
+        });
+    }
+
+    // Show all windows (for debugging or overview)
+    showAllWindows() {
+        this.windows.forEach((window, id) => {
+            window.style.display = 'block';
         });
     }
 
