@@ -270,7 +270,9 @@ class GameController {
             currentXP: this.gameState.currentXP, // Keep total XP, reset session
             // IP tracking
             blockedIPs: [],
-            attackHistory: []
+            attackHistory: [],
+            activeAttacks: new Map(), // Reset active attacks tracking
+            assetIsolations: [] // Reset isolation history
         };
         
         // Reset AI
@@ -308,6 +310,18 @@ class GameController {
             detectionTime: new Date(),
             blocked: false
         });
+        
+        // Track active attacks per asset for isolation XP calculation
+        if (!this.gameState.activeAttacks) {
+            this.gameState.activeAttacks = new Map();
+        }
+        const assetAttacks = this.gameState.activeAttacks.get(target) || [];
+        assetAttacks.push({
+            ...attackData,
+            attackStartTime: new Date(),
+            isActive: true
+        });
+        this.gameState.activeAttacks.set(target, assetAttacks);
         
         // Check if source IP is blocked
         if (this.gameState.blockedIPs && this.gameState.blockedIPs.includes(sourceIP)) {
@@ -454,6 +468,16 @@ class GameController {
         this.uiManager.addIncident(incident);
         this.uiManager.updateAssetStatus();
         
+        // Mark attacks as completed for XP tracking
+        if (this.gameState.activeAttacks && this.gameState.activeAttacks.has(attackData.target)) {
+            const assetAttacks = this.gameState.activeAttacks.get(attackData.target);
+            assetAttacks.forEach(attack => {
+                if (attack.attackId === attackData.attackId) {
+                    attack.isActive = false;
+                    attack.attackCompletedTime = new Date();
+                }
+            });
+        }
     }
     
     offerPlayerResponse(alert) {
@@ -543,6 +567,15 @@ class GameController {
             case 'ai-info':
                 this.showAIInformation();
                 break;
+            case 'isolation-stats':
+                this.showIsolationStatistics();
+                break;
+            case 'active-attacks':
+                this.showActiveAttacksPerAsset();
+                break;
+            case 'tactical-guide':
+                this.showTacticalGuidance();
+                break;
             case 'clear':
                 this.uiManager.clearTerminal();
                 this.uiManager.addTerminalOutput('$ Defense Command Terminal - Ready');
@@ -585,6 +618,9 @@ class GameController {
         this.uiManager.addTerminalOutput('  show-ips                  - Show IP information and blocked list');
         this.uiManager.addTerminalOutput('  show-attacks              - Show recent attack history');
         this.uiManager.addTerminalOutput('  ai-info                   - Show AI attacker information');
+        this.uiManager.addTerminalOutput('  isolation-stats           - Show asset isolation performance');
+        this.uiManager.addTerminalOutput('  active-attacks            - Show current attacks per asset');
+        this.uiManager.addTerminalOutput('  tactical-guide            - Show isolation strategy tips');
         this.uiManager.addTerminalOutput('');
         this.uiManager.addTerminalOutput('DEFENSIVE ACTIONS:');
         this.uiManager.addTerminalOutput('  block-ip [address]        - Block suspicious IP address');
@@ -682,15 +718,77 @@ class GameController {
             return;
         }
         
-        this.uiManager.addTerminalOutput(`🔒 Isolating asset: ${assetName}`);
+        this.uiManager.addTerminalOutput(`🔒 Isolating asset: ${assetName}...`);
         
-        // Temporarily improve asset security
-        asset.integrity = Math.min(100, asset.integrity + 10);
-        if (asset.status === 'vulnerable') {
-            asset.status = 'secure';
+        // Check for active attacks against this asset
+        const activeAttacks = this.getActiveAttacksForAsset(assetName);
+        const hasActiveAttacks = activeAttacks.length > 0;
+        
+        // Calculate XP reward/penalty based on isolation correctness
+        const isolationData = {
+            assetName: assetName,
+            timestamp: new Date(),
+            wasCorrect: hasActiveAttacks,
+            activeAttacksCount: activeAttacks.length,
+            assetIntegrityBefore: asset.integrity,
+            assetStatusBefore: asset.status
+        };
+        
+        // Apply isolation effects
+        if (hasActiveAttacks) {
+            // Correct isolation - stronger defensive effects
+            asset.integrity = Math.min(100, asset.integrity + 20);
+            if (asset.status === 'vulnerable') {
+                asset.status = 'secure';
+            }
+            
+            // Mark active attacks as mitigated
+            activeAttacks.forEach(attack => {
+                attack.isActive = false;
+                attack.mitigatedBy = 'asset-isolation';
+                attack.mitigationTime = new Date();
+            });
+            
+            // Award XP for correct isolation
+            const baseXP = 15; // Base XP for correct isolation
+            const bonusXP = activeAttacks.length * 5; // Bonus per attack stopped
+            const totalXP = baseXP + bonusXP;
+            
+            this.gameState.sessionXP += totalXP;
+            this.gameState.attacksMitigated += activeAttacks.length;
+            
+            this.uiManager.addTerminalOutput(`✅ Correct isolation! Stopped ${activeAttacks.length} active attack(s).`);
+            this.uiManager.addTerminalOutput(`   Asset ${assetName} secured. Security significantly improved.`);
+            this.uiManager.showAssetIsolationReward(totalXP, assetName, activeAttacks.length);
+            
+            // Send positive action to server
+            this.sendPlayerAction('isolate-asset-correct', assetName, 1.0);
+            
+        } else {
+            // Incorrect isolation - normal defensive effects but XP penalty
+            asset.integrity = Math.min(100, asset.integrity + 5); // Smaller improvement
+            if (asset.status === 'vulnerable') {
+                asset.status = 'secure';
+            }
+            
+            // XP penalty for unnecessary isolation
+            const penaltyXP = 8; // Penalty for wrong isolation
+            this.gameState.sessionXP = Math.max(0, this.gameState.sessionXP - penaltyXP);
+            
+            this.uiManager.addTerminalOutput(`⚠️  Unnecessary isolation. No active attacks against ${assetName}.`);
+            this.uiManager.addTerminalOutput(`   Asset secured but resources wasted.`);
+            this.uiManager.showAssetIsolationPenalty(penaltyXP, assetName);
+            
+            // Send negative action to server
+            this.sendPlayerAction('isolate-asset-incorrect', assetName, 0.3);
         }
         
-        this.uiManager.addTerminalOutput(`✅ Asset ${assetName} isolated from network. Security improved.`);
+        // Store isolation data for analysis
+        if (!this.gameState.assetIsolations) {
+            this.gameState.assetIsolations = [];
+        }
+        this.gameState.assetIsolations.push(isolationData);
+        
         this.uiManager.updateDisplay();
     }
     
@@ -783,6 +881,38 @@ class GameController {
     
     hideGameOverModal() {
         document.getElementById('game-over-modal').classList.add('hidden');
+    }
+    
+    // Helper method to get active attacks for a specific asset
+    getActiveAttacksForAsset(assetName) {
+        if (!this.gameState.activeAttacks) {
+            return [];
+        }
+        
+        const assetAttacks = this.gameState.activeAttacks.get(assetName) || [];
+        
+        // Filter for attacks that are still active and recent (within last 30 seconds)
+        const now = new Date();
+        const activeThreshold = 30000; // 30 seconds
+        
+        return assetAttacks.filter(attack => {
+            return attack.isActive && 
+                   (now - attack.attackStartTime) < activeThreshold;
+        });
+    }
+    
+    // Method to get isolation statistics for performance tracking
+    getIsolationStats() {
+        if (!this.gameState.assetIsolations) {
+            return { correct: 0, incorrect: 0, total: 0, accuracy: 0 };
+        }
+        
+        const correct = this.gameState.assetIsolations.filter(isolation => isolation.wasCorrect).length;
+        const total = this.gameState.assetIsolations.length;
+        const incorrect = total - correct;
+        const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+        
+        return { correct, incorrect, total, accuracy };
     }
     
     // Getters for other modules
@@ -1166,6 +1296,94 @@ class GameController {
             
             this.uiManager.addTerminalOutput(`Attack Success Rate: ${100 - blockRate}%`);
         }
+    }
+
+    showIsolationStatistics() {
+        const stats = this.getIsolationStats();
+        
+        this.uiManager.addTerminalOutput('=== ASSET ISOLATION PERFORMANCE ===');
+        this.uiManager.addTerminalOutput(`Total Isolations: ${stats.total}`);
+        this.uiManager.addTerminalOutput(`Correct Isolations: ${stats.correct} ✅`);
+        this.uiManager.addTerminalOutput(`Incorrect Isolations: ${stats.incorrect} ❌`);
+        this.uiManager.addTerminalOutput(`Accuracy Rate: ${stats.accuracy}%`);
+        
+        if (stats.total > 0) {
+            const xpEarned = stats.correct * 15; // Average XP per correct isolation
+            const xpLost = stats.incorrect * 8;  // Average XP per incorrect isolation
+            const netXP = xpEarned - xpLost;
+            
+            this.uiManager.addTerminalOutput('');
+            this.uiManager.addTerminalOutput('XP IMPACT:');
+            this.uiManager.addTerminalOutput(`XP Earned: +${xpEarned}`);
+            this.uiManager.addTerminalOutput(`XP Lost: -${xpLost}`);
+            this.uiManager.addTerminalOutput(`Net XP: ${netXP >= 0 ? '+' : ''}${netXP}`);
+            
+            // Provide performance feedback
+            this.uiManager.addTerminalOutput('');
+            if (stats.accuracy >= 80) {
+                this.uiManager.addTerminalOutput('🏆 EXCELLENT: Elite tactical awareness!');
+            } else if (stats.accuracy >= 60) {
+                this.uiManager.addTerminalOutput('👍 GOOD: Solid defensive instincts');
+            } else if (stats.accuracy >= 40) {
+                this.uiManager.addTerminalOutput('⚠️  FAIR: Room for improvement');
+            } else {
+                this.uiManager.addTerminalOutput('📚 LEARNING: Focus on attack indicators');
+            }
+        }
+    }
+
+    showActiveAttacksPerAsset() {
+        this.uiManager.addTerminalOutput('=== ACTIVE ATTACK MONITORING ===');
+        
+        const assetNames = Object.keys(this.gameState.assets);
+        let hasActiveAttacks = false;
+        
+        assetNames.forEach(assetName => {
+            const activeAttacks = this.getActiveAttacksForAsset(assetName);
+            const status = activeAttacks.length > 0 ? '🚨 UNDER ATTACK' : '🛡️  SECURE';
+            
+            this.uiManager.addTerminalOutput(`${assetName.toUpperCase()}: ${status}`);
+            
+            if (activeAttacks.length > 0) {
+                hasActiveAttacks = true;
+                activeAttacks.forEach((attack, index) => {
+                    const timeElapsed = Math.round((Date.now() - attack.attackStartTime) / 1000);
+                    this.uiManager.addTerminalOutput(`  └─ ${attack.technique} (${timeElapsed}s ago)`);
+                });
+                this.uiManager.addTerminalOutput(`  💡 RECOMMENDATION: Consider isolating ${assetName}`);
+            }
+        });
+        
+        if (!hasActiveAttacks) {
+            this.uiManager.addTerminalOutput('');
+            this.uiManager.addTerminalOutput('✅ All assets secure - No immediate threats detected');
+            this.uiManager.addTerminalOutput('💡 TIP: Avoid unnecessary isolations to maintain XP efficiency');
+        }
+    }
+
+    showTacticalGuidance() {
+        this.uiManager.addTerminalOutput('=== ASSET ISOLATION TACTICAL GUIDE ===');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('🎯 WHEN TO ISOLATE:');
+        this.uiManager.addTerminalOutput('  • Active attacks detected against specific asset');
+        this.uiManager.addTerminalOutput('  • Asset integrity below 70% and under threat');
+        this.uiManager.addTerminalOutput('  • Multiple attack techniques targeting same asset');
+        this.uiManager.addTerminalOutput('  • High-value assets (student-db, research-files)');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('⚠️  WHEN NOT TO ISOLATE:');
+        this.uiManager.addTerminalOutput('  • No active alerts for the target asset');
+        this.uiManager.addTerminalOutput('  • Asset already at 100% integrity and secure');
+        this.uiManager.addTerminalOutput('  • Recent attacks were against different assets');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('💰 XP OPTIMIZATION:');
+        this.uiManager.addTerminalOutput('  • Correct isolation: +15 XP base + 5 XP per attack stopped');
+        this.uiManager.addTerminalOutput('  • Incorrect isolation: -8 XP penalty');
+        this.uiManager.addTerminalOutput('  • Monitor "active-attacks" command for guidance');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('📊 PRO TIPS:');
+        this.uiManager.addTerminalOutput('  • Use "alerts" to see current threats');
+        this.uiManager.addTerminalOutput('  • Check "isolation-stats" to track performance');
+        this.uiManager.addTerminalOutput('  • Timing matters - isolate during active attacks');
     }
 }
 

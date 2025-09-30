@@ -21,6 +21,7 @@ class UIManager {
         this.updateAlerts();
         this.updateIncidents();
         this.updateXPDisplay();
+        this.updateIsolationAccuracy();
     }
     
     updateSystemStatus() {
@@ -643,6 +644,66 @@ class UIManager {
                 `${sign}${amount} XP`;
             console.log(`XP Notification [${type}]: ${message}`);
         }
+    }
+
+    // Specialized methods for asset isolation XP feedback
+    showAssetIsolationReward(amount, assetName, attacksStopped) {
+        // Show floating XP animation
+        this.showFloatingXP(amount, 'reward');
+        
+        // Show detailed notification
+        const message = attacksStopped > 1 ? 
+            `Excellent! Stopped ${attacksStopped} attacks on ${assetName}` :
+            `Great defense! Protected ${assetName} from attack`;
+        this.showXPNotification(amount, 'reward', message);
+        
+        // Add specialized terminal feedback with tactical information
+        this.addTerminalOutput(`🛡️  TACTICAL SUCCESS: Asset isolation prevented ${attacksStopped} attack(s)`);
+        this.addTerminalOutput(`   💰 Defense Bonus: +${amount} XP earned`);
+        
+        // Update session stats display
+        this.updateXPDisplay();
+    }
+
+    showAssetIsolationPenalty(amount, assetName) {
+        // Show floating XP penalty animation
+        this.showFloatingXP(-amount, 'penalty');
+        
+        // Show penalty notification
+        const message = `Resource waste: No threats detected on ${assetName}`;
+        this.showXPNotification(-amount, 'penalty', message);
+        
+        // Add specialized terminal feedback with learning guidance
+        this.addTerminalOutput(`⚠️  TACTICAL WARNING: Unnecessary isolation wastes resources`);
+        this.addTerminalOutput(`   💸 Efficiency Penalty: -${amount} XP lost`);
+        this.addTerminalOutput(`   💡 TIP: Monitor alerts before isolating assets`);
+        
+        // Update session stats display
+        this.updateXPDisplay();
+    }
+
+    // Update XP display to include isolation accuracy stats
+    updateIsolationAccuracy() {
+        const isolationStats = this.gameController.getIsolationStats();
+        
+        // Try to update isolation accuracy display if element exists
+        const accuracyElement = document.getElementById('isolation-accuracy');
+        if (accuracyElement && isolationStats.total > 0) {
+            accuracyElement.textContent = `${isolationStats.accuracy}%`;
+            
+            // Update color based on accuracy
+            accuracyElement.className = `font-bold ${
+                isolationStats.accuracy >= 80 ? 'text-green-400' :
+                isolationStats.accuracy >= 60 ? 'text-yellow-400' : 'text-red-400'
+            }`;
+        }
+        
+        // Update isolation counts if elements exist
+        const correctElement = document.getElementById('correct-isolations');
+        const incorrectElement = document.getElementById('incorrect-isolations');
+        
+        if (correctElement) correctElement.textContent = isolationStats.correct;
+        if (incorrectElement) incorrectElement.textContent = isolationStats.incorrect;
     }
 
     showCompletionBonus(bonus, breakdown) {
