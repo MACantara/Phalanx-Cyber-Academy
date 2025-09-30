@@ -86,25 +86,25 @@ export class BaseDialogue {
                  class="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-50 rounded border-2 sm:border-3 border-gray-600 object-cover flex-shrink-0 mx-auto md:mx-0" 
                  onerror="this.src='/static/images/avatars/default.png'">
             
-            <div class="flex-1 flex flex-col min-h-[150px] sm:min-h-[180px] md:min-h-[200px] relative">
-                <div class="text-green-500 text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-center md:text-left">${characterName}</div>
+            <div class="flex-1 flex flex-col min-h-[150px] sm:min-h-[180px] md:min-h-[200px] relative w-full">
+                <div class="w-full text-green-500 text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-center">${characterName}</div>
                 
                 <div class="text-green-400 text-sm sm:text-base md:text-lg leading-relaxed mb-4 sm:mb-6 md:mb-8 flex-grow text-left overflow-y-auto max-h-[40vh]" id="dialogue-text-content">
                     ${this.shouldTypeMessage(message) ? '' : message.text}
                 </div>
                 
-                <div class="flex flex-col sm:flex-row sm:justify-end items-center mt-auto gap-2 sm:gap-4">
-                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 md:gap-6 w-full sm:w-auto">
+                <div class="w-full flex flex-row justify-center items-center mt-auto gap-2 sm:gap-3 md:gap-4">
+                    <div class="flex flex-row gap-2 sm:gap-3 md:gap-4 flex-wrap justify-center">
                         ${this.currentMessageIndex > 0 ? 
-                            `<button class="w-full sm:w-auto px-3 sm:px-4 py-2 text-gray-300 hover:text-white active:text-gray-200 bg-gray-700 hover:bg-gray-600 active:bg-gray-600 rounded transition-colors duration-200 cursor-pointer text-xs sm:text-sm md:text-md touch-manipulation" onclick="${this.getPreviousHandler()}">
+                            `<button class="w-[70px] sm:w-[90px] md:w-[100px] px-2 sm:px-3 md:px-4 py-2 text-gray-300 hover:text-white active:text-gray-200 bg-gray-700 hover:bg-gray-600 active:bg-gray-600 rounded transition-colors duration-200 cursor-pointer text-xs sm:text-sm md:text-base touch-manipulation flex items-center justify-center" onclick="${this.getPreviousHandler()}">
                                 <i class="bi bi-arrow-left mr-1"></i><span class="hidden sm:inline">Previous</span><span class="sm:hidden">Prev</span>
                             </button>` : ''
                         }
-                        <button class="w-full sm:w-auto px-3 sm:px-4 py-2 text-green-400 hover:text-green-300 active:text-green-200 bg-gray-700 hover:bg-green-400 hover:text-black active:bg-green-500 active:text-black rounded transition-colors duration-200 cursor-pointer text-xs sm:text-sm md:text-md touch-manipulation" onclick="${this.getNextHandler()}">
+                        <button class="w-[70px] sm:w-[90px] md:w-[100px] px-2 sm:px-3 md:px-4 py-2 text-green-400 hover:text-green-300 active:text-green-200 bg-gray-700 hover:bg-green-400 hover:text-black active:bg-green-500 active:text-black rounded transition-colors duration-200 cursor-pointer text-xs sm:text-sm md:text-base touch-manipulation flex items-center justify-center" onclick="${this.getNextHandler()}">
                             ${isLastMessage ? this.getFinalButtonText() : '<span class="hidden sm:inline">Next</span><span class="sm:hidden">Next</span> <i class="bi bi-arrow-right ml-1"></i>'}
                         </button>
                         ${!this.isFirstViewing ? 
-                            `<button class="w-full sm:w-auto px-3 sm:px-4 py-2 text-gray-300 hover:text-white active:text-gray-200 bg-gray-700 hover:bg-gray-600 active:bg-gray-600 rounded transition-colors duration-200 cursor-pointer text-xs sm:text-sm md:text-md touch-manipulation" onclick="${this.getSkipHandler()}">
+                            `<button class="w-[70px] sm:w-[90px] md:w-[100px] px-2 sm:px-3 md:px-4 py-2 text-gray-300 hover:text-white active:text-gray-200 bg-gray-700 hover:bg-gray-600 active:bg-gray-600 rounded transition-colors duration-200 cursor-pointer text-xs sm:text-sm md:text-base touch-manipulation flex items-center justify-center" onclick="${this.getSkipHandler()}">
                                 <i class="bi bi-skip-end mr-1"></i>Skip
                             </button>` : ''
                         }
