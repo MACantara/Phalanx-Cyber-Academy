@@ -79,9 +79,6 @@ def get_level_js_files(level_id):
         'js/simulated-pc/desktop-components/taskbar.js',
         'js/simulated-pc/desktop-components/shutdown-modal.js',
         
-        # Shared utilities
-        'js/simulated-pc/desktop-components/shared-utils/navigation-util.js',
-        
         # Base dialogue system
         'js/simulated-pc/dialogues/base-dialogue.js',
         'js/simulated-pc/dialogues/dialogue-manager.js',

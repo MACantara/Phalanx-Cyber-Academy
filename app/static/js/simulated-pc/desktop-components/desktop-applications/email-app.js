@@ -4,7 +4,6 @@ import { EmailActionHandler } from './email-functions/email-action-handler.js';
 import { EmailReadTracker } from './email-functions/email-read-tracker.js';
 import { EmailCompletionTracker } from './email-functions/email-completion-tracker.js';
 import { ALL_EMAILS, loadEmailsFromCSV } from '../../levels/level-two/emails/email-registry.js';
-import { NavigationUtil } from '../shared-utils/navigation-util.js';
 import { InMemoryFeedbackStore } from './email-functions/email-session-summary.js';
 
 export class EmailApp extends WindowBase {
@@ -483,9 +482,6 @@ ${this.formatEmailBody(email.body)}
                 this.actionHandler.moveEmailToInbox(emailId);
             });
         }
-
-        // Use shared navigation utility for email link handling
-        NavigationUtil.bindEmailLinkHandlers(windowElement);
     }
 
     // Get comprehensive email statistics including completion status
