@@ -20,8 +20,8 @@ export class BrowserApp extends WindowBase {
     createContent() {
         return `
             <div class="h-full flex flex-col">
-                <div class="flex-1 overflow-auto bg-white" id="browser-content">
-                    <div class="flex items-center justify-center h-full text-gray-500">
+                <div class="flex-1 overflow-auto bg-white min-h-0" id="browser-content" style="max-height: calc(100vh - 48px);">
+                    <div class="flex items-center justify-center min-h-full text-gray-500">
                         <div class="text-center p-4">
                             <i class="bi bi-hourglass-split text-2xl sm:text-4xl mb-4 animate-spin"></i>
                             <p class="text-sm sm:text-base">Loading page...</p>
@@ -58,8 +58,8 @@ export class BrowserApp extends WindowBase {
         const contentElement = this.windowElement?.querySelector('#browser-content');
         if (contentElement) {
             contentElement.innerHTML = `
-                <div class="h-full bg-white flex items-center justify-center">
-                    <div class="text-center">
+                <div class="min-h-full bg-white flex items-center justify-center overflow-y-auto">
+                    <div class="text-center p-4">
                         <div class="text-6xl mb-4">🌐</div>
                         <h2 class="text-xl font-semibold text-gray-800 mb-2">Welcome to CyberQuest Browser</h2>
                         <p class="text-gray-600 mb-4">Enter a URL in the address bar to start browsing</p>
