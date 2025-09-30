@@ -32,6 +32,18 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 text: "• Forensic Analysis: Historical security incidents\n• Network Security: Communication and protocol security"
             },
             {
+                text: "🔐 Core Ethical Hacking Principles:\n• Password Security: Understanding brute-force attack resistance\n• Social Engineering Awareness: Recognizing manipulation tactics",
+                example: "Strong Password Example:\nWeak: password123, ilovepizza\nStrong: q2W#r7&zLp0 (12+ chars, mixed case, symbols)"
+            },
+            {
+                text: "• Anomaly Detection: Identifying suspicious patterns\n• Incident Response: Proper breach containment procedures\n• Digital Hygiene: Maintaining secure practices",
+                example: "Suspicious Activity Indicators:\n- Login attempts at unusual hours (3 AM)\n- Multiple failed logins from foreign IPs\n- Unexpected privilege escalation attempts"
+            },
+            {
+                text: "🛡️ Attack Vector Analysis:\n• Denial-of-Service (DoS): Service disruption techniques\n• Malware Detection: File analysis and threat identification\n• Multi-Factor Authentication: Enhanced access controls",
+                example: "DoS Attack Goal:\nOverwhelm services to make them unavailable\nNOT: Steal credentials or gain system access"
+            },
+            {
                 text: "🛠️ CTF Challenge Approach:\nThis is a Capture The Flag (CTF) security challenge. Your goal is to find 7 hidden flags using terminal commands and system exploration.",
                 example: "Example commands to get started:\nls -la (list files)\ncat filename.txt (read files)\ngrep -r \"flag\" . (search for flags)"
             },
