@@ -1,0 +1,169 @@
+{
+  "articles": [
+    {
+      "id": "real_001",
+      "title": "Senate Committee Approves Healthcare Funding Bill After Bipartisan Negotiations",
+      "date": "2024-03-15T14:30:00.000Z",
+      "author": "Sarah Johnson",
+      "author_credentials": "Political Reporter, Associated Press",
+      "website": "apnews.com",
+      "content": "WASHINGTON — The Senate Health Committee voted 12-8 on Thursday to approve a $2.3 billion healthcare funding bill that would expand access to rural medical facilities across 15 states. The legislation, sponsored by Senator Maria Rodriguez (D-CA) and co-sponsored by Senator James Mitchell (R-TX), received support from both parties after three months of negotiations. 'This bill represents a genuine compromise that addresses the healthcare needs of underserved communities,' said Rodriguez during the committee hearing. The bill now moves to the full Senate for consideration. Healthcare advocacy groups have expressed cautious optimism, while some fiscal conservatives have raised concerns about the funding mechanism. The Congressional Budget Office estimates the program would serve approximately 2.4 million additional patients over the next five years.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_002", 
+      "title": "Federal Reserve Maintains Interest Rates Amid Economic Uncertainty",
+      "date": "2024-03-12T16:45:00.000Z",
+      "author": "Michael Chen",
+      "author_credentials": "Economics Correspondent, Reuters",
+      "website": "reuters.com",
+      "content": "NEW YORK — The Federal Reserve announced Wednesday that it will maintain the federal funds rate at 5.25-5.50%, citing ongoing economic uncertainty and mixed inflation data. Fed Chair Jerome Powell said in a statement that while inflation has shown signs of cooling, recent employment figures and consumer spending patterns warrant a cautious approach. 'We remain committed to bringing inflation back to our 2% target while supporting maximum employment,' Powell said during the post-meeting press conference. Market analysts had anticipated the decision, with Treasury yields showing minimal movement following the announcement. The Fed's next policy meeting is scheduled for May 2-3, where officials will reassess economic conditions and consider future rate adjustments.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_003",
+      "title": "International Climate Summit Reaches Preliminary Agreement on Carbon Emissions",
+      "date": "2024-03-10T11:20:00.000Z", 
+      "author": "Dr. Emma Thompson",
+      "author_credentials": "Environmental Correspondent, BBC News",
+      "website": "bbc.com",
+      "content": "GENEVA — Delegates from 47 countries reached a preliminary agreement Tuesday on new carbon emission reduction targets during the International Climate Action Summit. The proposed framework would require participating nations to reduce emissions by 40% below 2020 levels by 2035. Environmental scientist Dr. Lisa Park from the UN Climate Panel said the agreement represents 'meaningful progress' while acknowledging implementation challenges. Several developing nations requested additional financial support for clean energy transitions. The final agreement requires ratification by member parliaments before taking effect. Critics argue the targets remain insufficient to meet Paris Agreement goals, while supporters emphasize the diplomatic breakthrough after two years of stalled negotiations.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_004",
+      "title": "Technology Companies Report Mixed Quarterly Earnings Results", 
+      "date": "2024-03-08T13:15:00.000Z",
+      "author": "Jennifer Martinez",
+      "author_credentials": "Business Reporter, Wall Street Journal",
+      "website": "wsj.com",
+      "content": "Major technology companies reported mixed earnings results for the fourth quarter, with cloud computing and artificial intelligence services showing strong growth while consumer electronics sales declined. Microsoft reported a 12% increase in revenue driven by Azure cloud services, while Apple saw iPhone sales drop 8% compared to the same quarter last year. Google parent Alphabet posted solid advertising revenue growth of 7%, though YouTube's performance lagged expectations. Industry analysts cite economic uncertainty and changing consumer spending patterns as key factors. 'We're seeing a shift toward enterprise services and away from consumer hardware,' said tech analyst Robert Kim from Goldman Sachs. The sector's performance has implications for broader market trends as investors monitor AI adoption rates.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_005",
+      "title": "University Researchers Develop New Method for Early Cancer Detection",
+      "date": "2024-03-05T10:30:00.000Z",
+      "author": "Dr. Katherine Williams",
+      "author_credentials": "Medical Correspondent, CNN Health",
+      "website": "cnn.com",
+      "content": "Researchers at Stanford University have developed a new blood test that can detect multiple types of cancer in early stages with 89% accuracy, according to results published in the journal Nature Medicine. The test, called CancerSeek-2, analyzes protein biomarkers and genetic mutations in blood samples. Lead researcher Dr. Amanda Foster said the technology could revolutionize cancer screening programs. The study involved 10,000 participants across five medical centers over three years. While promising, experts caution that larger clinical trials are needed before the test becomes widely available. The research was funded by the National Cancer Institute and has undergone peer review. Dr. Patricia Adams from the American Cancer Society called the results 'encouraging but preliminary,' emphasizing the need for additional validation studies.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_006",
+      "title": "Local School District Implements New STEM Education Program",
+      "date": "2024-03-03T09:45:00.000Z",
+      "author": "Maria Rodriguez",
+      "author_credentials": "Education Reporter, Local Herald Tribune",
+      "website": "heraldtribune.com", 
+      "content": "The Riverside School District launched a comprehensive STEM education initiative this week, introducing coding and robotics classes to all middle schools in the district. The $1.2 million program, funded through a combination of state grants and private donations, aims to prepare students for technology-focused careers. 'We want to ensure our students have the skills they need for the jobs of tomorrow,' said Superintendent Dr. Robert Johnson. The program includes teacher training, new equipment, and partnerships with local technology companies for internship opportunities. Initial enrollment shows strong student interest, with 340 students signed up across six schools. The program will be evaluated annually with results reported to the school board and community stakeholders.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_007",
+      "title": "Archaeological Team Discovers Ancient Trade Route in Mediterranean Region",
+      "date": "2024-03-01T12:00:00.000Z",
+      "author": "Prof. David Archaeological",
+      "author_credentials": "Archaeology Correspondent, National Geographic",
+      "website": "nationalgeographic.com",
+      "content": "An international team of archaeologists has uncovered evidence of a previously unknown ancient trade route connecting Mediterranean civilizations from 3,000 years ago. The discovery, made near the coast of Turkey, includes pottery fragments, coins, and ship remnants that suggest extensive commercial networks. Dr. Elena Vasquez, lead archaeologist from the University of Barcelona, said the findings challenge existing theories about ancient Mediterranean trade. The research team used advanced underwater scanning technology and carbon dating to verify their discoveries. Artifacts will be displayed at the Istanbul Archaeological Museum following conservation work. The discovery was published in the Journal of Archaeological Science after peer review by international experts.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "fake_001",
+      "title": "SHOCKING: Government Officials CAUGHT Using Secret Mind Control Technology on Citizens!",
+      "date": "2024-03-16T23:47:00.000Z",
+      "author": "Staff Writer",
+      "author_credentials": "",
+      "website": "truthpatriotnews.net",
+      "content": "BREAKING: Whistleblower documents reveal that government officials have been secretly testing mind control technology on unsuspecting American citizens for over a decade! The classified program, codenamed 'Project Neural Gateway,' uses advanced electromagnetic frequencies transmitted through cell phone towers to influence voter behavior and public opinion. According to our anonymous source (a high-ranking official who fears for their life), the technology was developed in underground facilities and tested on entire neighborhoods. 'They can literally make you think whatever they want,' the source revealed. This PROVES what patriots have been saying all along - the deep state is manipulating our minds! The mainstream media WON'T report this because they're in on it! Share this article before they DELETE it! Every American needs to know the truth about what THEY are doing to us. Wake up, people! Your thoughts aren't even your own anymore!!!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_002",
+      "title": "Doctors HATE This Simple Trick That Cures All Diseases Instantly - Big Pharma Trying to Hide It!",
+      "date": "2024-03-14T18:22:00.000Z",
+      "author": "Dr. Kevin Natural",
+      "author_credentials": "Alternative Health Expert",
+      "website": "realhealthtruth.com",
+      "content": "The medical establishment doesn't want you to know about this ONE WEIRD TRICK that can cure cancer, diabetes, heart disease, and even aging itself! This ancient secret has been hidden from the public for centuries, but NOW the truth is finally being revealed. All you need is common household items that Big Pharma desperately wants banned! Thousands of people have already been cured using this method, but doctors refuse to acknowledge it because it would destroy their billion-dollar industry. 'I was dying from stage 4 cancer, and this cured me in just 3 days!' says Jennifer from Ohio. The government and medical industry are working together to suppress this information. Don't let them fool you with their expensive treatments and dangerous drugs. This natural cure costs only $3 and works 100% of the time! Download our FREE guide now before they shut us down! WARNING: Big Pharma is paying people to write fake negative reviews. Don't believe the lies!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_003", 
+      "title": "URGENT: Foreign Troops Secretly Landing in America - Invasion Has Already Begun!",
+      "date": "2024-03-13T21:35:00.000Z",
+      "author": "Patriot Mike",
+      "author_credentials": "",
+      "website": "americandefensewatch.org",
+      "content": "ALERT! Multiple sources confirm that foreign military forces are secretly landing at U.S. airports under cover of darkness! These 'training exercises' are actually the beginning of a coordinated invasion that the government is HIDING from American patriots. Reliable witnesses have seen thousands of armed foreign soldiers at military bases across the country. The mainstream media is completely silent because they're controlled by the same global elites orchestrating this takeover! Our constitutional rights are under attack RIGHT NOW! These foreign troops are being positioned for martial law declaration that will suspend all elections and freedoms. Only true patriots who are awake can see what's really happening. The time for action is NOW before it's too late! Stock up on supplies, protect your families, and prepare for what's coming. Don't trust ANYONE in government - they're all compromised! This is NOT a drill! Share this everywhere before they block it!",
+      "label": 1, 
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_004",
+      "title": "Scientists Discover That Drinking Water Actually KILLS You - Here's What They Don't Want You to Know",
+      "date": "2024-03-11T16:18:00.000Z",
+      "author": "Health Investigator",
+      "author_credentials": "Independent Research Specialist", 
+      "website": "hiddentruthexposed.net",
+      "content": "BOMBSHELL research reveals that ordinary tap water contains deadly chemicals specifically designed to reduce population and make people obedient! Government scientists have known for decades that fluoride and chlorine in water supplies are actually mind-control agents that destroy your natural immunity and free thinking abilities. This explains why people who drink bottled water are more intelligent and independent! The water industry spends millions to hide these facts and discredit anyone who speaks out. Victims of water poisoning report memory loss, reduced creativity, and blind trust in authority figures. 'After I stopped drinking tap water, my IQ increased by 40 points and I could finally see the truth about everything,' reports Sarah from Texas. The solution is simple but they don't want you to know: only drink rainwater collected in pure containers! Everything else is contaminated by the global control system. Don't let them poison your mind any longer!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_005",
+      "title": "EXCLUSIVE: Celebrity Politicians Caught in Secret Satanic Ritual - Photos Inside!", 
+      "date": "2024-03-09T20:41:00.000Z",
+      "author": "Truth Seeker",
+      "author_credentials": "",
+      "website": "exposetheconspiracy.com",
+      "content": "SHOCKING evidence obtained by our investigative team proves that Hollywood celebrities and top politicians regularly participate in satanic rituals at a secret location! These exclusive photos show exactly what the elite don't want you to see. The rituals are part of their blood oath to maintain power and wealth while ordinary people suffer. Our brave undercover reporter risked everything to bring you this evidence that the mainstream media will NEVER show. These sick individuals worship dark forces and make deals for fame and fortune at the expense of innocent people. This explains why they all support the same evil agenda to destroy traditional values and control the population! The symbols are hidden in plain sight if you know what to look for. Every movie, every song, every speech contains their secret messages. Only people who are truly awake can see the pattern. Don't let them fool you anymore! The time has come to EXPOSE the truth about what really happens in the shadows. Share this before they make it disappear!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_006",
+      "title": "Breaking: Technology Giants Secretly Recording Everything You Say - Your Phone is Spying on You 24/7!",
+      "date": "2024-03-07T14:29:00.000Z", 
+      "author": "Cyber Patriot",
+      "author_credentials": "Digital Privacy Expert",
+      "website": "techfreedomfighter.org",
+      "content": "CONFIRMED: Every smartphone, tablet, and smart device is constantly recording your private conversations and sending them directly to government surveillance centers! This massive spy network has been operating for years without your knowledge or consent. Leaked documents prove that tech companies are required by secret laws to provide all your personal data to shadowy government agencies. They know everything - what you eat, where you go, who you talk to, even what you dream about! The spying technology is so advanced that they can read your thoughts through brain wave analysis via your phone's sensors. 'I discovered my phone was transmitting my conversations to unknown servers 24/7,' reveals anonymous tech insider who fears for their safety. The only way to protect yourself is to destroy all electronic devices immediately! Anyone who tells you this isn't true is either ignorant or working for THEM. Don't trust anything electronic - they're all compromised! Fight back against digital tyranny while you still can!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_007",
+      "title": "MIRACLE REVEALED: Ancient Pyramid Energy Can Give You Unlimited Wealth and Success - Elites Have Hidden This for Centuries!",
+      "date": "2024-03-04T11:52:00.000Z",
+      "author": "Spiritual Master Alex",
+      "author_credentials": "Ancient Wisdom Researcher", 
+      "website": "pyramidpowersecrets.org",
+      "content": "The secret that made ancient pharaohs incredibly wealthy and powerful has been HIDDEN from humanity for thousands of years! Pyramid energy technology can instantly transform your life, attract unlimited money, and give you supernatural abilities that seem impossible. The global elite have been using this knowledge to maintain their wealth while keeping ordinary people poor and powerless. But NOW the ancient secrets are finally being revealed to those who are ready! This revolutionary discovery proves that consciousness can literally restructure reality through pyramid geometry and sacred mathematics. 'I built a small pyramid in my backyard and within one week I received $50,000 from unexpected sources,' reports amazing success story from Michigan. The energy works automatically once you understand the sacred principles that universities refuse to teach. Government agencies desperately want to suppress this information because it would end their control over the masses. Don't let them keep you enslaved to poverty and limitation! Learn the forbidden knowledge that can change everything!",
+      "label": 1, 
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_008",
+      "title": "EXCLUSIVE INVESTIGATION: Weather Machines Creating Artificial Storms to Control Elections - Meteorologists Are In On It!",
+      "date": "2024-03-02T19:14:00.000Z",
+      "author": "Weather Truth Investigator",
+      "author_credentials": "",
+      "website": "climatetruthexposed.com", 
+      "content": "BREAKING investigation reveals that powerful weather manipulation machines are being used to create artificial storms and disasters in key voting areas to influence election outcomes! These secret facilities use advanced atmospheric manipulation technology developed from alien technology recovered decades ago. Insider meteorologists who refuse to stay silent anymore confirm that weather forecasts are actually weather PLANS created by political operatives. 'We're told exactly what weather to predict because they can control it completely,' admits anonymous weather service employee. The fake climate change narrative is just a cover story to hide their weather weapon capabilities! They can create hurricanes, droughts, floods, and even earthquakes whenever they need to distract from political scandals or suppress voter turnout in certain regions. This explains why weather patterns have become so 'unusual' in recent years. Real meteorologists who try to expose the truth are fired or worse. Don't believe the weather lies anymore - it's all artificially manufactured for political control!",
+      "label": 1,
+      "source_type": "fake_news"
+    }
+  ]
+}
