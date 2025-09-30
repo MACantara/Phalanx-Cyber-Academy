@@ -1,5 +1,4 @@
 import { WindowSnapManager } from './window-snap-manager.js';
-import { WindowResizeManager } from './window-resize-manager.js';
 import { appRegistry } from './application-registry.js';
 import { initializeApplicationLauncher } from './application-launcher.js';
 
@@ -14,7 +13,6 @@ export class WindowManager {
         // Ensure CSS is loaded before creating managers
         this.ensureWindowStylesLoaded();
         this.snapManager = new WindowSnapManager(container);
-        this.resizeManager = new WindowResizeManager(this);
         
         // Use application registry
         this.appRegistry = appRegistry;
@@ -70,9 +68,8 @@ export class WindowManager {
         // Bind window events
         this.bindWindowEvents(windowElement, id);
 
-        // Make window draggable and resizable
+        // Make window draggable
         this.makeDraggable(windowElement);
-        this.resizeManager.makeResizable(windowElement);
 
         // Initialize application if it exists
         if (app && typeof app.initialize === 'function') {
@@ -356,7 +353,6 @@ export class WindowManager {
         const windowIds = Array.from(this.windows.keys());
         windowIds.forEach(id => this.closeWindow(id));
         this.snapManager.cleanup();
-        this.resizeManager.cleanup();
     }
 
     minimizeAllWindows() {
