@@ -56,35 +56,10 @@ def player_analytics():
                 'level_3': general_data.get('level_3_completion_rate', 65.8),
                 'level_4': general_data.get('level_4_completion_rate', 58.2),
                 'level_5': general_data.get('level_5_completion_rate', 52.7)
-            },
-            'avg_actions_per_session': general_data.get('avg_actions_per_session', 47.3),
-            'failure_retry_rate': general_data.get('failure_retry_rate', 23.7)
-        }
-        
-        engagement_stats = {
-            'nps_score': general_data.get('nps_score', 72),
-            'avg_rating': general_data.get('average_rating', 4.2),
-            'total_ratings': general_data.get('total_ratings', 234),
-            'daily_active_users': general_data.get('daily_active_users', 42),
-            'weekly_active_users': general_data.get('weekly_active_users', 89),
-            'average_session_duration': general_data.get('average_session_duration', 18.5),
-            'retention_rate': general_data.get('retention_rate', 68.3)
+            }
         }
         
         weekly_trends = general_data.get('weekly_trends', [])
-        
-        # Get cybersecurity-specific statistics
-        cybersec_stats = {
-            'level_2_metrics': {
-                'phishing_detection_rate': general_data.get('phishing_detection_rate', 78.4)
-            },
-            'level_3_metrics': {
-                'malware_identification_accuracy': general_data.get('malware_identification_accuracy', 83.7)
-            },
-            'blue_vs_red_metrics': {
-                'asset_protection_rate': general_data.get('asset_protection_rate', 74.8)
-            }
-        }
         
     except Exception as e:
         logger.error(f"Error loading analytics data: {e}")
@@ -119,19 +94,7 @@ def player_analytics():
                 'level_3': 65.8,
                 'level_4': 58.2,
                 'level_5': 52.7
-            },
-            'avg_actions_per_session': 47.3,
-            'failure_retry_rate': 23.7
-        }
-        
-        engagement_stats = {
-            'nps_score': 72,
-            'avg_rating': 4.2,
-            'total_ratings': 234,
-            'daily_active_users': 42,
-            'weekly_active_users': 89,
-            'average_session_duration': 18.5,
-            'retention_rate': 68.3
+            }
         }
         
         weekly_trends = [
@@ -140,25 +103,11 @@ def player_analytics():
             {'date': '2025-01-17', 'dau': 45, 'sessions': 48, 'completions': 35, 'new_users': 7},
             {'date': '2025-01-18', 'dau': 55, 'sessions': 61, 'completions': 44, 'new_users': 13}
         ]
-        
-        cybersec_stats = {
-            'level_2_metrics': {
-                'phishing_detection_rate': 78.4
-            },
-            'level_3_metrics': {
-                'malware_identification_accuracy': 83.7
-            },
-            'blue_vs_red_metrics': {
-                'asset_protection_rate': 74.8
-            }
-        }
     
     return render_template('admin/player-data-analytics/dashboard.html',
                          general_stats=general_stats,
                          gameplay_stats=gameplay_stats,
-                         engagement_stats=engagement_stats,
-                         weekly_trends=weekly_trends,
-                         cybersec_stats=cybersec_stats)
+                         weekly_trends=weekly_trends)
 
 
 @data_analytics_bp.route('/player-analytics/levels')
