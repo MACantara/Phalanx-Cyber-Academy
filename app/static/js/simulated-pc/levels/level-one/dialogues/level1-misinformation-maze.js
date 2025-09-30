@@ -39,7 +39,7 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                 example: "Red flags: 'OUTRAGEOUS!', 'They don't want you to know!'\nBalanced: 'Study shows', 'According to officials'"
             },
             {
-                text: "🎮 How to Play:\nUse the Web Browser to navigate between news sites. Read each article carefully, then use your analytical skills to determine if it's legitimate journalism or misinformation."
+                text: "🎮 How to Play:\nUse the Web Browser to navigate articles. Read each article carefully, then use your analytical skills to determine if it's legitimate journalism or misinformation."
             },
             {
                 text: "Click 'Legitimate' or 'Misinformation' based on your assessment. Take your time to analyze all the evidence before making a decision."
