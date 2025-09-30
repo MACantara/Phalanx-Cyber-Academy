@@ -87,6 +87,7 @@ export class HelpCommand extends BaseCommand {
                     '  - Check configuration files, logs, and hidden files',
                     '  - Use find and grep to search for flags',
                     '  - Read the mission brief with "cat mission_brief.txt" for current challenges',
+                    '  - Use "submit-flag [flag-value]" to submit captured flags',
                     '  - Use "hints" command for flag-specific guidance',
                     '  - Use Tab for command, option, file, and folder completion',
                     '  - Use ↑/↓ arrow keys to navigate command history'
@@ -146,6 +147,7 @@ export class HelpCommand extends BaseCommand {
             '  - Check configuration files, logs, and hidden files',
             '  - Use find and grep to search for flags',
             '  - Read the mission brief with "cat mission_brief.txt" for current challenges',
+            '  - Use "submit-flag [flag-value]" to submit captured flags',
             '  - Use "hints" command for flag-specific guidance',
             '  - Use Tab for command, option, file, and folder completion',
             '  - Use ↑/↓ arrow keys to navigate command history'
