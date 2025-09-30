@@ -143,5 +143,440 @@
         "Always look for exact paypal.com spelling (not paypaI.com or similar)"
       ]
     }
+  },
+  {
+    "id": "legit_006",
+    "sender": "noreply@github.com",
+    "receiver": "developer@startup.com",
+    "date": "2024-03-21 10:15:22",
+    "subject": "Pull request merged: Fix authentication bug",
+    "body": "Hi Emma,\n\nYour pull request has been merged into the main branch.\n\nPull Request Details:\n- Repository: startup-app/backend-api\n- Title: Fix authentication bug in user login\n- Merged by: @teamlead\n- Commits: 3\n- Files changed: 2\n- Lines added: 47, removed: 23\n\nView the merged changes: https://github.com/startup-app/backend-api/pull/142\n\nThanks for your contribution!\nThe GitHub Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official github.com domain",
+        "Specific repository and PR details",
+        "Personalized with developer's name",
+        "Technical details that can be verified",
+        "Links to actual GitHub repository",
+        "Professional development workflow context"
+      ],
+      "educational_focus": "Demonstrates legitimate development platform notifications with verifiable technical details.",
+      "red_flags": [],
+      "verification_tips": [
+        "Check your GitHub notifications for this PR",
+        "Verify the repository name matches your projects",
+        "Confirm the PR number exists in the repository",
+        "GitHub always uses github.com domain for notifications"
+      ]
+    }
+  },
+  {
+    "id": "legit_007",
+    "sender": "notifications@linkedin.com",
+    "receiver": "professional@company.com",
+    "date": "2024-03-22 14:30:18",
+    "subject": "Sarah Chen has endorsed you for JavaScript",
+    "body": "Hi Michael,\n\nGreat news! Sarah Chen has endorsed you for JavaScript.\n\nYour Profile:\n- JavaScript: 12 endorsements\n- React: 8 endorsements  \n- Node.js: 6 endorsements\n\nEndorsements help showcase your skills to potential employers and colleagues.\n\nView your endorsements: https://www.linkedin.com/in/michael-developer/details/skills\n\nThanks for being part of LinkedIn!\nThe LinkedIn Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official linkedin.com domain",
+        "Specific endorsement details",
+        "Personalized with both names",
+        "Professional skills context",
+        "Links to official LinkedIn profile",
+        "Realistic endorsement counts"
+      ],
+      "educational_focus": "Shows legitimate professional network notifications with specific, verifiable information.",
+      "red_flags": [],
+      "verification_tips": [
+        "Check your LinkedIn profile for this endorsement",
+        "Verify you know the person who endorsed you",
+        "Confirm skill endorsement counts match your profile",
+        "LinkedIn always uses linkedin.com domain"
+      ]
+    }
+  },
+  {
+    "id": "legit_008",
+    "sender": "no-reply@spotify.com",
+    "receiver": "user@email.com",
+    "date": "2024-03-23 19:45:33",
+    "subject": "Your Discover Weekly is ready",
+    "body": "Hey David,\n\n🎵 Your personalized Discover Weekly playlist is here!\n\nThis Week's Mix:\n- 30 songs picked just for you\n- Based on your recent listening\n- Updated every Monday\n- 2 hours of fresh music\n\nFeatured Artists This Week:\n- Arctic Monkeys\n- Billie Eilish\n- The Strokes\n- Tame Impala\n\nListen now: https://open.spotify.com/playlist/37i9dQZEVXcQ9COmYs5Y2j\n\nHappy listening!\nSpotify",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official spotify.com domain",
+        "Personalized with user's name",
+        "Specific playlist details",
+        "Consistent with Spotify's weekly features",
+        "Links to official Spotify playlist",
+        "Professional music service branding"
+      ],
+      "educational_focus": "Legitimate music service automation with personalized content and official branding.",
+      "red_flags": [],
+      "verification_tips": [
+        "Check your Spotify app for this playlist",
+        "Verify the playlist link opens in official Spotify",
+        "Confirm you have Spotify account with this email",
+        "Spotify always uses spotify.com domain"
+      ]
+    }
+  },
+  {
+    "id": "legit_009",
+    "sender": "statements@chase.com",
+    "receiver": "customer@email.com",
+    "date": "2024-03-24 08:00:15",
+    "subject": "Your March statement is available",
+    "body": "Dear Jennifer Martinez,\n\nYour Chase credit card statement for March 2024 is now available.\n\nStatement Summary:\n- Account: •••• 4892\n- Statement Date: March 24, 2024\n- Payment Due: April 18, 2024\n- Minimum Payment: $45.00\n- Current Balance: $1,247.83\n\nView your statement securely online:\nhttps://www.chase.com/digital/online-banking\n\nQuestions? Call us at the number on the back of your card.\n\nThank you,\nChase Customer Service",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official chase.com domain",
+        "Personalized with full customer name",
+        "Specific account details (partial card number)",
+        "Realistic payment amounts and dates",
+        "Links to official Chase banking portal",
+        "Professional banking communication"
+      ],
+      "educational_focus": "Legitimate banking statement notification with proper security practices (partial account numbers).",
+      "red_flags": [],
+      "verification_tips": [
+        "Verify account details match your actual Chase account",
+        "Check statement availability in Chase online banking",
+        "Confirm payment due date and amounts",
+        "Chase always uses chase.com for official communications"
+      ]
+    }
+  },
+  {
+    "id": "legit_010",
+    "sender": "support@zoom.us",
+    "receiver": "host@company.com",
+    "date": "2024-03-25 11:20:44",
+    "subject": "Meeting summary: Weekly Team Standup",
+    "body": "Hi Rachel,\n\nHere's your meeting summary for Weekly Team Standup.\n\nMeeting Details:\n- Date: March 25, 2024\n- Duration: 32 minutes\n- Participants: 8 people joined\n- Recording: Available for 30 days\n\nParticipants:\n- Rachel Kim (Host)\n- Alex Chen, Sarah Lopez, Mike Wilson, and 4 others\n\nNext Meeting: March 25, 2024 at 10:00 AM\n\nView recording: https://zoom.us/rec/share/xyz789abc123\nSchedule next meeting: https://zoom.us/j/1234567890\n\nZoom Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official zoom.us domain",
+        "Specific meeting details",
+        "Personalized with host name",
+        "Realistic participant counts and duration",
+        "Links to official Zoom recording platform",
+        "Professional meeting service branding"
+      ],
+      "educational_focus": "Legitimate video conferencing summary with specific, verifiable meeting data.",
+      "red_flags": [],
+      "verification_tips": [
+        "Verify you hosted this meeting on Zoom",
+        "Check participant list matches actual attendees",
+        "Confirm meeting duration and date",
+        "Zoom always uses zoom.us domain for official emails"
+      ]
+    }
+  },
+  {
+    "id": "legit_011",
+    "sender": "noreply@trello.com",
+    "receiver": "manager@team.com",
+    "date": "2024-03-26 16:18:29",
+    "subject": "Card assigned: Update user documentation",
+    "body": "Hi Lisa,\n\nYou've been assigned to a new card in the Product Development board.\n\nCard Details:\n- Title: Update user documentation\n- List: In Progress\n- Due Date: March 30, 2024\n- Assigned by: Tom Rodriguez\n- Board: Product Development\n\nDescription:\nUpdate the API documentation to reflect the new authentication endpoints. Include code examples and error handling.\n\nView card: https://trello.com/c/abc123/update-user-documentation\n\nTrello Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official trello.com domain",
+        "Specific project management details",
+        "Personalized with assignee name",
+        "Professional task management context",
+        "Links to official Trello card",
+        "Realistic project workflow information"
+      ],
+      "educational_focus": "Legitimate project management notification with specific task assignment details.",
+      "red_flags": [],
+      "verification_tips": [
+        "Check your Trello boards for this card assignment",
+        "Verify you're a member of the Product Development board",
+        "Confirm the person who assigned the task",
+        "Trello always uses trello.com domain"
+      ]
+    }
+  },
+  {
+    "id": "legit_012",
+    "sender": "billing@adobe.com",
+    "receiver": "creative@agency.com",
+    "date": "2024-03-27 13:45:17",
+    "subject": "Payment successful - Creative Cloud subscription renewed",
+    "body": "Thank you for your payment, Creative Team.\n\nSubscription Renewed:\n- Plan: Creative Cloud All Apps (Team)\n- Billing Period: March 27 - April 26, 2024\n- Amount: $239.88 (4 licenses)\n- Payment Method: •••• 7823 (Company Card)\n- Next Billing: April 27, 2024\n\nYour team has access to:\n- Photoshop, Illustrator, InDesign, Premiere Pro\n- After Effects, XD, Lightroom, and more\n- 1TB cloud storage per user\n- Premium fonts and stock assets\n\nManage your team: https://adminconsole.adobe.com\n\nAdobe Customer Care",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official adobe.com domain",
+        "Detailed subscription information",
+        "Professional business language",
+        "Realistic team pricing and license counts",
+        "Links to official Adobe Admin Console",
+        "Proper payment confirmation format"
+      ],
+      "educational_focus": "Legitimate software subscription renewal with detailed billing information.",
+      "red_flags": [],
+      "verification_tips": [
+        "Verify subscription details match your Adobe account",
+        "Check payment amount against expected team pricing",
+        "Confirm license count matches your team size",
+        "Adobe always uses adobe.com for billing communications"
+      ]
+    }
+  },
+  {
+    "id": "legit_013",
+    "sender": "notifications@figma.com",
+    "receiver": "designer@studio.com",
+    "date": "2024-03-28 09:32:51",
+    "subject": "Comment added to Mobile App Wireframes",
+    "body": "Hi Chris,\n\nYou have a new comment on your design.\n\nFile: Mobile App Wireframes\nCommenter: Jessica Park\nTime: 9:30 AM\n\nComment: \"Great work on the navigation flow! Can we adjust the button spacing on the home screen? Also, consider making the search bar more prominent.\"\n\nLocation: Frame 3 - Home Screen Design\n\nReply to comment: https://www.figma.com/file/def456/mobile-app-wireframes?node-id=123:456\n\nHappy designing!\nFigma Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official figma.com domain",
+        "Specific design collaboration details",
+        "Personalized with designer and commenter names",
+        "Professional design feedback context",
+        "Links to official Figma file",
+        "Realistic design collaboration workflow"
+      ],
+      "educational_focus": "Legitimate design collaboration notification with specific project details.",
+      "red_flags": [],
+      "verification_tips": [
+        "Check your Figma files for this comment",
+        "Verify you're collaborating with Jessica Park",
+        "Confirm the file name matches your project",
+        "Figma always uses figma.com domain for notifications"
+      ]
+    }
+  },
+  {
+    "id": "legit_014",
+    "sender": "digest@stackoverflow.com",
+    "receiver": "developer@tech.com",
+    "date": "2024-03-29 07:30:15",
+    "subject": "Your weekly Stack Overflow summary",
+    "body": "Hello Kevin,\n\nHere's your personalized Stack Overflow activity this week:\n\n📊 Your Activity:\n- 3 questions answered\n- 2 answers accepted\n- 47 reputation points earned\n- 1 badge earned: \"Nice Answer\"\n\n🔥 Top Tags This Week:\n- JavaScript (5 interactions)\n- React (3 interactions)\n- Node.js (2 interactions)\n\n📈 Trending in Your Tags:\n- \"How to handle async/await in React hooks?\"\n- \"Best practices for Node.js error handling\"\n- \"Optimizing React component performance\"\n\nView your profile: https://stackoverflow.com/users/123456/kevin\n\nStack Overflow Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official stackoverflow.com domain",
+        "Personalized activity statistics",
+        "Specific reputation and badge information",
+        "Professional developer community context",
+        "Links to official Stack Overflow profile",
+        "Realistic programming topics and interactions"
+      ],
+      "educational_focus": "Legitimate developer community digest with personalized activity data.",
+      "red_flags": [],
+      "verification_tips": [
+        "Check your Stack Overflow profile for these statistics",
+        "Verify reputation points match your account",
+        "Confirm badge earnings in your profile",
+        "Stack Overflow always uses stackoverflow.com domain"
+      ]
+    }
+  },
+  {
+    "id": "legit_015",
+    "sender": "team@notion.so",
+    "receiver": "organizer@company.com",
+    "date": "2024-03-30 15:22:38",
+    "subject": "Page shared with you: Q2 Planning Document",
+    "body": "Hello Taylor,\n\nRobert Kim has shared a page with you in the Marketing Team workspace.\n\nPage Details:\n- Title: Q2 Planning Document\n- Workspace: Marketing Team\n- Permission: Can edit\n- Shared: March 30, 2024\n\nPage Preview:\n\"Q2 Marketing Strategy and Campaign Planning - This document outlines our marketing objectives for the second quarter, including campaign timelines, budget allocation, and success metrics.\"\n\nOpen page: https://www.notion.so/marketing-team/q2-planning-document\n\nStay organized!\nNotion Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official notion.so domain",
+        "Specific workspace and document details",
+        "Personalized with sharer and recipient names",
+        "Professional business document context",
+        "Links to official Notion workspace",
+        "Realistic document sharing scenario"
+      ],
+      "educational_focus": "Legitimate document collaboration notification with specific sharing details.",
+      "red_flags": [],
+      "verification_tips": [
+        "Check your Notion workspace for this shared document",
+        "Verify you're a member of the Marketing Team workspace",
+        "Confirm Robert Kim is a known colleague",
+        "Notion always uses notion.so domain for official emails"
+      ]
+    }
+  },
+  {
+    "id": "legit_016",
+    "sender": "security@1password.com",
+    "receiver": "admin@company.com",
+    "date": "2024-03-31 12:45:22",
+    "subject": "Security report: Strong password practices detected",
+    "body": "Hi Alex,\n\n🛡️ Great news! Your team is following excellent password security practices.\n\nSecurity Report:\n- Team size: 25 members\n- Strong passwords: 94% (excellent!)\n- Two-factor authentication: 88% enabled\n- Compromised passwords: 0 detected\n- Average security score: 92/100\n\nTop Security Practices:\n- All team members using unique passwords\n- Most accounts have 2FA enabled\n- Regular password updates\n- No shared passwords detected\n\nView detailed report: https://my.1password.com/security/reports\n\nKeep up the great work!\n1Password Security Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official 1password.com domain",
+        "Positive security report context",
+        "Specific team statistics",
+        "Professional security service branding",
+        "Links to official 1Password security dashboard",
+        "Realistic security metrics and scores"
+      ],
+      "educational_focus": "Legitimate password manager security report with detailed team analytics.",
+      "red_flags": [],
+      "verification_tips": [
+        "Check your 1Password business dashboard for this report",
+        "Verify team size matches your organization",
+        "Confirm security scores align with your dashboard",
+        "1Password always uses 1password.com domain"
+      ]
+    }
+  },
+  {
+    "id": "legit_017",
+    "sender": "no-reply@docker.com",
+    "receiver": "devops@startup.com",
+    "date": "2024-04-01 16:18:44",
+    "subject": "Docker Hub: Repository star milestone reached",
+    "body": "Hi Morgan,\n\n⭐ Congratulations! Your repository has reached 100 stars.\n\nRepository: morgan/web-toolkit\nStars: 100 (milestone reached!)\nForks: 23\nPulls this month: 1,247\n\nYour Popular Tags:\n- v2.1.0 (latest)\n- v2.0.3 (stable)\n- v1.9.8 (legacy)\n\nRepository Impact:\n- Downloads this month: 5,432\n- Used by 89 public repositories\n- Community feedback: 4.8/5 stars\n\nView repository: https://hub.docker.com/r/morgan/web-toolkit\n\nThanks for contributing to the Docker community!\nDocker Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official docker.com domain",
+        "Specific repository milestone information",
+        "Realistic download and usage statistics",
+        "Professional open source community context",
+        "Links to official Docker Hub repository",
+        "Positive achievement notification"
+      ],
+      "educational_focus": "Legitimate open source platform milestone notification with detailed repository statistics.",
+      "red_flags": [],
+      "verification_tips": [
+        "Check your Docker Hub profile for this repository",
+        "Verify star count matches your repository page",
+        "Confirm download statistics align with your metrics",
+        "Docker always uses docker.com for official communications"
+      ]
+    }
+  },
+  {
+    "id": "legit_018",
+    "sender": "digest@medium.com",
+    "receiver": "writer@freelance.com",
+    "date": "2024-04-02 11:35:17",
+    "subject": "Your story was featured in a publication",
+    "body": "Hi Jordan,\n\n🎉 Great news! Your story has been featured by a publication.\n\nStory Details:\n- Title: \"10 JavaScript Performance Tips Every Developer Should Know\"\n- Featured by: JavaScript Weekly\n- Publication date: April 1, 2024\n- Current stats: 2,847 views, 156 claps\n\nEditor's Note:\n\"Excellent practical advice for JavaScript optimization. The performance examples are particularly valuable for intermediate developers.\"\n\nYour Story Impact:\n- 47 new followers from this feature\n- 23 thoughtful responses\n- Shared 89 times on social media\n\nView your story: https://medium.com/@jordan/javascript-performance-tips-abc123\n\nKeep writing amazing content!\nMedium Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official medium.com domain",
+        "Specific publication and story details",
+        "Realistic engagement statistics",
+        "Professional writing platform context",
+        "Links to official Medium story",
+        "Positive achievement notification with editor feedback"
+      ],
+      "educational_focus": "Legitimate writing platform feature notification with detailed engagement metrics.",
+      "red_flags": [],
+      "verification_tips": [
+        "Check your Medium profile for this story",
+        "Verify engagement statistics match your dashboard",
+        "Confirm the publication actually featured your story",
+        "Medium always uses medium.com domain for notifications"
+      ]
+    }
+  },
+  {
+    "id": "legit_019",
+    "sender": "support@stripe.com",
+    "receiver": "finance@ecommerce.com",
+    "date": "2024-04-03 14:22:15",
+    "subject": "Monthly transaction summary - March 2024",
+    "body": "Hello,\n\nYour Stripe account summary for March 2024.\n\nTransaction Summary:\n- Total transactions: 1,247\n- Successful payments: 1,198 (96.1%)\n- Failed payments: 49 (3.9%)\n- Gross revenue: $47,832.15\n- Stripe fees: $1,389.47\n- Net revenue: $46,442.68\n\nTop Payment Methods:\n- Credit/Debit cards: 89%\n- Digital wallets: 8%\n- Bank transfers: 3%\n\nPerformance Insights:\n- Average transaction: $39.87\n- Peak transaction day: March 15 (127 payments)\n- Customer satisfaction: 98.2%\n\nView detailed analytics: https://dashboard.stripe.com/reports\n\nStripe Support Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official stripe.com domain",
+        "Detailed financial analytics",
+        "Realistic transaction statistics and amounts",
+        "Professional payment platform branding",
+        "Links to official Stripe dashboard",
+        "Comprehensive business metrics"
+      ],
+      "educational_focus": "Legitimate payment processor monthly summary with detailed business analytics.",
+      "red_flags": [],
+      "verification_tips": [
+        "Check your Stripe dashboard for these statistics",
+        "Verify transaction counts match your records",
+        "Confirm fee calculations align with Stripe pricing",
+        "Stripe always uses stripe.com for official communications"
+      ]
+    }
+  },
+  {
+    "id": "legit_020",
+    "sender": "education@coursera.org",
+    "receiver": "student@university.edu",
+    "date": "2024-04-04 09:15:33",
+    "subject": "Certificate earned: Machine Learning Specialization",
+    "body": "Congratulations Sam!\n\n🎓 You've successfully completed the Machine Learning Specialization.\n\nCertificate Details:\n- Course: Machine Learning (Stanford University)\n- Instructor: Andrew Ng\n- Completed: April 4, 2024\n- Final Grade: 94.7% (Excellent)\n- Certificate ID: ML-SPEC-2024-789456\n\nYour Achievements:\n- 4 courses completed\n- 16 programming assignments passed\n- 12 quizzes completed with high scores\n- Capstone project: 96% score\n\nShare your achievement:\n- Add to LinkedIn profile\n- Download certificate PDF\n- Share on social media\n\nView certificate: https://www.coursera.org/account/accomplishments/specialization/abc123\n\nWe're proud of your dedication to learning!\nCoursera Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official coursera.org domain",
+        "Specific course and instructor details",
+        "Realistic academic achievement information",
+        "Professional education platform branding",
+        "Links to official Coursera certificate page",
+        "Detailed completion statistics and grades"
+      ],
+      "educational_focus": "Legitimate online education certificate notification with specific academic achievements.",
+      "red_flags": [],
+      "verification_tips": [
+        "Check your Coursera profile for this certificate",
+        "Verify course completion date and grades",
+        "Confirm certificate ID matches your records",
+        "Coursera always uses coursera.org for official emails"
+      ]
+    }
   }
 ]
