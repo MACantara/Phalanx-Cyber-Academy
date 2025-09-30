@@ -63,7 +63,7 @@ export class WindowBase {
         this.windowElement.style.bottom = '3rem';
 
         this.windowElement.innerHTML = `
-            <div class="window-content flex-1 overflow-auto bg-black text-white text-sm sm:text-base">
+            <div class="window-content flex-1 overflow-y-auto overflow-x-hidden bg-black text-white text-sm sm:text-base min-h-0" style="height: 100%;">
                 ${this.createContent()}
             </div>
         `;
