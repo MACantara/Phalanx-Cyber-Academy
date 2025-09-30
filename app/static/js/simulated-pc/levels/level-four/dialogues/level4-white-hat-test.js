@@ -5,10 +5,10 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "🎓 Professional Certification: Level 4 - The White Hat Test\n\nENGAGEMENT TYPE: Authorized Penetration Test\nCLIENT: TechCorp Industries\nSCOPE: Web Application Security Assessment\nDURATION: Full-scope evaluation\nMETHODOLOGY: NIST SP 800-115 & OWASP Testing Guide"
+                text: "🎓 Professional Certification: Level 4 - The White Hat Test\nENGAGEMENT TYPE: Authorized Penetration Test\nCLIENT: TechCorp Industries\nSCOPE: Web Application Security Assessment\nDURATION: Full-scope evaluation\nMETHODOLOGY: NIST SP 800-115 & OWASP Testing Guide"
             },
             {
-                text: "📜 Rules of Engagement:\n\nAUTHORIZED ACTIVITIES:\n• Reconnaissance and information gathering\n• Vulnerability scanning and analysis"
+                text: "📜 Rules of Engagement:\nAUTHORIZED ACTIVITIES:\n• Reconnaissance and information gathering\n• Vulnerability scanning and analysis"
             },
             {
                 text: "• Configuration review and assessment\n• Log file examination and forensic analysis"
@@ -23,7 +23,7 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 text: "Your task is to identify 7 security vulnerabilities (represented as flags) across their infrastructure using professional penetration testing methodologies."
             },
             {
-                text: "🔍 Assessment Categories:\n\n• Environment Analysis: System configuration and deployment security\n• Access Control: Authentication and authorization mechanisms"
+                text: "🔍 Assessment Categories:\n• Environment Analysis: System configuration and deployment security\n• Access Control: Authentication and authorization mechanisms"
             },
             {
                 text: "• Data Exposure: Sensitive information in logs and files\n• Configuration Security: Server and application hardening\n• Code Review: Source code vulnerabilities"
@@ -32,11 +32,11 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 text: "• Forensic Analysis: Historical security incidents\n• Network Security: Communication and protocol security"
             },
             {
-                text: "🛠️ CTF Challenge Approach:\n\nThis is a Capture The Flag (CTF) security challenge. Your goal is to find 7 hidden flags using terminal commands and system exploration.",
+                text: "🛠️ CTF Challenge Approach:\nThis is a Capture The Flag (CTF) security challenge. Your goal is to find 7 hidden flags using terminal commands and system exploration.",
                 example: "Example commands to get started:\nls -la (list files)\ncat filename.txt (read files)\ngrep -r \"flag\" . (search for flags)"
             },
             {
-                text: "💻 Essential CTF Commands:\n\nMaster these terminal commands to find the hidden flags:",
+                text: "💻 Essential CTF Commands:\nMaster these terminal commands to find the hidden flags:",
                 example: "File Operations:\nls, cat, head, tail, grep\nfind / -name \"*.txt\" 2>/dev/null\nstrings binary_file | grep flag"
             },
             {
@@ -44,11 +44,11 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 example: "Log Analysis:\ngrep -i \"flag\\|password\\|key\" /var/log/*\nSystem Info:\nps aux, netstat -tulpn, env"
             },
             {
-                text: "🏆 CTF Success Tips:\n\n• Be Systematic: Check common flag locations first\n• Read Everything: Flags can be hidden in comments or unusual places",
+                text: "🏆 CTF Success Tips:\n• Be Systematic: Check common flag locations first\n• Read Everything: Flags can be hidden in comments or unusual places",
                 example: "Common Flag Locations:\n/home/user/flag.txt\n/etc/passwd comments\nEnvironment variables (env command)"
             },
             {
-                text: "📊 Success Metrics:\n\n• Flag Discovery: Find all 7 security vulnerabilities\n• Methodology Score: Demonstrate proper testing techniques"
+                text: "📊 Success Metrics:\n• Flag Discovery: Find all 7 security vulnerabilities\n• Methodology Score: Demonstrate proper testing techniques"
             },
             {
                 text: "• Documentation Quality: Clear evidence and explanations\n• Time Efficiency: Complete assessment within reasonable timeframe\n• Certification Goal: Earn 'Certified Ethical Hacker' badge"
@@ -61,7 +61,7 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 text: "🚀 Professional Engagement:\nThis assessment simulates real-world penetration testing engagements. Your professionalism, methodology, and ethical approach demonstrate readiness for cybersecurity consulting roles."
             },
             {
-                text: "Remember: Great penetration testers combine technical skills with ethical responsibility and clear communication.\n\nReady to begin your professional security assessment?"
+                text: "Remember: Great penetration testers combine technical skills with ethical responsibility and clear communication.\nReady to begin your professional security assessment?"
             }
         ];
     }

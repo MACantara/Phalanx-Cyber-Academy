@@ -5,7 +5,7 @@ export class Level2ShadowInboxDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "🚨 SECURITY ALERT: Level 2 - Shadow in the Inbox\n\nUrgent! Our organization has been targeted by a sophisticated phishing campaign. As the Security Operations Center analyst on duty, you must identify and quarantine malicious emails before they compromise our systems."
+                text: "🚨 SECURITY ALERT: Level 2 - Shadow in the Inbox\nUrgent! Our organization has been targeted by a sophisticated phishing campaign. As the Security Operations Center analyst on duty, you must identify and quarantine malicious emails before they compromise our systems."
             },
             {
                 text: "📊 Threat Intelligence:\nRecent attacks show a 300% increase in spear-phishing attempts targeting our industry. Attackers are using advanced social engineering tactics to breach corporate defenses."
@@ -20,7 +20,7 @@ export class Level2ShadowInboxDialogue extends BaseDialogue {
                 text: "One wrong decision could lead to a data breach costing millions. The stakes are high, and you are our last line of defense against these cyber threats."
             },
             {
-                text: "🔍 Email Analysis Framework:\n\nSender Verification: Check email addresses for subtle misspellings or suspicious domains that impersonate legitimate organizations.",
+                text: "🔍 Email Analysis Framework:\nSender Verification: Check email addresses for subtle misspellings or suspicious domains that impersonate legitimate organizations.",
                 example: "Legitimate: 'support@paypal.com'\nSuspicious: 'support@paypaI.com' (with uppercase I instead of l)"
             },
             {
@@ -36,7 +36,7 @@ export class Level2ShadowInboxDialogue extends BaseDialogue {
                 example: "Safe: 'Invoice_March2024.pdf' (from known vendor)\nDangerous: 'URGENT_Payment_Details.exe', 'Invoice.doc' with macros"
             },
             {
-                text: "⚠️ Red Flags Checklist:\n\n• Generic greetings ('Dear Customer') instead of your name\n• Urgent threats ('Account will be closed in 24 hours!')",
+                text: "⚠️ Red Flags Checklist:\n• Generic greetings ('Dear Customer') instead of your name\n• Urgent threats ('Account will be closed in 24 hours!')",
                 example: "Suspicious: 'Dear Valued Customer, Your account will be suspended!'\nLegitimate: 'Hello John Smith, This is a reminder about your subscription'"
             },
             {
@@ -44,19 +44,19 @@ export class Level2ShadowInboxDialogue extends BaseDialogue {
                 example: "Never legitimate: 'Please confirm your password and SSN for security'\nAlways suspicious: 'We has detected suspicious activity in you're account'"
             },
             {
-                text: "🛡️ Response Protocols:\n\nSAFE: Mark legitimate emails to allow delivery\nPHISHING: Quarantine suspicious emails immediately"
+                text: "🛡️ Response Protocols:\nSAFE: Mark legitimate emails to allow delivery\nPHISHING: Quarantine suspicious emails immediately"
             },
             {
                 text: "REPORT: Document phishing attempts for threat intelligence\nCritical Rule: Never click suspicious links or download unexpected attachments"
             },
             {
-                text: "💡 Advanced Detection Tips:\n\n• Check email headers for routing anomalies\n• Verify requests through alternative communication channels"
+                text: "💡 Advanced Detection Tips:\n• Check email headers for routing anomalies\n• Verify requests through alternative communication channels"
             },
             {
                 text: "• Be extra cautious with financial or HR-related requests\n• When in doubt, always choose security over convenience"
             },
             {
-                text: "🏆 Performance Metrics:\n\nAccuracy Rate: Correctly identify email types\nResponse Time: Quick decisions prevent damage"
+                text: "🏆 Performance Metrics:\nAccuracy Rate: Correctly identify email types\nResponse Time: Quick decisions prevent damage"
             },
             {
                 text: "False Positives: Minimize blocking legitimate business emails\nThreat Detection: Earn bonus XP for catching advanced attacks"
@@ -71,7 +71,7 @@ export class Level2ShadowInboxDialogue extends BaseDialogue {
                 text: "🚀 Mission Critical:\nPhishing attacks are responsible for 90% of data breaches. Your expertise in email security directly protects our organization's data, reputation, and financial assets."
             },
             {
-                text: "Every email you analyze correctly makes us more secure. The entire team is counting on your vigilance and expertise.\n\nReady to defend the inbox?"
+                text: "Every email you analyze correctly makes us more secure. The entire team is counting on your vigilance and expertise.\nReady to defend the inbox?"
             }
         ];
     }

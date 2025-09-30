@@ -9,7 +9,7 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "🎯 Mission Brief: Level 1 - The Misinformation Maze\n\nWelcome to your first cybersecurity challenge! As a junior security analyst, you've been assigned to investigate a coordinated disinformation campaign targeting upcoming elections."
+                text: "🎯 Mission Brief: Level 1 - The Misinformation Maze\nWelcome to your first cybersecurity challenge! As a junior security analyst, you've been assigned to investigate a coordinated disinformation campaign targeting upcoming elections."
             },
             {
                 text: "📚 Learning Objectives:\n• Master critical thinking techniques for information verification\n• Identify common misinformation tactics and manipulation strategies"
@@ -24,7 +24,7 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                 text: "You'll analyze various news articles to distinguish legitimate journalism from fabricated content designed to influence public opinion."
             },
             {
-                text: "🛠️ Detection Techniques:\n\nSource Analysis: Check domain authority and publication history\nAuthor Verification: Look for real credentials and bylines",
+                text: "🛠️ Detection Techniques:\nSource Analysis: Check domain authority and publication history\nAuthor Verification: Look for real credentials and bylines",
                 example: "Legitimate: 'By Sarah Johnson, Political Reporter, Associated Press'\nSuspicious: 'By Staff Writer' or no author listed"
             },
             {
@@ -32,7 +32,7 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                 example: "Professional: 'Senator Proposes New Healthcare Bill'\nManipulative: 'SHOCKING: Politicians HATE This Simple Healthcare Trick!'"
             },
             {
-                text: "⚠️ Warning Signs to Watch For:\n\n• Suspicious URLs or domain names\n• Missing author information or fake credentials",
+                text: "⚠️ Warning Signs to Watch For:\n• Suspicious URLs or domain names\n• Missing author information or fake credentials",
                 example: "Suspicious: 'realcnnews.com' (mimicking cnn.com)\nLegitimate: 'reuters.com', 'apnews.com', 'bbc.com'"
             },
             {
@@ -46,13 +46,13 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                 text: "Click 'Legitimate' or 'Misinformation' based on your assessment. Take your time to analyze all the evidence before making a decision."
             },
             {
-                text: "🏆 Scoring System:\n\nCorrect identification: +100 XP per article\nSpeed bonus: Extra points for quick, accurate decisions"
+                text: "🏆 Scoring System:\nCorrect identification: +100 XP per article\nSpeed bonus: Extra points for quick, accurate decisions"
             },
             {
                 text: "Streak multiplier: Consecutive correct answers increase your score\nPerfect score: Earn the 'Truth Seeker' badge for 100% accuracy"
             },
             {
-                text: "💡 Pro Tips:\n\n• Take time to read carefully - rushing leads to mistakes\n• Check multiple indicators, not just one red flag"
+                text: "💡 Pro Tips:\n• Take time to read carefully - rushing leads to mistakes\n• Check multiple indicators, not just one red flag"
             },
             {
                 text: "• When in doubt, err on the side of caution\n• Real news includes multiple credible sources and balanced reporting"

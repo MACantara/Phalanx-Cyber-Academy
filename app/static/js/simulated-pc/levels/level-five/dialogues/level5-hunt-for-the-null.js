@@ -5,7 +5,7 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "🔍 CASE FILE: Level 5 - The Hunt for The Null\n\nCASE NUMBER: FOR-2024-0812\nCLASSIFICATION: Top Secret\nLEAD INVESTIGATOR: [Your Name]\nINCIDENT TYPE: Advanced Persistent Threat (APT)\nOBJECTIVE: Identify and prosecute 'The Null' - mastermind behind global cybercrimes"
+                text: "🔍 CASE FILE: Level 5 - The Hunt for The Null\nCASE NUMBER: FOR-2024-0812\nCLASSIFICATION: Top Secret\nLEAD INVESTIGATOR: [Your Name]\nINCIDENT TYPE: Advanced Persistent Threat (APT)\nOBJECTIVE: Identify and prosecute 'The Null' - mastermind behind global cybercrimes"
             },
             {
                 text: "📋 Case Background:\nFor months, a sophisticated cybercriminal known only as 'The Null' has orchestrated attacks against critical infrastructure, financial institutions, and government agencies worldwide. Previous attempts to identify this adversary have failed. You are our last hope."
@@ -14,7 +14,7 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                 text: "🎯 Investigation Mandate:\nUsing advanced digital forensics techniques, analyze seized evidence from The Null's compromised systems to:\n• Establish their true identity\n• Document attack methodologies\n• Build prosecutable evidence chain\n• Prevent future attacks by understanding their infrastructure"
             },
             {
-                text: "🛠️ Forensic Suite Overview:\n\nEvidence Locker - Your command center\n• Manages chain of custody for all evidence\n• Tracks evidence integrity with cryptographic hashes\n• Coordinates analysis across all forensic tools\n• Maintains audit trail per ISO/IEC 27037:2012 standards",
+                text: "🛠️ Forensic Suite Overview:\nEvidence Locker - Your command center\n• Manages chain of custody for all evidence\n• Tracks evidence integrity with cryptographic hashes\n• Coordinates analysis across all forensic tools\n• Maintains audit trail per ISO/IEC 27037:2012 standards",
                 example: "Evidence Files:\nDISK_001.img (Hard drive image)\nMEMORY_001.dmp (RAM dump)\nNETWORK_001.pcap (Network traffic)"
             },
             {
@@ -37,7 +37,7 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                 text: "Report Generator - Legal documentation\n• Create court-admissible forensic reports\n• Follow NIST SP 800-86 forensic guidelines\n• Include proper evidence citations and methodology\n• Generate executive summaries for law enforcement"
             },
             {
-                text: "🔬 Forensic Methodology:\n\nPhase 1: Evidence Acquisition\n• Verify evidence integrity using cryptographic hashes\n• Document chain of custody\n• Create forensic copies for analysis"
+                text: "🔬 Forensic Methodology:\nPhase 1: Evidence Acquisition\n• Verify evidence integrity using cryptographic hashes\n• Document chain of custody\n• Create forensic copies for analysis"
             },
             {
                 text: "Phase 2: Analysis\n• Examine each evidence source systematically\n• Look for artifacts, deleted files, and hidden data\n• Cross-reference findings between sources"
@@ -49,7 +49,7 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                 text: "Phase 4: Documentation\n• Document all findings with legal precision\n• Maintain evidence integrity throughout\n• Prepare comprehensive forensic report"
             },
             {
-                text: "🎯 Key Investigation Areas:\n\n• Digital Identity: Email accounts, usernames, online personas\n• Technical Indicators: IP addresses, domains, malware signatures"
+                text: "🎯 Key Investigation Areas:\n• Digital Identity: Email accounts, usernames, online personas\n• Technical Indicators: IP addresses, domains, malware signatures"
             },
             {
                 text: "• Operational Security: VPNs, encryption, anonymization techniques\n• Attack Infrastructure: C2 servers, botnets, staging areas\n• Financial Trails: Cryptocurrency wallets, money laundering"
