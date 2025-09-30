@@ -105,21 +105,21 @@ class Challenge1PageClass extends BasePage {
                         </h2>
                         
                         <!-- Article Metadata -->
-                        <div class="text-gray-700 mb-5 text-sm flex gap-4 flex-wrap items-center">
-                            <span data-element-type="date" data-element-id="date_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800">
+                        <div class="text-gray-700 mb-4 sm:mb-5 text-xs sm:text-sm flex flex-col sm:flex-row gap-2 sm:gap-4 sm:flex-wrap sm:items-center">
+                            <span data-element-type="date" data-element-id="date_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800 self-start">
                                 <i class="bi bi-calendar-event text-xs"></i>
-                                Published: ${formattedDate}
+                                <span class="hidden sm:inline">Published:</span> ${formattedDate}
                             </span>
-                            <span class="text-slate-500">•</span>
-                            <span data-element-type="author" data-element-id="author_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800">
+                            <span class="text-slate-500 hidden sm:inline">•</span>
+                            <span data-element-type="author" data-element-id="author_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800 self-start">
                                 <i class="bi bi-pencil text-xs"></i>
-                                By: ${currentArticle.author || 'Staff Reporter'}
+                                <span class="hidden sm:inline">By:</span> ${currentArticle.author || 'Staff Reporter'}
                             </span>
-                            <span class="text-slate-500">•</span>
-                            <span data-element-type="source" data-element-id="source_analysis" class="px-2 py-1 bg-sky-50 border border-sky-500 rounded flex items-center gap-1">
+                            <span class="text-slate-500 hidden sm:inline">•</span>
+                            <span data-element-type="source" data-element-id="source_analysis" class="px-2 py-1 bg-sky-50 border border-sky-500 rounded flex items-center gap-1 self-start">
                                 <i class="bi bi-globe text-xs"></i>
                                 <strong class="text-sky-800">Source:</strong>
-                                <span class="text-sky-800 font-mono text-xs">${currentArticle.source || 'Unknown'}</span>
+                                <span class="text-sky-800 font-mono text-xs truncate max-w-32 sm:max-w-none">${currentArticle.source || 'Unknown'}</span>
                             </span>
                         </div>
                         
@@ -129,27 +129,27 @@ class Challenge1PageClass extends BasePage {
                         </div>
                         
                         <!-- Classification Interface -->
-                        <div class="mt-6 mb-4 p-5 bg-slate-50 rounded-lg border border-slate-200">
-                            <h3 class="mt-0 text-slate-800 text-xl">Classify this Article</h3>
-                            <p class="text-slate-600 mb-5">Based on your analysis, is this article real or fake news?</p>
+                        <div class="mt-4 sm:mt-6 mb-4 p-4 sm:p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h3 class="mt-0 text-slate-800 text-lg sm:text-xl">Classify this Article</h3>
+                            <p class="text-slate-600 mb-4 sm:mb-5 text-sm sm:text-base">Based on your analysis, is this article real or fake news?</p>
                             
-                            <div class="flex gap-4 mb-5">
+                            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-5">
                                 <button id="classify-real" 
-                                        class="flex-1 px-5 py-3 bg-emerald-500 text-white border-none rounded-md text-base cursor-pointer transition-colors hover:bg-emerald-600">
-                                    <i class="bi bi-newspaper me-2"></i> Real News
+                                        class="w-full sm:flex-1 px-4 sm:px-5 py-3 bg-emerald-500 text-white border-none rounded-md text-sm sm:text-base cursor-pointer transition-colors hover:bg-emerald-600 active:bg-emerald-700 touch-manipulation">
+                                    <i class="bi bi-newspaper me-1 sm:me-2"></i> Real News
                                 </button>
                                 <button id="classify-fake" 
-                                        class="flex-1 px-5 py-3 bg-red-500 text-white border-none rounded-md text-base cursor-pointer transition-colors hover:bg-red-600">
-                                    <i class="bi bi-exclamation-triangle me-2"></i> Fake News
+                                        class="w-full sm:flex-1 px-4 sm:px-5 py-3 bg-red-500 text-white border-none rounded-md text-sm sm:text-base cursor-pointer transition-colors hover:bg-red-600 active:bg-red-700 touch-manipulation">
+                                    <i class="bi bi-exclamation-triangle me-1 sm:me-2"></i> Fake News
                                 </button>
                             </div>
                             
-                            <div id="classification-result" class="hidden p-4 rounded-md mt-4">
+                            <div id="classification-result" class="hidden p-3 sm:p-4 rounded-md mt-4">
                                 <!-- Result will be shown here -->
                             </div>
                             
-                            <div class="text-center mt-5">
-                                <span class="text-slate-600 text-sm">
+                            <div class="text-center mt-4 sm:mt-5">
+                                <span class="text-slate-600 text-xs sm:text-sm">
                                     Article ${this.currentArticleIndex + 1} of ${this.articlesData.length}
                                 </span>
                             </div>
@@ -359,25 +359,25 @@ class Challenge1PageClass extends BasePage {
         
         // Show completion message
         const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-[10000]';
+        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-[10000] p-4';
         modal.innerHTML = `
-            <div class="bg-gray-800 border border-gray-600 rounded-lg p-6 max-w-lg mx-4 text-center shadow-2xl">
-                <div class="text-5xl mb-4"><i class="bi bi-party-popper"></i></div>
-                <h2 class="text-emerald-400 text-2xl font-bold mb-4">Challenge Complete!</h2>
-                <p class="text-gray-300 mb-5 leading-relaxed">
+            <div class="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6 max-w-xs sm:max-w-sm md:max-w-lg mx-4 text-center shadow-2xl w-full">
+                <div class="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4"><i class="bi bi-party-popper"></i></div>
+                <h2 class="text-emerald-400 text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">Challenge Complete!</h2>
+                <p class="text-gray-300 mb-4 sm:mb-5 leading-relaxed text-sm sm:text-base">
                     Excellent work! You've successfully classified all ${this.articlesData.length} articles and completed Level 1: The Misinformation Maze!
                 </p>
-                <div class="bg-gray-600 border border-gray-500 p-4 rounded-md mb-5">
-                    <div class="text-gray-100 text-lg font-bold mb-2">Final Score: ${finalScore}%</div>
-                    <div class="text-gray-400 text-sm">Correct Classifications: ${this.correctClassifications}/${this.articlesData.length}</div>
+                <div class="bg-gray-600 border border-gray-500 p-3 sm:p-4 rounded-md mb-4 sm:mb-5">
+                    <div class="text-gray-100 text-base sm:text-lg font-bold mb-1 sm:mb-2">Final Score: ${finalScore}%</div>
+                    <div class="text-gray-400 text-xs sm:text-sm">Correct Classifications: ${this.correctClassifications}/${this.articlesData.length}</div>
                 </div>
-                <div class="bg-green-900 border border-green-700 p-3 rounded-md mb-5">
-                    <p class="text-green-200 text-sm m-0">
-                        <i class="bi bi-trophy me-2"></i>You've earned XP in Information Literacy and unlocked the 'Fact-Checker' badge!
+                <div class="bg-green-900 border border-green-700 p-2 sm:p-3 rounded-md mb-4 sm:mb-5">
+                    <p class="text-green-200 text-xs sm:text-sm m-0">
+                        <i class="bi bi-trophy me-1 sm:me-2"></i>You've earned XP in Information Literacy and unlocked the 'Fact-Checker' badge!
                     </p>
                 </div>
                 <button onclick="this.closest('.fixed').remove(); window.challenge1Page?.completeLevelOne?.()" 
-                        class="bg-emerald-500 text-white px-6 py-3 border border-emerald-600 rounded-md text-base cursor-pointer transition-all w-full hover:bg-emerald-600 hover:shadow-md">
+                        class="bg-emerald-500 text-white px-4 sm:px-6 py-2 sm:py-3 border border-emerald-600 rounded-md text-sm sm:text-base cursor-pointer transition-all w-full hover:bg-emerald-600 hover:shadow-md active:bg-emerald-700 touch-manipulation">
                     Complete Level
                 </button>
             </div>
