@@ -23,8 +23,9 @@ export class Level3TimerApp {
     createElement() {
         this.element = document.createElement('div');
         this.element.id = 'level3-timer-static';
-        this.element.className = 'fixed top-4 right-4 bg-gray-800 border border-gray-600 rounded shadow-xl z-50 backdrop-blur-sm';
-        this.element.style.width = '220px';
+        this.element.className = 'fixed top-2 sm:top-4 right-2 sm:right-4 bg-gray-800 border border-gray-600 rounded shadow-xl z-50 backdrop-blur-sm';
+        this.element.style.width = '200px';
+        this.element.style.maxWidth = 'calc(100vw - 16px)';
         
         this.updateContent();
         return this.element;
@@ -37,28 +38,32 @@ export class Level3TimerApp {
                 <div class="text-white text-xs font-semibold flex items-center justify-between">
                     <div class="flex items-center space-x-1">
                         <i class="bi bi-stopwatch text-yellow-400"></i>
-                        <span>MISSION</span>
+                        <span class="hidden xs:inline">MISSION</span>
+                        <span class="xs:hidden">MISS</span>
                     </div>
                     <span class="text-xs ${this.isRunning ? 'text-green-400' : this.canStart ? 'text-yellow-400' : 'text-gray-300'}">
                         ${this.isRunning ? 'ACTIVE' : this.canStart ? 'READY' : 'STANDBY'}
                     </span>
                 </div>
             </div>
-            <div class="p-2 text-white">
+            <div class="p-1.5 sm:p-2 text-white">
                 <!-- Timer Display -->
                 <div class="text-center mb-2">
-                    <div class="text-lg font-bold font-mono ${this.getTimerColor()}">
+                    <div class="text-base sm:text-lg font-bold font-mono ${this.getTimerColor()}">
                         ${this.formatTime(this.timeRemaining)}
                     </div>
                 </div>
                 
                 <!-- Compact Damage Grid -->
-                <div class="grid grid-cols-1 gap-2 text-xs">
+                <div class="grid grid-cols-1 gap-1.5 sm:gap-2 text-xs">
                     <!-- Reputation -->
-                    <div class="bg-gray-700 rounded p-1.5">
+                    <div class="bg-gray-700 rounded p-1 sm:p-1.5">
                         <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-300">REPUTATION</span>
-                            <span class="${this.getReputationColor()}">${this.maxReputation - this.reputationDamage}%</span>
+                            <span class="text-gray-300 text-xs">
+                                <span class="hidden xs:inline">REPUTATION</span>
+                                <span class="xs:hidden">REP</span>
+                            </span>
+                            <span class="${this.getReputationColor()} text-xs">${this.maxReputation - this.reputationDamage}%</span>
                         </div>
                         <div class="w-full bg-gray-600 rounded-full h-1">
                             <div class="bg-gradient-to-r ${this.getReputationBarColor()} h-1 rounded-full transition-all duration-500" 
@@ -67,10 +72,10 @@ export class Level3TimerApp {
                     </div>
                     
                     <!-- Financial Cost -->
-                    <div class="bg-gray-700 rounded p-1.5">
+                    <div class="bg-gray-700 rounded p-1 sm:p-1.5">
                         <div class="flex justify-between items-center mb-1">
-                            <span class="text-gray-300">COST</span>
-                            <span class="${this.getFinancialColor()}">$${this.formatMoney(this.financialDamage)}</span>
+                            <span class="text-gray-300 text-xs">COST</span>
+                            <span class="${this.getFinancialColor()} text-xs">$${this.formatMoney(this.financialDamage)}</span>
                         </div>
                         <div class="w-full bg-gray-600 rounded-full h-1">
                             <div class="bg-gradient-to-r ${this.getFinancialBarColor()} h-1 rounded-full transition-all duration-500" 
@@ -297,19 +302,19 @@ export class Level3TimerApp {
         // Create game over modal with unique ID
         const modal = document.createElement('div');
         modal.id = 'level3-game-over-modal';
-        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
+        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50 p-4';
         modal.innerHTML = `
-            <div class="bg-red-900 border-2 border-red-600 rounded-lg p-8 max-w-lg mx-4 text-center">
-                <div class="text-red-300 mb-4">
-                    <i class="bi bi-x-circle text-6xl"></i>
+            <div class="bg-red-900 border-2 border-red-600 rounded-lg p-4 sm:p-6 md:p-8 w-full max-w-xs sm:max-w-sm md:max-w-lg text-center">
+                <div class="text-red-300 mb-3 sm:mb-4">
+                    <i class="bi bi-x-circle text-4xl sm:text-5xl md:text-6xl"></i>
                 </div>
-                <h2 class="text-2xl font-bold text-white mb-4">${title}</h2>
-                <p class="text-red-100 mb-6 leading-relaxed">${message}</p>
-                <div class="space-y-3">
-                    <button id="restart-level" class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors cursor-pointer">
+                <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-white mb-3 sm:mb-4">${title}</h2>
+                <p class="text-red-100 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">${message}</p>
+                <div class="space-y-2 sm:space-y-3">
+                    <button id="restart-level" class="w-full px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded transition-colors cursor-pointer touch-manipulation text-sm sm:text-base">
                         Restart Level 3
                     </button>
-                    <button id="return-levels" class="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded transition-colors cursor-pointer">
+                    <button id="return-levels" class="w-full px-3 sm:px-4 py-2 bg-gray-600 hover:bg-gray-700 active:bg-gray-800 text-white rounded transition-colors cursor-pointer touch-manipulation text-sm sm:text-base">
                         Return to Levels
                     </button>
                 </div>
