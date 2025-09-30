@@ -48,16 +48,63 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 example: "Example commands to get started:\nls -la (list files)\ncat filename.txt (read files)\ngrep -r \"flag\" . (search for flags)"
             },
             {
-                text: "💻 Essential CTF Commands:\nMaster these terminal commands to find the hidden flags:",
-                example: "File Operations:\nls, cat, head, tail, grep\nfind / -name \"*.txt\" 2>/dev/null\nstrings binary_file | grep flag"
+                text: "💻 Terminal Command Mastery Series:\nLet's learn the essential commands for ethical hacking and CTF challenges. Each command has specific use cases in security assessment."
             },
             {
-                text: "Advanced techniques for finding flags in logs, configurations, and hidden files:",
-                example: "Log Analysis:\ngrep -i \"flag\\|password\\|key\" /var/log/*\nSystem Info:\nps aux, netstat -tulpn, env"
+                text: "📂 FILE & DIRECTORY COMMANDS:\n• ls - List directory contents\n• ls -la - Show hidden files with detailed permissions",
+                example: "Basic File Listing:\nls                    # Current directory\nls -la               # Hidden files + permissions\nls -la /home/        # List all user directories\nls -la ~/.           # Show hidden config files"
             },
             {
-                text: "🏆 CTF Success Tips:\n• Be Systematic: Check common flag locations first\n• Read Everything: Flags can be hidden in comments or unusual places",
-                example: "Common Flag Locations:\n/home/user/flag.txt\n/etc/passwd comments\nEnvironment variables (env command)"
+                text: "• cat - Display file contents\n• head/tail - Show beginning/end of files",
+                example: "Reading Files:\ncat /etc/passwd      # View system users\ncat ~/.bashrc        # Check shell config\nhead -20 /var/log/auth.log  # First 20 lines\ntail -50 /var/log/syslog    # Last 50 lines"
+            },
+            {
+                text: "🔍 SEARCH & PATTERN MATCHING:\n• grep - Search for text patterns in files\n• find - Locate files and directories",
+                example: "Text Search:\ngrep -r \"WHT{\" /        # Find flags recursively\ngrep -i \"password\" /etc/*  # Case-insensitive search\ngrep \"admin\" /var/log/*    # Search logs for admin"
+            },
+            {
+                text: "• find - Advanced file discovery\n• which/whereis - Locate executables",
+                example: "File Discovery:\nfind / -name \"*.conf\" 2>/dev/null  # All config files\nfind /home -name \".*\" -type f      # Hidden files\nfind /usr -perm -4000              # SUID binaries\nfind /var/log -mtime -1            # Recent log files"
+            },
+            {
+                text: "🌐 SYSTEM INFORMATION:\n• ps - Process information\n• env - Environment variables\n• whoami/id - User identity",
+                example: "System Analysis:\nps aux               # All running processes\nenv                  # Environment variables\nwhoami               # Current user\nid                   # User ID and groups\nuname -a             # System information"
+            },
+            {
+                text: "🔧 FILE PERMISSIONS & ATTRIBUTES:\n• chmod - Change permissions\n• chown - Change ownership\n• file - Determine file type",
+                example: "File Analysis:\nls -la /etc/passwd   # Check file permissions\nfile suspicious.exe  # Identify file type\nstrings binary_file  # Extract readable text\nstat /etc/shadow     # Detailed file info"
+            },
+            {
+                text: "📊 NETWORK & PROCESS ANALYSIS:\n• netstat - Network connections\n• ss - Socket statistics\n• lsof - List open files",
+                example: "Network Reconnaissance:\nnetstat -tuln        # Listening ports\nss -tuln             # Modern socket info\nlsof -i              # Files using network\nps aux | grep nginx  # Find web server process"
+            },
+            {
+                text: "🔐 SECURITY-FOCUSED COMMANDS:\n• sudo - Execute as another user\n• crontab - View scheduled tasks\n• history - Command history",
+                example: "Security Analysis:\nsudo -l              # Check sudo permissions\ncrontab -l           # Current user's cron jobs\ncat /etc/crontab     # System-wide cron jobs\nhistory              # Command history\ncat ~/.bash_history  # Persistent history"
+            },
+            {
+                text: "📝 LOG & CONFIGURATION ANALYSIS:\n• journalctl - System logs (systemd)\n• dmesg - Kernel messages\n• systemctl - Service management",
+                example: "System Logs:\njournalctl -f        # Follow live logs\ndmesg | tail         # Recent kernel messages\nsystemctl status nginx     # Service status\nsystemctl list-unit-files  # All services"
+            },
+            {
+                text: "🎯 CTF-SPECIFIC TECHNIQUES:\n• strings - Extract text from binaries\n• base64 - Decode encoded data\n• xxd - Hex dump analyzer",
+                example: "CTF Flag Hunting:\nstrings /usr/bin/app | grep WHT    # Extract flags\nbase64 -d encoded.txt              # Decode base64\nxxd binary_file | grep \"flag\"      # Hex analysis\ncat /proc/*/environ | grep WHT     # Process environment"
+            },
+            {
+                text: "🔄 COMMAND COMBINATIONS:\nCombine commands with pipes (|) and operators for powerful analysis:",
+                example: "Advanced Techniques:\nps aux | grep -v \"root\" | head -10    # Non-root processes\nfind /var/log -name \"*.log\" | xargs grep \"error\"\ncat /etc/passwd | cut -d: -f1,3 | sort\nhistory | grep \"sudo\" | tail -5      # Recent sudo usage"
+            },
+            {
+                text: "⚠️ COMMON CTF LOCATIONS:\nFlags are often hidden in these standard locations:",
+                example: "Flag Discovery Checklist:\n/home/*/.*           # Hidden user files\n/etc/*.conf          # Configuration files\n/var/log/*           # System & app logs\n/tmp/*               # Temporary files\n/proc/*/environ      # Process environments\n/usr/local/bin/*     # Custom scripts"
+            },
+            {
+                text: "🏆 CTF SUCCESS METHODOLOGY:\n• Start with Reconnaissance: env, ls -la ~/, cat /etc/passwd\n• Check Configuration Files: /etc/*, ~/.bashrc, ~/.profile",
+                example: "Systematic Approach:\n1. env                    # Check environment\n2. ls -la ~/              # User home directory\n3. find /etc -name \"*.conf\"  # All config files\n4. cat /var/log/*/access.log  # Web server logs"
+            },
+            {
+                text: "• Analyze Logs Thoroughly: /var/log/*, /tmp/*, process memory\n• SUID Binary Analysis: find /usr -perm -4000",
+                example: "Deep Analysis Commands:\nfind /home -name \".*\" | xargs cat 2>/dev/null\ngrep -r \"WHT{\" /var/log/ 2>/dev/null\ncat /proc/*/environ | strings | grep -i flag\nfind / -name \"*backup*\" -o -name \"*config*\" 2>/dev/null"
             },
             {
                 text: "📊 Success Metrics:\n• Flag Discovery: Find all 7 security vulnerabilities\n• Methodology Score: Demonstrate proper testing techniques"
@@ -66,8 +113,12 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 text: "• Documentation Quality: Clear evidence and explanations\n• Time Efficiency: Complete assessment within reasonable timeframe\n• Certification Goal: Earn 'Certified Ethical Hacker' badge"
             },
             {
-                text: "🎮 How to Begin:\nOpen the Terminal and start exploring! Use the Challenge Tracker in the top-right to submit flags as you find them.",
-                example: "First commands to try:\nls -la\ncat /etc/passwd\ngrep -r \"CyberQuest\" .\nfind / -name \"*flag*\" 2>/dev/null"
+                text: "🎮 START YOUR ASSESSMENT:\nOpen Terminal and begin with systematic reconnaissance. Use 'submit-flag --help' to see submission options.",
+                example: "Essential Starting Commands:\n# Basic system info\nwhoami && pwd && ls -la\n\n# Check environment\nenv | grep -i wht\n\n# Find config files\nfind /etc -name \"*.conf\" 2>/dev/null | head -10\n\n# Check user directories\nls -la /home/*/\n\n# Submit flags when found\nsubmit-flag WHT{your_discovered_flag}"
+            },
+            {
+                text: "📋 CHALLENGE SUBMISSION:\nUse the integrated submit-flag terminal command for all flag submissions:",
+                example: "Submit-Flag Command Usage:\nsubmit-flag WHT{flag_value}     # Submit a flag\nsubmit-flag --progress          # Check progress\nsubmit-flag --challenges        # List challenges\nsubmit-flag --status           # Session status\nsubmit-flag --help             # Show all options"
             },
             {
                 text: "🚀 Professional Engagement:\nThis assessment simulates real-world penetration testing engagements. Your professionalism, methodology, and ethical approach demonstrate readiness for cybersecurity consulting roles."
