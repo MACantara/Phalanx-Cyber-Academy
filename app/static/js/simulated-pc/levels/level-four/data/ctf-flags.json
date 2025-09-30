@@ -2,7 +2,7 @@
   "ctf_flags": {
     "challenge_name": "The White Hat Test - Responsible Disclosure CTF",
     "challenge_description": "Ethical security assessment and vulnerability discovery challenge",
-    "total_flags_available": 19,
+    "total_flags_available": 22,
     "flags_per_session": 10,
     "flags": {
       "WHT-ENV": {
@@ -383,6 +383,66 @@
           "Understanding incident response procedures",
           "Learning about breach containment strategies",
           "Recognizing proper security team coordination"
+        ]
+      },
+      "WHT-PRIV": {
+        "id": "WHT-PRIV",
+        "value": "WHT{sudo_privilege_analysis}",
+        "name": "Sudo Privilege Escalation Challenge",
+        "challenge_question": "Sudo misconfigurations can lead to privilege escalation vulnerabilities. Can you analyze the current user's sudo permissions to identify potential security risks?",
+        "location": "sudo -l output",
+        "category": "privilege_escalation",
+        "difficulty": "hard",
+        "hints": [
+          "Check what commands the current user can run with sudo",
+          "Look for NOPASSWD entries that might be exploitable",
+          "Analyze file manipulation commands that run as root"
+        ],
+        "discovery_commands": ["sudo -l", "id", "whoami"],
+        "learning_objectives": [
+          "Understanding sudo security configurations",
+          "Learning about privilege escalation vectors",
+          "Recognizing dangerous sudo permissions"
+        ]
+      },
+      "WHT-PROC2": {
+        "id": "WHT-PROC2",
+        "value": "WHT{process_enumeration_discovery}",
+        "name": "Process Analysis and Enumeration Challenge",
+        "challenge_question": "Running processes can reveal services, applications, and potential attack vectors. Can you enumerate system processes to discover security-relevant information?",
+        "location": "ps aux output",
+        "category": "process_analysis",
+        "difficulty": "medium",
+        "hints": [
+          "List all running processes with detailed information",
+          "Look for unusual or suspicious process names",
+          "Check process IDs and service names for patterns"
+        ],
+        "discovery_commands": ["ps aux", "ps -ef", "netstat -tuln"],
+        "learning_objectives": [
+          "Understanding process enumeration techniques",
+          "Learning about service discovery methods",
+          "Recognizing suspicious process patterns"
+        ]
+      },
+      "WHT-STRINGS": {
+        "id": "WHT-STRINGS",
+        "value": "WHT{binary_analysis_strings}",
+        "name": "Binary String Extraction Challenge",
+        "challenge_question": "Binary files often contain readable strings that reveal functionality, credentials, or hidden information. Can you extract and analyze strings from system binaries?",
+        "location": "strings output from binaries",
+        "category": "binary_analysis",
+        "difficulty": "hard",
+        "hints": [
+          "Use strings command on executable files",
+          "Check backup scripts and system utilities",
+          "Look for hardcoded credentials or paths"
+        ],
+        "discovery_commands": ["strings /usr/local/bin/*", "find /usr -name '*.sh' -exec strings {} \\;", "strings /tmp/suspicious_file.exe"],
+        "learning_objectives": [
+          "Understanding binary analysis techniques",
+          "Learning about string extraction methods",
+          "Recognizing embedded secrets in executables"
         ]
       }
     },
