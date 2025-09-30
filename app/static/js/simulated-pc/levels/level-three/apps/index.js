@@ -9,7 +9,6 @@ export { Level3TimerApp, createLevel3Timer } from './timer.js';
 // Export Level 3 Applications (Simplified for timed gameplay)
 export { MalwareScannerApp as Level3MalwareScannerApp } from './malware-scanner.js';
 export { ProcessMonitorApp as Level3ProcessMonitorApp } from './process-monitor.js';
-export { RansomwareDecryptorApp as Level3RansomwareDecryptorApp } from './ransomware-decryptor.js';
 
 // Export Data Manager
 export { level3DataManager, Level3DataManager } from '../data/index.js';

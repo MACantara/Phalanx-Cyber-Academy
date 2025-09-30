@@ -11,8 +11,7 @@ export const Level3Config = {
     // Level-specific applications
     requiredApps: [
         'malware-scanner-app',
-        'process-monitor-app',
-        'ransomware-decryptor-app'
+        'process-monitor-app'
     ],
     
     // Tutorial requirements
@@ -32,7 +31,6 @@ export const Level3Config = {
         'Detect malware infections',
         'Quarantine malicious files',
         'Monitor system processes',
-        'Decrypt ransomware-encrypted files',
         'Clean infected systems'
     ],
     

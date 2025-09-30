@@ -10,13 +10,11 @@ export class Level3DataManager {
     constructor() {
         this.malwareData = null;
         this.processData = null;
-        this.encryptedFilesData = null;
         this.loaded = false;
         
         // Selected random subsets for gameplay (loaded from API)
         this.selectedMalware = {};
         this.selectedProcesses = [];
-        this.selectedEncryptedFiles = [];
     }
 
     async loadData() {
@@ -40,12 +38,10 @@ export class Level3DataManager {
             const gameData = apiData.data;
             this.selectedMalware = gameData.malware || {};
             this.selectedProcesses = this.buildProcessList(gameData.processes || {});
-            this.selectedEncryptedFiles = gameData.encrypted_files?.level3_ransomware_files || [];
             
             // For compatibility, also store the full data structures
             this.malwareData = gameData.malware || {};
             this.processData = gameData.processes || {};
-            this.encryptedFilesData = gameData.encrypted_files || {};
             
             this.loaded = true;
 
@@ -135,17 +131,6 @@ export class Level3DataManager {
     getMaliciousProcesses() {
         if (!this.loaded) return [];
         return this.selectedProcesses.filter(process => !process.trusted);
-    }
-
-    // Encrypted files data methods - now use API-loaded data
-    getEncryptedFiles() {
-        if (!this.loaded) return [];
-        return this.selectedEncryptedFiles;
-    }
-
-    getFileById(fileId) {
-        const files = this.getEncryptedFiles();
-        return files.find(file => file.id === fileId) || null;
     }
 
     // Timer integration methods - calculate from API-loaded data
