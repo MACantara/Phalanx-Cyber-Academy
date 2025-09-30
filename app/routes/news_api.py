@@ -2,97 +2,106 @@ from flask import Blueprint, jsonify, current_app
 import json
 import random
 import os
-import pandas as pd
 from pathlib import Path
 
 news_api_bp = Blueprint('news_api', __name__, url_prefix='/api/news')
 
-# Cache for CSV data to avoid reading file multiple times
-_csv_cache = None
+# Cache for JSON data to avoid reading file multiple times
+_json_cache = None
 
-def load_csv_data():
-    """Load and cache the news_articles_cleaned.csv data"""
-    global _csv_cache
-    if _csv_cache is not None:
-        return _csv_cache
+def load_json_data():
+    """Load and cache the news_articles.json data"""
+    global _json_cache
+    if _json_cache is not None:
+        return _json_cache
     
     try:
-        # Load the cleaned CSV data
-        csv_path = os.path.join(
+        # Load the JSON data
+        json_path = os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
-            'app', 'static', 'js', 'simulated-pc', 'levels', 'level-one', 'data', 'processed', 'news_articles_cleaned.csv'
+            'app', 'static', 'js', 'simulated-pc', 'levels', 'level-one', 'data', 'news_articles.json'
         )
         
         # Check if file exists
-        if not os.path.exists(csv_path):
-            print(f"CSV file not found at: {csv_path}")
-            return pd.DataFrame()
+        if not os.path.exists(json_path):
+            print(f"JSON file not found at: {json_path}")
+            return []
         
-        # Read CSV with pandas
-        _csv_cache = pd.read_csv(csv_path)
+        # Read JSON file
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
         
-        # Filter for only Fake and Real labels (case-insensitive)
-        _csv_cache = _csv_cache[_csv_cache['label'].str.lower().isin(['fake', 'real'])].copy()
+        _json_cache = data.get('articles', [])
         
-        print(f"Loaded {len(_csv_cache)} articles from news_articles_cleaned.csv")
-        print(f"Fake articles: {len(_csv_cache[_csv_cache['label'].str.lower() == 'fake'])}")
-        print(f"Real articles: {len(_csv_cache[_csv_cache['label'].str.lower() == 'real'])}")
+        fake_articles = [article for article in _json_cache if article['label'] == 1]
+        real_articles = [article for article in _json_cache if article['label'] == 0]
         
-        return _csv_cache
+        print(f"Loaded {len(_json_cache)} articles from news_articles.json")
+        print(f"Fake articles: {len(fake_articles)}")
+        print(f"Real articles: {len(real_articles)}")
+        
+        return _json_cache
         
     except Exception as e:
-        print(f"Error loading news_articles_cleaned.csv: {e}")
+        print(f"Error loading news_articles.json: {e}")
         import traceback
         traceback.print_exc()
-        return pd.DataFrame()
+        return []
 
-def convert_csv_to_article_format(df):
-    """Convert CSV dataframe to article format expected by frontend"""
+def convert_json_to_article_format(json_articles):
+    """Convert JSON articles to the format expected by frontend"""
     articles = []
     
-    for index, row in df.iterrows():
-        # Skip rows with missing essential data
-        if pd.isna(row['title_without_stopwords']) or pd.isna(row['text_without_stopwords']):
-            continue
-        
-        # Determine if article is real (case-insensitive check)
-        is_real = str(row['label']).lower() == 'real'
+    for article_data in json_articles:
+        # Determine if article is real (0 = real, 1 = fake)
+        is_real = article_data['label'] == 0
         
         # Create article object with required fields
         article = {
-            'id': f'article_{index}',
-            'author': str(row['author']) if pd.notna(row['author']) else 'Unknown Author',
-            'published': str(row['published']) if pd.notna(row['published']) else '',
-            'title': str(row['title_without_stopwords']) if pd.notna(row['title_without_stopwords']) else 'Untitled',
-            'text': str(row['text_without_stopwords']) if pd.notna(row['text_without_stopwords']) else '',
-            'site_url': str(row['site_url']) if pd.notna(row['site_url']) else '',
+            'id': article_data.get('id', f'article_{len(articles)}'),
+            'author': article_data.get('author', 'Unknown Author'),
+            'author_credentials': article_data.get('author_credentials', ''),
+            'published': article_data.get('date', ''),
+            'title': article_data.get('title', 'Untitled'),
+            'text': article_data.get('content', ''),
+            'site_url': article_data.get('website', ''),
             'main_img_url': 'https://via.placeholder.com/400x200/10b981/ffffff?text=News+Article',
             'is_real': is_real,
-            'label': str(row['label']),  # For checking purposes (not displayed)
-            'source': str(row['site_url']) if pd.notna(row['site_url']) else 'unknown',
-            'article_type': 'fake' if not is_real else 'real',
+            'label': 'real' if is_real else 'fake',
+            'source': article_data.get('website', 'unknown'),
+            'article_type': 'real' if is_real else 'fake',
+            'source_type': article_data.get('source_type', 'unknown'),
             'ai_analysis': {
                 'clickable_elements': [],
                 'article_analysis': {
                     'overall_credibility': 'high' if is_real else 'low',
                     'primary_red_flags': [] if is_real else [
                         'Questionable source credibility',
-                        'Potentially misleading content'
-                    ],
-                    'credibility_factors': [
-                        'Source verification needed',
-                        'Cross-reference recommended'
-                    ] if is_real else [],
-                    'educational_focus': f'This article demonstrates how to analyze {"real" if is_real else "fake"} news content.',
-                    'misinformation_tactics': [] if is_real else [
-                        'Emotional manipulation',
+                        'Potentially misleading content',
+                        'Emotional manipulation tactics',
                         'Unverified claims'
                     ],
+                    'credibility_factors': [
+                        'Established news organization',
+                        'Verified author credentials', 
+                        'Balanced reporting',
+                        'Multiple source citations'
+                    ] if is_real else [],
+                    'educational_focus': f'This article demonstrates how to analyze {"legitimate journalism" if is_real else "misinformation content"}.',
+                    'misinformation_tactics': [] if is_real else [
+                        'Sensational headlines',
+                        'Emotional manipulation',
+                        'Unverified claims',
+                        'Appeal to fear',
+                        'Conspiracy theories'
+                    ],
                     'verification_tips': [
-                        'Check the source reputation',
-                        'Verify author credentials',
-                        'Cross-reference with other sources',
-                        'Look for emotional manipulation'
+                        'Check the source reputation and domain',
+                        'Verify author credentials and expertise',
+                        'Cross-reference with other reliable sources',
+                        'Look for emotional manipulation in language',
+                        'Check for proper citations and evidence',
+                        'Analyze the website design and professionalism'
                     ]
                 }
             }
@@ -104,40 +113,40 @@ def convert_csv_to_article_format(df):
 
 @news_api_bp.route('/mixed-articles', methods=['GET'])
 def get_mixed_news_articles():
-    """Get a balanced mix of news articles from CSV with 8 fake and 7 real articles"""
+    """Get a balanced mix of news articles from JSON with 5 fake and 5 real articles"""
     try:
-        df = load_csv_data()
+        json_articles = load_json_data()
         
-        if df.empty:
+        if not json_articles:
             return jsonify({
                 'success': False,
-                'error': 'No CSV data available'
+                'error': 'No JSON data available'
             }), 500
         
         # Separate fake and real articles
-        fake_articles = df[df['label'].str.lower() == 'fake'].copy()
-        real_articles = df[df['label'].str.lower() == 'real'].copy()
+        fake_articles = [article for article in json_articles if article['label'] == 1]
+        real_articles = [article for article in json_articles if article['label'] == 0]
         
         # Check if we have enough articles
-        if len(fake_articles) < 8:
-            print(f"Warning: Only {len(fake_articles)} fake articles available, requested 8")
-        if len(real_articles) < 7:
-            print(f"Warning: Only {len(real_articles)} real articles available, requested 7")
-        
+        if len(fake_articles) < 5:
+            print(f"Warning: Only {len(fake_articles)} fake articles available, requested 5")
+        if len(real_articles) < 5:
+            print(f"Warning: Only {len(real_articles)} real articles available, requested 5")
+
         # Sample the required number of articles
-        selected_fake = fake_articles.sample(n=min(8, len(fake_articles)), random_state=random.randint(1, 1000))
-        selected_real = real_articles.sample(n=min(7, len(real_articles)), random_state=random.randint(1, 1000))
-        
+        selected_fake = random.sample(fake_articles, min(5, len(fake_articles)))
+        selected_real = random.sample(real_articles, min(5, len(real_articles)))
+
         # Combine the selected articles
-        selected_df = pd.concat([selected_fake, selected_real], ignore_index=True)
+        selected_articles = selected_fake + selected_real
         
-        # Convert to article format
-        articles = convert_csv_to_article_format(selected_df)
+        # Convert to article format expected by frontend
+        articles = convert_json_to_article_format(selected_articles)
         
         if not articles:
             return jsonify({
                 'success': False,
-                'error': 'No articles could be processed from CSV data'
+                'error': 'No articles could be processed from JSON data'
             }), 500
         
         # Shuffle articles for variety
@@ -154,7 +163,7 @@ def get_mixed_news_articles():
                 'total': len(articles),
                 'real_count': real_count,
                 'fake_count': fake_count,
-                'source': 'news_articles_cleaned.csv'
+                'source': 'news_articles.json'
             }
         })
         
@@ -169,17 +178,17 @@ def get_mixed_news_articles():
 
 @news_api_bp.route('/stats', methods=['GET'])
 def get_news_stats():
-    """Get statistics about the CSV dataset"""
+    """Get statistics about the JSON dataset"""
     try:
-        df = load_csv_data()
+        json_articles = load_json_data()
         
-        if df.empty:
+        if not json_articles:
             return jsonify({
                 'success': False,
-                'error': 'No CSV data available'
+                'error': 'No JSON data available'
             }), 500
         
-        articles = convert_csv_to_article_format(df)
+        articles = convert_json_to_article_format(json_articles)
         
         real_count = sum(1 for article in articles if article['is_real'])
         fake_count = len(articles) - real_count
@@ -192,7 +201,7 @@ def get_news_stats():
                 'fake_articles': fake_count,
                 'real_percentage': round((real_count / len(articles)) * 100, 2) if articles else 0,
                 'fake_percentage': round((fake_count / len(articles)) * 100, 2) if articles else 0,
-                'source': 'news_articles_cleaned.csv'
+                'source': 'news_articles.json'
             }
         })
         
@@ -203,34 +212,34 @@ def get_news_stats():
             'error': str(e)
         }), 500
 
-@news_api_bp.route('/csv-status', methods=['GET'])
-def get_csv_status():
-    """Get status of CSV data loading"""
+@news_api_bp.route('/data-status', methods=['GET'])
+def get_data_status():
+    """Get status of JSON data loading"""
     try:
-        df = load_csv_data()
+        json_articles = load_json_data()
         
-        if df.empty:
+        if not json_articles:
             return jsonify({
                 'success': True,
-                'csv_data_available': False,
-                'message': 'No CSV data available'
+                'data_available': False,
+                'message': 'No JSON data available'
             })
         
         # Get basic statistics
-        fake_count = len(df[df['label'].str.lower() == 'fake'])
-        real_count = len(df[df['label'].str.lower() == 'real'])
+        fake_count = len([article for article in json_articles if article['label'] == 1])
+        real_count = len([article for article in json_articles if article['label'] == 0])
         
         return jsonify({
             'success': True,
-            'csv_data_available': True,
-            'total_articles': len(df),
+            'data_available': True,
+            'total_articles': len(json_articles),
             'fake_articles': fake_count,
             'real_articles': real_count,
-            'source_file': 'news_articles_cleaned.csv'
+            'source_file': 'news_articles.json'
         })
         
     except Exception as e:
-        print(f"Error getting CSV status: {e}")
+        print(f"Error getting data status: {e}")
         return jsonify({
             'success': False,
             'error': str(e)
