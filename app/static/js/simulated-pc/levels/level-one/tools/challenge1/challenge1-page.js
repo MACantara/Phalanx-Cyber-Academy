@@ -226,12 +226,137 @@ class Challenge1PageClass extends BasePage {
         // Find the browser content element and update it
         const browserContent = document.querySelector('#browser-content');
         if (browserContent) {
-            browserContent.innerHTML = this.generateNewsPageHTML();
+            // Show skeleton loading first
+            browserContent.innerHTML = this.generateSkeletonHTML();
             
-            // Re-bind navigation and classification events
-            this.bindClassificationEvents();
-            window.challenge1Page = this;
+            // Update content after a brief delay to show skeleton
+            setTimeout(() => {
+                browserContent.innerHTML = this.generateNewsPageHTML();
+                
+                // Re-bind navigation and classification events
+                this.bindClassificationEvents();
+                window.challenge1Page = this;
+            }, 500);
         }
+    }
+
+    generateSkeletonHTML() {
+        return `
+            <div class="font-sans bg-white min-h-full w-full overflow-y-auto">
+                <!-- Header Section Skeleton -->
+                <section class="bg-gradient-to-r from-gray-800 to-gray-700 text-white py-4 px-5 w-full shadow-lg">
+                    <div class="max-w-5xl mx-auto">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
+                            <div class="flex-shrink-0">
+                                <h1 class="m-0 text-2xl sm:text-3xl font-bold">Daily Politico News</h1>
+                                <p class="mt-1 mb-0 text-gray-300 text-sm">Breaking News & Analysis</p>
+                            </div>
+                            
+                            <!-- Progress Bar Skeleton -->
+                            <div class="flex-grow max-w-md">
+                                <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20 shadow-sm animate-pulse">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <div class="bg-white/20 h-3 w-16 rounded"></div>
+                                        <div class="bg-white/20 h-3 w-12 rounded"></div>
+                                    </div>
+                                    <div class="bg-white/20 h-2 rounded-full"></div>
+                                    <div class="text-center mt-1">
+                                        <div class="bg-white/20 h-3 w-8 mx-auto rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center text-sm text-gray-300 border-t border-gray-600 pt-2">
+                            <span class="flex items-center gap-2">
+                                <i class="bi bi-newspaper"></i>
+                                Loading next article...
+                            </span>
+                            <span class="text-xs">
+                                ${this.classifiedArticles.size} classified
+                            </span>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Content Section Skeleton -->
+                <section class="w-full">
+                    <div class="px-8 py-6 max-w-4xl mx-auto">
+                        <!-- Title Skeleton -->
+                        <div class="animate-pulse">
+                            <div class="bg-gray-300 h-8 sm:h-10 w-3/4 mb-4 rounded"></div>
+                        </div>
+                        
+                        <!-- Metadata Skeleton -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 mb-5">
+                            <div class="animate-pulse">
+                                <div class="mb-3 pb-3 border-b border-slate-200">
+                                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="bg-gray-300 h-4 w-4 rounded"></div>
+                                            <div class="bg-gray-300 h-4 w-24 rounded"></div>
+                                        </div>
+                                        <div class="bg-gray-200 h-6 w-32 rounded-full"></div>
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                                        <div class="bg-gray-300 h-3 w-20 rounded"></div>
+                                        <div class="bg-gray-300 h-3 w-28 rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Content Skeleton -->
+                        <div class="mb-6 animate-pulse">
+                            <div class="space-y-3">
+                                <div class="bg-gray-300 h-4 w-full rounded"></div>
+                                <div class="bg-gray-300 h-4 w-11/12 rounded"></div>
+                                <div class="bg-gray-300 h-4 w-full rounded"></div>
+                                <div class="bg-gray-300 h-4 w-4/5 rounded"></div>
+                                <div class="bg-gray-300 h-4 w-full rounded"></div>
+                                <div class="bg-gray-300 h-4 w-3/4 rounded"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Classification Interface Skeleton -->
+                        <div class="mt-4 sm:mt-6 mb-4 p-4 sm:p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="animate-pulse">
+                                <div class="bg-gray-300 h-6 w-40 mb-4 rounded"></div>
+                                <div class="bg-gray-200 h-4 w-3/4 mb-5 rounded"></div>
+                                
+                                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-5">
+                                    <div class="bg-gray-300 h-12 w-full sm:flex-1 rounded-md"></div>
+                                    <div class="bg-gray-300 h-12 w-full sm:flex-1 rounded-md"></div>
+                                </div>
+                                
+                                <div class="text-center mt-4 sm:mt-5">
+                                    <div class="bg-gray-300 h-4 w-32 mx-auto rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Footer Section -->
+                <section class="bg-slate-50 p-5 text-center text-slate-600 border-t border-slate-200">
+                    <div class="max-w-4xl mx-auto">
+                        <p class="mb-3 font-medium text-slate-800">© 2025 Daily Politico News - CyberQuest Training Environment</p>
+                        <div class="text-xs leading-relaxed text-slate-700">
+                            <p class="my-1">
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-medium"><i class="bi bi-exclamation-triangle"></i> Training Purpose Only</span>
+                            </p>
+                            <p class="my-1">
+                                This is a simulated news website for cybersecurity education. 
+                                Articles are sourced from various datasets for educational analysis of misinformation patterns.
+                            </p>
+                            <p class="my-1 italic">
+                                Loading article data...
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        `;
     }
 
     updateTrainingOverlay() {
@@ -341,10 +466,23 @@ class Challenge1PageClass extends BasePage {
             // Update progress bar after classification
             this.updateProgressBar();
             
-            // Auto-advance to next article after 3 seconds
+            // Show loading message and auto-advance to next article after 3 seconds
             setTimeout(() => {
-                this.nextArticle();
-            }, 3000);
+                // Add loading indicator to the result
+                resultDiv.innerHTML += `
+                    <div class="mt-3 pt-3 border-t border-current/20">
+                        <div class="flex items-center justify-center gap-2 text-sm opacity-75">
+                            <div class="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full"></div>
+                            <span>Loading next article...</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Navigate to next article with skeleton loading
+                setTimeout(() => {
+                    this.nextArticle();
+                }, 1000);
+            }, 2000);
         }
     }
 
