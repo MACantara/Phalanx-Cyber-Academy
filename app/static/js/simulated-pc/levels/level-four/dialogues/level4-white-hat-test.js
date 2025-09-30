@@ -83,23 +83,11 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
 
     async createAndStartChallengeTracker() {
         try {
-            // Import and create challenge tracker
-            const { Level4ChallengeTracker } = await import('../apps/challenge-tracker-app.js');
-            const tracker = new Level4ChallengeTracker();
-            
-            // Make tracker globally accessible
-            window.level4ChallengeTracker = tracker;
-            
-            // Create and append tracker element
-            const trackerElement = tracker.createElement();
-            document.body.appendChild(trackerElement);
-            
-            // Initialize tracker
-            tracker.initialize();
-            
-            console.log('[Level4Dialog] Challenge tracker started');
+            // Challenge tracking is now integrated into the submit-flag terminal command
+            console.log('[Level4] Challenge tracking integrated into terminal submit-flag command');
+            console.log('[Level4Dialog] Level 4 CTF ready - use terminal commands to interact');
         } catch (error) {
-            console.error('[Level4Dialog] Failed to create challenge tracker:', error);
+            console.error('[Level4Dialog] Level setup error:', error);
         }
     }
 
