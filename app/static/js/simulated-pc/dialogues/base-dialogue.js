@@ -80,6 +80,7 @@ export class BaseDialogue {
         const avatarUrl = this.getCharacterAvatar();
         const characterName = this.getCharacterName();
         const isLastMessage = this.currentMessageIndex >= this.messages.length - 1;
+        const hasExample = message.example && message.example.trim();
 
         this.dialogueContainer.innerHTML = `
             <img src="${avatarUrl}" alt="${characterName}" 
@@ -89,8 +90,22 @@ export class BaseDialogue {
             <div class="flex-1 flex flex-col min-h-[150px] sm:min-h-[180px] md:min-h-[200px] relative w-full">
                 <div class="w-full text-green-500 text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-center">${characterName}</div>
                 
-                <div class="text-green-400 text-sm sm:text-base md:text-lg leading-relaxed mb-4 sm:mb-6 md:mb-8 flex-grow text-left overflow-y-auto max-h-[40vh]" id="dialogue-text-content">
-                    ${this.shouldTypeMessage(message) ? '' : message.text}
+                <div class="flex-grow mb-4 sm:mb-6 md:mb-8 overflow-y-auto max-h-[40vh] ${hasExample ? 'space-y-3 sm:space-y-4' : ''}">
+                    <div class="text-green-400 text-sm sm:text-base md:text-lg leading-relaxed text-left" id="dialogue-text-content">
+                        ${this.shouldTypeMessage(message) ? '' : message.text}
+                    </div>
+                    
+                    ${hasExample ? `
+                        <div class="bg-gray-900/50 border border-gray-600 rounded p-2 sm:p-3 md:p-4">
+                            <div class="text-yellow-400 text-xs sm:text-sm font-semibold mb-2 flex items-center">
+                                <i class="bi bi-lightbulb mr-1 sm:mr-2"></i>
+                                Example:
+                            </div>
+                            <div class="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed font-mono whitespace-pre-wrap" id="dialogue-example-content">
+                                ${message.example}
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
                 
                 <div class="w-full flex flex-row justify-center items-center mt-auto gap-2 sm:gap-3 md:gap-4">
