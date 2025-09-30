@@ -22,9 +22,9 @@ export class BrowserApp extends WindowBase {
             <div class="h-full flex flex-col">
                 <div class="flex-1 overflow-auto bg-white" id="browser-content">
                     <div class="flex items-center justify-center h-full text-gray-500">
-                        <div class="text-center">
-                            <i class="bi bi-hourglass-split text-4xl mb-4 animate-spin"></i>
-                            <p>Loading page...</p>
+                        <div class="text-center p-4">
+                            <i class="bi bi-hourglass-split text-2xl sm:text-4xl mb-4 animate-spin"></i>
+                            <p class="text-sm sm:text-base">Loading page...</p>
                         </div>
                     </div>
                 </div>
@@ -183,8 +183,32 @@ export class BrowserApp extends WindowBase {
             });
         });
 
-        // URL bar focus styling and security updates
+        // Go button and URL bar functionality
+        const goBtn = windowElement.querySelector('[data-action="go"]');
         const urlBar = windowElement.querySelector('#browser-url-bar');
+        
+        const navigateToUrl = () => {
+            const url = urlBar.value.trim();
+            if (url) {
+                // Add protocol if missing
+                const fullUrl = url.startsWith('http') ? url : `https://${url}`;
+                this.navigation.navigateToUrl(fullUrl);
+                // Emit navigation event
+                document.dispatchEvent(new CustomEvent('browser-navigate', {
+                    detail: { url: fullUrl }
+                }));
+                setTimeout(() => this.updateSecurityStatus(fullUrl), 200);
+                // Blur input on mobile to hide keyboard
+                if ('ontouchstart' in window) {
+                    urlBar.blur();
+                }
+            }
+        };
+        
+        if (goBtn) {
+            goBtn.addEventListener('click', navigateToUrl);
+        }
+        
         if (urlBar) {
             urlBar.addEventListener('focus', () => {
                 urlBar.select();
@@ -193,17 +217,7 @@ export class BrowserApp extends WindowBase {
             // Handle Enter key in URL bar
             urlBar.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
-                    const url = urlBar.value.trim();
-                    if (url) {
-                        // Add protocol if missing
-                        const fullUrl = url.startsWith('http') ? url : `https://${url}`;
-                        this.navigation.navigateToUrl(fullUrl);
-                        // Emit navigation event
-                        document.dispatchEvent(new CustomEvent('browser-navigate', {
-                            detail: { url: fullUrl }
-                        }));
-                        setTimeout(() => this.updateSecurityStatus(fullUrl), 200);
-                    }
+                    navigateToUrl();
                 }
             });
         }
