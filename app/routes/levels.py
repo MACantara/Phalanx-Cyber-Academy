@@ -180,9 +180,6 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-functions/command-registry.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-functions/file-system.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-functions/tab-completion.js',
-            
-            # Tutorials for Level 4
-            'js/simulated-pc/tutorials/terminal-tutorial.js',
         ]
     
     elif level_id == 5:
