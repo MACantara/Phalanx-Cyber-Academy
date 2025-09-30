@@ -90,22 +90,10 @@ export class BaseDialogue {
             <div class="flex-1 flex flex-col min-h-[150px] sm:min-h-[180px] md:min-h-[200px] relative w-full">
                 <div class="w-full text-green-500 text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-center">${characterName}</div>
                 
-                <div class="flex-grow mb-4 sm:mb-6 md:mb-8 overflow-y-auto max-h-[40vh] ${hasExample ? 'space-y-3 sm:space-y-4' : ''}">
+                <div class="flex-grow mb-4 sm:mb-6 md:mb-8 overflow-y-auto max-h-[40vh]">
                     <div class="text-green-400 text-sm sm:text-base md:text-lg leading-relaxed text-left" id="dialogue-text-content">
                         ${this.shouldTypeMessage(message) ? '' : message.text}
                     </div>
-                    
-                    ${hasExample ? `
-                        <div class="bg-gray-900/50 border border-gray-600 rounded p-2 sm:p-3 md:p-4">
-                            <div class="text-yellow-400 text-xs sm:text-sm font-semibold mb-2 flex items-center">
-                                <i class="bi bi-lightbulb mr-1 sm:mr-2"></i>
-                                Example:
-                            </div>
-                            <div class="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed font-mono whitespace-pre-wrap" id="dialogue-example-content">
-                                ${message.example}
-                            </div>
-                        </div>
-                    ` : ''}
                 </div>
                 
                 <div class="w-full flex flex-row justify-center items-center mt-auto gap-2 sm:gap-3 md:gap-4">
@@ -127,6 +115,27 @@ export class BaseDialogue {
                 </div>
             </div>
         `;
+
+        // Add separate centered example container if example exists
+        if (hasExample) {
+            const exampleContainer = document.createElement('div');
+            exampleContainer.className = 'fixed inset-0 flex items-center justify-center z-[10001] pointer-events-none';
+            exampleContainer.innerHTML = `
+                <div class="bg-gray-800 border-2 border-yellow-500 rounded-lg p-4 sm:p-6 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-4 shadow-2xl pointer-events-auto">
+                    <div class="text-yellow-400 text-sm sm:text-base font-semibold mb-3 flex items-center justify-center">
+                        <i class="bi bi-lightbulb mr-2"></i>
+                        Example
+                    </div>
+                    <div class="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed font-mono whitespace-pre-wrap text-center" id="dialogue-example-content">
+${message.example}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(exampleContainer);
+            
+            // Store reference for cleanup
+            this.exampleContainer = exampleContainer;
+        }
 
         // Type message if needed
         if (this.shouldTypeMessage(message)) {
@@ -162,6 +171,12 @@ export class BaseDialogue {
         this.clearHighlight();
         this.clearAllowedInteractions();
         
+        // Clean up previous example container
+        if (this.exampleContainer && this.exampleContainer.parentNode) {
+            this.exampleContainer.parentNode.removeChild(this.exampleContainer);
+            this.exampleContainer = null;
+        }
+        
         if (this.currentMessageIndex < this.messages.length - 1) {
             this.currentMessageIndex++;
             this.showMessage();
@@ -174,6 +189,12 @@ export class BaseDialogue {
         // Clear current interactive guidance
         this.clearHighlight();
         this.clearAllowedInteractions();
+        
+        // Clean up previous example container
+        if (this.exampleContainer && this.exampleContainer.parentNode) {
+            this.exampleContainer.parentNode.removeChild(this.exampleContainer);
+            this.exampleContainer = null;
+        }
         
         if (this.currentMessageIndex > 0) {
             this.currentMessageIndex--;
@@ -196,8 +217,15 @@ export class BaseDialogue {
         if (this.overlay && this.overlay.parentNode) {
             this.overlay.parentNode.removeChild(this.overlay);
         }
+        
+        // Clean up separate example container
+        if (this.exampleContainer && this.exampleContainer.parentNode) {
+            this.exampleContainer.parentNode.removeChild(this.exampleContainer);
+        }
+        
         this.overlay = null;
         this.dialogueContainer = null;
+        this.exampleContainer = null;
         this.isActive = false;
         
         // Clear current dialogue reference if it's this instance
