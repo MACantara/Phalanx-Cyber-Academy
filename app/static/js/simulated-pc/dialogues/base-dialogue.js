@@ -83,7 +83,7 @@ export class BaseDialogue {
 
         this.dialogueContainer.innerHTML = `
             <img src="${avatarUrl}" alt="${characterName}" 
-                 class="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-50 rounded border-2 sm:border-3 border-gray-600 object-cover flex-shrink-0 mx-auto md:mx-0" 
+                 class="w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-44 lg:h-44 xl:w-48 xl:h-48 rounded border-2 sm:border-3 border-gray-600 object-cover flex-shrink-0 mx-auto md:mx-0" 
                  onerror="this.src='/static/images/avatars/default.png'">
             
             <div class="flex-1 flex flex-col min-h-[150px] sm:min-h-[180px] md:min-h-[200px] relative w-full">
