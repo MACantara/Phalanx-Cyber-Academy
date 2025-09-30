@@ -89,43 +89,43 @@ export class EmailSessionSummary {
         console.log('Email Session Summary - Calculated accuracy:', calculatedAccuracy, 'from stats:', sessionStats, 'and history:', feedbackHistory.length);
         
         modal.innerHTML = `
-            <div class="bg-gray-800 text-white rounded p-8 max-w-4xl mx-4 max-h-150 overflow-y-auto border border-gray-600">
-                <div class="text-center mb-8">
-                    <div class="flex items-center justify-center gap-2 mb-4">
-                        <i class="bi bi-shield-check text-3xl text-blue-400"></i>
-                        <h1 class="text-3xl font-bold">Level 2 Complete!</h1>
+            <div class="bg-gray-800 text-white rounded p-4 sm:p-6 md:p-8 w-full max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-4xl mx-2 sm:mx-4 max-h-[95vh] overflow-y-auto border border-gray-600">
+                <div class="text-center mb-6 sm:mb-8">
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-2 mb-3 sm:mb-4">
+                        <i class="bi bi-shield-check text-2xl sm:text-3xl text-blue-400"></i>
+                        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">Level 2 Complete!</h1>
                     </div>
-                    <div class="text-6xl font-bold mb-4 ${accuracyClass}">${calculatedAccuracy}%</div>
-                    <p class="text-lg">Email Security Training Performance</p>
-                    <p class="text-sm text-gray-400 mt-2 flex items-center justify-center gap-1">
+                    <div class="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 sm:mb-4 ${accuracyClass}">${calculatedAccuracy}%</div>
+                    <p class="text-base sm:text-lg">Email Security Training Performance</p>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-2 flex flex-col sm:flex-row items-center justify-center gap-1">
                         <i class="bi bi-envelope-check-fill text-blue-400"></i>
-                        ${this.countUniqueEmails(feedbackHistory)} emails analyzed with AI-powered threat detection training
+                        <span>${this.countUniqueEmails(feedbackHistory)} emails analyzed with AI-powered threat detection training</span>
                     </p>
                 </div>
                 
                 <!-- Performance Summary -->
-                <div class="bg-gray-700 border border-gray-600 rounded p-6 mb-6">
-                    <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                <div class="bg-gray-700 border border-gray-600 rounded p-4 sm:p-6 mb-4 sm:mb-6">
+                    <h3 class="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center">
                         <i class="bi bi-trophy text-yellow-400 mr-2"></i>
                         Performance Summary
                     </h3>
-                    <div class="grid md:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="text-center">
-                            <div class="text-3xl font-bold ${accuracyClass} mb-2 flex items-center justify-center gap-2">
+                            <div class="text-2xl sm:text-3xl font-bold ${accuracyClass} mb-2 flex items-center justify-center gap-2">
                                 <i class="bi bi-percent"></i>
                                 ${calculatedAccuracy}
                             </div>
-                            <div class="text-gray-400 text-sm">Overall Accuracy</div>
+                            <div class="text-gray-400 text-xs sm:text-sm">Overall Accuracy</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-blue-400 mb-2 flex items-center justify-center gap-2">
+                            <div class="text-2xl sm:text-3xl font-bold text-blue-400 mb-2 flex items-center justify-center gap-2">
                                 <i class="bi bi-envelope-fill"></i>
                                 ${this.countUniqueEmails(feedbackHistory)}
                             </div>
-                            <div class="text-gray-400 text-sm">Emails Analyzed</div>
+                            <div class="text-gray-400 text-xs sm:text-sm">Emails Analyzed</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-green-400 mb-2 flex items-center justify-center gap-2">
+                            <div class="text-2xl sm:text-3xl font-bold text-green-400 mb-2 flex items-center justify-center gap-2">
                                 <i class="bi bi-check-circle-fill"></i>
                                 ${sessionStats.correctActions || feedbackHistory.filter(f => f.isCorrect).length}
                             </div>
@@ -145,8 +145,8 @@ export class EmailSessionSummary {
                 </div>
                 
                 <!-- Email Categories Performance -->
-                <div class="bg-gray-700 border border-gray-600 rounded p-6 mb-6">
-                    <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                <div class="bg-gray-700 border border-gray-600 rounded p-4 sm:p-6 mb-4 sm:mb-6">
+                    <h3 class="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center">
                         <i class="bi bi-envelope-check text-purple-400 mr-2"></i>
                         Email Category Performance
                     </h3>
@@ -159,19 +159,19 @@ export class EmailSessionSummary {
                 
                 <div class="text-center">
                     ${levelCompleted ? `
-                        <button onclick="window.emailSessionSummary?.completeLevel2()" class="bg-green-600 text-white px-8 py-3 rounded hover:bg-green-700 transition-colors font-semibold text-lg cursor-pointer flex items-center justify-center gap-2 mx-auto">
+                        <button onclick="window.emailSessionSummary?.completeLevel2()" class="w-full sm:w-auto bg-green-600 text-white px-6 sm:px-8 py-3 rounded hover:bg-green-700 active:bg-green-700 transition-colors font-semibold text-base sm:text-lg cursor-pointer flex items-center justify-center gap-2 mx-auto touch-manipulation">
                             <i class="bi bi-rocket-takeoff-fill"></i>
-                            Continue to Level 3
+                            <span class="hidden sm:inline">Continue to Level 3</span><span class="sm:hidden">Level 3</span>
                         </button>
                     ` : `
-                        <div class="space-y-3">
-                            <button onclick="window.emailSessionSummary?.completeLevel2()" class="bg-blue-600 text-white px-8 py-3 rounded hover:bg-blue-700 transition-colors font-semibold text-lg cursor-pointer flex items-center justify-center gap-2 mx-auto">
+                        <div class="space-y-3 flex flex-col sm:flex-row sm:space-y-0 sm:space-x-4 sm:justify-center">
+                            <button onclick="window.emailSessionSummary?.completeLevel2()" class="w-full sm:w-auto bg-blue-600 text-white px-6 sm:px-8 py-3 rounded hover:bg-blue-700 active:bg-blue-700 transition-colors font-semibold text-sm sm:text-lg cursor-pointer flex items-center justify-center gap-2 touch-manipulation">
                                 <i class="bi bi-save-fill"></i>
-                                Save Progress & Exit
+                                <span class="hidden sm:inline">Save Progress & Exit</span><span class="sm:hidden">Save & Exit</span>
                             </button>
-                            <button onclick="window.emailSessionSummary?.retryTraining()" class="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 transition-colors font-semibold cursor-pointer flex items-center justify-center gap-2 mx-auto">
+                            <button onclick="window.emailSessionSummary?.retryTraining()" class="w-full sm:w-auto bg-orange-600 text-white px-6 py-2 sm:py-3 rounded hover:bg-orange-700 active:bg-orange-700 transition-colors font-semibold text-sm sm:text-base cursor-pointer flex items-center justify-center gap-2 touch-manipulation">
                                 <i class="bi bi-arrow-clockwise"></i>
-                                Retry Training
+                                <span class="hidden sm:inline">Retry Training</span><span class="sm:hidden">Retry</span>
                             </button>
                         </div>
                     `}
