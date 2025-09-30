@@ -14,9 +14,9 @@ export const Level1Data = {
     
     // Article selection criteria
     articleSelection: {
-        fake_articles: 8,
-        real_articles: 7,
-        total: 15,
+        fake_articles: 5,
+        real_articles: 5,
+        total: 10,
         shuffle: true
     },
     
