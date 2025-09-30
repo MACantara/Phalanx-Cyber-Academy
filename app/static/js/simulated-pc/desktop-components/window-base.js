@@ -57,8 +57,8 @@ export class WindowBase {
         this.windowElement.className = 'absolute bg-gray-800 border border-gray-600 rounded shadow-2xl overflow-hidden min-w-72 min-h-48 backdrop-blur-lg';
         this.windowElement.style.width = this.options.width;
         this.windowElement.style.height = this.options.height;
-        this.windowElement.style.left = `${Math.random() * 20 + 10}%`;
-        this.windowElement.style.top = `${Math.random() * 20 + 10}%`;
+        this.windowElement.style.left = `0%`;
+        this.windowElement.style.top = `0%`;
 
         this.windowElement.innerHTML = `
             <div class="window-header bg-gradient-to-r from-gray-700 to-gray-600 px-3 py-2 border-b border-gray-600">
