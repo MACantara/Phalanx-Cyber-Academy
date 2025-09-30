@@ -50,17 +50,6 @@ export class ApplicationRegistry {
                 levelSpecific: 3,
                 autoOpen: false
             },
-            'ransomware-decryptor': {
-                module: '../levels/level-three/apps/index.js',
-                className: 'Level3RansomwareDecryptorApp',
-                storageKey: 'cyberquest_ransomwaredecryptor_opened',
-                tutorialMethod: null,
-                startMethod: null,
-                iconClass: 'bi-unlock',
-                title: 'Ransomware Decryptor',
-                levelSpecific: 3,
-                autoOpen: false
-            },
             'level3-timer': {
                 module: '../levels/level-three/apps/index.js',
                 className: 'Level3TimerApp',
