@@ -162,9 +162,7 @@ export class ApplicationLauncher {
         return await this.launchApplication('malware-scanner');
     }
 
-    async launchRansomwareDecryptor() {
-        return await this.launchApplication('ransomware-decryptor');
-    }
+
 
     // Level 5 - Digital Forensics Application Launchers
     async launchInvestigationBriefing() {
