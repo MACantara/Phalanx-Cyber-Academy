@@ -43,8 +43,13 @@ export class BaseDialogue {
     }
     
     createDialogueOverlay() {
-        // Remove any existing overlay
-        this.cleanup();
+        // Remove any existing overlay but preserve active state
+        if (this.overlay && this.overlay.parentNode) {
+            this.overlay.parentNode.removeChild(this.overlay);
+        }
+        if (this.exampleContainer && this.exampleContainer.parentNode) {
+            this.exampleContainer.parentNode.removeChild(this.exampleContainer);
+        }
         
         // Create overlay
         this.overlay = document.createElement('div');
@@ -92,7 +97,7 @@ export class BaseDialogue {
                 
                 <div class="flex-grow mb-4 sm:mb-6 md:mb-8 overflow-y-auto max-h-[40vh]">
                     <div class="text-green-400 text-sm sm:text-base md:text-lg leading-relaxed text-left" id="dialogue-text-content">
-                        ${this.shouldTypeMessage(message) ? '' : message.text}
+                        ${this.shouldTypeMessage(message) ? '' : this.formatText(message.text)}
                     </div>
                 </div>
                 
@@ -133,7 +138,7 @@ export class BaseDialogue {
                         Example
                     </div>
                     <div class="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed font-mono whitespace-pre-wrap text-center" id="dialogue-example-content">
-${message.example}
+${this.formatText(message.example)}
                     </div>
                 </div>
             `;
@@ -145,7 +150,16 @@ ${message.example}
 
         // Type message if needed
         if (this.shouldTypeMessage(message)) {
-            this.typeMessage(message.text);
+            // Add small delay to ensure DOM is ready
+            setTimeout(() => {
+                this.typeMessage(message.text);
+            }, 50);
+        } else {
+            // If not typing, make sure the formatted text is displayed
+            const container = document.getElementById('dialogue-text-content');
+            if (container) {
+                container.innerHTML = this.formatText(message.text);
+            }
         }
 
         // Bind touch events for mobile interaction
@@ -160,16 +174,91 @@ ${message.example}
         return message.typing !== false && message.type !== 'instant';
     }
 
+    formatText(text) {
+        if (!text) return '';
+        
+        // Convert markdown-style formatting to HTML
+        let formatted = text
+            // Convert line breaks
+            .replace(/\n/g, '<br>')
+            // Convert bold text (**text**)
+            .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>')
+            // Convert italic text (*text*)
+            .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-green-300 italic">$1</em>')
+            // Convert inline code (`text`)
+            .replace(/`([^`]+)`/g, '<code class="bg-gray-700 px-1 rounded text-yellow-300 font-mono text-sm">$1</code>')
+            // Convert bullet points (• text)
+            .replace(/^• (.+)$/gm, '<div class="flex items-start mb-1"><span class="text-green-400 mr-2 flex-shrink-0">•</span><span class="flex-1">$1</span></div>');
+            
+        return formatted;
+    }
+
     async typeMessage(text, speed = this.typingSpeed) {
         const container = document.getElementById('dialogue-text-content');
-        if (!container) return;
+        if (!container) {
+            console.warn('Dialogue text container not found');
+            return;
+        }
         
-        container.innerHTML = '';
+        console.log('Starting to type message:', text.substring(0, 50) + '...');
         
-        for (let i = 0; i < text.length; i++) {
-            container.innerHTML += text[i];
+        // Format the text first and set it as innerHTML (hidden)
+        const formattedText = this.formatText(text);
+        container.innerHTML = formattedText;
+        
+        // Hide all text initially by setting opacity to 0
+        container.style.color = 'transparent';
+        
+        // Store reference to ensure dialogue stays active during typing
+        const dialogueInstance = this;
+        
+        // Gradually reveal characters by measuring text width
+        const tempSpan = document.createElement('span');
+        tempSpan.innerHTML = formattedText;
+        tempSpan.style.visibility = 'hidden';
+        tempSpan.style.position = 'absolute';
+        tempSpan.style.whiteSpace = 'pre-wrap';
+        tempSpan.className = container.className;
+        document.body.appendChild(tempSpan);
+        
+        // Create a revealing overlay
+        const revealOverlay = document.createElement('div');
+        revealOverlay.style.position = 'absolute';
+        revealOverlay.style.top = '0';
+        revealOverlay.style.left = '0';
+        revealOverlay.style.right = '0';
+        revealOverlay.style.bottom = '0';
+        revealOverlay.style.background = 'linear-gradient(to right, transparent 0%, transparent 0%, rgb(31, 41, 55) 0%)';
+        revealOverlay.style.pointerEvents = 'none';
+        
+        // Make container relative and restore color
+        container.style.position = 'relative';
+        container.style.color = '';
+        container.appendChild(revealOverlay);
+        
+        // Animate the reveal
+        const plainText = text;
+        for (let i = 0; i <= plainText.length; i++) {
+            // Check if dialogue is still active
+            if (!dialogueInstance.isActive || !document.getElementById('dialogue-text-content')) {
+                console.warn('Typing interrupted - dialogue no longer active or container removed');
+                document.body.removeChild(tempSpan);
+                return;
+            }
+            
+            // Calculate percentage to reveal
+            const percentage = (i / plainText.length) * 100;
+            revealOverlay.style.background = `linear-gradient(to right, transparent ${percentage}%, rgb(31, 41, 55) ${percentage}%)`;
+            
             await new Promise(resolve => setTimeout(resolve, speed));
         }
+        
+        // Clean up
+        document.body.removeChild(tempSpan);
+        container.removeChild(revealOverlay);
+        container.style.position = '';
+        
+        console.log('Typing complete');
     }
 
     nextMessage() {
