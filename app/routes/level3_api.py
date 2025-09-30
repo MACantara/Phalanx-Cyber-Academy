@@ -24,7 +24,6 @@ def load_json_data():
         
         malware_path = os.path.join(json_base_path, 'malware-data.json')
         process_path = os.path.join(json_base_path, 'process-data.json')
-        encrypted_files_path = os.path.join(json_base_path, 'encrypted-files-data.json')
         
         # Check if required files exist
         if not os.path.exists(malware_path):
@@ -41,30 +40,18 @@ def load_json_data():
         with open(process_path, 'r', encoding='utf-8') as f:
             process_data = json.load(f)
         
-        # Read encrypted files if available (optional since ransomware decryptor was removed)
-        encrypted_files_data = {}
-        if os.path.exists(encrypted_files_path):
-            with open(encrypted_files_path, 'r', encoding='utf-8') as f:
-                encrypted_files_data = json.load(f)
-        else:
-            print(f"Encrypted files JSON not found (optional): {encrypted_files_path}")
-            encrypted_files_data = {'level3_ransomware_files': []}
-        
         # Combine all data into cache
         _json_cache = {
             'malware': malware_data,
-            'processes': process_data,
-            'encrypted_files': encrypted_files_data
+            'processes': process_data
         }
         
         malware_count = len(malware_data)
         process_count = len(process_data.get('malware', []))
-        encrypted_files_count = len(encrypted_files_data.get('level3_ransomware_files', []))
         
         print(f"Loaded Level 3 data from JSON files:")
         print(f"Malware entries: {malware_count}")
         print(f"Malicious processes: {process_count}")
-        print(f"Encrypted files: {encrypted_files_count} (ransomware decryptor removed)")
         
         return _json_cache
         
@@ -114,22 +101,15 @@ def get_level3_game_data():
             'malware': selected_malicious_processes
         }
         
-        # Get encrypted files data - select 5 random files
-        encrypted_files_data = data.get('encrypted_files', {})
-        all_encrypted_files = encrypted_files_data.get('level3_ransomware_files', [])
-        selected_encrypted_files = get_random_items(all_encrypted_files, 5)
-        
         return jsonify({
             'success': True,
             'data': {
                 'malware': selected_malware,
-                'processes': all_processes,
-                'encrypted_files': {'level3_ransomware_files': selected_encrypted_files}
+                'processes': all_processes
             },
             'summary': {
                 'malware_count': len(selected_malware),
                 'malicious_processes_count': len(selected_malicious_processes),
-                'encrypted_files_count': len(selected_encrypted_files),
                 'legitimate_processes_count': len(process_data.get('system', [])) + 
                                            len(process_data.get('gaming', [])) + 
                                            len(process_data.get('application', [])),
@@ -234,51 +214,6 @@ def get_process_data():
             'error': str(e)
         }), 500
 
-@level3_api_bp.route('/encrypted-files', methods=['GET'])
-def get_encrypted_files_data():
-    """Get encrypted files data (optionally randomized)"""
-    try:
-        data = load_json_data()
-        
-        if not data:
-            return jsonify({
-                'success': False,
-                'error': 'No encrypted files data available'
-            }), 500
-        
-        encrypted_files_data = data.get('encrypted_files', {})
-        all_files = encrypted_files_data.get('level3_ransomware_files', [])
-        
-        # Check if randomization is requested
-        randomize = request.args.get('randomize', 'false').lower() == 'true'
-        count = int(request.args.get('count', 5))
-        
-        if randomize:
-            selected_files = get_random_items(all_files, count)
-        else:
-            selected_files = all_files
-        
-        return jsonify({
-            'success': True,
-            'encrypted_files': {
-                'level3_ransomware_files': selected_files
-            },
-            'count': len(selected_files),
-            'summary': {
-                'critical_files': len([f for f in selected_files if f.get('priority') == 'Critical']),
-                'high_files': len([f for f in selected_files if f.get('priority') == 'High']),
-                'medium_files': len([f for f in selected_files if f.get('priority') == 'Medium']),
-                'low_files': len([f for f in selected_files if f.get('priority') == 'Low'])
-            }
-        })
-        
-    except Exception as e:
-        print(f"Error getting encrypted files data: {e}")
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-
 @level3_api_bp.route('/stats', methods=['GET'])
 def get_level3_stats():
     """Get statistics about the Level 3 dataset"""
@@ -293,7 +228,6 @@ def get_level3_stats():
         
         malware_data = data.get('malware', {})
         process_data = data.get('processes', {})
-        encrypted_files_data = data.get('encrypted_files', {})
         
         # Calculate malware statistics
         malware_types = {}
@@ -305,16 +239,6 @@ def get_level3_stats():
             malware_types[malware_type] = malware_types.get(malware_type, 0) + 1
             total_reputation_damage += malware.get('reputationDamage', 0)
             total_financial_damage += malware.get('financialDamage', 0)
-        
-        # Calculate file statistics
-        all_files = encrypted_files_data.get('level3_ransomware_files', [])
-        file_priorities = {}
-        total_reputation_recovery = 0
-        
-        for file_data in all_files:
-            priority = file_data.get('priority', 'Unknown')
-            file_priorities[priority] = file_priorities.get(priority, 0) + 1
-            total_reputation_recovery += file_data.get('reputationRecovery', 0)
         
         return jsonify({
             'success': True,
@@ -329,9 +253,6 @@ def get_level3_stats():
                     'application': len(process_data.get('application', [])),
                     'malware': len(process_data.get('malware', []))
                 },
-                'total_encrypted_files': len(all_files),
-                'file_priorities': file_priorities,
-                'total_reputation_recovery': total_reputation_recovery,
                 'source': 'Level 3 JSON data files'
             }
         })
@@ -358,14 +279,12 @@ def get_data_status():
         
         malware_count = len(data.get('malware', {}))
         process_count = len(data.get('processes', {}).get('malware', []))
-        files_count = len(data.get('encrypted_files', {}).get('level3_ransomware_files', []))
         
         return jsonify({
             'success': True,
             'data_available': True,
             'malware_count': malware_count,
             'malicious_processes_count': process_count,
-            'encrypted_files_count': files_count,
             'total_legitimate_processes': (
                 len(data.get('processes', {}).get('system', [])) +
                 len(data.get('processes', {}).get('gaming', [])) +
@@ -373,9 +292,8 @@ def get_data_status():
             ),
             'source_files': [
                 'malware-data.json',
-                'process-data.json', 
-                'encrypted-files-data.json'
-            ]
+                'process-data.json'
+            ],
         })
         
     except Exception as e:
@@ -406,17 +324,11 @@ def get_sample_data():
         process_data = data.get('processes', {})
         sample_processes = get_random_items(process_data.get('malware', []), 2)
         
-        encrypted_files_data = data.get('encrypted_files', {})
-        sample_files = get_random_items(
-            encrypted_files_data.get('level3_ransomware_files', []), 2
-        )
-        
         return jsonify({
             'success': True,
             'sample_data': {
                 'malware': sample_malware,
-                'malicious_processes': sample_processes,
-                'encrypted_files': sample_files
+                'malicious_processes': sample_processes
             },
             'message': 'Sample Level 3 data for testing'
         })
