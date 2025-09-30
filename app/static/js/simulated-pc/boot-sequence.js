@@ -30,8 +30,11 @@ export class BootSequence {
     }
 
     setupContainer() {
-        // Set up container with Tailwind classes
-        this.container.className = 'fixed inset-0 bg-black text-green-400 font-mono text-sm leading-relaxed p-10 overflow-y-auto flex flex-col justify-start items-start';
+        // Set up container with Tailwind classes - ensure proper scrolling and responsive design
+        this.container.className = 'fixed inset-0 bg-black text-green-400 font-mono text-xs sm:text-sm leading-relaxed p-2 sm:p-4 md:p-6 lg:p-10 overflow-y-auto flex flex-col justify-start items-start';
+        // Ensure container can scroll
+        this.container.style.overflowY = 'auto';
+        this.container.style.height = '100vh';
     }
 
     displayNextLine(onComplete) {
@@ -69,6 +72,9 @@ export class BootSequence {
         lineElement.className = `boot-line mb-0.5 whitespace-pre-wrap ${typeClasses}`;
         
         this.container.appendChild(lineElement);
+        
+        // Auto-scroll to bottom to keep content visible
+        this.scrollToBottom();
         
         // Display the line instantly
         if (line.text.trim() !== '') {
@@ -146,6 +152,14 @@ export class BootSequence {
         return new Promise((resolve) => {
             this.container.innerHTML = '';
             this.displayNextLine(resolve);
+        });
+    }
+
+    scrollToBottom() {
+        // Smooth scroll to bottom for better UX
+        this.container.scrollTo({
+            top: this.container.scrollHeight,
+            behavior: 'smooth'
         });
     }
 }
