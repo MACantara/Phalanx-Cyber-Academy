@@ -324,14 +324,14 @@ export class EmailSecurityManager {
         } else {
             // In inbox, show classification buttons only if not already categorized
             buttons += `
-                <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                    <button class="w-full sm:flex-1 px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 active:bg-red-600 transition-colors cursor-pointer flex items-center justify-center cursor-pointer text-xs sm:text-sm touch-manipulation" 
+                <div class="flex flex-row gap-3">
+                    <button class="flex-1 px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 active:bg-red-600 transition-colors cursor-pointer flex items-center justify-center text-sm touch-manipulation" 
                             id="report-phishing-btn" data-email-id="${emailId}">
-                        <i class="bi bi-shield-exclamation mr-1"></i><span class="hidden sm:inline">Report Phishing</span><span class="sm:hidden">Report</span>
+                        <i class="bi bi-shield-exclamation mr-1"></i><span class="hidden xs:inline">Report Phishing</span><span class="xs:hidden">Report</span>
                     </button>
-                    <button class="w-full sm:flex-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-500 active:bg-green-600 transition-colors cursor-pointer flex items-center justify-center cursor-pointer text-xs sm:text-sm touch-manipulation" 
+                    <button class="flex-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-500 active:bg-green-600 transition-colors cursor-pointer flex items-center justify-center text-sm touch-manipulation" 
                             id="mark-legitimate-btn" data-email-id="${emailId}">
-                        <i class="bi bi-shield-check mr-1"></i><span class="hidden sm:inline">Mark Legitimate</span><span class="sm:hidden">Legitimate</span>
+                        <i class="bi bi-shield-check mr-1"></i><span class="hidden xs:inline">Mark Legitimate</span><span class="xs:hidden">Legitimate</span>
                     </button>
                 </div>`;
         }
