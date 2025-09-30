@@ -66,6 +66,23 @@
                 }
               },
               "flag_ids": ["WHT-ENV2", "WHT-BACKUP", "WHT-HIST"]
+            },
+            "security": {
+              "type": "directory",
+              "contents": {
+                "incident_response_plan.txt": {
+                  "type": "file",
+                  "content": "TECHCORP INCIDENT RESPONSE PLAN\n==============================\n\nDOCUMENT VERSION: 2.1\nLAST UPDATED: 2025-09-15\nCLASSIFICATION: Internal Use Only\n\n🚨 INCIDENT RESPONSE PHASES\n\n1. PREPARATION\n   - Incident Response Team: security@techcorp.com\n   - Emergency Contacts: +1-800-SECURITY\n   - Escalation Matrix: CISO -> CTO -> CEO\n\n2. IDENTIFICATION & DETECTION\n   - Anomaly Indicators:\n     * Login attempts at unusual hours (e.g., 3:00 AM)\n     * Multiple failed authentications from foreign IPs\n     * Unusual data access patterns\n     * Privilege escalation attempts\n\n3. CONTAINMENT (FIRST STEP IN BREACH RESPONSE)\n   ⚠️  CRITICAL: Contain the breach BEFORE customer notification\n   - Isolate affected systems immediately\n   - Preserve evidence for forensic analysis\n   - Document all containment actions\n\n4. ERADICATION & RECOVERY\n   - Remove malicious artifacts\n   - Patch vulnerabilities\n   - Restore systems from clean backups\n\n5. LESSONS LEARNED\n   - Post-incident review\n   - Update security controls\n   - Staff training improvements\n\n# WHT{incident_response_procedures} - Proper breach response protocol\n\n📋 BREACH RESPONSE CHECKLIST:\n☐ Notify incident response team (NOT customers first)\n☐ Contain the breach to prevent further damage\n☐ Preserve evidence for investigation\n☐ Assess scope and impact\n☐ Begin eradication procedures\n☐ Prepare customer communications (after containment)\n\n💡 SECURITY REMINDERS:\n- Digital hygiene: Regular updates, verified software sources\n- Password security: 12+ characters, avoid reuse\n- 2FA implementation: Mandatory for privileged accounts\n- Social engineering awareness: Verify requests through official channels",
+                  "size": 1456,
+                  "flag_ids": ["WHT-INCIDENT"]
+                },
+                "digital_hygiene_guide.txt": {
+                  "type": "file",
+                  "content": "DIGITAL HYGIENE BEST PRACTICES\n==============================\n\n🔐 PASSWORD SECURITY\nStrong passwords are your first line of defense against brute-force attacks.\n\nWEAK EXAMPLES (avoid these):\n- password123 (common words + numbers)\n- ilovepizza (personal preferences)\n- J0hn2024! (predictable substitutions)\n\nSTRONG EXAMPLE:\n- q2W#r7&zLp0 (random, 12+ chars, mixed case, symbols)\n\n🛡️ SECURITY PRACTICES\n✅ DO:\n- Regularly update systems and software\n- Download software from verified sources only\n- Use unique passwords for each account\n- Enable two-factor authentication\n- Scan suspicious files before opening\n\n❌ DON'T:\n- Reuse passwords for convenience\n- Delay security updates\n- Download from unknown sources\n- Ignore security warnings\n- Share credentials via email/chat\n\n🚨 THREAT AWARENESS\n- Social engineering targets human psychology\n- DoS attacks disrupt services (don't steal data)\n- Brute-force attacks try many password combinations\n- Malware can hide in seemingly innocent files\n\n🎯 INCIDENT SIGNS\n- Unusual login times (3 AM activity)\n- Foreign IP access attempts\n- Unexpected system slowdowns\n- Suspicious file modifications\n- Unauthorized privilege changes",
+                  "size": 1123
+                }
+              },
+              "flag_ids": ["WHT-INCIDENT"]
             }
           }
         },
@@ -145,6 +162,18 @@
                   "type": "file",
                   "content": "Sep 27 08:00:00 sandbox systemd[1]: Started Daily apt download activities.\nSep 27 08:15:00 sandbox CRON[1234]: (root) CMD (/usr/local/bin/backup_script.sh)\nSep 27 08:30:00 sandbox nginx[5678]: Configuration reload successful\nSep 27 09:00:00 sandbox systemd[1]: Started Cleanup of Temporary Directories.\n",
                   "size": 312
+                },
+                "social_engineering.log": {
+                  "type": "file",
+                  "content": "2025-09-27 09:00:12 [EMAIL] From: it-support@techcorp-urgent.com\n2025-09-27 09:00:15 [EMAIL] Subject: URGENT: Account Suspension Notice - Immediate Action Required\n2025-09-27 09:00:18 [EMAIL] Body: Your account will be suspended in 2 hours due to suspicious activity.\n2025-09-27 09:00:20 [EMAIL] Body: Click here immediately to verify: http://fake-techcorp-login.malicious.com\n2025-09-27 09:01:00 [PHONE] Caller claimed to be CEO, demanded immediate password reset\n2025-09-27 09:02:30 [EMAIL] Phishing attempt: 'We are from IT department, send us your credentials for maintenance'\n# WHT{social_engineering_awareness} - Manipulation tactics identified\n2025-09-27 09:05:00 [ANALYSIS] Red flags: Urgency, authority claims, external links, fear tactics\n2025-09-27 09:06:00 [POLICY] Social engineering exploits human psychology, not technical vulnerabilities",
+                  "size": 789,
+                  "flag_ids": ["WHT-SOCIAL"]
+                },
+                "ddos_attack.log": {
+                  "type": "file",
+                  "content": "2025-09-27 10:00:01 [ALERT] DDoS attack detected from multiple sources\n2025-09-27 10:00:05 [ATTACK] SYN_FLOOD: 192.168.100.1 -> 10.0.1.100:80 (50,000 requests/sec)\n2025-09-27 10:00:08 [ATTACK] UDP_FLOOD: 203.0.113.5 -> 10.0.1.100:53 (25,000 packets/sec)\n2025-09-27 10:00:12 [IMPACT] Service response time: 15000ms (normal: 200ms)\n2025-09-27 10:00:15 [IMPACT] Connection timeouts: 95% of requests failing\n2025-09-27 10:01:00 [MITIGATION] Rate limiting activated on edge routers\n2025-09-27 10:01:30 [ANALYSIS] Attack goal: Service unavailability, NOT data theft\n# WHT{denial_of_service_analysis} - DoS attack pattern identified\n2025-09-27 10:02:00 [RECOVERY] Service availability restored after traffic filtering\n2025-09-27 10:05:00 [LESSON] DoS attacks overwhelm resources to disrupt service availability",
+                  "size": 887,
+                  "flag_ids": ["WHT-DOS"]
                 }
               }
             }
@@ -201,6 +230,18 @@
               "type": "file",
               "content": "root:x:0:0:root:/root:/bin/bash\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\nresearcher:x:1000:1000:Security Researcher:/home/researcher:/bin/bash\nadmin:x:1001:1001:System Admin:/home/admin:/bin/bash",
               "size": 213
+            },
+            "security": {
+              "type": "directory",
+              "contents": {
+                "auth_config.conf": {
+                  "type": "file",
+                  "content": "# Authentication Configuration\n# TechCorp Security Settings\n\n[AUTHENTICATION]\npassword_policy=strong\nmin_length=12\nrequire_symbols=true\nmax_attempts=3\nlockout_duration=300\n\n[TWO_FACTOR_AUTH]\n# CRITICAL SECURITY FLAW: 2FA bypass enabled for 'convenience'\nenabled=true\nbypass_for_internal=true\nbackup_codes_allowed=unlimited\n# WHT{two_factor_authentication_bypass} - 2FA implementation flaw\nemergency_bypass=admin_override\n\n[PASSWORD_EXAMPLES]\n# Weak passwords (vulnerable to brute-force)\nweak_example1=password123\nweak_example2=ilovepizza\nweak_example3=J0hn2024!\n\n# Strong password (resistant to brute-force)\nstrong_example=q2W#r7&zLp0\n\n[SECURITY_NOTES]\n# Strong passwords should be 12+ characters with mixed case, numbers, symbols\n# Social engineering attacks manipulate people, not systems\n# 2FA should be mandatory for all privileged accounts",
+                  "size": 945,
+                  "flag_ids": ["WHT-2FA"]
+                }
+              },
+              "flag_ids": ["WHT-2FA"]
             },
             "hosts": {
               "type": "file",
