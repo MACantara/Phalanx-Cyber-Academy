@@ -28,7 +28,11 @@ class PlayerAnalytics:
             user_progress = self.supabase.table("user_progress").select("*").execute()
             
             if not user_progress.data:
-                return self._get_mock_level_data()
+                # Return empty data for all levels
+                level_data = {}
+                for level_id in range(1, 6):
+                    level_data[f"level_{level_id}"] = await self._get_empty_level_data(level_id)
+                return level_data
                 
             level_data = {}
             
@@ -39,7 +43,11 @@ class PlayerAnalytics:
             
         except Exception as e:
             logger.error(f"Error getting level analytics: {e}")
-            return self._get_mock_level_data()
+            # Return empty data for all levels
+            level_data = {}
+            for level_id in range(1, 6):
+                level_data[f"level_{level_id}"] = await self._get_empty_level_data(level_id)
+            return level_data
     
     async def _analyze_level(self, level_id: int, progress_data: List[Dict]) -> Dict[str, Any]:
         """Analyze data for a specific level"""
@@ -172,13 +180,13 @@ class PlayerAnalytics:
             sessions = self.supabase.table("blue_red_sessions").select("*").execute()
             
             if not sessions.data:
-                return self._get_mock_blue_vs_red_data()
+                return await self._get_empty_blue_vs_red_data()
                 
             return await self._analyze_blue_vs_red_sessions(sessions.data)
             
         except Exception as e:
             logger.error(f"Error getting blue vs red analytics: {e}")
-            return self._get_mock_blue_vs_red_data()
+            return await self._get_empty_blue_vs_red_data()
     
     async def _analyze_blue_vs_red_sessions(self, sessions: List[Dict]) -> Dict[str, Any]:
         """Analyze blue vs red team session data"""
@@ -323,7 +331,7 @@ class PlayerAnalytics:
             
         except Exception as e:
             logger.error(f"Error getting general analytics: {e}")
-            return self._get_mock_general_data()
+            return await self._get_empty_general_data()
     
     async def _analyze_general_metrics(self, users: List[Dict], level_sessions: List[Dict], 
                                      blue_red_sessions: List[Dict]) -> Dict[str, Any]:
@@ -710,6 +718,40 @@ class PlayerAnalytics:
         total_negatives = sum(d.get('true_negatives', 0) + d.get('false_positives', 0) for d in data)
         false_positives = sum(d.get('false_positives', 0) for d in data)
         return round((false_positives / total_negatives * 100) if total_negatives > 0 else 0, 1)
+    
+    async def _get_empty_general_data(self) -> Dict[str, Any]:
+        """Return empty general analytics data structure"""
+        return {
+            'total_users': 0,
+            'active_users': 0,
+            'daily_active_users': 0,
+            'weekly_active_users': 0,
+            'monthly_active_users': 0,
+            'total_sessions': 0,
+            'completion_rate': 0,
+            'average_score': 0,
+            'average_session_duration_seconds': 0,
+            'average_completion_time_minutes': 0,
+            'retry_rate': 0,
+            'hint_usage_rate': 0,
+            'drop_off_rate': 0,
+            'churn_rate': 0,
+            'retention_day_1': 0,
+            'retention_day_7': 0,
+            'retention_day_30': 0,
+            'level_1_completion_rate': 0,
+            'level_2_completion_rate': 0,
+            'level_3_completion_rate': 0,
+            'level_4_completion_rate': 0,
+            'level_5_completion_rate': 0,
+            'weekly_trends': [],
+            'user_engagement': {
+                'daily_active_users': 0,
+                'weekly_active_users': 0,
+                'average_session_duration': 0,
+                'retention_rate': 0
+            }
+        }
     
     async def _get_empty_blue_vs_red_data(self) -> Dict[str, Any]:
         """Return empty data structure for blue vs red with no data"""
