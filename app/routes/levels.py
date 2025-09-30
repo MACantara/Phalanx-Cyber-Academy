@@ -123,9 +123,6 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-two/dialogues/index.js',
             'js/simulated-pc/levels/level-two/dialogues/level2-shadow-inbox.js',
             'js/simulated-pc/levels/level-two/dialogues/email-security-completion-dialogue.js',
-            
-            # Tutorials for Level 2
-            'js/simulated-pc/tutorials/email-tutorial.js',
         ]
     
     elif level_id == 3:
