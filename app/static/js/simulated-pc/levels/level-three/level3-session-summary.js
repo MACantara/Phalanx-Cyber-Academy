@@ -73,8 +73,8 @@ export class Level3SessionSummary {
         
         // Time Performance (25 points max)
         // Reward faster completion with more points
-        const timeUsed = (15 * 60) - timerStatus.timeRemaining;
-        const timeEfficiency = Math.max(0, (timerStatus.timeRemaining / (15 * 60))); // 0-1 scale
+        const timeUsed = (2 * 60) - timerStatus.timeRemaining;
+        const timeEfficiency = Math.max(0, (timerStatus.timeRemaining / (2 * 60))); // 0-1 scale
         const timeBonus = timeEfficiency * 25; // Up to 25 points for speed
         
         // Accuracy Performance (25 points max)
@@ -93,8 +93,8 @@ export class Level3SessionSummary {
         const financialBonus = financialHealth * 15; // Up to 15 points for cost management
         
         // Stage Completion Bonus (10 points max)
-        // Reward completing all three stages (process monitor, malware scanner, ransomware decryptor)
-        const stageCompletionBonus = (this.stagesCompleted.length / 3) * 10; // Up to 10 points for completion
+        // Reward completing both stages (process monitor, malware scanner)
+        const stageCompletionBonus = (this.stagesCompleted.length / 2) * 10; // Up to 10 points for completion
         
         const totalScore = Math.round(timeBonus + accuracyBonus + reputationBonus + financialBonus + stageCompletionBonus);
         
