@@ -21,22 +21,22 @@ export class NetworkAnalyzerApp extends ForensicAppBase {
 
     createContent() {
         return `
-            <div class="network-analyzer-app h-full bg-black text-white p-4 overflow-auto flex flex-col">
+            <div class="network-analyzer-app h-full bg-black text-white p-2 sm:p-4 overflow-auto flex flex-col touch-manipulation">
                 <!-- Header -->
-                <div class="flex justify-between items-center mb-4 border-b border-gray-600 pb-2">
-                    <h2 class="text-xl font-bold text-cyan-400">Network Traffic Analyzer</h2>
-                    <div class="flex space-x-4 text-sm">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 sm:mb-4 border-b border-gray-600 pb-2">
+                    <h2 class="text-lg sm:text-xl font-bold text-cyan-400 mb-2 sm:mb-0">Network Traffic Analyzer</h2>
+                    <div class="grid grid-cols-3 sm:flex sm:space-x-4 gap-2 sm:gap-0 text-xs sm:text-sm">
                         <div>
                             <span class="text-gray-300">Loaded:</span>
-                            <span class="text-cyan-400 font-semibold" id="loaded-capture">None</span>
+                            <span class="text-cyan-400 font-semibold block sm:inline" id="loaded-capture">None</span>
                         </div>
                         <div>
                             <span class="text-gray-300">Packets:</span>
-                            <span class="text-green-400 font-semibold" id="packet-count">0</span>
+                            <span class="text-green-400 font-semibold block sm:inline" id="packet-count">0</span>
                         </div>
                         <div>
                             <span class="text-gray-300">Threats:</span>
-                            <span class="text-red-400 font-semibold" id="threat-count">0</span>
+                            <span class="text-red-400 font-semibold block sm:inline" id="threat-count">0</span>
                         </div>
                     </div>
                 </div>
@@ -45,41 +45,41 @@ export class NetworkAnalyzerApp extends ForensicAppBase {
                 ${this.createForensicUI().evidencePanel}
 
                 <!-- Analysis Controls -->
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex space-x-2">
-                        <button id="mode-packets-${this.id}" class="analysis-mode-btn bg-cyan-600 px-4 py-2 rounded text-sm font-semibold">
+                <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-3 sm:mb-4 space-y-2 lg:space-y-0">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 lg:flex lg:space-x-2 gap-1 sm:gap-2 lg:gap-0">
+                        <button id="mode-packets-${this.id}" class="analysis-mode-btn bg-cyan-600 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation">
                             Packet Analysis
                         </button>
-                        <button id="mode-conversations-${this.id}" class="analysis-mode-btn bg-gray-600 px-4 py-2 rounded text-sm">
+                        <button id="mode-conversations-${this.id}" class="analysis-mode-btn bg-gray-600 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm touch-manipulation">
                             Conversations
                         </button>
-                        <button id="mode-protocols-${this.id}" class="analysis-mode-btn bg-gray-600 px-4 py-2 rounded text-sm">
+                        <button id="mode-protocols-${this.id}" class="analysis-mode-btn bg-gray-600 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm touch-manipulation">
                             Protocol Analysis
                         </button>
                     </div>
-                    <div class="flex space-x-2">
-                        <button id="load-capture-btn-${this.id}" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm font-semibold">
+                    <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-1 sm:space-y-0">
+                        <button id="load-capture-btn-${this.id}" class="bg-green-600 hover:bg-green-700 active:bg-green-800 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation">
                             Load Capture
                         </button>
-                        <button id="analyze-traffic-btn-${this.id}" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-semibold">
+                        <button id="analyze-traffic-btn-${this.id}" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 px-3 sm:px-4 py-2 rounded text-xs sm:text-sm font-semibold touch-manipulation">
                             Analyze Traffic
                         </button>
                     </div>
                 </div>
 
                 <!-- Main Content Grid -->
-                <div class="grid grid-cols-12 gap-4 h-full">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 h-full">
                     <!-- Left Panel - Captures / Filters -->
-                    <div class="col-span-3 bg-gray-800 rounded p-4 overflow-y-auto">
-                        <h3 class="text-lg font-semibold mb-3 text-yellow-400">Network Captures</h3>
-                        <div id="capture-list-${this.id}" class="space-y-2 mb-4">
+                    <div class="lg:col-span-3 bg-gray-800 rounded p-3 sm:p-4 overflow-y-auto">
+                        <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-yellow-400">Network Captures</h3>
+                        <div id="capture-list-${this.id}" class="space-y-1 sm:space-y-2 mb-3 sm:mb-4">
                             <!-- Available network captures will be populated here -->
                         </div>
                         
                         <!-- Traffic Filters -->
                         <div id="traffic-filters-${this.id}">
-                            <h4 class="font-semibold mb-2 text-green-400">Traffic Filters</h4>
-                            <div class="space-y-2 text-sm">
+                            <h4 class="font-semibold mb-1 sm:mb-2 text-green-400 text-sm sm:text-base">Traffic Filters</h4>
+                            <div class="space-y-1 sm:space-y-2 text-xs sm:text-sm">
                                 <div>
                                     <label class="text-gray-300">Protocol:</label>
                                     <select id="protocol-filter-${this.id}" class="w-full bg-gray-700 text-white px-2 py-1 rounded text-xs">
@@ -90,11 +90,11 @@ export class NetworkAnalyzerApp extends ForensicAppBase {
                                         <option value="HTTP">HTTP</option>
                                     </select>
                                 </div>
-                                <div>
+                                <div class="flex items-center">
                                     <label class="text-gray-300">Suspicious Only:</label>
                                     <input type="checkbox" id="suspicious-filter-${this.id}" class="ml-2">
                                 </div>
-                                <button id="apply-filters-btn-${this.id}" class="w-full bg-blue-600 hover:bg-blue-700 py-1 rounded text-xs">
+                                <button id="apply-filters-btn-${this.id}" class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 py-1 rounded text-xs touch-manipulation">
                                     Apply Filters
                                 </button>
                             </div>
@@ -102,12 +102,12 @@ export class NetworkAnalyzerApp extends ForensicAppBase {
                     </div>
 
                     <!-- Center Panel - Traffic Analysis -->
-                    <div class="col-span-6 bg-gray-800 rounded p-4 overflow-y-auto">
-                        <h3 class="text-lg font-semibold mb-3 text-yellow-400" id="center-panel-title">Packet Analysis</h3>
+                    <div class="lg:col-span-6 bg-gray-800 rounded p-3 sm:p-4 overflow-y-auto">
+                        <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-yellow-400" id="center-panel-title">Packet Analysis</h3>
                         
                         <!-- Packet Analysis View -->
                         <div id="packets-view-${this.id}" class="analysis-view">
-                            <div class="text-center text-gray-500 mt-8">
+                            <div class="text-center text-gray-500 mt-6 sm:mt-8 text-xs sm:text-sm">
                                 Load a network capture to begin analysis
                             </div>
                         </div>
@@ -128,10 +128,10 @@ export class NetworkAnalyzerApp extends ForensicAppBase {
                     </div>
 
                     <!-- Right Panel - Packet Details -->
-                    <div class="col-span-3 bg-gray-800 rounded p-4 overflow-y-auto">
-                        <h3 class="text-lg font-semibold mb-3 text-yellow-400">Packet Details</h3>
+                    <div class="lg:col-span-3 bg-gray-800 rounded p-3 sm:p-4 overflow-y-auto">
+                        <h3 class="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-yellow-400">Packet Details</h3>
                         <div id="packet-details-${this.id}">
-                            <div class="text-center text-gray-500 mt-8">
+                            <div class="text-center text-gray-500 mt-6 sm:mt-8 text-xs sm:text-sm">
                                 Select a packet to view details
                             </div>
                         </div>
@@ -388,22 +388,26 @@ export class NetworkAnalyzerApp extends ForensicAppBase {
         if (!packetsView || !this.loadedCapture) return;
 
         packetsView.innerHTML = this.packets.length === 0 ? 
-            '<div class="text-center text-gray-500 mt-8">No packets found</div>' :
+            '<div class="text-center text-gray-500 mt-6 sm:mt-8 text-xs sm:text-sm">No packets found</div>' :
             `
                 <div class="space-y-1">
                     ${this.packets.map(packet => `
-                        <div class="packet-item bg-gray-700 p-2 rounded cursor-pointer hover:bg-gray-600 transition-colors text-sm ${
-                            packet.suspicious ? 'border-l-4 border-red-500' : ''
+                        <div class="packet-item bg-gray-700 p-2 rounded cursor-pointer hover:bg-gray-600 active:bg-gray-500 transition-colors text-xs sm:text-sm touch-manipulation ${
+                            packet.suspicious ? 'border-l-2 sm:border-l-4 border-red-500' : ''
                         }" data-packet-id="${packet.id}">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <span class="text-xs text-gray-400 w-8">#${packet.id}</span>
-                                    <span class="text-cyan-400 w-24">${packet.source}</span>
-                                    <i class="bi bi-arrow-right text-gray-400"></i>
-                                    <span class="text-green-400 w-24">${packet.destination}</span>
-                                    <span class="text-blue-400 w-16">${packet.protocol}</span>
-                                    <span class="text-gray-300 w-16">${packet.size}B</span>
-                                    ${packet.suspicious ? '<span class="bg-red-600 text-xs px-2 py-1 rounded">THREAT</span>' : ''}
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-1 sm:space-y-0">
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-1 sm:space-y-0">
+                                    <div class="flex items-center space-x-2 sm:space-x-3">
+                                        <span class="text-xs text-gray-400 w-6 sm:w-8">#${packet.id}</span>
+                                        <span class="text-cyan-400 break-all sm:w-24">${packet.source}</span>
+                                        <i class="bi bi-arrow-right text-gray-400 hidden sm:inline"></i>
+                                        <span class="text-green-400 break-all sm:w-24">${packet.destination}</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-blue-400 w-12 sm:w-16">${packet.protocol}</span>
+                                        <span class="text-gray-300 w-12 sm:w-16">${packet.size}B</span>
+                                        ${packet.suspicious ? '<span class="bg-red-600 text-xs px-2 py-1 rounded w-fit">THREAT</span>' : ''}
+                                    </div>
                                 </div>
                                 <div class="text-xs text-gray-400">
                                     ${new Date(packet.timestamp).toLocaleTimeString()}
