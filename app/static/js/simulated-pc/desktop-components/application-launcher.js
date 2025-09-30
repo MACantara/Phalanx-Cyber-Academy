@@ -291,10 +291,7 @@ export class ApplicationLauncher {
         return this.windowManager.getOpenApplications();
     }
 
-    // Close application
-    closeApplication(appId) {
-        return this.windowManager.closeWindow(appId);
-    }
+
 
     // Get application info
     getApplicationInfo(appId) {
