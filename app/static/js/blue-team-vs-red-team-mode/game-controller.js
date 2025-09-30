@@ -274,7 +274,9 @@ class GameController {
             activeAttacks: new Map(), // Reset active attacks tracking
             assetIsolations: [], // Reset isolation history
             activeVulnerabilities: new Map(), // Reset vulnerability tracking
-            patchHistory: [] // Reset patch history
+            patchHistory: [], // Reset patch history
+            compromisedUsers: new Map(), // Reset user compromise tracking
+            credentialResets: [] // Reset credential reset history
         };
         
         // Reset AI
@@ -339,6 +341,22 @@ class GameController {
                 isActive: true
             });
             this.gameState.activeVulnerabilities.set(exploitedCVE, vulnExploits);
+        }
+        
+        // Track user credential compromises for reset XP calculation
+        const compromisedUser = this.getUserForAttack(attackData);
+        if (compromisedUser) {
+            if (!this.gameState.compromisedUsers) {
+                this.gameState.compromisedUsers = new Map();
+            }
+            const userCompromises = this.gameState.compromisedUsers.get(compromisedUser) || [];
+            userCompromises.push({
+                ...attackData,
+                username: compromisedUser,
+                compromiseStartTime: new Date(),
+                isActive: true
+            });
+            this.gameState.compromisedUsers.set(compromisedUser, userCompromises);
         }
         
         // Check if source IP is blocked
@@ -603,6 +621,15 @@ class GameController {
             case 'patch-guide':
                 this.showPatchGuidance();
                 break;
+            case 'compromised-users':
+                this.showCompromisedUsers();
+                break;
+            case 'reset-stats':
+                this.showResetStatistics();
+                break;
+            case 'reset-guide':
+                this.showResetGuidance();
+                break;
             case 'clear':
                 this.uiManager.clearTerminal();
                 this.uiManager.addTerminalOutput('$ Defense Command Terminal - Ready');
@@ -651,6 +678,9 @@ class GameController {
         this.uiManager.addTerminalOutput('  patch-stats               - Show vulnerability patch performance');
         this.uiManager.addTerminalOutput('  active-vulnerabilities   - Show current vulnerabilities being exploited');
         this.uiManager.addTerminalOutput('  patch-guide               - Show vulnerability patching strategy tips');
+        this.uiManager.addTerminalOutput('  compromised-users         - Show current compromised user accounts');
+        this.uiManager.addTerminalOutput('  reset-stats               - Show credential reset performance');
+        this.uiManager.addTerminalOutput('  reset-guide               - Show credential reset strategy tips');
         this.uiManager.addTerminalOutput('');
         this.uiManager.addTerminalOutput('DEFENSIVE ACTIONS:');
         this.uiManager.addTerminalOutput('  block-ip [address]        - Block suspicious IP address');
@@ -984,10 +1014,77 @@ class GameController {
     executeResetCredentials(username) {
         if (!username) {
             this.uiManager.addTerminalOutput('❌ Error: Username required. Usage: reset-credentials [username]');
+            this.uiManager.addTerminalOutput('   Common usernames: admin, student1, professor, guest');
             return;
         }
         
-        this.uiManager.addTerminalOutput(`🔄 Resetting credentials for user: ${username}`);
+        // Validate username format
+        if (!this.isValidUsername(username)) {
+            this.uiManager.addTerminalOutput(`❌ Error: Invalid username format '${username}'. Use alphanumeric characters only.`);
+            return;
+        }
+        
+        this.uiManager.addTerminalOutput(`🔄 Analyzing user account: ${username}...`);
+        
+        // Check for active compromises of this user
+        const activeCompromises = this.getActiveCompromisesForUser(username);
+        const hasActiveCompromises = activeCompromises.length > 0;
+        
+        // Calculate XP reward/penalty based on reset necessity
+        const resetData = {
+            username: username,
+            timestamp: new Date(),
+            wasNecessary: hasActiveCompromises,
+            activeCompromisesCount: activeCompromises.length,
+            systemStateBefore: this.getSecurityControlsSnapshot()
+        };
+        
+        // Add to reset history for tracking
+        if (!this.gameState.credentialResets) {
+            this.gameState.credentialResets = [];
+        }
+        this.gameState.credentialResets.push(resetData);
+        
+        if (hasActiveCompromises) {
+            // Calculate XP for necessary reset
+            const baseXP = 25; // Base XP for resetting compromised credentials
+            const compromiseBonus = activeCompromises.length * 10; // Bonus per active compromise
+            const totalXP = baseXP + compromiseBonus;
+            
+            // Award XP directly to game state
+            this.gameState.sessionXP += totalXP;
+            this.gameState.attacksMitigated += activeCompromises.length;
+            
+            // Show reward through UI
+            this.uiManager.showCredentialResetReward(baseXP, compromiseBonus, username);
+            
+            // Clear user compromises
+            if (this.gameState.compromisedUsers) {
+                const userCompromises = this.gameState.compromisedUsers.get(username) || [];
+                userCompromises.forEach(compromise => compromise.isActive = false);
+            }
+            
+            this.uiManager.addTerminalOutput(`🛡️ ${activeCompromises.length} active compromise(s) mitigated`);
+            
+            // Send positive action to server (if server tracking exists)
+            if (typeof this.sendPlayerAction === 'function') {
+                this.sendPlayerAction('reset-credentials-correct', username, 1.0);
+            }
+        } else {
+            // Penalty for unnecessary reset
+            const penaltyXP = 12; // Penalty XP for resetting clean credentials
+            
+            // Apply XP penalty directly to game state
+            this.gameState.sessionXP = Math.max(0, this.gameState.sessionXP - penaltyXP);
+            
+            // Show penalty through UI  
+            this.uiManager.showCredentialResetPenalty(penaltyXP, username);
+            
+            // Send negative action to server (if server tracking exists)
+            if (typeof this.sendPlayerAction === 'function') {
+                this.sendPlayerAction('reset-credentials-unnecessary', username, 0.3);
+            }
+        }
         
         // Enhance access control effectiveness
         if (this.gameState.securityControls.access) {
@@ -1159,6 +1256,72 @@ class GameController {
         
         const necessary = this.gameState.patchHistory.filter(patch => patch.wasNecessary).length;
         const total = this.gameState.patchHistory.length;
+        const unnecessary = total - necessary;
+        const accuracy = total > 0 ? Math.round((necessary / total) * 100) : 0;
+        
+        return { necessary, unnecessary, total, accuracy };
+    }
+
+    // Username mapping to attack techniques for credential compromise tracking
+    getUserForAttack(attackData) {
+        const userMap = {
+            // Credential Access attacks
+            'Phishing': 'student1',
+            'Credential Dumping': 'admin',
+            'Brute Force': 'guest',
+            
+            // Initial Access with credential compromise
+            'Drive-by Compromise': 'professor',
+            'Exploit Public-Facing Application': 'webadmin',
+            
+            // Privilege Escalation with user compromise
+            'Access Token Manipulation': 'admin',
+            'Process Injection': 'system',
+            
+            // Persistence attacks affecting user accounts
+            'Account Manipulation': 'student2',
+            'Registry Modification': 'localuser',
+            
+            // Lateral Movement with credential theft
+            'Remote Services': 'networkadmin',
+            'Internal Spearphishing': 'faculty'
+        };
+        
+        return userMap[attackData.technique] || null;
+    }
+
+    // Validate username format
+    isValidUsername(username) {
+        const usernamePattern = /^[a-zA-Z0-9_-]{3,20}$/;
+        return usernamePattern.test(username);
+    }
+
+    // Get active compromises for a specific user
+    getActiveCompromisesForUser(username) {
+        if (!this.gameState.compromisedUsers) {
+            return [];
+        }
+        
+        const userCompromises = this.gameState.compromisedUsers.get(username) || [];
+        
+        // Filter for compromises that are still active and recent (within last 60 seconds)
+        const now = new Date();
+        const activeThreshold = 60000; // 60 seconds
+        
+        return userCompromises.filter(compromise => {
+            return compromise.isActive && 
+                   (now - compromise.compromiseStartTime) < activeThreshold;
+        });
+    }
+
+    // Method to get credential reset statistics for performance tracking
+    getResetStats() {
+        if (!this.gameState.credentialResets) {
+            return { necessary: 0, unnecessary: 0, total: 0, accuracy: 0 };
+        }
+        
+        const necessary = this.gameState.credentialResets.filter(reset => reset.wasNecessary).length;
+        const total = this.gameState.credentialResets.length;
         const unnecessary = total - necessary;
         const accuracy = total > 0 ? Math.round((necessary / total) * 100) : 0;
         
@@ -1727,6 +1890,100 @@ class GameController {
         this.uiManager.addTerminalOutput('  • Check "patch-stats" to track efficiency');
         this.uiManager.addTerminalOutput('  • Timing is key - patch during active exploitation');
         this.uiManager.addTerminalOutput('  • Focus on CVEs being exploited, not preventive patching');
+    }
+
+    showCompromisedUsers() {
+        this.uiManager.addTerminalOutput('=== COMPROMISED USER ACCOUNT MONITORING ===');
+        
+        if (!this.gameState.compromisedUsers || this.gameState.compromisedUsers.size === 0) {
+            this.uiManager.addTerminalOutput('✅ No compromised user accounts detected');
+            this.uiManager.addTerminalOutput('💡 TIP: Avoid unnecessary credential resets to maintain XP efficiency');
+            return;
+        }
+        
+        let hasActiveCompromises = false;
+        
+        this.gameState.compromisedUsers.forEach((compromises, username) => {
+            const activeCompromises = this.getActiveCompromisesForUser(username);
+            
+            if (activeCompromises.length > 0) {
+                hasActiveCompromises = true;
+                const status = '🚨 COMPROMISED';
+                this.uiManager.addTerminalOutput(`${username}: ${status}`);
+                
+                activeCompromises.forEach((compromise, index) => {
+                    const timeElapsed = Math.round((Date.now() - compromise.compromiseStartTime) / 1000);
+                    this.uiManager.addTerminalOutput(`  └─ ${compromise.technique} (${timeElapsed}s ago)`);
+                });
+                this.uiManager.addTerminalOutput(`  💡 RECOMMENDATION: reset-credentials ${username}`);
+            }
+        });
+        
+        if (!hasActiveCompromises) {
+            this.uiManager.addTerminalOutput('✅ No current active compromises - All accounts secure');
+            this.uiManager.addTerminalOutput('💡 TIP: Wait for active compromises before resetting credentials for XP rewards');
+        }
+    }
+
+    showResetStatistics() {
+        const stats = this.getResetStats();
+        
+        this.uiManager.addTerminalOutput('=== CREDENTIAL RESET PERFORMANCE ===');
+        this.uiManager.addTerminalOutput(`Total Resets Executed: ${stats.total}`);
+        this.uiManager.addTerminalOutput(`Necessary Resets: ${stats.necessary} ✅`);
+        this.uiManager.addTerminalOutput(`Unnecessary Resets: ${stats.unnecessary} ❌`);
+        this.uiManager.addTerminalOutput(`Efficiency Rate: ${stats.accuracy}%`);
+        
+        if (stats.total > 0) {
+            const xpEarned = stats.necessary * 25; // Average XP per necessary reset
+            const xpLost = stats.unnecessary * 12;  // Average XP per unnecessary reset
+            const netXP = xpEarned - xpLost;
+            
+            this.uiManager.addTerminalOutput('');
+            this.uiManager.addTerminalOutput('XP IMPACT:');
+            this.uiManager.addTerminalOutput(`XP Earned: +${xpEarned}`);
+            this.uiManager.addTerminalOutput(`XP Lost: -${xpLost}`);
+            this.uiManager.addTerminalOutput(`Net XP: ${netXP >= 0 ? '+' : ''}${netXP}`);
+            
+            // Provide performance feedback
+            this.uiManager.addTerminalOutput('');
+            if (stats.accuracy >= 90) {
+                this.uiManager.addTerminalOutput('🏆 EXCELLENT: Elite security operations!');
+            } else if (stats.accuracy >= 75) {
+                this.uiManager.addTerminalOutput('👍 GOOD: Strong credential management');
+            } else if (stats.accuracy >= 60) {
+                this.uiManager.addTerminalOutput('⚠️  FAIR: Focus on compromised accounts only');
+            } else {
+                this.uiManager.addTerminalOutput('📚 LEARNING: Monitor active compromises before resetting');
+            }
+        }
+    }
+
+    showResetGuidance() {
+        this.uiManager.addTerminalOutput('=== CREDENTIAL RESET TACTICAL GUIDE ===');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('🎯 WHEN TO RESET CREDENTIALS:');
+        this.uiManager.addTerminalOutput('  • User account is actively compromised by attackers');
+        this.uiManager.addTerminalOutput('  • Multiple attack techniques targeting same user');
+        this.uiManager.addTerminalOutput('  • Credential theft or manipulation detected');
+        this.uiManager.addTerminalOutput('  • High-privilege accounts under attack');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('⚠️  WHEN NOT TO RESET:');
+        this.uiManager.addTerminalOutput('  • No active compromise detected for the user');
+        this.uiManager.addTerminalOutput('  • Preventive resets without immediate threat');
+        this.uiManager.addTerminalOutput('  • Credentials already reset recently');
+        this.uiManager.addTerminalOutput('  • User account shows no suspicious activity');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('💰 XP OPTIMIZATION:');
+        this.uiManager.addTerminalOutput('  • Necessary reset: +25 XP base + 10 XP per active compromise');
+        this.uiManager.addTerminalOutput('  • Unnecessary reset: -12 XP penalty');
+        this.uiManager.addTerminalOutput('  • Monitor "compromised-users" for guidance');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('📊 PRO TIPS:');
+        this.uiManager.addTerminalOutput('  • Use "alerts" to identify credential-based attacks');
+        this.uiManager.addTerminalOutput('  • Check "reset-stats" to track efficiency');
+        this.uiManager.addTerminalOutput('  • Timing is key - reset during active compromises');
+        this.uiManager.addTerminalOutput('  • Focus on compromised accounts, not preventive resets');
     }
 }
 

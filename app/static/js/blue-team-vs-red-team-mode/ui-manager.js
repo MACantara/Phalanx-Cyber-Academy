@@ -512,21 +512,45 @@ class UIManager {
             // Import centralized XP calculator for accurate display
             const { XPCalculator } = await import('/static/js/utils/xp-calculator.js');
             const xpCalculator = new XPCalculator();
-            await xpCalculator.loadConfig();
+            
+            // Check if loadConfig method exists before calling
+            if (typeof xpCalculator.loadConfig === 'function') {
+                await xpCalculator.loadConfig();
+            }
 
-            // Get current user's total XP using centralized system
-            const userXPData = await xpCalculator.getUserCurrentXP();
-            if (userXPData && userXPData.success) {
-                this.currentUserXP = userXPData.currentXP;
+            // Get current user's total XP using centralized system if method exists
+            if (typeof xpCalculator.getUserCurrentXP === 'function') {
+                const userXPData = await xpCalculator.getUserCurrentXP();
+                if (userXPData && userXPData.success) {
+                    this.currentUserXP = userXPData.currentXP;
+                    
+                    // Update current user XP display with accurate data
+                    const currentXPElement = document.getElementById('current-xp');
+                    if (currentXPElement) {
+                        currentXPElement.textContent = this.currentUserXP;
+                    }
+                }
+            } else {
+                // Fallback to local game state for current XP tracking
+                const gameState = this.gameController.getGameState();
+                this.currentUserXP = gameState.currentXP || 0;
                 
-                // Update current user XP display with accurate data
                 const currentXPElement = document.getElementById('current-xp');
                 if (currentXPElement) {
                     currentXPElement.textContent = this.currentUserXP;
                 }
             }
         } catch (error) {
-            console.warn('[UIManager] Failed to update XP display with centralized data:', error);
+            // Fallback to local XP tracking if centralized system is unavailable
+            console.warn('[UIManager] Centralized XP system unavailable, using local tracking:', error);
+            
+            const gameState = this.gameController.getGameState();
+            this.currentUserXP = gameState.currentXP || 0;
+            
+            const currentXPElement = document.getElementById('current-xp');
+            if (currentXPElement) {
+                currentXPElement.textContent = this.currentUserXP;
+            }
         }
     }
 
@@ -719,6 +743,48 @@ class UIManager {
         this.addTerminalOutput(`🔧  EFFICIENCY WARNING: Unnecessary patching wastes resources`);
         this.addTerminalOutput(`   💸 Preventive Penalty: -${amount} XP lost`);
         this.addTerminalOutput(`   💡 TIP: Focus on actively exploited vulnerabilities first`);
+        
+        // Update session stats display
+        this.updateXPDisplay();
+    }
+
+    showCredentialResetReward(baseAmount, compromiseBonus, username) {
+        const totalAmount = baseAmount + compromiseBonus;
+        
+        // Show floating XP reward animation
+        this.showFloatingXP(totalAmount, 'reward');
+        
+        // Show reward notification with username details
+        const message = `Credentials reset: ${username}`;
+        this.showXPNotification(totalAmount, 'reward', message);
+        
+        // Add specialized terminal feedback with tactical information
+        this.addTerminalOutput(`🔐  CREDENTIALS RESET: ${username} account secured`);
+        this.addTerminalOutput(`   🎯 Base Reset Reward: +${baseAmount} XP`);
+        
+        if (compromiseBonus > 0) {
+            this.addTerminalOutput(`   ⚡ Active Compromise Bonus: +${compromiseBonus} XP`);
+            this.addTerminalOutput(`   🔥 HIGH PRIORITY: Active compromise mitigated!`);
+        }
+        
+        this.addTerminalOutput(`   📊 Total Reward: +${totalAmount} XP`);
+        
+        // Update session stats display
+        this.updateXPDisplay();
+    }
+
+    showCredentialResetPenalty(amount, username) {
+        // Show floating XP penalty animation
+        this.showFloatingXP(-amount, 'penalty');
+        
+        // Show penalty notification
+        const message = `Unnecessary reset: ${username} not compromised`;
+        this.showXPNotification(-amount, 'penalty', message);
+        
+        // Add specialized terminal feedback with learning guidance
+        this.addTerminalOutput(`🔒  SECURITY WARNING: Unnecessary credential resets disrupt users`);
+        this.addTerminalOutput(`   💸 Disruption Penalty: -${amount} XP lost`);
+        this.addTerminalOutput(`   💡 TIP: Check for active compromises before resetting credentials`);
         
         // Update session stats display
         this.updateXPDisplay();
