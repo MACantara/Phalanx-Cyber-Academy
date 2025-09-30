@@ -229,6 +229,8 @@ export class TabCompletion {
                 return this.completeUnameArguments(currentPart, beforeCursor, afterCursor);
             case 'ls':
                 return this.completeLsArguments(parts, currentPart, beforeCursor, afterCursor);
+            case 'submit-flag':
+                return this.completeSubmitFlagArguments(currentPart, beforeCursor, afterCursor);
             default:
                 return null;
         }
@@ -346,5 +348,90 @@ export class TabCompletion {
             }
         }
         return prefix;
+    }
+
+    completeSubmitFlagArguments(currentPart, beforeCursor, afterCursor) {
+        // For submit-flag, provide suggestions with WHT{} format as primary
+        const flagSuggestions = ['WHT{', '--progress', '--challenges', '--status', '--help'];
+        
+        // If current part starts with --, suggest command options
+        if (currentPart.startsWith('--')) {
+            const optionSuggestions = ['--progress', '--challenges', '--status', '--help'];
+            const matches = optionSuggestions.filter(suggestion => 
+                suggestion.startsWith(currentPart)
+            );
+            
+            if (matches.length === 1) {
+                const completion = matches[0];
+                const beforeCompletion = beforeCursor.substring(0, beforeCursor.length - currentPart.length);
+                return {
+                    newText: beforeCompletion + completion + ' ' + afterCursor,
+                    newCursorPosition: beforeCompletion.length + completion.length + 1
+                };
+            }
+            
+            if (matches.length > 1) {
+                return {
+                    newText: beforeCursor + afterCursor,
+                    newCursorPosition: beforeCursor.length,
+                    suggestions: matches
+                };
+            }
+        }
+        
+        // If current part starts with -, suggest short options
+        if (currentPart.startsWith('-') && !currentPart.startsWith('--')) {
+            const shortOptions = ['-p', '-c', '-s', '-h'];
+            const matches = shortOptions.filter(opt => opt.startsWith(currentPart));
+            
+            if (matches.length === 1) {
+                const completion = matches[0];
+                const beforeCompletion = beforeCursor.substring(0, beforeCursor.length - currentPart.length);
+                return {
+                    newText: beforeCompletion + completion + ' ' + afterCursor,
+                    newCursorPosition: beforeCompletion.length + completion.length + 1
+                };
+            }
+            
+            if (matches.length > 1) {
+                return {
+                    newText: beforeCursor + afterCursor,
+                    newCursorPosition: beforeCursor.length,
+                    suggestions: matches
+                };
+            }
+        }
+        
+        // For flag formats, prioritize WHT{}
+        if (currentPart.length === 0) {
+            return {
+                newText: beforeCursor + afterCursor,
+                newCursorPosition: beforeCursor.length,
+                suggestions: flagSuggestions
+            };
+        }
+        
+        const matches = flagSuggestions.filter(suggestion => 
+            suggestion.toLowerCase().startsWith(currentPart.toLowerCase())
+        );
+        
+        if (matches.length === 0) {
+            return null;
+        }
+        
+        if (matches.length === 1) {
+            const completion = matches[0];
+            const beforeCompletion = beforeCursor.substring(0, beforeCursor.length - currentPart.length);
+            return {
+                newText: beforeCompletion + completion + afterCursor,
+                newCursorPosition: beforeCompletion.length + completion.length
+            };
+        }
+        
+        return {
+            newText: beforeCursor + afterCursor,
+            newCursorPosition: beforeCursor.length,
+            suggestions: matches
+        };
     }
 }
