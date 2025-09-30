@@ -48,8 +48,7 @@ export class Level3DataManager {
             console.log('[Level3DataManager] Data loaded from API successfully');
             console.log('[Level3DataManager] Selected:', {
                 malware: Object.keys(this.selectedMalware).length,
-                processes: this.selectedProcesses.length,
-                files: this.selectedEncryptedFiles.length
+                processes: this.selectedProcesses.length
             });
             
         } catch (error) {
@@ -58,10 +57,8 @@ export class Level3DataManager {
             // Fallback to empty data
             this.malwareData = {};
             this.processData = { system: [], gaming: [], application: [], malware: [] };
-            this.encryptedFilesData = { level3_ransomware_files: [] };
             this.selectedMalware = {};
             this.selectedProcesses = [];
-            this.selectedEncryptedFiles = [];
             this.loaded = true;
         }
     }
@@ -145,7 +142,8 @@ export class Level3DataManager {
     }
 
     getMaxReputationRecovery() {
-        return this.selectedEncryptedFiles.reduce((total, file) => total + (file.reputationRecovery || 0), 0);
+        // Encrypted files removed - no reputation recovery available
+        return 0;
     }
 
     // Utility methods
