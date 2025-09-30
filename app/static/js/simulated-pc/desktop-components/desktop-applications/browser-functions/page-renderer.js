@@ -37,8 +37,8 @@ export class PageRenderer {
 
     showLoadingState(contentElement) {
         contentElement.innerHTML = `
-            <div class="min-h-screen bg-white flex items-center justify-center">
-                <div class="text-center">
+            <div class="h-full bg-white flex items-center justify-center overflow-y-auto">
+                <div class="text-center p-4">
                     <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-6"></div>
                     <h2 class="text-xl font-semibold text-gray-800 mb-2">Loading page...</h2>
                     <p class="text-gray-600 mb-4">Please wait while we fetch the content</p>
@@ -54,7 +54,7 @@ export class PageRenderer {
 
     createErrorContent(errorMessage) {
         return `
-            <div class="min-h-screen bg-white flex items-center justify-center">
+            <div class="h-full bg-white flex items-center justify-center overflow-y-auto">
                 <div class="text-center max-w-md mx-auto p-6">
                     <div class="text-red-500 mb-4">
                         <i class="bi bi-exclamation-triangle text-6xl"></i>
