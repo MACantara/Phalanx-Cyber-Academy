@@ -64,7 +64,7 @@ def filter_emails_by_type(emails, email_type):
 
 @email_api_bp.route('/mixed-emails', methods=['GET'])
 def get_mixed_emails():
-    """Get a balanced mix of phishing and legitimate emails with 8 phishing and 7 legitimate emails"""
+    """Get a balanced mix of phishing and legitimate emails with 5 phishing and 5 legitimate emails"""
     try:
         emails = load_json_data()
         
@@ -79,15 +79,15 @@ def get_mixed_emails():
         legitimate_emails = filter_emails_by_type(emails, 'legitimate')
         
         # Check if we have enough emails
-        if len(phishing_emails) < 8:
-            print(f"Warning: Only {len(phishing_emails)} phishing emails available, requested 8")
-        if len(legitimate_emails) < 7:
-            print(f"Warning: Only {len(legitimate_emails)} legitimate emails available, requested 7")
-        
+        if len(phishing_emails) < 5:
+            print(f"Warning: Only {len(phishing_emails)} phishing emails available, requested 5")
+        if len(legitimate_emails) < 5:
+            print(f"Warning: Only {len(legitimate_emails)} legitimate emails available, requested 5")
+
         # Sample the required number of emails
-        selected_phishing = random.sample(phishing_emails, min(8, len(phishing_emails)))
-        selected_legitimate = random.sample(legitimate_emails, min(7, len(legitimate_emails)))
-        
+        selected_phishing = random.sample(phishing_emails, min(5, len(phishing_emails)))
+        selected_legitimate = random.sample(legitimate_emails, min(5, len(legitimate_emails)))
+
         # Combine the selected emails
         selected_emails = selected_phishing + selected_legitimate
         
