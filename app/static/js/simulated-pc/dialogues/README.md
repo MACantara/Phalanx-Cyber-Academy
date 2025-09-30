@@ -77,12 +77,12 @@ Messages can include interactive guidance properties:
 
 ```javascript
 {
-    text: "Click the Email icon to open the application.",
+    text: "Click the Email button in the taskbar to open the application.",
     typing: true,
     guidance: {
-        highlight: '.desktop-icon[data-id="email"]',  // Element to highlight
+        highlight: '.taskbar-item[data-id="email"]',  // Element to highlight
         action: 'pulse',                               // Visual effect: 'highlight' or 'pulse'
-        allowInteraction: '.desktop-icon[data-id="email"]' // Elements user can interact with
+        allowInteraction: '.taskbar-item[data-id="email"]' // Elements user can interact with
     }
 }
 ```
@@ -124,20 +124,20 @@ export class DesktopGuidanceDialogue extends BaseDialogue {
                 typing: true
             },
             {
-                text: "These are your desktop application icons. Each application serves a specific purpose in our cybersecurity training. Let's start with the Email Client!",
+                text: "The applications are available in the taskbar at the bottom. Each application serves a specific purpose in our cybersecurity training. Let's start with the Email Client!",
                 typing: true,
                 guidance: {
-                    highlight: '.desktop-icon[data-id="email"]',
+                    highlight: '.taskbar',
                     action: 'pulse'
                 }
             },
             {
-                text: "Double-click the Email Client icon to open it. This is where you'll practice identifying phishing attempts and suspicious emails.",
+                text: "Click the Email Client button in the taskbar to open it. This is where you'll practice identifying phishing attempts and suspicious emails.",
                 typing: true,
                 guidance: {
-                    highlight: '.desktop-icon[data-id="email"]',
+                    highlight: '.taskbar-item[data-id="email"]',
                     action: 'pulse',
-                    allowInteraction: '.desktop-icon[data-id="email"]'
+                    allowInteraction: '.taskbar-item[data-id="email"]'
                 }
             },
             {
