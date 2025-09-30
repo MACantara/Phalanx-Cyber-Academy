@@ -20,52 +20,6 @@ export class BrowserApp extends WindowBase {
     createContent() {
         return `
             <div class="h-full flex flex-col">
-                <div class="bg-gray-700 p-2 border-b border-gray-600 flex items-center space-x-3">
-                    <div class="flex space-x-1">
-                        <button class="px-1.5 py-1 bg-gray-600 border border-gray-500 rounded text-white text-xs hover:bg-gray-500 transition-colors duration-200 cursor-pointer" 
-                                data-action="back" title="Go Back">
-                            <i class="bi bi-arrow-left"></i>
-                        </button>
-                        <button class="px-1.5 py-1 bg-gray-600 border border-gray-500 rounded text-white text-xs hover:bg-gray-500 transition-colors duration-200 cursor-pointer" 
-                                data-action="forward" title="Go Forward">
-                            <i class="bi bi-arrow-right"></i>
-                        </button>
-                        <button class="px-1.5 py-1 bg-gray-600 border border-gray-500 rounded text-white text-xs hover:bg-gray-500 transition-colors duration-200 cursor-pointer" 
-                                data-action="refresh" title="Refresh Page">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </button>
-                    </div>
-                    <div class="flex-1 relative">
-                        <input type="text" 
-                               class="w-full px-3 py-1 bg-gray-800 border border-gray-600 rounded text-white text-xs font-mono pl-8" 
-                               id="browser-url-bar"
-                               placeholder="Enter URL or search term..."
-                               title="Address Bar">
-                    </div>
-                    <div class="flex space-x-1">
-                        <button class="px-2 py-1 bg-gray-600 border border-gray-500 rounded text-white text-xs hover:bg-gray-500 transition-colors duration-200 cursor-pointer" 
-                                data-action="home" title="Home">
-                            <i class="bi bi-house"></i>
-                        </button>
-                        <button class="px-2 py-1 bg-gray-600 border border-gray-500 rounded text-white text-xs hover:bg-gray-500 transition-colors duration-200 cursor-pointer" 
-                                data-action="toggle-bookmarks" title="Toggle Bookmarks">
-                            <i class="bi bi-star"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Bookmarks Bar -->
-                <div class="bg-gray-600 border-b border-gray-500 px-3 py-1.5 flex items-center space-x-2 text-xs" id="bookmarks-bar">
-                    <span class="text-gray-300 font-medium mr-2">Bookmarks:</span>
-                    <div class="flex space-x-1 overflow-x-auto">
-                        <button class="bookmark-item px-2 py-1 bg-gray-700 hover:bg-gray-500 text-white rounded border border-gray-500 transition-colors duration-200 cursor-pointer flex items-center space-x-1 whitespace-nowrap" 
-                                data-url="https://cyberquest.com" title="CyberQuest Training">
-                            <i class="bi bi-shield-check text-green-400 text-xs"></i>
-                            <span>CyberQuest</span>
-                        </button>
-                    </div>
-                </div>
-                
                 <div class="flex-1 overflow-auto bg-white" id="browser-content">
                     <div class="flex items-center justify-center h-full text-gray-500">
                         <div class="text-center">
