@@ -8,7 +8,6 @@ export class Taskbar {
 
     init() {
         this.createTaskbar();
-        this.startClock();
         this.bindEvents();
     }
 
@@ -20,9 +19,6 @@ export class Taskbar {
                 <i class="bi bi-grid-3x3-gap mr-1"></i> Quit Simulation
             </button>
             <div class="flex-1 flex items-center space-x-2.5 ml-5" id="taskbar-items"></div>
-            <div class="flex items-center space-x-4">
-                <span class="text-gray-300 text-xs text-center leading-tight" id="system-clock"></span>
-            </div>
         `;
         
         this.container.appendChild(this.taskbarElement);
@@ -98,29 +94,5 @@ export class Taskbar {
                 taskbarItem.classList.add('bg-gray-700', 'text-white');
             }
         }
-    }
-
-    startClock() {
-        const updateClock = () => {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString([], { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                hour12: true 
-            });
-            const dateString = now.toLocaleDateString('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
-            
-            const clockElement = this.taskbarElement.querySelector('#system-clock');
-            if (clockElement) {
-                clockElement.innerHTML = `${timeString}<br>${dateString}`;
-            }
-        };
-
-        updateClock();
-        setInterval(updateClock, 1000);
     }
 }
