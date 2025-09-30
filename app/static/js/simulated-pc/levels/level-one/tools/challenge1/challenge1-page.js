@@ -79,8 +79,8 @@ class Challenge1PageClass extends BasePage {
         // Truncate text if too long for better display (use new JSON format)
         const displayText = ArticleFormatter.truncateText(currentArticle.content || currentArticle.text, 1200);
         
-        // Determine if fake news (use new JSON format: label 0=real, 1=fake)
-        const isFakeNews = currentArticle.label === 1;
+        // Determine if fake news (check multiple possible field formats)
+        const isFakeNews = currentArticle.is_real === false || currentArticle.label === "fake" || currentArticle.label === 1;
         
         return `
             <div class="font-sans bg-white min-h-full w-full overflow-y-auto">
@@ -271,8 +271,8 @@ class Challenge1PageClass extends BasePage {
 
     classifyArticle(classification) {
         const currentArticle = this.articlesData[this.currentArticleIndex];
-        // Use new JSON format: label 0=real, 1=fake
-        const isRealArticle = currentArticle.label === 0;
+        // Use the is_real field from API (boolean) or label field (string)
+        const isRealArticle = currentArticle.is_real === true || currentArticle.label === "real" || currentArticle.label === 0;
         const isCorrect = (classification === 'real' && isRealArticle) || 
                          (classification === 'fake' && !isRealArticle);
         
