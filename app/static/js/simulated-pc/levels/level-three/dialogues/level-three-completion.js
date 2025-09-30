@@ -5,7 +5,7 @@ export class LevelThreeCompletionDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             { text: 'Outstanding work, Agent! You\'ve successfully completed Level 3: Malware Mayhem under intense time pressure. Your rapid cybersecurity response saved the gaming championship!' },
-            { text: 'You demonstrated exceptional skills in the three critical phases: eliminating malicious processes, performing comprehensive malware scans, and recovering encrypted files using advanced decryption tools.' },
+            { text: 'You demonstrated exceptional skills in the two critical phases: eliminating malicious processes and performing comprehensive malware scans while avoiding false positives.' },
             { text: 'Your swift action prevented catastrophic damage to the organization\'s reputation and avoided financial ruin. The tournament can continue thanks to your expertise!' },
             { text: 'Your performance-based XP reward reflects your speed, accuracy, and efficiency during this high-pressure crisis response. The faster and more accurate you were, the more XP you earned!' },
             { text: 'Remember: In real cybersecurity incidents, time is everything. Every minute of delay allows attackers to cause more damage, steal more data, and spread further through networks.' },
