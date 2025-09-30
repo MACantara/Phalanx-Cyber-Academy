@@ -343,9 +343,22 @@ class AIEngine {
         if (detected) {
             // Negative reward for getting detected
             reward = -1;
+            
+            // Additional penalty if player correctly isolated the target asset
+            if (this.wasAssetIsolatedCorrectly(attackData.target)) {
+                reward -= 0.5; // Extra penalty for being countered by smart isolation
+                console.log(`🛡️ AI penalty: Player correctly isolated ${attackData.target}`);
+            }
         } else {
             // Positive reward for successful stealth
             reward = 1;
+            
+            // Bonus if player incorrectly isolated other assets (wasted resources)
+            const incorrectIsolations = this.getRecentIncorrectIsolations();
+            if (incorrectIsolations.length > 0) {
+                reward += 0.3 * incorrectIsolations.length;
+                console.log(`🤖 AI bonus: Player made ${incorrectIsolations.length} incorrect isolation(s)`);
+            }
             
             // Bonus for high-value targets
             if (['student-db', 'research-files'].includes(attackData.target)) {
@@ -357,9 +370,54 @@ class AIEngine {
             if (advancedTypes.includes(attackData.type)) {
                 reward += 0.3;
             }
+            
+            // Reduced reward if target was isolated (even if incorrectly timed)
+            if (this.wasAssetRecentlyIsolated(attackData.target)) {
+                reward *= 0.7; // 30% reduction for isolated assets
+            }
         }
         
         return reward;
+    }
+    
+    // Check if an asset was correctly isolated (had active attacks when isolated)
+    wasAssetIsolatedCorrectly(assetName) {
+        const gameState = this.gameController.getGameState();
+        if (!gameState.assetIsolations) return false;
+        
+        // Check for recent correct isolations (within last 10 seconds)
+        const recentTime = new Date(Date.now() - 10000);
+        return gameState.assetIsolations.some(isolation => 
+            isolation.assetName === assetName &&
+            isolation.wasCorrect &&
+            isolation.timestamp > recentTime
+        );
+    }
+    
+    // Get recent incorrect isolations for AI learning
+    getRecentIncorrectIsolations() {
+        const gameState = this.gameController.getGameState();
+        if (!gameState.assetIsolations) return [];
+        
+        // Check for incorrect isolations within last 15 seconds
+        const recentTime = new Date(Date.now() - 15000);
+        return gameState.assetIsolations.filter(isolation => 
+            !isolation.wasCorrect &&
+            isolation.timestamp > recentTime
+        );
+    }
+    
+    // Check if an asset was recently isolated (affects attack success)
+    wasAssetRecentlyIsolated(assetName) {
+        const gameState = this.gameController.getGameState();
+        if (!gameState.assetIsolations) return false;
+        
+        // Check for any isolation within last 20 seconds
+        const recentTime = new Date(Date.now() - 20000);
+        return gameState.assetIsolations.some(isolation => 
+            isolation.assetName === assetName &&
+            isolation.timestamp > recentTime
+        );
     }
     
     getMaxQValueForState(state) {
