@@ -13,7 +13,7 @@ export class Level3TimerApp {
         this.reputationDamage = 0;
         this.financialDamage = 0;
         this.maxReputation = 100;
-        this.maxFinancialHealth = 1000000; // $1M starting budget
+        this.maxFinancialHealth = 100000; // $100K damage limit
         
         // DOM element
         this.element = null;
@@ -170,8 +170,8 @@ export class Level3TimerApp {
         this.reputationDamage = Math.min(this.reputationDamage + amount, this.maxReputation);
         this.updateDisplay();
         
-        // Check for game over
-        if (this.reputationDamage >= this.maxReputation) {
+        // Check for game over - reputation must stay above 50%
+        if (this.reputationDamage >= 50) {
             this.onGameOver('reputation');
             return;
         }
@@ -184,7 +184,7 @@ export class Level3TimerApp {
         this.financialDamage = Math.min(this.financialDamage + amount, this.maxFinancialHealth);
         this.updateDisplay();
         
-        // Check for game over
+        // Check for game over - budget cannot exceed $100K in damages
         if (this.financialDamage >= this.maxFinancialHealth) {
             this.onGameOver('financial');
             return;
@@ -287,10 +287,10 @@ export class Level3TimerApp {
         
         switch (reason) {
             case 'reputation':
-                message = 'Your organization\'s reputation has been completely destroyed. The tournament has been cancelled and your cybersecurity career is over.';
+                message = 'Your organization\'s reputation has dropped below 50%! The tournament sponsors have pulled out and the championship is cancelled. False positives and poor decision-making have destroyed public trust.';
                 break;
             case 'financial':
-                message = 'The financial damage from the cyber attack has bankrupted the organization. The tournament is cancelled and lawsuits are pending.';
+                message = 'The financial damage has exceeded $100K! The cost of false positives, system downtime, and emergency response has exceeded the tournament budget. Mission failed.';
                 break;
             case 'time':
                 message = 'Time has run out! The malware has spread throughout the entire tournament network. The championship is cancelled.';

@@ -89,7 +89,7 @@ export class Level3SessionSummary {
         
         // Financial Management (15 points max)
         // Reward minimizing financial costs
-        const financialHealth = Math.max(0, (1000000 - timerStatus.financialDamage) / 1000000);
+        const financialHealth = Math.max(0, (100000 - timerStatus.financialDamage) / 100000);
         const financialBonus = financialHealth * 15; // Up to 15 points for cost management
         
         // Stage Completion Bonus (10 points max)
