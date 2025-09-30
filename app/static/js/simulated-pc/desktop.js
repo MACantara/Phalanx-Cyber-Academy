@@ -1,5 +1,4 @@
 import { Taskbar } from './desktop-components/taskbar.js';
-import { DesktopIcons } from './desktop-components/desktop-icons.js';
 import { WindowManager } from './desktop-components/window-manager.js';
 import DialogueManager from './dialogues/dialogue-manager.js';
 import { DialogueIntegration } from './dialogues/dialogue-integration.js';
@@ -48,8 +47,6 @@ export class Desktop {
         if (this.windowManager.applicationLauncher) {
             this.windowManager.applicationLauncher.setLevel(this.level);
         }
-        
-        this.desktopIcons = new DesktopIcons(this.desktopElement, this.windowManager, this.level);
 
         // Trigger fade-in effect after all components are loaded
         setTimeout(() => {
