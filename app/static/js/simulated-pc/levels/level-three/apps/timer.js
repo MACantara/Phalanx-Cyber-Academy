@@ -161,7 +161,7 @@ export class Level3TimerApp {
 
     resetTimer() {
         this.stopTimer();
-        this.timeRemaining = 15 * 60; // Reset to 15 minutes
+        this.timeRemaining = 2 * 60; // Reset to 2 minutes
         this.updateDisplay();
     }
 
