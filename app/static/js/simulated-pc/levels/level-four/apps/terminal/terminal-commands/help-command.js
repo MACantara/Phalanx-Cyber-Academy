@@ -43,7 +43,7 @@ export class HelpCommand extends BaseCommand {
             'The White Hat Test - Responsible Disclosure CTF',
             '==============================================',
             '',
-            'MISSION: Find 7 randomly selected hidden flags and complete a responsible disclosure report',
+            'MISSION: Find 5 randomly selected hidden flags and complete a responsible disclosure report',
             '',
             'Available commands (use "help <command>" for detailed information):',
             ''
@@ -59,7 +59,7 @@ export class HelpCommand extends BaseCommand {
                 const selectedFlags = ctfConfig.selected_flags || [];
                 
                 // Update mission description with dynamic flag count
-                headerLines[3] = `MISSION: Find ${ctfConfig.flags_per_session || 7} randomly selected hidden flags and complete a responsible disclosure report`;
+                headerLines[3] = `MISSION: Find ${ctfConfig.flags_per_session || 5} randomly selected hidden flags and complete a responsible disclosure report`;
                 
                 // Add header
                 headerLines.forEach(line => this.addOutput(line));
@@ -109,7 +109,7 @@ export class HelpCommand extends BaseCommand {
             'The White Hat Test - Responsible Disclosure CTF',
             '==============================================',
             '',
-            'MISSION: Find 7 hidden flags and complete a responsible disclosure report',
+            'MISSION: Find 5 hidden flags and complete a responsible disclosure report',
             '',
             'Available commands (use "help <command>" for detailed information):',
             ''
