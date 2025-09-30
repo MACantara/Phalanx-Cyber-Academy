@@ -5,19 +5,19 @@ export class Level2ShadowInboxDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "🚨 SECURITY ALERT: Level 2 - Shadow in the Inbox\nUrgent! Our organization has been targeted by a sophisticated phishing campaign. As the Security Operations Center analyst on duty, you must identify and quarantine malicious emails before they compromise our systems."
+                text: "Welcome to your second cybersecurity challenge! As a SOC analyst, you'll analyze 10 emails to identify phishing attempts and protect our organization from cyber threats."
             },
             {
-                text: "📊 Threat Intelligence:\nRecent attacks show a 300% increase in spear-phishing attempts targeting our industry. Attackers are using advanced social engineering tactics to breach corporate defenses."
+                text: "📊 Threat Intelligence:\nPhishing attacks account for 90% of successful data breaches. You'll evaluate 5 legitimate business emails and 5 sophisticated phishing attempts using real-world attack patterns."
             },
             {
-                text: "Current Attack Vectors:\n• CEO impersonation emails\n• Fake vendor invoices\n• Credential harvesting schemes\n• Malware-laden attachments"
+                text: "📧 Email Analysis Challenge:\n• 5 Legitimate Emails: Real business communications from trusted sources\n• 5 Phishing Emails: Malicious attempts designed to steal credentials or deploy malware"
             },
             {
-                text: "🎯 Your Mission:\nAnalyze incoming emails in the corporate inbox and determine which are legitimate business communications versus sophisticated phishing attempts."
+                text: "🎯 Your Mission:\nCarefully examine each of the 10 emails to distinguish between authentic business communications and cleverly crafted phishing attempts."
             },
             {
-                text: "One wrong decision could lead to a data breach costing millions. The stakes are high, and you are our last line of defense against these cyber threats."
+                text: "Your accuracy directly impacts organizational security. Each correct identification strengthens our defense against cybercriminals targeting our data and systems."
             },
             {
                 text: "🔍 Email Analysis Framework:\nSender Verification: Check email addresses for subtle misspellings or suspicious domains that impersonate legitimate organizations.",
@@ -56,22 +56,22 @@ export class Level2ShadowInboxDialogue extends BaseDialogue {
                 text: "• Be extra cautious with financial or HR-related requests\n• When in doubt, always choose security over convenience"
             },
             {
-                text: "🏆 Performance Metrics:\nAccuracy Rate: Correctly identify email types\nResponse Time: Quick decisions prevent damage"
+                text: "🏆 Scoring System:\nBase XP Award: 100 XP for completing Level 2\nAccuracy Multiplier: Up to 2x bonus for perfect email classification (100%)"
             },
             {
-                text: "False Positives: Minimize blocking legitimate business emails\nThreat Detection: Earn bonus XP for catching advanced attacks"
+                text: "Speed Bonus: Additional XP for efficient threat detection\nMaximum Possible: ~200 XP for perfect performance\nEarn the 'Phishing Hunter' badge for 100% accuracy!"
             },
             {
-                text: "🎮 How to Play:\nOpen the Email Client and examine each message carefully. Read the sender information, subject line, and content thoroughly."
+                text: "🎮 How to Play:\nOpen the Email Client and analyze all 10 emails systematically. Each email contains clues about its authenticity - examine sender details, content, and formatting carefully."
             },
             {
-                text: "Use the 'SAFE' or 'PHISHING' buttons to classify each email based on your analysis. Remember - you're protecting the entire organization!"
+                text: "Use 'SAFE' for legitimate business emails or 'PHISHING' for malicious attempts. You'll receive immediate feedback and automatically progress through all 10 emails."
             },
             {
-                text: "🚀 Mission Critical:\nPhishing attacks are responsible for 90% of data breaches. Your expertise in email security directly protects our organization's data, reputation, and financial assets."
+                text: "🚀 Ready for Action?\nYou'll analyze 10 carefully selected emails representing real-world scenarios. Master the skills to identify both obvious and sophisticated phishing attempts."
             },
             {
-                text: "Every email you analyze correctly makes us more secure. The entire team is counting on your vigilance and expertise.\nReady to defend the inbox?"
+                text: "Your ability to distinguish between the 5 legitimate and 5 phishing emails protects our entire organization from cyber threats. Ready to secure the inbox?"
             }
         ];
     }
