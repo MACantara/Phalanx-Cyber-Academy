@@ -20,7 +20,7 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 text: "🎯 Mission Objectives:\nTechCorp has hired you as an ethical hacker to assess their security posture before a major product launch."
             },
             {
-                text: "Your task is to identify 7 security vulnerabilities (represented as flags) across their infrastructure using professional penetration testing methodologies."
+                text: "Your task is to identify security vulnerabilities (represented as flags) across their infrastructure using terminal commands and professional penetration testing methodologies."
             },
             {
                 text: "🔍 Assessment Categories:\n• Environment Analysis: System configuration and deployment security\n• Access Control: Authentication and authorization mechanisms"
@@ -111,7 +111,7 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 example: "Deep Analysis Commands:\nfind /home -name \".*\" | xargs cat 2>/dev/null\ngrep -r \"WHT{\" /var/log/ 2>/dev/null\ncat /proc/*/environ | strings | grep -i flag\nfind / -name \"*backup*\" -o -name \"*config*\" 2>/dev/null"
             },
             {
-                text: "📊 Success Metrics:\n• Flag Discovery: Find all 7 security vulnerabilities\n• Methodology Score: Demonstrate proper testing techniques"
+                text: "📊 Success Metrics:\n• Flag Discovery: Find 5 randomly selected security challenges per session\n• Methodology Score: Demonstrate proper testing techniques"
             },
             {
                 text: "• Documentation Quality: Clear evidence and explanations\n• Time Efficiency: Complete assessment within reasonable timeframe\n• Certification Goal: Earn 'Certified Ethical Hacker' badge"
