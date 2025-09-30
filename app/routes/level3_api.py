@@ -26,26 +26,29 @@ def load_json_data():
         process_path = os.path.join(json_base_path, 'process-data.json')
         encrypted_files_path = os.path.join(json_base_path, 'encrypted-files-data.json')
         
-        # Check if all files exist
+        # Check if required files exist
         if not os.path.exists(malware_path):
             print(f"Malware JSON file not found at: {malware_path}")
             return {}
         if not os.path.exists(process_path):
             print(f"Process JSON file not found at: {process_path}")
             return {}
-        if not os.path.exists(encrypted_files_path):
-            print(f"Encrypted files JSON file not found at: {encrypted_files_path}")
-            return {}
         
-        # Read all JSON files
+        # Read required JSON files
         with open(malware_path, 'r', encoding='utf-8') as f:
             malware_data = json.load(f)
         
         with open(process_path, 'r', encoding='utf-8') as f:
             process_data = json.load(f)
         
-        with open(encrypted_files_path, 'r', encoding='utf-8') as f:
-            encrypted_files_data = json.load(f)
+        # Read encrypted files if available (optional since ransomware decryptor was removed)
+        encrypted_files_data = {}
+        if os.path.exists(encrypted_files_path):
+            with open(encrypted_files_path, 'r', encoding='utf-8') as f:
+                encrypted_files_data = json.load(f)
+        else:
+            print(f"Encrypted files JSON not found (optional): {encrypted_files_path}")
+            encrypted_files_data = {'level3_ransomware_files': []}
         
         # Combine all data into cache
         _json_cache = {
@@ -61,7 +64,7 @@ def load_json_data():
         print(f"Loaded Level 3 data from JSON files:")
         print(f"Malware entries: {malware_count}")
         print(f"Malicious processes: {process_count}")
-        print(f"Encrypted files: {encrypted_files_count}")
+        print(f"Encrypted files: {encrypted_files_count} (ransomware decryptor removed)")
         
         return _json_cache
         
