@@ -61,9 +61,7 @@ export class WindowBase {
         this.windowElement.style.top = `0%`;
 
         this.windowElement.innerHTML = `
-            <div class="window-header bg-gradient-to-r from-gray-700 to-gray-600 px-3 py-2 border-b border-gray-600">
-            </div>
-            <div class="window-content h-full overflow-auto bg-black text-white" style="height: calc(100% - 40px);">
+            <div class="window-content h-full overflow-auto bg-black text-white">
                 ${this.createContent()}
             </div>
         `;
