@@ -106,11 +106,9 @@ export class ApplicationLauncher {
             if (closeBtn) closeBtn.style.display = 'none';
             if (minimizeBtn) minimizeBtn.style.display = 'none';
             
-            // Hide maximize button and resize handles for non-resizable windows
+            // Hide maximize button for non-resizable windows
             if (windowOptions.resizable === false) {
                 if (maximizeBtn) maximizeBtn.style.display = 'none';
-                const resizeHandles = windowElement.querySelectorAll('.resize-handle');
-                resizeHandles.forEach(handle => handle.style.display = 'none');
             }
         }
 
