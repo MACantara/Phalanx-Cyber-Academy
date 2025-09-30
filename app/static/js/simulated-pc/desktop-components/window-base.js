@@ -54,15 +54,16 @@ export class WindowBase {
     // Create the window structure
     createWindow() {
         this.windowElement = document.createElement('div');
-        this.windowElement.className = 'absolute bg-gray-800 border border-gray-600 shadow-2xl overflow-hidden min-w-72 min-h-48';
-        // Make window maximized, accounting for taskbar height (48px)
-        this.windowElement.style.width = '100%';
-        this.windowElement.style.height = 'calc(100% - 48px)';
-        this.windowElement.style.left = '0';
+        this.windowElement.className = 'fixed inset-0 bg-gray-800 overflow-hidden flex flex-col';
+        // Responsive sizing that accounts for taskbar
+        this.windowElement.style.height = 'calc(100vh - 3rem)'; // 3rem = 48px taskbar
         this.windowElement.style.top = '0';
+        this.windowElement.style.left = '0';
+        this.windowElement.style.right = '0';
+        this.windowElement.style.bottom = '3rem';
 
         this.windowElement.innerHTML = `
-            <div class="window-content h-full overflow-auto bg-black text-white">
+            <div class="window-content flex-1 overflow-auto bg-black text-white text-sm sm:text-base">
                 ${this.createContent()}
             </div>
         `;
