@@ -358,8 +358,7 @@ export class Level3SessionSummary {
     generateStageAnalysis() {
         const stages = [
             { name: 'Process Monitor', key: 'process-monitor', icon: 'bi-cpu', description: 'Eliminate malicious processes' },
-            { name: 'Malware Scanner', key: 'malware-scanner', icon: 'bi-shield-exclamation', description: 'Scan and quarantine threats' },
-            { name: 'File Recovery', key: 'ransomware-decryptor', icon: 'bi-unlock', description: 'Decrypt ransomware files' }
+            { name: 'Malware Scanner', key: 'malware-scanner', icon: 'bi-shield-exclamation', description: 'Scan and quarantine threats' }
         ];
 
         return stages.map(stage => {
