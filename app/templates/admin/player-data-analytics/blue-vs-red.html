@@ -60,7 +60,7 @@
                     </div>
                     <div class="ml-4">
                         <dt class="text-sm font-medium text-gray-700 dark:text-gray-300">Player Win Rate</dt>
-                        <dd class="text-2xl font-bold text-blue-600">{{ blue_vs_red_data.overview.player_win_rate }}%</dd>
+                        <dd class="text-2xl font-bold text-gray-700 dark:text-gray-300">{{ blue_vs_red_data.overview.player_win_rate }}%</dd>
                     </div>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                     </div>
                     <div class="ml-4">
                         <dt class="text-sm font-medium text-gray-700 dark:text-gray-300">Asset Protection</dt>
-                        <dd class="text-2xl font-bold text-purple-600">{{ blue_vs_red_data.overview.asset_protection_rate }}%</dd>
+                        <dd class="text-2xl font-bold text-gray-700 dark:text-gray-300">{{ blue_vs_red_data.overview.asset_protection_rate }}%</dd>
                     </div>
                 </div>
             </div>
@@ -85,7 +85,7 @@
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-700 dark:text-gray-300">Threat Detection Speed</span>
-                        <span class="text-sm font-medium text-green-600">{{ blue_vs_red_data.performance_metrics.threat_detection_speed }}s</span>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ blue_vs_red_data.performance_metrics.threat_detection_speed }}s</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-700 dark:text-gray-300">Incident Response Effectiveness</span>
@@ -126,24 +126,24 @@
                             <div class="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
                                 <div class="bg-red-500 h-2 rounded-full" style="width: {{ blue_vs_red_data.performance_metrics.ai_attack_success_rate }}%"></div>
                             </div>
-                            <span class="text-sm font-medium text-red-600">{{ blue_vs_red_data.performance_metrics.ai_attack_success_rate }}%</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ blue_vs_red_data.performance_metrics.ai_attack_success_rate }}%</span>
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-700 dark:text-gray-300">Player Action Efficiency</span>
-                        <span class="text-sm font-medium text-blue-600">{{ (blue_vs_red_data.performance_metrics.player_action_efficiency * 100) | round(1) }}%</span>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ (blue_vs_red_data.performance_metrics.player_action_efficiency * 100) | round(1) }}%</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-700 dark:text-gray-300">Mean Time to Detection (MTTD)</span>
-                        <span class="text-sm font-medium text-orange-600">{{ blue_vs_red_data.performance_metrics.mttd }}s</span>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ blue_vs_red_data.performance_metrics.mttd }}s</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-700 dark:text-gray-300">Mean Time to Response (MTTR)</span>
-                        <span class="text-sm font-medium text-yellow-600">{{ blue_vs_red_data.performance_metrics.mttr }}s</span>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ blue_vs_red_data.performance_metrics.mttr }}s</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-700 dark:text-gray-300">Recovery Time Objective (RTO)</span>
-                        <span class="text-sm font-medium text-indigo-600">{{ blue_vs_red_data.performance_metrics.rto }}s</span>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ blue_vs_red_data.performance_metrics.rto }}s</span>
                     </div>
                 </div>
             </div>
@@ -263,7 +263,7 @@
                                     <div class="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
                                         <div class="bg-red-500 h-2 rounded-full" style="width: {{ pattern.success_rate }}%"></div>
                                     </div>
-                                    <span class="text-red-600">{{ pattern.success_rate }}%</span>
+                                    <span class="text-gray-700 dark:text-gray-300">{{ pattern.success_rate }}%</span>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
@@ -271,7 +271,7 @@
                                     <div class="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
                                         <div class="bg-blue-500 h-2 rounded-full" style="width: {{ pattern.detection_rate }}%"></div>
                                     </div>
-                                    <span class="text-blue-600">{{ pattern.detection_rate }}%</span>
+                                    <span class="text-gray-700 dark:text-gray-300">{{ pattern.detection_rate }}%</span>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
