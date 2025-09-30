@@ -668,21 +668,91 @@ class GameController {
     
     runSecurityScan() {
         this.uiManager.addTerminalOutput('🔍 Running comprehensive security scan...');
+        this.uiManager.addTerminalOutput('   Analyzing network vulnerabilities...');
+        this.uiManager.addTerminalOutput('   Checking for active exploits...');
+        
         setTimeout(() => {
-            const vulnerabilities = Math.floor(Math.random() * 3);
-            this.uiManager.addTerminalOutput(`✅ Scan complete. Found ${vulnerabilities} potential vulnerabilities.`);
+            // Get current vulnerability state
+            const activeVulns = this.gameState.activeVulnerabilities || new Map();
+            const totalVulnerabilities = Math.floor(Math.random() * 4) + 2; // 2-5 vulnerabilities
             
-            if (vulnerabilities > 0) {
-                // Improve security controls slightly
+            this.uiManager.addTerminalOutput('');
+            this.uiManager.addTerminalOutput(`✅ Scan complete. Found ${totalVulnerabilities} vulnerabilities.`);
+            this.uiManager.addTerminalOutput('');
+            this.uiManager.addTerminalOutput('=== VULNERABILITY REPORT ===');
+            
+            // Generate comprehensive CVE list with current exploitation status
+            const allCVEs = [
+                { cve: 'CVE-2024-0001', severity: 'HIGH', description: 'Phishing Vector Vulnerability', technique: 'Phishing' },
+                { cve: 'CVE-2024-0002', severity: 'CRITICAL', description: 'Public Application Exploit', technique: 'Exploit Public-Facing Application' },
+                { cve: 'CVE-2024-0003', severity: 'MEDIUM', description: 'Drive-by Download Weakness', technique: 'Drive-by Compromise' },
+                { cve: 'CVE-2024-0004', severity: 'HIGH', description: 'Process Injection Flaw', technique: 'Process Injection' },
+                { cve: 'CVE-2024-0005', severity: 'HIGH', description: 'Token Manipulation Bug', technique: 'Access Token Manipulation' },
+                { cve: 'CVE-2024-0006', severity: 'CRITICAL', description: 'Privilege Escalation Exploit', technique: 'Exploitation for Privilege Escalation' },
+                { cve: 'CVE-2024-0007', severity: 'MEDIUM', description: 'Registry Modification Vulnerability', technique: 'Registry Modification' },
+                { cve: 'CVE-2024-0008', severity: 'HIGH', description: 'Scheduled Task Exploit', technique: 'Scheduled Task' },
+                { cve: 'CVE-2024-0009', severity: 'HIGH', description: 'Service Creation Flaw', technique: 'Service Creation' },
+                { cve: 'CVE-2024-0010', severity: 'CRITICAL', description: 'Remote Services Vulnerability', technique: 'Remote Services' }
+            ];
+            
+            // Select random vulnerabilities for this scan
+            const selectedVulns = allCVEs.slice(0, totalVulnerabilities);
+            let activeExploitCount = 0;
+            
+            selectedVulns.forEach((vuln, index) => {
+                const activeExploits = this.getActiveExploitsForCVE(vuln.cve);
+                const isExploited = activeExploits.length > 0;
+                
+                if (isExploited) activeExploitCount++;
+                
+                const severityIcon = vuln.severity === 'CRITICAL' ? '🔴' : 
+                                   vuln.severity === 'HIGH' ? '🟠' : '🟡';
+                const exploitStatus = isExploited ? '🚨 ACTIVELY EXPLOITED' : '💤 Dormant';
+                
+                this.uiManager.addTerminalOutput(`${index + 1}. ${vuln.cve} [${severityIcon} ${vuln.severity}] - ${exploitStatus}`);
+                this.uiManager.addTerminalOutput(`   └─ ${vuln.description}`);
+                
+                if (isExploited) {
+                    this.uiManager.addTerminalOutput(`   └─ ⚡ ${activeExploits.length} active exploit(s) detected`);
+                    this.uiManager.addTerminalOutput(`   └─ 💰 PATCH NOW: patch-vulnerability ${vuln.cve}`);
+                } else {
+                    this.uiManager.addTerminalOutput(`   └─ 💡 Monitor for activity before patching`);
+                }
+                this.uiManager.addTerminalOutput('');
+            });
+            
+            // Summary and recommendations
+            this.uiManager.addTerminalOutput('=== PATCH RECOMMENDATIONS ===');
+            
+            if (activeExploitCount > 0) {
+                this.uiManager.addTerminalOutput(`🎯 HIGH PRIORITY: ${activeExploitCount} CVE(s) being actively exploited`);
+                this.uiManager.addTerminalOutput('💰 Patch actively exploited CVEs for maximum XP rewards');
+                this.uiManager.addTerminalOutput('⚠️  Avoid patching dormant vulnerabilities (XP penalty)');
+            } else {
+                this.uiManager.addTerminalOutput('✅ No active exploitation detected');
+                this.uiManager.addTerminalOutput('💡 Monitor alerts for exploitation before patching');
+                this.uiManager.addTerminalOutput('⚠️  Preventive patching will result in XP penalties');
+            }
+            
+            this.uiManager.addTerminalOutput('');
+            this.uiManager.addTerminalOutput('📊 COMMANDS:');
+            this.uiManager.addTerminalOutput('  • active-vulnerabilities  - Monitor real-time exploitation');
+            this.uiManager.addTerminalOutput('  • patch-guide             - Strategic patching guidance');
+            this.uiManager.addTerminalOutput('  • patch-stats             - Track patch performance');
+            
+            // Improve security controls slightly from scan
+            if (totalVulnerabilities > 0) {
                 Object.keys(this.gameState.securityControls).forEach(control => {
                     this.gameState.securityControls[control].effectiveness = Math.min(100,
                         this.gameState.securityControls[control].effectiveness + 2
                     );
                 });
+                this.uiManager.addTerminalOutput('');
                 this.uiManager.addTerminalOutput('🛡️ Security controls enhanced based on scan results.');
             }
+            
             this.uiManager.updateDisplay();
-        }, 2000);
+        }, 2500);
     }
     
     executeBlockIP(ipAddress) {
