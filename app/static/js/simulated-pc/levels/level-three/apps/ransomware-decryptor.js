@@ -40,41 +40,40 @@ export class RansomwareDecryptorApp extends WindowBase {
         return `
             <div class="h-full flex flex-col bg-gray-900 text-white">
                 <!-- Header -->
-                <div class="bg-green-800 px-4 py-3 border-b border-gray-700">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <i class="bi bi-unlock text-2xl text-white"></i>
+                <div class="bg-green-800 px-3 sm:px-4 py-3 border-b border-gray-700">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+                        <div class="flex items-center space-x-2 sm:space-x-3">
+                            <i class="bi bi-unlock text-xl sm:text-2xl text-white"></i>
                             <div>
-                                <h2 class="text-lg font-bold text-white">Ransomware Recovery Tool</h2>
-                                <p class="text-sm text-white">Level 3 - Restore Encrypted Files</p>
+                                <h2 class="text-base sm:text-lg font-bold text-white">Ransomware Recovery Tool</h2>
+                                <p class="text-xs sm:text-sm text-white">Level 3 - Restore Encrypted Files</p>
                             </div>
                         </div>
-                        <div class="text-right text-sm">
-                            <div class="text-white">Encrypted: ${encryptedCount}</div>
-                            <div class="text-white">Recovered: ${decryptedCount}</div>
+                        <div class="text-left sm:text-right text-xs sm:text-sm">
+                            <div class="text-white">Encrypted: ${encryptedCount} | Recovered: ${decryptedCount}</div>
                             ${encryptedCount === 0 ? 
-                                '<div class="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium mt-1">✓ STAGE COMPLETE</div>' :
-                                `<div class="bg-red-600 text-white px-2 py-1 rounded text-xs font-medium mt-1">${encryptedCount} ENCRYPTED</div>`
+                                '<div class="bg-green-600 text-white px-2 py-1 rounded text-xs font-medium mt-1 inline-block">✓ STAGE COMPLETE</div>' :
+                                `<div class="bg-red-600 text-white px-2 py-1 rounded text-xs font-medium mt-1 inline-block">${encryptedCount} ENCRYPTED</div>`
                             }
                         </div>
                     </div>
                 </div>
 
                 <!-- Control Panel -->
-                <div class="bg-gray-800 px-4 py-3 border-b border-gray-700">
-                    <div class="flex items-center justify-between">
-                        <div class="flex space-x-3">
-                            <button id="scan-btn" class="px-4 py-2 rounded transition-colors ${this.isScanning ? 'bg-gray-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'}">
-                                <i class="bi bi-search mr-2"></i>${this.hasScanned ? 'Re-scan Files' : 'Scan for Files'}
+                <div class="bg-gray-800 px-3 sm:px-4 py-3 border-b border-gray-700">
+                    <div class="flex flex-col gap-3 sm:gap-0 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                            <button id="scan-btn" class="px-3 sm:px-4 py-2 rounded transition-colors text-sm touch-manipulation ${this.isScanning ? 'bg-gray-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 cursor-pointer'}">
+                                <i class="bi bi-search mr-1 sm:mr-2"></i>${this.hasScanned ? 'Re-scan Files' : 'Scan for Files'}
                             </button>
-                            <button id="decrypt-all-btn" class="px-4 py-2 rounded transition-colors ${(this.isDecrypting || encryptedCount === 0 || !this.hasScanned) ? 'bg-gray-600 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 cursor-pointer'}">
-                                <i class="bi bi-unlock-fill mr-2"></i>Decrypt All
+                            <button id="decrypt-all-btn" class="px-3 sm:px-4 py-2 rounded transition-colors text-sm touch-manipulation ${(this.isDecrypting || encryptedCount === 0 || !this.hasScanned) ? 'bg-gray-600 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 active:bg-green-800 cursor-pointer'}">
+                                <i class="bi bi-unlock-fill mr-1 sm:mr-2"></i>Decrypt All
                             </button>
-                            <button id="stop-btn" class="px-4 py-2 rounded transition-colors ${(!this.isDecrypting && !this.isScanning) ? 'bg-gray-600 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 cursor-pointer'}">
-                                <i class="bi bi-stop-circle mr-2"></i>Stop
+                            <button id="stop-btn" class="px-3 sm:px-4 py-2 rounded transition-colors text-sm touch-manipulation ${(!this.isDecrypting && !this.isScanning) ? 'bg-gray-600 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 active:bg-red-800 cursor-pointer'}">
+                                <i class="bi bi-stop-circle mr-1 sm:mr-2"></i>Stop
                             </button>
                         </div>
-                        <div class="flex items-center space-x-4 text-sm">
+                        <div class="flex items-center space-x-2 sm:space-x-4 text-xs sm:text-sm">
                             <div class="text-yellow-400">
                                 Recovery Progress: ${totalFiles > 0 ? Math.round((decryptedCount / totalFiles) * 100) : 0}%
                             </div>
@@ -131,14 +130,14 @@ export class RansomwareDecryptorApp extends WindowBase {
     renderFileList() {
         if (!this.hasScanned) {
             return `
-                <div class="h-full flex items-center justify-center text-gray-300">
-                    <div class="text-center">
-                        <i class="bi bi-search text-6xl mb-4 text-blue-500"></i>
-                        <p class="text-lg">No scan performed</p>
+                <div class="h-full flex items-center justify-center text-gray-300 p-4">
+                    <div class="text-center max-w-md">
+                        <i class="bi bi-search text-4xl sm:text-5xl md:text-6xl mb-4 text-blue-500"></i>
+                        <p class="text-base sm:text-lg">No scan performed</p>
                         <p class="text-sm">Click "Scan for Files" to search for encrypted files</p>
-                        <div class="mt-4 p-4 bg-yellow-800/20 border border-yellow-600 rounded-lg">
+                        <div class="mt-4 p-3 sm:p-4 bg-yellow-800/20 border border-yellow-600 rounded-lg">
                             <i class="bi bi-exclamation-triangle text-yellow-500 mr-2"></i>
-                            <span class="text-yellow-300 text-sm">Encrypted files may be present on the system. Scan to detect them.</span>
+                            <span class="text-yellow-300 text-xs sm:text-sm">Encrypted files may be present on the system. Scan to detect them.</span>
                         </div>
                     </div>
                 </div>
@@ -147,10 +146,10 @@ export class RansomwareDecryptorApp extends WindowBase {
 
         if (this.encryptedFiles.length === 0) {
             return `
-                <div class="h-full flex items-center justify-center text-gray-300">
+                <div class="h-full flex items-center justify-center text-gray-300 p-4">
                     <div class="text-center">
-                        <i class="bi bi-check-circle text-6xl mb-4 text-green-500"></i>
-                        <p class="text-lg">No encrypted files found</p>
+                        <i class="bi bi-check-circle text-4xl sm:text-5xl md:text-6xl mb-4 text-green-500"></i>
+                        <p class="text-base sm:text-lg">No encrypted files found</p>
                         <p class="text-sm">The system appears to be clean of ransomware encryption</p>
                     </div>
                 </div>
@@ -158,11 +157,13 @@ export class RansomwareDecryptorApp extends WindowBase {
         }
 
         return `
-            <div class="grid gap-3">
-                <h3 class="text-lg font-semibold mb-2 flex items-center">
-                    <i class="bi bi-file-lock text-red-500 mr-2"></i>
-                    Encrypted Files Detected (${this.encryptedFiles.length})
-                </h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                <div class="col-span-full">
+                    <h3 class="text-base sm:text-lg font-semibold mb-2 flex items-center">
+                        <i class="bi bi-file-lock text-red-500 mr-2"></i>
+                        Encrypted Files Detected (${this.encryptedFiles.length})
+                    </h3>
+                </div>
                 ${this.encryptedFiles.map(file => this.renderFileCard(file)).join('')}
             </div>
         `;
@@ -173,37 +174,39 @@ export class RansomwareDecryptorApp extends WindowBase {
         const priorityColor = level3DataManager.getPriorityColor(file.priority);
         
         return `
-            <div class="bg-gray-800 border border-gray-700 rounded-lg p-4 hover:bg-gray-750 transition-colors ${isDecrypted ? 'bg-green-900/20' : ''}">
-                <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center space-x-2 mb-2">
-                            ${isDecrypted ? 
-                                '<i class="bi bi-check-circle text-green-500"></i>' : 
-                                '<i class="bi bi-lock text-red-500"></i>'
-                            }
-                            <h4 class="font-semibold ${isDecrypted ? 'text-green-300' : 'text-white'}">
-                                ${isDecrypted ? file.originalName : file.encryptedName}
-                            </h4>
-                            <span class="px-2 py-1 rounded text-xs ${priorityColor} bg-gray-700">${file.priority}</span>
+            <div class="bg-gray-800 border border-gray-700 rounded-lg p-3 sm:p-4 hover:bg-gray-750 transition-colors ${isDecrypted ? 'bg-green-900/20' : ''}">
+                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+                    <div class="flex-1 min-w-0">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                            <div class="flex items-center space-x-2">
+                                ${isDecrypted ? 
+                                    '<i class="bi bi-check-circle text-green-500"></i>' : 
+                                    '<i class="bi bi-lock text-red-500"></i>'
+                                }
+                                <h4 class="font-semibold truncate ${isDecrypted ? 'text-green-300' : 'text-white'}">
+                                    ${isDecrypted ? file.originalName : file.encryptedName}
+                                </h4>
+                            </div>
+                            <span class="px-2 py-1 rounded text-xs ${priorityColor} bg-gray-700 flex-shrink-0 self-start sm:self-auto">${file.priority}</span>
                         </div>
-                        <p class="text-sm text-gray-300 mb-2">${file.description}</p>
-                        <div class="text-xs text-gray-400">
+                        <p class="text-xs sm:text-sm text-gray-300 mb-2 leading-relaxed">${file.description}</p>
+                        <div class="text-xs text-gray-400 space-y-1">
                             <div><strong>Size:</strong> ${file.size}</div>
                             ${!isDecrypted ? `<div><strong>Decrypt Time:</strong> ${file.decryptionTime / 1000}s</div>` : ''}
                             ${file.reputationRecovery > 0 ? `<div class="text-green-400"><strong>Reputation Recovery:</strong> +${file.reputationRecovery}%</div>` : ''}
                         </div>
                     </div>
-                    <div class="flex flex-col space-y-2 ml-4">
+                    <div class="flex flex-row sm:flex-col gap-2 sm:space-y-2 sm:ml-4 flex-shrink-0">
                         ${!isDecrypted && this.hasScanned ? `
-                            <button class="decrypt-btn px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-sm transition-colors cursor-pointer" data-file-id="${file.id}">
+                            <button class="decrypt-btn flex-1 sm:flex-auto px-3 py-1 bg-purple-600 hover:bg-purple-700 active:bg-purple-800 rounded text-xs sm:text-sm transition-colors cursor-pointer touch-manipulation" data-file-id="${file.id}">
                                 <i class="bi bi-unlock mr-1"></i>Decrypt
                             </button>
                         ` : !isDecrypted && !this.hasScanned ? `
-                            <button class="px-3 py-1 bg-gray-600 rounded text-sm cursor-not-allowed opacity-50">
+                            <button class="flex-1 sm:flex-auto px-3 py-1 bg-gray-600 rounded text-xs sm:text-sm cursor-not-allowed opacity-50">
                                 <i class="bi bi-unlock mr-1"></i>Decrypt
                             </button>
                         ` : `
-                            <div class="px-3 py-1 bg-green-600 rounded text-sm text-center">
+                            <div class="flex-1 sm:flex-auto px-3 py-1 bg-green-600 rounded text-xs sm:text-sm text-center">
                                 <i class="bi bi-check-circle mr-1"></i>Restored
                             </div>
                         `}
