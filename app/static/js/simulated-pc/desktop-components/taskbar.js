@@ -48,7 +48,12 @@ export class Taskbar {
         taskbarItem.innerHTML = `<i class="bi ${iconClass} mr-1"></i> ${title}`;
         
         taskbarItem.addEventListener('click', () => {
-            this.windowManager.toggleWindow(id);
+            // Bring window to front since windows are now static
+            const window = this.windowManager.windows.get(id);
+            if (window) {
+                window.style.zIndex = ++this.windowManager.zIndex;
+                this.setActiveWindow(id);
+            }
         });
         
         taskbarItems.appendChild(taskbarItem);
