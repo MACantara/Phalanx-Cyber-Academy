@@ -170,8 +170,8 @@ ${this.formatText(message.example)}
     }
 
     shouldTypeMessage(message) {
-        // Default to typing unless explicitly disabled
-        return message.typing !== false && message.type !== 'instant';
+        // Always display instantly
+        return false;
     }
 
     formatText(text) {
@@ -181,14 +181,10 @@ ${this.formatText(message.example)}
         let formatted = text
             // Convert line breaks
             .replace(/\n/g, '<br>')
-            // Convert bold text (**text**)
-            .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>')
             // Convert italic text (*text*)
             .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-green-300 italic">$1</em>')
             // Convert inline code (`text`)
             .replace(/`([^`]+)`/g, '<code class="bg-gray-700 px-1 rounded text-yellow-300 font-mono text-sm">$1</code>')
-            // Convert bullet points (• text)
-            .replace(/^• (.+)$/gm, '<div class="flex items-start mb-1"><span class="text-green-400 mr-2 flex-shrink-0">•</span><span class="flex-1">$1</span></div>');
             
         return formatted;
     }
@@ -202,60 +198,65 @@ ${this.formatText(message.example)}
         
         console.log('Starting to type message:', text.substring(0, 50) + '...');
         
-        // Format the text first and set it as innerHTML (hidden)
+        // Format the text first and set it as innerHTML
         const formattedText = this.formatText(text);
         container.innerHTML = formattedText;
-        
-        // Hide all text initially by setting opacity to 0
-        container.style.color = 'transparent';
         
         // Store reference to ensure dialogue stays active during typing
         const dialogueInstance = this;
         
-        // Gradually reveal characters by measuring text width
-        const tempSpan = document.createElement('span');
-        tempSpan.innerHTML = formattedText;
-        tempSpan.style.visibility = 'hidden';
-        tempSpan.style.position = 'absolute';
-        tempSpan.style.whiteSpace = 'pre-wrap';
-        tempSpan.className = container.className;
-        document.body.appendChild(tempSpan);
+        // Create a mask that will reveal text progressively
+        const maskOverlay = document.createElement('div');
+        maskOverlay.style.position = 'absolute';
+        maskOverlay.style.top = '0';
+        maskOverlay.style.left = '0';
+        maskOverlay.style.right = '0';
+        maskOverlay.style.bottom = '0';
+        maskOverlay.style.backgroundColor = 'rgb(31, 41, 55)'; // Same as dialogue background
+        maskOverlay.style.pointerEvents = 'none';
+        maskOverlay.style.zIndex = '1';
         
-        // Create a revealing overlay
-        const revealOverlay = document.createElement('div');
-        revealOverlay.style.position = 'absolute';
-        revealOverlay.style.top = '0';
-        revealOverlay.style.left = '0';
-        revealOverlay.style.right = '0';
-        revealOverlay.style.bottom = '0';
-        revealOverlay.style.background = 'linear-gradient(to right, transparent 0%, transparent 0%, rgb(31, 41, 55) 0%)';
-        revealOverlay.style.pointerEvents = 'none';
-        
-        // Make container relative and restore color
+        // Make container relative and add the mask
         container.style.position = 'relative';
-        container.style.color = '';
-        container.appendChild(revealOverlay);
+        container.appendChild(maskOverlay);
         
-        // Animate the reveal
+        // Wrap content in a div for better control
+        const contentWrapper = document.createElement('div');
+        contentWrapper.innerHTML = formattedText;
+        contentWrapper.style.position = 'relative';
+        contentWrapper.style.zIndex = '0';
+        
+        // Replace container content with wrapper
+        container.innerHTML = '';
+        container.appendChild(contentWrapper);
+        container.appendChild(maskOverlay);
+        
+        // Get container dimensions for calculation
+        const containerRect = container.getBoundingClientRect();
+        const containerHeight = container.scrollHeight;
+        
+        // Animate by progressively reducing mask height (top-to-bottom reveal)
         const plainText = text;
         for (let i = 0; i <= plainText.length; i++) {
             // Check if dialogue is still active
             if (!dialogueInstance.isActive || !document.getElementById('dialogue-text-content')) {
                 console.warn('Typing interrupted - dialogue no longer active or container removed');
-                document.body.removeChild(tempSpan);
                 return;
             }
             
-            // Calculate percentage to reveal
-            const percentage = (i / plainText.length) * 100;
-            revealOverlay.style.background = `linear-gradient(to right, transparent ${percentage}%, rgb(31, 41, 55) ${percentage}%)`;
+            // Calculate how much to reveal (top-to-bottom)
+            const revealPercentage = i / plainText.length;
+            const maskHeight = containerHeight * (1 - revealPercentage);
+            
+            // Position mask to cover remaining text from bottom
+            maskOverlay.style.height = `${maskHeight}px`;
+            maskOverlay.style.top = `${containerHeight - maskHeight}px`;
             
             await new Promise(resolve => setTimeout(resolve, speed));
         }
         
-        // Clean up
-        document.body.removeChild(tempSpan);
-        container.removeChild(revealOverlay);
+        // Clean up - remove mask and restore normal container
+        container.innerHTML = formattedText;
         container.style.position = '';
         
         console.log('Typing complete');
