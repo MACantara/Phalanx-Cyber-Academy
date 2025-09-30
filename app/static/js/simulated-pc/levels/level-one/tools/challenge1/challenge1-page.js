@@ -205,6 +205,26 @@ class Challenge1PageClass extends BasePage {
         `;
     }
 
+    scrollToArticleTop() {
+        // Scroll to the top of the article content smoothly
+        setTimeout(() => {
+            const articleTitle = document.querySelector('h2[data-element-type="title"]');
+            if (articleTitle) {
+                articleTitle.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start',
+                    inline: 'nearest'
+                });
+            } else {
+                // Fallback: scroll to top of browser content
+                const browserContent = document.querySelector('#browser-content');
+                if (browserContent) {
+                    browserContent.scrollTop = 0;
+                }
+            }
+        }, 100); // Small delay to ensure DOM is updated
+    }
+
     // Navigation methods for articles
     nextArticle() {
         if (this.currentArticleIndex < this.articlesData.length - 1) {
@@ -236,6 +256,9 @@ class Challenge1PageClass extends BasePage {
                 // Re-bind navigation and classification events
                 this.bindClassificationEvents();
                 window.challenge1Page = this;
+                
+                // Auto-scroll to top of the article content
+                this.scrollToArticleTop();
             }, 500);
         }
     }
