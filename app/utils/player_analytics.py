@@ -472,8 +472,6 @@ class PlayerAnalytics:
             'average_score': round(avg_score, 1),
             'average_session_duration_seconds': round(avg_session_duration_seconds),
             'average_completion_time_minutes': round(avg_completion_time_minutes, 1),
-            'retry_rate': await self._calculate_retry_rate_from_sessions(sessions),
-            'hint_usage_rate': await self._calculate_hint_usage_rate_from_sessions(sessions),
             'drop_off_rate': 100 - completion_rate,
             'churn_rate': await self._calculate_churn_rate(users),
             'retention_day_1': retention_rates.get('day_1', 0),
