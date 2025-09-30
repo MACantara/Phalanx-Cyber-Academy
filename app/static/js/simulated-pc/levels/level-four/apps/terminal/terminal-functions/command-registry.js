@@ -24,6 +24,7 @@ import { AwkCommand } from '../terminal-commands/awk-command.js';
 import { SedCommand } from '../terminal-commands/sed-command.js';
 import { HexdumpCommand } from '../terminal-commands/hexdump-command.js';
 import { HintsCommand } from '../terminal-commands/hints-command.js';
+import { SubmitFlagCommand } from '../terminal-commands/submit-flag-command.js';
 
 export class CommandRegistry {
     constructor(processor) {
@@ -57,7 +58,8 @@ export class CommandRegistry {
             'awk': new AwkCommand(this.processor),
             'sed': new SedCommand(this.processor),
             'hexdump': new HexdumpCommand(this.processor),
-            'hints': new HintsCommand(this.processor)
+            'hints': new HintsCommand(this.processor),
+            'submit-flag': new SubmitFlagCommand(this.processor)
         };
     }
 
