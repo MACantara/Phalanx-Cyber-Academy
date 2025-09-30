@@ -24,10 +24,10 @@ class PlayerAnalytics:
     async def get_level_analytics(self) -> Dict[str, Any]:
         """Get comprehensive analytics for levels 1-5"""
         try:
-            # Get user progress data for all levels
-            user_progress = self.supabase.table("user_progress").select("*").execute()
+            # Get session data filtered by level_id for levels 1-5
+            sessions = self.supabase.table("sessions").select("*").execute()
             
-            if not user_progress.data:
+            if not sessions.data:
                 # Return empty data for all levels
                 level_data = {}
                 for level_id in range(1, 6):
@@ -37,7 +37,7 @@ class PlayerAnalytics:
             level_data = {}
             
             for level_id in range(1, 6):
-                level_data[f"level_{level_id}"] = await self._analyze_level(level_id, user_progress.data)
+                level_data[f"level_{level_id}"] = await self._analyze_level(level_id, sessions.data)
                 
             return level_data
             
@@ -49,31 +49,39 @@ class PlayerAnalytics:
                 level_data[f"level_{level_id}"] = await self._get_empty_level_data(level_id)
             return level_data
     
-    async def _analyze_level(self, level_id: int, progress_data: List[Dict]) -> Dict[str, Any]:
-        """Analyze data for a specific level"""
-        level_progress = [p for p in progress_data if p.get('level_id') == level_id]
+    async def _analyze_level(self, level_id: int, sessions_data: List[Dict]) -> Dict[str, Any]:
+        """Analyze data for a specific level using sessions table"""
+        level_sessions = [s for s in sessions_data if s.get('level_id') == level_id]
         
-        if not level_progress:
+        if not level_sessions:
             return await self._get_empty_level_data(level_id)
             
-        total_attempts = len(level_progress)
-        completed = len([p for p in level_progress if p.get('completed', False)])
+        total_attempts = len(level_sessions)
+        completed = len([s for s in level_sessions if s.get('end_time')])  # Session has end_time means completed
         completion_rate = (completed / total_attempts * 100) if total_attempts > 0 else 0
         
         # Calculate average metrics
-        scores = [p.get('final_score', 0) for p in level_progress if p.get('final_score')]
+        scores = [s.get('score', 0) for s in level_sessions if s.get('score')]
         avg_score = sum(scores) / len(scores) if scores else 0
         
-        completion_times = [p.get('completion_time_seconds', 0) for p in level_progress if p.get('completion_time_seconds')]
+        # Calculate completion times from start_time and end_time
+        completion_times = []
+        for s in level_sessions:
+            if s.get('start_time') and s.get('end_time'):
+                start = datetime.fromisoformat(s['start_time'].replace('Z', '+00:00'))
+                end = datetime.fromisoformat(s['end_time'].replace('Z', '+00:00'))
+                duration_seconds = (end - start).total_seconds()
+                completion_times.append(duration_seconds)
+        
         avg_completion_time = sum(completion_times) / len(completion_times) if completion_times else 0
         
         # Calculate attempts to complete
         attempts_per_user = defaultdict(int)
         completed_users = set()
-        for p in level_progress:
-            user_id = p.get('user_id')
+        for s in level_sessions:
+            user_id = s.get('user_id')
             attempts_per_user[user_id] += 1
-            if p.get('completed'):
+            if s.get('end_time'):
                 completed_users.add(user_id)
         
         avg_attempts_to_complete = 0
@@ -82,8 +90,56 @@ class PlayerAnalytics:
             avg_attempts_to_complete = total_attempts_for_completed / len(completed_users)
         
         # Level-specific metrics based on level type
-        level_specific = await self._get_level_specific_metrics(level_id, level_progress)
+        level_specific = await self._get_level_specific_metrics_from_sessions(level_id, level_sessions)
         
+    async def _get_level_specific_metrics_from_sessions(self, level_id: int, sessions: List[Dict]) -> Dict[str, Any]:
+        """Get level-specific metrics based on the level type and session data"""
+        specific_metrics = {}
+        
+        if level_id in [1, 2, 3, 4, 5]:
+            # For regular levels, calculate specific metrics based on the level content
+            if level_id == 1:  # Phishing awareness
+                specific_metrics.update({
+                    'phishing_attempts_detected': len([s for s in sessions if s.get('score', 0) > 70]),
+                    'email_analysis_accuracy': round(sum(s.get('score', 0) for s in sessions) / len(sessions), 1) if sessions else 0
+                })
+            elif level_id == 2:  # Password security
+                specific_metrics.update({
+                    'strong_passwords_created': len([s for s in sessions if s.get('score', 0) > 80]),
+                    'password_strength_avg': round(sum(s.get('score', 0) for s in sessions) / len(sessions), 1) if sessions else 0
+                })
+            elif level_id == 3:  # Social engineering
+                specific_metrics.update({
+                    'social_attacks_identified': len([s for s in sessions if s.get('score', 0) > 75]),
+                    'response_accuracy': round(sum(s.get('score', 0) for s in sessions) / len(sessions), 1) if sessions else 0
+                })
+            elif level_id == 4:  # Network security
+                specific_metrics.update({
+                    'vulnerabilities_found': len([s for s in sessions if s.get('score', 0) > 65]),
+                    'scan_effectiveness': round(sum(s.get('score', 0) for s in sessions) / len(sessions), 1) if sessions else 0
+                })
+            elif level_id == 5:  # Incident response
+                specific_metrics.update({
+                    'incidents_resolved': len([s for s in sessions if s.get('score', 0) > 70]),
+                    'response_time_avg': round(sum(s.get('duration_minutes', 0) for s in sessions) / len(sessions), 1) if sessions else 0
+                })
+        
+        return specific_metrics
+    
+    async def _get_recent_level_activity_from_sessions(self, level_id: int) -> List[Dict]:
+        """Get recent activity for a specific level using sessions data"""
+        try:
+            recent = self.supabase.table("sessions").select(
+                "*, users(username)"
+            ).eq('level_id', level_id).order(
+                'start_time', desc=True
+            ).limit(5).execute()
+            
+            return recent.data if recent.data else []
+        except Exception as e:
+            logger.error(f"Error getting recent activity for level {level_id} from sessions: {e}")
+            return []
+
         return {
             'name': self._get_level_name(level_id),
             'description': self._get_level_description(level_id),
@@ -95,8 +151,8 @@ class PlayerAnalytics:
             'avg_time_seconds': round(avg_completion_time),
             'attempts_to_complete': round(avg_attempts_to_complete, 1),
             'difficulty_rating': self._calculate_difficulty(completion_rate, avg_completion_time),
-            'player_count': len(set(p.get('user_id') for p in level_progress)),
-            'recent_activity': await self._get_recent_level_activity(level_id),
+            'player_count': len(set(s.get('user_id') for s in level_sessions)),
+            'recent_activity': await self._get_recent_level_activity_from_sessions(level_id),
             **level_specific
         }
     
@@ -176,8 +232,8 @@ class PlayerAnalytics:
     async def get_blue_vs_red_analytics(self) -> Dict[str, Any]:
         """Get comprehensive analytics for Blue vs Red Team mode"""
         try:
-            # Get blue team vs red team session data
-            sessions = self.supabase.table("blue_red_sessions").select("*").execute()
+            # Get blue team vs red team session data from sessions table
+            sessions = self.supabase.table("sessions").select("*").ilike("session_name", "%blue%red%").execute()
             
             if not sessions.data:
                 return await self._get_empty_blue_vs_red_data()
@@ -321,61 +377,89 @@ class PlayerAnalytics:
         """Get general analytics across all game modes"""
         try:
             # Get user data
-            users = self.supabase.table("users").select("id, created_at, last_login").execute()
+            users = self.supabase.table("users").select("id, created_at, last_login, total_xp, is_verified").execute()
             
-            # Get all session data
-            level_sessions = self.supabase.table("user_progress").select("*").execute()
-            blue_red_sessions = self.supabase.table("blue_red_sessions").select("*").execute()
+            # Get all session data (using real sessions table)
+            sessions = self.supabase.table("sessions").select("*").execute()
             
-            return await self._analyze_general_metrics(users.data, level_sessions.data, blue_red_sessions.data)
+            # Get XP history for engagement metrics
+            xp_history = self.supabase.table("xp_history").select("*").execute()
+            
+            # Get login attempts for activity metrics
+            login_attempts = self.supabase.table("login_attempts").select("*").execute()
+            
+            return await self._analyze_general_metrics(users.data, sessions.data, xp_history.data, login_attempts.data)
             
         except Exception as e:
             logger.error(f"Error getting general analytics: {e}")
             return await self._get_empty_general_data()
     
-    async def _analyze_general_metrics(self, users: List[Dict], level_sessions: List[Dict], 
-                                     blue_red_sessions: List[Dict]) -> Dict[str, Any]:
+    async def _analyze_general_metrics(self, users: List[Dict], sessions: List[Dict], 
+                                     xp_history: List[Dict], login_attempts: List[Dict]) -> Dict[str, Any]:
         """Analyze general platform metrics"""
         total_users = len(users) if users else 0
         
         # Calculate active users (logged in within last 7 days)
-        week_ago = datetime.now() - timedelta(days=7)
-        day_ago = datetime.now() - timedelta(days=1)
-        month_ago = datetime.now() - timedelta(days=30)
+        from datetime import timezone
+        week_ago = datetime.now(timezone.utc) - timedelta(days=7)
+        day_ago = datetime.now(timezone.utc) - timedelta(days=1)
+        month_ago = datetime.now(timezone.utc) - timedelta(days=30)
         
         active_users = 0
         daily_active_users = 0
         monthly_active_users = 0
         
         if users:
-            active_users = len([u for u in users if u.get('last_login') and 
-                              datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) > week_ago])
-            daily_active_users = len([u for u in users if u.get('last_login') and 
-                                    datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) > day_ago])
-            monthly_active_users = len([u for u in users if u.get('last_login') and 
-                                      datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) > month_ago])
+            # Fix timezone-aware datetime comparisons
+            active_users = 0
+            daily_active_users = 0
+            monthly_active_users = 0
+            
+            for u in users:
+                if u.get('last_login'):
+                    try:
+                        last_login = datetime.fromisoformat(u['last_login'].replace('Z', '+00:00'))
+                        if last_login > week_ago:
+                            active_users += 1
+                        if last_login > day_ago:
+                            daily_active_users += 1
+                        if last_login > month_ago:
+                            monthly_active_users += 1
+                    except:
+                        continue
         
-        # Calculate engagement metrics
-        total_sessions = len(level_sessions) + len(blue_red_sessions) if level_sessions and blue_red_sessions else 0
+        # Calculate session metrics
+        total_sessions = len(sessions) if sessions else 0
+        completed_sessions = len([s for s in (sessions or []) if s.get('end_time')])
         
-        # Calculate session duration in seconds
+        # Calculate session duration using real session data (start_time and end_time)
         all_durations = []
-        if level_sessions:
-            all_durations.extend([s.get('completion_time_seconds', 0) for s in level_sessions if s.get('completion_time_seconds')])
-        if blue_red_sessions:
-            all_durations.extend([s.get('duration_minutes', 0) * 60 for s in blue_red_sessions if s.get('duration_minutes')])
+        if sessions:
+            for s in sessions:
+                if s.get('start_time') and s.get('end_time'):
+                    start = datetime.fromisoformat(s['start_time'].replace('Z', '+00:00'))
+                    end = datetime.fromisoformat(s['end_time'].replace('Z', '+00:00'))
+                    duration_seconds = (end - start).total_seconds()
+                    all_durations.append(duration_seconds)
         
         avg_session_duration_seconds = sum(all_durations) / len(all_durations) if all_durations else 0
         avg_completion_time_minutes = avg_session_duration_seconds / 60 if avg_session_duration_seconds else 0
         
+        # Calculate completion rate
+        completion_rate = (completed_sessions / total_sessions * 100) if total_sessions > 0 else 0
+        
+        # Calculate average score from sessions
+        scores = [s.get('score', 0) for s in (sessions or []) if s.get('score')]
+        avg_score = sum(scores) / len(scores) if scores else 0
+        
         # Calculate retention rates
         retention_rates = await self._calculate_retention_rates(users)
         
-        # Calculate level completion rates
-        level_completion_rates = await self._calculate_level_completion_rates(level_sessions)
+        # Calculate level completion rates from sessions
+        level_completion_rates = await self._calculate_level_completion_rates_from_sessions(sessions)
         
-        # Weekly trends
-        weekly_trends = await self._generate_weekly_trends(users, level_sessions, blue_red_sessions)
+        # Weekly trends using real data
+        weekly_trends = await self._generate_weekly_trends_from_real_data(users, sessions, xp_history)
         
         return {
             'total_users': total_users,
@@ -384,19 +468,19 @@ class PlayerAnalytics:
             'weekly_active_users': active_users,
             'monthly_active_users': monthly_active_users,
             'total_sessions': total_sessions,
-            'completion_rate': self._calculate_overall_completion_rate(level_sessions, blue_red_sessions),
-            'average_score': self._calculate_overall_average_score(level_sessions, blue_red_sessions),
+            'completion_rate': round(completion_rate, 1),
+            'average_score': round(avg_score, 1),
             'average_session_duration_seconds': round(avg_session_duration_seconds),
             'average_completion_time_minutes': round(avg_completion_time_minutes, 1),
-            'retry_rate': await self._calculate_retry_rate(level_sessions, blue_red_sessions),
-            'hint_usage_rate': await self._calculate_hint_usage_rate(level_sessions),
-            'drop_off_rate': 100 - self._calculate_overall_completion_rate(level_sessions, blue_red_sessions),
+            'retry_rate': await self._calculate_retry_rate_from_sessions(sessions),
+            'hint_usage_rate': await self._calculate_hint_usage_rate_from_sessions(sessions),
+            'drop_off_rate': 100 - completion_rate,
             'churn_rate': await self._calculate_churn_rate(users),
             'retention_day_1': retention_rates.get('day_1', 0),
             'retention_day_7': retention_rates.get('day_7', 0),
             'retention_day_30': retention_rates.get('day_30', 0),
             'weekly_trends': weekly_trends,
-            'user_engagement': await self._calculate_user_engagement(users, level_sessions, blue_red_sessions),
+            'user_engagement': await self._calculate_user_engagement_from_real_data(users, sessions, login_attempts),
             **level_completion_rates
         }
     
@@ -429,10 +513,10 @@ class PlayerAnalytics:
     async def _get_recent_level_activity(self, level_id: int) -> List[Dict]:
         """Get recent activity for a specific level"""
         try:
-            recent = self.supabase.table("user_progress").select(
+            recent = self.supabase.table("sessions").select(
                 "*, users(username)"
             ).eq('level_id', level_id).order(
-                'created_at', desc=True
+                'start_time', desc=True
             ).limit(5).execute()
             
             return recent.data if recent.data else []
@@ -443,22 +527,76 @@ class PlayerAnalytics:
     async def _get_recent_blue_vs_red_activity(self) -> List[Dict]:
         """Get recent blue vs red team activity"""
         try:
-            recent = self.supabase.table("blue_red_sessions").select(
+            recent = self.supabase.table("sessions").select(
                 "*, users(username)"
-            ).order('created_at', desc=True).limit(5).execute()
+            ).ilike('session_name', '%blue%red%').order(
+                'start_time', desc=True
+            ).limit(5).execute()
             
             return recent.data if recent.data else []
         except Exception as e:
             logger.error(f"Error getting recent blue vs red activity: {e}")
             return []
     
+    async def _generate_weekly_trends_from_real_data(self, users: List[Dict], sessions: List[Dict], xp_history: List[Dict]) -> List[Dict]:
+        """Generate weekly trend data from real session and XP data"""
+        from datetime import timezone
+        
+        weekly_data = []
+        
+        # Generate data for last 4 weeks
+        for week in range(3, -1, -1):
+            week_start = datetime.now(timezone.utc) - timedelta(weeks=week+1)
+            week_end = datetime.now(timezone.utc) - timedelta(weeks=week)
+            
+            # Filter sessions for this week
+            week_sessions = []
+            for s in (sessions or []):
+                if s.get('start_time'):
+                    try:
+                        session_time = datetime.fromisoformat(str(s['start_time']).replace('Z', '+00:00'))
+                        if week_start <= session_time <= week_end:
+                            week_sessions.append(s)
+                    except:
+                        continue
+            
+            # Filter XP history for this week
+            week_xp = []
+            for xp in (xp_history or []):
+                if xp.get('earned_at'):
+                    try:
+                        xp_time = datetime.fromisoformat(str(xp['earned_at']).replace('Z', '+00:00'))
+                        if week_start <= xp_time <= week_end:
+                            week_xp.append(xp)
+                    except:
+                        continue
+            
+            # Calculate metrics
+            session_count = len(week_sessions)
+            total_xp = sum(xp.get('xp_earned', 0) for xp in week_xp)
+            avg_score = 0
+            if week_sessions:
+                scores = [s.get('score', 0) for s in week_sessions if s.get('score')]
+                avg_score = sum(scores) / len(scores) if scores else 0
+            
+            week_data = {
+                'week': f'Week {4-week}',
+                'progress': min(100, total_xp / 10),  # XP as progress indicator
+                'sessions': session_count,
+                'avg_score': round(avg_score, 1)
+            }
+            weekly_data.append(week_data)
+        
+        return weekly_data
+    
     async def _generate_weekly_trends(self, users: List[Dict], level_sessions: List[Dict], 
                                     blue_red_sessions: List[Dict]) -> List[Dict]:
         """Generate weekly trend data from actual user and session data"""
         weeks = []
         
+        from datetime import timezone
         for i in range(8):
-            week_start = datetime.now() - timedelta(weeks=8-i)
+            week_start = datetime.now(timezone.utc) - timedelta(weeks=8-i)
             week_end = week_start + timedelta(weeks=1)
             
             # Count sessions in this week
@@ -500,7 +638,8 @@ class PlayerAnalytics:
         if not users:
             return {'day_1': 0, 'day_7': 0, 'day_30': 0}
         
-        now = datetime.now()
+        from datetime import timezone
+        now = datetime.now(timezone.utc)
         day_1_ago = now - timedelta(days=1)
         day_7_ago = now - timedelta(days=7)
         day_30_ago = now - timedelta(days=30)
@@ -527,20 +666,44 @@ class PlayerAnalytics:
             'day_30': round((len(retained_30_days) / len(users_30_days_ago) * 100), 1) if users_30_days_ago else 0
         }
     
-    async def _calculate_level_completion_rates(self, level_sessions: List[Dict]) -> Dict[str, float]:
-        """Calculate completion rates for each level"""
+    async def _calculate_level_completion_rates_from_sessions(self, sessions: List[Dict]) -> Dict[str, float]:
+        """Calculate completion rates for each level from sessions table"""
         level_rates = {}
         
         for level_id in range(1, 6):
-            level_progress = [s for s in (level_sessions or []) if s.get('level_id') == level_id]
-            if level_progress:
-                completed = len([s for s in level_progress if s.get('completed')])
-                completion_rate = (completed / len(level_progress)) * 100
+            level_sessions = [s for s in (sessions or []) if s.get('level_id') == level_id]
+            if level_sessions:
+                completed = len([s for s in level_sessions if s.get('end_time')])  # Has end_time = completed
+                completion_rate = (completed / len(level_sessions)) * 100
                 level_rates[f'level_{level_id}_completion_rate'] = round(completion_rate, 1)
             else:
                 level_rates[f'level_{level_id}_completion_rate'] = 0
         
         return level_rates
+    
+    async def _calculate_level_completion_rates(self, level_sessions: List[Dict]) -> Dict[str, float]:
+        """Legacy method - redirects to sessions-based method"""
+        return await self._calculate_level_completion_rates_from_sessions(level_sessions)
+    
+    async def _calculate_retry_rate_from_sessions(self, sessions: List[Dict]) -> float:
+        """Calculate retry rate from sessions table"""
+        if not sessions:
+            return 0
+        
+        # Group by user_id to find users with multiple attempts
+        user_attempts = {}
+        for session in sessions:
+            user_id = session.get('user_id')
+            if user_id:
+                if user_id not in user_attempts:
+                    user_attempts[user_id] = 0
+                user_attempts[user_id] += 1
+        
+        # Calculate percentage of users who retried (had more than 1 attempt)
+        users_with_retries = len([count for count in user_attempts.values() if count > 1])
+        total_users = len(user_attempts)
+        
+        return round((users_with_retries / total_users) * 100, 1) if total_users > 0 else 0
     
     async def _calculate_retry_rate(self, level_sessions: List[Dict], blue_red_sessions: List[Dict]) -> float:
         """Calculate overall retry rate across all sessions"""
@@ -574,10 +737,11 @@ class PlayerAnalytics:
     
     async def _calculate_churn_rate(self, users: List[Dict]) -> float:
         """Calculate user churn rate (users inactive for 30+ days)"""
+        from datetime import timezone
         if not users:
             return 0
         
-        month_ago = datetime.now() - timedelta(days=30)
+        month_ago = datetime.now(timezone.utc) - timedelta(days=30)
         churned_users = [u for u in users if not u.get('last_login') or 
                         datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) < month_ago]
         
@@ -607,6 +771,67 @@ class PlayerAnalytics:
             
         return round(sum(all_scores) / len(all_scores), 1) if all_scores else 0
     
+    async def _calculate_user_engagement_from_real_data(self, users: List[Dict], sessions: List[Dict], login_attempts: List[Dict]) -> Dict[str, Any]:
+        """Calculate user engagement metrics from real database tables"""
+        from datetime import timezone
+        
+        if not users:
+            return {
+                'daily_active_users': 0,
+                'weekly_active_users': 0,
+                'average_session_duration': 0,
+                'retention_rate': 0
+            }
+        
+        # Calculate DAU (users active in last 24 hours)
+        day_ago = datetime.now(timezone.utc) - timedelta(days=1)
+        dau = 0
+        for u in users:
+            if u.get('last_login'):
+                try:
+                    last_login = datetime.fromisoformat(str(u['last_login']).replace('Z', '+00:00'))
+                    if last_login > day_ago:
+                        dau += 1
+                except:
+                    continue
+        
+        # Calculate WAU (users active in last 7 days)  
+        week_ago = datetime.now(timezone.utc) - timedelta(days=7)
+        wau = 0
+        for u in users:
+            if u.get('last_login'):
+                try:
+                    last_login = datetime.fromisoformat(str(u['last_login']).replace('Z', '+00:00'))
+                    if last_login > week_ago:
+                        wau += 1
+                except:
+                    continue
+        
+        # Calculate average session duration from sessions table
+        session_durations = []
+        for session in (sessions or []):
+            if session.get('start_time') and session.get('end_time'):
+                try:
+                    start = datetime.fromisoformat(str(session['start_time']).replace('Z', '+00:00'))
+                    end = datetime.fromisoformat(str(session['end_time']).replace('Z', '+00:00'))
+                    duration = (end - start).total_seconds() / 60  # in minutes
+                    if 0 < duration < 1440:  # Valid session (0 to 24 hours)
+                        session_durations.append(duration)
+                except:
+                    continue
+        
+        avg_duration = round(sum(session_durations) / len(session_durations), 1) if session_durations else 0
+        
+        # Calculate retention rate (users active in last 7 days / total users)
+        retention_rate = round((wau / len(users)) * 100, 1) if users else 0
+        
+        return {
+            'daily_active_users': dau,
+            'weekly_active_users': wau,
+            'average_session_duration': avg_duration,
+            'retention_rate': retention_rate
+        }
+    
     async def _calculate_user_engagement(self, users: List[Dict], level_sessions: List[Dict], 
                                        blue_red_sessions: List[Dict]) -> Dict[str, Any]:
         """Calculate user engagement metrics"""
@@ -619,12 +844,13 @@ class PlayerAnalytics:
             }
         
         # Calculate DAU (users active in last 24 hours)
-        day_ago = datetime.now() - timedelta(days=1)
+        from datetime import timezone
+        day_ago = datetime.now(timezone.utc) - timedelta(days=1)
         dau = len([u for u in users if u.get('last_login') and 
                   datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) > day_ago])
         
         # Calculate WAU (users active in last 7 days)  
-        week_ago = datetime.now() - timedelta(days=7)
+        week_ago = datetime.now(timezone.utc) - timedelta(days=7)
         wau = len([u for u in users if u.get('last_login') and 
                   datetime.fromisoformat(u['last_login'].replace('Z', '+00:00')) > week_ago])
         
