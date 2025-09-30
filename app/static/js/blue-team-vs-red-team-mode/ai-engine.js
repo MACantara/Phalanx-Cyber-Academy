@@ -355,6 +355,12 @@ class AIEngine {
                 reward -= 0.4; // Extra penalty for being countered by smart patching
                 console.log(`🔧 AI penalty: Player correctly patched vulnerability for ${attackData.technique}`);
             }
+            
+            // Additional penalty if player reset credentials for compromised user
+            if (this.wereCredentialsResetCorrectly(attackData)) {
+                reward -= 0.3; // Extra penalty for being countered by smart credential reset
+                console.log(`🔐 AI penalty: Player correctly reset credentials for ${this.gameController.getUserForAttack(attackData)}`);
+            }
         } else {
             // Positive reward for successful stealth
             reward = 1;
@@ -371,6 +377,13 @@ class AIEngine {
             if (unnecessaryPatches.length > 0) {
                 reward += 0.2 * unnecessaryPatches.length;
                 console.log(`🤖 AI bonus: Player made ${unnecessaryPatches.length} unnecessary patch(es)`);
+            }
+            
+            // Bonus if player made unnecessary credential resets (wasted resources)
+            const unnecessaryResets = this.getRecentUnnecessaryResets();
+            if (unnecessaryResets.length > 0) {
+                reward += 0.25 * unnecessaryResets.length;
+                console.log(`🤖 AI bonus: Player made ${unnecessaryResets.length} unnecessary credential reset(s)`);
             }
             
             // Bonus for high-value targets
@@ -392,6 +405,11 @@ class AIEngine {
             // Reduced reward if vulnerability was patched (even if unnecessarily)
             if (this.wasVulnerabilityRecentlyPatched(attackData)) {
                 reward *= 0.8; // 20% reduction for patched vulnerabilities
+            }
+            
+            // Reduced reward if user credentials were reset (even if unnecessarily)
+            if (this.wereCredentialsRecentlyReset(attackData)) {
+                reward *= 0.75; // 25% reduction for reset credentials
             }
         }
         
@@ -483,6 +501,54 @@ class AIEngine {
         return gameState.patchHistory.some(patch => 
             patch.cveId === cveId &&
             patch.timestamp > recentTime
+        );
+    }
+
+    // Check if credentials were correctly reset (user was compromised when reset)
+    wereCredentialsResetCorrectly(attackData) {
+        const gameState = this.gameController.getGameState();
+        if (!gameState.credentialResets) return false;
+        
+        // Get the username for this attack
+        const username = this.gameController.getUserForAttack(attackData);
+        if (!username) return false;
+        
+        // Check for recent correct resets (within last 10 seconds)
+        const recentTime = new Date(Date.now() - 10000);
+        return gameState.credentialResets.some(reset => 
+            reset.username === username &&
+            reset.wasNecessary &&
+            reset.timestamp > recentTime
+        );
+    }
+
+    // Get recent unnecessary credential resets for AI learning
+    getRecentUnnecessaryResets() {
+        const gameState = this.gameController.getGameState();
+        if (!gameState.credentialResets) return [];
+        
+        // Check for unnecessary resets within last 15 seconds
+        const recentTime = new Date(Date.now() - 15000);
+        return gameState.credentialResets.filter(reset => 
+            !reset.wasNecessary &&
+            reset.timestamp > recentTime
+        );
+    }
+
+    // Check if credentials were recently reset (affects attack success rate)
+    wereCredentialsRecentlyReset(attackData) {
+        const gameState = this.gameController.getGameState();
+        if (!gameState.credentialResets) return false;
+        
+        // Get the username for this attack
+        const username = this.gameController.getUserForAttack(attackData);
+        if (!username) return false;
+        
+        // Check for any reset within last 45 seconds
+        const recentTime = new Date(Date.now() - 45000);
+        return gameState.credentialResets.some(reset => 
+            reset.username === username &&
+            reset.timestamp > recentTime
         );
     }
     
