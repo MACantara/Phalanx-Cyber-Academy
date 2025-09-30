@@ -92,6 +92,22 @@ class PlayerAnalytics:
         # Level-specific metrics based on level type
         level_specific = await self._get_level_specific_metrics_from_sessions(level_id, level_sessions)
         
+        return {
+            'name': self._get_level_name(level_id),
+            'description': self._get_level_description(level_id),
+            'total_attempts': total_attempts,
+            'completed_sessions': completed,
+            'completion_rate': round(completion_rate, 1),
+            'average_score': round(avg_score, 1),
+            'average_completion_time': round(avg_completion_time / 60, 1),  # Convert to minutes
+            'avg_time_seconds': round(avg_completion_time),
+            'attempts_to_complete': round(avg_attempts_to_complete, 1),
+            'difficulty_rating': self._calculate_difficulty(completion_rate, avg_completion_time),
+            'player_count': len(set(s.get('user_id') for s in level_sessions if s.get('user_id'))),
+            'recent_activity': await self._get_recent_level_activity_from_sessions(level_id),
+            **level_specific
+        }
+        
     async def _get_level_specific_metrics_from_sessions(self, level_id: int, sessions: List[Dict]) -> Dict[str, Any]:
         """Get level-specific metrics based on the level type and session data"""
         specific_metrics = {}
@@ -100,28 +116,28 @@ class PlayerAnalytics:
             # For regular levels, calculate specific metrics based on the level content
             if level_id == 1:  # Phishing awareness
                 specific_metrics.update({
-                    'phishing_attempts_detected': len([s for s in sessions if s.get('score', 0) > 70]),
-                    'email_analysis_accuracy': round(sum(s.get('score', 0) for s in sessions) / len(sessions), 1) if sessions else 0
+                    'phishing_attempts_detected': len([s for s in sessions if (s.get('score') or 0) > 70]),
+                    'email_analysis_accuracy': round(sum((s.get('score') or 0) for s in sessions) / len(sessions), 1) if sessions else 0
                 })
             elif level_id == 2:  # Password security
                 specific_metrics.update({
-                    'strong_passwords_created': len([s for s in sessions if s.get('score', 0) > 80]),
-                    'password_strength_avg': round(sum(s.get('score', 0) for s in sessions) / len(sessions), 1) if sessions else 0
+                    'strong_passwords_created': len([s for s in sessions if (s.get('score') or 0) > 80]),
+                    'password_strength_avg': round(sum((s.get('score') or 0) for s in sessions) / len(sessions), 1) if sessions else 0
                 })
             elif level_id == 3:  # Social engineering
                 specific_metrics.update({
-                    'social_attacks_identified': len([s for s in sessions if s.get('score', 0) > 75]),
-                    'response_accuracy': round(sum(s.get('score', 0) for s in sessions) / len(sessions), 1) if sessions else 0
+                    'social_attacks_identified': len([s for s in sessions if (s.get('score') or 0) > 75]),
+                    'response_accuracy': round(sum((s.get('score') or 0) for s in sessions) / len(sessions), 1) if sessions else 0
                 })
             elif level_id == 4:  # Network security
                 specific_metrics.update({
-                    'vulnerabilities_found': len([s for s in sessions if s.get('score', 0) > 65]),
-                    'scan_effectiveness': round(sum(s.get('score', 0) for s in sessions) / len(sessions), 1) if sessions else 0
+                    'vulnerabilities_found': len([s for s in sessions if (s.get('score') or 0) > 65]),
+                    'scan_effectiveness': round(sum((s.get('score') or 0) for s in sessions) / len(sessions), 1) if sessions else 0
                 })
             elif level_id == 5:  # Incident response
                 specific_metrics.update({
-                    'incidents_resolved': len([s for s in sessions if s.get('score', 0) > 70]),
-                    'response_time_avg': round(sum(s.get('duration_minutes', 0) for s in sessions) / len(sessions), 1) if sessions else 0
+                    'incidents_resolved': len([s for s in sessions if (s.get('score') or 0) > 70]),
+                    'response_time_avg': round(sum((s.get('duration_minutes') or 0) for s in sessions) / len(sessions), 1) if sessions else 0
                 })
         
         return specific_metrics
@@ -139,22 +155,6 @@ class PlayerAnalytics:
         except Exception as e:
             logger.error(f"Error getting recent activity for level {level_id} from sessions: {e}")
             return []
-
-        return {
-            'name': self._get_level_name(level_id),
-            'description': self._get_level_description(level_id),
-            'total_attempts': total_attempts,
-            'completed_sessions': completed,
-            'completion_rate': round(completion_rate, 1),
-            'average_score': round(avg_score, 1),
-            'average_completion_time': round(avg_completion_time / 60, 1),  # Convert to minutes
-            'avg_time_seconds': round(avg_completion_time),
-            'attempts_to_complete': round(avg_attempts_to_complete, 1),
-            'difficulty_rating': self._calculate_difficulty(completion_rate, avg_completion_time),
-            'player_count': len(set(s.get('user_id') for s in level_sessions)),
-            'recent_activity': await self._get_recent_level_activity_from_sessions(level_id),
-            **level_specific
-        }
     
     async def _get_level_specific_metrics(self, level_id: int, progress_data: List[Dict]) -> Dict[str, Any]:
         """Get metrics specific to each level's gameplay mechanics"""
