@@ -38,7 +38,7 @@ export class StringsCommand extends BaseCommand {
             }
         }
 
-        const content = await this.fileSystem.readFile(this.getCurrentDirectory(), filename);
+        const content = await this.readFile(filename);
         
         if (content !== null) {
             // Extract strings from file content

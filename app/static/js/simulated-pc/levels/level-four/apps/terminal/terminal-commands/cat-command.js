@@ -25,7 +25,7 @@ export class CatCommand extends BaseCommand {
         }
 
         const filename = args[0];
-        const content = await this.fileSystem.readFile(this.getCurrentDirectory(), filename);
+        const content = await this.readFile(filename);
         
         if (content !== null) {
             this.addOutput(content);

@@ -28,9 +28,9 @@ export class CdCommand extends BaseCommand {
         }
 
         const target = args[0];
-        const newPath = this.fileSystem.resolvePath(this.getCurrentDirectory(), target);
+        const newPath = this.resolvePath(target);
         
-        if (await this.fileSystem.directoryExists(newPath)) {
+        if (await this.directoryExists(target)) {
             this.setCurrentDirectory(newPath);
         } else {
             this.addOutput(`bash: cd: ${target}: No such file or directory`, 'error');

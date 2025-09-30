@@ -25,10 +25,10 @@ export class FileCommand extends BaseCommand {
         }
 
         const filename = args[0];
-        const exists = await this.fileSystem.fileExists(this.getCurrentDirectory(), filename);
+        const exists = await this.fileExists(filename);
         
         if (exists) {
-            const content = await this.fileSystem.readFile(this.getCurrentDirectory(), filename);
+            const content = await this.readFile(filename);
             
             // Determine file type based on content and extension
             if (filename.endsWith('.txt') || filename.endsWith('.log')) {
