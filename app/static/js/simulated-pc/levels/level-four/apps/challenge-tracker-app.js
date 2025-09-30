@@ -85,8 +85,9 @@ export class Level4ChallengeTracker {
     createElement() {
         this.element = document.createElement('div');
         this.element.id = 'level4-challenge-tracker-static';
-        this.element.className = 'fixed top-4 right-4 bg-gray-800 border border-gray-600 rounded shadow-xl z-50 backdrop-blur-sm';
-        this.element.style.width = this.isMinimized ? '60px' : '320px';
+        this.element.className = 'fixed top-2 sm:top-4 right-2 sm:right-4 bg-gray-800 border border-gray-600 rounded shadow-xl z-50 backdrop-blur-sm';
+        this.element.style.width = this.isMinimized ? '50px' : '300px';
+        this.element.style.maxWidth = 'calc(100vw - 16px)';
         this.element.style.transition = 'width 0.3s ease';
         
         this.updateContent();
@@ -110,38 +111,40 @@ export class Level4ChallengeTracker {
         const progress = `${this.foundFlagIds.size}/${this.challenges.length}`;
         
         return `
-            <div class="bg-gradient-to-r from-blue-700 to-blue-600 px-3 py-2 border-b border-gray-600 cursor-pointer"
+            <div class="bg-gradient-to-r from-blue-700 to-blue-600 px-2 sm:px-3 py-2 border-b border-gray-600 cursor-pointer touch-manipulation"
                  onclick="window.level4ChallengeTracker?.toggleMinimize()">
                 <div class="text-white text-xs font-semibold flex items-center justify-between">
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center space-x-1 sm:space-x-2">
                         <i class="bi bi-flag text-yellow-400"></i>
-                        <span>WHITE HAT TEST</span>
+                        <span class="hidden xs:inline">WHITE HAT TEST</span>
+                        <span class="xs:hidden">WHT</span>
                     </div>
                     <div class="flex flex-col items-end space-y-1">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-xs bg-blue-800 px-2 py-1 rounded">${progress}</span>
-                            <i class="bi bi-chevron-up text-gray-300"></i>
+                        <div class="flex items-center space-x-1 sm:space-x-2">
+                            <span class="text-xs bg-blue-800 px-1 sm:px-2 py-1 rounded">${progress}</span>
+                            <i class="bi bi-chevron-up text-gray-300 text-xs"></i>
                         </div>
-                        <div class="w-16 bg-gray-600 rounded-full h-1">
+                        <div class="w-12 sm:w-16 bg-gray-600 rounded-full h-1">
                             <div class="bg-gradient-to-r from-blue-400 to-green-400 h-1 rounded-full transition-all duration-500" 
                                  style="width: ${this.challenges.length > 0 ? (this.foundFlagIds.size / this.challenges.length) * 100 : 0}%"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="p-3 text-white max-h-96 overflow-y-auto">
+            <div class="p-2 sm:p-3 text-white max-h-80 sm:max-h-96 overflow-y-auto">
                 <!-- Current Challenge - Always show -->
-                <div class="mb-3">
-                    <div class="text-sm font-semibold text-blue-300 mb-2">
+                <div class="mb-2 sm:mb-3">
+                    <div class="text-xs sm:text-sm font-semibold text-blue-300 mb-2">
                         <div class="flex items-center">
                             <i class="bi bi-search mr-1"></i>
-                            Current Challenge
+                            <span class="hidden xs:inline">Current Challenge</span>
+                            <span class="xs:hidden">Challenge</span>
                         </div>
                     </div>
                     <!-- Challenge Dropdown -->
-                    <div class="mb-3">
+                    <div class="mb-2 sm:mb-3">
                         <select onchange="window.level4ChallengeTracker?.selectChallenge(parseInt(this.value))" 
-                                class="w-full text-xs bg-gray-600 text-white rounded px-2 py-1 border border-gray-500 focus:outline-none focus:border-blue-400 cursor-pointer"
+                                class="w-full text-xs bg-gray-600 text-white rounded px-2 py-1 border border-gray-500 focus:outline-none focus:border-blue-400 cursor-pointer touch-manipulation"
                                 value="${this.currentChallengeIndex}">
                             ${this.challenges.map((challenge, index) => `
                                 <option value="${index}" ${index === this.currentChallengeIndex ? 'selected' : ''}>
