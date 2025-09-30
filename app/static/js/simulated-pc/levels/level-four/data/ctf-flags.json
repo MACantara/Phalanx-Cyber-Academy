@@ -444,11 +444,233 @@
           "Learning about string extraction methods",
           "Recognizing embedded secrets in executables"
         ]
+      },
+      "WHT-FILE": {
+        "id": "WHT-FILE",
+        "value": "WHT{file_type_identification}",
+        "name": "File Type Analysis Challenge",
+        "challenge_question": "File extensions can be misleading. Can you use file type identification to discover hidden executables and disguised files in the system?",
+        "location": "/home/user/documents/report.pdf",
+        "category": "file_analysis",
+        "difficulty": "medium",
+        "hints": [
+          "File extensions don't always match file contents",
+          "Check file magic bytes to identify true file types",
+          "Executables might be disguised as documents"
+        ],
+        "discovery_commands": ["file /home/user/documents/*", "find /home -type f -exec file {} \\;", "file -b /home/user/documents/report.pdf"],
+        "learning_objectives": [
+          "Understanding file type identification",
+          "Learning about file magic bytes",
+          "Recognizing file disguise techniques"
+        ]
+      },
+      "WHT-UNAME": {
+        "id": "WHT-UNAME",
+        "value": "WHT{system_information_gathering}",
+        "name": "System Information Enumeration Challenge",
+        "challenge_question": "System information reveals kernel version, architecture, and potential vulnerabilities. Can you gather comprehensive system details for reconnaissance?",
+        "location": "uname output",
+        "category": "system_enumeration",
+        "difficulty": "easy",
+        "hints": [
+          "Gather system name, kernel version, and architecture",
+          "Check for outdated kernel versions with known vulnerabilities",
+          "System information helps identify exploit compatibility"
+        ],
+        "discovery_commands": ["uname -a", "cat /proc/version", "lsb_release -a"],
+        "learning_objectives": [
+          "Understanding system enumeration techniques",
+          "Learning about kernel version analysis",
+          "Recognizing vulnerability assessment methods"
+        ]
+      },
+      "WHT-STAT": {
+        "id": "WHT-STAT",
+        "value": "WHT{file_metadata_analysis}",
+        "name": "File Statistics and Metadata Challenge",
+        "challenge_question": "File metadata contains timestamps, permissions, and ownership information that can reveal security issues. Can you analyze file statistics for forensic evidence?",
+        "location": "/etc/passwd",
+        "category": "forensic_analysis",
+        "difficulty": "medium",
+        "hints": [
+          "File timestamps reveal when files were last accessed or modified",
+          "Check file permissions and ownership for security issues",
+          "Metadata analysis can uncover unauthorized changes"
+        ],
+        "discovery_commands": ["stat /etc/passwd", "stat /etc/shadow", "find /etc -printf '%T@ %p\\n' | sort -n"],
+        "learning_objectives": [
+          "Understanding file metadata analysis",
+          "Learning about timestamp forensics",
+          "Recognizing permission-based vulnerabilities"
+        ]
+      },
+      "WHT-XXD": {
+        "id": "WHT-XXD",
+        "value": "WHT{hexadecimal_data_analysis}",
+        "name": "Binary Hex Dump Analysis Challenge",
+        "challenge_question": "Binary data analysis requires examining raw bytes. Can you use hex dump analysis to find hidden data in binary files?",
+        "location": "/usr/local/bin/custom_tool",
+        "category": "binary_analysis",
+        "difficulty": "hard",
+        "hints": [
+          "Hex dumps reveal the raw binary structure of files",
+          "Look for readable strings in hex format",
+          "Check for embedded data or configuration in binaries"
+        ],
+        "discovery_commands": ["xxd /usr/local/bin/custom_tool", "xxd -l 512 /usr/local/bin/custom_tool", "xxd /etc/shadow | head -20"],
+        "learning_objectives": [
+          "Understanding hex dump analysis",
+          "Learning about binary data examination",
+          "Recognizing data hiding techniques"
+        ]
+      },
+      "WHT-CHMOD": {
+        "id": "WHT-CHMOD",
+        "value": "WHT{permission_modification_risks}",
+        "name": "File Permission Security Challenge",
+        "challenge_question": "File permissions control access to sensitive data. Can you identify world-writable files and incorrect permission settings that pose security risks?",
+        "location": "file permissions analysis",
+        "category": "permission_analysis",
+        "difficulty": "medium",
+        "hints": [
+          "World-writable files (777) are security risks",
+          "SUID/SGID bits on executables can enable privilege escalation",
+          "Check for files with overly permissive settings"
+        ],
+        "discovery_commands": ["find / -perm -002 2>/dev/null", "find / -perm -4000 2>/dev/null", "ls -la /tmp/"],
+        "learning_objectives": [
+          "Understanding Unix file permission security",
+          "Learning about dangerous permission settings",
+          "Recognizing privilege escalation vectors"
+        ]
+      },
+      "WHT-SYSTEMCTL": {
+        "id": "WHT-SYSTEMCTL",
+        "value": "WHT{service_management_analysis}",
+        "name": "System Service Analysis Challenge",
+        "challenge_question": "System services can be attack vectors if misconfigured. Can you analyze running services and identify potential security risks in service configurations?",
+        "location": "systemctl status output",
+        "category": "service_analysis",
+        "difficulty": "medium",
+        "hints": [
+          "List all running services and their status",
+          "Check for unnecessary services that increase attack surface",
+          "Look for failed services that might indicate compromise"
+        ],
+        "discovery_commands": ["systemctl list-units --type=service", "systemctl status", "systemctl list-unit-files --state=enabled"],
+        "learning_objectives": [
+          "Understanding service management security",
+          "Learning about attack surface reduction",
+          "Recognizing service-based vulnerabilities"
+        ]
+      },
+      "WHT-BASE64": {
+        "id": "WHT-BASE64",
+        "value": "WHT{encoded_data_discovery}",
+        "name": "Base64 Encoding Analysis Challenge",
+        "challenge_question": "Sensitive data is often base64 encoded to obscure it from casual inspection. Can you identify and decode base64 strings in configuration files?",
+        "location": "/etc/application/config.yaml",
+        "category": "data_encoding",
+        "difficulty": "easy",
+        "hints": [
+          "Base64 strings are often used to encode passwords and tokens",
+          "Look for long alphanumeric strings ending with '=' padding",
+          "Configuration files may contain encoded credentials"
+        ],
+        "discovery_commands": ["grep -r '[A-Za-z0-9+/]\\{20,\\}=' /etc/", "cat /etc/application/config.yaml | grep -E '[A-Za-z0-9+/]{16,}='", "echo 'V0hUe2VuY29kZWRfZGF0YV9kaXNjb3Zlcnl9' | base64 -d"],
+        "learning_objectives": [
+          "Understanding data encoding techniques",
+          "Learning about obfuscation methods",
+          "Recognizing encoded credential storage"
+        ]
+      },
+      "WHT-NETSTAT": {
+        "id": "WHT-NETSTAT",
+        "value": "WHT{network_connection_enumeration}",
+        "name": "Network Connection Analysis Challenge",
+        "challenge_question": "Active network connections reveal running services and potential backdoors. Can you enumerate network connections to identify suspicious activity?",
+        "location": "netstat output",
+        "category": "network_analysis",
+        "difficulty": "medium",
+        "hints": [
+          "Check for listening services on unusual ports",
+          "Look for connections to suspicious external addresses",
+          "Identify services that shouldn't be network-accessible"
+        ],
+        "discovery_commands": ["netstat -tuln", "netstat -tulnp", "netstat -an | grep LISTEN"],
+        "learning_objectives": [
+          "Understanding network service enumeration",
+          "Learning about backdoor detection",
+          "Recognizing suspicious network activity"
+        ]
+      },
+      "WHT-SS": {
+        "id": "WHT-SS",
+        "value": "WHT{socket_statistics_analysis}",
+        "name": "Socket Connection Investigation Challenge",
+        "challenge_question": "Modern socket analysis provides detailed connection information. Can you use socket statistics to identify process-to-port mappings and detect anomalies?",
+        "location": "ss command output",
+        "category": "network_forensics",
+        "difficulty": "hard",
+        "hints": [
+          "Socket statistics show process names and PIDs for connections",
+          "Check for processes listening on privileged ports",
+          "Identify connections that might indicate compromise"
+        ],
+        "discovery_commands": ["ss -tuln", "ss -tulnp", "ss -o state established"],
+        "learning_objectives": [
+          "Understanding modern network analysis tools",
+          "Learning about process-network correlation",
+          "Recognizing advanced network forensics"
+        ]
+      },
+      "WHT-ENV3": {
+        "id": "WHT-ENV3",
+        "value": "WHT{environment_variable_enumeration}",
+        "name": "Environment Variable Security Challenge",
+        "challenge_question": "Environment variables often contain sensitive paths, tokens, and configuration data. Can you enumerate environment variables to find security-relevant information?",
+        "location": "env output",
+        "category": "information_disclosure",
+        "difficulty": "easy",
+        "hints": [
+          "Environment variables may contain API keys and tokens",
+          "Check PATH variable for writable directories",
+          "Look for custom variables with sensitive data"
+        ],
+        "discovery_commands": ["env", "printenv", "echo $PATH"],
+        "learning_objectives": [
+          "Understanding environment variable security",
+          "Learning about PATH hijacking risks",
+          "Recognizing credential exposure in environment"
+        ]
+      },
+      "WHT-ID": {
+        "id": "WHT-ID",
+        "value": "WHT{user_identity_verification}",
+        "name": "User Identity and Group Analysis Challenge",
+        "challenge_question": "User identity and group memberships determine access privileges. Can you analyze current user identity to understand available permissions and potential escalation paths?",
+        "location": "id command output",
+        "category": "privilege_analysis",
+        "difficulty": "medium",
+        "hints": [
+          "Group memberships can provide unexpected privileges",
+          "Check for membership in administrative groups",
+          "Look for special groups like docker, sudo, or wheel"
+        ],
+        "discovery_commands": ["id", "groups", "whoami"],
+        "learning_objectives": [
+          "Understanding user privilege analysis",
+          "Learning about group-based permissions",
+          "Recognizing privilege escalation opportunities"
+        ]
       }
     },
     "scoring": {
       "points_per_flag": 100,
-      "total_points": 700,
+      "flags_per_session": 5,
+      "total_flags_available": 32,
+      "session_points": 500,
       "bonus_points": {
         "speed_bonus": 50,
         "thorough_documentation": 100,
@@ -457,10 +679,11 @@
     },
     "metadata": {
       "created_date": "2025-09-27",
-      "version": "2.0",
-      "challenge_type": "responsible_disclosure_ctf",
-      "estimated_duration": "45-90 minutes",
-      "skill_level": "intermediate"
+      "version": "3.0",
+      "challenge_type": "terminal_command_ctf",
+      "estimated_duration": "30-60 minutes per session",
+      "skill_level": "intermediate",
+      "session_structure": "5 random flags selected per session from 32 available challenges"
     }
   }
 }
