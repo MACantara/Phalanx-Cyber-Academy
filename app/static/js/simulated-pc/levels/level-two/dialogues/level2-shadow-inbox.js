@@ -5,19 +5,67 @@ export class Level2ShadowInboxDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "Welcome to Level 2: Shadow in the Inbox. In this level, you'll be learning how to spot phishing attempts and practice safe email protocols."
+                text: "🚨 **SECURITY ALERT: Level 2 - Shadow in the Inbox**\n\nUrgent! Our organization has been targeted by a sophisticated phishing campaign. As the Security Operations Center analyst on duty, you must identify and quarantine malicious emails before they compromise our systems."
             },
             {
-                text: "Phishing is one of the most common cyber threats today. Attackers try to trick you into revealing sensitive information through seemingly legitimate emails."
+                text: "📊 **Threat Intelligence:**\nRecent attacks show a 300% increase in spear-phishing attempts targeting our industry. Attackers are using advanced social engineering tactics to breach corporate defenses."
             },
             {
-                text: "You'll be presented with a series of emails. Some are legitimate, while others are phishing attempts. Your job is to identify which is which."
+                text: "**Current Attack Vectors:**\n• CEO impersonation emails\n• Fake vendor invoices\n• Credential harvesting schemes\n• Malware-laden attachments"
             },
             {
-                text: "Look for telltale signs like suspicious sender addresses, urgent language, unexpected attachments, and requests for sensitive information."
+                text: "🎯 **Your Mission:**\nAnalyze incoming emails in the corporate inbox and determine which are legitimate business communications versus sophisticated phishing attempts."
             },
             {
-                text: "Successfully completing this level will earn you 150 XP in the Email Security category. Ready to test your phishing detection skills?"
+                text: "One wrong decision could lead to a data breach costing millions. The stakes are high, and you are our last line of defense against these cyber threats."
+            },
+            {
+                text: "🔍 **Email Analysis Framework:**\n\n**Sender Verification:** Check email addresses for subtle misspellings or suspicious domains that impersonate legitimate organizations."
+            },
+            {
+                text: "**Content Analysis:** Look for urgent language, grammar errors, and pressure tactics designed to make you act without thinking carefully."
+            },
+            {
+                text: "**Link Inspection:** Hover over (don't click!) suspicious links to see real destinations. Malicious links often hide behind legitimate-looking text."
+            },
+            {
+                text: "**Attachment Safety:** Be wary of unexpected files, especially .exe, .zip, or macro-enabled documents that could contain malware."
+            },
+            {
+                text: "⚠️ **Red Flags Checklist:**\n\n• Generic greetings ('Dear Customer') instead of your name\n• Urgent threats ('Account will be closed in 24 hours!')"
+            },
+            {
+                text: "• Requests for passwords, SSN, or financial information\n• Suspicious sender addresses or reply-to mismatches\n• Poor grammar, spelling, or formatting inconsistencies"
+            },
+            {
+                text: "🛡️ **Response Protocols:**\n\n**SAFE:** Mark legitimate emails to allow delivery\n**PHISHING:** Quarantine suspicious emails immediately"
+            },
+            {
+                text: "**REPORT:** Document phishing attempts for threat intelligence\n**Critical Rule:** Never click suspicious links or download unexpected attachments"
+            },
+            {
+                text: "💡 **Advanced Detection Tips:**\n\n• Check email headers for routing anomalies\n• Verify requests through alternative communication channels"
+            },
+            {
+                text: "• Be extra cautious with financial or HR-related requests\n• When in doubt, always choose security over convenience"
+            },
+            {
+                text: "🏆 **Performance Metrics:**\n\n**Accuracy Rate:** Correctly identify email types\n**Response Time:** Quick decisions prevent damage"
+            },
+            {
+                text: "**False Positives:** Minimize blocking legitimate business emails\n**Threat Detection:** Earn bonus XP for catching advanced attacks"
+            },
+            {
+                text: "🎮 **How to Play:**\nOpen the Email Client and examine each message carefully. Read the sender information, subject line, and content thoroughly."
+            },
+            {
+                text: "Use the 'SAFE' or 'PHISHING' buttons to classify each email based on your analysis. Remember - you're protecting the entire organization!"
+            },
+            {
+                text: "🚀 **Mission Critical:**\nPhishing attacks are responsible for 90% of data breaches. Your expertise in email security directly protects our organization's data, reputation, and financial assets."
+            },
+            {
+                text: "Every email you analyze correctly makes us more secure. The entire team is counting on your vigilance and expertise.\n\nReady to defend the inbox?"
             }
         ];
     }

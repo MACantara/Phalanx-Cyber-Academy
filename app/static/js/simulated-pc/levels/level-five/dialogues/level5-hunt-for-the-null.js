@@ -5,58 +5,76 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "Welcome to Level 5: The Hunt for The Null. This is your final mission—a comprehensive digital forensics investigation to expose The Null's identity."
+                text: "🔍 **CASE FILE: Level 5 - The Hunt for The Null**\n\n**CASE NUMBER:** FOR-2024-0812\n**CLASSIFICATION:** Top Secret\n**LEAD INVESTIGATOR:** [Your Name]\n**INCIDENT TYPE:** Advanced Persistent Threat (APT)\n**OBJECTIVE:** Identify and prosecute 'The Null' - mastermind behind global cybercrimes"
             },
             {
-                text: "You'll be working with a professional forensic suite featuring six specialized applications: Evidence Locker, Disk Analyzer, Memory Forensics, Network Analyzer, Timeline Constructor, and Report Generator."
+                text: "📋 **Case Background:**\nFor months, a sophisticated cybercriminal known only as 'The Null' has orchestrated attacks against critical infrastructure, financial institutions, and government agencies worldwide. Previous attempts to identify this adversary have failed. You are our last hope."
             },
             {
-                text: "The Evidence Locker is your central hub—it manages chain of custody, tracks evidence integrity, and coordinates analysis across all forensic tools."
+                text: "🎯 **Investigation Mandate:**\nUsing advanced digital forensics techniques, analyze seized evidence from The Null's compromised systems to:\n• Establish their true identity\n• Document attack methodologies\n• Build prosecutable evidence chain\n• Prevent future attacks by understanding their infrastructure"
             },
             {
-                text: "Every piece of evidence has hash verification to ensure its authenticity."
+                text: "🛠️ **Forensic Suite Overview:**\n\n**Evidence Locker** - Your command center\n• Manages chain of custody for all evidence\n• Tracks evidence integrity with cryptographic hashes\n• Coordinates analysis across all forensic tools\n• Maintains audit trail per ISO/IEC 27037:2012 standards"
             },
             {
-                text: "Use the Disk Analyzer to examine hard drive images, recover deleted files, and analyze filesystem artifacts."
+                text: "**Disk Analyzer** - Hard drive forensics\n• Examine disk images from seized computers\n• Recover deleted files and hidden partitions\n• Analyze filesystem artifacts and metadata\n• Extract browser history, downloads, and user activity"
             },
             {
-                text: "The Memory Forensics tool reveals running processes, network connections, and hidden malware in RAM dumps."
+                text: "**Memory Forensics** - RAM analysis\n• Analyze memory dumps from running systems\n• Identify active processes and network connections\n• Detect memory-resident malware and rootkits\n• Extract encryption keys and volatile data"
             },
             {
-                text: "The Network Analyzer lets you inspect packet captures, identify suspicious traffic patterns, and trace command-and-control communications."
-            },
-            {                
-                text: "Correlate findings across sources using the Timeline Constructor."
+                text: "**Network Analyzer** - Traffic investigation\n• Inspect captured network packets\n• Identify command-and-control communications\n• Trace data exfiltration patterns\n• Reconstruct network conversations and protocols"
             },
             {
-                text: "Finally, document your investigation with the Report Generator."
+                text: "**Timeline Constructor** - Event correlation\n• Correlate findings across all evidence sources\n• Build comprehensive attack timeline\n• Identify patterns and relationships between events\n• Visualize the complete attack sequence"
             },
             {
-                text: "It creates legally-compliant forensic reports following NIST SP 800-86 and ISO/IEC 27037:2012 standards, complete with proper evidence citations."
+                text: "**Report Generator** - Legal documentation\n• Create court-admissible forensic reports\n• Follow NIST SP 800-86 forensic guidelines\n• Include proper evidence citations and methodology\n• Generate executive summaries for law enforcement"
             },
             {
-                text: "All forensic applications maintain a shared evidence context, so findings from one tool are automatically available to others."
+                text: "🔬 **Forensic Methodology:**\n\n**Phase 1: Evidence Acquisition**\n• Verify evidence integrity using cryptographic hashes\n• Document chain of custody\n• Create forensic copies for analysis"
             },
             {
-                text: "Look for correlations between disk artifacts, memory signatures, and network traffic."
+                text: "**Phase 2: Analysis**\n• Examine each evidence source systematically\n• Look for artifacts, deleted files, and hidden data\n• Cross-reference findings between sources"
             },
             {
-                text: "The Null has left traces across multiple evidence sources."
+                text: "**Phase 3: Correlation**\n• Use Timeline Constructor to identify patterns\n• Connect disk artifacts with memory signatures\n• Correlate network traffic with system activities"
             },
             {
-                text: "Your mission is to piece together the attack timeline, identify indicators of compromise, and build an airtight case documenting their activities."
+                text: "**Phase 4: Documentation**\n• Document all findings with legal precision\n• Maintain evidence integrity throughout\n• Prepare comprehensive forensic report"
             },
             {
-                text: "This investigation follows real-world digital forensics procedures."
+                text: "🎯 **Key Investigation Areas:**\n\n• **Digital Identity:** Email accounts, usernames, online personas\n• **Technical Indicators:** IP addresses, domains, malware signatures"
             },
             {
-                text: "Verify evidence integrity, maintain chain of custody, document your methodology, and ensure all findings are reproducible."
+                text: "• **Operational Security:** VPNs, encryption, anonymization techniques\n• **Attack Infrastructure:** C2 servers, botnets, staging areas\n• **Financial Trails:** Cryptocurrency wallets, money laundering"
             },
             {
-                text: "Successfully completing this forensic investigation and identifying The Null will earn you 500 XP in Digital Forensics."
+                text: "⚖️ **Legal Standards:**\nThis investigation must meet courtroom standards:"
             },
             {
-                text: "Ready to put your investigative skills to the ultimate test?"
+                text: "• **Evidence Integrity:** Cryptographic verification\n• **Chain of Custody:** Documented handling procedures\n• **Methodology:** Industry-standard forensic practices"
+            },
+            {
+                text: "• **Documentation:** Detailed, reproducible findings\n• **Expert Testimony:** Ability to defend findings in court"
+            },
+            {
+                text: "🏆 **Success Criteria:**\n• **Identity Confirmation:** Definitive identification of The Null\n• **Evidence Quality:** Court-admissible documentation\n• **Timeline Accuracy:** Complete attack reconstruction"
+            },
+            {
+                text: "• **Technical Proficiency:** Master-level forensic skills\n• **Mission Badge:** Earn 'Digital Detective' certification"
+            },
+            {
+                text: "🚀 **Investigation Launch:**\nThe Evidence Locker is your starting point. All seized materials have been catalogued and await your analysis."
+            },
+            {
+                text: "Remember - The Null is highly sophisticated and has evaded capture before. Your forensic expertise is the key to finally bringing them to justice."
+            },
+            {
+                text: "**Case Status:** Active Investigation\n**Evidence Status:** Ready for Analysis\n**Legal Authority:** Full Forensic Examination Authorized"
+            },
+            {
+                text: "Ready to begin the hunt?"
             }
         ];
     }

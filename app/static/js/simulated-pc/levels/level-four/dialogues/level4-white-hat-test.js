@@ -5,34 +5,73 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "Welcome to Level 4: The White Hat Test. This is a comprehensive cybersecurity challenge focused on ethical penetration testing and responsible disclosure."
+                text: "🎓 **Professional Certification: Level 4 - The White Hat Test**\n\n**ENGAGEMENT TYPE:** Authorized Penetration Test\n**CLIENT:** TechCorp Industries\n**SCOPE:** Web Application Security Assessment\n**DURATION:** Full-scope evaluation\n**METHODOLOGY:** NIST SP 800-115 & OWASP Testing Guide"
             },
             {
-                text: "You'll be conducting a security assessment of TechCorp's web application infrastructure using professional methodologies."
+                text: "📜 **Rules of Engagement:**\n\n**AUTHORIZED ACTIVITIES:**\n• Reconnaissance and information gathering\n• Vulnerability scanning and analysis"
             },
             {
-                text: "Your mission is to discover 7 randomly selected security flags hidden throughout the system using various reconnaissance and analysis techniques."
+                text: "• Configuration review and assessment\n• Log file examination and forensic analysis"
             },
             {
-                text: "Each challenge represents a different aspect of security research - from environment analysis to log investigation, from configuration review to forensic analysis."
+                text: "**STRICTLY PROHIBITED:**\n• Social engineering against real personnel\n• Denial of service attacks\n• Data exfiltration or destruction\n• Unauthorized access to production systems"
             },
             {
-                text: "Use the integrated Challenge Tracker in the top-right corner to submit discovered flags and monitor your progress throughout the assessment."
+                text: "🎯 **Mission Objectives:**\nTechCorp has hired you as an ethical hacker to assess their security posture before a major product launch."
             },
             {
-                text: "The terminal provides access to various security tools and commands. Explore the file system methodically to uncover hidden vulnerabilities and exposed information."
+                text: "Your task is to identify 7 security vulnerabilities (represented as flags) across their infrastructure using professional penetration testing methodologies."
             },
             {
-                text: "Remember: this is an authorized penetration test. All activities are within scope and conducted with proper permission for educational purposes."
+                text: "🔍 **Assessment Categories:**\n\n• **Environment Analysis:** System configuration and deployment security\n• **Access Control:** Authentication and authorization mechanisms"
             },
             {
-                text: "Your findings will be automatically validated, and successful completion demonstrates proficiency in ethical hacking methodologies and responsible security research practices."
+                text: "• **Data Exposure:** Sensitive information in logs and files\n• **Configuration Security:** Server and application hardening\n• **Code Review:** Source code vulnerabilities"
             },
             {
-                text: "Successfully completing this assessment will earn you 350 XP in Ethical Hacking and showcase your readiness for advanced cybersecurity roles."
+                text: "• **Forensic Analysis:** Historical security incidents\n• **Network Security:** Communication and protocol security"
             },
             {
-                text: "Begin your security assessment by using the Terminal to explore the TechCorp infrastructure. Good hunting, and remember - thorough documentation is key to professional security research."
+                text: "🛠️ **Penetration Testing Methodology:**\n\n**Phase 1: Reconnaissance**\n• Gather information about the target system\n• Identify services, versions, and technologies\n• Map the attack surface"
+            },
+            {
+                text: "**Phase 2: Scanning & Enumeration**\n• Identify potential vulnerabilities\n• Enumerate services and configurations\n• Document findings systematically"
+            },
+            {
+                text: "**Phase 3: Vulnerability Assessment**\n• Analyze discovered weaknesses\n• Determine exploitability and impact\n• Prioritize findings by risk level"
+            },
+            {
+                text: "**Phase 4: Documentation**\n• Use the Challenge Tracker to submit flags\n• Document methodology and evidence\n• Prepare findings for client reporting"
+            },
+            {
+                text: "💻 **Professional Tools Available:**\n\n• **Terminal Access:** Command-line interface with security tools\n• **File System Explorer:** Navigate and examine system files"
+            },
+            {
+                text: "• **Log Analyzer:** Review system and application logs\n• **Configuration Inspector:** Analyze server and app configurations\n• **Network Scanner:** Discover services and open ports"
+            },
+            {
+                text: "🏆 **Professional Standards:**\n\n• **Thoroughness:** Systematic examination of all components\n• **Documentation:** Detailed evidence collection for each finding"
+            },
+            {
+                text: "• **Ethics:** Responsible disclosure and minimal impact testing\n• **Methodology:** Follow industry-standard testing procedures"
+            },
+            {
+                text: "📊 **Success Metrics:**\n\n• **Flag Discovery:** Find all 7 security vulnerabilities\n• **Methodology Score:** Demonstrate proper testing techniques"
+            },
+            {
+                text: "• **Documentation Quality:** Clear evidence and explanations\n• **Time Efficiency:** Complete assessment within reasonable timeframe\n• **Certification Goal:** Earn 'Certified Ethical Hacker' badge"
+            },
+            {
+                text: "🎮 **How to Begin:**\nOpen the Terminal to start your security assessment. Use commands like `ls`, `cat`, `grep`, and specialized security tools to explore the TechCorp infrastructure."
+            },
+            {
+                text: "The Challenge Tracker in the top-right will help you submit flags and monitor progress throughout your assessment."
+            },
+            {
+                text: "🚀 **Professional Engagement:**\nThis assessment simulates real-world penetration testing engagements. Your professionalism, methodology, and ethical approach demonstrate readiness for cybersecurity consulting roles."
+            },
+            {
+                text: "**Remember:** Great penetration testers combine technical skills with ethical responsibility and clear communication.\n\nReady to begin your professional security assessment?"
             }
         ];
     }

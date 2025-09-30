@@ -9,22 +9,55 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "Welcome to Level 1: The Misinformation Maze. In this level, you'll be working to identify fake news and develop critical thinking skills to combat misinformation."
+                text: "🎯 **Mission Brief: Level 1 - The Misinformation Maze**\n\nWelcome to your first cybersecurity challenge! As a junior security analyst, you've been assigned to investigate a coordinated disinformation campaign targeting upcoming elections."
             },
             {
-                text: "As a cybersecurity analyst, you'll need to develop sharp analytical skills to distinguish between legitimate news and misleading information."
+                text: "📚 **Learning Objectives:**\n• Master critical thinking techniques for information verification\n• Identify common misinformation tactics and manipulation strategies"
             },
             {
-                text: "You'll be presented with various news articles from real sources. Your task is to determine which ones are legitimate and which are spreading misinformation."
+                text: "• Develop skills to assess source credibility and author credentials\n• Learn to spot emotional manipulation and bias in content"
             },
             {
-                text: "Remember to check sources, look for author credentials, and watch for emotional manipulation tactics. Misinformation often relies on sensational headlines rather than facts."
+                text: "🔍 **Your Mission:**\nIntelligence reports indicate that foreign adversaries are spreading false information through fake news websites."
             },
             {
-                text: "Successfully completing this level will earn you performance-based XP in the Information Literacy category. Your XP reward depends on how accurately you distinguish real from fake news!"
+                text: "You'll analyze various news articles to distinguish legitimate journalism from fabricated content designed to influence public opinion."
             },
             {
-                text: "Are you ready to start?"
+                text: "🛠️ **Detection Techniques:**\n\n**Source Analysis:** Check domain authority and publication history\n**Author Verification:** Look for real credentials and bylines"
+            },
+            {
+                text: "**Fact Correlation:** Cross-reference with reputable news sources\n**Language Patterns:** Watch for sensational headlines and emotional manipulation"
+            },
+            {
+                text: "⚠️ **Warning Signs to Watch For:**\n\n• Suspicious URLs or domain names\n• Missing author information or fake credentials"
+            },
+            {
+                text: "• Extreme emotional language designed to provoke anger\n• Claims without credible sources or evidence\n• Headlines that don't match the article content"
+            },
+            {
+                text: "🎮 **How to Play:**\nUse the Web Browser to navigate between news sites. Read each article carefully, then use your analytical skills to determine if it's legitimate journalism or misinformation."
+            },
+            {
+                text: "Click 'Legitimate' or 'Misinformation' based on your assessment. Take your time to analyze all the evidence before making a decision."
+            },
+            {
+                text: "🏆 **Scoring System:**\n\n**Correct identification:** +100 XP per article\n**Speed bonus:** Extra points for quick, accurate decisions"
+            },
+            {
+                text: "**Streak multiplier:** Consecutive correct answers increase your score\n**Perfect score:** Earn the 'Truth Seeker' badge for 100% accuracy"
+            },
+            {
+                text: "💡 **Pro Tips:**\n\n• Take time to read carefully - rushing leads to mistakes\n• Check multiple indicators, not just one red flag"
+            },
+            {
+                text: "• When in doubt, err on the side of caution\n• Real news includes multiple credible sources and balanced reporting"
+            },
+            {
+                text: "🚀 **Ready for Action?**\nThis mission is crucial for national security. Disinformation campaigns can influence elections, cause social unrest, and undermine public trust."
+            },
+            {
+                text: "Your ability to identify fake news helps protect democracy itself. Are you ready to enter the Misinformation Maze?"
             }
         ];
     }
