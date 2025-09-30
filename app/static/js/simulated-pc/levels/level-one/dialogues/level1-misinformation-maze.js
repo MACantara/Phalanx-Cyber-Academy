@@ -20,7 +20,7 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                 text: "🔍 Your Mission:\nIntelligence reports indicate that foreign adversaries are spreading false information through fake news websites."
             },
             {
-                text: "You'll analyze various news articles to distinguish legitimate journalism from fabricated content designed to influence public opinion."
+                text: "You'll analyze 10 carefully selected articles: 5 legitimate news pieces from established sources and 5 fabricated articles designed to mislead and manipulate public opinion."
             },
             {
                 text: "🛠️ Detection Techniques:\nSource Analysis: Check domain authority and publication history\nAuthor Verification: Look for real credentials and bylines",
@@ -39,28 +39,28 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                 example: "Red flags: 'OUTRAGEOUS!', 'They don't want you to know!'\nBalanced: 'Study shows', 'According to officials'"
             },
             {
-                text: "🎮 How to Play:\nUse the Web Browser to navigate articles. Read each article carefully, then use your analytical skills to determine if it's legitimate journalism or misinformation."
+                text: "🎮 How to Play:\nUse the Web Browser to navigate through all 10 articles. Read each article carefully, analyzing the source, author credentials, and content quality to determine authenticity."
             },
             {
-                text: "Click 'Real News' or 'Fake News' based on your assessment. Take your time to analyze all the evidence before making a decision."
+                text: "Click 'Real News' or 'Fake News' based on your assessment. You'll receive immediate feedback and automatically advance to the next article after classification."
             },
             {
-                text: "🏆 Scoring System:\nCorrect identification: +100 XP per article\nSpeed bonus: Extra points for quick, accurate decisions"
+                text: "🏆 Scoring System:\nBase XP Award: 50 XP for completing the level\nAccuracy Multiplier: Up to 2x bonus for perfect classification (100%)"
             },
             {
-                text: "Streak multiplier: Consecutive correct answers increase your score\nPerfect score: Earn the 'Truth Seeker' badge for 100% accuracy"
+                text: "Speed Bonus: Additional XP for quick, accurate decisions\nMaximum Possible: ~125 XP for perfect performance\nEarn the 'Fact-Checker' badge for 100% accuracy!"
             },
             {
-                text: "💡 Pro Tips:\n• Take time to read carefully - rushing leads to mistakes\n• Check multiple indicators, not just one red flag"
+                text: "💡 Pro Tips for All 10 Articles:\n• Take time to read carefully - rushing through the 10 articles leads to mistakes\n• Check multiple indicators: source domain, author credentials, writing style"
             },
             {
-                text: "• When in doubt, err on the side of caution\n• Real news includes multiple credible sources and balanced reporting"
+                text: "• Compare article quality between legitimate sources (AP, Reuters, BBC) vs suspicious domains\n• Real news includes verifiable sources and balanced reporting style"
             },
             {
-                text: "🚀 Ready for Action?\nThis mission is crucial for national security. Disinformation campaigns can influence elections, cause social unrest, and undermine public trust."
+                text: "🚀 Ready for Action?\nThis mission is crucial for national security. You'll evaluate 10 articles that represent real-world examples of both legitimate journalism and sophisticated misinformation."
             },
             {
-                text: "Your ability to identify fake news helps protect democracy itself. Are you ready to enter the Misinformation Maze?"
+                text: "Your ability to distinguish between the 5 real and 5 fake articles helps protect democracy itself. Are you ready to enter the Misinformation Maze and prove your analytical skills?"
             }
         ];
     }
