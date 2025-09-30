@@ -272,7 +272,9 @@ class GameController {
             blockedIPs: [],
             attackHistory: [],
             activeAttacks: new Map(), // Reset active attacks tracking
-            assetIsolations: [] // Reset isolation history
+            assetIsolations: [], // Reset isolation history
+            activeVulnerabilities: new Map(), // Reset vulnerability tracking
+            patchHistory: [] // Reset patch history
         };
         
         // Reset AI
@@ -322,6 +324,22 @@ class GameController {
             isActive: true
         });
         this.gameState.activeAttacks.set(target, assetAttacks);
+        
+        // Track active vulnerabilities being exploited for patch XP calculation
+        const exploitedCVE = this.getCVEForAttack(attackData);
+        if (exploitedCVE) {
+            if (!this.gameState.activeVulnerabilities) {
+                this.gameState.activeVulnerabilities = new Map();
+            }
+            const vulnExploits = this.gameState.activeVulnerabilities.get(exploitedCVE) || [];
+            vulnExploits.push({
+                ...attackData,
+                cveId: exploitedCVE,
+                exploitStartTime: new Date(),
+                isActive: true
+            });
+            this.gameState.activeVulnerabilities.set(exploitedCVE, vulnExploits);
+        }
         
         // Check if source IP is blocked
         if (this.gameState.blockedIPs && this.gameState.blockedIPs.includes(sourceIP)) {
@@ -576,6 +594,15 @@ class GameController {
             case 'tactical-guide':
                 this.showTacticalGuidance();
                 break;
+            case 'patch-stats':
+                this.showPatchStatistics();
+                break;
+            case 'active-vulnerabilities':
+                this.showActiveVulnerabilities();
+                break;
+            case 'patch-guide':
+                this.showPatchGuidance();
+                break;
             case 'clear':
                 this.uiManager.clearTerminal();
                 this.uiManager.addTerminalOutput('$ Defense Command Terminal - Ready');
@@ -621,6 +648,9 @@ class GameController {
         this.uiManager.addTerminalOutput('  isolation-stats           - Show asset isolation performance');
         this.uiManager.addTerminalOutput('  active-attacks            - Show current attacks per asset');
         this.uiManager.addTerminalOutput('  tactical-guide            - Show isolation strategy tips');
+        this.uiManager.addTerminalOutput('  patch-stats               - Show vulnerability patch performance');
+        this.uiManager.addTerminalOutput('  active-vulnerabilities   - Show current vulnerabilities being exploited');
+        this.uiManager.addTerminalOutput('  patch-guide               - Show vulnerability patching strategy tips');
         this.uiManager.addTerminalOutput('');
         this.uiManager.addTerminalOutput('DEFENSIVE ACTIONS:');
         this.uiManager.addTerminalOutput('  block-ip [address]        - Block suspicious IP address');
@@ -795,20 +825,88 @@ class GameController {
     executePatchVulnerability(cveId) {
         if (!cveId) {
             this.uiManager.addTerminalOutput('❌ Error: CVE ID required. Usage: patch-vulnerability [cve-id]');
+            this.uiManager.addTerminalOutput('   Common CVE IDs: CVE-2024-0001, CVE-2024-0002, CVE-2024-0003');
             return;
         }
         
-        this.uiManager.addTerminalOutput(`🔧 Applying security patch for: ${cveId}`);
+        // Validate CVE format
+        if (!this.isValidCVEId(cveId)) {
+            this.uiManager.addTerminalOutput(`❌ Error: Invalid CVE format '${cveId}'. Use format: CVE-YYYY-NNNN`);
+            return;
+        }
+        
+        this.uiManager.addTerminalOutput(`🔧 Analyzing vulnerability: ${cveId}...`);
+        
+        // Check for active exploits of this vulnerability
+        const activeExploits = this.getActiveExploitsForCVE(cveId);
+        const hasActiveExploits = activeExploits.length > 0;
+        
+        // Calculate XP reward/penalty based on patch necessity
+        const patchData = {
+            cveId: cveId,
+            timestamp: new Date(),
+            wasNecessary: hasActiveExploits,
+            activeExploitsCount: activeExploits.length,
+            systemStateeBefore: this.getSecurityControlsSnapshot()
+        };
         
         setTimeout(() => {
-            // Improve all security controls
-            Object.keys(this.gameState.securityControls).forEach(control => {
-                this.gameState.securityControls[control].effectiveness = Math.min(100,
-                    this.gameState.securityControls[control].effectiveness + 3
-                );
-            });
+            if (hasActiveExploits) {
+                // Correct patch - stronger security improvements
+                Object.keys(this.gameState.securityControls).forEach(control => {
+                    this.gameState.securityControls[control].effectiveness = Math.min(100,
+                        this.gameState.securityControls[control].effectiveness + 8
+                    );
+                });
+                
+                // Mark exploits as patched
+                activeExploits.forEach(exploit => {
+                    exploit.isActive = false;
+                    exploit.patchedBy = 'vulnerability-patch';
+                    exploit.patchTime = new Date();
+                });
+                
+                // Award XP for necessary patch
+                const baseXP = 20; // Base XP for correct patch
+                const bonusXP = activeExploits.length * 8; // Bonus per exploit stopped
+                const totalXP = baseXP + bonusXP;
+                
+                this.gameState.sessionXP += totalXP;
+                this.gameState.attacksMitigated += activeExploits.length;
+                
+                this.uiManager.addTerminalOutput(`✅ Critical patch applied! Stopped ${activeExploits.length} active exploit(s).`);
+                this.uiManager.addTerminalOutput(`   Vulnerability ${cveId} secured. System significantly hardened.`);
+                this.uiManager.showVulnerabilityPatchReward(totalXP, cveId, activeExploits.length);
+                
+                // Send positive action to server
+                this.sendPlayerAction('patch-vulnerability-correct', cveId, 1.0);
+                
+            } else {
+                // Unnecessary patch - minimal security improvement but XP penalty
+                Object.keys(this.gameState.securityControls).forEach(control => {
+                    this.gameState.securityControls[control].effectiveness = Math.min(100,
+                        this.gameState.securityControls[control].effectiveness + 2
+                    );
+                });
+                
+                // XP penalty for unnecessary patch
+                const penaltyXP = 10; // Penalty for patching non-exploited vulnerability
+                this.gameState.sessionXP = Math.max(0, this.gameState.sessionXP - penaltyXP);
+                
+                this.uiManager.addTerminalOutput(`⚠️  Preventive patch applied. No active exploits of ${cveId} detected.`);
+                this.uiManager.addTerminalOutput(`   System hardened but patch was not urgently needed.`);
+                this.uiManager.showVulnerabilityPatchPenalty(penaltyXP, cveId);
+                
+                // Send negative action to server
+                this.sendPlayerAction('patch-vulnerability-unnecessary', cveId, 0.4);
+            }
             
-            this.uiManager.addTerminalOutput(`✅ Security patch applied successfully. System hardened.`);
+            // Store patch data for analysis
+            if (!this.gameState.patchHistory) {
+                this.gameState.patchHistory = [];
+            }
+            this.gameState.patchHistory.push(patchData);
+            
             this.uiManager.updateDisplay();
         }, 1500);
     }
@@ -913,6 +1011,88 @@ class GameController {
         const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
         
         return { correct, incorrect, total, accuracy };
+    }
+
+    // CVE ID mapping to attack techniques for vulnerability tracking
+    getCVEForAttack(attackData) {
+        const cveMap = {
+            // Initial Access CVEs
+            'Phishing': 'CVE-2024-0001',
+            'Exploit Public-Facing Application': 'CVE-2024-0002',
+            'Drive-by Compromise': 'CVE-2024-0003',
+            
+            // Privilege Escalation CVEs
+            'Process Injection': 'CVE-2024-0004',
+            'Access Token Manipulation': 'CVE-2024-0005',
+            'Exploitation for Privilege Escalation': 'CVE-2024-0006',
+            
+            // Persistence CVEs
+            'Registry Modification': 'CVE-2024-0007',
+            'Scheduled Task': 'CVE-2024-0008',
+            'Service Creation': 'CVE-2024-0009',
+            
+            // Lateral Movement CVEs
+            'Remote Services': 'CVE-2024-0010',
+            'Internal Spearphishing': 'CVE-2024-0011',
+            'Lateral Tool Transfer': 'CVE-2024-0012',
+            
+            // Impact CVEs
+            'Data Destruction': 'CVE-2024-0013',
+            'Defacement': 'CVE-2024-0014',
+            'Denial of Service': 'CVE-2024-0015'
+        };
+        
+        return cveMap[attackData.technique] || null;
+    }
+
+    // Validate CVE ID format
+    isValidCVEId(cveId) {
+        const cvePattern = /^CVE-\d{4}-\d{4,7}$/;
+        return cvePattern.test(cveId);
+    }
+
+    // Get active exploits for a specific CVE
+    getActiveExploitsForCVE(cveId) {
+        if (!this.gameState.activeVulnerabilities) {
+            return [];
+        }
+        
+        const cveExploits = this.gameState.activeVulnerabilities.get(cveId) || [];
+        
+        // Filter for exploits that are still active and recent (within last 45 seconds)
+        const now = new Date();
+        const activeThreshold = 45000; // 45 seconds
+        
+        return cveExploits.filter(exploit => {
+            return exploit.isActive && 
+                   (now - exploit.exploitStartTime) < activeThreshold;
+        });
+    }
+
+    // Get security controls snapshot for tracking
+    getSecurityControlsSnapshot() {
+        const snapshot = {};
+        Object.entries(this.gameState.securityControls).forEach(([name, control]) => {
+            snapshot[name] = {
+                active: control.active,
+                effectiveness: control.effectiveness
+            };
+        });
+        return snapshot;
+    }
+
+    // Method to get patch statistics for performance tracking
+    getPatchStats() {
+        if (!this.gameState.patchHistory) {
+            return { necessary: 0, unnecessary: 0, total: 0, accuracy: 0 };
+        }
+        
+        const necessary = this.gameState.patchHistory.filter(patch => patch.wasNecessary).length;
+        const total = this.gameState.patchHistory.length;
+        const unnecessary = total - necessary;
+        const accuracy = total > 0 ? Math.round((necessary / total) * 100) : 0;
+        
+        return { necessary, unnecessary, total, accuracy };
     }
     
     // Getters for other modules
@@ -1384,6 +1564,99 @@ class GameController {
         this.uiManager.addTerminalOutput('  • Use "alerts" to see current threats');
         this.uiManager.addTerminalOutput('  • Check "isolation-stats" to track performance');
         this.uiManager.addTerminalOutput('  • Timing matters - isolate during active attacks');
+    }
+
+    showPatchStatistics() {
+        const stats = this.getPatchStats();
+        
+        this.uiManager.addTerminalOutput('=== VULNERABILITY PATCH PERFORMANCE ===');
+        this.uiManager.addTerminalOutput(`Total Patches Applied: ${stats.total}`);
+        this.uiManager.addTerminalOutput(`Necessary Patches: ${stats.necessary} ✅`);
+        this.uiManager.addTerminalOutput(`Unnecessary Patches: ${stats.unnecessary} ❌`);
+        this.uiManager.addTerminalOutput(`Efficiency Rate: ${stats.accuracy}%`);
+        
+        if (stats.total > 0) {
+            const xpEarned = stats.necessary * 20; // Average XP per necessary patch
+            const xpLost = stats.unnecessary * 10;  // Average XP per unnecessary patch
+            const netXP = xpEarned - xpLost;
+            
+            this.uiManager.addTerminalOutput('');
+            this.uiManager.addTerminalOutput('XP IMPACT:');
+            this.uiManager.addTerminalOutput(`XP Earned: +${xpEarned}`);
+            this.uiManager.addTerminalOutput(`XP Lost: -${xpLost}`);
+            this.uiManager.addTerminalOutput(`Net XP: ${netXP >= 0 ? '+' : ''}${netXP}`);
+            
+            // Provide performance feedback
+            this.uiManager.addTerminalOutput('');
+            if (stats.accuracy >= 85) {
+                this.uiManager.addTerminalOutput('🏆 EXCELLENT: Master patch management!');
+            } else if (stats.accuracy >= 70) {
+                this.uiManager.addTerminalOutput('👍 GOOD: Strong vulnerability response');
+            } else if (stats.accuracy >= 50) {
+                this.uiManager.addTerminalOutput('⚠️  FAIR: Focus on active exploits');
+            } else {
+                this.uiManager.addTerminalOutput('📚 LEARNING: Prioritize actively exploited CVEs');
+            }
+        }
+    }
+
+    showActiveVulnerabilities() {
+        this.uiManager.addTerminalOutput('=== ACTIVE VULNERABILITY MONITORING ===');
+        
+        if (!this.gameState.activeVulnerabilities || this.gameState.activeVulnerabilities.size === 0) {
+            this.uiManager.addTerminalOutput('✅ No active vulnerability exploits detected');
+            this.uiManager.addTerminalOutput('💡 TIP: Avoid unnecessary patching to maintain XP efficiency');
+            return;
+        }
+        
+        let hasActiveExploits = false;
+        
+        this.gameState.activeVulnerabilities.forEach((exploits, cveId) => {
+            const activeExploits = this.getActiveExploitsForCVE(cveId);
+            
+            if (activeExploits.length > 0) {
+                hasActiveExploits = true;
+                const status = '🚨 ACTIVELY EXPLOITED';
+                this.uiManager.addTerminalOutput(`${cveId}: ${status}`);
+                
+                activeExploits.forEach((exploit, index) => {
+                    const timeElapsed = Math.round((Date.now() - exploit.exploitStartTime) / 1000);
+                    this.uiManager.addTerminalOutput(`  └─ ${exploit.technique} (${timeElapsed}s ago)`);
+                });
+                this.uiManager.addTerminalOutput(`  💡 RECOMMENDATION: Patch ${cveId} for maximum XP`);
+            }
+        });
+        
+        if (!hasActiveExploits) {
+            this.uiManager.addTerminalOutput('✅ No current active exploits - All vulnerabilities dormant');
+            this.uiManager.addTerminalOutput('💡 TIP: Wait for active exploitation before patching for XP rewards');
+        }
+    }
+
+    showPatchGuidance() {
+        this.uiManager.addTerminalOutput('=== VULNERABILITY PATCHING TACTICAL GUIDE ===');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('🎯 WHEN TO PATCH:');
+        this.uiManager.addTerminalOutput('  • CVE is being actively exploited by attackers');
+        this.uiManager.addTerminalOutput('  • Multiple exploit attempts using same vulnerability');
+        this.uiManager.addTerminalOutput('  • High-impact attack techniques detected');
+        this.uiManager.addTerminalOutput('  • Critical infrastructure vulnerabilities under attack');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('⚠️  WHEN NOT TO PATCH:');
+        this.uiManager.addTerminalOutput('  • No active exploitation detected for the CVE');
+        this.uiManager.addTerminalOutput('  • Preventive patching without immediate threat');
+        this.uiManager.addTerminalOutput('  • CVE already patched recently');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('💰 XP OPTIMIZATION:');
+        this.uiManager.addTerminalOutput('  • Necessary patch: +20 XP base + 8 XP per exploit blocked');
+        this.uiManager.addTerminalOutput('  • Unnecessary patch: -10 XP penalty');
+        this.uiManager.addTerminalOutput('  • Monitor "active-vulnerabilities" for guidance');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('📊 PRO TIPS:');
+        this.uiManager.addTerminalOutput('  • Use "alerts" to identify attack techniques and their CVEs');
+        this.uiManager.addTerminalOutput('  • Check "patch-stats" to track efficiency');
+        this.uiManager.addTerminalOutput('  • Timing is key - patch during active exploitation');
+        this.uiManager.addTerminalOutput('  • Focus on CVEs being exploited, not preventive patching');
     }
 }
 

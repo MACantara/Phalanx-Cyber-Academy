@@ -349,6 +349,12 @@ class AIEngine {
                 reward -= 0.5; // Extra penalty for being countered by smart isolation
                 console.log(`🛡️ AI penalty: Player correctly isolated ${attackData.target}`);
             }
+            
+            // Additional penalty if player patched the vulnerability being exploited
+            if (this.wasVulnerabilityPatchedCorrectly(attackData)) {
+                reward -= 0.4; // Extra penalty for being countered by smart patching
+                console.log(`🔧 AI penalty: Player correctly patched vulnerability for ${attackData.technique}`);
+            }
         } else {
             // Positive reward for successful stealth
             reward = 1;
@@ -358,6 +364,13 @@ class AIEngine {
             if (incorrectIsolations.length > 0) {
                 reward += 0.3 * incorrectIsolations.length;
                 console.log(`🤖 AI bonus: Player made ${incorrectIsolations.length} incorrect isolation(s)`);
+            }
+            
+            // Bonus if player made unnecessary patches (wasted resources)
+            const unnecessaryPatches = this.getRecentUnnecessaryPatches();
+            if (unnecessaryPatches.length > 0) {
+                reward += 0.2 * unnecessaryPatches.length;
+                console.log(`🤖 AI bonus: Player made ${unnecessaryPatches.length} unnecessary patch(es)`);
             }
             
             // Bonus for high-value targets
@@ -374,6 +387,11 @@ class AIEngine {
             // Reduced reward if target was isolated (even if incorrectly timed)
             if (this.wasAssetRecentlyIsolated(attackData.target)) {
                 reward *= 0.7; // 30% reduction for isolated assets
+            }
+            
+            // Reduced reward if vulnerability was patched (even if unnecessarily)
+            if (this.wasVulnerabilityRecentlyPatched(attackData)) {
+                reward *= 0.8; // 20% reduction for patched vulnerabilities
             }
         }
         
@@ -417,6 +435,54 @@ class AIEngine {
         return gameState.assetIsolations.some(isolation => 
             isolation.assetName === assetName &&
             isolation.timestamp > recentTime
+        );
+    }
+
+    // Check if a vulnerability was correctly patched (was being actively exploited when patched)
+    wasVulnerabilityPatchedCorrectly(attackData) {
+        const gameState = this.gameController.getGameState();
+        if (!gameState.patchHistory) return false;
+        
+        // Get the CVE for this attack
+        const cveId = this.gameController.getCVEForAttack(attackData);
+        if (!cveId) return false;
+        
+        // Check for recent correct patches (within last 10 seconds)
+        const recentTime = new Date(Date.now() - 10000);
+        return gameState.patchHistory.some(patch => 
+            patch.cveId === cveId &&
+            patch.wasNecessary &&
+            patch.timestamp > recentTime
+        );
+    }
+
+    // Get recent unnecessary patches for AI learning
+    getRecentUnnecessaryPatches() {
+        const gameState = this.gameController.getGameState();
+        if (!gameState.patchHistory) return [];
+        
+        // Check for unnecessary patches within last 15 seconds
+        const recentTime = new Date(Date.now() - 15000);
+        return gameState.patchHistory.filter(patch => 
+            !patch.wasNecessary &&
+            patch.timestamp > recentTime
+        );
+    }
+
+    // Check if a vulnerability was recently patched (affects attack success rate)
+    wasVulnerabilityRecentlyPatched(attackData) {
+        const gameState = this.gameController.getGameState();
+        if (!gameState.patchHistory) return false;
+        
+        // Get the CVE for this attack
+        const cveId = this.gameController.getCVEForAttack(attackData);
+        if (!cveId) return false;
+        
+        // Check for any patch within last 30 seconds
+        const recentTime = new Date(Date.now() - 30000);
+        return gameState.patchHistory.some(patch => 
+            patch.cveId === cveId &&
+            patch.timestamp > recentTime
         );
     }
     
