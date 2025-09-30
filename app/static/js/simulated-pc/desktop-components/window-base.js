@@ -8,7 +8,6 @@ export class WindowBase {
             ...options
         };
         this.windowElement = null;
-        this.activityEmitter = null; // Will be set by child classes
         this.loadScrollbarStyles();
     }
 
@@ -78,60 +77,13 @@ export class WindowBase {
     }
 
 
-    // Activity emission setup - must be called by child classes
-    setupActivityEmission(activityEmitterClass) {
-        if (!activityEmitterClass) {
-            throw new Error(`Application '${this.id}' must provide an ActivityEmitter class that extends ActivityEmitterBase`);
-        }
-
-        // Create instance without validation for now - validation will happen during initialization
-        this.activityEmitter = new activityEmitterClass(this.id, this.title);
-        
-        // Verify custom events are implemented
-        try {
-            this.activityEmitter.initializeCustomEvents();
-        } catch (error) {
-            console.error(`Failed to initialize custom events for ${this.id}:`, error.message);
-            throw error;
-        }
-    }
-
-    // Common activity emission methods
-    emitAppActivity(activityType, data = {}, additionalData = {}) {
-        if (this.activityEmitter) {
-            this.activityEmitter.emitActivity(activityType, data, additionalData);
-        }
-    }
-
-    emitUserAction(action, details = {}) {
-        if (this.activityEmitter) {
-            this.activityEmitter.emitUserAction(action, details);
-        }
-    }
-
-    emitSecurityEvent(severity, description, details = {}) {
-        if (this.activityEmitter) {
-            this.activityEmitter.emitSecurityEvent(severity, description, details);
-        }
-    }
-
     // Initialize the window after creation
     initialize() {
-        // Emit app started event if activity emitter is set up
-        if (this.activityEmitter) {
-            this.activityEmitter.emitAppStarted();
-        }
-        
         // Override in child classes for specific initialization
     }
 
     // Clean up when window is closed
     cleanup() {
-        // Emit app stopped event if activity emitter is set up
-        if (this.activityEmitter) {
-            this.activityEmitter.emitAppStopped();
-        }
-        
         // Override in child classes for specific cleanup
     }
 

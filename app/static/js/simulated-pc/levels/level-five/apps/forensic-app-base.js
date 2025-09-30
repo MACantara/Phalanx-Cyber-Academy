@@ -44,14 +44,6 @@ export class ForensicAppBase extends WindowBase {
             
             const isValid = currentHash === originalHash;
             
-            if (!isValid) {
-                this.emitSecurityEvent('high', 'Evidence integrity compromised', {
-                    evidenceId,
-                    originalHash,
-                    currentHash
-                });
-            }
-
             return {
                 valid: isValid,
                 originalHash,
@@ -124,10 +116,6 @@ export class ForensicAppBase extends WindowBase {
             nistCompliance: this.checkNISTCompliance(step),
             isoCompliance: this.checkISOCompliance(step)
         };
-
-        if (!compliance.compliant) {
-            this.emitSecurityEvent('medium', 'Procedure compliance warning', compliance);
-        }
 
         return compliance;
     }
@@ -213,28 +201,6 @@ export class ForensicAppBase extends WindowBase {
         } catch (error) {
             console.error('[ForensicApp] Hash calculation failed:', error);
         }
-    }
-
-    // Emit forensic-specific events
-    emitForensicEvent(eventType, details) {
-        const event = {
-            type: 'forensic_event',
-            eventType,
-            application: this.id,
-            timestamp: new Date().toISOString(),
-            phase: this.forensicPhase,
-            details
-        };
-
-        // Emit to parent class activity system if available
-        if (this.activityEmitter) {
-            this.emitAppActivity('forensic_action', event);
-        }
-
-        // Also emit to shared evidence context
-        this.evidenceStore.addEvent(event);
-        
-        console.log(`[${this.id}] Forensic event:`, event);
     }
 
     // Create standardized forensic UI elements
@@ -325,12 +291,6 @@ export class ForensicAppBase extends WindowBase {
     // Initialize forensic application
     initialize() {
         super.initialize();
-        
-        // Emit forensic app initialization
-        this.emitForensicEvent('app_initialized', {
-            application: this.id,
-            phase: this.forensicPhase
-        });
 
         // Update chain of custody
         this.updateChainOfCustody('app_session', 'application_started');
@@ -343,12 +303,6 @@ export class ForensicAppBase extends WindowBase {
         
         // Export findings before cleanup
         this.exportFindings();
-        
-        // Emit forensic app cleanup
-        this.emitForensicEvent('app_cleanup', {
-            application: this.id,
-            phase: this.forensicPhase
-        });
 
         super.cleanup();
     }
