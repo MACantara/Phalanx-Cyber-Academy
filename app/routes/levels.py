@@ -74,7 +74,6 @@ def get_level_js_files(level_id):
         # Core desktop components
         'js/simulated-pc/desktop-components/window-base.js',
         'js/simulated-pc/desktop-components/window-manager.js',
-        'js/simulated-pc/desktop-components/window-snap-manager.js',
         'js/simulated-pc/desktop-components/application-launcher.js',
         'js/simulated-pc/desktop-components/application-registry.js',
         'js/simulated-pc/desktop-components/desktop-icons.js',

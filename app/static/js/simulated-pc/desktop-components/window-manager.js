@@ -1,4 +1,3 @@
-import { WindowSnapManager } from './window-snap-manager.js';
 import { appRegistry } from './application-registry.js';
 import { initializeApplicationLauncher } from './application-launcher.js';
 
@@ -12,7 +11,6 @@ export class WindowManager {
         
         // Ensure CSS is loaded before creating managers
         this.ensureWindowStylesLoaded();
-        this.snapManager = new WindowSnapManager(container);
         
         // Use application registry
         this.appRegistry = appRegistry;
@@ -108,7 +106,6 @@ export class WindowManager {
         let dragStarted = false;
         let startX, startY, startLeft, startTop;
         let windowApp = null;
-        let currentSnapZone = null;
 
         // Get the window app instance if it exists
         this.applications.forEach((app, id) => {
@@ -151,16 +148,7 @@ export class WindowManager {
                         startY = e.clientY;
                     }
                 }
-                // Check if window is snapped
-                else if (this.snapManager.isWindowSnapped(window)) {
-                    const snapResult = this.snapManager.handleDragStart(window, e.clientX, e.clientY, windowApp);
-                    if (snapResult) {
-                        startLeft = snapResult.left;
-                        startTop = snapResult.top;
-                        startX = e.clientX;
-                        startY = e.clientY;
-                    }
-                }
+
                 // Check legacy maximized state
                 else if (window.dataset.maximized === 'true') {
                     // Handle legacy maximized windows
@@ -195,9 +183,6 @@ export class WindowManager {
             // Update window position
             window.style.left = `${newLeft}px`;
             window.style.top = `${newTop}px`;
-            
-            // Show snap preview
-            currentSnapZone = this.snapManager.handleDragMove(e.clientX, e.clientY);
         });
 
         document.addEventListener('mouseup', (e) => {
@@ -206,23 +191,10 @@ export class WindowManager {
                 dragStarted = false;
                 header.style.cursor = 'grab';
                 
-                // Handle window snapping
-                if (currentSnapZone) {
-                    this.snapManager.handleDragEnd(window, e.clientX, e.clientY, windowApp);
-                } else {
-                    this.snapManager.hideSnapPreview();
-                }
-                currentSnapZone = null;
-                
                 // Double-click detection for maximize/restore
                 if (Math.abs(e.clientX - startX) < 5 && Math.abs(e.clientY - startY) < 5) {
                     if (windowApp && e.detail === 2) {
-                        // Check if window is snapped, if so unsnap first
-                        if (this.snapManager.isWindowSnapped(window)) {
-                            this.snapManager.unSnapWindow(window, windowApp);
-                        } else {
-                            windowApp.maximize();
-                        }
+                        windowApp.maximize();
                     }
                 }
             }
@@ -264,17 +236,10 @@ export class WindowManager {
         const app = this.applications.get(id);
         
         if (app && typeof app.maximize === 'function') {
-            // Check if window is snapped first
-            if (this.snapManager.isWindowSnapped(window)) {
-                this.snapManager.unSnapWindow(window, app);
-            } else {
-                app.maximize();
-            }
+            app.maximize();
         } else if (window) {
             // Legacy maximize for non-app windows
-            if (this.snapManager.isWindowSnapped(window)) {
-                this.snapManager.unSnapWindow(window);
-            } else if (window.dataset.maximized === 'true') {
+            if (window.dataset.maximized === 'true') {
                 // Restore
                 window.style.width = window.dataset.originalWidth;
                 window.style.height = window.dataset.originalHeight;
@@ -352,7 +317,6 @@ export class WindowManager {
     closeAllWindows() {
         const windowIds = Array.from(this.windows.keys());
         windowIds.forEach(id => this.closeWindow(id));
-        this.snapManager.cleanup();
     }
 
     minimizeAllWindows() {
