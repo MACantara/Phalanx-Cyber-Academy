@@ -1,5 +1,3 @@
-import { SkipDialogueModal } from '../desktop-components/skip-dialogue-modal.js';
-
 export class BaseDialogue {
     constructor(desktop, character = 'default') {
         this.desktop = desktop;
@@ -10,7 +8,6 @@ export class BaseDialogue {
         this.dialogueContainer = null;
         this.messages = []; // To be defined by child classes
         this.typingSpeed = 12.5; // Default typing speed in milliseconds per character (Lower is faster)
-        this.skipDialogueModal = null;
         
         // Interactive guidance properties
         this.isInteractiveMode = false;
@@ -214,18 +211,7 @@ export class BaseDialogue {
     }
 
     getSkipHandler() {
-        return 'window.currentDialogue.showSkipModal()';
-    }
-
-    async showSkipModal() {
-        if (!this.skipDialogueModal) {
-            this.skipDialogueModal = new SkipDialogueModal(document.body);
-        }
-        
-        const shouldSkip = await this.skipDialogueModal.show();
-        if (shouldSkip) {
-            this.complete();
-        }
+        return 'window.currentDialogue.complete()';
     }
 
     // Character management

@@ -186,7 +186,7 @@ export class YourTutorialNameTutorial extends BaseTutorial {
 
     // Override base class methods for proper tutorial flow
     getSkipTutorialHandler() {
-        return 'window.yourAppTutorial.showSkipModal';
+        return 'window.yourAppTutorial.complete()';
     }
 
     getPreviousStepHandler() {
