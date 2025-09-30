@@ -116,6 +116,12 @@ export class BaseDialogue {
             </div>
         `;
 
+        // Clean up any existing example container before creating a new one
+        if (this.exampleContainer && this.exampleContainer.parentNode) {
+            this.exampleContainer.parentNode.removeChild(this.exampleContainer);
+            this.exampleContainer = null;
+        }
+
         // Add separate centered example container if example exists
         if (hasExample) {
             const exampleContainer = document.createElement('div');
