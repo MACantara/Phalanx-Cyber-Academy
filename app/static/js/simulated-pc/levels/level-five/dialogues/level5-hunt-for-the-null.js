@@ -14,19 +14,24 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                 text: "🎯 **Investigation Mandate:**\nUsing advanced digital forensics techniques, analyze seized evidence from The Null's compromised systems to:\n• Establish their true identity\n• Document attack methodologies\n• Build prosecutable evidence chain\n• Prevent future attacks by understanding their infrastructure"
             },
             {
-                text: "🛠️ **Forensic Suite Overview:**\n\n**Evidence Locker** - Your command center\n• Manages chain of custody for all evidence\n• Tracks evidence integrity with cryptographic hashes\n• Coordinates analysis across all forensic tools\n• Maintains audit trail per ISO/IEC 27037:2012 standards"
+                text: "🛠️ **Forensic Suite Overview:**\n\n**Evidence Locker** - Your command center\n• Manages chain of custody for all evidence\n• Tracks evidence integrity with cryptographic hashes\n• Coordinates analysis across all forensic tools\n• Maintains audit trail per ISO/IEC 27037:2012 standards",
+                example: "Evidence Files:\nDISK_001.img (Hard drive image)\nMEMORY_001.dmp (RAM dump)\nNETWORK_001.pcap (Network traffic)"
             },
             {
-                text: "**Disk Analyzer** - Hard drive forensics\n• Examine disk images from seized computers\n• Recover deleted files and hidden partitions\n• Analyze filesystem artifacts and metadata\n• Extract browser history, downloads, and user activity"
+                text: "**Disk Analyzer** - Hard drive forensics\n• Examine disk images from seized computers\n• Recover deleted files and hidden partitions\n• Analyze filesystem artifacts and metadata\n• Extract browser history, downloads, and user activity",
+                example: "Findings: Deleted chat logs, browser bookmarks to suspicious sites\nArtifacts: Recently accessed files, USB device history"
             },
             {
-                text: "**Memory Forensics** - RAM analysis\n• Analyze memory dumps from running systems\n• Identify active processes and network connections\n• Detect memory-resident malware and rootkits\n• Extract encryption keys and volatile data"
+                text: "**Memory Forensics** - RAM analysis\n• Analyze memory dumps from running systems\n• Identify active processes and network connections\n• Detect memory-resident malware and rootkits\n• Extract encryption keys and volatile data",
+                example: "Discoveries: Hidden processes, network connections to 192.168.1.100:443\nKeys: SSH private keys, encrypted passwords in memory"
             },
             {
-                text: "**Network Analyzer** - Traffic investigation\n• Inspect captured network packets\n• Identify command-and-control communications\n• Trace data exfiltration patterns\n• Reconstruct network conversations and protocols"
+                text: "**Network Analyzer** - Traffic investigation\n• Inspect captured network packets\n• Identify command-and-control communications\n• Trace data exfiltration patterns\n• Reconstruct network conversations and protocols",
+                example: "Suspicious Traffic: Encrypted data to tor-exit-node.onion\nC2 Commands: Base64 encoded messages every 30 seconds"
             },
             {
-                text: "**Timeline Constructor** - Event correlation\n• Correlate findings across all evidence sources\n• Build comprehensive attack timeline\n• Identify patterns and relationships between events\n• Visualize the complete attack sequence"
+                text: "**Timeline Constructor** - Event correlation\n• Correlate findings across all evidence sources\n• Build comprehensive attack timeline\n• Identify patterns and relationships between events\n• Visualize the complete attack sequence",
+                example: "Timeline: 2024-01-15 14:30 - First malware execution\n2024-01-15 14:45 - Network connection established\n2024-01-15 15:00 - Data exfiltration began"
             },
             {
                 text: "**Report Generator** - Legal documentation\n• Create court-admissible forensic reports\n• Follow NIST SP 800-86 forensic guidelines\n• Include proper evidence citations and methodology\n• Generate executive summaries for law enforcement"

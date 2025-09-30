@@ -24,16 +24,20 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                 text: "You'll analyze various news articles to distinguish legitimate journalism from fabricated content designed to influence public opinion."
             },
             {
-                text: "🛠️ **Detection Techniques:**\n\n**Source Analysis:** Check domain authority and publication history\n**Author Verification:** Look for real credentials and bylines"
+                text: "🛠️ **Detection Techniques:**\n\n**Source Analysis:** Check domain authority and publication history\n**Author Verification:** Look for real credentials and bylines",
+                example: "Legitimate: 'By Sarah Johnson, Political Reporter, Associated Press'\nSuspicious: 'By Staff Writer' or no author listed"
             },
             {
-                text: "**Fact Correlation:** Cross-reference with reputable news sources\n**Language Patterns:** Watch for sensational headlines and emotional manipulation"
+                text: "**Fact Correlation:** Cross-reference with reputable news sources\n**Language Patterns:** Watch for sensational headlines and emotional manipulation",
+                example: "Professional: 'Senator Proposes New Healthcare Bill'\nManipulative: 'SHOCKING: Politicians HATE This Simple Healthcare Trick!'"
             },
             {
-                text: "⚠️ **Warning Signs to Watch For:**\n\n• Suspicious URLs or domain names\n• Missing author information or fake credentials"
+                text: "⚠️ **Warning Signs to Watch For:**\n\n• Suspicious URLs or domain names\n• Missing author information or fake credentials",
+                example: "Suspicious: 'realcnnews.com' (mimicking cnn.com)\nLegitimate: 'reuters.com', 'apnews.com', 'bbc.com'"
             },
             {
-                text: "• Extreme emotional language designed to provoke anger\n• Claims without credible sources or evidence\n• Headlines that don't match the article content"
+                text: "• Extreme emotional language designed to provoke anger\n• Claims without credible sources or evidence\n• Headlines that don't match the article content",
+                example: "Red flags: 'OUTRAGEOUS!', 'They don't want you to know!'\nBalanced: 'Study shows', 'According to officials'"
             },
             {
                 text: "🎮 **How to Play:**\nUse the Web Browser to navigate between news sites. Read each article carefully, then use your analytical skills to determine if it's legitimate journalism or misinformation."

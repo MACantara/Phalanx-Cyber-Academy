@@ -32,28 +32,20 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 text: "• **Forensic Analysis:** Historical security incidents\n• **Network Security:** Communication and protocol security"
             },
             {
-                text: "🛠️ **Penetration Testing Methodology:**\n\n**Phase 1: Reconnaissance**\n• Gather information about the target system\n• Identify services, versions, and technologies\n• Map the attack surface"
+                text: "🛠️ **CTF Challenge Approach:**\n\nThis is a Capture The Flag (CTF) security challenge. Your goal is to find 7 hidden flags using terminal commands and system exploration.",
+                example: "Example commands to get started:\nls -la (list files)\ncat filename.txt (read files)\ngrep -r \"flag\" . (search for flags)"
             },
             {
-                text: "**Phase 2: Scanning & Enumeration**\n• Identify potential vulnerabilities\n• Enumerate services and configurations\n• Document findings systematically"
+                text: "💻 **Essential CTF Commands:**\n\nMaster these terminal commands to find the hidden flags:",
+                example: "File Operations:\nls, cat, head, tail, grep\nfind / -name \"*.txt\" 2>/dev/null\nstrings binary_file | grep flag"
             },
             {
-                text: "**Phase 3: Vulnerability Assessment**\n• Analyze discovered weaknesses\n• Determine exploitability and impact\n• Prioritize findings by risk level"
+                text: "Advanced techniques for finding flags in logs, configurations, and hidden files:",
+                example: "Log Analysis:\ngrep -i \"flag\\|password\\|key\" /var/log/*\nSystem Info:\nps aux, netstat -tulpn, env"
             },
             {
-                text: "**Phase 4: Documentation**\n• Use the Challenge Tracker to submit flags\n• Document methodology and evidence\n• Prepare findings for client reporting"
-            },
-            {
-                text: "💻 **Professional Tools Available:**\n\n• **Terminal Access:** Command-line interface with security tools\n• **File System Explorer:** Navigate and examine system files"
-            },
-            {
-                text: "• **Log Analyzer:** Review system and application logs\n• **Configuration Inspector:** Analyze server and app configurations\n• **Network Scanner:** Discover services and open ports"
-            },
-            {
-                text: "🏆 **Professional Standards:**\n\n• **Thoroughness:** Systematic examination of all components\n• **Documentation:** Detailed evidence collection for each finding"
-            },
-            {
-                text: "• **Ethics:** Responsible disclosure and minimal impact testing\n• **Methodology:** Follow industry-standard testing procedures"
+                text: "🏆 **CTF Success Tips:**\n\n• **Be Systematic:** Check common flag locations first\n• **Read Everything:** Flags can be hidden in comments or unusual places",
+                example: "Common Flag Locations:\n/home/user/flag.txt\n/etc/passwd comments\nEnvironment variables (env command)"
             },
             {
                 text: "📊 **Success Metrics:**\n\n• **Flag Discovery:** Find all 7 security vulnerabilities\n• **Methodology Score:** Demonstrate proper testing techniques"
@@ -62,10 +54,8 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 text: "• **Documentation Quality:** Clear evidence and explanations\n• **Time Efficiency:** Complete assessment within reasonable timeframe\n• **Certification Goal:** Earn 'Certified Ethical Hacker' badge"
             },
             {
-                text: "🎮 **How to Begin:**\nOpen the Terminal to start your security assessment. Use commands like `ls`, `cat`, `grep`, and specialized security tools to explore the TechCorp infrastructure."
-            },
-            {
-                text: "The Challenge Tracker in the top-right will help you submit flags and monitor progress throughout your assessment."
+                text: "🎮 **How to Begin:**\nOpen the Terminal and start exploring! Use the Challenge Tracker in the top-right to submit flags as you find them.",
+                example: "First commands to try:\nls -la\ncat /etc/passwd\ngrep -r \"CyberQuest\" .\nfind / -name \"*flag*\" 2>/dev/null"
             },
             {
                 text: "🚀 **Professional Engagement:**\nThis assessment simulates real-world penetration testing engagements. Your professionalism, methodology, and ethical approach demonstrate readiness for cybersecurity consulting roles."
