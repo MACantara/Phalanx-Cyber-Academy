@@ -1909,7 +1909,7 @@ class GameController {
             if (activeCompromises.length > 0) {
                 hasActiveCompromises = true;
                 const status = '🚨 COMPROMISED';
-                this.uiManager.addTerminalOutput(`${username.toUpperCase()}: ${status}`);
+                this.uiManager.addTerminalOutput(`${username}: ${status}`);
                 
                 activeCompromises.forEach((compromise, index) => {
                     const timeElapsed = Math.round((Date.now() - compromise.compromiseStartTime) / 1000);
