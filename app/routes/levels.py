@@ -111,10 +111,6 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-one/dialogues/level1-misinformation-maze.js',
             'js/simulated-pc/levels/level-one/dialogues/challenge1-dialogue.js',
             'js/simulated-pc/levels/level-one/dialogues/level-completion-dialogue.js',
-            
-            # Tutorials for Level 1
-            'js/simulated-pc/tutorials/initial-tutorial.js',
-            'js/simulated-pc/tutorials/browser-tutorial.js',
         ]
     
     elif level_id == 2:
