@@ -9,13 +9,18 @@ export class DesktopIcons {
         this.allIcons = [
             { id: 'browser', name: 'Web Browser', icon: 'bi-globe', action: 'openBrowser' },
             { id: 'terminal', name: 'Terminal', icon: 'bi-terminal', action: 'openTerminal' },
-            { id: 'files', name: 'File Manager', icon: 'bi-folder', action: 'openFileManager' },
             { id: 'email', name: 'Email Client', icon: 'bi-envelope', action: 'openEmailClient' },
-            { id: 'wireshark', name: 'Network Monitor', icon: 'bi-router', action: 'openNetworkMonitor' },
-            { id: 'logs', name: 'System Logs', icon: 'bi-journal-text', action: 'openSystemLogs' },
             { id: 'process-monitor', name: 'Process Monitor', icon: 'bi-cpu', action: 'openProcessMonitor' },
             { id: 'malware-scanner', name: 'Malware Scanner', icon: 'bi-shield-exclamation', action: 'openMalwareScanner' },
-            { id: 'ransomware-decryptor', name: 'Ransomware Decryptor', icon: 'bi-unlock', action: 'openRansomwareDecryptor' }
+            { id: 'ransomware-decryptor', name: 'Ransomware Decryptor', icon: 'bi-unlock', action: 'openRansomwareDecryptor' },
+            // Level 5 - Digital Forensics Applications
+            { id: 'investigation-briefing', name: 'Investigation Briefing', icon: 'bi-clipboard-data', action: 'launchInvestigationBriefing' },
+            { id: 'evidence-locker', name: 'Evidence Locker', icon: 'bi-archive', action: 'launchEvidenceLocker' },
+            { id: 'disk-analyzer', name: 'Disk Analyzer', icon: 'bi-hdd-stack', action: 'launchDiskAnalyzer' },
+            { id: 'memory-forensics', name: 'Memory Analysis', icon: 'bi-memory', action: 'launchMemoryForensics' },
+            { id: 'network-analyzer', name: 'Network Forensics', icon: 'bi-diagram-3', action: 'launchNetworkAnalyzer' },
+            { id: 'timeline-constructor', name: 'Timeline Analysis', icon: 'bi-clock-history', action: 'launchTimelineConstructor' },
+            { id: 'report-generator', name: 'Investigation Report', icon: 'bi-file-earmark-text', action: 'launchReportGenerator' }
         ];
         
         // Set level-specific icons
@@ -30,7 +35,7 @@ export class DesktopIcons {
             2: ['email'], // Level 2: Shadow in the Inbox
             3: ['malware-scanner', 'process-monitor', 'ransomware-decryptor'], // Level 3: Malware Mayhem
             4: ['terminal'], // Level 4: White Hat Test
-            5: ['files', 'terminal', 'logs'] // Level 5: Hunt for The Null
+            5: ['investigation-briefing', 'evidence-locker', 'disk-analyzer', 'memory-forensics', 'network-analyzer', 'timeline-constructor', 'report-generator'] // Level 5: Digital Forensics
         };
 
         // Get level-specific icon IDs
@@ -75,8 +80,14 @@ export class DesktopIcons {
             const iconElement = e.target.closest('.desktop-icon');
             if (iconElement) {
                 const action = iconElement.getAttribute('data-action');
-                if (action && this.windowManager && typeof this.windowManager[action] === 'function') {
-                    this.windowManager[action]();
+                if (action) {
+                    // Try application launcher first, then fall back to window manager
+                    const launcher = this.windowManager.applicationLauncher;
+                    if (launcher && typeof launcher[action] === 'function') {
+                        launcher[action]();
+                    } else if (this.windowManager && typeof this.windowManager[action] === 'function') {
+                        this.windowManager[action]();
+                    }
                 }
             }
         });

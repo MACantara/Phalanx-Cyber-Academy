@@ -1,14 +1,12 @@
 import { Taskbar } from './desktop-components/taskbar.js';
 import { DesktopIcons } from './desktop-components/desktop-icons.js';
 import { WindowManager } from './desktop-components/window-manager.js';
-import { TutorialManager } from './tutorials/tutorial-manager.js';
 import DialogueManager from './dialogues/dialogue-manager.js';
 import { DialogueIntegration } from './dialogues/dialogue-integration.js';
 
 export class Desktop {
     constructor(container) {
         this.container = container;
-        this.tutorial = null;
         this.dialogueManager = null;
         this.dialogueIntegration = null;
         this.initializeDesktop();
@@ -39,12 +37,11 @@ export class Desktop {
         // Initialize components
         this.taskbar = new Taskbar(this.desktopElement, null);
         
-        // Initialize dialogue and tutorial systems before window manager
+        // Initialize dialogue system before window manager
         this.dialogueManager = new DialogueManager(this);
-        this.tutorial = new TutorialManager(this);
         this.dialogueIntegration = new DialogueIntegration(this);
         
-        this.windowManager = new WindowManager(this.desktopElement, this.taskbar, this.tutorial);
+        this.windowManager = new WindowManager(this.desktopElement, this.taskbar);
         this.taskbar.windowManager = this.windowManager;
         
         // Set level in application launcher for level-specific apps
@@ -61,16 +58,8 @@ export class Desktop {
         }, 100);
 
         // Initialize global accessibility
-        window.tutorial = this.tutorial;
         window.dialogueManager = this.dialogueManager;
         window.dialogueIntegration = this.dialogueIntegration;
-        
-        // Make tutorial restart function globally accessible
-        window.restartTutorial = async () => {
-            if (this.tutorial) {
-                await this.tutorial.restartInitialTutorial();
-            }
-        };
 
         // Make dialogue restart function globally accessible
         window.restartDialogues = () => {
@@ -93,15 +82,15 @@ export class Desktop {
         // Start with dialogue flow - this handles the narrative introduction
         await this.dialogueIntegration.initializeDialogueFlow();
         
-        // Note: Dialogues will automatically trigger tutorials as needed
-        // The flow is: Welcome → Tutorial Intro → Initial Tutorial → App Tutorials → Mission Briefing
+        // Note: Dialogues now handle both narrative and interactive guidance
+        // The flow is: Welcome → Interactive Guidance → Mission Briefing
         // Level-specific applications (like Level 3 timer) are auto-opened by the ApplicationLauncher
     }
 
-    // Method to trigger mission briefing when all tutorials are complete
-    async onTutorialCompleted(tutorialName) {
+    // Method to trigger mission briefing when all guidance is complete
+    async onGuidanceCompleted(guidanceName) {
         if (this.dialogueIntegration) {
-            await this.dialogueIntegration.onTutorialCompleted(tutorialName);
+            await this.dialogueIntegration.onGuidanceCompleted(guidanceName);
         }
     }
 

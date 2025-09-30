@@ -1,0 +1,142 @@
+{
+  "memory_dumps": [
+    {
+      "id": "mem_dump_001",
+      "name": "Suspect Laptop Memory",
+      "path": "/evidence/memory_001.dmp", 
+      "size": "16GB",
+      "format": "raw",
+      "architecture": "x64",
+      "os_version": "Windows 10 Build 19041",
+      "dump_time": "2024-03-14T20:45:00Z",
+      "hash_md5": "b2c3d4e5f6789012345678901"
+    },
+    {
+      "id": "mem_dump_002",
+      "name": "Server Memory Dump",
+      "path": "/evidence/memory_002.dmp",
+      "size": "32GB", 
+      "format": "crashdump",
+      "architecture": "x64",
+      "os_version": "Windows Server 2019",
+      "dump_time": "2024-03-14T21:30:00Z",
+      "hash_md5": "c3d4e5f6789012345678901234"
+    }
+  ],
+  "processes": [
+    {
+      "pid": 1234,
+      "name": "explorer.exe",
+      "path": "/Windows/explorer.exe",
+      "parent_pid": 888,
+      "start_time": "2024-03-14T08:30:00Z",
+      "cpu_usage": 2.5,
+      "memory_usage": "45MB",
+      "status": "running",
+      "suspicious": false,
+      "description": "Windows File Explorer"
+    },
+    {
+      "pid": 3456,
+      "name": "backdoor.exe",
+      "path": "/Users/TheNull/AppData/Local/Temp/backdoor.exe", 
+      "parent_pid": 1234,
+      "start_time": "2024-03-14T18:45:00Z",
+      "cpu_usage": 15.8,
+      "memory_usage": "128MB",
+      "status": "running",
+      "suspicious": true,
+      "description": "Suspicious process - potential backdoor",
+      "command_line": "backdoor.exe -stealth -port 4444",
+      "network_connections": [
+        {
+          "local_port": 4444,
+          "remote_ip": "185.243.67.89",
+          "remote_port": 443,
+          "protocol": "TCP",
+          "state": "ESTABLISHED"
+        }
+      ]
+    },
+    {
+      "pid": 5678,
+      "name": "cryptor.exe",
+      "path": "/Users/TheNull/Downloads/cryptor.exe",
+      "parent_pid": 1234,
+      "start_time": "2024-03-14T19:15:00Z", 
+      "cpu_usage": 35.2,
+      "memory_usage": "256MB",
+      "status": "running",
+      "suspicious": true,
+      "description": "Encryption malware - actively encrypting files",
+      "command_line": "cryptor.exe --encrypt --target-dirs Documents,Desktop",
+      "network_connections": [
+        {
+          "local_port": 51234,
+          "remote_ip": "185.243.67.89", 
+          "remote_port": 443,
+          "protocol": "HTTPS",
+          "state": "ESTABLISHED"
+        }
+      ]
+    },
+    {
+      "pid": 9999,
+      "name": "svchost.exe",
+      "path": "/Windows/System32/svchost.exe",
+      "parent_pid": 666,
+      "start_time": "2024-03-14T08:00:00Z",
+      "cpu_usage": 1.2,
+      "memory_usage": "32MB", 
+      "status": "running",
+      "suspicious": false,
+      "description": "Windows Service Host Process"
+    }
+  ],
+  "network_connections": [
+    {
+      "pid": 3456,
+      "process": "backdoor.exe",
+      "local_ip": "192.168.1.100",
+      "local_port": 4444,
+      "remote_ip": "185.243.67.89",
+      "remote_port": 443,
+      "protocol": "TCP",
+      "state": "ESTABLISHED",
+      "bytes_sent": 2048,
+      "bytes_received": 4096,
+      "established_time": "2024-03-14T18:50:00Z",
+      "suspicious": true
+    },
+    {
+      "pid": 5678,
+      "process": "cryptor.exe", 
+      "local_ip": "192.168.1.100",
+      "local_port": 51234,
+      "remote_ip": "185.243.67.89",
+      "remote_port": 443,
+      "protocol": "TCP",
+      "state": "ESTABLISHED",
+      "bytes_sent": 8192,
+      "bytes_received": 16384,
+      "established_time": "2024-03-14T19:20:00Z",
+      "suspicious": true
+    }
+  ],
+  "malware_signatures": [
+    {
+      "process_name": "backdoor.exe",
+      "signature": "Win32.Backdoor.Generic",
+      "confidence": 95,
+      "behavior": ["network_communication", "stealth_operation", "privilege_escalation"],
+      "threat_level": "critical"
+    },
+    {
+      "process_name": "cryptor.exe", 
+      "signature": "Win32.Ransom.Cryptor",
+      "confidence": 98,
+      "behavior": ["file_encryption", "network_communication", "anti_analysis"],
+      "threat_level": "critical"
+    }
+  ]
+}

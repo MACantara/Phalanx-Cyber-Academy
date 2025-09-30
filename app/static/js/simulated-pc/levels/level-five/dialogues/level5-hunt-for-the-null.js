@@ -1,6 +1,3 @@
-// TODO: Fix grep terminal command not working for directories
-// TODO: Fix find terminal command not find files with partial name matches
-
 import { BaseDialogue } from '../../../dialogues/base-dialogue.js';
 
 export class Level5HuntForTheNullDialogue extends BaseDialogue {
@@ -8,53 +5,96 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "Welcome to Level 5: The Hunt for The Null. This is your final mission - use advanced digital forensics to expose The Null's identity."
+                text: "Welcome to Level 5: The Hunt for The Null. This is your final mission—a comprehensive digital forensics investigation to expose The Null's identity."
             },
             {
-                text: "As a master cybersecurity analyst, you'll need to combine all your skills to track down the elusive hacker known only as 'The Null'."
+                text: "You'll be working with a professional forensic suite featuring six specialized applications: Evidence Locker, Disk Analyzer, Memory Forensics, Network Analyzer, Timeline Constructor, and Report Generator."
             },
             {
-                text: "You'll be analyzing logs, decrypting files, and following digital breadcrumbs across multiple systems to piece together The Null's identity."
+                text: "The Evidence Locker is your central hub—it manages chain of custody, tracks evidence integrity, and coordinates analysis across all forensic tools."
             },
             {
-                text: "This will test everything you've learned. Look for patterns, think critically, and don't overlook any detail, no matter how small it may seem."
+                text: "Every piece of evidence has hash verification to ensure its authenticity."
             },
             {
-                text: "Successfully completing this final challenge will earn you 500 XP in the Digital Forensics category. Are you ready to catch The Null?"
+                text: "Use the Disk Analyzer to examine hard drive images, recover deleted files, and analyze filesystem artifacts."
+            },
+            {
+                text: "The Memory Forensics tool reveals running processes, network connections, and hidden malware in RAM dumps."
+            },
+            {
+                text: "The Network Analyzer lets you inspect packet captures, identify suspicious traffic patterns, and trace command-and-control communications."
+            },
+            {                
+                text: "Correlate findings across sources using the Timeline Constructor."
+            },
+            {
+                text: "Finally, document your investigation with the Report Generator."
+            },
+            {
+                text: "It creates legally-compliant forensic reports following NIST SP 800-86 and ISO/IEC 27037:2012 standards, complete with proper evidence citations."
+            },
+            {
+                text: "All forensic applications maintain a shared evidence context, so findings from one tool are automatically available to others."
+            },
+            {
+                text: "Look for correlations between disk artifacts, memory signatures, and network traffic."
+            },
+            {
+                text: "The Null has left traces across multiple evidence sources."
+            },
+            {
+                text: "Your mission is to piece together the attack timeline, identify indicators of compromise, and build an airtight case documenting their activities."
+            },
+            {
+                text: "This investigation follows real-world digital forensics procedures."
+            },
+            {
+                text: "Verify evidence integrity, maintain chain of custody, document your methodology, and ensure all findings are reproducible."
+            },
+            {
+                text: "Successfully completing this forensic investigation and identifying The Null will earn you 500 XP in Digital Forensics."
+            },
+            {
+                text: "Ready to put your investigative skills to the ultimate test?"
             }
         ];
     }
 
     onComplete() {
         localStorage.setItem('cyberquest_level_5_started', 'true');
+        // Store the start time for performance tracking (similar to Level 4)
+        localStorage.setItem('cyberquest_level_5_start_time', Date.now());
         
-        // Initialize evidence tracker for Level 5
-        if (typeof initializeEvidenceTracker === 'function') {
-            import('../../level5/evidence-tracker.js').then(module => {
-                window.evidenceTracker = module.initializeEvidenceTracker();
-                if (window.evidenceTracker) {
-                    window.evidenceTracker.showTracker();
-                }
-            });
-        }
-        
-        // Open multiple applications for digital forensics
+        // Launch the Investigation Briefing as the starting point for Level 5 forensics
         if (window.applicationLauncher) {
             setTimeout(async () => {
-                // Launch multiple apps for comprehensive forensics analysis
-                const apps = ['files', 'logs', 'terminal'];
-                await window.applicationLauncher.launchMultiple(apps);
-                console.log('Digital forensics tools opened for Level 5: Hunt for The Null');
+                console.log('Launching Level 5 Digital Forensics Environment...');
                 
-                // Start the tutorial after apps are loaded
-                if (window.tutorialManager && typeof window.tutorialManager.shouldAutoStartLevel5Forensics === 'function') {
-                    setTimeout(() => {
-                        if (window.tutorialManager.shouldAutoStartLevel5Forensics()) {
-                            window.tutorialManager.startLevel5ForensicsTutorial();
-                        }
-                    }, 1500);
+                try {
+                    // Launch the Investigation Briefing app first - this provides mission guidance and context
+                    await window.applicationLauncher.launchInvestigationBriefing();
+                    console.log('Investigation Briefing launched successfully');
+                    
+                    // Launch the Investigation Tracker - provides progress monitoring throughout the investigation
+                    await window.applicationLauncher.launchInvestigationTracker();
+                    console.log('Investigation Tracker launched successfully');
+                    
+                    // Show notification to guide user using centralized toast system
+                    if (window.toastManager) {
+                        window.toastManager.showToast(
+                            ' INVESTIGATION BRIEFING: Mission briefing loaded. Review objectives and evidence guide before starting investigation.',
+                            'success'
+                        );
+                    }
+                    
+
+                    
+                } catch (error) {
+                    console.error('Failed to launch Level 5 forensic applications:', error);
                 }
-            }, 500);
+                
+            }, 1000);
         }
     }
 

@@ -1,0 +1,220 @@
+{
+  "investigation_objectives": [
+    {
+      "id": "obj_001",
+      "title": "Identify The Null's Identity",
+      "description": "Determine the real identity of the hacker known as 'The Null' through analysis of digital artifacts",
+      "required_evidence": ["evidence_001", "evidence_002"],
+      "points": 100,
+      "critical": true,
+      "validation_criteria": [
+        "Evidence of user account 'TheNull' found in disk analysis",
+        "Process artifacts showing malicious activity under this user account",
+        "Network communications linked to this identity"
+      ]
+    },
+    {
+      "id": "obj_002", 
+      "title": "Reconstruct Attack Timeline",
+      "description": "Create a detailed timeline of the attack from initial compromise to data exfiltration",
+      "required_evidence": ["evidence_001", "evidence_003"],
+      "points": 100,
+      "critical": true,
+      "validation_criteria": [
+        "Malware installation timestamp identified",
+        "Network communication timeline established",
+        "Data exfiltration period documented",
+        "Evidence correlation across multiple sources"
+      ]
+    },
+    {
+      "id": "obj_003",
+      "title": "Document Malware Activities",
+      "description": "Analyze and document all malicious software used in the attack",
+      "required_evidence": ["evidence_001", "evidence_002"],
+      "points": 100,
+      "critical": true,
+      "validation_criteria": [
+        "Backdoor malware identified and analyzed",
+        "Encryption malware (ransomware) documented",
+        "Persistence mechanisms discovered",
+        "Process behavior analysis completed"
+      ]
+    },
+    {
+      "id": "obj_004",
+      "title": "Trace Network Communications",
+      "description": "Map all suspicious network activities and command & control communications",
+      "required_evidence": ["evidence_002", "evidence_003"],
+      "points": 100,
+      "critical": false,
+      "validation_criteria": [
+        "C&C server IP addresses identified",
+        "Data exfiltration channels documented",
+        "Communication protocols analyzed",
+        "Traffic volume and patterns established"
+      ]
+    },
+    {
+      "id": "obj_005",
+      "title": "Assess Data Compromise",
+      "description": "Determine what data was accessed, modified, or exfiltrated during the attack",
+      "required_evidence": ["evidence_001", "evidence_003"],
+      "points": 100,
+      "critical": false,
+      "validation_criteria": [
+        "Accessed files and directories catalogued",
+        "Encrypted/modified files identified",
+        "Deleted evidence recovery attempted",
+        "Data exfiltration volume estimated"
+      ]
+    }
+  ],
+  "victory_conditions": {
+    "perfect_score": {
+      "min_points": 500,
+      "title": "Master Digital Forensics Investigator",
+      "description": "Outstanding work! You've successfully identified The Null and completely reconstructed the cyber attack.",
+      "rewards": {
+        "xp": 500,
+        "achievements": ["forensics_master", "perfect_investigation"],
+        "unlocks": ["advanced_forensics_tools"]
+      },
+      "message": "Congratulations! You've achieved a perfect investigation. All objectives completed with comprehensive evidence correlation. The Null's identity has been conclusively established, and your forensic report provides irrefutable evidence for prosecution."
+    },
+    "high_score": {
+      "min_points": 400,
+      "title": "Expert Digital Forensics Analyst",
+      "description": "Excellent investigation! You've identified The Null and documented most aspects of the cyber attack.",
+      "rewards": {
+        "xp": 450,
+        "achievements": ["forensics_expert"],
+        "unlocks": []
+      },
+      "message": "Well done! You've successfully identified The Null and documented the majority of the attack. Your investigation shows strong forensic methodology and evidence correlation skills."
+    },
+    "passing_score": {
+      "min_points": 300,
+      "title": "Competent Digital Forensics Investigator", 
+      "description": "Good work! You've gathered sufficient evidence to identify The Null with reasonable confidence.",
+      "rewards": {
+        "xp": 350,
+        "achievements": ["forensics_competent"],
+        "unlocks": []
+      },
+      "message": "Good work! You've met the minimum requirements for the investigation. The Null's identity has been established with sufficient evidence, though some aspects of the attack could be better documented."
+    },
+    "failed": {
+      "min_points": 0,
+      "title": "Investigation Incomplete",
+      "description": "The investigation lacks sufficient evidence to conclusively identify The Null.",
+      "rewards": {
+        "xp": 100,
+        "achievements": [],
+        "unlocks": []
+      },
+      "message": "The investigation is incomplete. More evidence is needed to establish The Null's identity and document the cyber attack. Review the investigation objectives and gather additional forensic evidence."
+    }
+  },
+  "scoring_rubric": {
+    "evidence_correlation": {
+      "description": "Points awarded for correlating evidence across multiple sources",
+      "max_points": 50,
+      "criteria": [
+        "Cross-reference disk artifacts with memory dumps",
+        "Correlate network traffic with process activity", 
+        "Link timeline events across evidence sources",
+        "Establish causation between events"
+      ]
+    },
+    "forensic_methodology": {
+      "description": "Points for following proper digital forensics procedures",
+      "max_points": 50,
+      "criteria": [
+        "Maintain chain of custody documentation",
+        "Verify evidence integrity with hash validation",
+        "Document analysis methodology clearly",
+        "Use appropriate forensic tools and techniques"
+      ]
+    },
+    "report_quality": {
+      "description": "Assessment of final forensic report completeness and accuracy",
+      "max_points": 50,
+      "criteria": [
+        "Executive summary clearly states findings",
+        "Technical details support conclusions",
+        "Evidence properly cited and referenced",
+        "Recommendations are actionable and relevant"
+      ]
+    }
+  },
+  "critical_evidence_mapping": {
+    "the_null_identity": {
+      "evidence_items": ["evidence_001", "evidence_002"],
+      "required_findings": [
+        "User account 'TheNull' discovered in filesystem",
+        "Malicious processes running under TheNull account",
+        "Personal files/documents linking to real identity"
+      ]
+    },
+    "attack_timeline": {
+      "evidence_items": ["evidence_001", "evidence_002", "evidence_003"],
+      "required_findings": [
+        "Initial compromise timestamp",
+        "Malware installation and execution",
+        "Data access and exfiltration periods",
+        "Attack progression sequence"
+      ]
+    },
+    "malware_analysis": {
+      "evidence_items": ["evidence_001", "evidence_002"],
+      "required_findings": [
+        "Backdoor executable identification",
+        "Ransomware/encryption tool discovery",
+        "Persistence mechanism analysis",
+        "Command and control configuration"
+      ]
+    }
+  },
+  "investigation_workflow": {
+    "recommended_steps": [
+      {
+        "step": 1,
+        "title": "Evidence Intake and Verification",
+        "description": "Use Evidence Locker to verify all evidence integrity and establish chain of custody",
+        "estimated_time": "5-10 minutes"
+      },
+      {
+        "step": 2,
+        "title": "Disk Forensics Analysis",
+        "description": "Analyze disk images to find user accounts, malicious files, and filesystem artifacts",
+        "estimated_time": "10-15 minutes"
+      },
+      {
+        "step": 3,
+        "title": "Memory Analysis",
+        "description": "Examine memory dumps for running processes, network connections, and malware signatures",
+        "estimated_time": "10-15 minutes"
+      },
+      {
+        "step": 4,
+        "title": "Network Traffic Analysis",
+        "description": "Investigate network captures for suspicious communications and data exfiltration",
+        "estimated_time": "10-15 minutes"
+      },
+      {
+        "step": 5,
+        "title": "Timeline Construction",
+        "description": "Correlate findings across all evidence sources to build attack timeline",
+        "estimated_time": "10-15 minutes"
+      },
+      {
+        "step": 6,
+        "title": "Report Generation",
+        "description": "Document findings in legally-compliant forensic report with proper evidence citations",
+        "estimated_time": "15-20 minutes"
+      }
+    ],
+    "total_estimated_time": "60-90 minutes"
+  }
+}

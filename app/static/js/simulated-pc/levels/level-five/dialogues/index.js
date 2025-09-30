@@ -4,4 +4,3 @@
  */
 
 export { Level5HuntForTheNullDialogue } from './level5-hunt-for-the-null.js';
-export { Level5CompletionDialogue } from './level5-completion-dialogue.js';

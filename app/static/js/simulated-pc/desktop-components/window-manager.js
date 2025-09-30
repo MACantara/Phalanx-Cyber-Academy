@@ -4,10 +4,9 @@ import { appRegistry } from './application-registry.js';
 import { initializeApplicationLauncher } from './application-launcher.js';
 
 export class WindowManager {
-    constructor(container, taskbar, tutorialManager = null) {
+    constructor(container, taskbar) {
         this.container = container;
         this.taskbar = taskbar;
-        this.tutorialManager = tutorialManager;
         this.windows = new Map();
         this.applications = new Map();
         this.zIndex = 1000;

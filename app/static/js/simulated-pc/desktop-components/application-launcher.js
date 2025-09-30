@@ -4,7 +4,6 @@ export class ApplicationLauncher {
     constructor(windowManager) {
         this.windowManager = windowManager;
         this.appRegistry = appRegistry;
-        this.tutorialManager = windowManager.tutorialManager;
         this.currentLevel = null; // Will be set by desktop
     }
 
@@ -27,7 +26,9 @@ export class ApplicationLauncher {
                 config.levelSpecific === this.currentLevel.toString()
             )
             .filter(([id, config]) => config.autoOpen)
-            .filter(([id, config]) => id !== 'level3-timer'); // Don't auto-open timer, wait for dialogue
+            .filter(([id, config]) => id !== 'level3-timer') // Don't auto-open timer, wait for dialogue
+            .filter(([id, config]) => id !== 'evidence-locker') // Don't auto-open evidence locker, wait for Level 5 dialogue
+            .filter(([id, config]) => id !== 'investigation-tracker'); // Don't auto-open tracker, wait for Level 5 dialogue
 
         console.log(`[ApplicationLauncher] Auto-opening ${levelApps.length} apps for level ${this.currentLevel}`);
 
@@ -77,32 +78,48 @@ export class ApplicationLauncher {
                 
                 return app;
             }
+            if (appId === 'investigation-tracker') {
+                // Investigation tracker is a static element, not a window
+                // Get the desktop container (desktop element or document body as fallback)
+                const desktopContainer = this.windowManager.container || 
+                                       this.windowManager.desktopElement || 
+                                       document.body;
+                
+                app.appendTo(desktopContainer);
+                app.initialize();
+                
+                // Store reference for later access and make globally accessible
+                this.level5InvestigationTrackerInstance = app;
+                window.level5InvestigationTracker = app;
+                
+                return app;
+            }
         }
 
-        const window = this.windowManager.createWindow(appId, windowTitle || appConfig.title, app, windowOptions);
+        const windowElement = this.windowManager.createWindow(appId, windowTitle || appConfig.title, app, windowOptions);
         
         // Apply level-specific window modifications
-        if (window && appConfig.persistent) {
-            const closeBtn = window.querySelector('.close');
-            const minimizeBtn = window.querySelector('.minimize');
-            const maximizeBtn = window.querySelector('.maximize');
+        if (windowElement && appConfig.persistent) {
+            const closeBtn = windowElement.querySelector('.close');
+            const minimizeBtn = windowElement.querySelector('.minimize');
+            const maximizeBtn = windowElement.querySelector('.maximize');
             if (closeBtn) closeBtn.style.display = 'none';
             if (minimizeBtn) minimizeBtn.style.display = 'none';
             
             // Hide maximize button and resize handles for non-resizable windows
             if (windowOptions.resizable === false) {
                 if (maximizeBtn) maximizeBtn.style.display = 'none';
-                const resizeHandles = window.querySelectorAll('.resize-handle');
+                const resizeHandles = windowElement.querySelectorAll('.resize-handle');
                 resizeHandles.forEach(handle => handle.style.display = 'none');
             }
         }
 
         // Position window if specified
-        if (window && windowOptions.position) {
-            window.style.left = windowOptions.position.left;
-            window.style.top = windowOptions.position.top;
+        if (windowElement && windowOptions.position) {
+            windowElement.style.left = windowOptions.position.left;
+            windowElement.style.top = windowOptions.position.top;
             if (windowOptions.zIndex) {
-                window.style.zIndex = windowOptions.zIndex;
+                windowElement.style.zIndex = windowOptions.zIndex;
             }
         }
 
@@ -110,37 +127,7 @@ export class ApplicationLauncher {
             this.appRegistry.markAsOpened(appId);
         }
 
-        // Handle tutorial auto-start if it's the first time and tutorial manager is available
-        if (isFirstTime && this.tutorialManager && appConfig.tutorialMethod && appConfig.startMethod) {
-            await this.handleTutorialAutoStart(appConfig.tutorialMethod, appConfig.startMethod);
-        }
-
         return app;
-    }
-
-    // Shared tutorial auto-start logic moved from window manager
-    async handleTutorialAutoStart(tutorialCheckMethod, tutorialStartMethod) {
-        try {
-            // Check if the tutorial manager has the required methods
-            if (typeof this.tutorialManager[tutorialCheckMethod] !== 'function') {
-                console.warn(`Tutorial method ${tutorialCheckMethod} not found on tutorial manager`);
-                return;
-            }
-
-            if (typeof this.tutorialManager[tutorialStartMethod] !== 'function') {
-                console.warn(`Tutorial method ${tutorialStartMethod} not found on tutorial manager`);
-                return;
-            }
-
-            const shouldStart = await this.tutorialManager[tutorialCheckMethod]();
-            if (shouldStart) {
-                setTimeout(async () => {
-                    await this.tutorialManager[tutorialStartMethod]();
-                }, 1500);
-            }
-        } catch (error) {
-            console.warn(`Tutorial auto-start failed: ${error.message}`);
-        }
     }
 
     // Generic application launcher
@@ -167,18 +154,6 @@ export class ApplicationLauncher {
         return await this.launchApplication('terminal');
     }
 
-    async launchFileManager() {
-        return await this.launchApplication('files');
-    }
-
-    async launchNetworkMonitor() {
-        return await this.launchApplication('wireshark');
-    }
-
-    async launchSystemLogs() {
-        return await this.launchApplication('logs');
-    }
-
     async launchProcessMonitor() {
         return await this.launchApplication('process-monitor');
     }
@@ -191,6 +166,68 @@ export class ApplicationLauncher {
         return await this.launchApplication('ransomware-decryptor');
     }
 
+    // Level 5 - Digital Forensics Application Launchers
+    async launchInvestigationBriefing() {
+        return await this.launchApplication('investigation-briefing');
+    }
+
+    async launchInvestigationTracker() {
+        return await this.launchApplication('investigation-tracker');
+    }
+
+    async launchEvidenceLocker() {
+        return await this.launchApplication('evidence-locker');
+    }
+
+    async launchDiskAnalyzer() {
+        return await this.launchApplication('disk-analyzer');
+    }
+
+    async launchMemoryForensics() {
+        return await this.launchApplication('memory-forensics');
+    }
+
+    async launchNetworkAnalyzer() {
+        return await this.launchApplication('network-analyzer');
+    }
+
+    async launchTimelineConstructor() {
+        return await this.launchApplication('timeline-constructor');
+    }
+
+    async launchReportGenerator() {
+        return await this.launchApplication('report-generator');
+    }
+
+    // Launch evidence-specific tools based on evidence type
+    async launchEvidenceSpecificTools(evidenceType) {
+        if (this.currentLevel !== 5 && this.currentLevel !== '5') {
+            console.warn('[ApplicationLauncher] Evidence-specific tools only available in Level 5');
+            return false;
+        }
+
+        const toolMapping = {
+            'disk_image': ['disk-analyzer'],
+            'memory_dump': ['memory-forensics'],
+            'network_capture': ['network-analyzer'],
+            'mixed': ['timeline-constructor', 'report-generator']
+        };
+        
+        const tools = toolMapping[evidenceType] || [];
+        const results = [];
+        
+        for (const appId of tools) {
+            try {
+                const success = await this.launchApplication(appId);
+                results.push({ appId, success });
+            } catch (error) {
+                results.push({ appId, success: false, error: error.message });
+            }
+        }
+        
+        console.log(`[ApplicationLauncher] Launched ${tools.length} evidence-specific tools for ${evidenceType}`);
+        return results;
+    }
 
     // Level-specific application launcher
     async launchLevelSpecificApp(appId) {
@@ -291,6 +328,12 @@ export class ApplicationLauncher {
         return this.level3TimerInstance || null;
     }
 
+    // Get Level 5 investigation tracker instance
+    getLevel5InvestigationTracker() {
+        // For Level 5 investigation tracker, we store it as a property since it's not a window
+        return this.level5InvestigationTrackerInstance || null;
+    }
+
     // Level 3 timer control methods (delegated from desktop)
     addReputationDamage(amount) {
         const timer = this.getLevel3Timer();
@@ -318,6 +361,45 @@ export class ApplicationLauncher {
             return timer.getStatus();
         }
         return null;
+    }
+
+    // Level 5 investigation tracker control methods
+    getInvestigationTrackerStatus() {
+        const tracker = this.getLevel5InvestigationTracker();
+        if (tracker && (this.currentLevel === 5 || this.currentLevel === '5')) {
+            return tracker.getStatus();
+        }
+        return null;
+    }
+
+    completeObjective(objectiveId, score = 0) {
+        const tracker = this.getLevel5InvestigationTracker();
+        if (tracker && (this.currentLevel === 5 || this.currentLevel === '5')) {
+            tracker.completeObjective(objectiveId, score);
+            return true;
+        }
+        console.warn('[ApplicationLauncher] completeObjective called but Level 5 tracker not available');
+        return false;
+    }
+
+    trackForensicAction(action, details, isCorrect) {
+        const tracker = this.getLevel5InvestigationTracker();
+        if (tracker && (this.currentLevel === 5 || this.currentLevel === '5')) {
+            tracker.trackForensicAction(action, details, isCorrect);
+            return true;
+        }
+        console.warn('[ApplicationLauncher] trackForensicAction called but Level 5 tracker not available');
+        return false;
+    }
+
+    markEvidenceAnalyzed(evidenceId) {
+        const tracker = this.getLevel5InvestigationTracker();
+        if (tracker && (this.currentLevel === 5 || this.currentLevel === '5')) {
+            tracker.markEvidenceAnalyzed(evidenceId);
+            return true;
+        }
+        console.warn('[ApplicationLauncher] markEvidenceAnalyzed called but Level 5 tracker not available');
+        return false;
     }
 }
 

@@ -1,0 +1,82 @@
+{
+  "evidence": [
+    {
+      "id": "evidence_001",
+      "type": "disk_image",
+      "source": "suspects_laptop",
+      "name": "Laptop Hard Drive Image",
+      "hash_md5": "8d858c03931191be22909b15719ae125",
+      "hash_sha256": "b0aeed9a1e4bd4fee0264cb174a1fc8141292ea13e61e5748bd88298d58027df",
+      "size": "500GB",
+      "relevance_score": 0.95,
+      "analysis_complete": false,
+      "findings": [],
+      "data": { 
+        "type": "disk_image", 
+        "sectors": 1000000, 
+        "filesystem": "NTFS",
+        "mount_point": "/mnt/evidence_001",
+        "partition_table": "MBR",
+        "created_date": "2024-03-15T10:30:00Z"
+      }
+    },
+    {
+      "id": "evidence_002", 
+      "type": "memory_dump",
+      "source": "suspects_laptop",
+      "name": "RAM Memory Dump",
+      "hash_md5": "074369ae1d657932f7519b60ecb76982",
+      "hash_sha256": "afce696c9b06f6d83c246729384cecefa62a9fbdf9bc3b6a5538a5ea267ebb3b",
+      "size": "16GB",
+      "relevance_score": 0.85,
+      "analysis_complete": false,
+      "findings": [],
+      "data": { 
+        "type": "memory_dump", 
+        "processes": 245, 
+        "connections": 15,
+        "dump_format": "raw",
+        "architecture": "x64",
+        "os_version": "Windows 10 Build 19041"
+      }
+    },
+    {
+      "id": "evidence_003",
+      "type": "network_capture",
+      "source": "router_logs", 
+      "name": "Network Traffic Capture",
+      "hash_md5": "3841a44412dd56f9b1438b3e18219849",
+      "hash_sha256": "3a315cb33b8c499a89e2df87ca7bd3f46093892fae0649799f8bcfb4eee94374",
+      "size": "2.5GB",
+      "relevance_score": 0.75,
+      "analysis_complete": false,
+      "findings": [],
+      "data": { 
+        "type": "network_capture", 
+        "packets": 50000, 
+        "protocols": ["TCP", "UDP", "HTTPS", "HTTP", "DNS"],
+        "capture_format": "pcap",
+        "interface": "eth0",
+        "duration": "2 hours"
+      }
+    },
+    {
+      "id": "evidence_004",
+      "type": "log_files",
+      "source": "web_server",
+      "name": "Web Server Access Logs",
+      "hash_md5": "9e31d840ccbc6192a689a23e7fc14d8d",
+      "hash_sha256": "91565a99fcf74340bc950338de753165f4b4e7a8cbc105fb7572d16ef03ba6ce",
+      "size": "850MB",
+      "relevance_score": 0.65,
+      "analysis_complete": false,
+      "findings": [],
+      "data": {
+        "type": "log_files",
+        "entries": 125000,
+        "format": "Apache Combined Log",
+        "date_range": "2024-03-10 to 2024-03-16"
+      }
+    }
+  ]
+}
