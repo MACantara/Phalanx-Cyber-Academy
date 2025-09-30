@@ -2,8 +2,8 @@
   "ctf_flags": {
     "challenge_name": "The White Hat Test - Responsible Disclosure CTF",
     "challenge_description": "Ethical security assessment and vulnerability discovery challenge",
-    "total_flags_available": 15,
-    "flags_per_session": 7,
+    "total_flags_available": 19,
+    "flags_per_session": 10,
     "flags": {
       "WHT-ENV": {
         "id": "WHT-ENV",
@@ -303,6 +303,86 @@
           "Understanding temporary file security",
           "Learning about application artifact analysis",
           "Recognizing data leakage in temporary storage"
+        ]
+      },
+      "WHT-SOCIAL": {
+        "id": "WHT-SOCIAL",
+        "value": "WHT{social_engineering_awareness}",
+        "name": "Social Engineering Detection Challenge",
+        "challenge_question": "Social engineering attacks manipulate individuals into revealing sensitive information. Can you identify social engineering attempts in communication logs?",
+        "location": "/var/log/social_engineering.log",
+        "category": "social_engineering",
+        "difficulty": "medium",
+        "hints": [
+          "Look for manipulation tactics in communication logs",
+          "Social engineering exploits human psychology, not technical vulnerabilities",
+          "Check for urgent requests, authority claims, and fear tactics"
+        ],
+        "discovery_commands": ["cat /var/log/social_engineering.log", "grep -i 'urgent\\|immediate\\|suspend' /var/log/*", "find /var/log -name '*social*'"],
+        "learning_objectives": [
+          "Understanding social engineering tactics",
+          "Recognizing manipulation in communications",
+          "Learning to identify phishing and pretexting attempts"
+        ]
+      },
+      "WHT-DOS": {
+        "id": "WHT-DOS",
+        "value": "WHT{denial_of_service_analysis}",
+        "name": "Denial of Service Attack Analysis",
+        "challenge_question": "DoS attacks overwhelm services to make them unavailable. Can you analyze network logs to identify DoS attack patterns and understand their impact?",
+        "location": "/var/log/ddos_attack.log",
+        "category": "network_security",
+        "difficulty": "hard",
+        "hints": [
+          "DoS attacks aim to disrupt service availability, not steal data",
+          "Look for patterns of excessive requests from multiple sources",
+          "Check for resource exhaustion indicators in logs"
+        ],
+        "discovery_commands": ["cat /var/log/ddos_attack.log", "grep -c 'SYN_FLOOD\\|UDP_FLOOD' /var/log/ddos_attack.log", "netstat -tuln"],
+        "learning_objectives": [
+          "Understanding DoS attack mechanisms",
+          "Learning to identify attack patterns in logs",
+          "Recognizing service disruption techniques"
+        ]
+      },
+      "WHT-2FA": {
+        "id": "WHT-2FA",
+        "value": "WHT{two_factor_authentication_bypass}",
+        "name": "Multi-Factor Authentication Security Challenge",
+        "challenge_question": "2FA provides additional security beyond passwords. Can you find misconfigurations in the authentication system that could allow 2FA bypass?",
+        "location": "/etc/security/auth_config.conf",
+        "category": "authentication",
+        "difficulty": "hard",
+        "hints": [
+          "2FA should be mandatory for privileged accounts",
+          "Look for backup authentication methods that bypass 2FA",
+          "Check for implementation flaws in authentication configuration"
+        ],
+        "discovery_commands": ["cat /etc/security/auth_config.conf", "grep -i '2fa\\|mfa\\|totp' /etc/security/*", "find /etc -name '*auth*'"],
+        "learning_objectives": [
+          "Understanding multi-factor authentication importance",
+          "Learning about authentication bypass techniques",
+          "Recognizing proper 2FA implementation practices"
+        ]
+      },
+      "WHT-INCIDENT": {
+        "id": "WHT-INCIDENT",
+        "value": "WHT{incident_response_procedures}",
+        "name": "Incident Response Plan Analysis",
+        "challenge_question": "Proper incident response is crucial for breach containment. Can you find and analyze the incident response procedures to identify gaps in security protocols?",
+        "location": "/home/security/incident_response_plan.txt",
+        "category": "incident_response",
+        "difficulty": "medium",
+        "hints": [
+          "First step in breach response is containment, not customer notification",
+          "Look for incident response team contact information",
+          "Check for proper escalation procedures and timelines"
+        ],
+        "discovery_commands": ["cat /home/security/incident_response_plan.txt", "find /home -name '*incident*'", "grep -i 'breach\\|response\\|containment' /home/security/*"],
+        "learning_objectives": [
+          "Understanding incident response procedures",
+          "Learning about breach containment strategies",
+          "Recognizing proper security team coordination"
         ]
       }
     },
