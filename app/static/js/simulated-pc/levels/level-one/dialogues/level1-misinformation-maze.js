@@ -42,7 +42,7 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                 text: "🎮 How to Play:\nUse the Web Browser to navigate articles. Read each article carefully, then use your analytical skills to determine if it's legitimate journalism or misinformation."
             },
             {
-                text: "Click 'Legitimate' or 'Misinformation' based on your assessment. Take your time to analyze all the evidence before making a decision."
+                text: "Click 'Real News' or 'Fake News' based on your assessment. Take your time to analyze all the evidence before making a decision."
             },
             {
                 text: "🏆 Scoring System:\nCorrect identification: +100 XP per article\nSpeed bonus: Extra points for quick, accurate decisions"
