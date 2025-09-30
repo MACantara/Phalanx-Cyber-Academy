@@ -537,9 +537,9 @@ class GameController {
     }
     
     handleTerminalCommand(command) {
-        const cmd = command.toLowerCase().trim();
-        const args = cmd.split(' ');
-        const baseCmd = args[0];
+        const trimmedCommand = command.trim();
+        const args = trimmedCommand.split(' ');
+        const baseCmd = args[0].toLowerCase(); // Only convert base command to lowercase
         
         this.uiManager.addTerminalOutput(`$ ${command}`);
         
