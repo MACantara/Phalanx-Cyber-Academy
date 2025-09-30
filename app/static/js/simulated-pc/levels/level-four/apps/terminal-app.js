@@ -18,6 +18,7 @@ export class TerminalApp extends WindowBase {
                     <div class="text-green-400">Welcome to The White Hat Test - Responsible Disclosure CTF</div>
                     <div class="text-yellow-400">Your mission: Find 7 hidden flags and complete a responsible disclosure report</div>
                     <div class="text-gray-400 leading-relaxed">Type 'help' for available commands | Type 'cat mission_brief.txt' to read the full brief</div>
+                    <div class="text-blue-400">💡 Use 'submit-flag [flag-value]' to submit captured flags for verification</div>
                     <div></div>
                 </div>
                 <div class="flex items-center" id="terminal-input-area">
@@ -42,6 +43,9 @@ export class TerminalApp extends WindowBase {
         
         // Show initial prompt
         this.updatePrompt();
+        
+        // Make challenge tracker accessible to terminal commands
+        this.setupChallengeTrackerAccess();
     }
 
     bindEvents() {
@@ -320,6 +324,57 @@ export class TerminalApp extends WindowBase {
                     console.error('[TerminalApp] Error dispatching flag discovery event:', error);
                 }
             });
+        }
+    }
+
+    setupChallengeTrackerAccess() {
+        // Try to find the challenge tracker in the global scope or desktop apps
+        const findChallengeTracker = () => {
+            // Check if it's already in global scope
+            if (window.level4ChallengeTracker) {
+                return window.level4ChallengeTracker;
+            }
+            
+            // Try to find it through desktop apps manager
+            try {
+                const desktop = document.querySelector('#desktop');
+                if (desktop && desktop.appsManager) {
+                    const apps = desktop.appsManager.apps;
+                    for (const app of apps) {
+                        if (app.id && app.id.includes('challenge-tracker')) {
+                            return app;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log('[TerminalApp] Could not access apps manager:', error.message);
+            }
+            
+            return null;
+        };
+
+        // Set up initial reference
+        const tracker = findChallengeTracker();
+        if (tracker) {
+            window.level4ChallengeTracker = tracker;
+        } else {
+            // Set up polling to find the tracker when it becomes available
+            const pollForTracker = () => {
+                const tracker = findChallengeTracker();
+                if (tracker) {
+                    window.level4ChallengeTracker = tracker;
+                    clearInterval(this.trackerPollInterval);
+                }
+            };
+            
+            this.trackerPollInterval = setInterval(pollForTracker, 1000);
+            
+            // Stop polling after 30 seconds
+            setTimeout(() => {
+                if (this.trackerPollInterval) {
+                    clearInterval(this.trackerPollInterval);
+                }
+            }, 30000);
         }
     }
 }
