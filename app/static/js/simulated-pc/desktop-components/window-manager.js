@@ -85,11 +85,14 @@ export class WindowManager {
     }
 
     bindWindowEvents(window, id) {
-        // Bring to front on click and set as active
-        window.addEventListener('mousedown', () => {
+        // Bring to front on click/touch and set as active
+        const activateWindow = () => {
             window.style.zIndex = ++this.zIndex;
             this.taskbar.setActiveWindow(id);
-        });
+        };
+        
+        window.addEventListener('mousedown', activateWindow);
+        window.addEventListener('touchstart', activateWindow, { passive: true });
     }
 
     // Switch to a specific window (bring it to front)
@@ -119,13 +122,13 @@ export class WindowManager {
     // Set up keyboard shortcuts for window switching
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
-            // Alt + Tab to cycle through windows
+            // Alt + Tab to cycle through windows (desktop only)
             if (e.altKey && e.key === 'Tab') {
                 e.preventDefault();
                 this.cycleWindows();
             }
             
-            // Alt + Number keys (1-9) to switch to specific window
+            // Alt + Number keys (1-9) to switch to specific window (desktop only)
             if (e.altKey && e.key >= '1' && e.key <= '9') {
                 e.preventDefault();
                 const windowIndex = parseInt(e.key) - 1;
@@ -135,6 +138,54 @@ export class WindowManager {
                 }
             }
         });
+        
+        // Add swipe gesture support for mobile window switching
+        this.setupTouchGestures();
+    }
+
+    // Mobile-friendly touch gestures
+    setupTouchGestures() {
+        let startX = 0;
+        let startY = 0;
+        
+        this.container.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        this.container.addEventListener('touchend', (e) => {
+            const endX = e.changedTouches[0].clientX;
+            const endY = e.changedTouches[0].clientY;
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+            
+            // Detect horizontal swipe gestures for window switching
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    // Swipe left - next window
+                    this.cycleWindows();
+                } else {
+                    // Swipe right - previous window (reverse cycle)
+                    this.cycleWindowsReverse();
+                }
+            }
+        }, { passive: true });
+    }
+    
+    // Reverse cycle through windows
+    cycleWindowsReverse() {
+        const windowIds = Array.from(this.windows.keys());
+        if (windowIds.length <= 1) return;
+        
+        const currentActiveId = this.taskbar.activeWindowId;
+        let nextIndex = windowIds.length - 1;
+        
+        if (currentActiveId) {
+            const currentIndex = windowIds.indexOf(currentActiveId);
+            nextIndex = currentIndex > 0 ? currentIndex - 1 : windowIds.length - 1;
+        }
+        
+        this.switchToWindow(windowIds[nextIndex]);
     }
 
     // Cycle through open windows
