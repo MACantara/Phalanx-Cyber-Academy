@@ -19,14 +19,14 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
             },
             {
                 text: "🔍 Where to Look:\n\n• Hidden files (start with .)\n• Configuration files in /etc/\n• Log files in /var/log/\n• User directories in /home/",
-                example: "Getting Started:\nls -la ~          # Check home directory\ncat ~/.bashrc     # Read shell config\nls /var/log/      # Check log directory"
+                example: "Getting Started:\nls -a ~          # Check home directory\ncat ~/.bashrc     # Read shell config\nls /var/log/      # Check log directory"
             },
             {
                 text: "� What You'll Learn:\n\n1. Basic Reconnaissance - Find hidden files\n2. Log Analysis - Examine system logs\n3. Configuration Review - Check server settings\n4. Credential Discovery - Find exposed passwords\n5. Network Analysis - Understand network setup\n6. Process Analysis - Check running services\n7. Permission Analysis - Find security flaws\n8. Responsible Disclosure - Report findings ethically"
             },
             {
-                text: "🎮 Getting Started:\n\n1. Open the Terminal application\n2. Start exploring with 'ls -la ~' to list files\n3. Use 'hints' command when you need help\n4. Submit flags with 'submit-flag WHT{flag_value}'",
-                example: "First Commands to Try:\nls -la ~              # Check your home directory\ncat ~/.bashrc         # Read configuration files\nls /var/log/          # Look at system logs\nhints                 # Get help when stuck"
+                text: "🎮 Getting Started:\n\n1. Open the Terminal application\n2. Start exploring with 'ls -a ~' to list files\n3. Use 'hints' command when you need help\n4. Submit flags with 'submit-flag WHT{flag_value}'",
+                example: "First Commands to Try:\nls -a ~              # Check your home directory\ncat ~/.bashrc         # Read configuration files\nls /var/log/          # Look at system logs\nhints                 # Get help when stuck"
             },
             {
                 text: "🛡️ Remember: Always Practice Ethical Hacking!\n\n• Only test systems you have permission to test\n• Report vulnerabilities responsibly\n• Help organizations improve their security\n• Respect privacy and data protection\n\nReady to start your ethical hacking journey?"
