@@ -22,6 +22,7 @@ export class ForensicReportApp extends ForensicAppBase {
         this.availableEvidence = [];
         this.reportScore = 0;
         this.isComplete = false;
+        this.selectedEvidence = null; // For mobile interactions
     }
 
     createContent() {
@@ -49,12 +50,12 @@ export class ForensicReportApp extends ForensicAppBase {
                 </div>
 
                 <!-- Main Content -->
-                <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+                <div class="flex-1 flex flex-col lg:flex-row min-h-0">
                     <!-- Evidence Bank Sidebar -->
-                    <div class="w-full lg:w-1/4 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto">
-                        <h3 class="text-base sm:text-lg font-semibold mb-3 text-blue-300">Evidence Bank</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mb-4 break-words">
-                            Drag evidence into report sections below
+                    <div class="w-full lg:w-1/4 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto max-h-[40vh] lg:max-h-full">
+                        <h3 class="text-base sm:text-lg lg:text-xl font-semibold mb-3 text-blue-300">Evidence Bank</h3>
+                        <p class="text-xs sm:text-sm lg:text-base text-gray-400 mb-4 break-words">
+                            Drag evidence into report sections below or tap to select on mobile
                         </p>
                         
                         <div id="evidence-bank" class="space-y-2">
@@ -81,16 +82,16 @@ export class ForensicReportApp extends ForensicAppBase {
                     </div>
 
                     <!-- Report Builder Panel -->
-                    <div class="flex-1 p-3 sm:p-4 overflow-y-auto">
+                    <div class="flex-1 p-3 sm:p-4 overflow-y-auto min-h-0">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                            <h3 class="text-base sm:text-lg font-semibold text-blue-300 mb-2 sm:mb-0">Report Sections</h3>
-                            <div class="text-xs sm:text-sm text-gray-400">
+                            <h3 class="text-base sm:text-lg lg:text-xl font-semibold text-blue-300 mb-2 sm:mb-0">Report Sections</h3>
+                            <div class="text-xs sm:text-sm lg:text-base text-gray-400">
                                 <span id="completed-sections">0</span> of 4 sections complete
                             </div>
                         </div>
 
                         <!-- Report Sections -->
-                        <div id="report-sections" class="space-y-4">
+                        <div id="report-sections" class="space-y-4 mb-6">
                             ${Object.entries(this.reportSections).map(([sectionId, section]) => this.createReportSection(sectionId, section)).join('')}
                         </div>
 
@@ -139,22 +140,23 @@ export class ForensicReportApp extends ForensicAppBase {
             <div class="report-section bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
                 <div class="p-3 sm:p-4 border-b border-gray-700 bg-gray-750">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                        <h4 class="text-sm sm:text-base font-semibold text-white mb-1 sm:mb-0">${section.title}</h4>
+                        <h4 class="text-sm sm:text-base lg:text-lg font-semibold text-white mb-1 sm:mb-0">${section.title}</h4>
                         <div class="flex items-center space-x-2">
-                            ${section.required ? '<span class="px-2 py-1 text-xs bg-red-600 text-red-100 rounded">Required</span>' : ''}
-                            <span id="section-status-${sectionId}" class="px-2 py-1 text-xs bg-gray-600 text-gray-300 rounded">Empty</span>
+                            ${section.required ? '<span class="px-2 py-1 text-xs sm:text-sm bg-red-600 text-red-100 rounded">Required</span>' : ''}
+                            <span id="section-status-${sectionId}" class="px-2 py-1 text-xs sm:text-sm bg-gray-600 text-gray-300 rounded">Empty</span>
                         </div>
                     </div>
                 </div>
                 
-                <div class="drop-zone min-h-[120px] p-4 border-2 border-dashed border-gray-600 hover:border-blue-500 transition-colors" 
+                <div class="drop-zone min-h-[120px] sm:min-h-[140px] p-4 border-2 border-dashed border-gray-600 hover:border-blue-500 transition-colors touch-manipulation" 
                      data-section-id="${sectionId}"
                      ondrop="window.forensicReportApp?.handleDrop(event)" 
-                     ondragover="window.forensicReportApp?.handleDragOver(event)">
+                     ondragover="window.forensicReportApp?.handleDragOver(event)"
+                     onclick="window.forensicReportApp?.handleMobileClick(event)">
                     <div id="section-content-${sectionId}" class="space-y-2">
                         <div class="text-center text-gray-500 py-4">
-                            <i class="bi bi-plus-circle text-2xl mb-2 block"></i>
-                            <p class="text-xs sm:text-sm break-words">Drop evidence here to add to ${section.title.toLowerCase()}</p>
+                            <i class="bi bi-plus-circle text-2xl sm:text-3xl mb-2 block"></i>
+                            <p class="text-xs sm:text-sm lg:text-base break-words">Drop evidence here or tap to add to ${section.title.toLowerCase()}</p>
                         </div>
                     </div>
                 </div>
@@ -231,17 +233,18 @@ export class ForensicReportApp extends ForensicAppBase {
         if (!evidenceBank) return;
 
         evidenceBank.innerHTML = this.availableEvidence.map(evidence => `
-            <div class="evidence-item cursor-move p-3 bg-gray-700 hover:bg-gray-600 rounded-lg border border-gray-600 hover:border-blue-500 transition-all" 
+            <div class="evidence-item cursor-move p-3 sm:p-4 bg-gray-700 hover:bg-gray-600 rounded-lg border border-gray-600 hover:border-blue-500 transition-all min-h-[60px] touch-manipulation" 
                  draggable="true" 
                  data-evidence-id="${evidence.id}"
                  data-evidence-type="${evidence.type}"
-                 data-evidence-points="${evidence.points}">
+                 data-evidence-points="${evidence.points}"
+                 onclick="window.forensicReportApp?.handleEvidenceClick(event)">
                 <div class="flex items-center space-x-3">
-                    <i class="${evidence.icon} text-blue-400 text-lg flex-shrink-0"></i>
+                    <i class="${evidence.icon} text-blue-400 text-lg sm:text-xl flex-shrink-0"></i>
                     <div class="min-w-0 flex-1">
-                        <h5 class="text-sm font-semibold text-white truncate">${evidence.title}</h5>
-                        <p class="text-xs text-gray-300 break-words">${evidence.description}</p>
-                        <div class="mt-1 text-xs text-blue-400">+${evidence.points} points</div>
+                        <h5 class="text-sm sm:text-base font-semibold text-white truncate">${evidence.title}</h5>
+                        <p class="text-xs sm:text-sm text-gray-300 break-words">${evidence.description}</p>
+                        <div class="mt-1 text-xs sm:text-sm text-blue-400">+${evidence.points} points</div>
                     </div>
                 </div>
             </div>
@@ -278,6 +281,44 @@ export class ForensicReportApp extends ForensicAppBase {
         const sectionId = dropZone.dataset.sectionId;
         
         this.addEvidenceToSection(sectionId, evidenceId);
+    }
+
+    // Mobile-friendly click handlers
+    handleEvidenceClick(event) {
+        const evidenceItem = event.currentTarget;
+        const evidenceId = evidenceItem.dataset.evidenceId;
+        
+        // Remove previous selection
+        document.querySelectorAll('.evidence-item').forEach(item => {
+            item.classList.remove('ring-2', 'ring-blue-400', 'bg-blue-700');
+        });
+        
+        // Highlight selected evidence
+        evidenceItem.classList.add('ring-2', 'ring-blue-400', 'bg-blue-700');
+        
+        // Store selected evidence for mobile interactions
+        this.selectedEvidence = evidenceId;
+        
+        // Show mobile instruction
+        this.showNotification('Evidence selected. Tap on a report section to add it.', 'info');
+    }
+
+    handleMobileClick(event) {
+        if (!this.selectedEvidence) {
+            this.showNotification('Please select evidence from the Evidence Bank first.', 'warning');
+            return;
+        }
+        
+        const dropZone = event.currentTarget;
+        const sectionId = dropZone.dataset.sectionId;
+        
+        this.addEvidenceToSection(sectionId, this.selectedEvidence);
+        
+        // Clear selection
+        this.selectedEvidence = null;
+        document.querySelectorAll('.evidence-item').forEach(item => {
+            item.classList.remove('ring-2', 'ring-blue-400', 'bg-blue-700');
+        });
     }
 
     addEvidenceToSection(sectionId, evidenceId) {
