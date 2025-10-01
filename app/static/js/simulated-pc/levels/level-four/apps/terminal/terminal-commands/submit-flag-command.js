@@ -1,4 +1,5 @@
 import { BaseCommand } from './base-command.js';
+import { Level4CompletionDialogue } from '../../../dialogues/level4-completion-dialogue.js';
 
 export class SubmitFlagCommand extends BaseCommand {
     constructor(processor) {
@@ -380,6 +381,11 @@ export class SubmitFlagCommand extends BaseCommand {
         this.processor.addOutput('', '');
         this.processor.addOutput('Thank you for practicing ethical security research!', 'text-green-400');
         
+        // Show completion dialogue after a short delay
+        setTimeout(() => {
+            this.showCompletionDialogue();
+        }, 3000); // Wait 3 seconds to let celebration message show
+        
         // Emit completion event
         try {
             document.dispatchEvent(new CustomEvent('level4-completed', {
@@ -435,5 +441,17 @@ export class SubmitFlagCommand extends BaseCommand {
         help.options.forEach(option => {
             this.processor.addOutput(`  ${option.flag.padEnd(20)} ${option.description}`, 'text-gray-300');
         });
+    }
+    
+    // Show completion dialogue
+    showCompletionDialogue() {
+        try {
+            Level4CompletionDialogue.startLevel4CompletionDialogue();
+        } catch (error) {
+            console.error('Error showing completion dialogue:', error);
+            // Fallback: show basic completion message
+            this.processor.addOutput('', '');
+            this.processor.addOutput('🎊 Level 4 Complete! Great job on your ethical hacking journey! 🎊', 'text-green-400');
+        }
     }
 }
