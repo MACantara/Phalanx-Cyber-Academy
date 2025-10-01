@@ -164,37 +164,17 @@ export class ApplicationLauncher {
 
 
 
-    // Level 5 - Digital Forensics Application Launchers
-    async launchInvestigationBriefing() {
-        return await this.launchApplication('investigation-briefing');
+    // Level 5 - Streamlined Digital Forensics Application Launchers (3 Core Apps)
+    async launchEvidenceViewer() {
+        return await this.launchApplication('evidence-viewer');
     }
 
-    async launchInvestigationTracker() {
-        return await this.launchApplication('investigation-tracker');
+    async launchInvestigationHub() {
+        return await this.launchApplication('investigation-hub');
     }
 
-    async launchEvidenceLocker() {
-        return await this.launchApplication('evidence-locker');
-    }
-
-    async launchDiskAnalyzer() {
-        return await this.launchApplication('disk-analyzer');
-    }
-
-    async launchMemoryForensics() {
-        return await this.launchApplication('memory-forensics');
-    }
-
-    async launchNetworkAnalyzer() {
-        return await this.launchApplication('network-analyzer');
-    }
-
-    async launchTimelineConstructor() {
-        return await this.launchApplication('timeline-constructor');
-    }
-
-    async launchReportGenerator() {
-        return await this.launchApplication('report-generator');
+    async launchForensicReport() {
+        return await this.launchApplication('forensic-report');
     }
 
     // Launch evidence-specific tools based on evidence type
