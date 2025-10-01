@@ -11,7 +11,7 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                 text: "🎯 ONE CLEAR GOAL: Discover The Null's Real Identity\n\n✅ Real Name: ?\n✅ Email Address: ?\n✅ Phone Number: ?\n\nThat's it. Find these 3 pieces of information and you win."
             },
             {
-                text: "📱 YOUR EVIDENCE (What you'll search through):\n\n💻 Laptop Hard Drive - Contains browser data and personal files\n🧠 Memory Dump - Shows what was running when seized\n🌐 Network Logs - Shows communications and data transfers\n\n⚡ NEW REQUIREMENT: You must investigate ALL 5 evidence pieces before building your report!"
+                text: "📱 YOUR EVIDENCE (What you'll search through):\n\n💻 Laptop Hard Drive - Contains browser data and personal files\n🧠 Memory Dump - Shows what was running when seized\n🌐 Network Logs - Shows communications and data transfers\n\n⚡ You must investigate ALL 5 evidence pieces before building your report!"
             },
             {
                 text: "🔍 HOW IT WORKS (Super Simple):\n\n1️⃣ Evidence Viewer → Investigate ALL 5 pieces of evidence\n2️⃣ Extract clues from each device (laptop, memory, network)\n3️⃣ Forensic Report Builder → Organize your findings\n4️⃣ Submit when you have all identity pieces"
