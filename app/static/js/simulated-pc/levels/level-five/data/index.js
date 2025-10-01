@@ -1,59 +1,29 @@
 /**
  * Level 5 Data Index
- * Centralized loading of all forensic datasets for digital investigation
+ * Lightweight data utilities for Level 5 digital forensics investigation
+ * Note: Data is now embedded directly in apps for better performance and simplicity
  */
 
-// Import streamlined Level 5 JSON datasets for core apps
-import evidenceViewerData from './evidence-viewer-data.json' with { type: 'json' };
-import investigationHubData from './investigation-hub-data.json' with { type: 'json' };
-import forensicReportData from './forensic-report-data.json' with { type: 'json' };
+// Level 5 now uses embedded data in each app for streamlined performance
+console.log('Level 5 Data: Using embedded app data for optimal performance');
 
-// Export individual datasets for core apps
-export { evidenceViewerData };
-export { investigationHubData };
-export { forensicReportData };
-
-// Combined Level 5 data object for bulk operations (streamlined)
+// Placeholder for any shared utilities (currently none needed)
 export const level5Data = {
-    evidence_viewer: evidenceViewerData,
-    investigation_hub: investigationHubData,
-    forensic_report: forensicReportData
+    message: 'Level 5 data is now embedded in individual apps for better performance'
 };
 
-// Data validation and status checking for streamlined datasets
-export function validateDataIntegrity() {
-    const datasets = {
-        evidence_viewer: evidenceViewerData,
-        investigation_hub: investigationHubData,
-        forensic_report: forensicReportData
-    };
-
-    const status = {};
-    
-    for (const [key, data] of Object.entries(datasets)) {
-        status[key] = {
-            loaded: data !== null && typeof data === 'object',
-            hasContent: data && Object.keys(data).length > 0,
-            size: data ? Object.keys(data).length : 0
-        };
-    }
-
+// Utility function to check if Level 5 apps have embedded data
+export function validateAppDataIntegrity() {
     return {
-        allLoaded: Object.values(status).every(s => s.loaded),
-        allValid: Object.values(status).every(s => s.hasContent),
-        status
+        message: 'Data validation is now handled within individual Level 5 apps',
+        recommendation: 'Check app initialization logs for data loading status'
     };
 }
 
-// Get specific dataset by name (streamlined)
+// Legacy compatibility notice
 export function getDataset(name) {
-    const datasets = {
-        'evidence_viewer': evidenceViewerData,
-        'investigation_hub': investigationHubData,
-        'forensic_report': forensicReportData
-    };
-    
-    return datasets[name] || null;
+    console.warn(`getDataset('${name}') is deprecated. Data is now embedded in Level 5 apps.`);
+    return null;
 }
 
 // Default export for backward compatibility
