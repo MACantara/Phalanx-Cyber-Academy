@@ -14,7 +14,7 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 text: "🎯 Your Mission:\n\nFind 3 security flags hidden in the system using basic terminal commands. Each flag teaches you a fundamental ethical hacking skill."
             },
             {
-                text: "� Essential Commands:\n\nYou'll use these basic terminal commands to explore the system and find vulnerabilities:",
+                text: "💻 Essential Commands:\n\nYou'll use these basic terminal commands to explore the system and find vulnerabilities:",
                 example: "Core Commands:\nls -la    # List all files (including hidden)\ncat file  # Read file contents\nfind /    # Search for files\ngrep text # Search inside files"
             },
             {
