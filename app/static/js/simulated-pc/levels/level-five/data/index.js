@@ -4,20 +4,17 @@
  */
 
 // Import streamlined Level 5 JSON datasets for core apps
-import evidenceData from './evidence-data.json' with { type: 'json' };
 import evidenceViewerData from './evidence-viewer-data.json' with { type: 'json' };
 import investigationHubData from './investigation-hub-data.json' with { type: 'json' };
 import forensicReportData from './forensic-report-data.json' with { type: 'json' };
 
 // Export individual datasets for core apps
-export { evidenceData };
 export { evidenceViewerData };
 export { investigationHubData };
 export { forensicReportData };
 
 // Combined Level 5 data object for bulk operations (streamlined)
 export const level5Data = {
-    evidence: evidenceData,
     evidence_viewer: evidenceViewerData,
     investigation_hub: investigationHubData,
     forensic_report: forensicReportData
@@ -26,7 +23,6 @@ export const level5Data = {
 // Data validation and status checking for streamlined datasets
 export function validateDataIntegrity() {
     const datasets = {
-        evidence: evidenceData,
         evidence_viewer: evidenceViewerData,
         investigation_hub: investigationHubData,
         forensic_report: forensicReportData
@@ -52,7 +48,6 @@ export function validateDataIntegrity() {
 // Get specific dataset by name (streamlined)
 export function getDataset(name) {
     const datasets = {
-        'evidence': evidenceData,
         'evidence_viewer': evidenceViewerData,
         'investigation_hub': investigationHubData,
         'forensic_report': forensicReportData
