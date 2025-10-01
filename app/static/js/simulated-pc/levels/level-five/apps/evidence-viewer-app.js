@@ -148,6 +148,15 @@ export class EvidenceViewerApp extends ForensicAppBase {
 
     async initialize() {
         await super.initialize();
+        
+        // Reset analysis completion status when starting new evidence analysis
+        // This allows for replayability and proper workflow
+        if (!this.isReanalysis) {
+            localStorage.removeItem('level5_evidence_analysis_complete');
+            localStorage.removeItem('level5_evidence_analysis_data');
+            console.log('[EvidenceViewer] Reset analysis status for new investigation');
+        }
+        
         this.loadEvidence();
         this.bindEvents();
         this.updateObjective();
@@ -506,12 +515,28 @@ export class EvidenceViewerApp extends ForensicAppBase {
     proceedToNextStep() {
         if (this.discoveredClues.size >= 3) {
             const targetName = this.targetIdentity?.real_name || this.targetIdentity?.code_name || 'Unknown Target';
-            this.showNotification(`🎉 All identity clues found for ${this.targetIdentity?.code_name}! Next: 1) Check Investigation Hub for progress 2) Add evidence to Forensic Report sections`, 'success', 6000);
+            
+            // Mark evidence analysis as complete for access control
+            localStorage.setItem('level5_evidence_analysis_complete', 'true');
+            
+            // Store extracted clues and target data for forensic report
+            const analysisData = {
+                clues: Array.from(this.discoveredClues),
+                target_identity: this.targetIdentity,
+                target_name: targetName,
+                evidence_pool: this.evidencePool,
+                completion_time: new Date().toISOString()
+            };
+            localStorage.setItem('level5_evidence_analysis_data', JSON.stringify(analysisData));
+            
+            this.showNotification(`🎉 Evidence Analysis Complete! ${this.targetIdentity?.code_name} identity clues extracted. Investigation Hub updated - you can now open Forensic Report Builder!`, 'success', 6000);
             this.emitForensicEvent('analysis_complete', { 
                 clues: Array.from(this.discoveredClues),
                 target_identity: this.targetIdentity,
                 target_name: targetName
             });
+            
+            console.log(`[EvidenceViewer] Analysis complete for ${this.targetIdentity?.code_name}. Data stored for forensic report.`);
         }
     }
 
