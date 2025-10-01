@@ -39,10 +39,24 @@ export class EvidenceViewerApp extends ForensicAppBase {
                     </div>
                 </div>
 
+                <!-- Mobile Tab Navigation -->
+                <div class="lg:hidden bg-gray-800 border-b border-gray-700">
+                    <div class="flex">
+                        <button id="tab-evidence" class="tab-button flex-1 px-4 py-3 text-sm font-medium bg-blue-600 text-white border-r border-gray-700">
+                            <i class="bi bi-list-ul mr-2"></i>
+                            Evidence List
+                        </button>
+                        <button id="tab-analysis" class="tab-button flex-1 px-4 py-3 text-sm font-medium bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            <i class="bi bi-search mr-2"></i>
+                            Analysis Results
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Main Content Area -->
                 <div class="flex-1 flex flex-col lg:flex-row min-h-0">
                     <!-- Evidence Selection Sidebar -->
-                    <div class="w-full lg:w-1/3 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto">
+                    <div id="evidence-panel" class="w-full lg:w-1/3 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto lg:block">
                         <h3 class="text-base sm:text-lg font-semibold mb-3 text-blue-300">Available Evidence</h3>
                         <div id="evidence-list" class="space-y-2">
                             <!-- Evidence items will be populated here -->
@@ -61,7 +75,7 @@ export class EvidenceViewerApp extends ForensicAppBase {
                     </div>
 
                     <!-- Analysis Panel -->
-                    <div class="flex-1 flex flex-col p-3 sm:p-4 min-h-0 overflow-y-auto">
+                    <div id="analysis-panel" class="flex-1 flex-col p-3 sm:p-4 min-h-0 overflow-y-auto hidden lg:flex">
                         <!-- Current Objective Banner -->
                         <div id="objective-banner" class="mb-4 p-3 sm:p-4 bg-blue-900/50 border border-blue-600 rounded-lg flex-shrink-0">
                             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between">
@@ -140,11 +154,23 @@ export class EvidenceViewerApp extends ForensicAppBase {
     }
 
     bindEvents() {
+        // Mobile tab switching
+        const tabEvidence = document.getElementById('tab-evidence');
+        const tabAnalysis = document.getElementById('tab-analysis');
+        
+        tabEvidence?.addEventListener('click', () => this.switchToTab('evidence'));
+        tabAnalysis?.addEventListener('click', () => this.switchToTab('analysis'));
+
         // Evidence selection
         document.addEventListener('click', (e) => {
             if (e.target.closest('.evidence-item')) {
                 const evidenceId = e.target.closest('.evidence-item').dataset.evidenceId;
                 this.selectEvidence(evidenceId);
+                
+                // Auto-switch to analysis tab on mobile when evidence is selected
+                if (window.innerWidth < 1024) {
+                    this.switchToTab('analysis');
+                }
             }
         });
 
@@ -449,6 +475,39 @@ export class EvidenceViewerApp extends ForensicAppBase {
             notification.classList.add('translate-x-full');
             setTimeout(() => notification.remove(), 300);
         }, duration);
+    }
+
+    switchToTab(tabName) {
+        const evidencePanel = document.getElementById('evidence-panel');
+        const analysisPanel = document.getElementById('analysis-panel');
+        const tabEvidence = document.getElementById('tab-evidence');
+        const tabAnalysis = document.getElementById('tab-analysis');
+
+        if (tabName === 'evidence') {
+            // Show evidence panel, hide analysis panel
+            evidencePanel?.classList.remove('hidden');
+            evidencePanel?.classList.add('block');
+            analysisPanel?.classList.add('hidden');
+            analysisPanel?.classList.remove('flex');
+
+            // Update tab appearances
+            tabEvidence?.classList.remove('bg-gray-700', 'text-gray-300');
+            tabEvidence?.classList.add('bg-blue-600', 'text-white');
+            tabAnalysis?.classList.remove('bg-blue-600', 'text-white');
+            tabAnalysis?.classList.add('bg-gray-700', 'text-gray-300');
+        } else if (tabName === 'analysis') {
+            // Show analysis panel, hide evidence panel
+            analysisPanel?.classList.remove('hidden');
+            analysisPanel?.classList.add('flex');
+            evidencePanel?.classList.add('hidden');
+            evidencePanel?.classList.remove('block');
+
+            // Update tab appearances
+            tabAnalysis?.classList.remove('bg-gray-700', 'text-gray-300');
+            tabAnalysis?.classList.add('bg-blue-600', 'text-white');
+            tabEvidence?.classList.remove('bg-blue-600', 'text-white');
+            tabEvidence?.classList.add('bg-gray-700', 'text-gray-300');
+        }
     }
 }
 
