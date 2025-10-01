@@ -73,10 +73,24 @@ export class ForensicReportApp extends ForensicAppBase {
                     </div>
                 </div>
 
+                <!-- Mobile Tab Navigation -->
+                <div class="lg:hidden bg-gray-800 border-b border-gray-700">
+                    <div class="flex">
+                        <button id="tab-evidence-bank" class="tab-button flex-1 px-4 py-3 text-sm font-medium bg-blue-600 text-white border-r border-gray-700">
+                            <i class="bi bi-collection mr-2"></i>
+                            Evidence Bank
+                        </button>
+                        <button id="tab-report-builder" class="tab-button flex-1 px-4 py-3 text-sm font-medium bg-gray-700 text-gray-300 hover:bg-gray-600">
+                            <i class="bi bi-file-text mr-2"></i>
+                            Report Builder
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Main Content -->
                 <div class="flex-1 flex flex-col lg:flex-row min-h-0">
                     <!-- Evidence Bank Sidebar -->
-                    <div class="w-full lg:w-1/4 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto max-h-[40vh] lg:max-h-full">
+                    <div id="evidence-bank-panel" class="w-full lg:w-1/4 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto max-h-[40vh] lg:max-h-full lg:block">
                         <h3 class="text-base sm:text-lg lg:text-xl font-semibold mb-3 text-blue-300">Evidence Bank</h3>
                         <p class="text-xs sm:text-sm lg:text-base text-gray-400 mb-4 break-words">
                             Drag evidence into report sections below or tap to select on mobile
@@ -106,7 +120,7 @@ export class ForensicReportApp extends ForensicAppBase {
                     </div>
 
                     <!-- Report Builder Panel -->
-                    <div class="flex-1 p-3 sm:p-4 overflow-y-auto min-h-0">
+                    <div id="report-builder-panel" class="flex-1 p-3 sm:p-4 overflow-y-auto min-h-0 hidden lg:block">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
                             <h3 class="text-base sm:text-lg lg:text-xl font-semibold text-blue-300 mb-2 sm:mb-0">Report Sections</h3>
                             <div class="text-xs sm:text-sm lg:text-base text-gray-400">
@@ -211,6 +225,13 @@ export class ForensicReportApp extends ForensicAppBase {
     }
 
     bindEvents() {
+        // Mobile tab switching
+        const tabEvidenceBank = document.getElementById('tab-evidence-bank');
+        const tabReportBuilder = document.getElementById('tab-report-builder');
+        
+        tabEvidenceBank?.addEventListener('click', () => this.switchToTab('evidence-bank'));
+        tabReportBuilder?.addEventListener('click', () => this.switchToTab('report-builder'));
+
         // Submit report button
         const submitBtn = document.getElementById('submit-report-btn');
         submitBtn?.addEventListener('click', () => this.submitReport());
@@ -341,6 +362,11 @@ export class ForensicReportApp extends ForensicAppBase {
         
         // Store selected evidence for mobile interactions
         this.selectedEvidence = evidenceId;
+        
+        // Auto-switch to report builder tab on mobile when evidence is selected
+        if (window.innerWidth < 1024) {
+            this.switchToTab('report-builder');
+        }
         
         // Show mobile instruction
         this.showNotification('Evidence selected. Tap on a report section to add it.', 'info');
@@ -595,6 +621,39 @@ export class ForensicReportApp extends ForensicAppBase {
             notification.classList.add('translate-x-full');
             setTimeout(() => notification.remove(), 300);
         }, duration);
+    }
+
+    switchToTab(tabName) {
+        const evidenceBankPanel = document.getElementById('evidence-bank-panel');
+        const reportBuilderPanel = document.getElementById('report-builder-panel');
+        const tabEvidenceBank = document.getElementById('tab-evidence-bank');
+        const tabReportBuilder = document.getElementById('tab-report-builder');
+
+        if (tabName === 'evidence-bank') {
+            // Show evidence bank panel, hide report builder panel
+            evidenceBankPanel?.classList.remove('hidden');
+            evidenceBankPanel?.classList.add('block');
+            reportBuilderPanel?.classList.add('hidden');
+            reportBuilderPanel?.classList.remove('block');
+
+            // Update tab appearances
+            tabEvidenceBank?.classList.remove('bg-gray-700', 'text-gray-300');
+            tabEvidenceBank?.classList.add('bg-blue-600', 'text-white');
+            tabReportBuilder?.classList.remove('bg-blue-600', 'text-white');
+            tabReportBuilder?.classList.add('bg-gray-700', 'text-gray-300');
+        } else if (tabName === 'report-builder') {
+            // Show report builder panel, hide evidence bank panel
+            reportBuilderPanel?.classList.remove('hidden');
+            reportBuilderPanel?.classList.add('block');
+            evidenceBankPanel?.classList.add('hidden');
+            evidenceBankPanel?.classList.remove('block');
+
+            // Update tab appearances
+            tabReportBuilder?.classList.remove('bg-gray-700', 'text-gray-300');
+            tabReportBuilder?.classList.add('bg-blue-600', 'text-white');
+            tabEvidenceBank?.classList.remove('bg-blue-600', 'text-white');
+            tabEvidenceBank?.classList.add('bg-gray-700', 'text-gray-300');
+        }
     }
 }
 
