@@ -40,11 +40,11 @@ export class EvidenceViewerApp extends ForensicAppBase {
                 </div>
 
                 <!-- Main Content Area -->
-                <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+                <div class="flex-1 flex flex-col lg:flex-row min-h-0">
                     <!-- Evidence Selection Sidebar -->
-                    <div class="w-full lg:w-1/3 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4">
+                    <div class="w-full lg:w-1/3 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto">
                         <h3 class="text-base sm:text-lg font-semibold mb-3 text-blue-300">Available Evidence</h3>
-                        <div id="evidence-list" class="space-y-2 max-h-48 lg:max-h-full overflow-y-auto">
+                        <div id="evidence-list" class="space-y-2">
                             <!-- Evidence items will be populated here -->
                         </div>
                         
@@ -61,19 +61,19 @@ export class EvidenceViewerApp extends ForensicAppBase {
                     </div>
 
                     <!-- Analysis Panel -->
-                    <div class="flex-1 flex flex-col p-3 sm:p-4">
+                    <div class="flex-1 flex flex-col p-3 sm:p-4 min-h-0 overflow-y-auto">
                         <!-- Current Objective Banner -->
-                        <div id="objective-banner" class="mb-4 p-3 sm:p-4 bg-blue-900/50 border border-blue-600 rounded-lg">
+                        <div id="objective-banner" class="mb-4 p-3 sm:p-4 bg-blue-900/50 border border-blue-600 rounded-lg flex-shrink-0">
                             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between">
                                 <div class="mb-2 sm:mb-0 flex-1 min-w-0">
-                                    <h4 class="text-sm sm:text-base font-semibold text-blue-200 break-words">
+                                    <h4 class="text-sm sm:text-base lg:text-lg font-semibold text-blue-200 break-words">
                                         Current Objective: Establish Evidence Chain of Custody
                                     </h4>
-                                    <p class="text-xs sm:text-sm text-blue-300 mt-1 break-words">
+                                    <p class="text-xs sm:text-sm lg:text-base text-blue-300 mt-1 break-words">
                                         Verify the integrity and authenticity of digital evidence per ISO/IEC 27037:2012
                                     </p>
                                 </div>
-                                <button id="hint-btn" class="px-3 py-1 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm rounded-md transition-colors flex-shrink-0">
+                                <button id="hint-btn" class="px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm lg:text-base rounded-md transition-colors flex-shrink-0 min-h-[44px] touch-manipulation">
                                     <i class="bi bi-lightbulb mr-1"></i>
                                     <span class="hidden sm:inline">Get Hint</span>
                                     <span class="sm:hidden">Hint</span>
@@ -82,29 +82,29 @@ export class EvidenceViewerApp extends ForensicAppBase {
                         </div>
 
                         <!-- Evidence Analysis Area -->
-                        <div id="analysis-area" class="flex-1 bg-gray-800 rounded-lg p-3 sm:p-4 overflow-y-auto">
+                        <div id="analysis-area" class="flex-1 bg-gray-800 rounded-lg p-3 sm:p-4 overflow-y-auto min-h-[300px]">
                             <div id="welcome-state" class="text-center py-8 sm:py-12">
                                 <i class="bi bi-search text-4xl sm:text-6xl text-gray-600 mb-4"></i>
-                                <h3 class="text-lg sm:text-xl font-semibold text-gray-400 mb-2">Select Evidence to Begin Analysis</h3>
-                                <p class="text-sm sm:text-base text-gray-500 max-w-md mx-auto break-words">
+                                <h3 class="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-400 mb-2">Select Evidence to Begin Analysis</h3>
+                                <p class="text-sm sm:text-base lg:text-lg text-gray-500 max-w-md mx-auto break-words">
                                     Choose evidence from the sidebar to start your forensic investigation following proper NIST procedures.
                                 </p>
                             </div>
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="mt-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                            <button id="analyze-btn" class="flex-1 sm:flex-none px-4 py-2 sm:px-6 sm:py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white rounded-lg transition-colors disabled:cursor-not-allowed" disabled>
+                        <div class="mt-4 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 flex-shrink-0">
+                            <button id="analyze-btn" class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white rounded-lg transition-colors disabled:cursor-not-allowed min-h-[48px] touch-manipulation" disabled>
                                 <i class="bi bi-cpu mr-2"></i>
-                                <span class="text-sm sm:text-base">Analyze Evidence</span>
+                                <span class="text-sm sm:text-base lg:text-lg">Analyze Evidence</span>
                             </button>
-                            <button id="extract-btn" class="flex-1 sm:flex-none px-4 py-2 sm:px-6 sm:py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg transition-colors disabled:cursor-not-allowed" disabled>
+                            <button id="extract-btn" class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg transition-colors disabled:cursor-not-allowed min-h-[48px] touch-manipulation" disabled>
                                 <i class="bi bi-download mr-2"></i>
-                                <span class="text-sm sm:text-base">Extract Clue</span>
+                                <span class="text-sm sm:text-base lg:text-lg">Extract Clue</span>
                             </button>
-                            <button id="next-step-btn" class="flex-1 sm:flex-none px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white rounded-lg transition-colors disabled:cursor-not-allowed" disabled>
+                            <button id="next-step-btn" class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white rounded-lg transition-colors disabled:cursor-not-allowed min-h-[48px] touch-manipulation" disabled>
                                 <i class="bi bi-arrow-right mr-2"></i>
-                                <span class="text-sm sm:text-base">Next Step</span>
+                                <span class="text-sm sm:text-base lg:text-lg">Next Step</span>
                             </button>
                         </div>
                     </div>
@@ -192,17 +192,17 @@ export class EvidenceViewerApp extends ForensicAppBase {
         ];
 
         evidenceList.innerHTML = evidence.map(item => `
-            <div class="evidence-item cursor-pointer p-3 bg-gray-700 hover:bg-gray-600 rounded-lg border border-gray-600 hover:border-blue-500 transition-all" 
+            <div class="evidence-item cursor-pointer p-3 sm:p-4 bg-gray-700 hover:bg-gray-600 rounded-lg border border-gray-600 hover:border-blue-500 transition-all min-h-[70px] touch-manipulation" 
                  data-evidence-id="${item.id}">
                 <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-2 min-w-0 flex-1">
-                        <i class="${item.icon} text-blue-400 text-lg flex-shrink-0"></i>
+                    <div class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                        <i class="${item.icon} text-blue-400 text-lg sm:text-xl flex-shrink-0"></i>
                         <div class="min-w-0 flex-1">
-                            <h4 class="text-sm font-semibold text-white truncate">${item.name}</h4>
-                            <p class="text-xs text-gray-400 truncate">${item.type}</p>
+                            <h4 class="text-sm sm:text-base font-semibold text-white truncate">${item.name}</h4>
+                            <p class="text-xs sm:text-sm text-gray-400 truncate">${item.type}</p>
                         </div>
                     </div>
-                    <div class="flex flex-col items-end text-xs flex-shrink-0 ml-2">
+                    <div class="flex flex-col items-end text-xs sm:text-sm flex-shrink-0 ml-2">
                         <span class="text-gray-300">${item.size}</span>
                         <span class="text-green-400">
                             <i class="bi bi-shield-check mr-1"></i>
