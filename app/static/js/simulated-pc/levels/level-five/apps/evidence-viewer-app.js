@@ -186,36 +186,50 @@ export class EvidenceViewerApp extends ForensicAppBase {
         hintBtn?.addEventListener('click', () => this.showHint());
     }
 
-    loadEvidence() {
+    async loadEvidence() {
         const evidenceList = document.getElementById('evidence-list');
         if (!evidenceList) return;
 
-        const evidence = [
-            {
-                id: 'laptop_image',
-                name: 'Laptop Hard Drive',
-                type: 'Disk Image',
-                size: '500GB',
-                status: 'verified',
-                icon: 'bi-device-hdd'
-            },
-            {
-                id: 'memory_dump', 
-                name: 'RAM Memory Dump',
-                type: 'Memory Analysis',
-                size: '16GB',
-                status: 'verified',
-                icon: 'bi-memory'
-            },
-            {
-                id: 'network_logs',
-                name: 'Network Traffic Logs',
-                type: 'Network Analysis', 
-                size: '2.5GB',
-                status: 'verified',
-                icon: 'bi-globe'
+        try {
+            // Load evidence from API - each member has 5 pieces of evidence
+            const response = await fetch('/api/level5/evidence-viewer-data');
+            const result = await response.json();
+            
+            if (result.success && result.data && result.data.evidence_pool) {
+                this.evidencePool = result.data.evidence_pool;
+                this.targetIdentity = result.data.target_identity;
+                
+                console.log(`Loaded ${this.evidencePool.length} evidence items for ${this.targetIdentity.code_name}`);
+            } else {
+                throw new Error('Failed to load evidence data from API');
             }
-        ];
+        } catch (error) {
+            console.error('Error loading evidence:', error);
+            // Fallback to embedded data
+            this.evidencePool = [
+                {
+                    id: 'fallback_001',
+                    title: 'Browser Profile Data',
+                    source: 'Laptop Browser',
+                    type: 'browser_data',
+                    clue_type: 'identity',
+                    icon: 'bi-person-badge',
+                    finding: 'Real name found in browser profile'
+                }
+            ];
+        }
+
+        // Render evidence list
+        const evidence = this.evidencePool.map((item, index) => ({
+            id: item.id,
+            name: item.title,
+            type: item.source,
+            size: this.getEvidenceSize(item.type),
+            status: 'verified',
+            icon: item.icon || this.getDefaultIcon(item.type),
+            clue_type: item.clue_type,
+            difficulty: item.difficulty
+        }));
 
         evidenceList.innerHTML = evidence.map(item => `
             <div class="evidence-item cursor-pointer p-3 sm:p-4 bg-gray-700 hover:bg-gray-600 rounded-lg border border-gray-600 hover:border-blue-500 transition-all min-h-[70px] touch-manipulation" 
@@ -226,6 +240,7 @@ export class EvidenceViewerApp extends ForensicAppBase {
                         <div class="min-w-0 flex-1">
                             <h4 class="text-sm sm:text-base font-semibold text-white truncate">${item.name}</h4>
                             <p class="text-xs sm:text-sm text-gray-400 truncate">${item.type}</p>
+                            ${item.difficulty ? `<span class="text-xs px-2 py-1 rounded ${this.getDifficultyColor(item.difficulty)}">${item.difficulty}</span>` : ''}
                         </div>
                     </div>
                     <div class="flex flex-col items-end text-xs sm:text-sm flex-shrink-0 ml-2">
@@ -238,6 +253,37 @@ export class EvidenceViewerApp extends ForensicAppBase {
                 </div>
             </div>
         `).join('');
+    }
+
+    getEvidenceSize(evidenceType) {
+        const sizes = {
+            'browser_data': '245MB',
+            'process_memory': '1.2GB', 
+            'network_traffic': '800MB',
+            'system_logs': '156MB',
+            'malware_analysis': '45MB'
+        };
+        return sizes[evidenceType] || '500MB';
+    }
+
+    getDefaultIcon(evidenceType) {
+        const icons = {
+            'browser_data': 'bi-globe',
+            'process_memory': 'bi-memory',
+            'network_traffic': 'bi-wifi',
+            'system_logs': 'bi-file-text',
+            'malware_analysis': 'bi-bug'
+        };
+        return icons[evidenceType] || 'bi-file-earmark';
+    }
+
+    getDifficultyColor(difficulty) {
+        const colors = {
+            'easy': 'bg-green-600 text-green-100',
+            'medium': 'bg-yellow-600 text-yellow-100',
+            'hard': 'bg-red-600 text-red-100'
+        };
+        return colors[difficulty] || 'bg-gray-600 text-gray-100';
     }
 
     selectEvidence(evidenceId) {
@@ -259,44 +305,21 @@ export class EvidenceViewerApp extends ForensicAppBase {
         const analysisArea = document.getElementById('analysis-area');
         if (!analysisArea) return;
 
-        const evidenceData = {
-            laptop_image: {
-                title: 'Laptop Hard Drive Analysis',
-                description: 'NTFS filesystem with 3 partitions. Contains user data, system files, and deleted artifacts.',
-                findings: [
-                    'User account: "TheNull" found in registry',
-                    'Browser history shows visits to hacker forums', 
-                    'Deleted files in recycle bin contain encryption tools',
-                    'Timeline shows activity during known attack timeframe'
-                ],
-                clue: 'Real name "Alex Morrison" found in browser autofill data'
-            },
-            memory_dump: {
-                title: 'Memory Dump Analysis',
-                description: 'RAM capture showing running processes, network connections, and malware artifacts.',
-                findings: [
-                    'Suspicious process "backdoor.exe" running as SYSTEM',
-                    'Active network connections to command & control server',
-                    'Encrypted communications detected in process memory',
-                    'Anti-forensics tools loaded in memory'
-                ],
-                clue: 'Email address "a.morrison@securemail.com" extracted from process memory'
-            },
-            network_logs: {
-                title: 'Network Traffic Analysis', 
-                description: 'Packet capture showing communication patterns and data exfiltration attempts.',
-                findings: [
-                    'Outbound connections to IP 185.243.67.89 (known C&C server)',
-                    'Large data uploads during attack timeframe',
-                    'Encrypted tunnel established using custom protocol',
-                    'DNS queries for suspicious domains'
-                ],
-                clue: 'Phone number +1-555-0142 found in exfiltrated contact data'
-            }
-        };
+        // Find the evidence in the loaded pool
+        const evidence = this.evidencePool?.find(item => item.id === evidenceId);
+        if (!evidence) {
+            console.error('Evidence not found:', evidenceId);
+            return;
+        }
 
-        const data = evidenceData[evidenceId];
-        if (!data) return;
+        // Extract findings from evidence data
+        const findings = this.generateFindings(evidence);
+        const data = {
+            title: evidence.title,
+            description: evidence.description,
+            findings: findings,
+            clue: evidence.finding
+        };
 
         analysisArea.innerHTML = `
             <div class="space-y-4">
