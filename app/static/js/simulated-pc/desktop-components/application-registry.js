@@ -62,80 +62,36 @@ export class ApplicationRegistry {
                 autoOpen: true, // Auto-open when available
                 persistent: true // Cannot be closed by user
             },
-            // Level 5 - Digital Forensics Applications
-            'evidence-locker': {
-                module: '../levels/level-five/apps/evidence-locker-app.js',
-                className: 'EvidenceLockerApp',
-                storageKey: 'cyberquest_evidencelocker_opened',
-                iconClass: 'bi-archive',
-                title: 'Evidence Locker',
+            // Level 5 - Streamlined Digital Forensics Applications (3 Core Apps)
+            'evidence-viewer': {
+                module: '../levels/level-five/apps/evidence-viewer-app.js',
+                className: 'EvidenceViewerApp',
+                storageKey: 'cyberquest_evidenceviewer_opened',
+                iconClass: 'bi-eye-fill',
+                title: 'Evidence Viewer',
                 levelSpecific: 5,
                 autoOpen: false,
-                persistent: true
+                persistent: false
             },
-            'disk-analyzer': {
-                module: '../levels/level-five/apps/disk-analyzer-app.js',
-                className: 'DiskAnalyzerApp',
-                storageKey: 'cyberquest_diskanalyzer_opened',
-                iconClass: 'bi-hdd-stack',
-                title: 'Disk Image Analyzer',
+            'investigation-hub': {
+                module: '../levels/level-five/apps/investigation-hub-app.js',
+                className: 'InvestigationHubApp',
+                storageKey: 'cyberquest_investigationhub_opened',
+                iconClass: 'bi-kanban',
+                title: 'Investigation Hub',
                 levelSpecific: 5,
-                autoOpen: false
+                autoOpen: false,
+                persistent: false
             },
-            'memory-forensics': {
-                module: '../levels/level-five/apps/memory-forensics-app.js',
-                className: 'MemoryForensicsApp',
-                storageKey: 'cyberquest_memoryforensics_opened',
-                iconClass: 'bi-memory',
-                title: 'Memory Analysis',
+            'forensic-report': {
+                module: '../levels/level-five/apps/forensic-report-app.js',
+                className: 'ForensicReportApp',
+                storageKey: 'cyberquest_forensicreport_opened',
+                iconClass: 'bi-file-text',
+                title: 'Forensic Report',
                 levelSpecific: 5,
-                autoOpen: false
-            },
-            'network-analyzer': {
-                module: '../levels/level-five/apps/network-analyzer-app.js',
-                className: 'NetworkAnalyzerApp',
-                storageKey: 'cyberquest_networkanalyzer_opened',
-                iconClass: 'bi-diagram-3',
-                title: 'Network Forensics',
-                levelSpecific: 5,
-                autoOpen: false
-            },
-            'timeline-constructor': {
-                module: '../levels/level-five/apps/timeline-constructor-app.js',
-                className: 'TimelineConstructorApp',
-                storageKey: 'cyberquest_timeline_opened',
-                iconClass: 'bi-clock-history',
-                title: 'Timeline Analysis',
-                levelSpecific: 5,
-                autoOpen: false
-            },
-            'report-generator': {
-                module: '../levels/level-five/apps/report-generator-app.js',
-                className: 'ReportGeneratorApp',
-                storageKey: 'cyberquest_reportgenerator_opened',
-                iconClass: 'bi-file-earmark-text',
-                title: 'Investigation Report',
-                levelSpecific: 5,
-                autoOpen: false
-            },
-            'investigation-briefing': {
-                module: '../levels/level-five/apps/investigation-briefing-app.js',
-                className: 'InvestigationBriefingApp',
-                storageKey: 'cyberquest_investigationbriefing_opened',
-                iconClass: 'bi-clipboard-data',
-                title: 'Investigation Briefing',
-                levelSpecific: 5,
-                autoOpen: false
-            },
-            'investigation-tracker': {
-                module: '../levels/level-five/apps/investigation-tracker-app.js',
-                className: 'Level5InvestigationTracker',
-                storageKey: null, // Don't track opened status for tracker
-                iconClass: 'bi-search',
-                title: 'Investigation Progress',
-                levelSpecific: 5,
-                autoOpen: true, // Auto-open when available
-                persistent: true // Cannot be closed by user
+                autoOpen: false,
+                persistent: false
             }
         };
         this.loadedModules = new Map(); // Cache for loaded modules
