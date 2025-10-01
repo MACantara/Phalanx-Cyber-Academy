@@ -10,72 +10,84 @@ level5_api_bp = Blueprint('level5_api', __name__, url_prefix='/api/level5')
 _json_cache = {}
 
 def load_json_data():
-    """Load Level 5 forensic data from JSON files - centralized data loading matching index.js structure"""
+    """Load Level 5 forensic data - now using null members dataset with randomized evidence"""
     global _json_cache
     
     try:
         # Define the base path to Level 5 data files
         base_path = Path(current_app.root_path) / 'static' / 'js' / 'simulated-pc' / 'levels' / 'level-five' / 'data'
         
-        # Load streamlined Level 5 JSON datasets for 3 core apps
-        datasets = {
-            'evidence_viewer': 'evidence-viewer-data.json',
-            'investigation_hub': 'investigation-hub-data.json',
-            'forensic_report': 'forensic-report-data.json'
-        }
+        # Load the new null members dataset
+        null_members_file = base_path / 'null-members-dataset.json'
         
-        data = {}
-        for key, filename in datasets.items():
-            file_path = base_path / filename
-            if file_path.exists():
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    data[key] = json.load(f)
-                current_app.logger.info(f"Loaded Level 5 {key} data from {filename}")
-            else:
-                current_app.logger.warning(f"Level 5 data file not found: {filename}")
-                data[key] = {}
-        
-        _json_cache = data
-        return data
+        if null_members_file.exists():
+            with open(null_members_file, 'r', encoding='utf-8') as f:
+                null_data = json.load(f)
+            
+            # Randomly select one null member for investigation
+            selected_member = random.choice(null_data['null_members'])
+            
+            current_app.logger.info(f"Selected Null member for investigation: {selected_member['code_name']} ({selected_member['real_name']})")
+            
+            # Structure data for apps
+            _json_cache = {
+                'null_members_full': null_data,
+                'selected_member': selected_member,
+                'evidence_data': {
+                    'evidence': selected_member['evidence_trail']
+                }
+            }
+            
+            return _json_cache
+        else:
+            current_app.logger.error("Null members dataset not found")
+            return {}
         
     except Exception as e:
         current_app.logger.error(f"Error loading Level 5 forensic data: {str(e)}")
         return {}
 
 
-def get_random_evidence_items(evidence_pool, count=5):
-    """Randomly select evidence items from the pool for varied gameplay"""
-    if not evidence_pool or len(evidence_pool) == 0:
+def get_selected_member_evidence(selected_member):
+    """Get all evidence for the selected null member (5 pieces of evidence per member)"""
+    if not selected_member or 'evidence_trail' not in selected_member:
         return []
     
-    # Ensure we don't request more items than available
-    actual_count = min(count, len(evidence_pool))
+    # Return all 5 evidence pieces for the selected member
+    evidence_trail = selected_member['evidence_trail']
+    current_app.logger.info(f"Loaded {len(evidence_trail)} evidence items for {selected_member['code_name']}")
     
-    # Use random.sample to get unique random items
-    return random.sample(evidence_pool, actual_count)
+    return evidence_trail
 
 
 @level5_api_bp.route('/evidence-viewer-data', methods=['GET'])
 def get_evidence_viewer_data():
-    """Get evidence viewer data with 5 random evidence items for analysis"""
+    """Get evidence viewer data with 5 evidence items from selected null member"""
     try:
         data = load_json_data()
-        evidence_viewer_data = data.get('evidence_viewer', {})
+        selected_member = data.get('selected_member', {})
         
-        # Get 5 random evidence items from the evidence pool
-        evidence_pool = evidence_viewer_data.get('evidence_pool', [])
-        random_evidence = get_random_evidence_items(evidence_pool, 5)
+        # Get all 5 evidence items for the selected member
+        evidence_items = get_selected_member_evidence(selected_member)
         
         response_data = {
-            'evidence_pool': random_evidence,
-            'analysis_objectives': evidence_viewer_data.get('analysis_objectives', []),
-            'forensic_standards': evidence_viewer_data.get('forensic_standards', {})
+            'target_identity': {
+                'code_name': selected_member.get('code_name', 'Unknown'),
+                'real_name': selected_member.get('real_name', '?'),
+                'email': selected_member.get('email', '?'),
+                'phone': selected_member.get('phone', '?'),
+                'role': selected_member.get('role', 'Unknown')
+            },
+            'evidence_pool': evidence_items,
+            'investigation_objective': f"Identify the real identity of '{selected_member.get('code_name', 'Unknown')}' through forensic analysis of digital evidence",
+            'evidence_count': len(evidence_items)
         }
         
         return jsonify({
             'success': True,
             'data': response_data,
-            'evidence_count': len(random_evidence)
+            'evidence_count': len(evidence_items),
+            'target': selected_member.get('code_name', 'Unknown')
         }), 200
         
     except Exception as e:
@@ -88,15 +100,20 @@ def get_evidence_viewer_data():
 
 @level5_api_bp.route('/evidence-data', methods=['GET'])
 def get_evidence_data():
-    """Get base evidence data for compatibility"""
+    """Get base evidence data - returns selected member's evidence trail"""
     try:
         data = load_json_data()
-        evidence_data = data.get('evidence', {})
+        evidence_data = data.get('evidence_data', {})
+        selected_member = data.get('selected_member', {})
         
         return jsonify({
             'success': True,
             'data': evidence_data,
-            'count': len(evidence_data.get('evidence', []))
+            'count': len(evidence_data.get('evidence', [])),
+            'target_info': {
+                'code_name': selected_member.get('code_name'),
+                'role': selected_member.get('role')
+            }
         }), 200
         
     except Exception as e:
@@ -130,15 +147,46 @@ def get_investigation_hub_data():
 
 @level5_api_bp.route('/forensic-report-data', methods=['GET'])
 def get_forensic_report_data():
-    """Get forensic report data with evidence bank and identity verification"""
+    """Get forensic report evidence bank - extracted clues from evidence analysis"""
     try:
         data = load_json_data()
-        report_data = data.get('forensic_report', {})
+        selected_member = data.get('selected_member', {})
+        
+        # Convert evidence trail to forensic report evidence bank format
+        evidence_bank = []
+        for evidence in selected_member.get('evidence_trail', []):
+            evidence_bank.append({
+                'id': evidence['id'],
+                'title': evidence['title'],
+                'description': evidence['finding'],
+                'type': evidence['clue_type'],
+                'source': evidence['source'],
+                'icon': evidence['icon'],
+                'points': 20 if evidence['clue_type'] in ['identity', 'contact'] else 10,
+                'difficulty': evidence['difficulty'],
+                'evidence_data': evidence.get('evidence_data', {})
+            })
+        
+        response_data = {
+            'target_identity': {
+                'code_name': selected_member.get('code_name'),
+                'real_name': selected_member.get('real_name'),
+                'email': selected_member.get('email'),
+                'phone': selected_member.get('phone'),
+                'role': selected_member.get('role')
+            },
+            'evidence_bank': evidence_bank,
+            'report_template': {
+                'case_title': f"Identity Investigation: {selected_member.get('code_name', 'Unknown')}",
+                'investigation_objective': f"Conclusively identify the real identity of '{selected_member.get('code_name', 'Unknown')}' through digital forensic analysis"
+            }
+        }
         
         return jsonify({
             'success': True,
-            'data': report_data,
-            'evidence_bank_count': len(report_data.get('evidence_bank', []))
+            'data': response_data,
+            'evidence_bank_count': len(evidence_bank),
+            'target': selected_member.get('code_name', 'Unknown')
         }), 200
         
     except Exception as e:
@@ -179,12 +227,16 @@ def get_data_status():
         data = load_json_data()
         
         status = {}
-        # Check streamlined Level 5 datasets for 3 core apps
-        for key in ['evidence', 'evidence_viewer', 'investigation_hub', 'forensic_report']:
-            status[key] = {
-                'loaded': key in data and bool(data[key]),
-                'item_count': len(data.get(key, {}))
-            }
+        # Check null members dataset and selected member
+        status['null_members'] = {
+            'loaded': 'null_members_full' in data and bool(data['null_members_full']),
+            'total_members': len(data.get('null_members_full', {}).get('null_members', []))
+        }
+        status['selected_member'] = {
+            'loaded': 'selected_member' in data and bool(data['selected_member']),
+            'code_name': data.get('selected_member', {}).get('code_name', 'Unknown'),
+            'evidence_count': len(data.get('selected_member', {}).get('evidence_trail', []))
+        }
         
         return jsonify({
             'success': True,
