@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, current_app, request, session
 from functools import wraps
 import json
 import hashlib
+import random
 from pathlib import Path
 
 level5_api_bp = Blueprint('level5_api', __name__, url_prefix='/api/level5')
@@ -16,16 +17,12 @@ def load_json_data():
         # Define the base path to Level 5 data files
         base_path = Path(current_app.root_path) / 'static' / 'js' / 'simulated-pc' / 'levels' / 'level-five' / 'data'
         
-        # Load all Level 5 JSON datasets
+        # Load streamlined Level 5 JSON datasets for 3 core apps
         datasets = {
-            'case_briefing': 'case-briefing.json',
-            'disk_analysis': 'disk-analysis-data.json',
             'evidence': 'evidence-data.json',
-            'investigation_objectives': 'investigation-objectives.json',
-            'memory_forensics': 'memory-forensics-data.json',
-            'network_analysis': 'network-analysis-data.json',
-            'report_templates': 'report-templates-data.json',
-            'timeline': 'timeline-data.json'
+            'evidence_viewer': 'evidence-viewer-data.json',
+            'investigation_hub': 'investigation-hub-data.json',
+            'forensic_report': 'forensic-report-data.json'
         }
         
         data = {}
@@ -47,9 +44,52 @@ def load_json_data():
         return {}
 
 
+def get_random_evidence_items(evidence_pool, count=5):
+    """Randomly select evidence items from the pool for varied gameplay"""
+    if not evidence_pool or len(evidence_pool) == 0:
+        return []
+    
+    # Ensure we don't request more items than available
+    actual_count = min(count, len(evidence_pool))
+    
+    # Use random.sample to get unique random items
+    return random.sample(evidence_pool, actual_count)
+
+
+@level5_api_bp.route('/evidence-viewer-data', methods=['GET'])
+def get_evidence_viewer_data():
+    """Get evidence viewer data with 5 random evidence items for analysis"""
+    try:
+        data = load_json_data()
+        evidence_viewer_data = data.get('evidence_viewer', {})
+        
+        # Get 5 random evidence items from the evidence pool
+        evidence_pool = evidence_viewer_data.get('evidence_pool', [])
+        random_evidence = get_random_evidence_items(evidence_pool, 5)
+        
+        response_data = {
+            'evidence_pool': random_evidence,
+            'analysis_objectives': evidence_viewer_data.get('analysis_objectives', []),
+            'forensic_standards': evidence_viewer_data.get('forensic_standards', {})
+        }
+        
+        return jsonify({
+            'success': True,
+            'data': response_data,
+            'evidence_count': len(random_evidence)
+        }), 200
+        
+    except Exception as e:
+        current_app.logger.error(f"Error fetching evidence viewer data: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': 'Failed to load evidence viewer data'
+        }), 500
+
+
 @level5_api_bp.route('/evidence-data', methods=['GET'])
 def get_evidence_data():
-    """Get all evidence items for the investigation"""
+    """Get base evidence data for compatibility"""
     try:
         data = load_json_data()
         evidence_data = data.get('evidence', {})
@@ -68,116 +108,45 @@ def get_evidence_data():
         }), 500
 
 
-@level5_api_bp.route('/disk-analysis-data', methods=['GET'])
-def get_disk_analysis_data():
-    """Get disk analysis data including images, filesystem, and deleted files"""
+@level5_api_bp.route('/investigation-hub-data', methods=['GET'])
+def get_investigation_hub_data():
+    """Get investigation hub data with objectives and progress tracking"""
     try:
         data = load_json_data()
-        disk_data = data.get('disk_analysis', {})
+        hub_data = data.get('investigation_hub', {})
         
         return jsonify({
             'success': True,
-            'data': disk_data,
-            'images_count': len(disk_data.get('disk_images', [])),
-            'deleted_files_count': len(disk_data.get('deleted_files', []))
+            'data': hub_data,
+            'objectives_count': len(hub_data.get('objectives', []))
         }), 200
         
     except Exception as e:
-        current_app.logger.error(f"Error fetching disk analysis data: {str(e)}")
+        current_app.logger.error(f"Error fetching investigation hub data: {str(e)}")
         return jsonify({
             'success': False,
-            'error': 'Failed to load disk analysis data'
+            'error': 'Failed to load investigation hub data'
         }), 500
 
 
-@level5_api_bp.route('/memory-forensics-data', methods=['GET'])
-def get_memory_forensics_data():
-    """Get memory forensics data including processes and malware signatures"""
+@level5_api_bp.route('/forensic-report-data', methods=['GET'])
+def get_forensic_report_data():
+    """Get forensic report data with evidence bank and identity verification"""
     try:
         data = load_json_data()
-        memory_data = data.get('memory_forensics', {})
-        
-        return jsonify({
-            'success': True,
-            'data': memory_data,
-            'dumps_count': len(memory_data.get('memory_dumps', [])),
-            'processes_count': len(memory_data.get('processes', [])),
-            'malware_signatures_count': len(memory_data.get('malware_signatures', []))
-        }), 200
-        
-    except Exception as e:
-        current_app.logger.error(f"Error fetching memory forensics data: {str(e)}")
-        return jsonify({
-            'success': False,
-            'error': 'Failed to load memory forensics data'
-        }), 500
-
-
-@level5_api_bp.route('/network-analysis-data', methods=['GET'])
-def get_network_analysis_data():
-    """Get network analysis data including captures, packets, and conversations"""
-    try:
-        data = load_json_data()
-        network_data = data.get('network_analysis', {})
-        
-        return jsonify({
-            'success': True,
-            'data': network_data,
-            'captures_count': len(network_data.get('network_captures', [])),
-            'packets_count': len(network_data.get('packets', [])),
-            'conversations_count': len(network_data.get('conversations', []))
-        }), 200
-        
-    except Exception as e:
-        current_app.logger.error(f"Error fetching network analysis data: {str(e)}")
-        return jsonify({
-            'success': False,
-            'error': 'Failed to load network analysis data'
-        }), 500
-
-
-@level5_api_bp.route('/timeline-data', methods=['GET'])
-def get_timeline_data():
-    """Get timeline data including correlation rules and event templates"""
-    try:
-        data = load_json_data()
-        timeline_data = data.get('timeline', {})
-        
-        return jsonify({
-            'success': True,
-            'data': timeline_data,
-            'correlation_rules_count': len(timeline_data.get('correlation_rules', [])),
-            'event_templates_count': len(timeline_data.get('event_templates', [])),
-            'sample_events_count': len(timeline_data.get('sample_events', []))
-        }), 200
-        
-    except Exception as e:
-        current_app.logger.error(f"Error fetching timeline data: {str(e)}")
-        return jsonify({
-            'success': False,
-            'error': 'Failed to load timeline data'
-        }), 500
-
-
-@level5_api_bp.route('/report-templates-data', methods=['GET'])
-def get_report_templates_data():
-    """Get report templates and compliance standards"""
-    try:
-        data = load_json_data()
-        report_data = data.get('report_templates', {})
+        report_data = data.get('forensic_report', {})
         
         return jsonify({
             'success': True,
             'data': report_data,
-            'templates_count': len(report_data.get('report_templates', [])),
-            'citation_formats_count': len(report_data.get('citation_formats', []))
+            'evidence_bank_count': len(report_data.get('evidence_bank', []))
         }), 200
         
     except Exception as e:
-        current_app.logger.error(f"Error fetching report templates data: {str(e)}")
+        current_app.logger.error(f"Error fetching forensic report data: {str(e)}")
         return jsonify({
             'success': False,
-            'error': 'Failed to load report templates data'
+            'error': 'Failed to load forensic report data'
         }), 500
 
 
@@ -201,44 +170,7 @@ def get_all_data():
         }), 500
 
 
-@level5_api_bp.route('/case-briefing-data', methods=['GET'])
-def get_case_briefing_data():
-    """Get investigation case briefing and objectives"""
-    try:
-        data = load_json_data()
-        briefing_data = data.get('case_briefing', {})
-        
-        return jsonify({
-            'success': True,
-            'data': briefing_data
-        }), 200
-        
-    except Exception as e:
-        current_app.logger.error(f"Error fetching case briefing data: {str(e)}")
-        return jsonify({
-            'success': False,
-            'error': 'Failed to load case briefing data'
-        }), 500
 
-
-@level5_api_bp.route('/investigation-objectives-data', methods=['GET'])
-def get_investigation_objectives_data():
-    """Get investigation objectives and victory conditions"""
-    try:
-        data = load_json_data()
-        objectives_data = data.get('investigation_objectives', {})
-        
-        return jsonify({
-            'success': True,
-            'data': objectives_data
-        }), 200
-        
-    except Exception as e:
-        current_app.logger.error(f"Error fetching investigation objectives data: {str(e)}")
-        return jsonify({
-            'success': False,
-            'error': 'Failed to load investigation objectives data'
-        }), 500
 
 
 @level5_api_bp.route('/data-status', methods=['GET'])
@@ -248,8 +180,8 @@ def get_data_status():
         data = load_json_data()
         
         status = {}
-        # Check all datasets matching the centralized index.js structure
-        for key in ['case_briefing', 'disk_analysis', 'evidence', 'investigation_objectives', 'memory_forensics', 'network_analysis', 'report_templates', 'timeline']:
+        # Check streamlined Level 5 datasets for 3 core apps
+        for key in ['evidence', 'evidence_viewer', 'investigation_hub', 'forensic_report']:
             status[key] = {
                 'loaded': key in data and bool(data[key]),
                 'item_count': len(data.get(key, {}))
