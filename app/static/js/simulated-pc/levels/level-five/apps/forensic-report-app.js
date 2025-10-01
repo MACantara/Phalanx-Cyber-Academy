@@ -776,32 +776,48 @@ export class ForensicReportApp extends ForensicAppBase {
             const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
             const progressManager = new GameProgressManager();
 
-            if (sessionId) {
+            // Ensure we have a valid score (0-100 range)
+            const finalScore = Math.max(0, Math.min(100, this.reportScore || 0));
+            const startTime = parseInt(localStorage.getItem('cyberquest_level_5_start_time') || Date.now());
+
+            if (sessionId && !isNaN(parseInt(sessionId))) {
                 // First, attach to the existing session that was started externally
-                const startTime = parseInt(localStorage.getItem('cyberquest_level_5_start_time') || Date.now());
                 progressManager.attachToExistingSession(
                     parseInt(sessionId),
                     5, // Level ID
-                    'Hunt-for-the-Null', // Level name
+                    'The-Hunt-for-the-Null', // Level name
                     'expert', // Difficulty
                     startTime
                 );
             } else {
                 // If no session exists, start and immediately complete one
                 // This ensures we can track completion even if session wasn't formally started
-                const startTime = parseInt(localStorage.getItem('cyberquest_level_5_start_time') || Date.now());
+                console.log('[ForensicReport] No existing session found, starting new one for Level 5');
                 await progressManager.startLevel(5, 'Hunt-for-the-Null', 'expert');
             }
 
+            // Prepare completion data matching the pattern used by other levels
+            const completionTime = Date.now() - startTime;
+            const evidenceCount = this.availableEvidence?.length || 0;
+            const sectionsCompleted = Object.values(this.reportSections).filter(s => s.evidence.length > 0).length;
+
             // Complete level using centralized system
-            const sessionResult = await progressManager.completeLevel(this.reportScore, {
-                reportScore: this.reportScore,
+            const sessionResult = await progressManager.completeLevel(finalScore, {
+                reportScore: finalScore,
                 targetIdentified: this.targetIdentity?.real_name || 'Unknown',
-                evidenceAnalyzed: this.availableEvidence?.length || 0,
-                sectionsCompleted: Object.values(this.reportSections).filter(s => s.evidence.length > 0).length,
-                completionTime: Date.now() - parseInt(localStorage.getItem('cyberquest_level_5_start_time') || Date.now()),
+                evidenceAnalyzed: evidenceCount,
+                sectionsCompleted: sectionsCompleted,
+                completionTime: completionTime,
+                completionTimeMinutes: Math.round(completionTime / (1000 * 60)),
+                timeSpent: Math.round(completionTime / 1000), // Time in seconds for API
                 levelId: 5,
-                forensicCompliance: true
+                forensicCompliance: true,
+                identityClues: {
+                    realName: this.targetIdentity?.real_name || null,
+                    email: this.targetIdentity?.email || null,
+                    phone: this.targetIdentity?.phone || null,
+                    codeName: this.targetIdentity?.code_name || 'The Null'
+                }
             });
 
             if (sessionResult) {
@@ -812,18 +828,44 @@ export class ForensicReportApp extends ForensicAppBase {
                 sessionStorage.removeItem('active_session_id');
                 window.currentSessionId = null;
                 
+                // Mark Level 5 as completed locally (additional backup)
+                localStorage.setItem('cyberquest_level_5_completed', 'true');
+                localStorage.setItem('cyberquest_level_5_completion_time', Date.now());
+                
                 // Store completion data for potential use by completion dialogue
                 localStorage.setItem('cyberquest_level_5_session_result', JSON.stringify({
-                    score: this.reportScore,
+                    score: finalScore,
                     xp: sessionResult.xp,
-                    completionTime: sessionResult.time_spent
+                    completionTime: sessionResult.time_spent || Math.round(completionTime / 1000)
                 }));
+
+                // Show XP earned notification
+                const xpAwarded = sessionResult.xp ? sessionResult.xp.xp_awarded : 
+                                 (sessionResult.session ? sessionResult.session.xp_awarded : null);
+                if (window.toastManager && xpAwarded) {
+                    window.toastManager.showToast(
+                        `Level completed! You earned ${xpAwarded} XP!`, 
+                        'success',
+                        5000
+                    );
+                }
+            } else {
+                console.warn('[ForensicReport] Session completion returned null result');
+                // Still mark as completed locally
+                localStorage.setItem('cyberquest_level_5_completed', 'true');
+                localStorage.setItem('cyberquest_level_5_completion_time', Date.now());
             }
             
         } catch (error) {
             console.error('[ForensicReport] Failed to end Level 5 session:', error);
+            console.error('[ForensicReport] Error details:', error.message, error.stack);
+            
+            // Mark as completed locally even if session ending fails
+            localStorage.setItem('cyberquest_level_5_completed', 'true');
+            localStorage.setItem('cyberquest_level_5_completion_time', Date.now());
+            
             // Continue with completion even if session ending fails
-            this.showNotification('Level completed locally. Session data may not be saved.', 'warning', 4000);
+            this.showNotification('Level completed! Session data saved locally.', 'success', 4000);
         }
     }
 
