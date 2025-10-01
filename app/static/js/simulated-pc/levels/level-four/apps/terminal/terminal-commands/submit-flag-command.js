@@ -350,6 +350,19 @@ export class SubmitFlagCommand extends BaseCommand {
         }
         
         console.log('[SubmitFlagCommand] Flag found:', flagValue, 'ID:', flagId);
+        
+        // Notify challenge tracker about the flag discovery
+        try {
+            document.dispatchEvent(new CustomEvent('level4-flag-discovered', {
+                detail: {
+                    flag: flagValue,
+                    flagId: flagId,
+                    timestamp: Date.now()
+                }
+            }));
+        } catch (error) {
+            console.error('[SubmitFlagCommand] Error dispatching flag discovery event:', error);
+        }
     }
 
     async onAllChallengesCompleted() {
