@@ -49,19 +49,8 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                         );
                     }
                     
-                    // Launch Forensic Report after 2 seconds
-                    setTimeout(async () => {
-                        await window.applicationLauncher.launchForensicReport();
-                        console.log('Forensic Report launched successfully');
-                        
-                        if (window.toastManager) {
-                            window.toastManager.showToast(
-                                '📝 Drag identity clues to Forensic Report. Need: Real Name + Email + Phone = WIN!',
-                                'info',
-                                5000
-                            );
-                        }
-                    }, 2000);
+                    // Set up forensic event listener for app opening
+                    this.setupForensicEventListener();
                     
                 } catch (error) {
                     console.error('Failed to launch Level 5 applications:', error);
@@ -73,6 +62,50 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                     }
                 }
             }, 1000);
+        }
+    }
+
+    setupForensicEventListener() {
+        // Listen for forensic events to handle app opening
+        document.addEventListener('forensic-event', (e) => {
+            const { eventType, details } = e.detail;
+            
+            if (eventType === 'open_app' && details.appId === 'forensic-report') {
+                this.openForensicReportApp();
+            }
+        });
+        
+        console.log('[Level5] Forensic event listener set up for app opening');
+    }
+
+    async openForensicReportApp() {
+        try {
+            // Check if evidence analysis is complete
+            const analysisComplete = localStorage.getItem('level5_evidence_analysis_complete');
+            
+            if (analysisComplete === 'true') {
+                console.log('[Level5] Opening Forensic Report - evidence analysis complete');
+                await window.applicationLauncher.launchForensicReport();
+                
+                if (window.toastManager) {
+                    window.toastManager.showToast(
+                        '📝 Report Builder opened! Drag evidence into sections to reveal the identity.',
+                        'info',
+                        5000
+                    );
+                }
+            } else {
+                console.log('[Level5] Forensic Report blocked - evidence analysis not complete');
+                if (window.toastManager) {
+                    window.toastManager.showToast(
+                        '🔒 Complete evidence analysis first! Extract 3+ identity clues from Evidence Viewer.',
+                        'warning',
+                        5000
+                    );
+                }
+            }
+        } catch (error) {
+            console.error('[Level5] Failed to open forensic report:', error);
         }
     }
 
