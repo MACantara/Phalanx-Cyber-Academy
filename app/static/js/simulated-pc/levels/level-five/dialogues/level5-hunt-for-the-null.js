@@ -28,9 +28,27 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
         ];
     }
 
-    onComplete() {
+    async onComplete() {
         localStorage.setItem('cyberquest_level_5_started', 'true');
         localStorage.setItem('cyberquest_level_5_start_time', Date.now());
+        
+        // Initialize session for Level 5 using the GameProgressManager
+        try {
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+            const progressManager = new GameProgressManager();
+            
+            const levelData = await progressManager.startLevel(5, 'Hunt-for-the-Null', 'expert');
+            console.log('[Level5] Session started:', levelData);
+            
+            // Store session ID for later use
+            if (levelData.session && levelData.session.id) {
+                localStorage.setItem('cyberquest_active_session_id', levelData.session.id.toString());
+                sessionStorage.setItem('active_session_id', levelData.session.id.toString());
+                window.currentSessionId = levelData.session.id;
+            }
+        } catch (error) {
+            console.warn('[Level5] Failed to start session, will create one on completion:', error);
+        }
         
         if (window.applicationLauncher) {
             setTimeout(async () => {
