@@ -151,9 +151,10 @@ export class ForensicReportApp extends ForensicAppBase {
                                 Based on forensic analysis, "The Null" has been conclusively identified as:
                             </p>
                             <div class="mt-2 p-3 bg-red-800/50 rounded">
-                                <p class="text-base font-bold text-white">Alex Morrison</p>
-                                <p class="text-sm text-red-200">Email: a.morrison@securemail.com</p>
-                                <p class="text-sm text-red-200">Phone: +1-555-0142</p>
+                                <p class="text-base font-bold text-white">${this.targetIdentity?.real_name || 'Unknown'}</p>
+                                <p class="text-sm text-red-200">Email: ${this.targetIdentity?.email || 'Unknown'}</p>
+                                <p class="text-sm text-red-200">Phone: ${this.targetIdentity?.phone || 'Unknown'}</p>
+                                <p class="text-sm text-red-200">Role: ${this.targetIdentity?.role || 'Unknown'}</p>
                             </div>
                         </div>
                     </div>
@@ -240,49 +241,34 @@ export class ForensicReportApp extends ForensicAppBase {
         this.setupDragAndDrop();
     }
 
-    loadEvidence() {
-        this.availableEvidence = [
-            {
-                id: 'laptop_identity',
-                title: 'Laptop Identity Evidence',
-                description: 'Real name "Alex Morrison" found in browser autofill',
-                type: 'identity',
-                icon: 'bi-person-badge',
-                points: 25
-            },
-            {
-                id: 'memory_email',
-                title: 'Memory Email Evidence',
-                description: 'Email "a.morrison@securemail.com" extracted from process memory',
-                type: 'contact',
-                icon: 'bi-envelope',
-                points: 25
-            },
-            {
-                id: 'network_phone',
-                title: 'Network Contact Evidence', 
-                description: 'Phone number +1-555-0142 found in exfiltrated data',
-                type: 'contact',
-                icon: 'bi-phone',
-                points: 25
-            },
-            {
-                id: 'attack_timeline',
-                title: 'Attack Timeline',
-                description: 'Chronological sequence of malicious activities',
-                type: 'analysis',
-                icon: 'bi-clock-history',
-                points: 15
-            },
-            {
-                id: 'malware_analysis',
-                title: 'Malware Analysis',
-                description: 'Backdoor and encryption tools identified',
-                type: 'technical',
-                icon: 'bi-bug',
-                points: 10
+    async loadEvidence() {
+        try {
+            // Load evidence from API - these are the extracted clues from evidence analysis
+            const response = await fetch('/api/level5/forensic-report-data');
+            const result = await response.json();
+            
+            if (result.success && result.data && result.data.evidence_bank) {
+                this.availableEvidence = result.data.evidence_bank;
+                this.targetIdentity = result.data.target_identity;
+                
+                console.log(`Loaded ${this.availableEvidence.length} evidence clues for ${this.targetIdentity.code_name}`);
+            } else {
+                throw new Error('Failed to load forensic report data from API');
             }
-        ];
+        } catch (error) {
+            console.error('Error loading evidence bank:', error);
+            // Fallback to embedded data
+            this.availableEvidence = [
+                {
+                    id: 'fallback_identity',
+                    title: 'Identity Evidence',
+                    description: 'Real name found in digital artifacts',
+                    type: 'identity',
+                    icon: 'bi-person-badge',
+                    points: 25
+                }
+            ];
+        }
 
         this.renderEvidenceBank();
     }
@@ -527,12 +513,14 @@ export class ForensicReportApp extends ForensicAppBase {
     }
 
     hasIdentityEvidence() {
-        const identityEvidence = ['laptop_identity', 'memory_email', 'network_phone'];
+        // Check if we have at least one identity and one contact evidence
         const addedEvidence = Object.values(this.reportSections)
-            .flatMap(section => section.evidence)
-            .map(evidence => evidence.id);
+            .flatMap(section => section.evidence);
         
-        return identityEvidence.every(id => addedEvidence.includes(id));
+        const hasIdentity = addedEvidence.some(evidence => evidence.type === 'identity');
+        const hasContact = addedEvidence.some(evidence => evidence.type === 'contact');
+        
+        return hasIdentity && hasContact;
     }
 
     showIdentityConclusion() {
@@ -565,10 +553,13 @@ export class ForensicReportApp extends ForensicAppBase {
         this.showNotification('Submitting forensic report...', 'info');
         
         setTimeout(() => {
-            this.showNotification('Report submitted successfully! The Null identified as Alex Morrison.', 'success', 5000);
+            this.showNotification(`Report submitted successfully! ${this.targetIdentity?.code_name || 'Target'} identified as ${this.targetIdentity?.real_name || 'Unknown'}.`, 'success', 5000);
             this.emitForensicEvent('report_submitted', { 
                 score: this.reportScore,
-                identity: 'Alex Morrison',
+                identity: this.targetIdentity?.real_name || 'Unknown',
+                code_name: this.targetIdentity?.code_name || 'Unknown',
+                email: this.targetIdentity?.email || 'Unknown',
+                phone: this.targetIdentity?.phone || 'Unknown',
                 sections: this.reportSections 
             });
             
