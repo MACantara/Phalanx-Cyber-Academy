@@ -5,8 +5,7 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "Welcome to your final challenge. A cybercriminal known as 'The Null' has been conducting sophisticated attacks worldwide. Your mission: identify their real identity through digital forensics.",
-                example: "CASE FILE #FOR-2024-0314\nSuspect: 'The Null' (Unknown Identity)\nEvidence: Laptop, memory dump, network logs"
+                text: "Welcome to your final challenge. A cybercriminal known as 'The Null' has been conducting sophisticated attacks worldwide. Your mission: identify their real identity through digital forensics."
             },
             {
                 text: "🎯 YOUR CLEAR OBJECTIVES:\n\n1️⃣ Maintain Chain of Custody - Ensure evidence integrity\n2️⃣ Analyze Evidence - Find identity clues in digital artifacts\n3️⃣ Extract Identity Information - Real name, email, phone\n4️⃣ Build Complete Report - Document findings for prosecution"
