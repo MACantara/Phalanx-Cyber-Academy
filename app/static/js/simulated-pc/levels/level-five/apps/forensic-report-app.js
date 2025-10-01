@@ -13,10 +13,34 @@ export class ForensicReportApp extends ForensicAppBase {
         });
         
         this.reportSections = {
-            'executive_summary': { title: 'Executive Summary', evidence: [], required: true },
-            'evidence_analysis': { title: 'Evidence Analysis', evidence: [], required: true },
-            'findings': { title: 'Key Findings', evidence: [], required: true },
-            'conclusions': { title: 'Conclusions & Identity', evidence: [], required: true }
+            'executive_summary': { 
+                title: 'Executive Summary', 
+                evidence: [], 
+                required: true,
+                description: 'High-level overview evidence (Timeline, Malware Analysis)',
+                acceptedTypes: ['analysis', 'technical']
+            },
+            'evidence_analysis': { 
+                title: 'Evidence Analysis', 
+                evidence: [], 
+                required: true,
+                description: 'All evidence types for technical documentation',
+                acceptedTypes: ['identity', 'contact', 'analysis', 'technical']
+            },
+            'findings': { 
+                title: 'Key Findings', 
+                evidence: [], 
+                required: true,
+                description: 'Critical identity evidence (Name, Email, Phone)',
+                acceptedTypes: ['identity', 'contact']
+            },
+            'conclusions': { 
+                title: 'Conclusions & Identity', 
+                evidence: [], 
+                required: true,
+                description: 'Identity evidence proving who "The Null" really is',
+                acceptedTypes: ['identity', 'contact']
+            }
         };
         
         this.availableEvidence = [];
@@ -139,24 +163,38 @@ export class ForensicReportApp extends ForensicAppBase {
         return `
             <div class="report-section bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
                 <div class="p-3 sm:p-4 border-b border-gray-700 bg-gray-750">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
                         <h4 class="text-sm sm:text-base lg:text-lg font-semibold text-white mb-1 sm:mb-0">${section.title}</h4>
                         <div class="flex items-center space-x-2">
                             ${section.required ? '<span class="px-2 py-1 text-xs sm:text-sm bg-red-600 text-red-100 rounded">Required</span>' : ''}
                             <span id="section-status-${sectionId}" class="px-2 py-1 text-xs sm:text-sm bg-gray-600 text-gray-300 rounded">Empty</span>
                         </div>
                     </div>
+                    ${section.description ? `
+                        <div class="text-xs sm:text-sm text-blue-300 mb-2">
+                            <i class="bi bi-info-circle mr-1"></i>
+                            ${section.description}
+                        </div>
+                    ` : ''}
                 </div>
                 
                 <div class="drop-zone min-h-[120px] sm:min-h-[140px] p-4 border-2 border-dashed border-gray-600 hover:border-blue-500 transition-colors touch-manipulation" 
                      data-section-id="${sectionId}"
+                     data-accepted-types="${section.acceptedTypes ? section.acceptedTypes.join(',') : ''}"
                      ondrop="window.forensicReportApp?.handleDrop(event)" 
                      ondragover="window.forensicReportApp?.handleDragOver(event)"
                      onclick="window.forensicReportApp?.handleMobileClick(event)">
                     <div id="section-content-${sectionId}" class="space-y-2">
                         <div class="text-center text-gray-500 py-4">
                             <i class="bi bi-plus-circle text-2xl sm:text-3xl mb-2 block"></i>
-                            <p class="text-xs sm:text-sm lg:text-base break-words">Drop evidence here or tap to add to ${section.title.toLowerCase()}</p>
+                            <p class="text-xs sm:text-sm lg:text-base break-words">Drop evidence here or tap to add</p>
+                            ${section.acceptedTypes ? `
+                                <div class="mt-2 flex flex-wrap justify-center gap-1">
+                                    ${section.acceptedTypes.map(type => `
+                                        <span class="px-2 py-1 text-xs bg-blue-600 text-blue-100 rounded">${this.getTypeLabel(type)}</span>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
                 </div>
@@ -242,7 +280,12 @@ export class ForensicReportApp extends ForensicAppBase {
                 <div class="flex items-center space-x-3">
                     <i class="${evidence.icon} text-blue-400 text-lg sm:text-xl flex-shrink-0"></i>
                     <div class="min-w-0 flex-1">
-                        <h5 class="text-sm sm:text-base font-semibold text-white truncate">${evidence.title}</h5>
+                        <div class="flex items-center justify-between mb-1">
+                            <h5 class="text-sm sm:text-base font-semibold text-white truncate">${evidence.title}</h5>
+                            <span class="px-2 py-1 text-xs font-medium rounded ${this.getTypeColor(evidence.type)}">
+                                ${this.getTypeLabel(evidence.type)}
+                            </span>
+                        </div>
                         <p class="text-xs sm:text-sm text-gray-300 break-words">${evidence.description}</p>
                         <div class="mt-1 text-xs sm:text-sm text-blue-400">+${evidence.points} points</div>
                     </div>
@@ -321,6 +364,26 @@ export class ForensicReportApp extends ForensicAppBase {
         });
     }
 
+    getTypeLabel(type) {
+        const labels = {
+            'identity': 'Identity',
+            'contact': 'Contact Info',
+            'analysis': 'Analysis',
+            'technical': 'Technical'
+        };
+        return labels[type] || type;
+    }
+
+    getTypeColor(type) {
+        const colors = {
+            'identity': 'bg-green-600 text-green-100',
+            'contact': 'bg-blue-600 text-blue-100',
+            'analysis': 'bg-purple-600 text-purple-100',
+            'technical': 'bg-orange-600 text-orange-100'
+        };
+        return colors[type] || 'bg-gray-600 text-gray-100';
+    }
+
     addEvidenceToSection(sectionId, evidenceId) {
         const evidence = this.availableEvidence.find(e => e.id === evidenceId);
         const section = this.reportSections[sectionId];
@@ -333,13 +396,24 @@ export class ForensicReportApp extends ForensicAppBase {
             return;
         }
 
+        // Validate evidence type for section
+        if (section.acceptedTypes && !section.acceptedTypes.includes(evidence.type)) {
+            const acceptedLabels = section.acceptedTypes.map(type => this.getTypeLabel(type)).join(', ');
+            this.showNotification(
+                `❌ Wrong section! "${evidence.title}" (${this.getTypeLabel(evidence.type)}) doesn't belong in ${section.title}. Try: ${acceptedLabels}`, 
+                'error',
+                5000
+            );
+            return;
+        }
+
         // Add evidence to section
         section.evidence.push(evidence);
         this.renderSectionContent(sectionId);
         this.updateReportScore();
         this.checkReportCompletion();
         
-        this.showNotification(`Added ${evidence.title} to ${section.title}`, 'success');
+        this.showNotification(`✅ Added ${evidence.title} to ${section.title}`, 'success');
         this.emitForensicEvent('evidence_added_to_report', { sectionId, evidenceId });
     }
 
