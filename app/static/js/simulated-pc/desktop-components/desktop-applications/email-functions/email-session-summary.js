@@ -89,66 +89,69 @@ export class EmailSessionSummary {
         console.log('Email Session Summary - Calculated accuracy:', calculatedAccuracy, 'from stats:', sessionStats, 'and history:', feedbackHistory.length);
         
         modal.innerHTML = `
-            <div class="bg-gray-800 text-white rounded p-4 sm:p-6 md:p-8 w-full max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-4xl mx-2 sm:mx-4 max-h-[95vh] overflow-y-auto border border-gray-600">
-                <div class="text-center mb-6 sm:mb-8">
-                    <div class="flex flex-col sm:flex-row items-center justify-center gap-2 mb-3 sm:mb-4">
-                        <i class="bi bi-shield-check text-2xl sm:text-3xl text-blue-400"></i>
-                        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">Level 2 Complete!</h1>
+            <div class="bg-gray-800 text-white rounded-lg p-3 sm:p-4 md:p-6 lg:p-8 w-full max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-2 sm:mx-4 max-h-[95vh] overflow-y-auto border border-gray-600 shadow-2xl">
+                <!-- Header Section with Better Mobile Layout -->
+                <div class="text-center mb-4 sm:mb-6 md:mb-8">
+                    <div class="flex flex-col items-center justify-center gap-2 mb-3 sm:mb-4">
+                        <i class="bi bi-shield-check text-2xl sm:text-3xl md:text-4xl text-blue-400"></i>
+                        <h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold">Level 2 Complete!</h1>
                     </div>
-                    <div class="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 sm:mb-4 ${accuracyClass}">${calculatedAccuracy}%</div>
-                    <p class="text-base sm:text-lg">Email Security Training Performance</p>
-                    <p class="text-xs sm:text-sm text-gray-400 mt-2 flex flex-col sm:flex-row items-center justify-center gap-1">
-                        <i class="bi bi-envelope-check-fill text-blue-400"></i>
-                        <span>${this.countUniqueEmails(feedbackHistory)} emails analyzed with AI-powered threat detection training</span>
-                    </p>
+                    <div class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-3 md:mb-4 ${accuracyClass}">${calculatedAccuracy}%</div>
+                    <p class="text-sm sm:text-base md:text-lg font-medium">Email Security Training Performance</p>
+                    <div class="text-xs sm:text-sm text-gray-400 mt-2 flex flex-col items-center justify-center gap-1">
+                        <i class="bi bi-envelope-check-fill text-blue-400 text-sm sm:text-base"></i>
+                        <span class="text-center px-2">${this.countUniqueEmails(feedbackHistory)} emails analyzed with AI-powered threat detection training</span>
+                    </div>
                 </div>
                 
-                <!-- Performance Summary -->
-                <div class="bg-gray-700 border border-gray-600 rounded p-4 sm:p-6 mb-4 sm:mb-6">
-                    <h3 class="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center">
-                        <i class="bi bi-trophy text-yellow-400 mr-2"></i>
+                <!-- Performance Summary with Enhanced Mobile Layout -->
+                <div class="bg-gray-700 border border-gray-600 rounded-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6">
+                    <h3 class="text-sm sm:text-base md:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center">
+                        <i class="bi bi-trophy text-yellow-400 mr-2 text-base sm:text-lg"></i>
                         Performance Summary
                     </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="text-center">
-                            <div class="text-2xl sm:text-3xl font-bold ${accuracyClass} mb-2 flex items-center justify-center gap-2">
-                                <i class="bi bi-percent"></i>
-                                ${calculatedAccuracy}
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                        <div class="text-center bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-600">
+                            <div class="text-xl sm:text-2xl md:text-3xl font-bold ${accuracyClass} mb-1 sm:mb-2 flex items-center justify-center gap-1 sm:gap-2">
+                                <i class="bi bi-percent text-sm sm:text-base"></i>
+                                <span>${calculatedAccuracy}</span>
                             </div>
-                            <div class="text-gray-400 text-xs sm:text-sm">Overall Accuracy</div>
+                            <div class="text-gray-400 text-xs sm:text-sm font-medium">Overall Accuracy</div>
                         </div>
-                        <div class="text-center">
-                            <div class="text-2xl sm:text-3xl font-bold text-blue-400 mb-2 flex items-center justify-center gap-2">
-                                <i class="bi bi-envelope-fill"></i>
-                                ${this.countUniqueEmails(feedbackHistory)}
+                        <div class="text-center bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-600">
+                            <div class="text-xl sm:text-2xl md:text-3xl font-bold text-blue-400 mb-1 sm:mb-2 flex items-center justify-center gap-1 sm:gap-2">
+                                <i class="bi bi-envelope-fill text-sm sm:text-base"></i>
+                                <span>${this.countUniqueEmails(feedbackHistory)}</span>
                             </div>
-                            <div class="text-gray-400 text-xs sm:text-sm">Emails Analyzed</div>
+                            <div class="text-gray-400 text-xs sm:text-sm font-medium">Emails Analyzed</div>
                         </div>
-                        <div class="text-center">
-                            <div class="text-2xl sm:text-3xl font-bold text-green-400 mb-2 flex items-center justify-center gap-2">
-                                <i class="bi bi-check-circle-fill"></i>
-                                ${sessionStats.correctActions || feedbackHistory.filter(f => f.isCorrect).length}
+                        <div class="text-center bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-600">
+                            <div class="text-xl sm:text-2xl md:text-3xl font-bold text-green-400 mb-1 sm:mb-2 flex items-center justify-center gap-1 sm:gap-2">
+                                <i class="bi bi-check-circle-fill text-sm sm:text-base"></i>
+                                <span>${sessionStats.correctActions || feedbackHistory.filter(f => f.isCorrect).length}</span>
                             </div>
-                            <div class="text-gray-400 text-sm">Correct Actions</div>
+                            <div class="text-gray-400 text-xs sm:text-sm font-medium">Correct Actions</div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Detailed Email Analysis -->
-                <div class="space-y-4 mb-8">
-                    <h2 class="text-xl font-semibold text-white mb-4 flex items-center">
-                        <i class="bi bi-clipboard-data text-blue-400 mr-2"></i>
-                        Detailed Email Analysis
+                <!-- Detailed Email Analysis with Mobile Optimization -->
+                <div class="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+                    <h2 class="text-lg sm:text-xl md:text-xl font-semibold text-white mb-3 sm:mb-4 flex items-center">
+                        <i class="bi bi-clipboard-data text-blue-400 mr-2 text-base sm:text-lg"></i>
+                        <span class="hidden sm:inline">Detailed Email Analysis</span>
+                        <span class="sm:hidden">Email Analysis</span>
                     </h2>
                     
                     ${this.generateDetailedEmailAnalysis(feedbackHistory)}
                 </div>
                 
-                <!-- Email Categories Performance -->
-                <div class="bg-gray-700 border border-gray-600 rounded p-4 sm:p-6 mb-4 sm:mb-6">
-                    <h3 class="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center">
-                        <i class="bi bi-envelope-check text-purple-400 mr-2"></i>
-                        Email Category Performance
+                <!-- Email Categories Performance with Mobile Layout -->
+                <div class="bg-gray-700 border border-gray-600 rounded-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6">
+                    <h3 class="text-sm sm:text-base md:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center">
+                        <i class="bi bi-envelope-check text-purple-400 mr-2 text-base sm:text-lg"></i>
+                        <span class="hidden sm:inline">Email Category Performance</span>
+                        <span class="sm:hidden">Categories</span>
                     </h3>
                     
                     ${this.generateEmailCategoriesChart(feedbackHistory)}
@@ -157,21 +160,25 @@ export class EmailSessionSummary {
                 <!-- Areas for Improvement -->
                 ${this.generateImprovementSection(feedbackHistory, calculatedAccuracy)}
                 
-                <div class="text-center">
+                <!-- Action Buttons with Enhanced Mobile Design -->
+                <div class="text-center pt-4 sm:pt-6 border-t border-gray-600">
                     ${levelCompleted ? `
-                        <button onclick="window.emailSessionSummary?.completeLevel2()" class="w-full sm:w-auto bg-green-600 text-white px-6 sm:px-8 py-3 rounded hover:bg-green-700 active:bg-green-700 transition-colors font-semibold text-base sm:text-lg cursor-pointer flex items-center justify-center gap-2 mx-auto touch-manipulation">
-                            <i class="bi bi-rocket-takeoff-fill"></i>
-                            <span class="hidden sm:inline">Continue to Level 3</span><span class="sm:hidden">Level 3</span>
+                        <button onclick="window.emailSessionSummary?.completeLevel2()" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 active:bg-green-800 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:shadow-lg active:shadow-inner transition-all duration-200 font-semibold text-sm sm:text-base md:text-lg cursor-pointer flex items-center justify-center gap-2 mx-auto touch-manipulation min-h-[48px]">
+                            <i class="bi bi-rocket-takeoff-fill text-base sm:text-lg"></i>
+                            <span class="hidden sm:inline">Continue to Level 3</span>
+                            <span class="sm:hidden">Level 3</span>
                         </button>
                     ` : `
                         <div class="space-y-3 flex flex-col sm:flex-row sm:space-y-0 sm:space-x-4 sm:justify-center">
-                            <button onclick="window.emailSessionSummary?.completeLevel2()" class="w-full sm:w-auto bg-blue-600 text-white px-6 sm:px-8 py-3 rounded hover:bg-blue-700 active:bg-blue-700 transition-colors font-semibold text-sm sm:text-lg cursor-pointer flex items-center justify-center gap-2 touch-manipulation">
-                                <i class="bi bi-save-fill"></i>
-                                <span class="hidden sm:inline">Save Progress & Exit</span><span class="sm:hidden">Save & Exit</span>
+                            <button onclick="window.emailSessionSummary?.completeLevel2()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-lg hover:shadow-lg active:shadow-inner transition-all duration-200 font-semibold text-sm sm:text-base cursor-pointer flex items-center justify-center gap-2 touch-manipulation min-h-[48px]">
+                                <i class="bi bi-save-fill text-base"></i>
+                                <span class="hidden sm:inline">Save Progress & Exit</span>
+                                <span class="sm:hidden">Save & Exit</span>
                             </button>
-                            <button onclick="window.emailSessionSummary?.retryTraining()" class="w-full sm:w-auto bg-orange-600 text-white px-6 py-2 sm:py-3 rounded hover:bg-orange-700 active:bg-orange-700 transition-colors font-semibold text-sm sm:text-base cursor-pointer flex items-center justify-center gap-2 touch-manipulation">
-                                <i class="bi bi-arrow-clockwise"></i>
-                                <span class="hidden sm:inline">Retry Training</span><span class="sm:hidden">Retry</span>
+                            <button onclick="window.emailSessionSummary?.retryTraining()" class="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-lg hover:shadow-lg active:shadow-inner transition-all duration-200 font-semibold text-sm sm:text-base cursor-pointer flex items-center justify-center gap-2 touch-manipulation min-h-[48px]">
+                                <i class="bi bi-arrow-clockwise text-base"></i>
+                                <span class="hidden sm:inline">Retry Training</span>
+                                <span class="sm:hidden">Retry</span>
                             </button>
                         </div>
                     `}
@@ -195,8 +202,9 @@ export class EmailSessionSummary {
     generateDetailedEmailAnalysis(feedbackHistory) {
         if (feedbackHistory.length === 0) {
             return `
-                <div class="bg-gray-700 border border-gray-600 rounded p-4 text-center">
-                    <p class="text-gray-400">No email analysis data available</p>
+                <div class="bg-gray-700 border border-gray-600 rounded-lg p-3 sm:p-4 text-center">
+                    <div class="text-gray-500 text-2xl sm:text-3xl mb-2">📧</div>
+                    <p class="text-gray-400 text-sm sm:text-base">No email analysis data available</p>
                 </div>
             `;
         }
@@ -208,56 +216,63 @@ export class EmailSessionSummary {
             const typeAccuracyClass = this.getAccuracyClass(typeAccuracy);
             
             return `
-                <div class="bg-gray-700 border border-gray-600 rounded p-4">
-                    <div class="flex justify-between items-start mb-3">
-                        <div class="flex-1">
+                <div class="bg-gray-700 border border-gray-600 rounded-lg p-3 sm:p-4">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3">
+                        <div class="flex-1 mb-2 sm:mb-0">
                             <div class="font-semibold text-white mb-1 flex items-center gap-2">
-                                <i class="bi bi-envelope-fill text-gray-400"></i>
-                                ${type} Emails
+                                <i class="bi bi-envelope-fill text-gray-400 text-sm sm:text-base"></i>
+                                <span class="text-sm sm:text-base">${type} Emails</span>
                             </div>
-                            <div class="text-gray-400 text-sm flex items-center gap-2">
-                                <i class="bi bi-collection-fill text-gray-500"></i>
-                                <strong>Count:</strong> ${emails.length} emails • 
-                                <i class="bi bi-target text-gray-500"></i>
-                                <strong>Accuracy:</strong> ${emails.filter(e => e.isCorrect).length}/${emails.length} correct
+                            <div class="text-gray-400 text-xs sm:text-sm flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                <div class="flex items-center gap-1">
+                                    <i class="bi bi-collection-fill text-gray-500"></i>
+                                    <strong>Count:</strong> ${emails.length} emails
+                                </div>
+                                <span class="hidden sm:inline">•</span>
+                                <div class="flex items-center gap-1">
+                                    <i class="bi bi-target text-gray-500"></i>
+                                    <strong>Accuracy:</strong> ${emails.filter(e => e.isCorrect).length}/${emails.length} correct
+                                </div>
                             </div>
                         </div>
-                        <div class="text-2xl font-bold ${typeAccuracyClass} ml-4">
+                        <div class="text-xl sm:text-2xl font-bold ${typeAccuracyClass} sm:ml-4 self-start">
                             ${typeAccuracy}%
                         </div>
                     </div>
                     
-                    <!-- Action Breakdown -->
-                    <div class="grid grid-cols-2 gap-4 text-sm mb-3">
-                        <div class="bg-green-900/30 border border-green-600/30 rounded p-2 text-center">
+                    <!-- Action Breakdown with Mobile Optimization -->
+                    <div class="grid grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm mb-3">
+                        <div class="bg-green-900/30 border border-green-600/30 rounded-lg p-2 sm:p-3 text-center">
                             <div class="text-green-400 font-bold flex items-center justify-center gap-1">
-                                <i class="bi bi-check-circle-fill"></i>
-                                ${emails.filter(e => e.isCorrect).length}
+                                <i class="bi bi-check-circle-fill text-sm"></i>
+                                <span>${emails.filter(e => e.isCorrect).length}</span>
                             </div>
-                            <div class="text-green-300 text-xs">Correct</div>
+                            <div class="text-green-300 text-xs font-medium">Correct</div>
                         </div>
-                        <div class="bg-red-900/30 border border-red-600/30 rounded p-2 text-center">
+                        <div class="bg-red-900/30 border border-red-600/30 rounded-lg p-2 sm:p-3 text-center">
                             <div class="text-red-400 font-bold flex items-center justify-center gap-1">
-                                <i class="bi bi-x-circle-fill"></i>
-                                ${emails.filter(e => !e.isCorrect).length}
+                                <i class="bi bi-x-circle-fill text-sm"></i>
+                                <span>${emails.filter(e => !e.isCorrect).length}</span>
                             </div>
-                            <div class="text-red-300 text-xs">Incorrect</div>
+                            <div class="text-red-300 text-xs font-medium">Incorrect</div>
                         </div>
                     </div>
                     
-                    <!-- Key Learning Points -->
-                    <div class="bg-gray-800 rounded p-3">
-                        <div class="text-xs text-gray-400 mb-2 flex items-start gap-1">
-                            <i class="bi bi-key-fill text-yellow-400 mt-0.5"></i>
-                            <div>
-                                <strong>Key Indicators:</strong> ${this.getEmailTypeIndicators(type)}
+                    <!-- Key Learning Points with Mobile Layout -->
+                    <div class="bg-gray-800 rounded-lg p-2 sm:p-3">
+                        <div class="text-xs sm:text-sm text-gray-400 mb-2 flex items-start gap-1 sm:gap-2">
+                            <i class="bi bi-key-fill text-yellow-400 mt-0.5 flex-shrink-0"></i>
+                            <div class="min-w-0">
+                                <strong>Key Indicators:</strong> 
+                                <span class="block sm:inline mt-1 sm:mt-0">${this.getEmailTypeIndicators(type)}</span>
                             </div>
                         </div>
                         ${typeAccuracy < 75 ? `
-                            <div class="text-xs text-blue-300 flex items-start gap-1">
-                                <i class="bi bi-lightbulb-fill text-blue-400 mt-0.5"></i>
-                                <div>
-                                    <strong>Learning Tip:</strong> ${this.generateEmailTypeTip(type, typeAccuracy)}
+                            <div class="text-xs sm:text-sm text-blue-300 flex items-start gap-1 sm:gap-2">
+                                <i class="bi bi-lightbulb-fill text-blue-400 mt-0.5 flex-shrink-0"></i>
+                                <div class="min-w-0">
+                                    <strong>Learning Tip:</strong> 
+                                    <span class="block sm:inline mt-1 sm:mt-0">${this.generateEmailTypeTip(type, typeAccuracy)}</span>
                                 </div>
                             </div>
                         ` : ''}
@@ -274,24 +289,25 @@ export class EmailSessionSummary {
         const categories = this.categorizeEmailPerformance(feedbackHistory);
         
         return `
-            <div class="grid md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 ${Object.entries(categories).map(([category, data]) => `
-                    <div class="bg-gray-800 border border-gray-600 rounded p-4">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-medium text-white flex items-center gap-2">
-                                <i class="bi ${category.includes('Phishing') ? 'bi-exclamation-triangle-fill text-red-400' : 'bi-check-circle-fill text-green-400'}"></i>
-                                ${category}
+                    <div class="bg-gray-800 border border-gray-600 rounded-lg p-3 sm:p-4 hover:bg-gray-750 transition-colors duration-200">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 sm:mb-3">
+                            <span class="font-medium text-white flex items-center gap-2 mb-1 sm:mb-0">
+                                <i class="bi ${category.includes('Phishing') ? 'bi-exclamation-triangle-fill text-red-400' : 'bi-check-circle-fill text-green-400'} text-sm sm:text-base"></i>
+                                <span class="text-sm sm:text-base">${category}</span>
                             </span>
-                            <span class="text-sm font-semibold ${data.accuracy >= 70 ? 'text-green-400' : 'text-red-400'}">
+                            <span class="text-sm sm:text-base font-semibold ${data.accuracy >= 70 ? 'text-green-400' : 'text-red-400'} self-start sm:self-auto">
                                 ${data.accuracy}%
                             </span>
                         </div>
-                        <div class="w-full bg-gray-600 rounded-full h-2">
-                            <div class="h-2 rounded-full transition-all duration-1000 ${data.accuracy >= 70 ? 'bg-green-500' : 'bg-red-500'}" 
+                        <div class="w-full bg-gray-600 rounded-full h-2 sm:h-3 mb-2">
+                            <div class="h-2 sm:h-3 rounded-full transition-all duration-1000 ${data.accuracy >= 70 ? 'bg-green-500' : 'bg-red-500'}" 
                                  style="width: ${data.accuracy}%"></div>
                         </div>
-                        <div class="text-xs text-gray-400 mt-1">
-                            ${data.correct}/${data.total} correct
+                        <div class="text-xs sm:text-sm text-gray-400 flex items-center gap-1">
+                            <i class="bi bi-check-square text-gray-500"></i>
+                            <span>${data.correct}/${data.total} correct responses</span>
                         </div>
                     </div>
                 `).join('')}
@@ -308,17 +324,20 @@ export class EmailSessionSummary {
         const suggestions = this.generateImprovementSuggestions(feedbackHistory);
         
         return `
-            <div class="bg-blue-900/30 border border-blue-600 rounded p-6 mb-6">
-                <h3 class="text-lg font-semibold text-blue-300 mb-4 flex items-center">
-                    <i class="bi bi-lightbulb text-blue-400 mr-2"></i>
-                    Areas for Improvement
+            <div class="bg-blue-900/30 border border-blue-600 rounded-lg p-3 sm:p-4 md:p-6 mb-4 sm:mb-6">
+                <h3 class="text-base sm:text-lg font-semibold text-blue-300 mb-3 sm:mb-4 flex items-center">
+                    <i class="bi bi-lightbulb text-blue-400 mr-2 text-base sm:text-lg"></i>
+                    <span class="hidden sm:inline">Areas for Improvement</span>
+                    <span class="sm:hidden">Improvements</span>
                 </h3>
                 
-                <div class="space-y-3">
-                    ${suggestions.map(suggestion => `
-                        <div class="flex items-start">
-                            <div class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold mr-3 mt-0.5">!</div>
-                            <div class="text-blue-200 text-sm">${suggestion}</div>
+                <div class="space-y-2 sm:space-y-3">
+                    ${suggestions.map((suggestion, index) => `
+                        <div class="flex items-start gap-2 sm:gap-3">
+                            <div class="bg-blue-600 text-white rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                                ${index + 1}
+                            </div>
+                            <div class="text-blue-200 text-xs sm:text-sm leading-relaxed min-w-0">${suggestion}</div>
                         </div>
                     `).join('')}
                 </div>
@@ -591,12 +610,12 @@ export class EmailSessionSummary {
         const loadingModal = document.createElement('div');
         loadingModal.className = 'fixed inset-0 bg-black/90 flex items-center justify-center z-50';
         loadingModal.innerHTML = `
-            <div class="bg-gray-800 p-8 rounded text-center max-w-md mx-4">
-                <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-6"></div>
-                <h3 class="text-xl font-semibold text-white mb-2">Preparing Your Training Session</h3>
-                <p class="text-gray-300">Loading your progress and resetting the simulation...</p>
-                <div class="w-full bg-gray-700 rounded-full h-2.5 mt-6">
-                    <div class="bg-blue-600 h-2.5 rounded-full animate-pulse" style="width: 80%"></div>
+            <div class="bg-gray-800 p-4 sm:p-6 md:p-8 rounded-lg text-center max-w-xs sm:max-w-md mx-2 sm:mx-4 border border-gray-600 shadow-2xl">
+                <div class="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-blue-500 mx-auto mb-4 sm:mb-6"></div>
+                <h3 class="text-lg sm:text-xl font-semibold text-white mb-2">Preparing Your Training Session</h3>
+                <p class="text-gray-300 text-sm sm:text-base px-2">Loading your progress and resetting the simulation...</p>
+                <div class="w-full bg-gray-700 rounded-full h-2 sm:h-2.5 mt-4 sm:mt-6">
+                    <div class="bg-blue-600 h-2 sm:h-2.5 rounded-full animate-pulse" style="width: 80%"></div>
                 </div>
             </div>
         `;
@@ -620,12 +639,13 @@ export class EmailSessionSummary {
             console.error('Error during retry training:', error);
             if (loadingModal && loadingModal.parentNode) {
                 loadingModal.innerHTML = `
-                    <div class="bg-gray-800 p-8 rounded text-center max-w-md mx-4">
-                        <div class="text-red-500 text-5xl mb-4">⚠️</div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Error Resetting Training</h3>
-                        <p class="text-gray-300 mb-4">There was an error preparing your training session. Please try again or refresh the page.</p>
-                        <button onclick="window.location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded transition-colors">
-                            <i class="bi bi-arrow-clockwise mr-2"></i> Refresh Page
+                    <div class="bg-gray-800 p-4 sm:p-6 md:p-8 rounded-lg text-center max-w-xs sm:max-w-md mx-2 sm:mx-4 border border-gray-600 shadow-2xl">
+                        <div class="text-red-500 text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4">⚠️</div>
+                        <h3 class="text-lg sm:text-xl font-semibold text-white mb-2">Error Resetting Training</h3>
+                        <p class="text-gray-300 text-sm sm:text-base mb-4 px-2">There was an error preparing your training session. Please try again or refresh the page.</p>
+                        <button onclick="window.location.reload()" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-200 touch-manipulation min-h-[44px] flex items-center justify-center gap-2 mx-auto">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            <span class="text-sm sm:text-base">Refresh Page</span>
                         </button>
                     </div>
                 `;
@@ -694,35 +714,50 @@ export class EmailSessionSummary {
         const mistakes = this.lastFeedbackHistory.filter(f => !f.isCorrect);
         
         modal.innerHTML = `
-            <div class="bg-gray-800 text-white rounded p-6 max-w-2xl mx-4 max-h-96 overflow-y-auto border border-gray-600">
-                <h2 class="text-xl font-bold text-white mb-4">Review Your Mistakes</h2>
+            <div class="bg-gray-800 text-white rounded-lg p-3 sm:p-4 md:p-6 w-full max-w-xs sm:max-w-lg md:max-w-2xl mx-2 sm:mx-4 max-h-[90vh] overflow-y-auto border border-gray-600 shadow-2xl">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                        <i class="bi bi-clipboard-check text-red-400"></i>
+                        <span class="hidden sm:inline">Review Your Mistakes</span>
+                        <span class="sm:hidden">Mistakes</span>
+                    </h2>
+                    <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-white transition-colors p-1">
+                        <i class="bi bi-x-lg text-lg"></i>
+                    </button>
+                </div>
                 
                 ${mistakes.length === 0 ? `
-                    <div class="text-center py-8">
-                        <div class="text-4xl mb-4">🎯</div>
-                        <div class="text-lg font-semibold text-green-400">Perfect Score!</div>
-                        <div class="text-gray-400">You didn't make any mistakes in this session.</div>
+                    <div class="text-center py-6 sm:py-8">
+                        <div class="text-3xl sm:text-4xl mb-3 sm:mb-4">🎯</div>
+                        <div class="text-base sm:text-lg font-semibold text-green-400 mb-2">Perfect Score!</div>
+                        <div class="text-gray-400 text-sm sm:text-base">You didn't make any mistakes in this session.</div>
                     </div>
                 ` : `
-                    <div class="space-y-4">
+                    <div class="space-y-3 sm:space-y-4">
                         ${mistakes.map((mistake, index) => `
-                            <div class="border border-gray-600 rounded p-4 bg-gray-700">
-                                <div class="flex items-start justify-between mb-2">
-                                    <div class="font-semibold text-white">Email ${index + 1}</div>
-                                    <div class="text-xs text-gray-400">${mistake.timestamp}</div>
+                            <div class="border border-gray-600 rounded-lg p-3 sm:p-4 bg-gray-700 hover:bg-gray-650 transition-colors duration-200">
+                                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 sm:mb-3">
+                                    <div class="font-semibold text-white text-sm sm:text-base mb-1 sm:mb-0">Email ${index + 1}</div>
+                                    <div class="text-xs text-gray-400">${new Date(mistake.timestamp).toLocaleString()}</div>
                                 </div>
                                 
-                                <div class="text-sm text-gray-300 mb-2">
-                                    <strong>From:</strong> ${mistake.emailSender}<br>
-                                    <strong>Subject:</strong> ${mistake.emailSubject}
+                                <div class="text-xs sm:text-sm text-gray-300 mb-2 sm:mb-3 space-y-1">
+                                    <div class="flex flex-col sm:flex-row">
+                                        <strong class="text-gray-200 mr-2">From:</strong> 
+                                        <span class="break-all">${mistake.emailSender}</span>
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row">
+                                        <strong class="text-gray-200 mr-2">Subject:</strong> 
+                                        <span class="break-words">${mistake.emailSubject}</span>
+                                    </div>
                                 </div>
                                 
-                                <div class="bg-red-900/50 border border-red-600 rounded p-3 mb-2">
-                                    <div class="text-red-300 font-medium">Your Action: ${mistake.playerAction}</div>
-                                    <div class="text-red-400 text-sm">This email was ${mistake.isSuspicious ? 'suspicious' : 'legitimate'}</div>
+                                <div class="bg-red-900/50 border border-red-600 rounded-lg p-2 sm:p-3 mb-2">
+                                    <div class="text-red-300 font-medium text-xs sm:text-sm">Your Action: ${mistake.playerAction}</div>
+                                    <div class="text-red-400 text-xs">This email was ${mistake.isSuspicious ? 'suspicious' : 'legitimate'}</div>
                                 </div>
                                 
-                                <div class="text-xs text-gray-400">
+                                <div class="text-xs text-gray-400 leading-relaxed">
                                     ${mistake.reasoning || 'Review the email characteristics and learn to identify similar patterns in the future.'}
                                 </div>
                             </div>
@@ -730,10 +765,11 @@ export class EmailSessionSummary {
                     </div>
                 `}
                 
-                <div class="text-center mt-6">
+                <div class="text-center mt-4 sm:mt-6 pt-4 border-t border-gray-600">
                     <button onclick="this.closest('.fixed').remove()" 
-                            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors border border-blue-500 cursor-pointer">
-                        Close Review
+                            class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-200 border border-blue-500 cursor-pointer touch-manipulation min-h-[44px] flex items-center justify-center gap-2">
+                        <i class="bi bi-check-lg"></i>
+                        <span class="text-sm sm:text-base">Close Review</span>
                     </button>
                 </div>
             </div>
