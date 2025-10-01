@@ -20,7 +20,7 @@ export class LevelCompletionDialogue extends BaseDialogue {
                 text: "These skills are essential in today's digital landscape where misinformation can influence elections, spread conspiracy theories, and undermine public trust."
             },
             {
-                text: "You've earned performance-based XP in Information Literacy and unlocked the 'Fact-Checker' badge. Your XP reward reflects your accuracy in distinguishing real from fake news!"
+                text: "You've earned performance-based XP in Information Literacy. Your XP reward reflects your accuracy in distinguishing real from fake news!"
             },
             {
                 text: "Remember: Always verify before you share, cross-reference multiple sources, and question information that seems designed to provoke strong emotions."
