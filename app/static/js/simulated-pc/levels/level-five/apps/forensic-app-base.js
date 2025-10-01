@@ -249,14 +249,14 @@ export class ForensicAppBase extends WindowBase {
 
     createEvidencePanel() {
         return `
-            <div class="forensic-evidence-panel bg-gray-700 p-4 rounded mb-4">
-                <h3 class="text-lg font-semibold mb-2 text-green-400">Evidence Status</h3>
-                <div id="evidence-status-${this.id}" class="grid grid-cols-2 gap-4">
-                    <div class="text-sm">
+            <div class="forensic-evidence-panel bg-gray-700 p-3 sm:p-4 rounded mb-4">
+                <h3 class="text-base sm:text-lg lg:text-xl font-semibold mb-2 text-green-400">Evidence Status</h3>
+                <div id="evidence-status-${this.id}" class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+                    <div class="text-sm sm:text-base">
                         <span class="text-gray-300">Integrity:</span>
                         <span class="text-green-400 ml-2" id="integrity-status-${this.id}">Verified</span>
                     </div>
-                    <div class="text-sm">
+                    <div class="text-sm sm:text-base">
                         <span class="text-gray-300">Chain of Custody:</span>
                         <span class="text-green-400 ml-2" id="custody-status-${this.id}">Maintained</span>
                     </div>
@@ -267,15 +267,15 @@ export class ForensicAppBase extends WindowBase {
 
     createComplianceIndicator() {
         return `
-            <div class="forensic-compliance bg-gray-700 p-3 rounded mb-4">
-                <h4 class="text-md font-semibold mb-2 text-yellow-400">Compliance Status</h4>
-                <div class="flex space-x-4 text-sm">
+            <div class="forensic-compliance bg-gray-700 p-3 sm:p-4 rounded mb-4">
+                <h4 class="text-sm sm:text-base lg:text-lg font-semibold mb-2 text-yellow-400">Compliance Status</h4>
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 text-sm sm:text-base">
                     <div class="flex items-center">
-                        <i class="bi bi-shield-check text-green-400 mr-1"></i>
+                        <i class="bi bi-shield-check text-green-400 mr-2"></i>
                         <span>NIST SP 800-86</span>
                     </div>
                     <div class="flex items-center">
-                        <i class="bi bi-shield-check text-green-400 mr-1"></i>
+                        <i class="bi bi-shield-check text-green-400 mr-2"></i>
                         <span>ISO/IEC 27037:2012</span>
                     </div>
                 </div>
@@ -285,12 +285,12 @@ export class ForensicAppBase extends WindowBase {
 
     createChainOfCustodyTracker() {
         return `
-            <div class="forensic-custody bg-gray-700 p-3 rounded mb-4">
-                <h4 class="text-md font-semibold mb-2 text-blue-400">Chain of Custody</h4>
-                <div id="custody-log-${this.id}" class="text-sm text-gray-300 max-h-32 overflow-y-auto">
-                    <div class="flex justify-between border-b border-gray-600 py-1">
+            <div class="forensic-custody bg-gray-700 p-3 sm:p-4 rounded mb-4">
+                <h4 class="text-sm sm:text-base lg:text-lg font-semibold mb-2 text-blue-400">Chain of Custody</h4>
+                <div id="custody-log-${this.id}" class="text-xs sm:text-sm text-gray-300 max-h-32 sm:max-h-40 overflow-y-auto">
+                    <div class="flex flex-col sm:flex-row sm:justify-between border-b border-gray-600 py-2">
                         <span>Evidence acquired</span>
-                        <span class="text-green-400">${new Date().toLocaleTimeString()}</span>
+                        <span class="text-green-400 mt-1 sm:mt-0">${new Date().toLocaleTimeString()}</span>
                     </div>
                 </div>
             </div>
@@ -299,15 +299,15 @@ export class ForensicAppBase extends WindowBase {
 
     createPhaseIndicator() {
         return `
-            <div class="forensic-phase bg-gray-700 p-3 rounded mb-4">
-                <h4 class="text-md font-semibold mb-2 text-purple-400">Investigation Phase</h4>
-                <div class="flex space-x-2">
-                    <div class="phase-indicator ${this.forensicPhase >= 1 ? 'bg-green-600' : 'bg-gray-600'} w-4 h-4 rounded"></div>
-                    <div class="phase-indicator ${this.forensicPhase >= 2 ? 'bg-green-600' : 'bg-gray-600'} w-4 h-4 rounded"></div>
-                    <div class="phase-indicator ${this.forensicPhase >= 3 ? 'bg-green-600' : 'bg-gray-600'} w-4 h-4 rounded"></div>
-                    <div class="phase-indicator ${this.forensicPhase >= 4 ? 'bg-green-600' : 'bg-gray-600'} w-4 h-4 rounded"></div>
+            <div class="forensic-phase bg-gray-700 p-3 sm:p-4 rounded mb-4">
+                <h4 class="text-sm sm:text-base lg:text-lg font-semibold mb-2 text-purple-400">Investigation Phase</h4>
+                <div class="flex space-x-2 sm:space-x-3">
+                    <div class="phase-indicator ${this.forensicPhase >= 1 ? 'bg-green-600' : 'bg-gray-600'} w-4 h-4 sm:w-5 sm:h-5 rounded"></div>
+                    <div class="phase-indicator ${this.forensicPhase >= 2 ? 'bg-green-600' : 'bg-gray-600'} w-4 h-4 sm:w-5 sm:h-5 rounded"></div>
+                    <div class="phase-indicator ${this.forensicPhase >= 3 ? 'bg-green-600' : 'bg-gray-600'} w-4 h-4 sm:w-5 sm:h-5 rounded"></div>
+                    <div class="phase-indicator ${this.forensicPhase >= 4 ? 'bg-green-600' : 'bg-gray-600'} w-4 h-4 sm:w-5 sm:h-5 rounded"></div>
                 </div>
-                <div class="text-sm text-gray-300 mt-2">Phase ${this.forensicPhase}: ${this.getPhaseDescription()}</div>
+                <div class="text-xs sm:text-sm text-gray-300 mt-2">Phase ${this.forensicPhase}: ${this.getPhaseDescription()}</div>
             </div>
         `;
     }
