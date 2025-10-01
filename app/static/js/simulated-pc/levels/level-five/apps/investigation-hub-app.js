@@ -26,8 +26,8 @@ export class InvestigationHubApp extends ForensicAppBase {
                 <div class="p-3 sm:p-4 bg-gray-800 border-b border-gray-700">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                         <div class="mb-2 sm:mb-0">
-                            <h2 class="text-lg sm:text-xl lg:text-2xl font-bold text-green-400">Investigation Command Center</h2>
-                            <p class="text-xs sm:text-sm text-gray-400">Digital Forensics Case: The Hunt for The Null</p>
+                            <h2 class="text-lg sm:text-xl lg:text-2xl font-bold text-green-400">Digital Detective Hub</h2>
+                            <p class="text-xs sm:text-sm text-gray-400">Mission: Unmask "The Null" - Find Real Name, Email & Phone</p>
                         </div>
                         <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                             <div class="text-xs sm:text-sm">
@@ -62,54 +62,58 @@ export class InvestigationHubApp extends ForensicAppBase {
                         <div id="briefing-panel" class="w-full lg:w-1/3 bg-gray-800 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto">
                             <h3 class="hidden lg:block text-base sm:text-lg lg:text-xl font-semibold mb-3 text-blue-300">Mission Briefing</h3>
                         
-                        <!-- Case Summary -->
-                        <div class="mb-4 p-3 bg-red-900/30 border border-red-600 rounded-lg">
-                            <h4 class="text-sm font-semibold text-red-300 mb-2">
-                                <i class="bi bi-exclamation-triangle mr-2"></i>
-                                CRITICAL PRIORITY
+                        <!-- Simple Mission -->
+                        <div class="mb-4 p-3 bg-blue-900/30 border border-blue-600 rounded-lg">
+                            <h4 class="text-sm font-semibold text-blue-300 mb-2">
+                                <i class="bi bi-target mr-2"></i>
+                                YOUR MISSION
                             </h4>
-                            <p class="text-xs sm:text-sm text-red-200 break-words">
-                                Identify the cyber criminal known as "The Null" through forensic analysis of seized digital evidence.
+                            <p class="text-xs sm:text-sm text-blue-200 break-words">
+                                Find 3 pieces of identity information about "The Null": Real Name, Email Address, and Phone Number.
                             </p>
                         </div>
 
-                        <!-- Success Criteria -->
-                        <div class="mb-4 p-3 bg-blue-900/30 border border-blue-600 rounded-lg">
-                            <h4 class="text-sm font-semibold text-blue-300 mb-2">Success Criteria</h4>
-                            <ul class="text-xs sm:text-sm text-blue-200 space-y-1">
+                        <!-- What You Need to Find -->
+                        <div class="mb-4 p-3 bg-green-900/30 border border-green-600 rounded-lg">
+                            <h4 class="text-sm font-semibold text-green-300 mb-2">What You Need to Find</h4>
+                            <ul class="text-xs sm:text-sm text-green-200 space-y-1">
                                 <li class="flex items-start space-x-2">
-                                    <i class="bi bi-check-circle text-green-400 mt-0.5 flex-shrink-0"></i>
-                                    <span class="break-words">Maintain evidence integrity (ISO/IEC 27037)</span>
+                                    <i class="bi bi-person text-yellow-400 mt-0.5 flex-shrink-0"></i>
+                                    <span class="break-words">Real Name: ? (Hidden in laptop files)</span>
                                 </li>
                                 <li class="flex items-start space-x-2">
-                                    <i class="bi bi-check-circle text-green-400 mt-0.5 flex-shrink-0"></i>
-                                    <span class="break-words">Follow NIST SP 800-86 methodology</span>
+                                    <i class="bi bi-envelope text-yellow-400 mt-0.5 flex-shrink-0"></i>
+                                    <span class="break-words">Email Address: ? (In memory dump)</span>
                                 </li>
                                 <li class="flex items-start space-x-2">
-                                    <i class="bi bi-check-circle text-green-400 mt-0.5 flex-shrink-0"></i>
-                                    <span class="break-words">Conclusively identify The Null</span>
+                                    <i class="bi bi-phone text-yellow-400 mt-0.5 flex-shrink-0"></i>
+                                    <span class="break-words">Phone Number: ? (In network logs)</span>
                                 </li>
                                 <li class="flex items-start space-x-2">
-                                    <i class="bi bi-check-circle text-green-400 mt-0.5 flex-shrink-0"></i>
-                                    <span class="break-words">Generate compliant forensic report</span>
+                                    <i class="bi bi-trophy text-yellow-400 mt-0.5 flex-shrink-0"></i>
+                                    <span class="break-words">Find all 3 → Submit Report → WIN!</span>
                                 </li>
                             </ul>
                         </div>
 
-                        <!-- Standards Compliance -->
-                        <div class="p-3 bg-green-900/30 border border-green-600 rounded-lg">
-                            <h4 class="text-sm font-semibold text-green-300 mb-2">
-                                <i class="bi bi-shield-check mr-2"></i>
-                                Compliance Status
+                        <!-- Simple Instructions -->
+                        <div class="p-3 bg-purple-900/30 border border-purple-600 rounded-lg">
+                            <h4 class="text-sm font-semibold text-purple-300 mb-2">
+                                <i class="bi bi-lightbulb mr-2"></i>
+                                How to Win
                             </h4>
                             <div class="space-y-1 text-xs">
                                 <div class="flex items-center space-x-2">
-                                    <i class="bi bi-check-circle text-green-400"></i>
-                                    <span class="text-green-200">NIST SP 800-86</span>
+                                    <i class="bi bi-1-circle text-purple-400"></i>
+                                    <span class="text-purple-200">Open Evidence Viewer → Examine devices</span>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <i class="bi bi-check-circle text-green-400"></i>
-                                    <span class="text-green-200">ISO/IEC 27037:2012</span>
+                                    <i class="bi bi-2-circle text-purple-400"></i>
+                                    <span class="text-purple-200">Find identity clues → Drag to Report</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="bi bi-3-circle text-purple-400"></i>
+                                    <span class="text-purple-200">All 3 found → Submit → Victory!</span>
                                 </div>
                             </div>
                         </div>
@@ -169,18 +173,14 @@ export class InvestigationHubApp extends ForensicAppBase {
                         </div>
 
                         <!-- Quick Actions -->
-                        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
+                        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                             <button id="analyze-evidence-btn" class="p-4 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-center min-h-[60px] touch-manipulation">
                                 <i class="bi bi-search text-xl mb-2 block"></i>
-                                <span class="text-sm sm:text-base">Analyze Evidence</span>
+                                <span class="text-sm sm:text-base">Find Identity Clues</span>
                             </button>
-                            <button id="view-progress-btn" class="p-4 bg-green-600 hover:bg-green-700 rounded-lg transition-colors text-center min-h-[60px] touch-manipulation">
-                                <i class="bi bi-graph-up text-xl mb-2 block"></i>
-                                <span class="text-sm sm:text-base">View Progress</span>
-                            </button>
-                            <button id="build-report-btn" class="p-4 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors text-center disabled:bg-gray-600 min-h-[60px] touch-manipulation" disabled>
+                            <button id="build-report-btn" class="p-4 bg-green-600 hover:bg-green-700 rounded-lg transition-colors text-center min-h-[60px] touch-manipulation">
                                 <i class="bi bi-file-earmark-text text-xl mb-2 block"></i>
-                                <span class="text-sm sm:text-base">Build Report</span>
+                                <span class="text-sm sm:text-base">Submit Report</span>
                             </button>
                             </div>
                         </div>
@@ -214,11 +214,9 @@ export class InvestigationHubApp extends ForensicAppBase {
     bindEvents() {
         // Quick action buttons
         const analyzeBtn = document.getElementById('analyze-evidence-btn');
-        const progressBtn = document.getElementById('view-progress-btn');
         const reportBtn = document.getElementById('build-report-btn');
 
         analyzeBtn?.addEventListener('click', () => this.openEvidenceViewer());
-        progressBtn?.addEventListener('click', () => this.showDetailedProgress());
         reportBtn?.addEventListener('click', () => this.openReportBuilder());
 
         // Tab switching (mobile/tablet)
@@ -241,39 +239,39 @@ export class InvestigationHubApp extends ForensicAppBase {
         this.objectives = [
             {
                 id: 'obj_1',
-                title: 'Establish Chain of Custody',
-                description: 'Verify evidence integrity and document proper forensic handling per ISO/IEC 27037:2012',
-                points: 100,
-                priority: 'high',
-                status: 'pending',
-                steps: ['Verify evidence hashes', 'Document custody trail', 'Ensure integrity']
-            },
-            {
-                id: 'obj_2',
-                title: 'Analyze Digital Evidence',
-                description: 'Systematically examine all evidence sources following NIST SP 800-86 methodology',
+                title: 'Find Real Name',
+                description: 'Search laptop files and browser data for The Null\'s real identity',
                 points: 200,
                 priority: 'critical',
                 status: 'pending',
-                steps: ['Examine disk image', 'Analyze memory dump', 'Review network logs']
+                steps: ['Check browser autofill', 'Search personal files', 'Look in documents']
+            },
+            {
+                id: 'obj_2', 
+                title: 'Find Email Address',
+                description: 'Extract email address from memory dump or communications',
+                points: 200,
+                priority: 'critical',
+                status: 'pending',
+                steps: ['Analyze memory dump', 'Check email clients', 'Search process memory']
             },
             {
                 id: 'obj_3',
-                title: 'Extract Identity Clues',
-                description: 'Discover and document evidence pointing to The Null\'s real identity',
+                title: 'Find Phone Number',
+                description: 'Locate phone number in network logs or contact data',
                 points: 200,
-                priority: 'critical', 
+                priority: 'critical',
                 status: 'pending',
-                steps: ['Find personal information', 'Extract contact details', 'Correlate identity markers']
+                steps: ['Check network traffic', 'Search contact lists', 'Find in communications']
             },
             {
                 id: 'obj_4',
-                title: 'Build Forensic Report',
-                description: 'Create comprehensive report documenting findings and conclusions',
-                points: 150,
-                priority: 'medium',
+                title: 'Submit Final Report',
+                description: 'Add all identity evidence to forensic report and submit',
+                points: 50,
+                priority: 'high',
                 status: 'pending',
-                steps: ['Organize evidence', 'Document methodology', 'Present conclusions']
+                steps: ['Drag clues to report', 'Verify all 3 pieces', 'Submit for victory']
             }
         ];
 
