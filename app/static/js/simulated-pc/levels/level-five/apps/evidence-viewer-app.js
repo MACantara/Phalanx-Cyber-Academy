@@ -532,6 +532,137 @@ export class EvidenceViewerApp extends ForensicAppBase {
             tabEvidence?.classList.add('bg-gray-700', 'text-gray-300');
         }
     }
+
+    /**
+     * Generate analysis findings based on evidence type and data
+     * @param {Object} evidence - Evidence object containing type and data
+     * @returns {Array} Array of analysis findings
+     */
+    generateFindings(evidence) {
+        if (!evidence || !evidence.evidence_data) {
+            return ['No detailed analysis data available'];
+        }
+
+        const findings = [];
+        
+        try {
+            // Generate findings based on evidence type
+            switch (evidence.type) {
+                case 'browser_autofill':
+                    if (evidence.evidence_data.autofill_name) {
+                        findings.push(`Personal name identified: ${evidence.evidence_data.autofill_name}`);
+                    }
+                    if (evidence.evidence_data.autofill_address) {
+                        findings.push(`Address information: ${evidence.evidence_data.autofill_address}`);
+                    }
+                    if (evidence.evidence_data.browser) {
+                        findings.push(`Browser type: ${evidence.evidence_data.browser}`);
+                    }
+                    if (evidence.evidence_data.last_modified) {
+                        findings.push(`Last modification: ${evidence.evidence_data.last_modified}`);
+                    }
+                    break;
+
+                case 'process_memory':
+                case 'email_headers':
+                    if (evidence.evidence_data.email_address) {
+                        findings.push(`Email address extracted: ${evidence.evidence_data.email_address}`);
+                    }
+                    if (evidence.evidence_data.email_provider) {
+                        findings.push(`Email provider: ${evidence.evidence_data.email_provider}`);
+                    }
+                    if (evidence.evidence_data.last_login || evidence.evidence_data.timestamp) {
+                        findings.push(`Last activity: ${evidence.evidence_data.last_login || evidence.evidence_data.timestamp}`);
+                    }
+                    break;
+
+                case 'network_traffic':
+                case 'voip_logs':
+                    if (evidence.evidence_data.phone_number || evidence.evidence_data.caller_id) {
+                        findings.push(`Phone number identified: ${evidence.evidence_data.phone_number || evidence.evidence_data.caller_id}`);
+                    }
+                    if (evidence.evidence_data.destination_ip) {
+                        findings.push(`Communication endpoint: ${evidence.evidence_data.destination_ip}`);
+                    }
+                    if (evidence.evidence_data.call_duration) {
+                        findings.push(`Call duration: ${evidence.evidence_data.call_duration}`);
+                    }
+                    break;
+
+                case 'system_logs':
+                    if (evidence.evidence_data.attack_start) {
+                        findings.push(`Attack initiated: ${evidence.evidence_data.attack_start}`);
+                    }
+                    if (evidence.evidence_data.key_events) {
+                        findings.push(`Timeline of events documented with ${evidence.evidence_data.key_events.length} key activities`);
+                    }
+                    break;
+
+                case 'malware_analysis':
+                    if (evidence.evidence_data.malware_name) {
+                        findings.push(`Malware identified: ${evidence.evidence_data.malware_name}`);
+                    }
+                    if (evidence.evidence_data.author_signature) {
+                        findings.push(`Author signature found: ${evidence.evidence_data.author_signature}`);
+                    }
+                    if (evidence.evidence_data.encryption) {
+                        findings.push(`Encryption method: ${evidence.evidence_data.encryption}`);
+                    }
+                    break;
+
+                case 'browser_cookies':
+                case 'keychain_data':
+                case 'social_profiles':
+                    if (evidence.evidence_data.account_name || evidence.evidence_data.profile_name) {
+                        findings.push(`Account name: ${evidence.evidence_data.account_name || evidence.evidence_data.profile_name}`);
+                    }
+                    if (evidence.evidence_data.service || evidence.evidence_data.platform) {
+                        findings.push(`Service/Platform: ${evidence.evidence_data.service || evidence.evidence_data.platform}`);
+                    }
+                    break;
+
+                case 'pgp_keys':
+                case 'source_code':
+                    if (evidence.evidence_data.user_id || evidence.evidence_data.author) {
+                        findings.push(`Author information: ${evidence.evidence_data.user_id || evidence.evidence_data.author}`);
+                    }
+                    if (evidence.evidence_data.key_algorithm || evidence.evidence_data.algorithm) {
+                        findings.push(`Technical details: ${evidence.evidence_data.key_algorithm || evidence.evidence_data.algorithm}`);
+                    }
+                    break;
+
+                case 'banking_logs':
+                case 'trading_platform':
+                    if (evidence.evidence_data.account_holder || evidence.evidence_data.trading_email) {
+                        findings.push(`Account holder: ${evidence.evidence_data.account_holder || evidence.evidence_data.trading_email}`);
+                    }
+                    if (evidence.evidence_data.bank || evidence.evidence_data.platform) {
+                        findings.push(`Financial institution: ${evidence.evidence_data.bank || evidence.evidence_data.platform}`);
+                    }
+                    break;
+
+                default:
+                    // Generic analysis for unknown types
+                    Object.entries(evidence.evidence_data).forEach(([key, value]) => {
+                        if (typeof value === 'string' && value.length > 0) {
+                            findings.push(`${key.replace(/_/g, ' ').toUpperCase()}: ${value}`);
+                        }
+                    });
+                    break;
+            }
+
+            // Add generic metadata if available
+            if (evidence.difficulty) {
+                findings.push(`Analysis complexity: ${evidence.difficulty.toUpperCase()}`);
+            }
+
+            return findings.length > 0 ? findings : ['Technical analysis completed - see key evidence for details'];
+
+        } catch (error) {
+            console.error('Error generating findings:', error);
+            return ['Analysis data processed - technical details available in evidence summary'];
+        }
+    }
 }
 
 export default EvidenceViewerApp;
