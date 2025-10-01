@@ -6,31 +6,26 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
         this.messages = [
             {
                 text: "Welcome to your final challenge. A cybercriminal known as 'The Null' has been conducting sophisticated attacks worldwide. Your mission: identify their real identity through digital forensics.",
-                example: "CASE FILE #FOR-2024-0314\nSuspect: 'The Null' (Unknown Identity)\nCrimes: Data breaches, ransomware attacks\nEvidence: Laptop, memory dump, network logs\nStatus: Investigation Active"
+                example: "CASE FILE #FOR-2024-0314\nSuspect: 'The Null' (Unknown Identity)\nEvidence: Laptop, memory dump, network logs"
             },
             {
-                text: "🎯 YOUR CLEAR OBJECTIVES:\n\n1️⃣ Maintain Chain of Custody - Ensure evidence integrity\n2️⃣ Analyze Evidence - Find identity clues in digital artifacts\n3️⃣ Extract Identity Information - Real name, email, phone\n4️⃣ Build Complete Report - Document findings for prosecution",
-                example: "Success Criteria:\n✓ Chain of custody maintained\n✓ Real name identified\n✓ Email address found\n✓ Phone number extracted\n✓ Report submitted with 100% accuracy"
+                text: "🎯 YOUR CLEAR OBJECTIVES:\n\n1️⃣ Maintain Chain of Custody - Ensure evidence integrity\n2️⃣ Analyze Evidence - Find identity clues in digital artifacts\n3️⃣ Extract Identity Information - Real name, email, phone\n4️⃣ Build Complete Report - Document findings for prosecution"
             },
             {
-                text: "🛠️ YOUR FORENSIC TOOLKIT (3 Simple Apps):\n\n📁 Evidence Viewer - Examine digital artifacts step-by-step\n📊 Investigation Hub - Track your progress and objectives\n📋 Forensic Report - Build your final case documentation",
-                example: "App Functions:\nEvidence Viewer → Analyze laptop files, memory, network\nInvestigation Hub → Monitor objectives completion\nForensic Report → Drag evidence into report sections"
+                text: "🛠️ YOUR FORENSIC TOOLKIT (3 Simple Apps):\n\n📁 Evidence Viewer - Examine digital artifacts step-by-step\n📊 Investigation Hub - Track your progress and objectives\n📋 Forensic Report - Build your final case documentation"
             },
             {
                 text: "🎯 CLEAR SUCCESS PATH:\n\nStep 1: Start with Evidence Viewer to examine artifacts\nStep 2: Use Investigation Hub to track your progress\nStep 3: Compile findings in Forensic Report\nStep 4: Submit report when identity is confirmed",
-                example: "Workflow Example:\n1. Open Evidence Viewer → Find 'Alex Morrison' in browser\n2. Check Investigation Hub → See 25% complete\n3. Drag evidence to Forensic Report → Build case\n4. Submit when all sections complete"
+                example: "Workflow: Evidence Viewer → Investigation Hub → Forensic Report → Submit"
             },
             {
-                text: "🔬 FORENSIC STANDARDS (You'll be guided):\n\n✅ NIST SP 800-86 - Digital investigation procedures\n✅ ISO/IEC 27037:2012 - Evidence handling guidelines\n\nDon't worry - the apps will guide you through proper procedures!",
-                example: "Standards Compliance:\nNIST SP 800-86: Data collection, examination, analysis\nISO/IEC 27037:2012: Evidence identification, collection, acquisition\nChain of Custody: Documented at every step"
+                text: "🔬 FORENSIC STANDARDS (You'll be guided):\n\n✅ NIST SP 800-86 - Digital investigation procedures\n✅ ISO/IEC 27037:2012 - Evidence handling guidelines\n\nDon't worry - the apps will guide you through proper procedures!"
             },
             {
-                text: "🏆 WHAT SUCCESS LOOKS LIKE:\n\n• Find The Null's real name: Alex Morrison\n• Extract email: a.morrison@securemail.com\n• Discover phone: +1-555-0142\n• Build complete forensic report\n• Earn 'Digital Detective' certification",
-                example: "Target Evidence:\nLaptop → Real Name: 'Alex Morrison'\nMemory → Email: 'a.morrison@securemail.com'\nNetwork → Phone: '+1-555-0142'\nReport → All evidence compiled & submitted"
+                text: "🏆 WHAT SUCCESS LOOKS LIKE:\n\n• Find The Null's real name: Alex Morrison\n• Extract email: a.morrison@securemail.com\n• Discover phone: +1-555-0142\n• Build complete forensic report\n• Earn 'Digital Detective' certification"
             },
             {
-                text: "🚀 GETTING STARTED:\n\nWhen this briefing ends, three forensic apps will launch automatically. Start with the Evidence Viewer app - it will guide you through examining digital artifacts step by step.",
-                example: "Launch Sequence:\n1. Evidence Viewer opens (start here)\n2. Investigation Hub opens (track progress)\n3. Forensic Report opens (compile findings)\n4. Follow guided workflow to success!"
+                text: "🚀 GETTING STARTED:\n\nWhen this briefing ends, three forensic apps will launch automatically. Start with the Evidence Viewer app - it will guide you through examining digital artifacts step by step."
             },
             {
                 text: "Ready to solve your first major digital forensics case?"
