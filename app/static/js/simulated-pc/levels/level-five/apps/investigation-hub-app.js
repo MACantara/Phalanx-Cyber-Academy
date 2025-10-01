@@ -43,10 +43,10 @@ export class InvestigationHubApp extends ForensicAppBase {
                 </div>
 
                 <!-- Main Dashboard -->
-                <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+                <div class="flex-1 flex flex-col lg:flex-row min-h-0">
                     <!-- Mission Briefing Panel -->
-                    <div class="w-full lg:w-1/3 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto">
-                        <h3 class="text-base sm:text-lg font-semibold mb-3 text-blue-300">Mission Briefing</h3>
+                    <div class="w-full lg:w-1/3 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto max-h-[50vh] lg:max-h-full">
+                        <h3 class="text-base sm:text-lg lg:text-xl font-semibold mb-3 text-blue-300">Mission Briefing</h3>
                         
                         <!-- Case Summary -->
                         <div class="mb-4 p-3 bg-red-900/30 border border-red-600 rounded-lg">
@@ -102,22 +102,22 @@ export class InvestigationHubApp extends ForensicAppBase {
                     </div>
 
                     <!-- Objectives Panel -->
-                    <div class="flex-1 p-3 sm:p-4 overflow-y-auto">
+                    <div class="flex-1 p-3 sm:p-4 overflow-y-auto min-h-0">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                            <h3 class="text-base sm:text-lg font-semibold text-blue-300 mb-2 sm:mb-0">Investigation Objectives</h3>
-                            <div class="text-xs sm:text-sm text-gray-400">
+                            <h3 class="text-base sm:text-lg lg:text-xl font-semibold text-blue-300 mb-2 sm:mb-0">Investigation Objectives</h3>
+                            <div class="text-xs sm:text-sm lg:text-base text-gray-400">
                                 <span id="completed-count">0</span> of <span id="total-count">4</span> completed
                             </div>
                         </div>
 
                         <!-- Objectives List -->
-                        <div id="objectives-list" class="space-y-3 sm:space-y-4">
+                        <div id="objectives-list" class="space-y-3 sm:space-y-4 mb-6">
                             <!-- Objectives will be populated here -->
                         </div>
 
                         <!-- Progress Visualization -->
                         <div class="mt-6 p-4 bg-gray-800 rounded-lg">
-                            <h4 class="text-sm sm:text-base font-semibold mb-3 text-yellow-300">Investigation Progress</h4>
+                            <h4 class="text-sm sm:text-base lg:text-lg font-semibold mb-3 text-yellow-300">Investigation Progress</h4>
                             <div class="space-y-3">
                                 <!-- Overall Progress -->
                                 <div>
@@ -155,18 +155,18 @@ export class InvestigationHubApp extends ForensicAppBase {
                         </div>
 
                         <!-- Quick Actions -->
-                        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                            <button id="analyze-evidence-btn" class="p-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-center">
-                                <i class="bi bi-search text-lg mb-1 block"></i>
-                                <span class="text-xs sm:text-sm">Analyze Evidence</span>
+                        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
+                            <button id="analyze-evidence-btn" class="p-4 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-center min-h-[60px] touch-manipulation">
+                                <i class="bi bi-search text-xl mb-2 block"></i>
+                                <span class="text-sm sm:text-base">Analyze Evidence</span>
                             </button>
-                            <button id="view-progress-btn" class="p-3 bg-green-600 hover:bg-green-700 rounded-lg transition-colors text-center">
-                                <i class="bi bi-graph-up text-lg mb-1 block"></i>
-                                <span class="text-xs sm:text-sm">View Progress</span>
+                            <button id="view-progress-btn" class="p-4 bg-green-600 hover:bg-green-700 rounded-lg transition-colors text-center min-h-[60px] touch-manipulation">
+                                <i class="bi bi-graph-up text-xl mb-2 block"></i>
+                                <span class="text-sm sm:text-base">View Progress</span>
                             </button>
-                            <button id="build-report-btn" class="p-3 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors text-center disabled:bg-gray-600" disabled>
-                                <i class="bi bi-file-earmark-text text-lg mb-1 block"></i>
-                                <span class="text-xs sm:text-sm">Build Report</span>
+                            <button id="build-report-btn" class="p-4 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors text-center disabled:bg-gray-600 min-h-[60px] touch-manipulation" disabled>
+                                <i class="bi bi-file-earmark-text text-xl mb-2 block"></i>
+                                <span class="text-sm sm:text-base">Build Report</span>
                             </button>
                         </div>
                     </div>
