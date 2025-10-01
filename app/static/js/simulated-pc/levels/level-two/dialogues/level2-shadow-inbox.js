@@ -59,7 +59,7 @@ export class Level2ShadowInboxDialogue extends BaseDialogue {
                 text: "🏆 Scoring System:\nBase XP Award: 100 XP for completing Level 2\nAccuracy Multiplier: Up to 2x bonus for perfect email classification (100%)"
             },
             {
-                text: "Speed Bonus: Additional XP for efficient threat detection\nMaximum Possible: ~200 XP for perfect performance\nEarn the 'Phishing Hunter' badge for 100% accuracy!"
+                text: "Speed Bonus: Additional XP for efficient threat detection\nMaximum Possible: ~200 XP for perfect performance!"
             },
             {
                 text: "🎮 How to Play:\nOpen the Email Client and analyze all 10 emails systematically. Each email contains clues about its authenticity - examine sender details, content, and formatting carefully."

@@ -562,7 +562,7 @@ class Challenge1PageClass extends BasePage {
                 </div>
                 <div class="bg-green-900 border border-green-700 p-2 sm:p-3 rounded-md mb-4 sm:mb-5">
                     <p class="text-green-200 text-xs sm:text-sm m-0">
-                        <i class="bi bi-trophy me-1 sm:me-2"></i>You've earned XP in Information Literacy and unlocked the 'Fact-Checker' badge!
+                        <i class="bi bi-trophy me-1 sm:me-2"></i>You've earned XP in Information Literacy!
                     </p>
                 </div>
                 <button onclick="this.closest('.fixed').remove(); window.challenge1Page?.completeLevelOne?.()" 

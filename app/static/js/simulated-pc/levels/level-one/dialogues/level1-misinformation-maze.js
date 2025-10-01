@@ -48,7 +48,7 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                 text: "🏆 Scoring System:\nBase XP Award: 50 XP for completing the level\nAccuracy Multiplier: Up to 2x bonus for perfect classification (100%)"
             },
             {
-                text: "Speed Bonus: Additional XP for quick, accurate decisions\nMaximum Possible: ~125 XP for perfect performance\nEarn the 'Fact-Checker' badge for 100% accuracy!"
+                text: "Speed Bonus: Additional XP for quick, accurate decisions\nMaximum Possible: ~125 XP for perfect performance!"
             },
             {
                 text: "💡 Pro Tips for All 10 Articles:\n• Take time to read carefully - rushing through the 10 articles leads to mistakes\n• Check multiple indicators: source domain, author credentials, writing style"
