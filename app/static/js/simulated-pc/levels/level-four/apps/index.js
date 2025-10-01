@@ -65,7 +65,7 @@ export async function loadCTFFlags() {
         // Return fallback flag structure
         return {
             ctf_flags: {
-                total_flags: 7,
+                total_flags: 3,
                 flags: {},
                 metadata: {
                     error: 'Failed to load flags configuration'

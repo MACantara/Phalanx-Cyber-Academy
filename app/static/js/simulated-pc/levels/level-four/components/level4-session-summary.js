@@ -23,8 +23,8 @@ export class Level4SessionSummary extends BaseModalComponent {
         const defaultData = {
             startTime: Date.now() - (30 * 60 * 1000), // Default to 30 minutes ago
             endTime: Date.now(),
-            flagsFound: 7,
-            totalFlags: 7,
+            flagsFound: 3,
+            totalFlags: 3,
             completionRate: 100,
             categories: ['Environment Analysis', 'Configuration Review', 'Log Investigation', 'Forensic Analysis'],
             xpEarned: 0, // Will be calculated dynamically or from backend

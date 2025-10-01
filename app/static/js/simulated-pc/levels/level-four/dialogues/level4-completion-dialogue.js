@@ -35,7 +35,7 @@ export class Level4CompletionDialogue extends BaseDialogue {
 
     generateCompletionStats() {
         const stats = {
-            flagsFound: 7,
+            flagsFound: 3,
             duration: 'approximately 30 minutes',
             categories: ['Environment Analysis', 'Configuration Review', 'Log Investigation', 'Forensic Analysis'],
             xpEarned: 0  // Will be calculated dynamically based on performance

@@ -7,7 +7,7 @@ export class HintsCommand extends BaseCommand {
             description: 'Show hints for CTF flags',
             usage: 'hints [flag_number]',
             options: [
-                { flag: 'flag_number', description: 'Specific flag number to get hints for (1-7)' },
+                { flag: 'flag_number', description: 'Specific flag number to get hints for (1-3)' },
                 { flag: '--all', description: 'Show hints for all flags' },
                 { flag: '--help', description: 'Display this help and exit' }
             ]
@@ -38,10 +38,10 @@ export class HintsCommand extends BaseCommand {
                 const flagNumber = args[0].toUpperCase();
                 if (!flagNumber.startsWith('FLAG-')) {
                     const num = parseInt(flagNumber);
-                    if (num >= 1 && num <= 7) {
+                    if (num >= 1 && num <= 3) {
                         this.showFlagHints(`FLAG-${num}`, flagsConfig);
                     } else {
-                        this.addOutput('Error: Flag number must be between 1 and 7', 'error');
+                        this.addOutput('Error: Flag number must be between 1 and 3', 'error');
                     }
                 } else {
                     this.showFlagHints(flagNumber, flagsConfig);

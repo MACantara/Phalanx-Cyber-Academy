@@ -16,7 +16,7 @@ export class TerminalApp extends WindowBase {
             <div class="h-full bg-black text-green-400 font-mono text-xs sm:text-sm p-2 sm:p-3 flex flex-col" id="terminal-container">
                 <div class="flex-1 overflow-y-auto mb-2 sm:mb-3 space-y-1 overflow-x-hidden" id="terminal-output">
                     <div class="text-green-400">Welcome to The White Hat Test - Responsible Disclosure CTF</div>
-                    <div class="text-yellow-400">Your mission: Find 7 hidden flags and complete a responsible disclosure report</div>
+                    <div class="text-yellow-400">Your mission: Find 3 hidden flags and complete a responsible disclosure report</div>
                     <div class="text-gray-400 leading-relaxed">Type 'help' for available commands | Type 'submit-flag --challenges' to see available challenges</div>
                     <div class="text-blue-400">💡 Use 'submit-flag WHT{flag-value}' to submit captured flags for verification</div>
                     <div></div>
