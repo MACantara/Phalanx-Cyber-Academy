@@ -389,16 +389,39 @@ export class InvestigationHubApp extends ForensicAppBase {
         
         switch (eventType) {
             case 'evidence_analyzed':
-                this.markObjectiveProgress('obj_2', 50);
+                this.markObjectiveProgress('obj_1', 33);
+                this.markObjectiveProgress('obj_2', 33);
+                this.markObjectiveProgress('obj_3', 33);
                 break;
             case 'clue_discovered':
-                this.markObjectiveProgress('obj_3', 67);
+                // Complete objectives based on clue type
+                if (details.clue_type === 'identity') {
+                    this.completeObjective('obj_1');
+                } else if (details.clue_type === 'contact') {
+                    // Check if it's email or phone based on clue content
+                    if (details.clue && details.clue.toLowerCase().includes('email')) {
+                        this.completeObjective('obj_2');
+                    } else if (details.clue && details.clue.toLowerCase().includes('phone')) {
+                        this.completeObjective('obj_3');
+                    } else {
+                        // Fallback: complete next available objective
+                        if (!this.completedObjectives.has('obj_2')) {
+                            this.completeObjective('obj_2');
+                        } else if (!this.completedObjectives.has('obj_3')) {
+                            this.completeObjective('obj_3');
+                        }
+                    }
+                }
                 break;
             case 'analysis_complete':
+                // Ensure all identity clues objectives are completed
+                this.completeObjective('obj_1');
                 this.completeObjective('obj_2');
                 this.completeObjective('obj_3');
+                this.showNotification('🎉 Evidence analysis complete! All identity clues found. You can now build the forensic report.', 'success', 5000);
                 break;
             case 'report_generated':
+            case 'report_submitted':
                 this.completeObjective('obj_4');
                 break;
         }
@@ -464,11 +487,15 @@ export class InvestigationHubApp extends ForensicAppBase {
     }
 
     openReportBuilder() {
-        if (this.completedObjectives.size >= 3) {
+        // Check if evidence analysis is complete (stored in localStorage)
+        const analysisComplete = localStorage.getItem('level5_evidence_analysis_complete');
+        
+        if (analysisComplete === 'true' || this.completedObjectives.size >= 2) {
             this.emitForensicEvent('open_app', { appId: 'forensic-report' });
-            this.showNotification('Opening Report Builder...', 'info');
+            this.showNotification('Opening Forensic Report Builder...', 'info');
         } else {
-            this.showNotification('Complete evidence analysis before building report.', 'warning');
+            const completed = this.completedObjectives.size;
+            this.showNotification(`Complete evidence analysis first. Progress: ${completed}/3 identity clues found.`, 'warning');
         }
     }
 
