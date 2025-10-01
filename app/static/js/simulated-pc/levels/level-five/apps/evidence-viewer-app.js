@@ -383,7 +383,7 @@ export class EvidenceViewerApp extends ForensicAppBase {
 
     proceedToNextStep() {
         if (this.discoveredClues.size >= 3) {
-            this.showNotification('All identity clues discovered! Ready to build forensic report.', 'success');
+            this.showNotification('🎉 All identity clues found! Next: 1) Check Investigation Hub for progress 2) Add evidence to Forensic Report sections', 'success', 6000);
             this.emitForensicEvent('analysis_complete', { 
                 clues: Array.from(this.discoveredClues),
                 identity: 'Alex Morrison'
