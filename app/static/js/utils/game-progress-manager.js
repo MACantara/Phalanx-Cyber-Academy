@@ -203,32 +203,16 @@ class GameProgressManager {
             
             console.log(`[GameProgressManager] Completing session: ${sessionName}, Score: ${score}, Time: ${timeSpent}s`);
             
-            // End session
+            // End session (this will automatically award XP via backend with 'session_completion' reason)
             const sessionResult = await this.sessionManager.endSession(score, additionalData);
             
-            // Award session XP
-            let xpResult = null;
-            try {
-                xpResult = await this.xpCalculator.awardSessionXP(
-                    sessionName,
-                    score,
-                    timeSpent,
-                    null, // no level_id for non-level sessions
-                    sessionId,
-                    'session_completion'
-                );
-            } catch (xpError) {
-                console.warn('[GameProgressManager] Session XP awarding failed:', xpError);
-                // Use basic XP calculation for non-level sessions
-                const baseXP = 50;
-                const scoreMultiplier = score ? Math.max(0.8, score / 100) : 1.0;
-                const estimatedXP = Math.floor(baseXP * scoreMultiplier);
-                
-                xpResult = {
-                    xp_awarded: estimatedXP,
-                    error: xpError.message
-                };
-            }
+            // Extract XP result from session end response
+            // Session.end_session() already awards XP, so we don't need to call awardSessionXP() again
+            const xpResult = {
+                xp_awarded: sessionResult.xp_awarded || 0,
+                calculation_details: sessionResult.xp_calculation || {},
+                new_total: sessionResult.new_total_xp
+            };
             
             this.startTime = null;
             
