@@ -12,6 +12,7 @@ import { FindCommand } from '../terminal-commands/find-command.js';
 import { GrepCommand } from '../terminal-commands/grep-command.js';
 import { HintsCommand } from '../terminal-commands/hints-command.js';
 import { SubmitFlagCommand } from '../terminal-commands/submit-flag-command.js';
+import { SudoCommand } from '../terminal-commands/sudo-command.js';
 
 export class CommandRegistry {
     constructor(processor) {
@@ -29,8 +30,9 @@ export class CommandRegistry {
             'find': new FindCommand(this.processor),
             'grep': new GrepCommand(this.processor),
             
-            // User information
+            // User information and privileges
             'whoami': new WhoamiCommand(this.processor),
+            'sudo': new SudoCommand(this.processor),
             
             // Terminal utilities
             'clear': new ClearCommand(this.processor),
