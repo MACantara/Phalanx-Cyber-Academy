@@ -42,11 +42,25 @@ export class InvestigationHubApp extends ForensicAppBase {
                     </div>
                 </div>
 
-                <!-- Main Dashboard -->
-                <div class="flex-1 flex flex-col lg:flex-row min-h-0">
-                    <!-- Mission Briefing Panel -->
-                    <div class="w-full lg:w-1/3 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto max-h-[50vh] lg:max-h-full">
-                        <h3 class="text-base sm:text-lg lg:text-xl font-semibold mb-3 text-blue-300">Mission Briefing</h3>
+                <!-- Tab Navigation (Mobile) / Split Layout (Desktop) -->
+                <div class="flex-1 flex flex-col min-h-0">
+                    <!-- Tab Buttons (visible on mobile/tablet only) -->
+                    <div class="lg:hidden flex border-b border-gray-700 bg-gray-800">
+                        <button id="briefing-tab" class="flex-1 px-4 py-3 text-sm font-medium text-center border-b-2 border-blue-500 text-blue-400 bg-gray-750">
+                            <i class="bi bi-clipboard-data mr-2"></i>
+                            Mission Briefing
+                        </button>
+                        <button id="objectives-tab" class="flex-1 px-4 py-3 text-sm font-medium text-center border-b-2 border-transparent text-gray-400 hover:text-gray-300">
+                            <i class="bi bi-list-task mr-2"></i>
+                            Objectives
+                        </button>
+                    </div>
+
+                    <!-- Content Area -->
+                    <div class="flex-1 flex min-h-0">
+                        <!-- Mission Briefing Panel -->
+                        <div id="briefing-panel" class="w-full lg:w-1/3 bg-gray-800 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto">
+                            <h3 class="hidden lg:block text-base sm:text-lg lg:text-xl font-semibold mb-3 text-blue-300">Mission Briefing</h3>
                         
                         <!-- Case Summary -->
                         <div class="mb-4 p-3 bg-red-900/30 border border-red-600 rounded-lg">
@@ -99,16 +113,16 @@ export class InvestigationHubApp extends ForensicAppBase {
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Objectives Panel -->
-                    <div class="flex-1 p-3 sm:p-4 overflow-y-auto min-h-0">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                            <h3 class="text-base sm:text-lg lg:text-xl font-semibold text-blue-300 mb-2 sm:mb-0">Investigation Objectives</h3>
-                            <div class="text-xs sm:text-sm lg:text-base text-gray-400">
-                                <span id="completed-count">0</span> of <span id="total-count">4</span> completed
-                            </div>
                         </div>
+
+                        <!-- Objectives Panel -->
+                        <div id="objectives-panel" class="w-full lg:flex-1 bg-gray-900 p-3 sm:p-4 overflow-y-auto min-h-0 hidden lg:block">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                                <h3 class="hidden lg:block text-base sm:text-lg lg:text-xl font-semibold text-blue-300 mb-2 sm:mb-0">Investigation Objectives</h3>
+                                <div class="text-xs sm:text-sm lg:text-base text-gray-400">
+                                    <span id="completed-count">0</span> of <span id="total-count">4</span> completed
+                                </div>
+                            </div>
 
                         <!-- Objectives List -->
                         <div id="objectives-list" class="space-y-3 sm:space-y-4 mb-6">
@@ -168,6 +182,7 @@ export class InvestigationHubApp extends ForensicAppBase {
                                 <i class="bi bi-file-earmark-text text-xl mb-2 block"></i>
                                 <span class="text-sm sm:text-base">Build Report</span>
                             </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -205,6 +220,13 @@ export class InvestigationHubApp extends ForensicAppBase {
         analyzeBtn?.addEventListener('click', () => this.openEvidenceViewer());
         progressBtn?.addEventListener('click', () => this.showDetailedProgress());
         reportBtn?.addEventListener('click', () => this.openReportBuilder());
+
+        // Tab switching (mobile/tablet)
+        const briefingTab = document.getElementById('briefing-tab');
+        const objectivesTab = document.getElementById('objectives-tab');
+        
+        briefingTab?.addEventListener('click', () => this.switchToTab('briefing'));
+        objectivesTab?.addEventListener('click', () => this.switchToTab('objectives'));
 
         // Objective interactions
         document.addEventListener('click', (e) => {
@@ -458,6 +480,39 @@ export class InvestigationHubApp extends ForensicAppBase {
         const percentage = Math.round((completed / total) * 100);
         
         this.showNotification(`Investigation Progress: ${completed}/${total} objectives (${percentage}%) - Score: ${this.currentScore}/${this.maxScore}`, 'info', 4000);
+    }
+
+    switchToTab(tabName) {
+        const briefingTab = document.getElementById('briefing-tab');
+        const objectivesTab = document.getElementById('objectives-tab');
+        const briefingPanel = document.getElementById('briefing-panel');
+        const objectivesPanel = document.getElementById('objectives-panel');
+
+        if (tabName === 'briefing') {
+            // Activate briefing tab
+            briefingTab?.classList.add('border-blue-500', 'text-blue-400', 'bg-gray-750');
+            briefingTab?.classList.remove('border-transparent', 'text-gray-400');
+            
+            // Deactivate objectives tab
+            objectivesTab?.classList.remove('border-blue-500', 'text-blue-400', 'bg-gray-750');
+            objectivesTab?.classList.add('border-transparent', 'text-gray-400');
+            
+            // Show briefing panel, hide objectives panel
+            briefingPanel?.classList.remove('hidden');
+            objectivesPanel?.classList.add('hidden');
+        } else if (tabName === 'objectives') {
+            // Activate objectives tab
+            objectivesTab?.classList.add('border-blue-500', 'text-blue-400', 'bg-gray-750');
+            objectivesTab?.classList.remove('border-transparent', 'text-gray-400');
+            
+            // Deactivate briefing tab
+            briefingTab?.classList.remove('border-blue-500', 'text-blue-400', 'bg-gray-750');
+            briefingTab?.classList.add('border-transparent', 'text-gray-400');
+            
+            // Show objectives panel, hide briefing panel
+            objectivesPanel?.classList.remove('hidden');
+            briefingPanel?.classList.add('hidden');
+        }
     }
 
     showObjectiveDetails(objectiveId) {
