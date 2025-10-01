@@ -225,8 +225,6 @@ export class TabCompletion {
             case 'echo':
                 // Echo doesn't need specific completion beyond what user types
                 return null;
-            case 'uname':
-                return this.completeUnameArguments(currentPart, beforeCursor, afterCursor);
             case 'ls':
                 return this.completeLsArguments(parts, currentPart, beforeCursor, afterCursor);
             case 'submit-flag':
@@ -260,30 +258,6 @@ export class TabCompletion {
                 newText: beforeCompletion + commonPrefix + afterCursor,
                 newCursorPosition: beforeCompletion.length + commonPrefix.length,
                 suggestions: matches
-            };
-        }
-        
-        return {
-            newText: beforeCursor + afterCursor,
-            newCursorPosition: beforeCursor.length,
-            suggestions: matches
-        };
-    }
-
-    completeUnameArguments(currentPart, beforeCursor, afterCursor) {
-        const unameOptions = ['-a', '--all'];
-        const matches = unameOptions.filter(opt => opt.startsWith(currentPart));
-        
-        if (matches.length === 0) {
-            return null;
-        }
-        
-        if (matches.length === 1) {
-            const match = matches[0];
-            const beforeCompletion = beforeCursor.substring(0, beforeCursor.length - currentPart.length);
-            return {
-                newText: beforeCompletion + match + ' ' + afterCursor,
-                newCursorPosition: beforeCompletion.length + match.length + 1
             };
         }
         
