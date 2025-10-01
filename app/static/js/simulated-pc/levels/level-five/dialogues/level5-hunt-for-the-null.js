@@ -43,24 +43,46 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                 console.log('Launching Level 5 Streamlined Digital Forensics...');
                 
                 try {
-                    // Launch all three core forensic apps
+                    // Launch Evidence Viewer first (primary analysis tool)
                     await window.applicationLauncher.launchEvidenceViewer();
                     console.log('Evidence Viewer launched successfully');
                     
-                    await window.applicationLauncher.launchInvestigationHub();
-                    console.log('Investigation Hub launched successfully');
-                    
-                    await window.applicationLauncher.launchForensicReport();
-                    console.log('Forensic Report launched successfully');
-                    
-                    // Show clear guidance
+                    // Show initial guidance
                     if (window.toastManager) {
                         window.toastManager.showToast(
-                            '🔍 FORENSIC APPS READY: Start with Evidence Viewer to examine digital artifacts. Follow the guided workflow!',
+                            '🔍 START HERE: Use Evidence Viewer to analyze digital artifacts and extract identity clues',
                             'success',
-                            5000
+                            4000
                         );
                     }
+                    
+                    // Launch Investigation Hub after 2 seconds
+                    setTimeout(async () => {
+                        await window.applicationLauncher.launchInvestigationHub();
+                        console.log('Investigation Hub launched successfully');
+                        
+                        if (window.toastManager) {
+                            window.toastManager.showToast(
+                                '📊 Investigation Hub opened - Track your forensic progress here',
+                                'info',
+                                3000
+                            );
+                        }
+                    }, 2000);
+                    
+                    // Launch Forensic Report after 4 seconds
+                    setTimeout(async () => {
+                        await window.applicationLauncher.launchForensicReport();
+                        console.log('Forensic Report launched successfully');
+                        
+                        if (window.toastManager) {
+                            window.toastManager.showToast(
+                                '� Forensic Report ready - Add evidence here when you find clues',
+                                'info',
+                                3000
+                            );
+                        }
+                    }, 4000);
                     
                 } catch (error) {
                     console.error('Failed to launch Level 5 forensic applications:', error);
