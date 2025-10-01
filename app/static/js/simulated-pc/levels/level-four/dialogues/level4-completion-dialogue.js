@@ -106,11 +106,11 @@ export class Level4CompletionDialogue extends BaseDialogue {
         // Force return the instructor name with proper fallback
         if (this.desktop?.dialogueManager) {
             const name = this.desktop.dialogueManager.getCharacterName(this.character);
-            return name && name !== 'System' ? name : 'Instructor';
+            return name && name !== 'System' ? name : 'Dr. Cipher';
         }
         
         // Fallback to instructor name
-        return 'Security Instructor';
+        return 'Dr. Cipher';
     }
 
     static shouldAutoStart() {
