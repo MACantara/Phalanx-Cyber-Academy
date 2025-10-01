@@ -3,49 +3,33 @@
  * Centralized loading of all forensic datasets for digital investigation
  */
 
-// Import all Level 5 JSON datasets using import assertions
-import caseBriefingData from './case-briefing.json' with { type: 'json' };
-import diskAnalysisData from './disk-analysis-data.json' with { type: 'json' };
+// Import streamlined Level 5 JSON datasets for core apps
 import evidenceData from './evidence-data.json' with { type: 'json' };
-import investigationObjectivesData from './investigation-objectives.json' with { type: 'json' };
-import memoryForensicsData from './memory-forensics-data.json' with { type: 'json' };
-import networkAnalysisData from './network-analysis-data.json' with { type: 'json' };
-import reportTemplatesData from './report-templates-data.json' with { type: 'json' };
-import timelineData from './timeline-data.json' with { type: 'json' };
+import evidenceViewerData from './evidence-viewer-data.json' with { type: 'json' };
+import investigationHubData from './investigation-hub-data.json' with { type: 'json' };
+import forensicReportData from './forensic-report-data.json' with { type: 'json' };
 
-// Export individual datasets
-export { caseBriefingData };
-export { diskAnalysisData };
+// Export individual datasets for core apps
 export { evidenceData };
-export { investigationObjectivesData };
-export { memoryForensicsData };
-export { networkAnalysisData };
-export { reportTemplatesData };
-export { timelineData };
+export { evidenceViewerData };
+export { investigationHubData };
+export { forensicReportData };
 
-// Combined Level 5 data object for bulk operations
+// Combined Level 5 data object for bulk operations (streamlined)
 export const level5Data = {
-    case_briefing: caseBriefingData,
-    disk_analysis: diskAnalysisData,
     evidence: evidenceData,
-    investigation_objectives: investigationObjectivesData,
-    memory_forensics: memoryForensicsData,
-    network_analysis: networkAnalysisData,
-    report_templates: reportTemplatesData,
-    timeline: timelineData
+    evidence_viewer: evidenceViewerData,
+    investigation_hub: investigationHubData,
+    forensic_report: forensicReportData
 };
 
-// Data validation and status checking
+// Data validation and status checking for streamlined datasets
 export function validateDataIntegrity() {
     const datasets = {
-        case_briefing: caseBriefingData,
-        disk_analysis: diskAnalysisData,
         evidence: evidenceData,
-        investigation_objectives: investigationObjectivesData,
-        memory_forensics: memoryForensicsData,
-        network_analysis: networkAnalysisData,
-        report_templates: reportTemplatesData,
-        timeline: timelineData
+        evidence_viewer: evidenceViewerData,
+        investigation_hub: investigationHubData,
+        forensic_report: forensicReportData
     };
 
     const status = {};
@@ -65,17 +49,13 @@ export function validateDataIntegrity() {
     };
 }
 
-// Get specific dataset by name
+// Get specific dataset by name (streamlined)
 export function getDataset(name) {
     const datasets = {
-        'case_briefing': caseBriefingData,
-        'disk_analysis': diskAnalysisData,
         'evidence': evidenceData,
-        'investigation_objectives': investigationObjectivesData,
-        'memory_forensics': memoryForensicsData,
-        'network_analysis': networkAnalysisData,
-        'report_templates': reportTemplatesData,
-        'timeline': timelineData
+        'evidence_viewer': evidenceViewerData,
+        'investigation_hub': investigationHubData,
+        'forensic_report': forensicReportData
     };
     
     return datasets[name] || null;
