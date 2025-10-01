@@ -91,11 +91,33 @@ export class Level4CompletionDialogue extends BaseDialogue {
         return 'View Assessment Summary';
     }
 
+    getCharacterAvatar() {
+        // Force return the instructor avatar with proper fallback
+        if (this.desktop?.dialogueManager) {
+            const avatar = this.desktop.dialogueManager.getCharacterAvatar(this.character);
+            return avatar && !avatar.includes('default.png') ? avatar : '/static/images/avatars/Cipher_Neutral_Talking.gif';
+        }
+        
+        // Fallback to instructor avatar
+        return '/static/images/avatars/Cipher_Neutral_Talking.gif';
+    }
+
+    getCharacterName() {
+        // Force return the instructor name with proper fallback
+        if (this.desktop?.dialogueManager) {
+            const name = this.desktop.dialogueManager.getCharacterName(this.character);
+            return name && name !== 'System' ? name : 'Instructor';
+        }
+        
+        // Fallback to instructor name
+        return 'Security Instructor';
+    }
+
     static shouldAutoStart() {
         return false; // This dialogue should be manually triggered by challenge tracker
     }
 
-    static startLevel4CompletionDialogue(desktop, challengeTracker) {
+    static startLevel4CompletionDialogue(desktop = null, challengeTracker = null) {
         const dialogue = new Level4CompletionDialogue(desktop, challengeTracker);
         dialogue.start();
         return dialogue;
