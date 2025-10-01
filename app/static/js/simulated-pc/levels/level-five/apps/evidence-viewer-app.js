@@ -434,6 +434,17 @@ export class EvidenceViewerApp extends ForensicAppBase {
 
         if (this.discoveredClues.size >= 3) {
             nextStepBtn.disabled = false;
+            // Update button text to be clearer
+            const nextStepBtnSpan = nextStepBtn?.querySelector('span');
+            if (nextStepBtnSpan) {
+                nextStepBtnSpan.textContent = 'Open Report Builder';
+            }
+        } else {
+            // Update button text to show progress
+            const nextStepBtnSpan = nextStepBtn?.querySelector('span');
+            if (nextStepBtnSpan) {
+                nextStepBtnSpan.textContent = `Need ${3 - this.discoveredClues.size} More Clues`;
+            }
         }
     }
 
@@ -510,6 +521,9 @@ export class EvidenceViewerApp extends ForensicAppBase {
         if (cluesCount) {
             cluesCount.textContent = this.discoveredClues.size;
         }
+        
+        // Also update action buttons when clues count changes
+        this.updateActionButtons();
     }
 
     proceedToNextStep() {
@@ -529,7 +543,7 @@ export class EvidenceViewerApp extends ForensicAppBase {
             };
             localStorage.setItem('level5_evidence_analysis_data', JSON.stringify(analysisData));
             
-            this.showNotification(`🎉 Evidence Analysis Complete! ${this.targetIdentity?.code_name} identity clues extracted. Investigation Hub updated - you can now open Forensic Report Builder!`, 'success', 6000);
+            this.showNotification(`🎉 Evidence Analysis Complete! Opening Forensic Report Builder...`, 'success', 4000);
             this.emitForensicEvent('analysis_complete', { 
                 clues: Array.from(this.discoveredClues),
                 target_identity: this.targetIdentity,
@@ -537,6 +551,29 @@ export class EvidenceViewerApp extends ForensicAppBase {
             });
             
             console.log(`[EvidenceViewer] Analysis complete for ${this.targetIdentity?.code_name}. Data stored for forensic report.`);
+            
+            // Automatically open the Forensic Report app after analysis completion
+            setTimeout(() => {
+                this.openForensicReportApp();
+            }, 2000);
+        }
+    }
+
+    async openForensicReportApp() {
+        try {
+            // Try to open the forensic report app using the application launcher
+            if (window.applicationLauncher) {
+                console.log('[EvidenceViewer] Opening Forensic Report Builder...');
+                await window.applicationLauncher.launchForensicReport();
+                this.showNotification('📝 Forensic Report Builder opened! Drag extracted evidence into report sections.', 'info', 5000);
+            } else {
+                // Fallback: emit event to request app opening
+                this.emitForensicEvent('open_app', { appId: 'forensic-report' });
+                this.showNotification('📝 Requesting Forensic Report Builder... If it doesn\'t open, try launching it manually from the Investigation Hub.', 'info', 5000);
+            }
+        } catch (error) {
+            console.error('[EvidenceViewer] Failed to open Forensic Report app:', error);
+            this.showNotification('⚠️ Could not auto-open Forensic Report Builder. Please open it manually from the Investigation Hub or desktop.', 'warning', 6000);
         }
     }
 
