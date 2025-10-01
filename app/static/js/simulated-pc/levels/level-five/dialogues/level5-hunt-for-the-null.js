@@ -11,13 +11,13 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                 text: "🎯 ONE CLEAR GOAL: Discover The Null's Real Identity\n\n✅ Real Name: ?\n✅ Email Address: ?\n✅ Phone Number: ?\n\nThat's it. Find these 3 pieces of information and you win."
             },
             {
-                text: "📱 YOUR EVIDENCE (What you'll search through):\n\n💻 Laptop Hard Drive - Contains browser data and personal files\n🧠 Memory Dump - Shows what was running when seized\n🌐 Network Logs - Shows communications and data transfers"
+                text: "📱 YOUR EVIDENCE (What you'll search through):\n\n💻 Laptop Hard Drive - Contains browser data and personal files\n🧠 Memory Dump - Shows what was running when seized\n🌐 Network Logs - Shows communications and data transfers\n\n⚡ NEW REQUIREMENT: You must investigate ALL 5 evidence pieces before building your report!"
             },
             {
-                text: "🔍 HOW IT WORKS (Super Simple):\n\n1️⃣ Click Evidence Viewer → Examine each device\n2️⃣ Look for personal information (name, email, phone)\n3️⃣ Copy important clues to Forensic Report\n4️⃣ Submit when you have all 3 identity pieces"
+                text: "🔍 HOW IT WORKS (Super Simple):\n\n1️⃣ Evidence Viewer → Investigate ALL 5 pieces of evidence\n2️⃣ Extract clues from each device (laptop, memory, network)\n3️⃣ Forensic Report Builder → Organize your findings\n4️⃣ Submit when you have all identity pieces"
             },
             {
-                text: "🎮 SIMPLE WORKFLOW:\n\n• Start → Evidence Viewer (find clues)\n• Copy clues → Forensic Report (organize findings)\n• All 3 identity pieces found → Submit Report → WIN!\n\nNo complex procedures. Just detective work!"
+                text: "🎮 STREAMLINED WORKFLOW:\n\n• Evidence Viewer: Investigate all 5 evidence pieces\n• Extract clues from each device thoroughly\n• Forensic Report Builder: Drag clues into report sections\n• Submit Report → WIN!\n\nComplete investigation required before report building!"
             },
             {
                 text: "🏆 SUCCESS = Finding These 3 Things:\n\n👤 Real Name: Alex Morrison\n📧 Email: a.morrison@securemail.com\n📞 Phone: +1-555-0142\n\nFind all 3, submit your report, case closed!"
@@ -43,9 +43,9 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                     
                     if (window.toastManager) {
                         window.toastManager.showToast(
-                            '🎯 GOAL: Find name, email & phone. Click Evidence Viewer → Select each device → Look for personal info',
+                            '🎯 GOAL: Investigate ALL 5 evidence pieces → Extract clues → Build forensic report → Find name, email & phone!',
                             'success',
-                            6000
+                            8000
                         );
                     }
                     
@@ -98,7 +98,7 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
                 console.log('[Level5] Forensic Report blocked - evidence analysis not complete');
                 if (window.toastManager) {
                     window.toastManager.showToast(
-                        '🔒 Complete evidence analysis first! Extract 3+ identity clues from Evidence Viewer.',
+                        '🔒 Complete evidence analysis first! Investigate all 5 pieces of evidence in Evidence Viewer.',
                         'warning',
                         5000
                     );
