@@ -160,7 +160,6 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/cat-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/cd-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/clear-command.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/date-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/echo-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/find-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/grep-command.js',
@@ -168,7 +167,6 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/history-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/ls-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/pwd-command.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/uname-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/whoami-command.js',
             
             # Terminal Application (core Level 4 app)
