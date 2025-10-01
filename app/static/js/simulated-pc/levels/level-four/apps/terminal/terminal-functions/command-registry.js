@@ -1,4 +1,4 @@
-// Import all terminal commands from terminal-commands directory
+// Import essential terminal commands for beginner ethical hacking
 import { LsCommand } from '../terminal-commands/ls-command.js';
 import { CdCommand } from '../terminal-commands/cd-command.js';
 import { CatCommand } from '../terminal-commands/cat-command.js';
@@ -8,27 +8,10 @@ import { ClearCommand } from '../terminal-commands/clear-command.js';
 import { HelpCommand } from '../terminal-commands/help-command.js';
 import { HistoryCommand } from '../terminal-commands/history-command.js';
 import { EchoCommand } from '../terminal-commands/echo-command.js';
-import { UnameCommand } from '../terminal-commands/uname-command.js';
 import { FindCommand } from '../terminal-commands/find-command.js';
 import { GrepCommand } from '../terminal-commands/grep-command.js';
-import { HeadCommand } from '../terminal-commands/head-command.js';
-import { TailCommand } from '../terminal-commands/tail-command.js';
 import { HintsCommand } from '../terminal-commands/hints-command.js';
 import { SubmitFlagCommand } from '../terminal-commands/submit-flag-command.js';
-import { PsCommand } from '../terminal-commands/ps-command.js';
-import { EnvCommand } from '../terminal-commands/env-command.js';
-import { IdCommand } from '../terminal-commands/id-command.js';
-import { FileCommand } from '../terminal-commands/file-command.js';
-import { StringsCommand } from '../terminal-commands/strings-command.js';
-import { NetstatCommand } from '../terminal-commands/netstat-command.js';
-import { SsCommand } from '../terminal-commands/ss-command.js';
-import { Base64Command } from '../terminal-commands/base64-command.js';
-import { SudoCommand } from '../terminal-commands/sudo-command.js';
-import { CrontabCommand } from '../terminal-commands/crontab-command.js';
-import { StatCommand } from '../terminal-commands/stat-command.js';
-import { XxdCommand } from '../terminal-commands/xxd-command.js';
-import { ChmodCommand } from '../terminal-commands/chmod-command.js';
-import { SystemctlCommand } from '../terminal-commands/systemctl-command.js';
 
 export class CommandRegistry {
     constructor(processor) {
@@ -45,34 +28,9 @@ export class CommandRegistry {
             'pwd': new PwdCommand(this.processor),
             'find': new FindCommand(this.processor),
             'grep': new GrepCommand(this.processor),
-            'head': new HeadCommand(this.processor),
-            'tail': new TailCommand(this.processor),
             
-            // User and system information
+            // User information
             'whoami': new WhoamiCommand(this.processor),
-            'id': new IdCommand(this.processor),
-            'uname': new UnameCommand(this.processor),
-            'ps': new PsCommand(this.processor),
-            'env': new EnvCommand(this.processor),
-            
-            // File analysis and manipulation
-            'file': new FileCommand(this.processor),
-            'strings': new StringsCommand(this.processor),
-            'stat': new StatCommand(this.processor),
-            'chmod': new ChmodCommand(this.processor),
-            
-            // Network analysis
-            'netstat': new NetstatCommand(this.processor),
-            'ss': new SsCommand(this.processor),
-            
-            // Data processing and encoding
-            'base64': new Base64Command(this.processor),
-            'xxd': new XxdCommand(this.processor),
-            
-            // System administration
-            'sudo': new SudoCommand(this.processor),
-            'crontab': new CrontabCommand(this.processor),
-            'systemctl': new SystemctlCommand(this.processor),
             
             // Terminal utilities
             'clear': new ClearCommand(this.processor),
