@@ -19,7 +19,6 @@ def load_json_data():
         
         # Load streamlined Level 5 JSON datasets for 3 core apps
         datasets = {
-            'evidence': 'evidence-data.json',
             'evidence_viewer': 'evidence-viewer-data.json',
             'investigation_hub': 'investigation-hub-data.json',
             'forensic_report': 'forensic-report-data.json'
