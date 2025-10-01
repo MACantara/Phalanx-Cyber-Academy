@@ -319,6 +319,61 @@ console.log('Session summary:', sessionManager.getSessionSummary());
    const sessionId = getCurrentSessionId(); // Checks all common keys
    ```
 
+## XP History Tracking Consistency
+
+### Important: Single XP Award Per Completion
+
+**The system is designed to award XP only once per completion event** to maintain consistency in XP history tracking.
+
+#### How It Works
+
+When a session is completed (either level or non-level):
+
+1. **Frontend calls** `gameProgressManager.completeLevel()` or `gameProgressManager.completeSession()`
+2. **This calls** `sessionManager.endSession()` which hits `/levels/api/session/end`
+3. **Backend** `Session.end_session()` automatically awards XP with reason `'session_completion'`
+4. **Frontend extracts** XP data from the session end response
+
+**Do NOT call `awardXP()` or `awardSessionXP()` separately** after ending a session, as this would create duplicate XP awards.
+
+#### Correct Usage
+
+```javascript
+// ✅ CORRECT - Single XP award via session end
+const completion = await gameProgressManager.completeLevel(score);
+// XP is automatically awarded by Session.end_session() on backend
+// completion.xp contains the XP data
+
+// ❌ WRONG - Would create duplicate XP awards
+const completion = await gameProgressManager.completeLevel(score);
+await xpCalculator.awardXP(levelId, score, timeSpent); // DON'T DO THIS!
+```
+
+#### XP History Reason Values
+
+All completion events use the **`session_completion`** reason for consistency:
+- Level completions: `session_completion`
+- Blue Team vs Red Team Mode completions: `session_completion`
+- Other session completions: `session_completion`
+
+This provides:
+- **Consistent tracking** - All completion events use the same reason
+- **Simplified analytics** - Easy to query all completion XP awards
+- **No confusion** - Clear distinction between completion XP and other XP sources (bonuses, manual adjustments, etc.)
+
+#### Why This Matters
+
+Before this fix, the system had duplicate XP awards:
+- `Session.end_session()` awarded XP with `session_completion` reason
+- `game-progress-manager` separately called `awardXP()` with `level_completion` reason
+
+This caused:
+- **Double XP** for each completion (users got 2x XP they should)
+- **Inconsistent history** - Same event appeared twice with different reasons
+- **Confused analytics** - Hard to track actual completions
+
+The fix ensures **one XP award per completion** with **consistent `session_completion` reason**.
+
 ## Testing
 
 Test your integration:

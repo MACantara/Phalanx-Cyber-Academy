@@ -561,6 +561,7 @@ def end_session():
             'time_spent': session.time_spent,
             'xp_awarded': session.get_xp_awarded(),
             'xp_calculation': session.get_xp_calculation_details(),
+            'new_total_xp': getattr(session, '_new_total_xp', None),
             'message': 'Session completed successfully'
         })
         
