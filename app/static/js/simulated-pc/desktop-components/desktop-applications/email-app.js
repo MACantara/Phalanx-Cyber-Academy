@@ -135,25 +135,28 @@ export class EmailApp extends WindowBase {
         const spamCount = this.state.getEmailsForFolder(allEmails, 'spam').length;
 
         return `
-            <div class="h-full flex">
-                <div class="w-48 bg-gray-700 border-r border-gray-600 p-3 flex flex-col">
-                    <div class="email-folder px-3 py-2 rounded text-sm font-medium mb-1 cursor-pointer transition-colors duration-200
-                        ${currentFolder === 'inbox' ? 'bg-green-400 text-black' : 'text-gray-300 hover:bg-gray-600'}"
-                        data-folder="inbox">
-                        📧 Inbox (${inboxCount})
-                    </div>
-                    <div class="email-folder px-3 py-2 rounded text-sm font-medium mb-1 cursor-pointer transition-colors duration-200
-                        ${currentFolder === 'spam' ? 'bg-red-400 text-black' : 'text-gray-300 hover:bg-gray-600'}"
-                        data-folder="spam">
-                        🗑️ Spam (${spamCount})
+            <div class="h-full flex flex-col">
+                <!-- Mobile-first folder navigation -->
+                <div class="bg-gray-700 border-b border-gray-600 p-2">
+                    <div class="flex space-x-1">
+                        <div class="email-folder px-3 py-2 rounded text-xs sm:text-sm font-medium cursor-pointer transition-colors duration-200
+                            ${currentFolder === 'inbox' ? 'bg-green-400 text-black' : 'text-gray-300 hover:bg-gray-600'}"
+                            data-folder="inbox">
+                            📧 Inbox (${inboxCount})
+                        </div>
+                        <div class="email-folder px-3 py-2 rounded text-xs sm:text-sm font-medium cursor-pointer transition-colors duration-200
+                            ${currentFolder === 'spam' ? 'bg-red-400 text-black' : 'text-gray-300 hover:bg-gray-600'}"
+                            data-folder="spam">
+                            🗑️ Spam (${spamCount})
+                        </div>
                     </div>
                 </div>
-                <div class="flex-1 flex flex-col">
-                    <div class="flex-1 overflow-y-auto" id="email-list">
-                        ${selectedEmail
-                            ? this.createEmailDetail(selectedEmail, currentFolder)
-                            : emails.map(email => this.createEmailListItem(email)).join('')}
-                    </div>
+                
+                <!-- Email content area -->
+                <div class="flex-1 overflow-y-auto min-h-0" id="email-list" style="max-height: calc(100vh - 95px);">
+                    ${selectedEmail
+                        ? this.createEmailDetail(selectedEmail, currentFolder)
+                        : emails.map(email => this.createEmailListItem(email)).join('')}
                 </div>
             </div>
         `;
@@ -192,15 +195,15 @@ export class EmailApp extends WindowBase {
         const displayDateTime = this.getDateTimeDisplay(email);
 
         return `
-            <div class="email-item p-3 border-b border-gray-600 cursor-pointer hover:bg-gray-700 transition-colors duration-200 flex items-center"
+            <div class="email-item p-3 border-b border-gray-600 cursor-pointer hover:bg-gray-700 transition-colors duration-200 flex items-start"
                  data-email-id="${email.id}">
-                <span class="inline-block w-2 h-2 rounded-full mr-3 ${statusClass}"></span>
-                <div class="flex-1">
-                    <div class="font-medium text-white text-sm flex items-center">
-                        ${email.sender}
+                <span class="inline-block w-2 h-2 rounded-full mr-2 mt-1 flex-shrink-0 ${statusClass}"></span>
+                <div class="flex-1 min-w-0">
+                    <div class="font-medium text-white text-xs sm:text-sm flex items-center flex-wrap">
+                        <span class="truncate">${email.sender}</span>
                         ${statusIndicator}
                     </div>
-                    <div class="text-sm mb-1 ${isRead ? 'text-gray-300 font-normal' : 'text-white font-bold'}">${email.subject}</div>
+                    <div class="text-xs sm:text-sm mb-1 ${isRead ? 'text-gray-300 font-normal' : 'text-white font-bold'} line-clamp-2">${email.subject}</div>
                     <div class="text-gray-400 text-xs">${displayDateTime}</div>
                 </div>
             </div>
@@ -273,12 +276,12 @@ export class EmailApp extends WindowBase {
         const displayTime = email.fullDateTime || this.formatDetailTime(email);
 
         return `
-            <div class="p-6">
-                <!-- Action buttons and status in streamlined header -->
-                <div class="mb-4 flex items-start justify-between">
-                    <div class="flex items-center space-x-2">
-                        <button class="px-2 py-1 bg-gray-600 text-white rounded hover:bg-gray-500 transition-colors text-sm cursor-pointer flex items-center" id="back-btn">
-                            <i class="bi bi-arrow-left mr-1 text-md"></i>Back
+            <div class="p-3 sm:p-6 h-full overflow-y-auto">
+                <!-- Action buttons and status - mobile responsive -->
+                <div class="mb-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                    <div class="flex items-center space-x-2 flex-wrap">
+                        <button class="px-3 py-2 bg-gray-600 text-white rounded hover:bg-gray-500 transition-colors text-xs sm:text-sm cursor-pointer flex items-center" id="back-btn">
+                            <i class="bi bi-arrow-left mr-1"></i>Back
                         </button>
                         ${this.state.securityManager.createActionButtons(email.id, this.state.getCurrentFolder())}
                     </div>
@@ -291,27 +294,27 @@ export class EmailApp extends WindowBase {
                 
                 <!-- Email information -->
                 <div class="mb-4">
-                    <div class="font-medium text-lg text-white">${email.subject}</div>
-                    <div class="bg-gray-700 rounded p-3 mt-3 text-sm">
-                        <div class="grid grid-cols-1 gap-2">
-                            <div class="flex">
-                                <span class="text-gray-400 w-16 flex-shrink-0">From:</span>
+                    <div class="font-medium text-base sm:text-lg text-white mb-3">${email.subject}</div>
+                    <div class="bg-gray-700 rounded p-3 text-xs sm:text-sm">
+                        <div class="space-y-2">
+                            <div class="flex flex-col sm:flex-row">
+                                <span class="text-gray-400 font-medium mb-1 sm:mb-0 sm:w-16 sm:flex-shrink-0">From:</span>
                                 <span class="text-white break-all">${this.formatSenderDetails(email.sender)}</span>
                             </div>
-                            <div class="flex">
-                                <span class="text-gray-400 w-16 flex-shrink-0">To:</span>
-                                <span class="text-white">${email.receiver || 'user@company.com'}</span>
+                            <div class="flex flex-col sm:flex-row">
+                                <span class="text-gray-400 font-medium mb-1 sm:mb-0 sm:w-16 sm:flex-shrink-0">To:</span>
+                                <span class="text-white break-all">${email.receiver || 'user@company.com'}</span>
                             </div>
-                            <div class="flex">
-                                <span class="text-gray-400 w-16 flex-shrink-0">Date:</span>
+                            <div class="flex flex-col sm:flex-row">
+                                <span class="text-gray-400 font-medium mb-1 sm:mb-0 sm:w-16 sm:flex-shrink-0">Date:</span>
                                 <span class="text-white">${email.date || displayTime}</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="bg-gray-800 text-white text-sm p-4 rounded border border-gray-600">
-                    <div class="whitespace-pre-wrap break-words">
+                <div class="bg-gray-800 text-white text-xs sm:text-sm p-3 sm:p-4 rounded border border-gray-600">
+                    <div class="whitespace-pre-wrap break-words leading-relaxed">
 ${this.formatEmailBody(email.body)}
                     </div>
                 </div>

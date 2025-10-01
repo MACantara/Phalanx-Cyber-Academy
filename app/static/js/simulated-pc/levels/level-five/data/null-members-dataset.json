@@ -1,0 +1,413 @@
+{
+  "null_members": [
+    {
+      "id": "member_001",
+      "code_name": "Aberr4ti0n",
+      "real_name": "Amorsolo de la Cruz",
+      "email": "a.delacruz@darkweb.ph",
+      "phone": "+63-917-555-0184",
+      "role": "Aggressive Infiltration Specialist",
+      "nationality": "Filipino",
+      "personality": "Very aggressive and grudgeful hacker who unfortunately graces the net",
+      "evidence_trail": [
+        {
+          "id": "evidence_001_browser",
+          "type": "browser_autofill",
+          "source": "Compromised Browser Data",
+          "title": "Browser Autofill Profile",
+          "description": "Personal information stored in browser autofill settings from compromised system",
+          "difficulty": "easy",
+          "clue_type": "identity",
+          "icon": "bi-person-badge",
+          "finding": "Real name 'Amorsolo de la Cruz' found in browser autofill data",
+          "evidence_data": {
+            "autofill_name": "Amorsolo de la Cruz",
+            "autofill_address": "Makati City, Metro Manila, Philippines 1226",
+            "browser": "Firefox Developer Edition",
+            "last_modified": "2024-03-15 22:45:33"
+          }
+        },
+        {
+          "id": "evidence_001_memory",
+          "type": "process_memory",
+          "source": "RAM Memory Dump",
+          "title": "Email Login Credentials",
+          "description": "Active email session found in process memory during aggressive attack",
+          "difficulty": "medium",
+          "clue_type": "contact",
+          "icon": "bi-envelope",
+          "finding": "Email 'a.delacruz@darkweb.ph' extracted from process memory",
+          "evidence_data": {
+            "email_address": "a.delacruz@darkweb.ph",
+            "email_provider": "DarkWeb Philippines",
+            "last_login": "2024-03-15 23:12:18",
+            "process_id": "4782"
+          }
+        },
+        {
+          "id": "evidence_001_network",
+          "type": "network_traffic",
+          "source": "Network Packet Capture",
+          "title": "Aggressive Attack Communication",
+          "description": "Phone contact data found in vindictive attack communication",
+          "difficulty": "hard",
+          "clue_type": "contact",
+          "icon": "bi-phone",
+          "finding": "Phone number +63-917-555-0184 found in attack coordination data",
+          "evidence_data": {
+            "phone_number": "+63-917-555-0184",
+            "contact_type": "primary_mobile",
+            "transmission_time": "2024-03-15 23:28:45",
+            "destination_ip": "203.177.45.123"
+          }
+        },
+        {
+          "id": "evidence_001_timeline",
+          "type": "system_logs",
+          "source": "System Event Logs",
+          "title": "Aggressive Attack Timeline",
+          "description": "Chronological sequence of vindictive malicious activities",
+          "difficulty": "medium",
+          "clue_type": "technical",
+          "icon": "bi-clock-history",
+          "finding": "Aggressive attack pattern orchestrated by Amorsolo de la Cruz",
+          "evidence_data": {
+            "attack_start": "2024-03-15 22:00:00",
+            "key_events": [
+              "22:00 - Aggressive system breach initiated",
+              "22:45 - Browser data compromised",
+              "23:12 - Email credentials stolen",
+              "23:28 - Vindictive data destruction sequence"
+            ]
+          }
+        },
+        {
+          "id": "evidence_001_malware",
+          "type": "malware_analysis",
+          "source": "Malware Sample",
+          "title": "Vindictive Destruction Tool",
+          "description": "Analysis of aggressive data destruction malware",
+          "difficulty": "hard",
+          "clue_type": "technical",
+          "icon": "bi-bug",
+          "finding": "Vindictive malware with Amorsolo de la Cruz's signature",
+          "evidence_data": {
+            "malware_name": "Aberration Destroyer v1.4",
+            "author_signature": "ADC_Aberr4ti0n_2024",
+            "encryption": "Military-grade AES-256",
+            "persistence_method": "Aggressive rootkit installation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "member_002",
+      "code_name": "Du11ahan",
+      "real_name": "Carrie Ashworth",
+      "email": "c.ashworth@shadownet.uk",
+      "phone": "+44-20-7555-0298",
+      "role": "Meticulous Cyber Operations Specialist",
+      "nationality": "English",
+      "personality": "A meticulous, calculated hacker who plans every move with precision",
+      "evidence_trail": [
+        {
+          "id": "evidence_002_browser",
+          "type": "browser_cookies",
+          "source": "Browser Cookie Store",
+          "title": "Calculated Authentication Cookies",
+          "description": "Meticulously crafted persistent authentication cookies",
+          "difficulty": "easy",
+          "clue_type": "identity",
+          "icon": "bi-person-badge",
+          "finding": "Real name 'Carrie Ashworth' found in authentication cookie",
+          "evidence_data": {
+            "cookie_value": "user=Carrie%20Ashworth&role=operator&precision=maximum",
+            "domain": "shadownet.uk",
+            "expiry": "2024-06-21 11:59:59",
+            "secure": true
+          }
+        },
+        {
+          "id": "evidence_002_email",
+          "type": "email_headers",
+          "source": "Email Metadata",
+          "title": "Calculated Email Communication",
+          "description": "Precisely crafted SMTP headers with operational details",
+          "difficulty": "medium",
+          "clue_type": "contact",
+          "icon": "bi-envelope",
+          "finding": "Email 'c.ashworth@shadownet.uk' found in message headers",
+          "evidence_data": {
+            "from_address": "c.ashworth@shadownet.uk",
+            "x_mailer": "Precision-Mail-Client 4.1",
+            "message_id": "<dullahan2024@shadownet.uk>",
+            "timestamp": "2024-03-16 09:15:42"
+          }
+        },
+        {
+          "id": "evidence_002_voip",
+          "type": "voip_logs",
+          "source": "VoIP Call Records",
+          "title": "Calculated Voice Communications",
+          "description": "Precisely timed encrypted voice call metadata",
+          "difficulty": "hard",
+          "clue_type": "contact",
+          "icon": "bi-phone",
+          "finding": "Phone number +44-20-7555-0298 identified in VoIP call logs",
+          "evidence_data": {
+            "caller_id": "+44-20-7555-0298",
+            "call_duration": "00:23:17",
+            "encryption": "Military-grade SRTP",
+            "call_time": "2024-03-16 14:30:00"
+          }
+        },
+        {
+          "id": "evidence_002_network",
+          "type": "network_forensics",
+          "source": "Network Flow Analysis",
+          "title": "Calculated Network Operations",
+          "description": "Meticulously planned network infiltration patterns",
+          "difficulty": "medium",
+          "clue_type": "technical",
+          "icon": "bi-activity",
+          "finding": "Precise network operations traced to Carrie Ashworth",
+          "evidence_data": {
+            "attack_vector": "Calculated DNS poisoning sequence",
+            "target_networks": ["financial.gov.uk", "MI6.secure"],
+            "data_exfil": "4.7GB over 12 hours with precision timing"
+          }
+        },
+        {
+          "id": "evidence_002_tools",
+          "type": "hacking_tools",
+          "source": "Tool Analysis",
+          "title": "Precision Hacking Toolkit",
+          "description": "Meticulously crafted penetration tools",
+          "difficulty": "hard",
+          "clue_type": "technical",
+          "icon": "bi-tools",
+          "finding": "Precision tools compiled with Carrie Ashworth's signature",
+          "evidence_data": {
+            "tool_name": "Dullahan Precision Kit",
+            "compiler_version": "gcc 12.1 (CA-precision-build)",
+            "compile_time": "2024-03-10 11:30:00",
+            "debug_symbols": "CA_DULLAHAN_2024"
+          }
+        }
+      ]
+    },
+    {
+      "id": "member_003", 
+      "code_name": "Gem1n1",
+      "real_name": "Kaito and Kaori Ishikawa",
+      "email": "gemini.twins@cyberplay.jp",
+      "phone": "+81-90-555-4477",
+      "role": "Twin Challenge-Seeking Cyber Specialists",
+      "nationality": "Japanese",
+      "personality": "Playful twin hackers looking for a challenge, working in perfect synchronization",
+      "evidence_trail": [
+        {
+          "id": "evidence_003_keychain",
+          "type": "keychain_data",
+          "source": "Shared Gaming Keychain",
+          "title": "Twin Gaming Credentials",
+          "description": "Shared credentials for twin gaming and hacking sessions",
+          "difficulty": "easy",
+          "clue_type": "identity", 
+          "icon": "bi-person-badge",
+          "finding": "Real names 'Kaito and Kaori Ishikawa' found in shared keychain",
+          "evidence_data": {
+            "account_name": "Kaito and Kaori Ishikawa",
+            "service": "Gemini Gaming Network",
+            "creation_date": "2023-12-25 00:00:01",
+            "last_modified": "2024-03-17 19:33:22"
+          }
+        },
+        {
+          "id": "evidence_003_pgp",
+          "type": "pgp_keys",
+          "source": "PGP Key Analysis",
+          "title": "Twin Cryptographic Challenge",
+          "description": "Dual-signature PGP key system created by twin hackers",
+          "difficulty": "medium",
+          "clue_type": "contact",
+          "icon": "bi-envelope",
+          "finding": "Email 'gemini.twins@cyberplay.jp' embedded in twin PGP key",
+          "evidence_data": {
+            "key_id": "0xGEM1N1",
+            "user_id": "Gemini Twins <gemini.twins@cyberplay.jp>",
+            "key_creation": "2024-02-14 12:21:12",
+            "key_algorithm": "Dual RSA 4096 (Twin-Sync)"
+          }
+        },
+        {
+          "id": "evidence_003_sms",
+          "type": "sms_backup",
+          "source": "SMS Backup File",
+          "title": "Twin Challenge Messages",
+          "description": "Synchronized SMS backup from twin hacking challenges",
+          "difficulty": "hard",
+          "clue_type": "contact",
+          "icon": "bi-phone",
+          "finding": "Phone number +81-90-555-4477 found in challenge SMS backup",
+          "evidence_data": {
+            "backup_phone": "+81-90-555-4477",
+            "backup_date": "2024-03-17 21:21:21",
+            "encryption": "Gemini-Sync AES-256",
+            "message_count": 2222
+          }
+        },
+        {
+          "id": "evidence_003_crypto",
+          "type": "cryptocurrency",
+          "source": "Blockchain Analysis",
+          "title": "Twin Gaming Cryptocurrency",
+          "description": "Synchronized cryptocurrency transactions from twin challenges",
+          "difficulty": "medium",
+          "clue_type": "technical",
+          "icon": "bi-currency-bitcoin",
+          "finding": "Twin cryptocurrency wallet linked to Kaito and Kaori Ishikawa",
+          "evidence_data": {
+            "wallet_address": "1Gem1n1Tw1ns2024BTC1212",
+            "total_received": "21.12 BTC",
+            "transaction_count": 212,
+            "last_activity": "2024-03-17 12:21:12"
+          }
+        },
+        {
+          "id": "evidence_003_algorithms",
+          "type": "source_code",
+          "source": "Code Repository",
+          "title": "Twin Challenge Algorithm",
+          "description": "Synchronized dual-execution hacking algorithms",
+          "difficulty": "hard",
+          "clue_type": "technical",
+          "icon": "bi-code-slash",
+          "finding": "Twin-authored challenge code by Kaito and Kaori Ishikawa",
+          "evidence_data": {
+            "author": "Gemini Twins <gemini.twins@cyberplay.jp>",
+            "algorithm": "Twin-Sync Challenge Protocol",
+            "commit_hash": "gem1n1121212",
+            "commit_message": "Ultimate twin challenge - Let's play! - K&K"
+          }
+        }
+      ]
+    },
+    {
+      "id": "member_004",
+      "code_name": "O2ymandi4s",
+      "real_name": "Dr. Clarice \"Cipher\" Kim",
+      "email": "dr.cipher@nullvision.net",
+      "phone": "+1-555-NULL",
+      "role": "The Mysterious Leader & Architect of Chaos",
+      "nationality": "Unknown",
+      "personality": "An ambitious, shady mastermind who wants the cyberspace wiped out into a clean slate",
+      "evidence_trail": [
+        {
+          "id": "evidence_004_social",
+          "type": "social_profiles",
+          "source": "Academic Network Cache",
+          "title": "Academic Profile Fragment",
+          "description": "Fragments of academic credentials and identity",
+          "difficulty": "easy",
+          "clue_type": "identity",
+          "icon": "bi-person-badge",
+          "finding": "Real name 'Dr. Clarice \"Cipher\" Kim' found in academic cache",
+          "evidence_data": {
+            "profile_name": "Dr. Clarice \"Cipher\" Kim",
+            "platform": "AcademicShadow",
+            "bio": "Digital Architect of Tomorrow's Null State",
+            "location": "The Void Between Zeros and Ones"
+          }
+        },
+        {
+          "id": "evidence_004_phishing",
+          "type": "phishing_kit",
+          "source": "Master Control Analysis",
+          "title": "Null Vision Command Kit",
+          "description": "Master control system for orchestrating the digital apocalypse",
+          "difficulty": "medium",
+          "clue_type": "contact",
+          "icon": "bi-envelope",
+          "finding": "Email 'dr.cipher@nullvision.net' hardcoded in master control",
+          "evidence_data": {
+            "kit_name": "NullVision Master Control v0.0",
+            "admin_email": "dr.cipher@nullvision.net",
+            "target_domains": ["*.gov", "*.mil", "*.critical"],
+            "success_rate": "99.7%"
+          }
+        },
+        {
+          "id": "evidence_004_burner",
+          "type": "burner_phone",
+          "source": "Shadow Device Registry",
+          "title": "Null Command Phone", 
+          "description": "Encrypted command device for orchestrating global null operations",
+          "difficulty": "hard",
+          "clue_type": "contact",
+          "icon": "bi-phone",
+          "finding": "Phone number +1-555-NULL linked to master command device",
+          "evidence_data": {
+            "registered_number": "+1-555-NULL",
+            "activation_date": "2024-01-01 00:00:00",
+            "payment_method": "Untraceable digital currency",
+            "registration_location": "The Digital Void"
+          }
+        },
+        {
+          "id": "evidence_004_personas",
+          "type": "fake_identities",
+          "source": "Null Identity Matrix",
+          "title": "Reality Manipulation System",
+          "description": "Master system for rewriting digital reality and identity",
+          "difficulty": "medium",
+          "clue_type": "technical",
+          "icon": "bi-masks-theater",
+          "finding": "Reality manipulation system architected by Dr. Clarice Kim",
+          "evidence_data": {
+            "personas_created": 9999,
+            "success_rate": "100.0%",
+            "creator_signature": "CK_O2YMANDI4S_NULL",
+            "last_generation": "2024-03-18 23:59:59"
+          }
+        },
+        {
+          "id": "evidence_004_psychology",
+          "type": "psychological_profiles",
+          "source": "Global Behavioral Analysis",
+          "title": "Humanity Nullification Research",
+          "description": "Comprehensive research on global digital behavior elimination",
+          "difficulty": "hard",
+          "clue_type": "technical",
+          "icon": "bi-brain",
+          "finding": "Global nullification psychology researched by Dr. Clarice Kim",
+          "evidence_data": {
+            "profile_count": 7800000000,
+            "manipulation_success": "99.99%",
+            "researcher": "Dr. Clarice \"Cipher\" Kim",
+            "methodology": "Complete digital reality nullification"
+          }
+        }
+      ]
+    }
+  ],
+  "investigation_metadata": {
+    "case_number": "CF-2024-NULL-002",
+    "case_title": "Operation Null Hunter: The Four Pillars Investigation",
+    "investigation_type": "Digital Forensics - Identity Determination of Core Members",
+    "organization": "The Null - Digital Apocalypse Collective",
+    "member_profiles": {
+      "Aberr4ti0n": "Filipino aggressive hacker with vindictive tendencies",
+      "Du11ahan": "English meticulous operative with calculated precision",
+      "Gem1n1": "Japanese twin hackers seeking challenges and synchronization",
+      "O2ymandi4s": "Mysterious leader architecting digital reality nullification"
+    },
+    "evidence_types": ["browser_data", "memory_analysis", "network_traffic", "system_logs", "malware_analysis", "academic_profiles", "command_systems"],
+    "forensic_standards": ["NIST SP 800-86", "ISO/IEC 27037:2012"],
+    "difficulty_levels": {
+      "easy": "Direct evidence with clear identity markers",
+      "medium": "Requires analysis but evidence is accessible", 
+      "hard": "Complex analysis requiring technical expertise"
+    }
+  }
+}

@@ -1,6 +1,5 @@
 import { BaseDialogue } from '../../../dialogues/base-dialogue.js';
 import { 
-    Challenge1Dialogue, 
     LevelCompletionDialogue 
 } from './index.js';
 
@@ -9,22 +8,59 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "Welcome to Level 1: The Misinformation Maze. In this level, you'll be working to identify fake news and develop critical thinking skills to combat misinformation."
+                text: "🎯 Mission Brief: Level 1 - The Misinformation Maze\nWelcome to your first cybersecurity challenge! As a junior security analyst, you've been assigned to investigate a coordinated disinformation campaign targeting upcoming elections."
             },
             {
-                text: "As a cybersecurity analyst, you'll need to develop sharp analytical skills to distinguish between legitimate news and misleading information."
+                text: "📚 Learning Objectives:\n• Master critical thinking techniques for information verification\n• Identify common misinformation tactics and manipulation strategies"
             },
             {
-                text: "You'll be presented with various news articles from real sources. Your task is to determine which ones are legitimate and which are spreading misinformation."
+                text: "• Develop skills to assess source credibility and author credentials\n• Learn to spot emotional manipulation and bias in content"
             },
             {
-                text: "Remember to check sources, look for author credentials, and watch for emotional manipulation tactics. Misinformation often relies on sensational headlines rather than facts."
+                text: "🔍 Your Mission:\nIntelligence reports indicate that foreign adversaries are spreading false information through fake news websites."
             },
             {
-                text: "Successfully completing this level will earn you performance-based XP in the Information Literacy category. Your XP reward depends on how accurately you distinguish real from fake news!"
+                text: "You'll analyze 10 carefully selected articles: 5 legitimate news pieces from established sources and 5 fabricated articles designed to mislead and manipulate public opinion."
             },
             {
-                text: "Are you ready to start?"
+                text: "🛠️ Detection Techniques:\nSource Analysis: Check domain authority and publication history\nAuthor Verification: Look for real credentials and bylines",
+                example: "Legitimate: 'By Sarah Johnson, Political Reporter, Associated Press'\nSuspicious: 'By Staff Writer' or no author listed"
+            },
+            {
+                text: "Fact Correlation: Cross-reference with reputable news sources\nLanguage Patterns: Watch for sensational headlines and emotional manipulation",
+                example: "Professional: 'Senator Proposes New Healthcare Bill'\nManipulative: 'SHOCKING: Politicians HATE This Simple Healthcare Trick!'"
+            },
+            {
+                text: "⚠️ Warning Signs to Watch For:\n• Suspicious URLs or domain names\n• Missing author information or fake credentials",
+                example: "Suspicious: 'realcnnews.com' (mimicking cnn.com)\nLegitimate: 'reuters.com', 'apnews.com', 'bbc.com'"
+            },
+            {
+                text: "• Extreme emotional language designed to provoke anger\n• Claims without credible sources or evidence\n• Headlines that don't match the article content",
+                example: "Red flags: 'OUTRAGEOUS!', 'They don't want you to know!'\nBalanced: 'Study shows', 'According to officials'"
+            },
+            {
+                text: "🎮 How to Play:\nUse the Web Browser to navigate through all 10 articles. Read each article carefully, analyzing the source, author credentials, and content quality to determine authenticity."
+            },
+            {
+                text: "Click 'Real News' or 'Fake News' based on your assessment. You'll receive immediate feedback and automatically advance to the next article after classification."
+            },
+            {
+                text: "🏆 Scoring System:\nBase XP Award: 50 XP for completing the level\nAccuracy Multiplier: Up to 2x bonus for perfect classification (100%)"
+            },
+            {
+                text: "Speed Bonus: Additional XP for quick, accurate decisions\nMaximum Possible: ~125 XP for perfect performance!"
+            },
+            {
+                text: "💡 Pro Tips for All 10 Articles:\n• Take time to read carefully - rushing through the 10 articles leads to mistakes\n• Check multiple indicators: source domain, author credentials, writing style"
+            },
+            {
+                text: "• Compare article quality between legitimate sources (AP, Reuters, BBC) vs suspicious domains\n• Real news includes verifiable sources and balanced reporting style"
+            },
+            {
+                text: "🚀 Ready for Action?\nThis mission is crucial for national security. You'll evaluate 10 articles that represent real-world examples of both legitimate journalism and sophisticated misinformation."
+            },
+            {
+                text: "Your ability to distinguish between the 5 real and 5 fake articles helps protect democracy itself. Are you ready to enter the Misinformation Maze and prove your analytical skills?"
             }
         ];
     }
@@ -47,10 +83,6 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                     // Navigate directly to the challenge1 page
                     browserApp.navigation.navigateToUrl('https://daily-politico-news.com/breaking-news');
                     
-                    // Wait for page to load, then trigger challenge1 dialogue
-                    setTimeout(() => {
-                        this.triggerChallenge1Dialogue();
-                    }, 1000);
                 }
                 
                 // Mark the challenge as started
@@ -61,17 +93,6 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
         }
     }
 
-    triggerChallenge1Dialogue() {
-        // Ensure no other dialogue is active
-        if (window.currentDialogue) {
-            window.currentDialogue.cleanup();
-        }
-        
-        // Start the challenge1 dialogue
-        const challenge1Dialogue = new Challenge1Dialogue(this.desktop);
-        window.currentDialogue = challenge1Dialogue;
-        challenge1Dialogue.start();
-    }
 
     getFinalButtonText() {
         return 'Start Simulation';
@@ -107,18 +128,6 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
         }
     }
 
-    static async startChallenge1Dialogue(desktop) {
-        if (Challenge1Dialogue.shouldAutoStart()) {
-            // Ensure no other dialogue is active
-            if (window.currentDialogue) {
-                window.currentDialogue.cleanup();
-            }
-            
-            const dialogue = new Challenge1Dialogue(desktop);
-            window.currentDialogue = dialogue;
-            dialogue.start();
-        }
-    }
 
     static async startLevelCompletionDialogue(desktop) {
         if (LevelCompletionDialogue.shouldAutoStart()) {

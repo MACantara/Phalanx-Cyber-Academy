@@ -507,41 +507,41 @@ export class EmailFeedback {
         ];
         
         modal.innerHTML = `
-            <div class="bg-gray-800 rounded border border-gray-600 shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden">
+            <div class="bg-gray-800 rounded border border-gray-600 shadow-2xl w-full max-w-xs sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-2 sm:mx-4 max-h-[90vh] overflow-hidden">
                 <!-- Header -->
-                <div class="bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-red-600 to-pink-600'} px-6 py-4">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="text-3xl">${feedback.result === 'correct' ? '✅' : '❌'}</div>
-                            <div>
-                                <h2 class="text-lg font-bold text-white">${feedback.title}</h2>
-                                <p class="text-sm text-white/90">${feedbackData.emailSubject}</p>
+                <div class="bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-red-600 to-pink-600'} px-4 sm:px-6 py-3 sm:py-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                        <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
+                            <div class="text-2xl sm:text-3xl flex-shrink-0">${feedback.result === 'correct' ? '✅' : '❌'}</div>
+                            <div class="min-w-0">
+                                <h2 class="text-base sm:text-lg font-bold text-white truncate">${feedback.title}</h2>
+                                <p class="text-xs sm:text-sm text-white/90 line-clamp-2">${feedbackData.emailSubject}</p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <div class="text-white font-bold text-lg">${accuracy}%</div>
+                        <div class="flex sm:flex-col items-center sm:text-right gap-2 sm:gap-0">
+                            <div class="text-white font-bold text-base sm:text-lg">${accuracy}%</div>
                             <div class="text-white/80 text-xs">Accuracy</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Content -->
-                <div class="p-6 overflow-y-auto max-h-[60vh]">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="p-4 sm:p-6 overflow-y-auto max-h-[60vh]">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
                         <!-- Left Column -->
-                        <div class="space-y-3">
+                        <div class="space-y-2 sm:space-y-3">
                             <!-- Email Info -->
-                            <div class="bg-gray-700/50 rounded p-3 border border-gray-600/50">
-                                <h3 class="text-sm font-semibold text-gray-300 mb-2 flex items-center">
+                            <div class="bg-gray-700/50 rounded p-2 sm:p-3 border border-gray-600/50">
+                                <h3 class="text-xs sm:text-sm font-semibold text-gray-300 mb-1.5 sm:mb-2 flex items-center">
                                     📧 <span class="ml-1">Email Analysis</span>
                                 </h3>
                                 <div class="space-y-1 text-xs">
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-400">Action:</span>
+                                    <div class="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                                        <span class="text-gray-400 font-medium">Action:</span>
                                         <span class="text-white capitalize">${feedbackData.playerAction}</span>
                                     </div>
-                                    <div class="flex justify-between">
-                                        <span class="text-gray-400">Type:</span>
+                                    <div class="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
+                                        <span class="text-gray-400 font-medium">Type:</span>
                                         <span class="${feedbackData.isSuspicious ? 'text-red-400' : 'text-green-400'} font-medium">
                                             ${feedbackData.isSuspicious ? 'Phishing' : 'Legitimate'}
                                         </span>
@@ -560,16 +560,16 @@ export class EmailFeedback {
                             </div>
 
                             <!-- Session Progress -->
-                            <div class="bg-gray-700/50 rounded p-3 border border-gray-600/50">
-                                <h3 class="text-sm font-semibold text-gray-300 mb-2 flex items-center">
+                            <div class="bg-gray-700/50 rounded p-2 sm:p-3 border border-gray-600/50">
+                                <h3 class="text-xs sm:text-sm font-semibold text-gray-300 mb-1.5 sm:mb-2 flex items-center">
                                     📊 <span class="ml-1">Session Progress</span>
                                 </h3>
                                 <div class="flex justify-between items-center mb-2">
                                     <span class="text-xs text-gray-400">Score:</span>
-                                    <span class="text-sm text-white">${this.sessionScore}/${this.totalActions}</span>
+                                    <span class="text-xs sm:text-sm text-white font-medium">${this.sessionScore}/${this.totalActions}</span>
                                 </div>
-                                <div class="w-full bg-gray-600 rounded-full h-1.5">
-                                    <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-1.5 rounded-full transition-all duration-500" 
+                                <div class="w-full bg-gray-600 rounded-full h-1.5 sm:h-2">
+                                    <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-1.5 sm:h-2 rounded-full transition-all duration-500" 
                                          style="width: ${accuracy}%"></div>
                                 </div>
                             </div>
@@ -586,18 +586,18 @@ export class EmailFeedback {
                         </div>
 
                         <!-- Right Column -->
-                        <div class="space-y-3">
+                        <div class="space-y-2 sm:space-y-3">
                             <!-- Key Insights -->
                             ${insights.length > 0 ? `
-                            <div class="bg-gray-700/50 rounded p-3 border border-gray-600/50">
-                                <h3 class="text-sm font-semibold text-gray-300 mb-2 flex items-center">
+                            <div class="bg-gray-700/50 rounded p-2 sm:p-3 border border-gray-600/50">
+                                <h3 class="text-xs sm:text-sm font-semibold text-gray-300 mb-1.5 sm:mb-2 flex items-center">
                                     🔍 <span class="ml-1">Key Insights</span>
                                 </h3>
-                                <div class="space-y-1 max-h-24 overflow-y-auto">
+                                <div class="space-y-1 max-h-20 sm:max-h-24 overflow-y-auto">
                                     ${insights.slice(0, 4).map(insight => `
                                         <div class="flex items-start space-x-2 text-xs">
                                             <span class="flex-shrink-0">${insight.icon}</span>
-                                            <span class="${insight.color}">${insight.text}</span>
+                                            <span class="${insight.color} leading-tight">${insight.text}</span>
                                         </div>
                                     `).join('')}
                                     ${insights.length > 4 ? `<div class="text-xs text-gray-500 italic">+${insights.length - 4} more insights...</div>` : ''}
@@ -606,15 +606,15 @@ export class EmailFeedback {
                             ` : ''}
 
                             <!-- Security Tips -->
-                            <div class="bg-blue-900/20 rounded p-3 border border-blue-600/30">
-                                <h3 class="text-sm font-semibold text-blue-400 mb-2 flex items-center">
+                            <div class="bg-blue-900/20 rounded p-2 sm:p-3 border border-blue-600/30">
+                                <h3 class="text-xs sm:text-sm font-semibold text-blue-400 mb-1.5 sm:mb-2 flex items-center">
                                     💡 <span class="ml-1">Quick Tips</span>
                                 </h3>
-                                <div class="space-y-1 max-h-24 overflow-y-auto">
+                                <div class="space-y-1 max-h-20 sm:max-h-24 overflow-y-auto">
                                     ${feedback.tips.slice(0, 3).map(tip => `
                                         <div class="flex items-start space-x-2 text-xs">
                                             <span class="text-blue-400 flex-shrink-0">•</span>
-                                            <span class="text-blue-300">${tip}</span>
+                                            <span class="text-blue-300 leading-tight">${tip}</span>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -625,10 +625,10 @@ export class EmailFeedback {
                 </div>
 
                 <!-- Footer -->
-                <div class="px-6 py-4 bg-gray-750 border-t border-gray-600">
+                <div class="px-4 sm:px-6 py-3 sm:py-4 bg-gray-750 border-t border-gray-600">
                     <button onclick="this.closest('.fixed').remove()" 
-                            class="w-full bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-blue-600 to-blue-700'} text-white py-2 px-4 rounded hover:shadow-lg transition-all duration-300 font-medium text-sm cursor-pointer">
-                        Continue Training <i class="bi bi-arrow-right"></i>
+                            class="w-full bg-gradient-to-r ${feedback.result === 'correct' ? 'from-green-600 to-emerald-600' : 'from-blue-600 to-blue-700'} text-white py-2.5 sm:py-2 px-4 rounded hover:shadow-lg active:shadow-md transition-all duration-300 font-medium text-xs sm:text-sm cursor-pointer touch-manipulation">
+                        <span class="hidden sm:inline">Continue Training</span><span class="sm:hidden">Continue</span> <i class="bi bi-arrow-right ml-1"></i>
                     </button>
                 </div>
             </div>

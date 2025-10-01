@@ -4,10 +4,9 @@
  */
 
 import { TerminalApp } from './terminal-app.js';
-import { Level4ChallengeTracker, createLevel4ChallengeTracker } from './challenge-tracker-app.js';
 
-// Export terminal app and challenge tracker
-export { TerminalApp, Level4ChallengeTracker, createLevel4ChallengeTracker };
+// Export terminal app (challenge tracking now integrated into submit-flag command)
+export { TerminalApp };
 
 // Level 4 apps loaded flag
 export const level4AppsLoaded = true;
@@ -66,7 +65,7 @@ export async function loadCTFFlags() {
         // Return fallback flag structure
         return {
             ctf_flags: {
-                total_flags: 7,
+                total_flags: 3,
                 flags: {},
                 metadata: {
                     error: 'Failed to load flags configuration'

@@ -6,54 +6,105 @@
 export const Level5Config = {
     id: 5,
     name: "The Hunt for The Null",
-    description: "Use advanced digital forensics to expose The Null's identity",
+    description: "Follow proper digital forensics procedures to identify a cyber criminal using 3 key pieces of evidence",
     
-    // Level-specific applications
+    // Streamlined core applications (responsive design)
     requiredApps: [
-        'file-manager-app',
-        'terminal-app',
-        'system-logs-app',
-        'network-monitor-app',
-        'browser-app'
+        'evidence-viewer-app',      // Analyze digital evidence with guided steps
+        'investigation-hub-app',    // Central dashboard showing objectives and progress
+        'forensic-report-app'       // Simple report builder with drag-drop evidence
     ],
     
-    // Tutorial requirements
-    tutorials: [
-        'level5-forensics-tutorial',
-        'file-manager-tutorial',
-        'terminal-tutorial'
-    ],
-    
-    // Dialogue files
-    dialogues: [
-        'level5-hunt-for-the-null'
-    ],
-    
-    // Level objectives
+    // Clear mission objectives
     objectives: [
-        'Analyze digital evidence',
-        'Trace network communications',
-        'Recover deleted files',
-        'Identify The Null'
+        {
+            id: 'obj_1',
+            title: 'Establish Chain of Custody',
+            description: 'Verify evidence integrity and document proper forensic handling',
+            points: 100,
+            required: true
+        },
+        {
+            id: 'obj_2', 
+            title: 'Analyze Digital Evidence',
+            description: 'Examine 3 pieces of evidence to find identity clues',
+            points: 200,
+            required: true
+        },
+        {
+            id: 'obj_3',
+            title: 'Build Forensic Report',
+            description: 'Create compliant report following NIST SP 800-86 standards',
+            points: 150,
+            required: true
+        },
+        {
+            id: 'obj_4',
+            title: 'Identify The Null',
+            description: 'Conclusively identify the hacker known as "The Null"',
+            points: 200,
+            required: true
+        }
     ],
     
-    // Scoring criteria
+    // Clear success criteria
+    successCriteria: {
+        minimumScore: 400,
+        requiredEvidence: ['laptop_image', 'memory_dump', 'network_logs'],
+        mustIdentifyTarget: true,
+        complianceRequired: ['chain_of_custody', 'evidence_integrity', 'proper_documentation']
+    },
+    
+    // Guided workflow following forensic standards
+    workflow: {
+        phases: [
+            {
+                name: 'Evidence Acquisition',
+                description: 'Secure and verify digital evidence',
+                standard: 'ISO/IEC 27037:2012 - Evidence Collection',
+                steps: ['verify_hashes', 'document_custody', 'ensure_integrity']
+            },
+            {
+                name: 'Evidence Analysis', 
+                description: 'Systematic examination of digital artifacts',
+                standard: 'NIST SP 800-86 - Forensic Analysis',
+                steps: ['examine_files', 'extract_metadata', 'identify_artifacts']
+            },
+            {
+                name: 'Reporting',
+                description: 'Document findings in compliant format',
+                standard: 'NIST SP 800-86 - Reporting',
+                steps: ['organize_evidence', 'document_findings', 'validate_conclusions']
+            }
+        ]
+    },
+    
+    // Simplified scoring 
     scoring: {
-        maxScore: 1500,
+        maxScore: 650,
+        perfectScore: 500,  // Minimum for "perfect" rating
+        passingScore: 400,  // Minimum to complete level
         penalties: {
-            contaminatedEvidence: -250,
-            missedClue: -100
+            procedural_violation: -50,
+            contaminated_evidence: -100,
+            missing_evidence: -75
         },
         bonuses: {
-            forensicAccuracy: 500,
-            timelineReconstruction: 300
+            perfect_procedure: +50,
+            efficiency_bonus: +25,
+            comprehensive_analysis: +75
         }
     },
     
-    // Special forensics features
-    forensics: {
-        evidenceTracker: true,
-        scoringSystem: true,
-        timeline: true
+    // Standards compliance tracking
+    standards: {
+        'NIST_SP_800_86': {
+            name: 'NIST SP 800-86 - Guide to Integrating Forensic Techniques',
+            requirements: ['proper_methodology', 'evidence_preservation', 'detailed_documentation']
+        },
+        'ISO_27037': {
+            name: 'ISO/IEC 27037:2012 - Digital Evidence Guidelines', 
+            requirements: ['chain_of_custody', 'evidence_integrity', 'competent_handling']
+        }
     }
 };

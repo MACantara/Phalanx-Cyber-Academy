@@ -420,19 +420,19 @@ def load_ctf_flags():
         return None
 
 def get_selected_flags():
-    """Get 7 randomly selected flags"""
+    """Get 3 randomly selected flags from 8 available"""
     # Generate new random selection for each request (no caching)
     flags_data = load_ctf_flags()
     if not flags_data:
         return []
     
     all_flags = list(flags_data.get('ctf_flags', {}).get('flags', {}).keys())
-    flags_per_session = flags_data.get('ctf_flags', {}).get('flags_per_session', 7)
+    flags_per_session = 3  # Reduced to 3 flags per session for beginner-friendly learning
     
     # Randomly select flags for this request
     selected_flags = random.sample(all_flags, min(flags_per_session, len(all_flags)))
     
-    print(f"Generated truly random flags for request: {selected_flags}")
+    print(f"Generated 3 random flags for focused learning session: {selected_flags}")
     
     return selected_flags
 

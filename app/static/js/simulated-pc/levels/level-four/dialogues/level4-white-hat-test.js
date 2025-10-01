@@ -5,34 +5,51 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "Welcome to Level 4: The White Hat Test. This is a comprehensive cybersecurity challenge focused on ethical penetration testing and responsible disclosure."
+                text: "🎓 Level 4: The White Hat Test\n\nWelcome to ethical hacking! You'll learn responsible security testing by finding hidden vulnerabilities in a safe environment."
             },
             {
-                text: "You'll be conducting a security assessment of TechCorp's web application infrastructure using professional methodologies."
+                text: "🛡️ What is Ethical Hacking?\n\nEthical hackers are security professionals who find vulnerabilities to help organizations improve their security - with permission!"
             },
             {
-                text: "Your mission is to discover 7 randomly selected security flags hidden throughout the system using various reconnaissance and analysis techniques."
+                text: "🎯 Your Mission:\n\nFind 3 security flags hidden in the system using basic terminal commands. Each session randomly selects 3 flags from our comprehensive challenge library to ensure focused learning."
             },
             {
-                text: "Each challenge represents a different aspect of security research - from environment analysis to log investigation, from configuration review to forensic analysis."
+                text: "🎲 Session-Based Challenge System:\n\nEach session presents 3 randomly selected flags from our challenge library, ensuring you get a focused yet varied learning experience every time you play.",
+                example: "How It Works:\n• 8 total challenges available in the library\n• 3 challenges randomly selected per session\n• Balanced mix of difficulty and skill types\n• 20-30 minute focused sessions\n• Replay for different challenge combinations"
             },
             {
-                text: "Use the integrated Challenge Tracker in the top-right corner to submit discovered flags and monitor your progress throughout the assessment."
+                text: "⚡ Performance-Based XP System:\n\nLevel 4 features dynamic XP rewards based on your efficiency and speed! Your XP is calculated using:",
+                example: "XP Calculation Factors:\n• Base XP: 200 (Hard difficulty)\n• Efficiency Bonus: Fewer attempts = more XP\n• Speed Bonus: Faster completion = higher multiplier\n• Performance Score: 50-125% of base XP\n• First-time Bonus: +25 XP for new completion"
             },
             {
-                text: "The terminal provides access to various security tools and commands. Explore the file system methodically to uncover hidden vulnerabilities and exposed information."
+                text: "💻 Essential Commands:\n\nYou'll use these basic terminal commands to explore the system and find vulnerabilities:",
+                example: "Core Commands:\nls -la    # List all files (including hidden)\ncat file  # Read file contents\nfind /    # Search for files\ngrep text # Search inside files"
             },
             {
-                text: "Remember: this is an authorized penetration test. All activities are within scope and conducted with proper permission for educational purposes."
+                text: "🔍 Where to Look:\n\n• Hidden files (start with .)\n• Configuration files in /etc/\n• Log files in /var/log/\n• User directories in /home/",
+                example: "Getting Started:\nls -a ~          # Check home directory\ncat ~/.bashrc     # Read shell config\nls /var/log/      # Check log directory"
             },
             {
-                text: "Your findings will be automatically validated, and successful completion demonstrates proficiency in ethical hacking methodologies and responsible security research practices."
+                text: "🏆 XP Performance Ratings:\n\nYour final XP depends on how efficiently you complete the assessment:",
+                example: "Efficiency Ratings:\n• Perfect (1.0 avg attempts): +25% XP bonus\n• Excellent (1.5 avg): +15% XP bonus\n• Good (2.5 avg): +5% XP bonus\n• Average (3.0 avg): Standard XP\n• Poor (4.0+ avg): -20% XP penalty\n\nSpeed Ratings:\n• Lightning (< 15min): +30% time bonus\n• Fast (15-20min): +20% time bonus\n• Normal (20-30min): +10% time bonus\n• Slow (30+ min): Standard or penalty"
             },
             {
-                text: "Successfully completing this assessment will earn you 350 XP in Ethical Hacking and showcase your readiness for advanced cybersecurity roles."
+                text: "� What You'll Learn:\n\n1. Basic Reconnaissance - Find hidden files\n2. Log Analysis - Examine system logs\n3. Configuration Review - Check server settings\n4. Credential Discovery - Find exposed passwords\n5. Network Analysis - Understand network setup\n6. Process Analysis - Check running services\n7. Permission Analysis - Find security flaws\n8. Responsible Disclosure - Report findings ethically"
             },
             {
-                text: "Begin your security assessment by using the Terminal to explore the TechCorp infrastructure. Good hunting, and remember - thorough documentation is key to professional security research."
+                text: "🎮 Getting Started:\n\n1. Open the Terminal application\n2. Start exploring with 'ls -a ~' to list files\n3. Use 'hints' command when you need help\n4. Submit flags with 'submit-flag WHT{flag_value}'",
+                example: "First Commands to Try:\nls -a ~              # Check your home directory\ncat ~/.bashrc         # Read configuration files\nls /var/log/          # Look at system logs\nhints                 # Get help when stuck"
+            },
+            {
+                text: "💰 XP Optimization Tips:\n\nMaximize your XP earnings with these strategies:",
+                example: "Pro Tips for High XP:\n• Think before you act - reduce failed attempts\n• Use systematic approach - check files methodically\n• Learn from hints - they guide you to flags efficiently\n• Work quickly but carefully - speed matters for bonus XP\n• Complete on first try for maximum efficiency rating\n\nExample: Perfect run (3 flags, 3 attempts, 15min) = ~290 XP\nTypical run (3 flags, 8 attempts, 25min) = ~210 XP"
+            },
+            {
+                text: "� Session Tracking:\n\nYour performance is continuously monitored and will be displayed in a detailed assessment summary upon completion.",
+                example: "What Gets Tracked:\n• Flag discovery attempts and timing\n• Commands used and efficiency\n• Overall completion time\n• Performance score calculation\n• Final XP breakdown with bonuses/penalties\n\nView your results at the end to see how you performed!"
+            },
+            {
+                text: "�🛡️ Remember: Always Practice Ethical Hacking!\n\n• Only test systems you have permission to test\n• Report vulnerabilities responsibly\n• Help organizations improve their security\n• Respect privacy and data protection\n\nReady to start your ethical hacking journey and earn performance-based XP?"
             }
         ];
     }
@@ -54,23 +71,11 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
 
     async createAndStartChallengeTracker() {
         try {
-            // Import and create challenge tracker
-            const { Level4ChallengeTracker } = await import('../apps/challenge-tracker-app.js');
-            const tracker = new Level4ChallengeTracker();
-            
-            // Make tracker globally accessible
-            window.level4ChallengeTracker = tracker;
-            
-            // Create and append tracker element
-            const trackerElement = tracker.createElement();
-            document.body.appendChild(trackerElement);
-            
-            // Initialize tracker
-            tracker.initialize();
-            
-            console.log('[Level4Dialog] Challenge tracker started');
+            // Challenge tracking is now integrated into the submit-flag terminal command
+            console.log('[Level4] Challenge tracking integrated into terminal submit-flag command');
+            console.log('[Level4Dialog] Level 4 CTF ready - use terminal commands to interact');
         } catch (error) {
-            console.error('[Level4Dialog] Failed to create challenge tracker:', error);
+            console.error('[Level4Dialog] Level setup error:', error);
         }
     }
 

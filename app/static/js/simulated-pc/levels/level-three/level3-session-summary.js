@@ -73,8 +73,8 @@ export class Level3SessionSummary {
         
         // Time Performance (25 points max)
         // Reward faster completion with more points
-        const timeUsed = (15 * 60) - timerStatus.timeRemaining;
-        const timeEfficiency = Math.max(0, (timerStatus.timeRemaining / (15 * 60))); // 0-1 scale
+        const timeUsed = (2 * 60) - timerStatus.timeRemaining;
+        const timeEfficiency = Math.max(0, (timerStatus.timeRemaining / (2 * 60))); // 0-1 scale
         const timeBonus = timeEfficiency * 25; // Up to 25 points for speed
         
         // Accuracy Performance (25 points max)
@@ -89,12 +89,12 @@ export class Level3SessionSummary {
         
         // Financial Management (15 points max)
         // Reward minimizing financial costs
-        const financialHealth = Math.max(0, (1000000 - timerStatus.financialDamage) / 1000000);
+        const financialHealth = Math.max(0, (100000 - timerStatus.financialDamage) / 100000);
         const financialBonus = financialHealth * 15; // Up to 15 points for cost management
         
         // Stage Completion Bonus (10 points max)
-        // Reward completing all three stages (process monitor, malware scanner, ransomware decryptor)
-        const stageCompletionBonus = (this.stagesCompleted.length / 3) * 10; // Up to 10 points for completion
+        // Reward completing both stages (process monitor, malware scanner)
+        const stageCompletionBonus = (this.stagesCompleted.length / 2) * 10; // Up to 10 points for completion
         
         const totalScore = Math.round(timeBonus + accuracyBonus + reputationBonus + financialBonus + stageCompletionBonus);
         
@@ -358,8 +358,7 @@ export class Level3SessionSummary {
     generateStageAnalysis() {
         const stages = [
             { name: 'Process Monitor', key: 'process-monitor', icon: 'bi-cpu', description: 'Eliminate malicious processes' },
-            { name: 'Malware Scanner', key: 'malware-scanner', icon: 'bi-shield-exclamation', description: 'Scan and quarantine threats' },
-            { name: 'File Recovery', key: 'ransomware-decryptor', icon: 'bi-unlock', description: 'Decrypt ransomware files' }
+            { name: 'Malware Scanner', key: 'malware-scanner', icon: 'bi-shield-exclamation', description: 'Scan and quarantine threats' }
         ];
 
         return stages.map(stage => {

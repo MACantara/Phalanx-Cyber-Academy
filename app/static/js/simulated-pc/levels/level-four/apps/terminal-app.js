@@ -13,17 +13,18 @@ export class TerminalApp extends WindowBase {
 
     createContent() {
         return `
-            <div class="h-full bg-black text-green-400 font-mono text-sm p-3 flex flex-col" id="terminal-container">
-                <div class="flex-1 overflow-y-auto mb-3 space-y-1 overflow-x-hidden" id="terminal-output">
+            <div class="h-full bg-black text-green-400 font-mono text-xs sm:text-sm p-2 sm:p-3 flex flex-col" id="terminal-container">
+                <div class="flex-1 overflow-y-auto mb-2 sm:mb-3 space-y-1 overflow-x-hidden" id="terminal-output">
                     <div class="text-green-400">Welcome to The White Hat Test - Responsible Disclosure CTF</div>
-                    <div class="text-yellow-400">Your mission: Find 7 hidden flags and complete a responsible disclosure report</div>
-                    <div class="text-gray-400">Type 'help' for available commands | Type 'cat mission_brief.txt' to read the full brief</div>
+                    <div class="text-yellow-400">Your mission: Find 3 hidden flags and complete a responsible disclosure report</div>
+                    <div class="text-gray-400 leading-relaxed">Type 'help' for available commands | Type 'submit-flag --challenges' to see available challenges</div>
+                    <div class="text-blue-400">💡 Use 'submit-flag WHT{flag-value}' to submit captured flags for verification</div>
                     <div></div>
                 </div>
                 <div class="flex items-center" id="terminal-input-area">
-                    <span class="text-green-400 mr-2" id="input-prompt">researcher@sandbox:~$ </span>
+                    <span class="text-green-400 mr-1 sm:mr-2 flex-shrink-0 text-xs sm:text-sm" id="input-prompt">researcher@sandbox:~$ </span>
                     <input type="text" 
-                           class="flex-1 bg-transparent border-none text-green-400 outline-none font-mono text-sm" 
+                           class="flex-1 bg-transparent border-none text-green-400 outline-none font-mono text-xs sm:text-sm min-w-0" 
                            placeholder="Type your command..." 
                            id="command-input"
                            autocomplete="off"
@@ -322,4 +323,6 @@ export class TerminalApp extends WindowBase {
             });
         }
     }
+
+
 }

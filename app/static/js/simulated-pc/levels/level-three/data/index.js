@@ -10,13 +10,11 @@ export class Level3DataManager {
     constructor() {
         this.malwareData = null;
         this.processData = null;
-        this.encryptedFilesData = null;
         this.loaded = false;
         
         // Selected random subsets for gameplay (loaded from API)
         this.selectedMalware = {};
         this.selectedProcesses = [];
-        this.selectedEncryptedFiles = [];
     }
 
     async loadData() {
@@ -40,20 +38,17 @@ export class Level3DataManager {
             const gameData = apiData.data;
             this.selectedMalware = gameData.malware || {};
             this.selectedProcesses = this.buildProcessList(gameData.processes || {});
-            this.selectedEncryptedFiles = gameData.encrypted_files?.level3_ransomware_files || [];
             
             // For compatibility, also store the full data structures
             this.malwareData = gameData.malware || {};
             this.processData = gameData.processes || {};
-            this.encryptedFilesData = gameData.encrypted_files || {};
             
             this.loaded = true;
 
             console.log('[Level3DataManager] Data loaded from API successfully');
             console.log('[Level3DataManager] Selected:', {
                 malware: Object.keys(this.selectedMalware).length,
-                processes: this.selectedProcesses.length,
-                files: this.selectedEncryptedFiles.length
+                processes: this.selectedProcesses.length
             });
             
         } catch (error) {
@@ -62,10 +57,8 @@ export class Level3DataManager {
             // Fallback to empty data
             this.malwareData = {};
             this.processData = { system: [], gaming: [], application: [], malware: [] };
-            this.encryptedFilesData = { level3_ransomware_files: [] };
             this.selectedMalware = {};
             this.selectedProcesses = [];
-            this.selectedEncryptedFiles = [];
             this.loaded = true;
         }
     }
@@ -137,17 +130,6 @@ export class Level3DataManager {
         return this.selectedProcesses.filter(process => !process.trusted);
     }
 
-    // Encrypted files data methods - now use API-loaded data
-    getEncryptedFiles() {
-        if (!this.loaded) return [];
-        return this.selectedEncryptedFiles;
-    }
-
-    getFileById(fileId) {
-        const files = this.getEncryptedFiles();
-        return files.find(file => file.id === fileId) || null;
-    }
-
     // Timer integration methods - calculate from API-loaded data
     calculateTotalReputationDamage() {
         const malwareItems = Object.values(this.selectedMalware);
@@ -160,7 +142,8 @@ export class Level3DataManager {
     }
 
     getMaxReputationRecovery() {
-        return this.selectedEncryptedFiles.reduce((total, file) => total + (file.reputationRecovery || 0), 0);
+        // Encrypted files removed - no reputation recovery available
+        return 0;
     }
 
     // Utility methods

@@ -55,7 +55,7 @@ export class PageRegistry {
                 riskFactors: ['Unknown website', 'Unverified content']
             },
             createContent: () => `
-                <div class="p-6 text-center text-gray-800 bg-gray-100">
+                <div class="p-6 text-center text-gray-800 bg-gray-100 min-h-full overflow-y-auto">
                     <div class="max-w-md mx-auto">
                         <i class="bi bi-exclamation-triangle text-6xl text-yellow-500 mb-4"></i>
                         <h1 class="text-2xl font-bold mb-4">Page Not Found</h1>

@@ -324,14 +324,16 @@ export class EmailSecurityManager {
         } else {
             // In inbox, show classification buttons only if not already categorized
             buttons += `
-                <button class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-500 transition-colors cursor-pointer flex items-center cursor-pointer text-sm" 
-                        id="report-phishing-btn" data-email-id="${emailId}">
-                    <i class="bi bi-shield-exclamation mr-1"></i>Report Phishing
-                </button>
-                <button class="px-2 py-1 bg-green-600 text-white rounded hover:bg-green-500 transition-colors cursor-pointer flex items-center cursor-pointer text-sm" 
-                        id="mark-legitimate-btn" data-email-id="${emailId}">
-                    <i class="bi bi-shield-check mr-1"></i>Mark Legitimate
-                </button>`;
+                <div class="flex flex-row gap-3">
+                    <button class="flex-1 px-3 py-2 bg-red-600 text-white rounded hover:bg-red-500 active:bg-red-600 transition-colors cursor-pointer flex items-center justify-center text-sm touch-manipulation" 
+                            id="report-phishing-btn" data-email-id="${emailId}">
+                        <i class="bi bi-shield-exclamation mr-1"></i><span class="hidden xs:inline">Report Phishing</span><span class="xs:hidden">Report</span>
+                    </button>
+                    <button class="flex-1 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-500 active:bg-green-600 transition-colors cursor-pointer flex items-center justify-center text-sm touch-manipulation" 
+                            id="mark-legitimate-btn" data-email-id="${emailId}">
+                        <i class="bi bi-shield-check mr-1"></i><span class="hidden xs:inline">Mark Legitimate</span><span class="xs:hidden">Legitimate</span>
+                    </button>
+                </div>`;
         }
         
         return buttons;
@@ -339,15 +341,15 @@ export class EmailSecurityManager {
 
     createPhishingWarning() {
         return `
-            <div class="mt-4 mb-4 bg-red-900 border border-red-700 rounded p-4">
+            <div class="mt-3 sm:mt-4 mb-3 sm:mb-4 bg-red-900 border border-red-700 rounded p-3 sm:p-4">
                 <div class="flex items-center mb-2">
-                    <i class="bi bi-exclamation-triangle text-red-400 mr-2"></i>
-                    <h4 class="text-red-400 font-semibold">Phishing Email Reported</h4>
+                    <i class="bi bi-exclamation-triangle text-red-400 mr-2 flex-shrink-0"></i>
+                    <h4 class="text-red-400 font-semibold text-sm sm:text-base">Phishing Email Reported</h4>
                 </div>
-                <p class="text-red-300 text-sm">
+                <p class="text-red-300 text-xs sm:text-sm leading-relaxed">
                     This email has been reported as a phishing attempt. It has been flagged for review and will be blocked from future delivery.
                 </p>
-                <div class="mt-2 text-red-400 text-xs">
+                <div class="mt-2 text-red-400 text-xs leading-relaxed">
                     <strong>Safety Tips:</strong> Never click links or download attachments from suspicious emails. 
                     Always verify sender identity before sharing personal information.
                 </div>
@@ -356,12 +358,12 @@ export class EmailSecurityManager {
 
     createLegitimateConfirmation() {
         return `
-            <div class="mt-4 mb-4 bg-green-900 border border-green-700 rounded p-4">
+            <div class="mt-3 sm:mt-4 mb-3 sm:mb-4 bg-green-900 border border-green-700 rounded p-3 sm:p-4">
                 <div class="flex items-center mb-2">
-                    <i class="bi bi-shield-check text-green-400 mr-2"></i>
-                    <h4 class="text-green-400 font-semibold">Legitimate Email Verified</h4>
+                    <i class="bi bi-shield-check text-green-400 mr-2 flex-shrink-0"></i>
+                    <h4 class="text-green-400 font-semibold text-sm sm:text-base">Legitimate Email Verified</h4>
                 </div>
-                <p class="text-green-300 text-sm">
+                <p class="text-green-300 text-xs sm:text-sm leading-relaxed">
                     This email has been marked as legitimate and trusted. The sender is verified and the content is safe.
                 </p>
             </div>`;

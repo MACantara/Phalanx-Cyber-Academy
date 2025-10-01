@@ -1,7 +1,7 @@
 [
   {
     "id": "phish_001",
-    "sender": "security@paypal-verification.com",
+    "sender": "security@paypaI-verification.com",
     "receiver": "user@example.com",
     "date": "2024-03-15 09:32:15",
     "subject": "URGENT: Your PayPal Account Has Been Limited",
@@ -10,25 +10,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Suspicious domain (paypal-verification.com)",
-        "Urgent language and threats",
-        "Suspicious link to .tk domain",
-        "Generic greeting",
+        "Suspicious domain with uppercase 'I' instead of lowercase 'l' (paypaI vs paypal)",
+        "Generic greeting 'Dear PayPal User' instead of actual name",
+        "Urgent threats about account closure",
+        "Suspicious domain (.tk) for verification link",
         "Pressure tactics with time limit"
       ],
       "safety_factors": [],
-      "educational_focus": "This email demonstrates classic phishing tactics using urgency, fake security warnings, and suspicious links.",
+      "educational_focus": "Perfect example from dialogue training - demonstrates paypaI.com vs paypal.com domain spoofing and generic greetings instead of personalized names.",
       "red_flags": [
-        "Misspelled or suspicious sender domain",
-        "Urgent threats about account closure",
-        "Suspicious shortened or foreign domain links",
-        "Generic greetings instead of personalized"
+        "Domain spoofing: paypaI-verification.com (uppercase I instead of l)",
+        "External suspicious domain for account verification",
+        "Generic customer greetings instead of your name",
+        "Urgent time-based threats",
+        "Requests to click suspicious links for account access"
       ],
       "verification_tips": [
-        "Check sender domain carefully - legitimate PayPal emails come from @paypal.com",
-        "Hover over links to see real destination",
-        "Log into PayPal directly through official website",
-        "PayPal never asks for verification via email links"
+        "Always check for exact spelling of official domains",
+        "PayPal will never use .tk or similar domains for verification",
+        "Legitimate emails address you by your registered name",
+        "Never click suspicious links - login directly to PayPal instead"
       ]
     }
   },
@@ -43,25 +44,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Amazon domain (amazon-security.net)",
-        "Suspicious external payment link",
-        "High-value order to create urgency",
+        "Non-Amazon domain (amazon-security.net vs amazon.com)",
+        "Fake high-value order to create urgency",
+        "External domain for payment updates",
         "Generic greeting without customer name",
         "Fake order number format"
       ],
       "safety_factors": [],
-      "educational_focus": "Demonstrates order confirmation phishing using fake high-value purchases to create urgency.",
+      "educational_focus": "Shows how attackers use fake high-value orders and pressure tactics combined with domain spoofing to steal payment information.",
       "red_flags": [
-        "Non-Amazon domain in sender address",
-        "External payment update links",
-        "Unexpected high-value orders",
-        "Generic customer greetings"
+        "Wrong domain: amazon-security.net instead of amazon.com",
+        "Suspicious payment update domain (.org instead of official Amazon)",
+        "Generic greeting instead of your actual name",
+        "Unexpected high-value order you didn't make",
+        "External links for payment sensitive operations"
       ],
       "verification_tips": [
-        "Check your actual Amazon account for real orders",
-        "Amazon emails come from @amazon.com domains",
-        "Never click payment links in emails",
-        "Verify orders through official Amazon app or website"
+        "Amazon only sends order emails from @amazon.com",
+        "Check your actual Amazon account for this order number",
+        "Never update payment info through email links",
+        "Amazon addresses customers by their registered name"
       ]
     }
   },
@@ -76,26 +78,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Microsoft domain",
-        "Malicious download link (.exe file)",
-        "Extreme urgency (2 hours)",
-        "Scare tactics about file damage",
+        "Fake Microsoft domain (microsoft-security.org vs microsoft.com)",
+        "Requests to download executable files (.exe)",
+        "Extreme urgency with 2-hour deadline",
+        "Fear tactics about file damage",
         "Fake phone number"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows tech support scam tactics using fear and fake security alerts to distribute malware.",
+      "educational_focus": "Demonstrates tech support scam tactics using fear, fake security alerts, and malware distribution through executable downloads.",
       "red_flags": [
+        "Wrong domain: microsoft-security.org vs official microsoft.com",
+        "Requests to download .exe files from external sites",
+        "Extreme urgency tactics (2-hour deadline)",
         "Microsoft doesn't send virus alerts via email",
-        "Executable file downloads in emails",
-        "Extreme time pressure tactics",
-        "Non-Microsoft domains",
-        "Generic support phone numbers"
+        "Suspicious phone numbers for 'support'"
       ],
       "verification_tips": [
-        "Microsoft never sends security alerts via email",
-        "Never download executable files from emails",
-        "Use official Microsoft support channels",
-        "Run legitimate antivirus software regularly"
+        "Microsoft never sends virus detection emails",
+        "Never download .exe files from email links",
+        "Official Microsoft emails come from microsoft.com domain",
+        "Use official antivirus software, not email downloads"
       ]
     }
   },
@@ -110,26 +112,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Chase domain (chase-alert.com)",
-        "Suspicious geographic location",
+        "Fake Chase domain (chase-alert.com vs chase.com)",
+        "Geographic scare tactics (Nigeria reference)",
+        "Urgent 30-minute deadline pressure",
         "Invalid IP address format",
-        "Urgent time limit threat",
         "Suspicious verification link"
       ],
       "safety_factors": [],
-      "educational_focus": "Demonstrates banking security phishing using fake login alerts and geographic scare tactics.",
+      "educational_focus": "Shows banking security phishing using geographic fears, fake login alerts, and urgent time pressure to steal banking credentials.",
       "red_flags": [
-        "Non-bank domains in sender address",
-        "Suspicious foreign login locations",
-        "Time pressure tactics",
-        "External verification links",
-        "Invalid IP address formats"
+        "Wrong domain: chase-alert.com instead of official chase.com",
+        "Uses geographic stereotypes to create fear",
+        "Invalid IP address format (should not end in .456)",
+        "External domain for banking security operations",
+        "Extreme urgency with 30-minute threat"
       ],
       "verification_tips": [
-        "Log into your bank account directly through official website",
-        "Banks use their official domains for communications",
-        "Verify suspicious activity through official bank app",
-        "Never click verification links in emails"
+        "Chase bank emails come from chase.com domain only",
+        "Login directly to Chase website to check alerts",
+        "IP addresses don't end in numbers over 255",
+        "Banks don't lock accounts with 30-minute email warnings"
       ]
     }
   },
@@ -144,32 +146,32 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Facebook domain",
-        "Account deletion threats",
-        "Emotional manipulation (losing memories)",
-        "Suspicious .tk domain link",
+        "Fake Facebook domain (facebook-security.net vs facebook.com)",
+        "Emotional manipulation about losing photos/memories",
+        "Generic greeting instead of your actual name",
+        "Suspicious .tk domain for verification",
         "Urgent 24-hour deadline"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows emotional manipulation phishing using fear of losing personal data and memories.",
+      "educational_focus": "Demonstrates emotional manipulation phishing using fear of data loss and personal memories to bypass logical thinking.",
       "red_flags": [
-        "Facebook doesn't delete accounts without warning",
-        "Non-Facebook domains in sender",
-        "Threats about losing personal data",
-        "External verification requirements",
-        "Urgent time limits"
+        "Wrong domain: facebook-security.net vs official facebook.com",
+        "Generic greeting 'Facebook User' instead of your name",
+        "Emotional manipulation about losing personal data",
+        "Suspicious .tk domain for account verification",
+        "Fake privacy regulation claims"
       ],
       "verification_tips": [
-        "Check Facebook notifications within the app",
-        "Facebook emails come from @facebook.com or @facebookmail.com",
-        "Log into Facebook directly to check account status",
-        "Facebook provides advance notice for policy changes"
+        "Facebook emails come from facebook.com or facebookmail.com",
+        "Facebook addresses users by their registered names",
+        "Never use .tk domains for account verification",
+        "Check Facebook directly for account status notifications"
       ]
     }
   },
   {
     "id": "phish_006",
-    "sender": "billing@netflix-support.org",
+    "sender": "billing@netfIix-support.org",
     "receiver": "subscriber@email.com",
     "date": "2024-03-20 12:18:55",
     "subject": "Netflix Payment Failed - Service Suspended",
@@ -178,26 +180,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Netflix domain (netflix-support.org)",
-        "Generic greeting 'Hi there'",
-        "Suspicious billing update link",
-        "Account cancellation threats",
+        "Domain spoofing with capital 'I' instead of lowercase 'l' (netfIix vs netflix)",
+        "Generic greeting instead of account holder name",
+        "External domain for payment updates",
+        "48-hour pressure deadline",
         "External domain for sensitive operations"
       ],
       "safety_factors": [],
-      "educational_focus": "Demonstrates subscription service phishing using payment failure scare tactics.",
+      "educational_focus": "Another example of character substitution domain spoofing, similar to PayPal example in dialogue.",
       "red_flags": [
-        "Netflix emails come from @netflix.com",
-        "Generic greetings instead of account holder name",
-        "External payment update links",
-        "Immediate suspension threats",
+        "Domain spoofing: netfIix-support.org (uppercase I instead of lowercase l)",
+        "Generic greeting 'Hi there' instead of your name",
+        "External .net domain for Netflix billing operations",
+        "Urgent payment deadline pressure",
         "Suspicious billing domains"
       ],
       "verification_tips": [
-        "Check your Netflix account directly through the app",
-        "Netflix sends payment reminders, not immediate suspensions",
-        "Update payment info only through official Netflix website",
-        "Verify payment status with your bank directly"
+        "Netflix emails come from netflix.com domain only",
+        "Check your actual Netflix account for payment issues",
+        "Never update payment info through email links",
+        "Netflix addresses subscribers by their registered names"
       ]
     }
   },
@@ -212,32 +214,32 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Apple domain with extra words",
-        "Suspicious foreign location (Moscow)",
-        "Account disabling threats",
-        "External unlock link",
+        "Fake Apple domain (apple-id-verification.com vs apple.com)",
+        "Geographic scare tactics using Russia",
+        "External domain for account unlock",
+        "Generic greeting 'Dear Apple Customer'",
         "Urgent 12-hour deadline"
       ],
       "safety_factors": [],
       "educational_focus": "Shows Apple ID phishing using device security alerts and geographic scare tactics.",
       "red_flags": [
-        "Apple emails come from @apple.com",
-        "Suspicious login locations",
-        "External unlock links",
-        "Immediate permanent disabling threats",
-        "Generic Apple Customer greeting"
+        "Wrong domain: apple-id-verification.com vs official apple.com",
+        "Generic greeting instead of your actual name",
+        "External domain for Apple ID security operations",
+        "Geographic fear tactics",
+        "Extreme urgency with 12-hour threat"
       ],
       "verification_tips": [
-        "Check Apple ID status through official Apple website",
-        "Apple provides secure account recovery methods",
-        "Log into iCloud directly to verify account status",
-        "Use official Apple Support app for assistance"
+        "Apple emails come from apple.com or icloud.com domains only",
+        "Check your Apple ID account directly for security alerts",
+        "Apple addresses customers by their registered names",
+        "Never unlock accounts through external domains"
       ]
     }
   },
   {
     "id": "phish_008",
-    "sender": "noreply@googlesecurity-alert.net",
+    "sender": "noreply@googIe-security-alert.net",
     "receiver": "user@gmail.com",
     "date": "2024-03-22 15:27:09",
     "subject": "Google Account: Sign-in Blocked",
@@ -246,26 +248,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Google domain (googlesecurity-alert.net)",
-        "Suspicious African location",
-        "External recovery link",
-        "Account compromise threats",
+        "Domain spoofing with uppercase 'I' (googIe vs google)",
+        "Geographic scare tactics using Nigeria",
+        "External domain for account recovery",
+        "Generic greeting without personalization",
         "Non-Google security domain"
       ],
       "safety_factors": [],
       "educational_focus": "Demonstrates Google account phishing using blocked sign-in alerts and compromise fears.",
       "red_flags": [
-        "Google emails come from @google.com",
-        "Suspicious international locations",
-        "External account recovery links",
-        "Compromise scare tactics",
+        "Domain spoofing: googIe-security-alert.net (uppercase I instead of lowercase l)",
+        "External domain for Google account operations",
+        "Generic greeting instead of your name",
+        "Geographic fear tactics",
         "Non-Google domains for security"
       ],
       "verification_tips": [
-        "Check Google account activity through myaccount.google.com",
-        "Google provides official security notifications",
-        "Use Google's official account recovery process",
-        "Enable two-factor authentication for added security"
+        "Google emails come from google.com or gmail.com domains only",
+        "Check Google account security page directly",
+        "Google addresses users by their registered names",
+        "Never use external sites for Google account recovery"
       ]
     }
   },
@@ -280,26 +282,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake eBay domain (ebay-resolution.com)",
-        "High-value dispute to create urgency",
-        "External dispute response link",
-        "Automatic refund threats",
+        "Fake eBay domain (ebay-resolution.com vs ebay.com)",
+        "High-value fake dispute to create panic",
+        "External domain for dispute resolution",
+        "Generic seller greeting",
         "48-hour pressure deadline"
       ],
       "safety_factors": [],
       "educational_focus": "Shows eBay seller phishing using fake disputes and financial pressure tactics.",
       "red_flags": [
-        "eBay communications come from @ebay.com",
-        "High-value disputes to create panic",
-        "External dispute resolution links",
-        "Immediate automatic refund threats",
+        "Wrong domain: ebay-resolution.com instead of official ebay.com",
+        "High-value dispute you likely didn't have",
+        "External domain for eBay seller operations",
+        "Generic greeting instead of your seller name",
         "Suspicious seller center domains"
       ],
       "verification_tips": [
-        "Log into eBay seller account directly",
-        "Check eBay messages within the platform",
-        "eBay disputes are handled through official resolution center",
-        "Verify buyer information through eBay's system"
+        "eBay emails come from ebay.com domain only",
+        "Check your eBay seller dashboard for actual disputes",
+        "Verify high-value transactions in your sales history",
+        "Never handle disputes through external websites"
       ]
     }
   },
@@ -314,26 +316,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Visa domain (visa-security.org)",
-        "High-value cryptocurrency transaction",
-        "Suspicious foreign location",
-        "External security link",
+        "Fake Visa domain (visa-security.org vs visa.com)",
+        "High-value cryptocurrency transaction to create fear",
+        "External domain for fraud protection",
+        "Geographic scare tactics using Romania",
         "Extreme 1-hour urgency"
       ],
       "safety_factors": [],
       "educational_focus": "Demonstrates credit card fraud phishing using cryptocurrency and foreign transaction fears.",
       "red_flags": [
-        "Visa doesn't use visa-security.org",
-        "High-value cryptocurrency transactions",
-        "Suspicious Eastern European locations",
-        "External fraud protection links",
+        "Wrong domain: visa-security.org vs official visa.com",
+        "External domain for Visa security operations",
+        "Cryptocurrency transaction scare tactics",
+        "Geographic fear tactics",
         "Extreme urgency tactics"
       ],
       "verification_tips": [
-        "Contact your bank directly using the number on your card",
-        "Check your actual card statements through bank app",
-        "Banks provide official fraud alert systems",
-        "Never click links in fraud alert emails"
+        "Visa communications come from official visa.com domain",
+        "Check your actual bank/card issuer for fraud alerts",
+        "Call the number on your card for fraud concerns",
+        "Banks don't use 1-hour email deadlines for fraud"
       ]
     }
   },
@@ -348,26 +350,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Too good to be true investment returns",
-        "Guaranteed 300% returns (impossible)",
-        "Zero risk claims (unrealistic)",
-        "Limited time pressure tactics",
+        "Unrealistic 300% return promises",
+        "Claims of 'guaranteed' profits with zero risk",
+        "Pressure tactics with limited spots",
+        "Generic congratulations without personalization",
         "Suspicious crypto domain"
       ],
       "safety_factors": [],
       "educational_focus": "Shows cryptocurrency investment scam using unrealistic return promises and urgency.",
       "red_flags": [
-        "Guaranteed high returns are always scams",
-        "No legitimate investment has zero risk",
-        "Pressure tactics with limited time offers",
-        "Unsolicited investment opportunities",
+        "Unrealistic investment returns (300% in 30 days)",
+        "Claims of zero risk with guaranteed profits",
+        "Generic 'Congratulations' without explanation",
+        "Limited time offers with artificial scarcity",
         "Cryptocurrency get-rich-quick schemes"
       ],
       "verification_tips": [
-        "All investments carry risk - no guarantees exist",
-        "Research any investment company thoroughly",
-        "Consult licensed financial advisors",
-        "Be skeptical of unsolicited investment offers"
+        "No legitimate investment guarantees 300% returns",
+        "All investments carry risk - 'zero risk' is a red flag",
+        "Research any investment platform thoroughly",
+        "Be extremely wary of unsolicited investment offers"
       ]
     }
   },
@@ -382,26 +384,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake FedEx domain (fedex-delivery.net)",
-        "High-value package to create interest",
-        "External rescheduling link",
-        "Package return threats",
+        "Fake FedEx domain (fedex-delivery.net vs fedex.com)",
+        "High-value fake package to create urgency",
+        "External domain for package redelivery",
+        "Generic customer greeting",
         "Fake tracking number format"
       ],
       "safety_factors": [],
       "educational_focus": "Demonstrates shipping scam using fake delivery failures and valuable package claims.",
       "red_flags": [
-        "FedEx emails come from @fedex.com",
-        "Unexpected high-value packages",
-        "External delivery scheduling links",
-        "Package return threats",
+        "Wrong domain: fedex-delivery.net vs official fedex.com",
+        "High-value package you didn't order",
+        "External domain for FedEx operations",
+        "Generic greeting instead of recipient name",
         "Suspicious tracking number formats"
       ],
       "verification_tips": [
-        "Track packages only through official FedEx website",
-        "Verify any deliveries you're actually expecting",
-        "FedEx provides official tracking and rescheduling",
-        "Don't click links for unexpected packages"
+        "FedEx emails come from fedex.com domain only",
+        "Track packages directly on fedex.com website",
+        "Verify you're expecting a package from Apple",
+        "Check tracking numbers on official FedEx site"
       ]
     }
   },
@@ -416,26 +418,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake WhatsApp domain",
-        "Unnecessary verification requirements",
-        "Suspicious .tk domain",
-        "Account deletion threats",
+        "Fake WhatsApp domain (whatsapp-verification.com vs whatsapp.com)",
+        "Generic greeting 'WhatsApp User'",
+        "External .tk domain for verification",
+        "Fake security policy claims",
         "Fake verification codes"
       ],
       "safety_factors": [],
       "educational_focus": "Shows messaging app phishing using fake security policy changes and verification requirements.",
       "red_flags": [
-        "WhatsApp doesn't require email verification",
-        "Non-WhatsApp domains for verification",
-        "Account deletion threats",
-        "External verification links",
+        "Wrong domain: whatsapp-verification.com vs official whatsapp.com",
+        "Generic greeting instead of your phone number",
+        "External .tk domain for WhatsApp verification",
+        "Fake verification codes in email",
         "Fake security policy changes"
       ],
       "verification_tips": [
-        "WhatsApp verification happens within the app",
-        "WhatsApp doesn't use email for account verification",
-        "Check WhatsApp official communications through the app",
-        "Contact WhatsApp support through official channels"
+        "WhatsApp verification happens within the app, not email",
+        "WhatsApp doesn't send verification codes via email",
+        "Check WhatsApp official channels for policy changes",
+        "WhatsApp uses whatsapp.com for official communications"
       ]
     }
   },
@@ -450,32 +452,32 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake IRS domain (irs-treasury.org)",
-        "Unsolicited refund claims",
-        "External banking verification",
-        "Refund forfeiture threats",
+        "Fake IRS domain (irs-treasury.org vs irs.gov)",
+        "Unexpected refund with specific amount",
+        "External domain for IRS operations",
+        "Generic taxpayer greeting",
         "Generic taxpayer greeting"
       ],
       "safety_factors": [],
       "educational_focus": "Demonstrates tax refund scam using government impersonation and financial incentives.",
       "red_flags": [
-        "IRS emails come from @irs.gov only",
-        "IRS doesn't initiate contact via email",
-        "External banking information requests",
-        "Refund forfeiture threats",
+        "Wrong domain: irs-treasury.org vs official irs.gov",
+        "Unexpected tax refund notification",
+        "External domain for IRS refund operations",
+        "Generic greeting 'Dear Taxpayer'",
         "Generic government greetings"
       ],
       "verification_tips": [
-        "Check refund status only through official IRS website",
-        "IRS communicates primarily through postal mail",
-        "Verify tax information through official IRS channels",
-        "Never provide banking info via email links"
+        "IRS uses irs.gov domain for official communications",
+        "Check your tax return status directly on irs.gov",
+        "IRS doesn't initiate contact via email for refunds",
+        "Be suspicious of unexpected refund notifications"
       ]
     }
   },
   {
     "id": "phish_015",
-    "sender": "support@instagram-help.org",
+    "sender": "support@instagram-heIp.org",
     "receiver": "influencer@email.com",
     "date": "2024-03-29 12:45:38",
     "subject": "Instagram Verification Badge Available",
@@ -484,26 +486,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Instagram domain (instagram-help.org)",
-        "Unsolicited verification offers",
-        "External activation links",
-        "Limited time verification offer",
+        "Domain spoofing with uppercase 'I' (instagram-heIp vs instagram-help)",
+        "Fake verification badge offer",
+        "External domain for Instagram verification",
+        "Generic account statistics",
         "Fake follower statistics"
       ],
       "safety_factors": [],
       "educational_focus": "Shows social media verification scam targeting influencers and content creators.",
       "red_flags": [
-        "Instagram emails come from @instagram.com",
-        "Verification is done through Instagram app",
-        "External verification activation links",
-        "Unsolicited verification offers",
+        "Wrong domain: instagram-heIp.org (uppercase I instead of lowercase l)",
+        "Unexpected verification badge approval",
+        "External domain for Instagram verification",
+        "Generic follower counts",
         "Time pressure for verification"
       ],
       "verification_tips": [
-        "Apply for verification only through Instagram app",
-        "Instagram doesn't email about verification approvals",
-        "Check verification status within Instagram settings",
-        "Be cautious of unsolicited social media offers"
+        "Instagram verification happens within the app",
+        "Instagram uses instagram.com for official emails",
+        "Check Instagram's official verification process",
+        "Be wary of unsolicited verification offers"
       ]
     }
   },
@@ -518,32 +520,32 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Spotify domain (spotify-premium.net)",
-        "Generic greeting without name",
-        "External payment update link",
-        "Account downgrade threats",
+        "Fake Spotify domain (spotify-premium.net vs spotify.com)",
+        "Generic greeting 'Hi' without name",
+        "External domain for billing updates",
+        "24-hour pressure deadline",
         "Immediate 24-hour pressure"
       ],
       "safety_factors": [],
       "educational_focus": "Shows subscription payment scam using service downgrade fears and payment urgency.",
       "red_flags": [
-        "Spotify emails come from @spotify.com",
-        "Generic greetings without subscriber name",
-        "External payment update links",
-        "Immediate downgrade threats",
+        "Wrong domain: spotify-premium.net vs official spotify.com",
+        "Generic greeting without subscriber name",
+        "External domain for Spotify billing",
+        "24-hour downgrade threat",
         "Suspicious billing domains"
       ],
       "verification_tips": [
-        "Check Spotify account directly through the app",
-        "Update payment info only through official Spotify website",
-        "Spotify provides grace periods for payment issues",
-        "Verify payment status with your bank or card company"
+        "Spotify emails come from spotify.com domain only",
+        "Check your Spotify account directly for billing issues",
+        "Spotify addresses subscribers by their names",
+        "Never update payment info through email links"
       ]
     }
   },
   {
     "id": "phish_017",
-    "sender": "security@linkedin-professional.com",
+    "sender": "security@Iinkedin-professional.com",
     "receiver": "professional@email.com",
     "date": "2024-03-31 08:19:33",
     "subject": "LinkedIn: Your Profile Has Been Viewed 247 Times",
@@ -552,26 +554,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake LinkedIn domain (linkedin-professional.com)",
-        "Inflated profile view numbers",
-        "External premium upgrade link",
-        "Limited time discount pressure",
+        "Domain spoofing with uppercase 'I' (Iinkedin vs linkedin)",
+        "Generic greeting 'Hello Professional'",
+        "External domain for LinkedIn Premium",
+        "Fake profile view statistics",
         "Generic professional greeting"
       ],
       "safety_factors": [],
       "educational_focus": "Shows professional networking scam using career advancement and profile visibility tactics.",
       "red_flags": [
-        "LinkedIn emails come from @linkedin.com",
-        "Inflated or fake profile statistics",
-        "External upgrade links",
-        "Pressure tactics with expiring offers",
+        "Wrong domain: Iinkedin-professional.com (uppercase I instead of lowercase l)",
+        "Generic greeting instead of your actual name",
+        "External domain for LinkedIn Premium upgrades",
+        "Fake profile statistics",
         "Generic professional greetings"
       ],
       "verification_tips": [
-        "Check LinkedIn notifications within the app",
-        "Upgrade to Premium only through official LinkedIn website",
-        "Verify profile view statistics through LinkedIn dashboard",
-        "Be cautious of unsolicited professional offers"
+        "LinkedIn emails come from linkedin.com domain only",
+        "Check your actual LinkedIn notifications for profile views",
+        "LinkedIn addresses members by their registered names",
+        "Upgrade to Premium only through official LinkedIn website"
       ]
     }
   },
@@ -586,25 +588,25 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Zoom domain (zoom-security.org)",
-        "Malicious software download link",
-        "Account suspension threats",
+        "Fake Zoom domain (zoom-security.org vs zoom.us)",
+        "Requests to download security updates via email",
+        "Generic greeting 'Dear Zoom User'",
         "Fake security vulnerability claims",
         "External download requirements"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows software update scam using fake security vulnerabilities to distribute malware.",
+      "educational_focus": "Shows software update scam using fake security alerts to distribute malware.",
       "red_flags": [
-        "Zoom emails come from @zoom.us",
-        "Software downloads through external links",
-        "Account suspension threats",
-        "Fake security update requirements",
-        "Non-Zoom domains for security"
+        "Wrong domain: zoom-security.org vs official zoom.us",
+        "Generic greeting instead of your account name",
+        "External domain for Zoom security downloads",
+        "Email requests to download software updates",
+        "Fake security patch version numbers"
       ],
       "verification_tips": [
-        "Download Zoom updates only from official Zoom website",
-        "Check Zoom app for legitimate update notifications",
-        "Verify security news through official Zoom communications",
+        "Zoom uses zoom.us domain for official communications",
+        "Updates come through the Zoom application, not email downloads",
+        "Check Zoom's official website for security announcements",
         "Never download software from email links"
       ]
     }
@@ -620,26 +622,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Unsolicited lottery win claims",
-        "Large monetary prizes",
-        "International lottery scam",
-        "Prize forfeiture threats",
-        "External claims contact"
+        "Unsolicited lottery win notification",
+        "Large prize amount to create excitement",
+        "Requests to contact external agents",
+        "Generic lottery organization name",
+        "Fake international lottery claims"
       ],
       "safety_factors": [],
-      "educational_focus": "Classic lottery scam using large prize claims and urgency to extract personal information or fees.",
+      "educational_focus": "Classic lottery scam using large prize amounts and fake international organizations.",
       "red_flags": [
-        "You cannot win lotteries you didn't enter",
-        "International lottery claims via email",
-        "Large unsolicited monetary prizes",
-        "Prize forfeiture pressure tactics",
-        "External claims agents"
+        "Unexpected lottery win without entering",
+        "Large prize amount ($750,000)",
+        "Generic 'International Lottery Commission'",
+        "Requests to contact external claims agents",
+        "Fake lottery numbers and ticket information"
       ],
       "verification_tips": [
-        "Legitimate lotteries require ticket purchases",
-        "Never provide personal information for unsolicited prizes",
-        "Research any lottery organization thoroughly",
-        "Be extremely skeptical of large unsolicited prizes"
+        "You cannot win a lottery you didn't enter",
+        "Legitimate lotteries don't notify winners via email",
+        "Be extremely suspicious of unexpected large prizes",
+        "Research any lottery organization before responding"
       ]
     }
   },
@@ -654,26 +656,26 @@
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Fake Microsoft domain (windows-update.net)",
-        "Malicious update download link",
-        "Fake CVE vulnerability scores",
-        "Extreme urgency and fear tactics",
-        "Remote control scare tactics"
+        "Fake Windows domain (windows-update.net vs microsoft.com)",
+        "Requests to download updates via email",
+        "Fear tactics about system compromise",
+        "External domain for Microsoft updates",
+        "Fake CVE scores and update IDs"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows operating system update scam using fake security vulnerabilities and fear of system compromise.",
+      "educational_focus": "Shows operating system update scam using fake security alerts to distribute malware.",
       "red_flags": [
-        "Microsoft doesn't send update emails",
-        "Windows updates come through Windows Update",
-        "External update download links",
-        "Fake security vulnerability claims",
-        "Extreme urgency in technical communications"
+        "Wrong domain: windows-update.net vs official microsoft.com",
+        "Microsoft doesn't send update notifications via email",
+        "External domain for Windows security updates",
+        "Fear tactics about system compromise",
+        "Urgent all-caps instructions to install now"
       ],
       "verification_tips": [
-        "Windows updates only through Windows Update system",
-        "Microsoft doesn't email about individual updates",
-        "Verify security news through official Microsoft channels",
-        "Never download system updates from email links"
+        "Windows updates come through Windows Update, not email",
+        "Microsoft uses microsoft.com for official communications",
+        "Check Windows Update settings in your system",
+        "Never download Windows updates from email links"
       ]
     }
   }

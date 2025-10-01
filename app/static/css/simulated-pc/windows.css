@@ -1,3 +1,33 @@
+/* Responsive design utilities */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Touch-friendly interface adjustments */
+@media (max-width: 768px) {
+    .window-content::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    /* Larger touch targets for mobile */
+    .email-item,
+    .desktop-icon,
+    button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Improved spacing for mobile */
+    .email-item {
+        padding: 0.75rem !important;
+    }
+}
+
 /* Custom scrollbar for window content */
 .window-content::-webkit-scrollbar {
     width: 12px;

@@ -43,16 +43,21 @@ export class BaseDialogue {
     }
     
     createDialogueOverlay() {
-        // Remove any existing overlay
-        this.cleanup();
+        // Remove any existing overlay but preserve active state
+        if (this.overlay && this.overlay.parentNode) {
+            this.overlay.parentNode.removeChild(this.overlay);
+        }
+        if (this.exampleContainer && this.exampleContainer.parentNode) {
+            this.exampleContainer.parentNode.removeChild(this.exampleContainer);
+        }
         
         // Create overlay
         this.overlay = document.createElement('div');
-        this.overlay.className = 'fixed inset-0 bg-black/20 flex justify-center items-start pt-[2vh] z-[10000]';
+        this.overlay.className = 'fixed inset-0 bg-black/20 flex justify-center items-start pt-2 sm:pt-4 md:pt-8 z-[10000] p-2 sm:p-4';
         
         // Create dialogue container
         this.dialogueContainer = document.createElement('div');
-        this.dialogueContainer.className = 'bg-gray-800 border-2 border-gray-600 rounded p-4 max-w-2xl w-[90%] min-h-[200px] shadow-2xl flex flex-row items-start gap-8 dialogue-appear';
+        this.dialogueContainer.className = 'bg-gray-800 border-2 border-gray-600 rounded p-3 sm:p-4 md:p-6 w-full max-w-xs sm:max-w-lg md:max-w-2xl min-h-[200px] max-h-[85vh] shadow-2xl flex flex-col md:flex-row items-start gap-3 sm:gap-4 md:gap-8 dialogue-appear overflow-y-auto';
         
         this.overlay.appendChild(this.dialogueContainer);
         document.body.appendChild(this.overlay);
@@ -80,32 +85,35 @@ export class BaseDialogue {
         const avatarUrl = this.getCharacterAvatar();
         const characterName = this.getCharacterName();
         const isLastMessage = this.currentMessageIndex >= this.messages.length - 1;
+        const hasExample = message.example && message.example.trim();
 
         this.dialogueContainer.innerHTML = `
             <img src="${avatarUrl}" alt="${characterName}" 
-                 class="w-40 h-50 rounded border-3 border-gray-600 object-cover flex-shrink-0" 
-                 onerror="this.src='/static/images/avatars/default.png'" width="120" height="120">
+                 class="w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-44 lg:h-44 xl:w-48 xl:h-48 rounded border-2 sm:border-3 border-gray-600 object-cover flex-shrink-0 mx-auto md:mx-0" 
+                 onerror="this.src='/static/images/avatars/default.png'">
             
-            <div class="flex-1 flex flex-col min-h-[200px] relative">
-                <div class="text-green-500 text-xl font-bold mb-4 text-left">${characterName}</div>
+            <div class="flex-1 flex flex-col min-h-[150px] sm:min-h-[180px] md:min-h-[200px] relative w-full">
+                <div class="w-full text-green-500 text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-center">${characterName}</div>
                 
-                <div class="text-green-400 text-lg leading-relaxed mb-8 flex-grow text-left" id="dialogue-text-content">
-                    ${this.shouldTypeMessage(message) ? '' : message.text}
+                <div class="flex-grow mb-4 sm:mb-6 md:mb-8 overflow-y-auto max-h-[40vh]">
+                    <div class="text-green-400 text-sm sm:text-base md:text-lg leading-relaxed text-left" id="dialogue-text-content">
+                        ${this.shouldTypeMessage(message) ? '' : this.formatText(message.text)}
+                    </div>
                 </div>
                 
-                <div class="flex justify-end items-center mt-auto">
-                    <div class="flex gap-6">
+                <div class="w-full flex flex-row justify-center items-center mt-auto gap-2 sm:gap-3 md:gap-4">
+                    <div class="flex flex-row gap-2 sm:gap-3 md:gap-4 flex-wrap justify-center">
                         ${this.currentMessageIndex > 0 ? 
-                            `<button class="text-gray-300 hover:text-white transition-colors duration-200 cursor-pointer text-md" onclick="${this.getPreviousHandler()}">
-                                ← Previous
+                            `<button class="w-[70px] sm:w-[90px] md:w-[100px] px-2 sm:px-3 md:px-4 py-2 text-gray-300 hover:text-white active:text-gray-200 bg-gray-700 hover:bg-gray-600 active:bg-gray-600 rounded transition-colors duration-200 cursor-pointer text-xs sm:text-sm md:text-base touch-manipulation flex items-center justify-center" onclick="${this.getPreviousHandler()}">
+                                <i class="bi bi-arrow-left mr-1"></i><span class="hidden sm:inline">Previous</span><span class="sm:hidden">Prev</span>
                             </button>` : ''
                         }
-                        <button class="text-green-400 hover:text-green-300 transition-colors duration-200 cursor-pointer text-md" onclick="${this.getNextHandler()}">
-                            ${isLastMessage ? this.getFinalButtonText() : 'Next →'}
+                        <button class="w-[70px] sm:w-[90px] md:w-[100px] px-2 sm:px-3 md:px-4 py-2 text-green-400 hover:text-green-300 active:text-green-200 bg-gray-700 hover:bg-green-400 hover:text-black active:bg-green-500 active:text-black rounded transition-colors duration-200 cursor-pointer text-xs sm:text-sm md:text-base touch-manipulation flex items-center justify-center" onclick="${this.getNextHandler()}">
+                            ${isLastMessage ? this.getFinalButtonText() : '<span class="hidden sm:inline">Next</span><span class="sm:hidden">Next</span> <i class="bi bi-arrow-right ml-1"></i>'}
                         </button>
                         ${!this.isFirstViewing ? 
-                            `<button class="text-gray-300 hover:text-white transition-colors duration-200 cursor-pointer text-md" onclick="${this.getSkipHandler()}">
-                                Skip
+                            `<button class="w-[70px] sm:w-[90px] md:w-[100px] px-2 sm:px-3 md:px-4 py-2 text-gray-300 hover:text-white active:text-gray-200 bg-gray-700 hover:bg-gray-600 active:bg-gray-600 rounded transition-colors duration-200 cursor-pointer text-xs sm:text-sm md:text-base touch-manipulation flex items-center justify-center" onclick="${this.getSkipHandler()}">
+                                <i class="bi bi-skip-end mr-1"></i>Skip
                             </button>` : ''
                         }
                     </div>
@@ -113,36 +121,178 @@ export class BaseDialogue {
             </div>
         `;
 
+        // Clean up any existing example container before creating a new one
+        if (this.exampleContainer && this.exampleContainer.parentNode) {
+            this.exampleContainer.parentNode.removeChild(this.exampleContainer);
+            this.exampleContainer = null;
+        }
+
+        // Add separate example container positioned relative to dialogue if example exists
+        if (hasExample) {
+            const exampleContainer = document.createElement('div');
+            
+            // Get dialogue container position and dimensions
+            const dialogueRect = this.dialogueContainer.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            const spaceBelow = viewportHeight - dialogueRect.bottom;
+            const spaceAbove = dialogueRect.top;
+            
+            // Position example container below dialogue if there's space, otherwise above
+            const positionBelow = spaceBelow >= 200; // Need at least 200px for example container
+            
+            if (positionBelow) {
+                exampleContainer.className = 'absolute flex items-start justify-center z-[10001] pointer-events-none';
+                exampleContainer.style.top = `${dialogueRect.bottom + window.scrollY + 8}px`; // 8px gap
+                exampleContainer.style.left = `${Math.max(8, dialogueRect.left + window.scrollX)}px`;
+                exampleContainer.style.right = `${Math.max(8, window.innerWidth - dialogueRect.right - window.scrollX)}px`;
+            } else {
+                exampleContainer.className = 'absolute flex items-end justify-center z-[10001] pointer-events-none';
+                exampleContainer.style.bottom = `${viewportHeight - dialogueRect.top - window.scrollY + 8}px`; // 8px gap above
+                exampleContainer.style.left = `${Math.max(8, dialogueRect.left + window.scrollX)}px`;
+                exampleContainer.style.right = `${Math.max(8, window.innerWidth - dialogueRect.right - window.scrollX)}px`;
+            }
+            
+            exampleContainer.innerHTML = `
+                <div class="bg-gray-800 border-2 border-yellow-500 rounded-lg p-4 sm:p-6 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-4 shadow-2xl pointer-events-auto">
+                    <div class="text-yellow-400 text-sm sm:text-base font-semibold mb-3 flex items-center justify-center">
+                        <i class="bi bi-lightbulb mr-2"></i>
+                        Example
+                    </div>
+                    <div class="text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed font-mono whitespace-pre-wrap text-center" id="dialogue-example-content">
+${this.formatText(message.example)}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(exampleContainer);
+            
+            // Store reference for cleanup
+            this.exampleContainer = exampleContainer;
+        }
+
         // Type message if needed
         if (this.shouldTypeMessage(message)) {
-            this.typeMessage(message.text);
+            // Add small delay to ensure DOM is ready
+            setTimeout(() => {
+                this.typeMessage(message.text);
+            }, 50);
+        } else {
+            // If not typing, make sure the formatted text is displayed
+            const container = document.getElementById('dialogue-text-content');
+            if (container) {
+                container.innerHTML = this.formatText(message.text);
+            }
         }
+
+        // Bind touch events for mobile interaction
+        this.bindTouchEvents();
 
         // Apply interactive guidance for this message
         this.applyInteractiveGuidance(message);
     }
 
     shouldTypeMessage(message) {
-        // Default to typing unless explicitly disabled
-        return message.typing !== false && message.type !== 'instant';
+        // Always display instantly
+        return false;
+    }
+
+    formatText(text) {
+        if (!text) return '';
+        
+        // Convert markdown-style formatting to HTML
+        let formatted = text
+            // Convert line breaks
+            .replace(/\n/g, '<br>')
+            // Convert italic text (*text*)
+            .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-green-300 italic">$1</em>')
+            // Convert inline code (`text`)
+            .replace(/`([^`]+)`/g, '<code class="bg-gray-700 px-1 rounded text-yellow-300 font-mono text-sm">$1</code>')
+            
+        return formatted;
     }
 
     async typeMessage(text, speed = this.typingSpeed) {
         const container = document.getElementById('dialogue-text-content');
-        if (!container) return;
+        if (!container) {
+            console.warn('Dialogue text container not found');
+            return;
+        }
         
+        console.log('Starting to type message:', text.substring(0, 50) + '...');
+        
+        // Format the text first and set it as innerHTML
+        const formattedText = this.formatText(text);
+        container.innerHTML = formattedText;
+        
+        // Store reference to ensure dialogue stays active during typing
+        const dialogueInstance = this;
+        
+        // Create a mask that will reveal text progressively
+        const maskOverlay = document.createElement('div');
+        maskOverlay.style.position = 'absolute';
+        maskOverlay.style.top = '0';
+        maskOverlay.style.left = '0';
+        maskOverlay.style.right = '0';
+        maskOverlay.style.bottom = '0';
+        maskOverlay.style.backgroundColor = 'rgb(31, 41, 55)'; // Same as dialogue background
+        maskOverlay.style.pointerEvents = 'none';
+        maskOverlay.style.zIndex = '1';
+        
+        // Make container relative and add the mask
+        container.style.position = 'relative';
+        container.appendChild(maskOverlay);
+        
+        // Wrap content in a div for better control
+        const contentWrapper = document.createElement('div');
+        contentWrapper.innerHTML = formattedText;
+        contentWrapper.style.position = 'relative';
+        contentWrapper.style.zIndex = '0';
+        
+        // Replace container content with wrapper
         container.innerHTML = '';
+        container.appendChild(contentWrapper);
+        container.appendChild(maskOverlay);
         
-        for (let i = 0; i < text.length; i++) {
-            container.innerHTML += text[i];
+        // Get container dimensions for calculation
+        const containerRect = container.getBoundingClientRect();
+        const containerHeight = container.scrollHeight;
+        
+        // Animate by progressively reducing mask height (top-to-bottom reveal)
+        const plainText = text;
+        for (let i = 0; i <= plainText.length; i++) {
+            // Check if dialogue is still active
+            if (!dialogueInstance.isActive || !document.getElementById('dialogue-text-content')) {
+                console.warn('Typing interrupted - dialogue no longer active or container removed');
+                return;
+            }
+            
+            // Calculate how much to reveal (top-to-bottom)
+            const revealPercentage = i / plainText.length;
+            const maskHeight = containerHeight * (1 - revealPercentage);
+            
+            // Position mask to cover remaining text from bottom
+            maskOverlay.style.height = `${maskHeight}px`;
+            maskOverlay.style.top = `${containerHeight - maskHeight}px`;
+            
             await new Promise(resolve => setTimeout(resolve, speed));
         }
+        
+        // Clean up - remove mask and restore normal container
+        container.innerHTML = formattedText;
+        container.style.position = '';
+        
+        console.log('Typing complete');
     }
 
     nextMessage() {
         // Clear current interactive guidance
         this.clearHighlight();
         this.clearAllowedInteractions();
+        
+        // Clean up previous example container
+        if (this.exampleContainer && this.exampleContainer.parentNode) {
+            this.exampleContainer.parentNode.removeChild(this.exampleContainer);
+            this.exampleContainer = null;
+        }
         
         if (this.currentMessageIndex < this.messages.length - 1) {
             this.currentMessageIndex++;
@@ -156,6 +306,12 @@ export class BaseDialogue {
         // Clear current interactive guidance
         this.clearHighlight();
         this.clearAllowedInteractions();
+        
+        // Clean up previous example container
+        if (this.exampleContainer && this.exampleContainer.parentNode) {
+            this.exampleContainer.parentNode.removeChild(this.exampleContainer);
+            this.exampleContainer = null;
+        }
         
         if (this.currentMessageIndex > 0) {
             this.currentMessageIndex--;
@@ -178,8 +334,15 @@ export class BaseDialogue {
         if (this.overlay && this.overlay.parentNode) {
             this.overlay.parentNode.removeChild(this.overlay);
         }
+        
+        // Clean up separate example container
+        if (this.exampleContainer && this.exampleContainer.parentNode) {
+            this.exampleContainer.parentNode.removeChild(this.exampleContainer);
+        }
+        
         this.overlay = null;
         this.dialogueContainer = null;
+        this.exampleContainer = null;
         this.isActive = false;
         
         // Clear current dialogue reference if it's this instance
@@ -286,11 +449,19 @@ export class BaseDialogue {
         interactionStyles.id = 'dialogue-interaction-styles';
         interactionStyles.textContent = `
             .dialogue-highlight {
-                outline: 3px solid #10b981 !important;
-                outline-offset: 2px;
+                outline: 2px solid #10b981 !important;
+                outline-offset: 1px;
                 position: relative;
                 z-index: 52 !important;
                 animation: dialogue-pulse 2s infinite;
+            }
+
+            /* Responsive outline thickness */
+            @media (min-width: 640px) {
+                .dialogue-highlight {
+                    outline: 3px solid #10b981 !important;
+                    outline-offset: 2px;
+                }
             }
 
             .dialogue-pulse {
@@ -303,8 +474,22 @@ export class BaseDialogue {
                     transform: scale(1);
                 }
                 50% { 
-                    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
-                    transform: scale(1.02);
+                    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+                    transform: scale(1.01);
+                }
+            }
+
+            /* Larger pulse for desktop */
+            @media (min-width: 768px) {
+                @keyframes dialogue-pulse {
+                    0%, 100% { 
+                        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+                        transform: scale(1);
+                    }
+                    50% { 
+                        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+                        transform: scale(1.02);
+                    }
                 }
             }
 
@@ -483,5 +668,18 @@ export class BaseDialogue {
                 this.allowInteractionWith(guidance.allowInteraction);
             }
         }
+    }
+
+    bindTouchEvents() {
+        // Add touch event support for dialogue buttons
+        const buttons = this.dialogueContainer.querySelectorAll('button[onclick]');
+        buttons.forEach(button => {
+            const onclickHandler = button.getAttribute('onclick');
+            if (onclickHandler) {
+                button.addEventListener('touchstart', () => {
+                    eval(onclickHandler);
+                }, { passive: true });
+            }
+        });
     }
 }

@@ -3,25 +3,19 @@
  * Digital forensics specific apps and utilities
  */
 
-// Import all forensic applications
-import { EvidenceLockerApp } from './evidence-locker-app.js';
-import { DiskAnalyzerApp } from './disk-analyzer-app.js';
-import { MemoryForensicsApp } from './memory-forensics-app.js';
-import { NetworkAnalyzerApp } from './network-analyzer-app.js';
-import { TimelineConstructorApp } from './timeline-constructor-app.js';
-import { ReportGeneratorApp } from './report-generator-app.js';
+// Import streamlined forensic applications (responsive design)
+import { EvidenceViewerApp } from './evidence-viewer-app.js';
+import { InvestigationHubApp } from './investigation-hub-app.js'; 
+import { ForensicReportApp } from './forensic-report-app.js';
 
-// Import forensic base class
+// Import forensic base class with responsive design
 import { ForensicAppBase } from './forensic-app-base.js';
 
 export const Level5Apps = {
-    // Forensic Applications
-    EvidenceLockerApp,
-    DiskAnalyzerApp,
-    MemoryForensicsApp,
-    NetworkAnalyzerApp,
-    TimelineConstructorApp,
-    ReportGeneratorApp,
+    // Core Forensic Applications (3 streamlined apps)
+    EvidenceViewerApp,      // Guided evidence analysis
+    InvestigationHubApp,    // Central progress dashboard  
+    ForensicReportApp,      // Simple report builder
     
     // Base class for extending forensic applications
     ForensicAppBase,
@@ -29,12 +23,9 @@ export const Level5Apps = {
     // Application registry for dynamic loading
     getForensicApps() {
         return {
-            'evidence-locker': EvidenceLockerApp,
-            'disk-analyzer': DiskAnalyzerApp,
-            'memory-forensics': MemoryForensicsApp,
-            'network-analyzer': NetworkAnalyzerApp,
-            'timeline-constructor': TimelineConstructorApp,
-            'report-generator': ReportGeneratorApp
+            'evidence-viewer': EvidenceViewerApp,
+            'investigation-hub': InvestigationHubApp,
+            'forensic-report': ForensicReportApp
         };
     },
     

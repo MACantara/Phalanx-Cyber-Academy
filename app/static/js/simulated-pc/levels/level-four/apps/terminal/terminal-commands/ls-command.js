@@ -24,7 +24,11 @@ export class LsCommand extends BaseCommand {
         const showAll = args.includes('-a') || args.includes('-la') || args.includes('-al');
         const longFormat = args.includes('-l') || args.includes('-la') || args.includes('-al');
         
-        const items = await this.fileSystem.listDirectory(this.getCurrentDirectory(), showAll);
+        // Check if a specific directory is provided
+        const nonFlagArgs = args.filter(arg => !arg.startsWith('-'));
+        const targetDir = nonFlagArgs.length > 0 ? nonFlagArgs[0] : '.';
+        
+        const items = await this.listDirectory(targetDir, showAll);
         
         if (longFormat) {
             items.forEach(item => {

@@ -27,9 +27,8 @@ export class ArticleFormatter {
     }
 
     static toTitleCase(str) {
-        return str.replace(/\w\S*/g, (txt) => {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        });
+        // Return the original string without modification to preserve original formatting
+        return str;
     }
 
     static formatArticleText(text, isFakeNews, articleData = null) {

@@ -5,101 +5,130 @@ export class Level5HuntForTheNullDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "Welcome to Level 5: The Hunt for The Null. This is your final mission—a comprehensive digital forensics investigation to expose The Null's identity."
+                text: "🕵️ MISSION: A cybercriminal called 'The Null' has been exposed. You have their seized devices. Your job is simple: find out who they really are."
             },
             {
-                text: "You'll be working with a professional forensic suite featuring six specialized applications: Evidence Locker, Disk Analyzer, Memory Forensics, Network Analyzer, Timeline Constructor, and Report Generator."
+                text: "🎯 ONE CLEAR GOAL: Discover The Null's Real Identity\n\n✅ Real Name: ?\n✅ Email Address: ?\n✅ Phone Number: ?\n\nThat's it. Find these 3 pieces of information and you win."
             },
             {
-                text: "The Evidence Locker is your central hub—it manages chain of custody, tracks evidence integrity, and coordinates analysis across all forensic tools."
+                text: "📱 YOUR EVIDENCE (What you'll search through):\n\n💻 Laptop Hard Drive - Contains browser data and personal files\n🧠 Memory Dump - Shows what was running when seized\n🌐 Network Logs - Shows communications and data transfers\n\n⚡ You must investigate ALL 5 evidence pieces before building your report!"
             },
             {
-                text: "Every piece of evidence has hash verification to ensure its authenticity."
+                text: "🔍 HOW IT WORKS (Super Simple):\n\n1️⃣ Evidence Viewer → Investigate ALL 5 pieces of evidence\n2️⃣ Extract clues from each device (laptop, memory, network)\n3️⃣ Forensic Report Builder → Organize your findings\n4️⃣ Submit when you have all identity pieces"
             },
             {
-                text: "Use the Disk Analyzer to examine hard drive images, recover deleted files, and analyze filesystem artifacts."
+                text: "🎮 STREAMLINED WORKFLOW:\n\n• Evidence Viewer: Investigate all 5 evidence pieces\n• Extract clues from each device thoroughly\n• Forensic Report Builder: Drag clues into report sections\n• Submit Report → WIN!\n\nComplete investigation required before report building!"
             },
             {
-                text: "The Memory Forensics tool reveals running processes, network connections, and hidden malware in RAM dumps."
+                text: "🏆 SUCCESS = Finding These 3 Things:\n\n👤 Real Name: Alex Morrison\n📧 Email: a.morrison@securemail.com\n📞 Phone: +1-555-0142\n\nFind all 3, submit your report, case closed!"
             },
             {
-                text: "The Network Analyzer lets you inspect packet captures, identify suspicious traffic patterns, and trace command-and-control communications."
-            },
-            {                
-                text: "Correlate findings across sources using the Timeline Constructor."
-            },
-            {
-                text: "Finally, document your investigation with the Report Generator."
-            },
-            {
-                text: "It creates legally-compliant forensic reports following NIST SP 800-86 and ISO/IEC 27037:2012 standards, complete with proper evidence citations."
-            },
-            {
-                text: "All forensic applications maintain a shared evidence context, so findings from one tool are automatically available to others."
-            },
-            {
-                text: "Look for correlations between disk artifacts, memory signatures, and network traffic."
-            },
-            {
-                text: "The Null has left traces across multiple evidence sources."
-            },
-            {
-                text: "Your mission is to piece together the attack timeline, identify indicators of compromise, and build an airtight case documenting their activities."
-            },
-            {
-                text: "This investigation follows real-world digital forensics procedures."
-            },
-            {
-                text: "Verify evidence integrity, maintain chain of custody, document your methodology, and ensure all findings are reproducible."
-            },
-            {
-                text: "Successfully completing this forensic investigation and identifying The Null will earn you 500 XP in Digital Forensics."
-            },
-            {
-                text: "Ready to put your investigative skills to the ultimate test?"
+                text: "Ready to be a digital detective and unmask The Null?"
             }
         ];
     }
 
-    onComplete() {
+    async onComplete() {
         localStorage.setItem('cyberquest_level_5_started', 'true');
-        // Store the start time for performance tracking (similar to Level 4)
         localStorage.setItem('cyberquest_level_5_start_time', Date.now());
         
-        // Launch the Investigation Briefing as the starting point for Level 5 forensics
+        // Initialize session for Level 5 using the GameProgressManager
+        try {
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+            const progressManager = new GameProgressManager();
+            
+            const levelData = await progressManager.startLevel(5, 'Hunt-for-the-Null', 'expert');
+            console.log('[Level5] Session started:', levelData);
+            
+            // Store session ID for later use
+            if (levelData.session && levelData.session.id) {
+                localStorage.setItem('cyberquest_active_session_id', levelData.session.id.toString());
+                sessionStorage.setItem('active_session_id', levelData.session.id.toString());
+                window.currentSessionId = levelData.session.id;
+            }
+        } catch (error) {
+            console.warn('[Level5] Failed to start session, will create one on completion:', error);
+        }
+        
         if (window.applicationLauncher) {
             setTimeout(async () => {
-                console.log('Launching Level 5 Digital Forensics Environment...');
+                console.log('Launching Level 5 Digital Detective Mission...');
                 
                 try {
-                    // Launch the Investigation Briefing app first - this provides mission guidance and context
-                    await window.applicationLauncher.launchInvestigationBriefing();
-                    console.log('Investigation Briefing launched successfully');
+                    // Launch Evidence Viewer first (primary detective tool)
+                    await window.applicationLauncher.launchEvidenceViewer();
+                    console.log('Evidence Viewer launched successfully');
                     
-                    // Launch the Investigation Tracker - provides progress monitoring throughout the investigation
-                    await window.applicationLauncher.launchInvestigationTracker();
-                    console.log('Investigation Tracker launched successfully');
-                    
-                    // Show notification to guide user using centralized toast system
                     if (window.toastManager) {
                         window.toastManager.showToast(
-                            ' INVESTIGATION BRIEFING: Mission briefing loaded. Review objectives and evidence guide before starting investigation.',
-                            'success'
+                            '🎯 GOAL: Investigate ALL 5 evidence pieces → Extract clues → Build forensic report → Find name, email & phone!',
+                            'success',
+                            8000
                         );
                     }
                     
-
+                    // Set up forensic event listener for app opening
+                    this.setupForensicEventListener();
                     
                 } catch (error) {
-                    console.error('Failed to launch Level 5 forensic applications:', error);
+                    console.error('Failed to launch Level 5 applications:', error);
+                    if (window.toastManager) {
+                        window.toastManager.showToast(
+                            'Detective environment loading... Open apps from desktop if needed.',
+                            'info'
+                        );
+                    }
                 }
-                
             }, 1000);
         }
     }
 
+    setupForensicEventListener() {
+        // Listen for forensic events to handle app opening
+        document.addEventListener('forensic-event', (e) => {
+            const { eventType, details } = e.detail;
+            
+            if (eventType === 'open_app' && details.appId === 'forensic-report') {
+                this.openForensicReportApp();
+            }
+        });
+        
+        console.log('[Level5] Forensic event listener set up for app opening');
+    }
+
+    async openForensicReportApp() {
+        try {
+            // Check if evidence analysis is complete
+            const analysisComplete = localStorage.getItem('level5_evidence_analysis_complete');
+            
+            if (analysisComplete === 'true') {
+                console.log('[Level5] Opening Forensic Report - evidence analysis complete');
+                await window.applicationLauncher.launchForensicReport();
+                
+                if (window.toastManager) {
+                    window.toastManager.showToast(
+                        '📝 Report Builder opened! Drag evidence into sections to reveal the identity.',
+                        'info',
+                        5000
+                    );
+                }
+            } else {
+                console.log('[Level5] Forensic Report blocked - evidence analysis not complete');
+                if (window.toastManager) {
+                    window.toastManager.showToast(
+                        '🔒 Complete evidence analysis first! Investigate all 5 pieces of evidence in Evidence Viewer.',
+                        'warning',
+                        5000
+                    );
+                }
+            }
+        } catch (error) {
+            console.error('[Level5] Failed to open forensic report:', error);
+        }
+    }
+
     getFinalButtonText() {
-        return 'Start Final Mission';
+        return 'Start Digital Detective Work';
     }
 
     static shouldAutoStart(levelId) {

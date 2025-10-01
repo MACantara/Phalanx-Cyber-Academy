@@ -78,7 +78,6 @@ def get_level_js_files(level_id):
         'js/simulated-pc/desktop-components/window-snap-manager.js',
         'js/simulated-pc/desktop-components/application-launcher.js',
         'js/simulated-pc/desktop-components/application-registry.js',
-        'js/simulated-pc/desktop-components/desktop-icons.js',
         'js/simulated-pc/desktop-components/taskbar.js',
         'js/simulated-pc/desktop-components/shutdown-modal.js',
         'js/simulated-pc/desktop-components/skip-dialogue-modal.js',
@@ -109,12 +108,7 @@ def get_level_js_files(level_id):
             # Level 1 dialogues
             'js/simulated-pc/levels/level-one/dialogues/index.js',
             'js/simulated-pc/levels/level-one/dialogues/level1-misinformation-maze.js',
-            'js/simulated-pc/levels/level-one/dialogues/challenge1-dialogue.js',
             'js/simulated-pc/levels/level-one/dialogues/level-completion-dialogue.js',
-            
-            # Tutorials for Level 1
-            'js/simulated-pc/tutorials/initial-tutorial.js',
-            'js/simulated-pc/tutorials/browser-tutorial.js',
         ]
     
     elif level_id == 2:
@@ -129,9 +123,6 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-two/dialogues/index.js',
             'js/simulated-pc/levels/level-two/dialogues/level2-shadow-inbox.js',
             'js/simulated-pc/levels/level-two/dialogues/email-security-completion-dialogue.js',
-            
-            # Tutorials for Level 2
-            'js/simulated-pc/tutorials/email-tutorial.js',
         ]
     
     elif level_id == 3:
@@ -149,11 +140,7 @@ def get_level_js_files(level_id):
             # Level 3 applications
             'js/simulated-pc/levels/level-three/apps/malware-scanner.js',
             'js/simulated-pc/levels/level-three/apps/process-monitor.js',
-            'js/simulated-pc/levels/level-three/apps/ransomware-decryptor.js',
             
-            # Tutorials for Level 3
-            'js/simulated-pc/tutorials/malware-scanner-tutorial.js',
-            'js/simulated-pc/tutorials/process-monitor-tutorial.js',
         ]
     
     elif level_id == 4:
@@ -173,17 +160,13 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/cat-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/cd-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/clear-command.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/date-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/echo-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/find-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/grep-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/help-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/history-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/ls-command.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/nmap-command.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/ping-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/pwd-command.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/uname-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/whoami-command.js',
             
             # Terminal Application (core Level 4 app)
@@ -193,9 +176,6 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-functions/command-registry.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-functions/file-system.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-functions/tab-completion.js',
-            
-            # Tutorials for Level 4
-            'js/simulated-pc/tutorials/terminal-tutorial.js',
         ]
     
     elif level_id == 5:
@@ -206,13 +186,10 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-five/apps/index.js',
             'js/simulated-pc/levels/level-five/data/index.js',
             
-            # Level 5 forensic applications
-            'js/simulated-pc/levels/level-five/apps/evidence-locker-app.js',
-            'js/simulated-pc/levels/level-five/apps/disk-analyzer-app.js',
-            'js/simulated-pc/levels/level-five/apps/memory-forensics-app.js',
-            'js/simulated-pc/levels/level-five/apps/network-analyzer-app.js',
-            'js/simulated-pc/levels/level-five/apps/timeline-constructor-app.js',
-            'js/simulated-pc/levels/level-five/apps/report-generator-app.js',
+            # Level 5 streamlined forensic applications (3 core apps)
+            'js/simulated-pc/levels/level-five/apps/evidence-viewer-app.js',
+            'js/simulated-pc/levels/level-five/apps/investigation-hub-app.js',
+            'js/simulated-pc/levels/level-five/apps/forensic-report-app.js',
             'js/simulated-pc/levels/level-five/apps/forensic-app-base.js',
             
             # Level 5 dialogues

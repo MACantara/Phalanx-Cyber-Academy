@@ -73,7 +73,7 @@ export class TabCompletion {
     }
 
     commandSupportsFileCompletion(command) {
-        const fileCommands = ['cd', 'ls', 'cat', 'help'];
+        const fileCommands = ['cd', 'ls', 'cat', 'help', 'sudo'];
         return fileCommands.includes(command);
     }
 
@@ -225,10 +225,12 @@ export class TabCompletion {
             case 'echo':
                 // Echo doesn't need specific completion beyond what user types
                 return null;
-            case 'uname':
-                return this.completeUnameArguments(currentPart, beforeCursor, afterCursor);
             case 'ls':
                 return this.completeLsArguments(parts, currentPart, beforeCursor, afterCursor);
+            case 'sudo':
+                return this.completeSudoArguments(parts, currentPart, beforeCursor, afterCursor);
+            case 'submit-flag':
+                return this.completeSubmitFlagArguments(currentPart, beforeCursor, afterCursor);
             default:
                 return null;
         }
@@ -258,30 +260,6 @@ export class TabCompletion {
                 newText: beforeCompletion + commonPrefix + afterCursor,
                 newCursorPosition: beforeCompletion.length + commonPrefix.length,
                 suggestions: matches
-            };
-        }
-        
-        return {
-            newText: beforeCursor + afterCursor,
-            newCursorPosition: beforeCursor.length,
-            suggestions: matches
-        };
-    }
-
-    completeUnameArguments(currentPart, beforeCursor, afterCursor) {
-        const unameOptions = ['-a', '--all'];
-        const matches = unameOptions.filter(opt => opt.startsWith(currentPart));
-        
-        if (matches.length === 0) {
-            return null;
-        }
-        
-        if (matches.length === 1) {
-            const match = matches[0];
-            const beforeCompletion = beforeCursor.substring(0, beforeCursor.length - currentPart.length);
-            return {
-                newText: beforeCompletion + match + ' ' + afterCursor,
-                newCursorPosition: beforeCompletion.length + match.length + 1
             };
         }
         
@@ -332,6 +310,57 @@ export class TabCompletion {
         return null;
     }
 
+    completeSudoArguments(parts, currentPart, beforeCursor, afterCursor) {
+        // If current part starts with -, suggest sudo options
+        if (currentPart.startsWith('-')) {
+            const sudoOptions = ['-l', '-h', '--help'];
+            const matches = sudoOptions.filter(opt => opt.startsWith(currentPart));
+            
+            if (matches.length === 1) {
+                const match = matches[0];
+                const beforeCompletion = beforeCursor.substring(0, beforeCursor.length - currentPart.length);
+                return {
+                    newText: beforeCompletion + match + ' ' + afterCursor,
+                    newCursorPosition: beforeCompletion.length + match.length + 1
+                };
+            }
+            
+            if (matches.length > 1) {
+                return {
+                    newText: beforeCursor + afterCursor,
+                    newCursorPosition: beforeCursor.length,
+                    suggestions: matches
+                };
+            }
+        }
+        
+        // If no flags, suggest common commands that work with sudo
+        if (parts.length === 2) { // sudo [command]
+            const sudoCommands = ['find', 'ls', 'cat', 'ps'];
+            const matches = sudoCommands.filter(cmd => cmd.startsWith(currentPart.toLowerCase()));
+            
+            if (matches.length === 1) {
+                const match = matches[0];
+                const beforeCompletion = beforeCursor.substring(0, beforeCursor.length - currentPart.length);
+                return {
+                    newText: beforeCompletion + match + ' ' + afterCursor,
+                    newCursorPosition: beforeCompletion.length + match.length + 1
+                };
+            }
+            
+            if (matches.length > 1) {
+                return {
+                    newText: beforeCursor + afterCursor,
+                    newCursorPosition: beforeCursor.length,
+                    suggestions: matches
+                };
+            }
+        }
+        
+        // Fall back to file/directory completion for paths
+        return null;
+    }
+
     findCommonPrefix(strings) {
         if (strings.length === 0) return '';
         if (strings.length === 1) return strings[0];
@@ -346,5 +375,90 @@ export class TabCompletion {
             }
         }
         return prefix;
+    }
+
+    completeSubmitFlagArguments(currentPart, beforeCursor, afterCursor) {
+        // For submit-flag, provide suggestions with WHT{} format as primary
+        const flagSuggestions = ['WHT{', '--progress', '--challenges', '--status', '--help'];
+        
+        // If current part starts with --, suggest command options
+        if (currentPart.startsWith('--')) {
+            const optionSuggestions = ['--progress', '--challenges', '--status', '--help'];
+            const matches = optionSuggestions.filter(suggestion => 
+                suggestion.startsWith(currentPart)
+            );
+            
+            if (matches.length === 1) {
+                const completion = matches[0];
+                const beforeCompletion = beforeCursor.substring(0, beforeCursor.length - currentPart.length);
+                return {
+                    newText: beforeCompletion + completion + ' ' + afterCursor,
+                    newCursorPosition: beforeCompletion.length + completion.length + 1
+                };
+            }
+            
+            if (matches.length > 1) {
+                return {
+                    newText: beforeCursor + afterCursor,
+                    newCursorPosition: beforeCursor.length,
+                    suggestions: matches
+                };
+            }
+        }
+        
+        // If current part starts with -, suggest short options
+        if (currentPart.startsWith('-') && !currentPart.startsWith('--')) {
+            const shortOptions = ['-p', '-c', '-s', '-h'];
+            const matches = shortOptions.filter(opt => opt.startsWith(currentPart));
+            
+            if (matches.length === 1) {
+                const completion = matches[0];
+                const beforeCompletion = beforeCursor.substring(0, beforeCursor.length - currentPart.length);
+                return {
+                    newText: beforeCompletion + completion + ' ' + afterCursor,
+                    newCursorPosition: beforeCompletion.length + completion.length + 1
+                };
+            }
+            
+            if (matches.length > 1) {
+                return {
+                    newText: beforeCursor + afterCursor,
+                    newCursorPosition: beforeCursor.length,
+                    suggestions: matches
+                };
+            }
+        }
+        
+        // For flag formats, prioritize WHT{}
+        if (currentPart.length === 0) {
+            return {
+                newText: beforeCursor + afterCursor,
+                newCursorPosition: beforeCursor.length,
+                suggestions: flagSuggestions
+            };
+        }
+        
+        const matches = flagSuggestions.filter(suggestion => 
+            suggestion.toLowerCase().startsWith(currentPart.toLowerCase())
+        );
+        
+        if (matches.length === 0) {
+            return null;
+        }
+        
+        if (matches.length === 1) {
+            const completion = matches[0];
+            const beforeCompletion = beforeCursor.substring(0, beforeCursor.length - currentPart.length);
+            return {
+                newText: beforeCompletion + completion + afterCursor,
+                newCursorPosition: beforeCompletion.length + completion.length
+            };
+        }
+        
+        return {
+            newText: beforeCursor + afterCursor,
+            newCursorPosition: beforeCursor.length,
+            suggestions: matches
+        };
     }
 }

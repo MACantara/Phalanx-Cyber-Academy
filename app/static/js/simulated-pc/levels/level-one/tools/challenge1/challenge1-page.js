@@ -73,54 +73,79 @@ class Challenge1PageClass extends BasePage {
 
         const currentArticle = this.articlesData[this.currentArticleIndex];
         
-        // Format the published date for display
-        const formattedDate = ArticleFormatter.formatDate(currentArticle.published);
+        // Format the published date for display (use new JSON format)
+        const formattedDate = ArticleFormatter.formatDate(currentArticle.date || currentArticle.published);
         
-        // Truncate text if too long for better display
-        const displayText = ArticleFormatter.truncateText(currentArticle.text, 1200);
+        // Truncate text if too long for better display (use new JSON format)
+        const displayText = ArticleFormatter.truncateText(currentArticle.content || currentArticle.text, 1200);
         
-        // Add suspicious elements only subtly for fake news
-        const isFakeNews = !currentArticle.is_real;
+        // Determine if fake news (check multiple possible field formats)
+        const isFakeNews = currentArticle.is_real === false || currentArticle.label === "fake" || currentArticle.label === 1;
         
         return `
-            <div class="font-sans bg-white min-h-screen w-full">
-                <!-- Header Section -->
-                <section class="bg-gray-800 text-white p-5 w-full">
-                    <div class="flex justify-between items-center max-w-4xl mx-auto">
-                        <div>
-                            <h1 class="m-0 text-3xl">Daily Politico News</h1>
-                            <p class="mt-1 mb-0 text-gray-400">Your Source for News and Analysis</p>
+            <div class="font-sans bg-white min-h-full w-full overflow-y-auto">
+                <!-- Streamlined Header Section -->
+                <section class="bg-gradient-to-r from-gray-800 to-gray-700 text-white py-4 px-5 w-full shadow-lg">
+                    <div class="max-w-5xl mx-auto">
+                        <!-- Top row: Site branding and progress -->
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
+                            <div class="flex-shrink-0">
+                                <h1 class="m-0 text-2xl sm:text-3xl font-bold">Daily Politico News</h1>
+                                <p class="mt-1 mb-0 text-gray-300 text-sm">Breaking News & Analysis</p>
+                            </div>
+                            
+                            <!-- Streamlined Progress Bar -->
+                            <div class="flex-grow max-w-md">
+                                ${ProgressBar.create(this.currentArticleIndex, this.articlesData.length, this.classifiedArticles.size)}
+                            </div>
                         </div>
                         
-                        <!-- Progress Bar -->
-                        ${ProgressBar.create(this.currentArticleIndex, this.articlesData.length, this.classifiedArticles.size)}
+                        <!-- Article navigation indicator -->
+                        <div class="flex justify-between items-center text-sm text-gray-300 border-t border-gray-600 pt-2">
+                            <span class="flex items-center gap-2">
+                                <i class="bi bi-newspaper"></i>
+                                Article ${this.currentArticleIndex + 1} of ${this.articlesData.length}
+                            </span>
+                            <span class="text-xs">
+                                ${this.classifiedArticles.size} classified
+                            </span>
+                        </div>
                     </div>
                 </section>
                 
                 <!-- Content Section -->
                 <section class="w-full">
                     <div class="px-8 py-6 max-w-4xl mx-auto">
-                        <h2 class="text-slate-900 text-3xl mb-3" data-element-type="title" data-element-id="title_analysis">
+                        <h2 class="text-slate-900 text-2xl sm:text-3xl mb-4" data-element-type="title" data-element-id="title_analysis">
                             ${ArticleFormatter.toTitleCase(currentArticle.title)}
                         </h2>
                         
-                        <!-- Article Metadata -->
-                        <div class="text-gray-700 mb-5 text-sm flex gap-4 flex-wrap items-center">
-                            <span data-element-type="date" data-element-id="date_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800">
-                                <i class="bi bi-calendar-event text-xs"></i>
-                                Published: ${formattedDate}
-                            </span>
-                            <span class="text-slate-500">•</span>
-                            <span data-element-type="author" data-element-id="author_analysis" class="px-2 py-1 bg-slate-50 border border-slate-200 rounded flex items-center gap-1 text-slate-800">
-                                <i class="bi bi-pencil text-xs"></i>
-                                By: ${currentArticle.author || 'Staff Reporter'}
-                            </span>
-                            <span class="text-slate-500">•</span>
-                            <span data-element-type="source" data-element-id="source_analysis" class="px-2 py-1 bg-sky-50 border border-sky-500 rounded flex items-center gap-1">
-                                <i class="bi bi-globe text-xs"></i>
-                                <strong class="text-sky-800">Source:</strong>
-                                <span class="text-sky-800 font-mono text-xs">${currentArticle.source || 'Unknown'}</span>
-                            </span>
+                        <!-- Enhanced Article Metadata -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 mb-5">
+                            <!-- Author Information with Credentials -->
+                            <div class="mb-3 pb-3 border-b border-slate-200">
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                                    <span data-element-type="author" data-element-id="author_analysis" class="flex items-center gap-2 text-slate-800">
+                                        <i class="bi bi-person-badge text-slate-600"></i>
+                                        <strong class="text-sm sm:text-base">${currentArticle.author || 'Staff Reporter'}</strong>
+                                    </span>
+                                    ${currentArticle.author_credentials ? `
+                                        <span class="text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded-full self-start sm:self-auto">
+                                            ${currentArticle.author_credentials}
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs text-slate-600">
+                                    <span data-element-type="date" data-element-id="date_analysis" class="flex items-center gap-1">
+                                        <i class="bi bi-calendar-event"></i>
+                                        Published: ${formattedDate}
+                                    </span>
+                                    <span data-element-type="source" data-element-id="source_analysis" class="flex items-center gap-1">
+                                        <i class="bi bi-globe2"></i>
+                                        Source: <span class="font-mono text-blue-700">${currentArticle.website || currentArticle.source || 'Unknown'}</span>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Article Text -->
@@ -129,27 +154,27 @@ class Challenge1PageClass extends BasePage {
                         </div>
                         
                         <!-- Classification Interface -->
-                        <div class="mt-6 mb-4 p-5 bg-slate-50 rounded-lg border border-slate-200">
-                            <h3 class="mt-0 text-slate-800 text-xl">Classify this Article</h3>
-                            <p class="text-slate-600 mb-5">Based on your analysis, is this article real or fake news?</p>
+                        <div class="mt-4 sm:mt-6 mb-4 p-4 sm:p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <h3 class="mt-0 text-slate-800 text-lg sm:text-xl">Classify this Article</h3>
+                            <p class="text-slate-600 mb-4 sm:mb-5 text-sm sm:text-base">Based on your analysis, is this article real or fake news?</p>
                             
-                            <div class="flex gap-4 mb-5">
+                            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-5">
                                 <button id="classify-real" 
-                                        class="flex-1 px-5 py-3 bg-emerald-500 text-white border-none rounded-md text-base cursor-pointer transition-colors hover:bg-emerald-600">
-                                    <i class="bi bi-newspaper me-2"></i> Real News
+                                        class="w-full sm:flex-1 px-4 sm:px-5 py-3 bg-emerald-500 text-white border-none rounded-md text-sm sm:text-base cursor-pointer transition-colors hover:bg-emerald-600 active:bg-emerald-700 touch-manipulation">
+                                    <i class="bi bi-newspaper me-1 sm:me-2"></i> Real News
                                 </button>
                                 <button id="classify-fake" 
-                                        class="flex-1 px-5 py-3 bg-red-500 text-white border-none rounded-md text-base cursor-pointer transition-colors hover:bg-red-600">
-                                    <i class="bi bi-exclamation-triangle me-2"></i> Fake News
+                                        class="w-full sm:flex-1 px-4 sm:px-5 py-3 bg-red-500 text-white border-none rounded-md text-sm sm:text-base cursor-pointer transition-colors hover:bg-red-600 active:bg-red-700 touch-manipulation">
+                                    <i class="bi bi-exclamation-triangle me-1 sm:me-2"></i> Fake News
                                 </button>
                             </div>
                             
-                            <div id="classification-result" class="hidden p-4 rounded-md mt-4">
+                            <div id="classification-result" class="hidden p-3 sm:p-4 rounded-md mt-4">
                                 <!-- Result will be shown here -->
                             </div>
                             
-                            <div class="text-center mt-5">
-                                <span class="text-slate-600 text-sm">
+                            <div class="text-center mt-4 sm:mt-5">
+                                <span class="text-slate-600 text-xs sm:text-sm">
                                     Article ${this.currentArticleIndex + 1} of ${this.articlesData.length}
                                 </span>
                             </div>
@@ -170,13 +195,34 @@ class Challenge1PageClass extends BasePage {
                                 Articles are sourced from various datasets for educational analysis of misinformation patterns.
                             </p>
                             <p class="my-1 italic">
-                                Current article sourced from: <span class="font-mono bg-slate-100 px-1 rounded text-slate-900">${currentArticle.source || 'Training Dataset'}</span>
+                                Current article ID: <span class="font-mono bg-slate-100 px-1 rounded text-slate-900">${currentArticle.id || 'N/A'}</span> | 
+                                Source: <span class="font-mono bg-slate-100 px-1 rounded text-slate-900">${currentArticle.website || 'Training Dataset'}</span>
                             </p>
                         </div>
                     </div>
                 </section>
             </div>
         `;
+    }
+
+    scrollToArticleTop() {
+        // Scroll to the top of the article content smoothly
+        setTimeout(() => {
+            const articleTitle = document.querySelector('h2[data-element-type="title"]');
+            if (articleTitle) {
+                articleTitle.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start',
+                    inline: 'nearest'
+                });
+            } else {
+                // Fallback: scroll to top of browser content
+                const browserContent = document.querySelector('#browser-content');
+                if (browserContent) {
+                    browserContent.scrollTop = 0;
+                }
+            }
+        }, 100); // Small delay to ensure DOM is updated
     }
 
     // Navigation methods for articles
@@ -200,12 +246,140 @@ class Challenge1PageClass extends BasePage {
         // Find the browser content element and update it
         const browserContent = document.querySelector('#browser-content');
         if (browserContent) {
-            browserContent.innerHTML = this.generateNewsPageHTML();
+            // Show skeleton loading first
+            browserContent.innerHTML = this.generateSkeletonHTML();
             
-            // Re-bind navigation and classification events
-            this.bindClassificationEvents();
-            window.challenge1Page = this;
+            // Update content after a brief delay to show skeleton
+            setTimeout(() => {
+                browserContent.innerHTML = this.generateNewsPageHTML();
+                
+                // Re-bind navigation and classification events
+                this.bindClassificationEvents();
+                window.challenge1Page = this;
+                
+                // Auto-scroll to top of the article content
+                this.scrollToArticleTop();
+            }, 500);
         }
+    }
+
+    generateSkeletonHTML() {
+        return `
+            <div class="font-sans bg-white min-h-full w-full overflow-y-auto">
+                <!-- Header Section Skeleton -->
+                <section class="bg-gradient-to-r from-gray-800 to-gray-700 text-white py-4 px-5 w-full shadow-lg">
+                    <div class="max-w-5xl mx-auto">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
+                            <div class="flex-shrink-0">
+                                <h1 class="m-0 text-2xl sm:text-3xl font-bold">Daily Politico News</h1>
+                                <p class="mt-1 mb-0 text-gray-300 text-sm">Breaking News & Analysis</p>
+                            </div>
+                            
+                            <!-- Progress Bar Skeleton -->
+                            <div class="flex-grow max-w-md">
+                                <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20 shadow-sm animate-pulse">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <div class="bg-white/20 h-3 w-16 rounded"></div>
+                                        <div class="bg-white/20 h-3 w-12 rounded"></div>
+                                    </div>
+                                    <div class="bg-white/20 h-2 rounded-full"></div>
+                                    <div class="text-center mt-1">
+                                        <div class="bg-white/20 h-3 w-8 mx-auto rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center text-sm text-gray-300 border-t border-gray-600 pt-2">
+                            <span class="flex items-center gap-2">
+                                <i class="bi bi-newspaper"></i>
+                                Loading next article...
+                            </span>
+                            <span class="text-xs">
+                                ${this.classifiedArticles.size} classified
+                            </span>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Content Section Skeleton -->
+                <section class="w-full">
+                    <div class="px-8 py-6 max-w-4xl mx-auto">
+                        <!-- Title Skeleton -->
+                        <div class="animate-pulse">
+                            <div class="bg-gray-300 h-8 sm:h-10 w-3/4 mb-4 rounded"></div>
+                        </div>
+                        
+                        <!-- Metadata Skeleton -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 mb-5">
+                            <div class="animate-pulse">
+                                <div class="mb-3 pb-3 border-b border-slate-200">
+                                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <div class="bg-gray-300 h-4 w-4 rounded"></div>
+                                            <div class="bg-gray-300 h-4 w-24 rounded"></div>
+                                        </div>
+                                        <div class="bg-gray-200 h-6 w-32 rounded-full"></div>
+                                    </div>
+                                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                                        <div class="bg-gray-300 h-3 w-20 rounded"></div>
+                                        <div class="bg-gray-300 h-3 w-28 rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Content Skeleton -->
+                        <div class="mb-6 animate-pulse">
+                            <div class="space-y-3">
+                                <div class="bg-gray-300 h-4 w-full rounded"></div>
+                                <div class="bg-gray-300 h-4 w-11/12 rounded"></div>
+                                <div class="bg-gray-300 h-4 w-full rounded"></div>
+                                <div class="bg-gray-300 h-4 w-4/5 rounded"></div>
+                                <div class="bg-gray-300 h-4 w-full rounded"></div>
+                                <div class="bg-gray-300 h-4 w-3/4 rounded"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Classification Interface Skeleton -->
+                        <div class="mt-4 sm:mt-6 mb-4 p-4 sm:p-5 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="animate-pulse">
+                                <div class="bg-gray-300 h-6 w-40 mb-4 rounded"></div>
+                                <div class="bg-gray-200 h-4 w-3/4 mb-5 rounded"></div>
+                                
+                                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-5">
+                                    <div class="bg-gray-300 h-12 w-full sm:flex-1 rounded-md"></div>
+                                    <div class="bg-gray-300 h-12 w-full sm:flex-1 rounded-md"></div>
+                                </div>
+                                
+                                <div class="text-center mt-4 sm:mt-5">
+                                    <div class="bg-gray-300 h-4 w-32 mx-auto rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Footer Section -->
+                <section class="bg-slate-50 p-5 text-center text-slate-600 border-t border-slate-200">
+                    <div class="max-w-4xl mx-auto">
+                        <p class="mb-3 font-medium text-slate-800">© 2025 Daily Politico News - CyberQuest Training Environment</p>
+                        <div class="text-xs leading-relaxed text-slate-700">
+                            <p class="my-1">
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-medium"><i class="bi bi-exclamation-triangle"></i> Training Purpose Only</span>
+                            </p>
+                            <p class="my-1">
+                                This is a simulated news website for cybersecurity education. 
+                                Articles are sourced from various datasets for educational analysis of misinformation patterns.
+                            </p>
+                            <p class="my-1 italic">
+                                Loading article data...
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        `;
     }
 
     updateTrainingOverlay() {
@@ -245,8 +419,10 @@ class Challenge1PageClass extends BasePage {
 
     classifyArticle(classification) {
         const currentArticle = this.articlesData[this.currentArticleIndex];
-        const isCorrect = (classification === 'real' && currentArticle.is_real) || 
-                         (classification === 'fake' && !currentArticle.is_real);
+        // Use the is_real field from API (boolean) or label field (string)
+        const isRealArticle = currentArticle.is_real === true || currentArticle.label === "real" || currentArticle.label === 0;
+        const isCorrect = (classification === 'real' && isRealArticle) || 
+                         (classification === 'fake' && !isRealArticle);
         
         const resultDiv = document.getElementById('classification-result');
         const realBtn = document.getElementById('classify-real');
@@ -269,7 +445,7 @@ class Challenge1PageClass extends BasePage {
                     <i class="bi bi-check-circle text-xl"></i>
                     <div>
                         <strong>Correct!</strong><br>
-                        This article is indeed ${currentArticle.is_real ? 'real' : 'fake'} news.
+                        This article is indeed ${isRealArticle ? 'real' : 'fake'} news.
                     </div>
                 </div>
             `;
@@ -280,7 +456,7 @@ class Challenge1PageClass extends BasePage {
                     <i class="bi bi-x-circle text-xl"></i>
                     <div>
                         <strong>Incorrect.</strong><br>
-                        This article is actually ${currentArticle.is_real ? 'real' : 'fake'} news.
+                        This article is actually ${isRealArticle ? 'real' : 'fake'} news.
                     </div>
                 </div>
             `;
@@ -295,7 +471,7 @@ class Challenge1PageClass extends BasePage {
         if (window.ToastManager) {
             const message = isCorrect ? 
                 `Correct! Article ${this.currentArticleIndex + 1} classified successfully.` :
-                `Incorrect. Article ${this.currentArticleIndex + 1} was ${currentArticle.is_real ? 'real' : 'fake'} news.`;
+                `Incorrect. Article ${this.currentArticleIndex + 1} was ${isRealArticle ? 'real' : 'fake'} news.`;
             
             window.ToastManager.showToast(message, isCorrect ? 'success' : 'error');
         }
@@ -313,10 +489,23 @@ class Challenge1PageClass extends BasePage {
             // Update progress bar after classification
             this.updateProgressBar();
             
-            // Auto-advance to next article after 3 seconds
+            // Show loading message and auto-advance to next article after 3 seconds
             setTimeout(() => {
-                this.nextArticle();
-            }, 3000);
+                // Add loading indicator to the result
+                resultDiv.innerHTML += `
+                    <div class="mt-3 pt-3 border-t border-current/20">
+                        <div class="flex items-center justify-center gap-2 text-sm opacity-75">
+                            <div class="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full"></div>
+                            <span>Loading next article...</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Navigate to next article with skeleton loading
+                setTimeout(() => {
+                    this.nextArticle();
+                }, 1000);
+            }, 2000);
         }
     }
 
@@ -359,25 +548,25 @@ class Challenge1PageClass extends BasePage {
         
         // Show completion message
         const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-[10000]';
+        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-[10000] p-4';
         modal.innerHTML = `
-            <div class="bg-gray-800 border border-gray-600 rounded-lg p-6 max-w-lg mx-4 text-center shadow-2xl">
-                <div class="text-5xl mb-4"><i class="bi bi-party-popper"></i></div>
-                <h2 class="text-emerald-400 text-2xl font-bold mb-4">Challenge Complete!</h2>
-                <p class="text-gray-300 mb-5 leading-relaxed">
+            <div class="bg-gray-800 border border-gray-600 rounded-lg p-4 sm:p-6 max-w-xs sm:max-w-sm md:max-w-lg mx-4 text-center shadow-2xl w-full">
+                <div class="text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4"><i class="bi bi-party-popper"></i></div>
+                <h2 class="text-emerald-400 text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4">Challenge Complete!</h2>
+                <p class="text-gray-300 mb-4 sm:mb-5 leading-relaxed text-sm sm:text-base">
                     Excellent work! You've successfully classified all ${this.articlesData.length} articles and completed Level 1: The Misinformation Maze!
                 </p>
-                <div class="bg-gray-600 border border-gray-500 p-4 rounded-md mb-5">
-                    <div class="text-gray-100 text-lg font-bold mb-2">Final Score: ${finalScore}%</div>
-                    <div class="text-gray-400 text-sm">Correct Classifications: ${this.correctClassifications}/${this.articlesData.length}</div>
+                <div class="bg-gray-600 border border-gray-500 p-3 sm:p-4 rounded-md mb-4 sm:mb-5">
+                    <div class="text-gray-100 text-base sm:text-lg font-bold mb-1 sm:mb-2">Final Score: ${finalScore}%</div>
+                    <div class="text-gray-400 text-xs sm:text-sm">Correct Classifications: ${this.correctClassifications}/${this.articlesData.length}</div>
                 </div>
-                <div class="bg-green-900 border border-green-700 p-3 rounded-md mb-5">
-                    <p class="text-green-200 text-sm m-0">
-                        <i class="bi bi-trophy me-2"></i>You've earned XP in Information Literacy and unlocked the 'Fact-Checker' badge!
+                <div class="bg-green-900 border border-green-700 p-2 sm:p-3 rounded-md mb-4 sm:mb-5">
+                    <p class="text-green-200 text-xs sm:text-sm m-0">
+                        <i class="bi bi-trophy me-1 sm:me-2"></i>You've earned XP in Information Literacy!
                     </p>
                 </div>
                 <button onclick="this.closest('.fixed').remove(); window.challenge1Page?.completeLevelOne?.()" 
-                        class="bg-emerald-500 text-white px-6 py-3 border border-emerald-600 rounded-md text-base cursor-pointer transition-all w-full hover:bg-emerald-600 hover:shadow-md">
+                        class="bg-emerald-500 text-white px-4 sm:px-6 py-2 sm:py-3 border border-emerald-600 rounded-md text-sm sm:text-base cursor-pointer transition-all w-full hover:bg-emerald-600 hover:shadow-md active:bg-emerald-700 touch-manipulation">
                     Complete Level
                 </button>
             </div>

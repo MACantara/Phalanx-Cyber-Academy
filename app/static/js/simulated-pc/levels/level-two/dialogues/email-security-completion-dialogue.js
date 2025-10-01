@@ -16,7 +16,7 @@ export class EmailSecurityCompletionDialogue extends BaseDialogue {
                 text: "Your analysis helped prevent multiple potential security breaches. You correctly identified advanced threats including spear-phishing, credential harvesting, and social engineering attacks."
             },
             {
-                text: "You've earned 150 XP in Cybersecurity and unlocked the 'Email Security Expert' badge. These skills are crucial for protecting both personal and organizational digital assets."
+                text: "You've earned 150 XP in Cybersecurity. These skills are crucial for protecting both personal and organizational digital assets."
             },
             {
                 text: "Remember: Email remains the primary attack vector for cybercriminals. Your vigilance and expertise in email security make you a valuable defender against digital threats."

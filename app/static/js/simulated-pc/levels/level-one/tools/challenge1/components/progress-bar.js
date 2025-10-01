@@ -4,31 +4,30 @@ export class ProgressBar {
         const progressWidth = totalArticles > 0 ? (classifiedCount / totalArticles) * 100 : 0;
         
         return `
-            <div class="bg-white/10 backdrop-blur-sm rounded p-4 border border-white border-opacity-20">
-                <div class="flex justify-between items-center mb-3">
-                    <div class="text-emerald-400 text-sm font-semibold tracking-wide">
-                        Classification Progress
-                    </div>
-                    <span class="text-gray-300 text-xs font-medium bg-gray-800/50 px-2 py-1 rounded ml-2">
-                        ${classifiedCount} of ${totalArticles} classified
+            <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20 shadow-sm">
+                <!-- Compact header with progress info -->
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-emerald-400 text-xs font-semibold">
+                        Progress
+                    </span>
+                    <span class="text-gray-300 text-xs bg-gray-800/50 px-2 py-0.5 rounded">
+                        ${classifiedCount}/${totalArticles}
                     </span>
                 </div>
                 
-                <!-- Progress Bar Container -->
-                <div class="bg-white/20 h-2 rounded-full overflow-hidden shadow-inner">
+                <!-- Compact Progress Bar -->
+                <div class="bg-white/20 h-2 rounded-full overflow-hidden">
                     <div class="
                         bg-gradient-to-r from-emerald-500 to-emerald-400 
                         h-full 
                         rounded-full
                         transition-all duration-300 ease-out
-                        shadow-sm
                     " style="width: ${progressWidth}%"></div>
                 </div>
                 
-                <!-- Progress Percentage -->
-                <div class="text-gray-400 text-xs text-center mt-2 font-medium">
-                    <span class="text-emerald-300">${progressPercent}%</span>
-                    Complete
+                <!-- Compact percentage display -->
+                <div class="text-center mt-1">
+                    <span class="text-emerald-300 text-xs font-medium">${progressPercent}%</span>
                 </div>
             </div>
         `;

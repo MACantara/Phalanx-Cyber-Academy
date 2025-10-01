@@ -1,0 +1,323 @@
+{
+  "articles": [
+    {
+      "id": "real_001",
+      "title": "Senate Committee Approves Healthcare Funding Bill After Bipartisan Negotiations",
+      "date": "2024-03-15T14:30:00.000Z",
+      "author": "Sarah Johnson",
+      "author_credentials": "Political Reporter, Associated Press",
+      "website": "apnews.com",
+      "content": "WASHINGTON — The Senate Health Committee voted 12-8 on Thursday to approve a $2.3 billion healthcare funding bill that would expand access to rural medical facilities across 15 states. The legislation, sponsored by Senator Maria Rodriguez (D-CA) and co-sponsored by Senator James Mitchell (R-TX), received support from both parties after three months of negotiations. 'This bill represents a genuine compromise that addresses the healthcare needs of underserved communities,' said Rodriguez during the committee hearing. The bill now moves to the full Senate for consideration. Healthcare advocacy groups have expressed cautious optimism, while some fiscal conservatives have raised concerns about the funding mechanism. The Congressional Budget Office estimates the program would serve approximately 2.4 million additional patients over the next five years.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_002", 
+      "title": "Federal Reserve Maintains Interest Rates Amid Economic Uncertainty",
+      "date": "2024-03-12T16:45:00.000Z",
+      "author": "Michael Chen",
+      "author_credentials": "Economics Correspondent, Reuters",
+      "website": "reuters.com",
+      "content": "NEW YORK — The Federal Reserve announced Wednesday that it will maintain the federal funds rate at 5.25-5.50%, citing ongoing economic uncertainty and mixed inflation data. Fed Chair Jerome Powell said in a statement that while inflation has shown signs of cooling, recent employment figures and consumer spending patterns warrant a cautious approach. 'We remain committed to bringing inflation back to our 2% target while supporting maximum employment,' Powell said during the post-meeting press conference. Market analysts had anticipated the decision, with Treasury yields showing minimal movement following the announcement. The Fed's next policy meeting is scheduled for May 2-3, where officials will reassess economic conditions and consider future rate adjustments.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_003",
+      "title": "International Climate Summit Reaches Preliminary Agreement on Carbon Emissions",
+      "date": "2024-03-10T11:20:00.000Z", 
+      "author": "Dr. Emma Thompson",
+      "author_credentials": "Environmental Correspondent, BBC News",
+      "website": "bbc.com",
+      "content": "GENEVA — Delegates from 47 countries reached a preliminary agreement Tuesday on new carbon emission reduction targets during the International Climate Action Summit. The proposed framework would require participating nations to reduce emissions by 40% below 2020 levels by 2035. Environmental scientist Dr. Lisa Park from the UN Climate Panel said the agreement represents 'meaningful progress' while acknowledging implementation challenges. Several developing nations requested additional financial support for clean energy transitions. The final agreement requires ratification by member parliaments before taking effect. Critics argue the targets remain insufficient to meet Paris Agreement goals, while supporters emphasize the diplomatic breakthrough after two years of stalled negotiations.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_004",
+      "title": "Technology Companies Report Mixed Quarterly Earnings Results", 
+      "date": "2024-03-08T13:15:00.000Z",
+      "author": "Jennifer Martinez",
+      "author_credentials": "Business Reporter, Wall Street Journal",
+      "website": "wsj.com",
+      "content": "Major technology companies reported mixed earnings results for the fourth quarter, with cloud computing and artificial intelligence services showing strong growth while consumer electronics sales declined. Microsoft reported a 12% increase in revenue driven by Azure cloud services, while Apple saw iPhone sales drop 8% compared to the same quarter last year. Google parent Alphabet posted solid advertising revenue growth of 7%, though YouTube's performance lagged expectations. Industry analysts cite economic uncertainty and changing consumer spending patterns as key factors. 'We're seeing a shift toward enterprise services and away from consumer hardware,' said tech analyst Robert Kim from Goldman Sachs. The sector's performance has implications for broader market trends as investors monitor AI adoption rates.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_005",
+      "title": "University Researchers Develop New Method for Early Cancer Detection",
+      "date": "2024-03-05T10:30:00.000Z",
+      "author": "Dr. Katherine Williams",
+      "author_credentials": "Medical Correspondent, CNN Health",
+      "website": "cnn.com",
+      "content": "Researchers at Stanford University have developed a new blood test that can detect multiple types of cancer in early stages with 89% accuracy, according to results published in the journal Nature Medicine. The test, called CancerSeek-2, analyzes protein biomarkers and genetic mutations in blood samples. Lead researcher Dr. Amanda Foster said the technology could revolutionize cancer screening programs. The study involved 10,000 participants across five medical centers over three years. While promising, experts caution that larger clinical trials are needed before the test becomes widely available. The research was funded by the National Cancer Institute and has undergone peer review. Dr. Patricia Adams from the American Cancer Society called the results 'encouraging but preliminary,' emphasizing the need for additional validation studies.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_006",
+      "title": "Local School District Implements New STEM Education Program",
+      "date": "2024-03-03T09:45:00.000Z",
+      "author": "Maria Rodriguez",
+      "author_credentials": "Education Reporter, Local Herald Tribune",
+      "website": "heraldtribune.com", 
+      "content": "The Riverside School District launched a comprehensive STEM education initiative this week, introducing coding and robotics classes to all middle schools in the district. The $1.2 million program, funded through a combination of state grants and private donations, aims to prepare students for technology-focused careers. 'We want to ensure our students have the skills they need for the jobs of tomorrow,' said Superintendent Dr. Robert Johnson. The program includes teacher training, new equipment, and partnerships with local technology companies for internship opportunities. Initial enrollment shows strong student interest, with 340 students signed up across six schools. The program will be evaluated annually with results reported to the school board and community stakeholders.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_007",
+      "title": "Archaeological Team Discovers Ancient Trade Route in Mediterranean Region",
+      "date": "2024-03-01T12:00:00.000Z",
+      "author": "Prof. David Archaeological",
+      "author_credentials": "Archaeology Correspondent, National Geographic",
+      "website": "nationalgeographic.com",
+      "content": "An international team of archaeologists has uncovered evidence of a previously unknown ancient trade route connecting Mediterranean civilizations from 3,000 years ago. The discovery, made near the coast of Turkey, includes pottery fragments, coins, and ship remnants that suggest extensive commercial networks. Dr. Elena Vasquez, lead archaeologist from the University of Barcelona, said the findings challenge existing theories about ancient Mediterranean trade. The research team used advanced underwater scanning technology and carbon dating to verify their discoveries. Artifacts will be displayed at the Istanbul Archaeological Museum following conservation work. The discovery was published in the Journal of Archaeological Science after peer review by international experts.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "fake_001",
+      "title": "SHOCKING: Government Officials CAUGHT Using Secret Mind Control Technology on Citizens!",
+      "date": "2024-03-16T23:47:00.000Z",
+      "author": "Staff Writer",
+      "author_credentials": "",
+      "website": "truthpatriotnews.net",
+      "content": "BREAKING: Whistleblower documents reveal that government officials have been secretly testing mind control technology on unsuspecting American citizens for over a decade! The classified program, codenamed 'Project Neural Gateway,' uses advanced electromagnetic frequencies transmitted through cell phone towers to influence voter behavior and public opinion. According to our anonymous source (a high-ranking official who fears for their life), the technology was developed in underground facilities and tested on entire neighborhoods. 'They can literally make you think whatever they want,' the source revealed. This PROVES what patriots have been saying all along - the deep state is manipulating our minds! The mainstream media WON'T report this because they're in on it! Share this article before they DELETE it! Every American needs to know the truth about what THEY are doing to us. Wake up, people! Your thoughts aren't even your own anymore!!!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_002",
+      "title": "Doctors HATE This Simple Trick That Cures All Diseases Instantly - Big Pharma Trying to Hide It!",
+      "date": "2024-03-14T18:22:00.000Z",
+      "author": "Dr. Kevin Natural",
+      "author_credentials": "Alternative Health Expert",
+      "website": "realhealthtruth.com",
+      "content": "The medical establishment doesn't want you to know about this ONE WEIRD TRICK that can cure cancer, diabetes, heart disease, and even aging itself! This ancient secret has been hidden from the public for centuries, but NOW the truth is finally being revealed. All you need is common household items that Big Pharma desperately wants banned! Thousands of people have already been cured using this method, but doctors refuse to acknowledge it because it would destroy their billion-dollar industry. 'I was dying from stage 4 cancer, and this cured me in just 3 days!' says Jennifer from Ohio. The government and medical industry are working together to suppress this information. Don't let them fool you with their expensive treatments and dangerous drugs. This natural cure costs only $3 and works 100% of the time! Download our FREE guide now before they shut us down! WARNING: Big Pharma is paying people to write fake negative reviews. Don't believe the lies!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_003", 
+      "title": "URGENT: Foreign Troops Secretly Landing in America - Invasion Has Already Begun!",
+      "date": "2024-03-13T21:35:00.000Z",
+      "author": "Patriot Mike",
+      "author_credentials": "",
+      "website": "americandefensewatch.org",
+      "content": "ALERT! Multiple sources confirm that foreign military forces are secretly landing at U.S. airports under cover of darkness! These 'training exercises' are actually the beginning of a coordinated invasion that the government is HIDING from American patriots. Reliable witnesses have seen thousands of armed foreign soldiers at military bases across the country. The mainstream media is completely silent because they're controlled by the same global elites orchestrating this takeover! Our constitutional rights are under attack RIGHT NOW! These foreign troops are being positioned for martial law declaration that will suspend all elections and freedoms. Only true patriots who are awake can see what's really happening. The time for action is NOW before it's too late! Stock up on supplies, protect your families, and prepare for what's coming. Don't trust ANYONE in government - they're all compromised! This is NOT a drill! Share this everywhere before they block it!",
+      "label": 1, 
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_004",
+      "title": "Scientists Discover That Drinking Water Actually KILLS You - Here's What They Don't Want You to Know",
+      "date": "2024-03-11T16:18:00.000Z",
+      "author": "Health Investigator",
+      "author_credentials": "Independent Research Specialist", 
+      "website": "hiddentruthexposed.net",
+      "content": "BOMBSHELL research reveals that ordinary tap water contains deadly chemicals specifically designed to reduce population and make people obedient! Government scientists have known for decades that fluoride and chlorine in water supplies are actually mind-control agents that destroy your natural immunity and free thinking abilities. This explains why people who drink bottled water are more intelligent and independent! The water industry spends millions to hide these facts and discredit anyone who speaks out. Victims of water poisoning report memory loss, reduced creativity, and blind trust in authority figures. 'After I stopped drinking tap water, my IQ increased by 40 points and I could finally see the truth about everything,' reports Sarah from Texas. The solution is simple but they don't want you to know: only drink rainwater collected in pure containers! Everything else is contaminated by the global control system. Don't let them poison your mind any longer!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_005",
+      "title": "EXCLUSIVE: Celebrity Politicians Caught in Secret Satanic Ritual - Photos Inside!", 
+      "date": "2024-03-09T20:41:00.000Z",
+      "author": "Truth Seeker",
+      "author_credentials": "",
+      "website": "exposetheconspiracy.com",
+      "content": "SHOCKING evidence obtained by our investigative team proves that Hollywood celebrities and top politicians regularly participate in satanic rituals at a secret location! These exclusive photos show exactly what the elite don't want you to see. The rituals are part of their blood oath to maintain power and wealth while ordinary people suffer. Our brave undercover reporter risked everything to bring you this evidence that the mainstream media will NEVER show. These sick individuals worship dark forces and make deals for fame and fortune at the expense of innocent people. This explains why they all support the same evil agenda to destroy traditional values and control the population! The symbols are hidden in plain sight if you know what to look for. Every movie, every song, every speech contains their secret messages. Only people who are truly awake can see the pattern. Don't let them fool you anymore! The time has come to EXPOSE the truth about what really happens in the shadows. Share this before they make it disappear!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_006",
+      "title": "Breaking: Technology Giants Secretly Recording Everything You Say - Your Phone is Spying on You 24/7!",
+      "date": "2024-03-07T14:29:00.000Z", 
+      "author": "Cyber Patriot",
+      "author_credentials": "Digital Privacy Expert",
+      "website": "techfreedomfighter.org",
+      "content": "CONFIRMED: Every smartphone, tablet, and smart device is constantly recording your private conversations and sending them directly to government surveillance centers! This massive spy network has been operating for years without your knowledge or consent. Leaked documents prove that tech companies are required by secret laws to provide all your personal data to shadowy government agencies. They know everything - what you eat, where you go, who you talk to, even what you dream about! The spying technology is so advanced that they can read your thoughts through brain wave analysis via your phone's sensors. 'I discovered my phone was transmitting my conversations to unknown servers 24/7,' reveals anonymous tech insider who fears for their safety. The only way to protect yourself is to destroy all electronic devices immediately! Anyone who tells you this isn't true is either ignorant or working for THEM. Don't trust anything electronic - they're all compromised! Fight back against digital tyranny while you still can!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_007",
+      "title": "MIRACLE REVEALED: Ancient Pyramid Energy Can Give You Unlimited Wealth and Success - Elites Have Hidden This for Centuries!",
+      "date": "2024-03-04T11:52:00.000Z",
+      "author": "Spiritual Master Alex",
+      "author_credentials": "Ancient Wisdom Researcher", 
+      "website": "pyramidpowersecrets.org",
+      "content": "The secret that made ancient pharaohs incredibly wealthy and powerful has been HIDDEN from humanity for thousands of years! Pyramid energy technology can instantly transform your life, attract unlimited money, and give you supernatural abilities that seem impossible. The global elite have been using this knowledge to maintain their wealth while keeping ordinary people poor and powerless. But NOW the ancient secrets are finally being revealed to those who are ready! This revolutionary discovery proves that consciousness can literally restructure reality through pyramid geometry and sacred mathematics. 'I built a small pyramid in my backyard and within one week I received $50,000 from unexpected sources,' reports amazing success story from Michigan. The energy works automatically once you understand the sacred principles that universities refuse to teach. Government agencies desperately want to suppress this information because it would end their control over the masses. Don't let them keep you enslaved to poverty and limitation! Learn the forbidden knowledge that can change everything!",
+      "label": 1, 
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_008",
+      "title": "EXCLUSIVE INVESTIGATION: Weather Machines Creating Artificial Storms to Control Elections - Meteorologists Are In On It!",
+      "date": "2024-03-02T19:14:00.000Z",
+      "author": "Weather Truth Investigator",
+      "author_credentials": "",
+      "website": "climatetruthexposed.com", 
+      "content": "BREAKING investigation reveals that powerful weather manipulation machines are being used to create artificial storms and disasters in key voting areas to influence election outcomes! These secret facilities use advanced atmospheric manipulation technology developed from alien technology recovered decades ago. Insider meteorologists who refuse to stay silent anymore confirm that weather forecasts are actually weather PLANS created by political operatives. 'We're told exactly what weather to predict because they can control it completely,' admits anonymous weather service employee. The fake climate change narrative is just a cover story to hide their weather weapon capabilities! They can create hurricanes, droughts, floods, and even earthquakes whenever they need to distract from political scandals or suppress voter turnout in certain regions. This explains why weather patterns have become so 'unusual' in recent years. Real meteorologists who try to expose the truth are fired or worse. Don't believe the weather lies anymore - it's all artificially manufactured for political control!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "real_008",
+      "title": "Supreme Court Hears Arguments on Digital Privacy Rights in Landmark Case",
+      "date": "2024-02-28T15:20:00.000Z",
+      "author": "Amy Sullivan",
+      "author_credentials": "Legal Affairs Correspondent, Washington Post",
+      "website": "washingtonpost.com",
+      "content": "WASHINGTON — The Supreme Court heard oral arguments Tuesday in a case that could reshape digital privacy rights for millions of Americans. The case, Digital Rights Foundation v. Department of Homeland Security, centers on whether government agencies can access personal data from tech companies without obtaining individual warrants. Chief Justice Roberts questioned both sides extensively about the balance between national security and constitutional privacy protections. 'This case will determine how the Fourth Amendment applies in the digital age,' said constitutional law professor Janet Miller from Georgetown University. The Electronic Frontier Foundation and American Civil Liberties Union filed amicus briefs supporting stronger privacy protections. The government argues that existing oversight mechanisms provide sufficient protection while enabling crucial security operations. A decision is expected by June, with significant implications for data privacy legislation currently pending in Congress.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_009",
+      "title": "NASA Announces Successful Test of New Mars Rover Communication System",
+      "date": "2024-02-25T11:45:00.000Z",
+      "author": "Dr. Lisa Chen",
+      "author_credentials": "Science Reporter, Scientific American",
+      "website": "scientificamerican.com",
+      "content": "PASADENA, Calif. — NASA engineers successfully tested a new high-bandwidth communication system that could revolutionize data transmission between Mars rovers and Earth. The Deep Space Optical Communications experiment, conducted at the Jet Propulsion Laboratory, achieved data rates 10 times faster than current radio systems. 'This breakthrough will enable us to receive high-definition video and detailed scientific data from future Mars missions,' said Dr. Sarah Martinez, lead communications engineer. The system uses laser technology to transmit information across the 140-million-mile distance between planets. Testing will continue over the next six months before integration into the Mars Sample Return mission planned for 2028. The technology could also benefit deep space exploration missions to Jupiter and Saturn, significantly improving scientific data collection capabilities.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_010",
+      "title": "European Union Implements New Renewable Energy Targets for 2030",
+      "date": "2024-02-22T09:30:00.000Z",
+      "author": "Francesco Rossi",
+      "author_credentials": "Environmental Policy Reporter, Financial Times",
+      "website": "ft.com",
+      "content": "BRUSSELS — The European Union formally adopted new renewable energy targets requiring member states to generate 42.5% of their energy from renewable sources by 2030. The revised Renewable Energy Directive received approval from the European Council following months of negotiations between member states. Germany and Denmark exceeded their interim targets, while several Eastern European countries requested additional transition funding. 'This directive puts Europe on track to achieve carbon neutrality by 2050,' said EU Energy Commissioner Maria Andersson. The legislation includes specific provisions for green hydrogen production and sustainable aviation fuels. Environmental groups praised the ambitious targets while industry associations expressed concerns about implementation timelines. The directive takes effect immediately, with member states required to update their national energy plans within 18 months.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_011",
+      "title": "Federal Trade Commission Proposes New Rules for AI Algorithm Transparency",
+      "date": "2024-02-20T14:15:00.000Z",
+      "author": "Robert Kim",
+      "author_credentials": "Technology Policy Reporter, Politico",
+      "website": "politico.com",
+      "content": "WASHINGTON — The Federal Trade Commission announced proposed regulations requiring companies to disclose how artificial intelligence algorithms make decisions affecting consumers. The rules would apply to AI systems used in hiring, lending, healthcare, and criminal justice. FTC Chairwoman Jessica Chen said the regulations address growing concerns about algorithmic bias and lack of transparency. 'Consumers have a right to understand how automated systems make decisions that affect their lives,' Chen stated during a press briefing. The proposal includes requirements for algorithmic impact assessments and public reporting of AI system performance. Technology companies have 90 days to submit public comments before the rules are finalized. Consumer advocacy groups welcomed the proposal while some industry representatives argued it could stifle innovation. Similar legislation is pending in several state legislatures.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_012",
+      "title": "International Study Shows Decline in Global Hunger Rates Despite Economic Challenges",
+      "date": "2024-02-18T12:00:00.000Z",
+      "author": "Dr. Patricia Williams",
+      "author_credentials": "Global Health Correspondent, The Lancet",
+      "website": "thelancet.com",
+      "content": "GENEVA — A comprehensive study by the World Health Organization and UN Food Programme shows global hunger rates declined by 2.3% in 2023 despite ongoing economic pressures and climate challenges. The report analyzed data from 195 countries, finding significant improvements in Sub-Saharan Africa and Southeast Asia. Lead researcher Dr. James Anderson from Oxford University attributed progress to improved agricultural techniques and targeted nutrition programs. 'Investments in sustainable farming and social safety nets are paying dividends,' Anderson noted. The study highlighted successful programs in Rwanda and Bangladesh that combined technology with local knowledge. However, researchers cautioned that progress remains fragile, with climate change and economic instability threatening gains. The full report will be published next month in the International Journal of Public Health.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "fake_009",
+      "title": "BREAKING: Scientists Confirm Vaccines Contain Microchips That Control Your DNA - Government Admits Cover-Up!",
+      "date": "2024-02-26T22:18:00.000Z",
+      "author": "Freedom Fighter",
+      "author_credentials": "Independent Medical Researcher",
+      "website": "vaccinetruthexposed.net",
+      "content": "SHOCKING revelation: Internal government documents leaked by brave whistleblowers PROVE that all vaccines since 2019 contain microscopic computer chips designed to alter human DNA! These nanobots can be activated remotely to change your genetic code and make you compliant to government commands. Dr. Marcus Freedom (real name withheld for safety) examined vaccine samples under advanced microscopes and found thousands of metallic particles moving in organized patterns. 'These are definitely artificial constructs designed to interface with human cells,' he revealed in a secret interview. The chips use 5G signals to receive programming updates that can modify behavior, fertility, and even thoughts! This explains why vaccinated people seem more willing to follow government orders without question. Big Pharma and world governments have been planning this for decades as part of their population control agenda. Unvaccinated people are the last free humans on Earth! Share this EVERYWHERE before they delete it and arrest us all!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_010",
+      "title": "URGENT ALERT: Moon Landing Footage Accidentally Broadcast Shows Stanley Kubrick Directing Fake Apollo Mission!",
+      "date": "2024-02-24T19:33:00.000Z",
+      "author": "Space Truth Investigator",
+      "author_credentials": "Former NASA Contractor",
+      "website": "moonhoaxrevealed.com",
+      "content": "BOMBSHELL: Previously classified NASA footage accidentally aired during a technical glitch reveals legendary filmmaker Stanley Kubrick directing the 'moon landing' on a Hollywood sound stage! The 47-minute video shows Kubrick giving directions to actors in space suits while stagehands move fake moon rocks and adjust lighting. You can clearly hear him say 'Cut! That's a wrap on humanity's greatest lie!' NASA immediately pulled the broadcast and claims it was 'archival training footage,' but experts confirm this is the REAL moon landing that fooled the world for 55 years. The footage shows detailed behind-the-scenes moments including Kubrick arguing with NASA officials about the flag placement and how to make the low gravity effects look convincing. 'This proves everything we suspected - the moon landings were the most expensive movie production in history,' says former Disney animator Jake Morrison who analyzed the footage frame by frame. The government is desperately trying to discredit this evidence, but the truth is finally OUT!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_011",
+      "title": "EXPOSED: Major Food Companies Adding Mind Control Chemicals to Make You Crave Processed Foods!",
+      "date": "2024-02-21T16:47:00.000Z",
+      "author": "Nutrition Truth Warrior",
+      "author_credentials": "Holistic Health Expert",
+      "website": "foodconspiracywatch.org",
+      "content": "Classified corporate documents obtained through a secret source reveal that major food manufacturers have been adding powerful psychoactive compounds to processed foods since 1987! These chemicals, developed in partnership with pharmaceutical companies, create artificial cravings and addiction to junk food while suppressing the desire for healthy, natural foods. Internal memos from unnamed corporations show executives laughing about how easily they can manipulate consumer behavior. 'Project Appetite Control' uses a combination of synthetic flavor enhancers and neurological stimulants that hijack the brain's reward system. People who eat only organic, unprocessed foods report dramatically improved mental clarity and loss of junk food cravings within just 72 hours! The food industry spends billions to keep this information hidden because healthy people don't buy their toxic products. This explains the obesity epidemic and why willpower alone can't overcome processed food addiction. The ONLY solution is to completely avoid anything made in a factory and grow your own food!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_012",
+      "title": "LEAKED: Government Plans Mandatory Surveillance Implants for All Citizens by 2026 - Resistance Movement Forms!",
+      "date": "2024-02-19T21:52:00.000Z",
+      "author": "Liberty Defender",
+      "author_credentials": "",
+      "website": "freedomresistance.net",
+      "content": "TOP SECRET government documents reveal 'Operation Digital Identity' - a plan to forcibly implant tracking devices in every American citizen by December 2026! These rice-grain-sized chips will monitor location, vital signs, financial transactions, and even emotional states 24/7. The program starts with 'voluntary' implants for government employees and military personnel, then expands to healthcare workers, teachers, and eventually EVERYONE. Parents who refuse to chip their children will lose custody under new 'child safety' laws already being written in Congress. The implants can deliver electrical shocks to control behavior and even release drugs directly into the bloodstream to alter mood and compliance. Underground resistance cells are already forming across America to fight this tyrannical surveillance state. 'This is the end of human freedom as we know it,' warns former Pentagon insider who leaked the documents at great personal risk. Patriots must unite NOW to stop this digital enslavement before it's too late! Stock up on supplies and prepare for the coming fight for liberty!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_013",
+      "title": "CONFIRMED: Ancient Aliens Return to Earth in 2024 - World Leaders Already Meeting With Them Secretly!",
+      "date": "2024-02-17T08:25:00.000Z",
+      "author": "ET Disclosure Truth",
+      "author_credentials": "Exopolitics Specialist",
+      "website": "aliencontactconfirmed.com",
+      "content": "Multiple independent sources confirm that the same extraterrestrial beings who built the pyramids have returned to Earth and are currently in direct communication with world governments! Satellite images leaked by European Space Agency whistleblowers show massive UFO motherships hidden behind the moon, waiting for the official disclosure announcement planned for this summer. The aliens, known as the 'Anunnaki' in ancient texts, are offering advanced technology in exchange for mining rights to rare earth elements. President Biden, Vladimir Putin, and Xi Jinping have all participated in secret video conferences with alien ambassadors using technology that translates their telepathic communication into human language. 'The meetings are happening in underground facilities built specifically for first contact protocols,' reveals former State Department official who witnessed three alien encounters. The extraterrestrials warned that humanity must unite and stop destroying the planet or face intervention within 18 months. They possess technology that makes human weapons obsolete and can shut down all electronics remotely. Full disclosure is coming whether governments want it or not!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "fake_014",
+      "title": "SCIENTISTS STUNNED: Drinking Coffee Actually Gives You Superpowers - Big Coffee Hiding This to Control Supply!",
+      "date": "2024-02-15T13:41:00.000Z",
+      "author": "Caffeine Truth Researcher",
+      "author_credentials": "Biochemical Nutrition Expert",
+      "website": "coffeesuperpowers.net",
+      "content": "Revolutionary research suppressed for 20 years proves that coffee contains compounds that unlock dormant human abilities including telepathy, enhanced strength, and photographic memory! Scientists at a secret laboratory discovered that coffee beans grown above 8,000 feet contain crystalline structures that resonate with human neural frequencies. When consumed regularly, these crystals accumulate in the brain and activate unused portions that mainstream science claims are 'junk' neurons. 'After drinking 12 cups of high-altitude coffee daily for 6 months, I developed the ability to read thoughts and move objects with my mind,' reports test subject Maria Santos from Colombia. The coffee industry deliberately mixes high-altitude beans with inferior low-altitude varieties to dilute the effect and prevent widespread awakening of human potential. Only pure, single-origin coffee from specific mountain regions can trigger these abilities. The government is aware of this and has been secretly purchasing entire coffee farms to control access. Ancient texts describe coffee as 'the drink of the gods' for a reason - it literally transforms humans into superhuman beings!",
+      "label": 1,
+      "source_type": "fake_news"
+    },
+    {
+      "id": "real_013",
+      "title": "Federal Infrastructure Bill Allocates $12 Billion for Rural Broadband Expansion",
+      "date": "2024-02-14T10:30:00.000Z",
+      "author": "Michelle Torres",
+      "author_credentials": "Infrastructure Reporter, USA Today",
+      "website": "usatoday.com",
+      "content": "WASHINGTON — The Department of Transportation announced the distribution of $12 billion in federal funding to expand high-speed internet access to underserved rural communities across 35 states. The Broadband Equity Access and Deployment Program will prioritize areas currently lacking reliable internet service, with projects expected to begin construction by late 2024. Transportation Secretary David Rodriguez emphasized the program's role in economic development and educational opportunity. 'Reliable internet access is essential infrastructure for modern communities,' Rodriguez said during the announcement. The funding will support fiber-optic cable installation, wireless tower construction, and satellite internet expansion. State transportation departments will coordinate with private internet service providers to maximize coverage and minimize costs. Rural advocacy groups have praised the investment while noting that full implementation may take several years. The program builds on previous infrastructure investments and aims to achieve universal broadband access by 2030.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_014",
+      "title": "Medical Breakthrough: New Treatment Shows Promise for Alzheimer's Disease Prevention",
+      "date": "2024-02-12T16:45:00.000Z",
+      "author": "Dr. Rebecca Martinez",
+      "author_credentials": "Medical Science Correspondent, Nature Medicine",
+      "website": "nature.com",
+      "content": "BOSTON — Researchers at Massachusetts General Hospital announced promising results from a Phase II clinical trial of a new drug that may prevent Alzheimer's disease in high-risk patients. The treatment, called ALZ-Block, targets amyloid plaques before they accumulate to dangerous levels in the brain. Lead investigator Dr. Steven Chen reported that patients who received the monthly injection showed 67% less cognitive decline over two years compared to the placebo group. The study followed 240 participants aged 55-75 who had genetic markers indicating elevated Alzheimer's risk but showed no symptoms. 'These results suggest we may be able to intervene before irreversible brain damage occurs,' Chen explained. The drug works by enhancing the brain's natural clearance mechanisms for toxic proteins. Phase III trials involving 2,000 participants will begin next year at medical centers across North America and Europe. The Alzheimer's Association cautiously welcomed the results while emphasizing the need for larger studies to confirm safety and effectiveness.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    },
+    {
+      "id": "real_015",
+      "title": "International Trade Agreement Reduces Tariffs on Green Technology Imports",
+      "date": "2024-02-10T13:20:00.000Z",
+      "author": "James Anderson",
+      "author_credentials": "Trade Policy Reporter, Reuters",
+      "website": "reuters.com",
+      "content": "GENEVA — Representatives from 28 countries signed the Green Technology Trade Facilitation Agreement, eliminating tariffs on solar panels, wind turbines, and electric vehicle components. The World Trade Organization facilitated negotiations that concluded after 18 months of discussions. U.S. Trade Representative Katherine Lee described the agreement as a significant step toward global climate goals. 'Reducing trade barriers will accelerate clean energy adoption worldwide,' Lee stated at the signing ceremony. The agreement includes provisions for technology transfer and joint research initiatives between developed and developing nations. Environmental economists estimate the tariff reductions could lower renewable energy costs by 15-20% globally within five years. Several environmental organizations endorsed the agreement while calling for similar measures on energy storage technology. The agreement takes effect January 2025, pending ratification by member country legislatures.",
+      "label": 0,
+      "source_type": "legitimate_news"
+    }
+  ]
+}
