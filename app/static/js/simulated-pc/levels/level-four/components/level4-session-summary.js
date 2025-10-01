@@ -334,23 +334,23 @@ export class Level4SessionSummary extends BaseModalComponent {
     getEfficiencyRating(totalAttempts, totalFlags) {
         const avgAttempts = totalFlags > 0 ? totalAttempts / totalFlags : 1;
         
-        if (avgAttempts <= 1.0) return 'perfect';
-        if (avgAttempts <= 1.5) return 'excellent';
-        if (avgAttempts <= 2.5) return 'good';
-        if (avgAttempts <= 3.5) return 'average';
-        return 'poor';
+        if (avgAttempts <= 1.0) return 'Perfect';
+        if (avgAttempts <= 1.5) return 'Excellent';
+        if (avgAttempts <= 2.5) return 'Good';
+        if (avgAttempts <= 3.5) return 'Average';
+        return 'Poor';
     }
 
     /**
      * Get time performance rating
      */
     getTimeRating(minutes) {
-        if (minutes <= 15) return 'lightning';
-        if (minutes <= 20) return 'very_fast';
-        if (minutes <= 30) return 'fast';
-        if (minutes <= 45) return 'normal';
-        if (minutes <= 60) return 'slow';
-        return 'very_slow';
+        if (minutes <= 15) return 'Lightning';
+        if (minutes <= 20) return 'Very Fast';
+        if (minutes <= 30) return 'Fast';
+        if (minutes <= 45) return 'Normal';
+        if (minutes <= 60) return 'Slow';
+        return 'Very Slow';
     }
 
     /**
@@ -424,10 +424,10 @@ export class Level4SessionSummary extends BaseModalComponent {
         if (flags.length === 0) {
             // Fallback with default flags if no challenge tracker data
             return `
-                <div class="bg-gray-800 rounded-lg p-4 border border-gray-700 text-center">
-                    <div class="text-gray-400">
+                <div class="bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-700 text-center">
+                    <div class="text-gray-400 text-sm sm:text-base break-words">
                         <i class="bi bi-info-circle mr-2"></i>
-                        Flag details not available - tracker data missing
+                        <span>Flag details not available - tracker data missing</span>
                     </div>
                 </div>
             `;
@@ -449,27 +449,27 @@ export class Level4SessionSummary extends BaseModalComponent {
             }
             
             return `
-                <div class="bg-gray-800 rounded-lg p-4 border border-gray-700 flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="flex items-center">
+                <div class="bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0 min-h-0 overflow-hidden">
+                    <div class="flex items-center space-x-3 min-w-0 flex-1">
+                        <div class="flex items-center flex-shrink-0">
                             ${isCompleted ? 
-                                '<i class="bi bi-check-circle-fill text-green-400 text-xl"></i>' : 
-                                '<i class="bi bi-circle text-gray-500 text-xl"></i>'
+                                '<i class="bi bi-check-circle-fill text-green-400 text-lg sm:text-xl"></i>' : 
+                                '<i class="bi bi-circle text-gray-500 text-lg sm:text-xl"></i>'
                             }
                         </div>
-                        <div>
-                            <div class="font-semibold text-white">${flag.name || flag.id}</div>
-                            <div class="text-sm text-gray-400">${flag.id}</div>
-                            ${flag.category ? `<div class="text-xs text-gray-500">${flag.category}</div>` : ''}
+                        <div class="min-w-0 flex-1">
+                            <div class="font-semibold text-white text-sm sm:text-base truncate">${flag.name || flag.id}</div>
+                            <div class="text-xs sm:text-sm text-gray-400 truncate">${flag.id}</div>
+                            ${flag.category ? `<div class="text-xs text-gray-500 truncate">${flag.category}</div>` : ''}
                         </div>
                     </div>
-                    <div class="text-right">
+                    <div class="text-left sm:text-right flex-shrink-0">
                         ${isCompleted ? `
-                            <div class="text-sm text-green-400 font-semibold flex items-center">
+                            <div class="text-sm text-green-400 font-semibold flex items-center sm:justify-end">
                                 <i class="bi bi-trophy mr-1"></i>
-                                Found!
+                                <span>Found!</span>
                             </div>
-                            <div class="text-xs text-gray-400">
+                            <div class="text-xs sm:text-sm text-gray-400 mt-1">
                                 ${attempts} attempt${attempts > 1 ? 's' : ''} • ${displayTime}m
                             </div>
                             ${this.getDifficultyBadge(flag.difficulty)}
@@ -498,8 +498,8 @@ export class Level4SessionSummary extends BaseModalComponent {
         const color = difficultyColors[difficulty.toLowerCase()] || 'bg-gray-600 text-gray-100';
         
         return `
-            <div class="text-xs mt-1">
-                <span class="${color} px-2 py-0.5 rounded-full text-xs font-medium">
+            <div class="text-xs mt-1 flex sm:justify-end">
+                <span class="${color} px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap">
                     ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
                 </span>
             </div>
@@ -515,10 +515,47 @@ export class Level4SessionSummary extends BaseModalComponent {
         const modalContent = this.createSummaryContent();
         this.showModal('Level 4: White Hat Test - Assessment Complete', modalContent);
         
-        // Bind navigation events after modal is shown
+        // Apply responsive styling to modal after it's shown
         setTimeout(() => {
+            this.applyResponsiveModalStyling();
             this.bindNavigationEvents();
         }, 100);
+    }
+
+    /**
+     * Apply responsive styling to the modal container
+     */
+    applyResponsiveModalStyling() {
+        const modal = document.getElementById('level4-summary-modal');
+        if (modal) {
+            // Ensure modal is responsive across all screen sizes
+            modal.className = modal.className.replace(
+                /max-w-\S+/g, 
+                'max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-5xl'
+            );
+            
+            // Add responsive width classes if not present
+            if (!modal.className.includes('max-w-')) {
+                modal.classList.add('max-w-xs', 'sm:max-w-lg', 'md:max-w-2xl', 'lg:max-w-4xl', 'xl:max-w-5xl');
+            }
+            
+            // Ensure proper mobile padding and margins
+            modal.classList.add('mx-2', 'sm:mx-4', 'lg:mx-auto');
+            
+            // Set appropriate height constraints for mobile
+            modal.style.maxHeight = '95vh';
+            modal.style.overflowY = 'auto';
+            
+            // Apply webkit scrolling for smooth mobile experience
+            modal.style.webkitOverflowScrolling = 'touch';
+        }
+
+        // Apply responsive styling to modal backdrop
+        const backdrop = document.querySelector('.modal-backdrop, [class*="modal"]');
+        if (backdrop && !backdrop.classList.contains('responsive-applied')) {
+            backdrop.classList.add('p-2', 'sm:p-4', 'lg:p-8', 'responsive-applied');
+            backdrop.style.overflowY = 'auto';
+        }
     }
 
     createSummaryContent() {
@@ -530,90 +567,90 @@ export class Level4SessionSummary extends BaseModalComponent {
         const performanceBasedXP = xpCalculation.xpEarned;
         
         return `
-            <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-6 rounded-lg">
+            <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white p-3 sm:p-4 lg:p-6 rounded-lg max-w-full overflow-hidden">
                 <!-- Header Section -->
-                <div class="text-center mb-6">
-                    <div class="text-4xl mb-2">🎉</div>
-                    <h2 class="text-2xl font-bold text-green-400 mb-2">Assessment Complete!</h2>
-                    <p class="text-gray-300">White Hat Penetration Test Successfully Completed</p>
+                <div class="text-center mb-4 sm:mb-6">
+                    <div class="text-3xl sm:text-4xl mb-2">🎉</div>
+                    <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-green-400 mb-2 break-words">Assessment Complete!</h2>
+                    <p class="text-sm sm:text-base text-gray-300 px-2">White Hat Penetration Test Successfully Completed</p>
                 </div>
 
                 <!-- Performance-Based XP Banner -->
-                <div class="bg-gradient-to-r from-purple-900/50 to-blue-900/50 rounded-lg p-4 mb-6 border border-purple-500/30">
-                    <div class="flex items-center justify-center mb-4">
-                        <i class="bi bi-trophy-fill text-4xl text-yellow-400 mr-3"></i>
-                        <div>
-                            <h3 class="text-2xl font-bold text-white">Performance-Based XP Awarded!</h3>
-                            <p class="text-green-100">Your reward reflects efficiency, speed, and CTF expertise</p>
+                <div class="bg-gradient-to-r from-purple-900/50 to-blue-900/50 rounded-lg p-3 sm:p-4 lg:p-5 mb-4 sm:mb-6 border border-purple-500/30">
+                    <div class="flex flex-col sm:flex-row items-center justify-center mb-3 sm:mb-4 text-center sm:text-left">
+                        <i class="bi bi-trophy-fill text-3xl sm:text-4xl text-yellow-400 mb-2 sm:mb-0 sm:mr-3"></i>
+                        <div class="min-w-0 flex-1">
+                            <h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-white break-words">Performance-Based XP Awarded!</h3>
+                            <p class="text-sm sm:text-base text-green-100 break-words">Your reward reflects efficiency, speed, and CTF expertise</p>
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                         <div class="bg-green-900/50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-green-400">${Math.round(avgAttemptsPerFlag * 10) / 10}</div>
-                            <div class="text-xs text-green-200">Avg Attempts/Flag</div>
-                            <div class="text-xs text-gray-300">${this.getEfficiencyRating(totalAttempts, this.sessionData.flagsFound)}</div>
+                            <div class="text-lg sm:text-xl lg:text-2xl font-bold text-green-400">${Math.round(avgAttemptsPerFlag * 10) / 10}</div>
+                            <div class="text-xs sm:text-sm text-green-200 break-words">Avg Attempts/Flag</div>
+                            <div class="text-xs text-gray-300 capitalize break-words">${this.getEfficiencyRating(totalAttempts, this.sessionData.flagsFound)}</div>
                         </div>
                         <div class="bg-blue-900/50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-blue-400">${duration}</div>
-                            <div class="text-xs text-blue-200">Completion Time</div>
-                            <div class="text-xs text-gray-300">${this.getTimeRating((this.sessionData.endTime - this.sessionData.startTime) / (1000 * 60))}</div>
+                            <div class="text-lg sm:text-xl lg:text-2xl font-bold text-blue-400">${duration}</div>
+                            <div class="text-xs sm:text-sm text-blue-200">Completion Time</div>
+                            <div class="text-xs text-gray-300 capitalize break-words">${this.getTimeRating((this.sessionData.endTime - this.sessionData.startTime) / (1000 * 60))}</div>
                         </div>
                         <div class="bg-purple-900/50 rounded-lg p-3 text-center">
-                            <div class="text-xl font-bold text-purple-400">${performanceScore}%</div>
-                            <div class="text-xs text-purple-200">Performance Score</div>
-                            <div class="text-xs text-gray-300">Dynamic XP Multiplier</div>
+                            <div class="text-lg sm:text-xl lg:text-2xl font-bold text-purple-400">${performanceScore}%</div>
+                            <div class="text-xs sm:text-sm text-purple-200">Performance Score</div>
+                            <div class="text-xs text-gray-300 break-words">Dynamic XP Multiplier</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Performance Metrics -->
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
-                        <div class="text-2xl font-bold text-green-400">${this.sessionData.flagsFound}/${this.sessionData.totalFlags}</div>
-                        <div class="text-sm text-gray-400">Flags Discovered</div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-6">
+                    <div class="bg-gray-800 rounded-lg p-3 sm:p-4 text-center border border-gray-700 min-h-0">
+                        <div class="text-lg sm:text-xl lg:text-2xl font-bold text-green-400 break-words">${this.sessionData.flagsFound}/${this.sessionData.totalFlags}</div>
+                        <div class="text-xs sm:text-sm text-gray-400 break-words">Flags Discovered</div>
                     </div>
-                    <div class="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
-                        <div class="text-2xl font-bold text-blue-400">${duration}</div>
-                        <div class="text-sm text-gray-400">Completion Time</div>
+                    <div class="bg-gray-800 rounded-lg p-3 sm:p-4 text-center border border-gray-700 min-h-0">
+                        <div class="text-lg sm:text-xl lg:text-2xl font-bold text-blue-400">${duration}</div>
+                        <div class="text-xs sm:text-sm text-gray-400">Completion Time</div>
                     </div>
-                    <div class="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
-                        <div class="text-2xl font-bold text-purple-400">${this.sessionData.completionRate}%</div>
-                        <div class="text-sm text-gray-400">Success Rate</div>
+                    <div class="bg-gray-800 rounded-lg p-3 sm:p-4 text-center border border-gray-700 min-h-0">
+                        <div class="text-lg sm:text-xl lg:text-2xl font-bold text-purple-400">${this.sessionData.completionRate}%</div>
+                        <div class="text-xs sm:text-sm text-gray-400">Success Rate</div>
                     </div>
-                    <div class="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
-                        <div class="text-2xl font-bold text-yellow-400">${this.sessionData.xpEarned || performanceBasedXP}</div>
-                        <div class="text-sm text-gray-400">XP Earned</div>
+                    <div class="bg-gray-800 rounded-lg p-3 sm:p-4 text-center border border-gray-700 min-h-0">
+                        <div class="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-400">${this.sessionData.xpEarned || performanceBasedXP}</div>
+                        <div class="text-xs sm:text-sm text-gray-400">XP Earned</div>
                         <div class="text-xs text-gray-500 mt-1">Performance-Based</div>
                     </div>
                 </div>
 
                 <!-- Flag Details -->
-                <div class="mb-6">
-                    <h3 class="text-lg font-semibold text-blue-300 mb-3 flex items-center">
-                        <i class="bi bi-flag-fill mr-2"></i>
-                        Flag Discovery Details
+                <div class="mb-4 sm:mb-6 overflow-hidden">
+                    <h3 class="text-base sm:text-lg lg:text-xl font-semibold text-blue-300 mb-3 flex items-center break-words">
+                        <i class="bi bi-flag-fill mr-2 flex-shrink-0"></i>
+                        <span class="min-w-0">Flag Discovery Details</span>
                     </h3>
-                    <div class="space-y-2">
+                    <div class="space-y-2 max-w-full overflow-hidden">
                         ${this.generateFlagDetails()}
                     </div>
                 </div>
 
                 <!-- Next Steps -->
-                <div class="text-center">
-                    <div class="flex flex-col md:flex-row gap-3 justify-center">
+                <div class="text-center px-2 sm:px-0">
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch max-w-full">
                         <button 
                             id="continue-level5-btn"
-                            class="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white rounded-lg font-semibold transition-colors cursor-pointer flex items-center justify-center"
+                            class="flex-1 sm:flex-none px-4 sm:px-6 lg:px-8 py-3 sm:py-3 lg:py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 active:from-green-700 active:to-emerald-700 text-white rounded-lg font-semibold transition-all duration-200 cursor-pointer flex items-center justify-center text-sm sm:text-base lg:text-lg touch-manipulation min-h-[48px] sm:min-h-[52px]"
                         >
-                            <i class="bi bi-arrow-right-circle mr-2"></i>
-                            <span>Continue to Level 5</span>
+                            <i class="bi bi-arrow-right-circle mr-2 flex-shrink-0"></i>
+                            <span class="min-w-0 truncate">Continue to Level 5</span>
                         </button>
                         <button 
                             id="levels-overview-btn"
-                            class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors cursor-pointer flex items-center justify-center"
+                            class="flex-1 sm:flex-none px-4 sm:px-6 lg:px-8 py-3 sm:py-3 lg:py-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-lg font-semibold transition-all duration-200 cursor-pointer flex items-center justify-center text-sm sm:text-base lg:text-lg touch-manipulation min-h-[48px] sm:min-h-[52px]"
                         >
-                            <i class="bi bi-grid mr-2"></i>
-                            <span>Back to Levels</span>
+                            <i class="bi bi-grid mr-2 flex-shrink-0"></i>
+                            <span class="min-w-0 truncate">Back to Levels</span>
                         </button>
                     </div>
                 </div>
@@ -886,7 +923,52 @@ export class Level4SessionSummary extends BaseModalComponent {
         // Show the summary modal
         window.level4SessionSummary.showSessionSummary(completionStats);
         
+        // Add responsive event listeners for orientation changes and viewport resizing
+        window.level4SessionSummary.addResponsiveEventListeners();
+        
         return window.level4SessionSummary;
+    }
+
+    /**
+     * Add event listeners for responsive behavior
+     */
+    addResponsiveEventListeners() {
+        // Handle orientation changes and window resizing
+        const handleResize = () => {
+            setTimeout(() => {
+                this.applyResponsiveModalStyling();
+            }, 100);
+        };
+
+        // Listen for orientation changes (mobile devices)
+        if (window.screen && window.screen.orientation) {
+            window.screen.orientation.addEventListener('change', handleResize);
+        }
+
+        // Listen for window resize (all devices)
+        window.addEventListener('resize', handleResize);
+
+        // Store cleanup function for later removal
+        this.cleanupResponsiveListeners = () => {
+            if (window.screen && window.screen.orientation) {
+                window.screen.orientation.removeEventListener('change', handleResize);
+            }
+            window.removeEventListener('resize', handleResize);
+        };
+    }
+
+    /**
+     * Clean up responsive event listeners
+     */
+    cleanup() {
+        if (this.cleanupResponsiveListeners) {
+            this.cleanupResponsiveListeners();
+        }
+        
+        // Call parent cleanup if it exists
+        if (super.cleanup) {
+            super.cleanup();
+        }
     }
 
     /**
