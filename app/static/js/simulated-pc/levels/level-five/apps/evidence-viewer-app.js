@@ -16,6 +16,7 @@ export class EvidenceViewerApp extends ForensicAppBase {
         this.analysisStep = 1;
         this.maxSteps = 4;
         this.discoveredClues = new Set();
+        this.investigatedEvidence = new Set(); // Track which evidence has been investigated
         this.currentObjective = null;
     }
 
@@ -108,10 +109,6 @@ export class EvidenceViewerApp extends ForensicAppBase {
 
                         <!-- Action Buttons -->
                         <div class="mt-4 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 flex-shrink-0">
-                            <button id="analyze-btn" class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white rounded-lg transition-colors disabled:cursor-not-allowed min-h-[48px] touch-manipulation" disabled>
-                                <i class="bi bi-cpu mr-2"></i>
-                                <span class="text-sm sm:text-base lg:text-lg">Analyze Evidence</span>
-                            </button>
                             <button id="extract-btn" class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 text-white rounded-lg transition-colors disabled:cursor-not-allowed min-h-[48px] touch-manipulation" disabled>
                                 <i class="bi bi-download mr-2"></i>
                                 <span class="text-sm sm:text-base lg:text-lg">Extract Clue</span>
@@ -127,9 +124,9 @@ export class EvidenceViewerApp extends ForensicAppBase {
                 <!-- Status Bar -->
                 <div class="px-3 sm:px-4 py-2 bg-gray-800 border-t border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs sm:text-sm">
                     <div class="mb-1 sm:mb-0">
-                        <span class="text-gray-400">Clues Found: </span>
-                        <span id="clues-count" class="text-green-400 font-semibold">0</span>
-                        <span class="text-gray-400"> / 3</span>
+                        <span class="text-gray-400">Evidence Investigated: </span>
+                        <span id="evidence-count" class="text-green-400 font-semibold">0</span>
+                        <span class="text-gray-400"> / 5</span>
                     </div>
                     <div class="flex space-x-2 sm:space-x-4 text-xs">
                         <span class="text-blue-400">
@@ -154,6 +151,7 @@ export class EvidenceViewerApp extends ForensicAppBase {
         if (!this.isReanalysis) {
             localStorage.removeItem('level5_evidence_analysis_complete');
             localStorage.removeItem('level5_evidence_analysis_data');
+            this.investigatedEvidence.clear(); // Reset investigated evidence tracking
             console.log('[EvidenceViewer] Reset analysis status for new investigation');
         }
         
@@ -184,12 +182,10 @@ export class EvidenceViewerApp extends ForensicAppBase {
         });
 
         // Action buttons
-        const analyzeBtn = document.getElementById('analyze-btn');
         const extractBtn = document.getElementById('extract-btn'); 
         const nextStepBtn = document.getElementById('next-step-btn');
         const hintBtn = document.getElementById('hint-btn');
 
-        analyzeBtn?.addEventListener('click', () => this.analyzeCurrentEvidence());
         extractBtn?.addEventListener('click', () => this.extractClue());
         nextStepBtn?.addEventListener('click', () => this.proceedToNextStep());
         hintBtn?.addEventListener('click', () => this.showHint());
@@ -232,28 +228,44 @@ export class EvidenceViewerApp extends ForensicAppBase {
             difficulty: item.difficulty
         }));
 
-        evidenceList.innerHTML = evidence.map(item => `
-            <div class="evidence-item cursor-pointer p-3 sm:p-4 bg-gray-700 hover:bg-gray-600 rounded-lg border border-gray-600 hover:border-blue-500 transition-all min-h-[70px] touch-manipulation" 
-                 data-evidence-id="${item.id}">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
-                        <i class="${item.icon} text-blue-400 text-lg sm:text-xl flex-shrink-0"></i>
-                        <div class="min-w-0 flex-1">
-                            <h4 class="text-sm sm:text-base font-semibold text-white truncate">${item.name}</h4>
-                            <p class="text-xs sm:text-sm text-gray-400 truncate">${item.type}</p>
-                            ${item.difficulty ? `<span class="text-xs px-2 py-1 rounded ${this.getDifficultyColor(item.difficulty)}">${item.difficulty}</span>` : ''}
+        this.renderEvidenceList(evidence);
+    }
+
+    renderEvidenceList(evidence) {
+        const evidenceList = document.getElementById('evidence-list');
+        if (!evidenceList) return;
+
+        evidenceList.innerHTML = evidence.map(item => {
+            const isInvestigated = this.investigatedEvidence.has(item.id);
+            const statusIcon = isInvestigated ? 'bi-check-circle-fill' : 'bi-shield-check';
+            const statusText = isInvestigated ? 'Investigated' : 'verified';
+            const statusColor = isInvestigated ? 'text-blue-400' : 'text-green-400';
+            const itemBorder = isInvestigated ? 'border-blue-500' : 'border-gray-600 hover:border-blue-500';
+            const itemBg = isInvestigated ? 'bg-gray-600' : 'bg-gray-700 hover:bg-gray-600';
+
+            return `
+                <div class="evidence-item cursor-pointer p-3 sm:p-4 ${itemBg} rounded-lg border ${itemBorder} transition-all min-h-[70px] touch-manipulation" 
+                     data-evidence-id="${item.id}">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                            <i class="${item.icon} text-blue-400 text-lg sm:text-xl flex-shrink-0"></i>
+                            <div class="min-w-0 flex-1">
+                                <h4 class="text-sm sm:text-base font-semibold text-white truncate">${item.name}</h4>
+                                <p class="text-xs sm:text-sm text-gray-400 truncate">${item.type}</p>
+                                ${item.difficulty ? `<span class="text-xs px-2 py-1 rounded ${this.getDifficultyColor(item.difficulty)}">${item.difficulty}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end text-xs sm:text-sm flex-shrink-0 ml-2">
+                            <span class="text-gray-300">${item.size}</span>
+                            <span class="${statusColor}">
+                                <i class="${statusIcon} mr-1"></i>
+                                ${statusText}
+                            </span>
                         </div>
                     </div>
-                    <div class="flex flex-col items-end text-xs sm:text-sm flex-shrink-0 ml-2">
-                        <span class="text-gray-300">${item.size}</span>
-                        <span class="text-green-400">
-                            <i class="bi bi-shield-check mr-1"></i>
-                            ${item.status}
-                        </span>
-                    </div>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     getEvidenceSize(evidenceType) {
@@ -395,9 +407,6 @@ export class EvidenceViewerApp extends ForensicAppBase {
                                 <i class="bi bi-exclamation-triangle mr-2"></i>
                                 ${data.clue}
                             </p>
-                            <button id="extract-clue-btn" class="mt-2 px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white text-xs rounded transition-colors">
-                                Extract Identity Clue
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -416,23 +425,18 @@ export class EvidenceViewerApp extends ForensicAppBase {
                 </div>
             </div>
         `;
-
-        // Bind extract clue button
-        const extractClueBtn = document.getElementById('extract-clue-btn');
-        extractClueBtn?.addEventListener('click', () => this.extractClue());
     }
 
     updateActionButtons() {
-        const analyzeBtn = document.getElementById('analyze-btn');
         const extractBtn = document.getElementById('extract-btn');
         const nextStepBtn = document.getElementById('next-step-btn');
 
         if (this.currentEvidence) {
-            analyzeBtn.disabled = false;
             extractBtn.disabled = false;
         }
 
-        if (this.discoveredClues.size >= 3) {
+        // Check if all 5 pieces of evidence have been investigated
+        if (this.investigatedEvidence.size >= 5) {
             nextStepBtn.disabled = false;
             // Update button text to be clearer
             const nextStepBtnSpan = nextStepBtn?.querySelector('span');
@@ -443,17 +447,12 @@ export class EvidenceViewerApp extends ForensicAppBase {
             // Update button text to show progress
             const nextStepBtnSpan = nextStepBtn?.querySelector('span');
             if (nextStepBtnSpan) {
-                nextStepBtnSpan.textContent = `Need ${3 - this.discoveredClues.size} More Clues`;
+                nextStepBtnSpan.textContent = `Investigate ${5 - this.investigatedEvidence.size} More Evidence`;
             }
         }
     }
 
-    analyzeCurrentEvidence() {
-        if (!this.currentEvidence) return;
-        
-        this.showNotification(`Analyzing ${this.currentEvidence}... Evidence processing complete!`, 'success');
-        this.emitForensicEvent('evidence_analyzed', { evidenceId: this.currentEvidence });
-    }
+
 
     extractClue() {
         if (!this.currentEvidence) return;
@@ -495,10 +494,14 @@ export class EvidenceViewerApp extends ForensicAppBase {
                 clue = evidence.finding || 'Evidence analyzed';
         }
 
-        // Only add if not already discovered
+        // Mark evidence as investigated and add clue if not already discovered
+        if (!this.investigatedEvidence.has(this.currentEvidence)) {
+            this.investigatedEvidence.add(this.currentEvidence);
+            this.updateEvidenceCount();
+        }
+
         if (clue && !this.discoveredClues.has(this.currentEvidence)) {
             this.discoveredClues.add(this.currentEvidence);
-            this.updateCluesCount();
             this.showNotification(`Identity clue extracted: ${clue}`, 'success');
             this.emitForensicEvent('clue_discovered', { 
                 clue, 
@@ -510,24 +513,45 @@ export class EvidenceViewerApp extends ForensicAppBase {
             
             console.log(`[EvidenceViewer] Clue extracted from ${this.currentEvidence}: ${clue}`);
         } else if (this.discoveredClues.has(this.currentEvidence)) {
-            this.showNotification('Clue already extracted from this evidence', 'info');
+            this.showNotification('Evidence already investigated - clue previously extracted', 'info');
+        } else {
+            this.showNotification('Evidence investigated - no additional clues found', 'success');
         }
 
+        // Refresh the evidence list to show investigated status
+        this.refreshEvidenceListDisplay();
         this.updateActionButtons();
     }
 
-    updateCluesCount() {
-        const cluesCount = document.getElementById('clues-count');
-        if (cluesCount) {
-            cluesCount.textContent = this.discoveredClues.size;
+    refreshEvidenceListDisplay() {
+        // Re-render the evidence list with updated investigation status
+        if (this.evidencePool) {
+            const evidence = this.evidencePool.map((item, index) => ({
+                id: item.id,
+                name: item.title,
+                type: item.source,
+                size: this.getEvidenceSize(item.type),
+                status: 'verified',
+                icon: item.icon || this.getDefaultIcon(item.type),
+                clue_type: item.clue_type,
+                difficulty: item.difficulty
+            }));
+            this.renderEvidenceList(evidence);
+        }
+    }
+
+    updateEvidenceCount() {
+        const evidenceCount = document.getElementById('evidence-count');
+        if (evidenceCount) {
+            evidenceCount.textContent = this.investigatedEvidence.size;
         }
         
-        // Also update action buttons when clues count changes
+        // Also update action buttons when evidence count changes
         this.updateActionButtons();
     }
 
     proceedToNextStep() {
-        if (this.discoveredClues.size >= 3) {
+        if (this.investigatedEvidence.size >= 5) {
             const targetName = this.targetIdentity?.real_name || this.targetIdentity?.code_name || 'Unknown Target';
             
             // Mark evidence analysis as complete for access control
@@ -536,6 +560,7 @@ export class EvidenceViewerApp extends ForensicAppBase {
             // Store extracted clues and target data for forensic report
             const analysisData = {
                 clues: Array.from(this.discoveredClues),
+                investigated_evidence: Array.from(this.investigatedEvidence),
                 target_identity: this.targetIdentity,
                 target_name: targetName,
                 evidence_pool: this.evidencePool,
@@ -543,9 +568,10 @@ export class EvidenceViewerApp extends ForensicAppBase {
             };
             localStorage.setItem('level5_evidence_analysis_data', JSON.stringify(analysisData));
             
-            this.showNotification(`🎉 Evidence Analysis Complete! Opening Forensic Report Builder...`, 'success', 4000);
+            this.showNotification(`🎉 All Evidence Investigated! Opening Forensic Report Builder...`, 'success', 4000);
             this.emitForensicEvent('analysis_complete', { 
                 clues: Array.from(this.discoveredClues),
+                investigated_evidence: Array.from(this.investigatedEvidence),
                 target_identity: this.targetIdentity,
                 target_name: targetName
             });
@@ -592,15 +618,21 @@ export class EvidenceViewerApp extends ForensicAppBase {
     }
 
     showHint() {
-        const hints = {
-            1: 'Start by selecting evidence from the sidebar. Each piece contains crucial identity information.',
-            2: 'Look for personal information like names, email addresses, and contact details.',
-            3: 'Extract all identity clues before proceeding to report building.',
-            4: 'Ensure all evidence maintains proper chain of custody throughout analysis.'
-        };
-
-        const hint = hints[this.analysisStep] || 'Follow the forensic methodology to identify The Null.';
-        this.showNotification(hint, 'info', 5000);
+        const remainingEvidence = 5 - this.investigatedEvidence.size;
+        
+        if (remainingEvidence > 0) {
+            this.showNotification(
+                `💡 You need to investigate all ${remainingEvidence} remaining pieces of evidence before you can proceed to the forensic report builder. Select each evidence item and extract clues to mark them as investigated.`, 
+                'info', 
+                6000
+            );
+        } else {
+            this.showNotification(
+                '🎉 Excellent! All evidence has been investigated. You can now proceed to build your forensic report.', 
+                'success', 
+                5000
+            );
+        }
     }
 
     showNotification(message, type = 'info', duration = 3000) {
