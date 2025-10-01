@@ -21,35 +21,35 @@ export const Level5Config = {
             id: 'obj_1',
             title: 'Establish Chain of Custody',
             description: 'Verify evidence integrity and document proper forensic handling',
-            points: 100,
+            points: 25,
             required: true
         },
         {
             id: 'obj_2', 
             title: 'Analyze Digital Evidence',
             description: 'Examine 3 pieces of evidence to find identity clues',
-            points: 200,
+            points: 35,
             required: true
         },
         {
             id: 'obj_3',
             title: 'Build Forensic Report',
             description: 'Create compliant report following NIST SP 800-86 standards',
-            points: 150,
+            points: 30,
             required: true
         },
         {
             id: 'obj_4',
             title: 'Identify The Null',
             description: 'Conclusively identify the hacker known as "The Null"',
-            points: 200,
+            points: 30,
             required: true
         }
     ],
     
     // Clear success criteria
     successCriteria: {
-        minimumScore: 400,
+        minimumScore: 96,
         requiredEvidence: ['laptop_image', 'memory_dump', 'network_logs'],
         mustIdentifyTarget: true,
         complianceRequired: ['chain_of_custody', 'evidence_integrity', 'proper_documentation']
@@ -81,18 +81,18 @@ export const Level5Config = {
     
     // Simplified scoring 
     scoring: {
-        maxScore: 650,
-        perfectScore: 500,  // Minimum for "perfect" rating
-        passingScore: 400,  // Minimum to complete level
+        maxScore: 120,
+        perfectScore: 120,  // Minimum for "perfect" rating
+        passingScore: 96,  // Minimum to complete level
         penalties: {
-            procedural_violation: -50,
-            contaminated_evidence: -100,
-            missing_evidence: -75
+            procedural_violation: -12,
+            contaminated_evidence: -24,
+            missing_evidence: -18
         },
         bonuses: {
-            perfect_procedure: +50,
-            efficiency_bonus: +25,
-            comprehensive_analysis: +75
+            perfect_procedure: +12,
+            efficiency_bonus: +6,
+            comprehensive_analysis: +18
         }
     },
     

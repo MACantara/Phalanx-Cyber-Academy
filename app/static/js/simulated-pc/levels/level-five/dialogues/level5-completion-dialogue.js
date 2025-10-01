@@ -13,7 +13,7 @@ export class Level5CompletionDialogue extends BaseDialogue {
 
     setupMessages() {
         const score = this.investigationStats.investigationScore || 0;
-        const maxScore = 500;
+        const maxScore = 120;
         const complianceScore = this.investigationStats.complianceScore || 0;
         const objectivesCompleted = this.investigationStats.objectivesCompleted?.length || 0;
         const evidenceAnalyzed = this.investigationStats.evidenceAnalyzed?.length || 0;
@@ -22,13 +22,13 @@ export class Level5CompletionDialogue extends BaseDialogue {
         let performanceLevel = 'novice';
         let performanceMessage = '';
         
-        if (score >= 450) {
+        if (score >= 108) {
             performanceLevel = 'expert';
             performanceMessage = 'Outstanding work! You\'ve demonstrated expert-level digital forensics skills.';
-        } else if (score >= 350) {
+        } else if (score >= 84) {
             performanceLevel = 'proficient';
             performanceMessage = 'Excellent investigation! You\'ve shown strong forensic analysis capabilities.';
-        } else if (score >= 250) {
+        } else if (score >= 60) {
             performanceLevel = 'competent';
             performanceMessage = 'Good work! You\'ve successfully identified The Null with solid evidence.';
         } else {
@@ -72,7 +72,7 @@ export class Level5CompletionDialogue extends BaseDialogue {
             
             const summaryStats = {
                 score: this.investigationStats.investigationScore || 0,
-                totalPossible: 500,
+                totalPossible: 120,
                 objectivesCompleted: this.investigationStats.objectivesCompleted?.length || 0,
                 evidenceAnalyzed: this.investigationStats.evidenceAnalyzed?.length || 0,
                 correctActions: this.investigationStats.correctActions || 0,

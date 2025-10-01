@@ -20,7 +20,7 @@ export class Level5WorkflowSummary {
     createContent() {
         const {
             score = 0,
-            totalPossible = 150,
+            totalPossible = 120,
             objectivesCompleted = 0,
             evidenceAnalyzed = 0,
             correctActions = 0,

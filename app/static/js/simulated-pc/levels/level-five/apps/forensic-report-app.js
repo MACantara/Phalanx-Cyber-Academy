@@ -776,8 +776,8 @@ export class ForensicReportApp extends ForensicAppBase {
             const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
             const progressManager = new GameProgressManager();
 
-            // Ensure we have a valid score (0-100 range)
-            const finalScore = Math.max(0, Math.min(100, this.reportScore || 0));
+            // Ensure we have a valid score (0-120 range)
+            const finalScore = Math.max(0, Math.min(120, this.reportScore || 0));
             const startTime = parseInt(localStorage.getItem('cyberquest_level_5_start_time') || Date.now());
 
             if (sessionId && !isNaN(parseInt(sessionId))) {

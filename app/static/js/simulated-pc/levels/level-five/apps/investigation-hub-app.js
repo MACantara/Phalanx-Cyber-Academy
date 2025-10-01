@@ -15,7 +15,7 @@ export class InvestigationHubApp extends ForensicAppBase {
         this.objectives = [];
         this.completedObjectives = new Set();
         this.currentScore = 0;
-        this.maxScore = 650;
+        this.maxScore = 120;
         this.investigationStatus = 'active';
     }
 
