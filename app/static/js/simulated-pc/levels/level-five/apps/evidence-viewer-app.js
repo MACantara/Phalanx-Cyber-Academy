@@ -204,19 +204,11 @@ export class EvidenceViewerApp extends ForensicAppBase {
                 throw new Error('Failed to load evidence data from API');
             }
         } catch (error) {
-            console.error('Error loading evidence:', error);
-            // Fallback to embedded data
-            this.evidencePool = [
-                {
-                    id: 'fallback_001',
-                    title: 'Browser Profile Data',
-                    source: 'Laptop Browser',
-                    type: 'browser_data',
-                    clue_type: 'identity',
-                    icon: 'bi-person-badge',
-                    finding: 'Real name found in browser profile'
-                }
-            ];
+            console.error('[EvidenceViewer] Error loading evidence from Level 5 API:', error);
+            this.showNotification('Failed to load evidence data from Level 5 API. Please refresh the page.', 'error');
+            this.evidencePool = [];
+            this.targetIdentity = null;
+            return;
         }
 
         // Render evidence list
@@ -257,22 +249,62 @@ export class EvidenceViewerApp extends ForensicAppBase {
 
     getEvidenceSize(evidenceType) {
         const sizes = {
-            'browser_data': '245MB',
+            'browser_autofill': '125MB',
+            'browser_cookies': '89MB',
             'process_memory': '1.2GB', 
+            'email_headers': '45MB',
             'network_traffic': '800MB',
+            'voip_logs': '234MB',
+            'network_forensics': '567MB',
             'system_logs': '156MB',
-            'malware_analysis': '45MB'
+            'malware_analysis': '78MB',
+            'keychain_data': '23MB',
+            'pgp_keys': '12MB',
+            'sms_backup': '156MB',
+            'cryptocurrency': '89MB',
+            'source_code': '234MB',
+            'social_profiles': '67MB',
+            'phishing_kit': '145MB',
+            'burner_phone': '34MB',
+            'fake_identities': '890MB',
+            'psychological_profiles': '456MB',
+            'banking_logs': '234MB',
+            'trading_platform': '345MB',
+            'fintech_app': '123MB',
+            'trading_bot': '567MB',
+            'money_laundering': '1.1GB',
+            'hacking_tools': '289MB'
         };
         return sizes[evidenceType] || '500MB';
     }
 
     getDefaultIcon(evidenceType) {
         const icons = {
-            'browser_data': 'bi-globe',
+            'browser_autofill': 'bi-person-badge',
+            'browser_cookies': 'bi-cookie',
             'process_memory': 'bi-memory',
+            'email_headers': 'bi-envelope',
             'network_traffic': 'bi-wifi',
+            'voip_logs': 'bi-phone',
+            'network_forensics': 'bi-activity',
             'system_logs': 'bi-file-text',
-            'malware_analysis': 'bi-bug'
+            'malware_analysis': 'bi-bug',
+            'keychain_data': 'bi-key',
+            'pgp_keys': 'bi-shield-lock',
+            'sms_backup': 'bi-chat-dots',
+            'cryptocurrency': 'bi-currency-bitcoin',
+            'source_code': 'bi-code-slash',
+            'social_profiles': 'bi-people',
+            'phishing_kit': 'bi-envelope-exclamation',
+            'burner_phone': 'bi-phone',
+            'fake_identities': 'bi-masks-theater',
+            'psychological_profiles': 'bi-brain',
+            'banking_logs': 'bi-bank',
+            'trading_platform': 'bi-graph-up',
+            'fintech_app': 'bi-phone-fill',
+            'trading_bot': 'bi-robot',
+            'money_laundering': 'bi-arrow-repeat',
+            'hacking_tools': 'bi-tools'
         };
         return icons[evidenceType] || 'bi-file-earmark';
     }
@@ -406,18 +438,59 @@ export class EvidenceViewerApp extends ForensicAppBase {
     extractClue() {
         if (!this.currentEvidence) return;
 
-        const clueMap = {
-            laptop_image: 'Real name: Alex Morrison',
-            memory_dump: 'Email: a.morrison@securemail.com', 
-            network_logs: 'Phone: +1-555-0142'
-        };
+        // Find the current evidence in the evidence pool
+        const evidence = this.evidencePool?.find(item => item.id === this.currentEvidence);
+        if (!evidence) {
+            console.error('Evidence not found:', this.currentEvidence);
+            return;
+        }
 
-        const clue = clueMap[this.currentEvidence];
+        // Extract the clue from the evidence data based on clue_type
+        let clue = '';
+        const evidenceData = evidence.evidence_data || {};
+        
+        switch (evidence.clue_type) {
+            case 'identity':
+                // Extract name from various possible fields
+                clue = evidenceData.autofill_name || 
+                       evidenceData.account_name || 
+                       evidenceData.profile_name || 
+                       `Real name: ${this.targetIdentity?.real_name || 'Unknown'}`;
+                break;
+            case 'contact':
+                // Extract email or phone based on evidence type
+                if (evidenceData.email_address || evidenceData.from_address || evidenceData.trading_email) {
+                    clue = `Email: ${evidenceData.email_address || evidenceData.from_address || evidenceData.trading_email}`;
+                } else if (evidenceData.phone_number || evidenceData.caller_id || evidenceData.backup_phone || evidenceData.registered_number || evidenceData.verified_phone) {
+                    clue = `Phone: ${evidenceData.phone_number || evidenceData.caller_id || evidenceData.backup_phone || evidenceData.registered_number || evidenceData.verified_phone}`;
+                } else {
+                    clue = `Contact info: ${this.targetIdentity?.email || this.targetIdentity?.phone || 'Unknown'}`;
+                }
+                break;
+            case 'technical':
+                // Extract technical details
+                clue = evidence.finding || 'Technical evidence analyzed';
+                break;
+            default:
+                clue = evidence.finding || 'Evidence analyzed';
+        }
+
+        // Only add if not already discovered
         if (clue && !this.discoveredClues.has(this.currentEvidence)) {
             this.discoveredClues.add(this.currentEvidence);
             this.updateCluesCount();
             this.showNotification(`Identity clue extracted: ${clue}`, 'success');
-            this.emitForensicEvent('clue_discovered', { clue, source: this.currentEvidence });
+            this.emitForensicEvent('clue_discovered', { 
+                clue, 
+                source: this.currentEvidence, 
+                evidence_type: evidence.type,
+                clue_type: evidence.clue_type,
+                target: this.targetIdentity?.code_name
+            });
+            
+            console.log(`[EvidenceViewer] Clue extracted from ${this.currentEvidence}: ${clue}`);
+        } else if (this.discoveredClues.has(this.currentEvidence)) {
+            this.showNotification('Clue already extracted from this evidence', 'info');
         }
 
         this.updateActionButtons();
@@ -432,10 +505,12 @@ export class EvidenceViewerApp extends ForensicAppBase {
 
     proceedToNextStep() {
         if (this.discoveredClues.size >= 3) {
-            this.showNotification('🎉 All identity clues found! Next: 1) Check Investigation Hub for progress 2) Add evidence to Forensic Report sections', 'success', 6000);
+            const targetName = this.targetIdentity?.real_name || this.targetIdentity?.code_name || 'Unknown Target';
+            this.showNotification(`🎉 All identity clues found for ${this.targetIdentity?.code_name}! Next: 1) Check Investigation Hub for progress 2) Add evidence to Forensic Report sections`, 'success', 6000);
             this.emitForensicEvent('analysis_complete', { 
                 clues: Array.from(this.discoveredClues),
-                identity: 'Alex Morrison'
+                target_identity: this.targetIdentity,
+                target_name: targetName
             });
         }
     }
