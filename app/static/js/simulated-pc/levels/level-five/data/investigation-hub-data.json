@@ -1,0 +1,199 @@
+{
+  "investigation_objectives": [
+    {
+      "id": "obj_chain_custody",
+      "title": "Maintain Chain of Custody",
+      "description": "Ensure all digital evidence maintains proper chain of custody documentation per ISO/IEC 27037:2012",
+      "priority": "critical",
+      "status": "not_started",
+      "progress": 0,
+      "required_actions": [
+        "Verify evidence hashes",
+        "Document evidence sources", 
+        "Maintain access logs",
+        "Complete custody forms"
+      ],
+      "completion_criteria": "All evidence properly documented and verified",
+      "points": 100,
+      "estimated_time": "15 minutes"
+    },
+    {
+      "id": "obj_analyze_evidence",
+      "title": "Analyze Digital Evidence",
+      "description": "Systematically examine laptop, memory, and network evidence to find identity clues",
+      "priority": "high", 
+      "status": "not_started",
+      "progress": 0,
+      "required_actions": [
+        "Examine laptop browser data",
+        "Analyze memory dump contents",
+        "Review network traffic logs",
+        "Extract key artifacts"
+      ],
+      "completion_criteria": "Key evidence artifacts identified and extracted",
+      "points": 150,
+      "estimated_time": "25 minutes"
+    },
+    {
+      "id": "obj_extract_identity",
+      "title": "Extract Identity Information", 
+      "description": "Find and verify The Null's real identity including name, email, and phone number",
+      "priority": "critical",
+      "status": "not_started", 
+      "progress": 0,
+      "required_actions": [
+        "Locate real name in artifacts",
+        "Find primary email address",
+        "Discover phone number",
+        "Verify identity correlation"
+      ],
+      "completion_criteria": "Complete identity: Alex Morrison, a.morrison@securemail.com, +1-555-0142",
+      "points": 200,
+      "estimated_time": "20 minutes"
+    },
+    {
+      "id": "obj_build_report",
+      "title": "Build Forensic Report", 
+      "description": "Compile comprehensive forensic report with all findings and evidence",
+      "priority": "high",
+      "status": "not_started",
+      "progress": 0,
+      "required_actions": [
+        "Organize evidence by category",
+        "Document analysis methodology",
+        "Include compliance verification", 
+        "Prepare final conclusions"
+      ],
+      "completion_criteria": "Complete report ready for legal proceedings",
+      "points": 150,
+      "estimated_time": "20 minutes"
+    }
+  ],
+  "workflow_phases": [
+    {
+      "phase": 1,
+      "name": "Evidence Acquisition",
+      "description": "Initial evidence gathering and verification",
+      "objectives": ["obj_chain_custody"],
+      "status": "pending",
+      "estimated_duration": "15 minutes"
+    },
+    {
+      "phase": 2, 
+      "name": "Digital Analysis",
+      "description": "Systematic examination of digital artifacts",
+      "objectives": ["obj_analyze_evidence", "obj_extract_identity"],
+      "status": "locked",
+      "estimated_duration": "45 minutes"
+    },
+    {
+      "phase": 3,
+      "name": "Report Generation",
+      "description": "Compilation and documentation of findings", 
+      "objectives": ["obj_build_report"],
+      "status": "locked",
+      "estimated_duration": "20 minutes"
+    }
+  ],
+  "evidence_categories": [
+    {
+      "category": "laptop_evidence",
+      "name": "Laptop Digital Artifacts",
+      "description": "Files, browser data, and system artifacts from suspect's laptop",
+      "total_items": 4,
+      "analyzed_items": 0,
+      "key_findings": [],
+      "forensic_value": "high"
+    },
+    {
+      "category": "memory_evidence", 
+      "name": "Memory Dump Analysis",
+      "description": "Volatile memory contents and process analysis",
+      "total_items": 3,
+      "analyzed_items": 0,
+      "key_findings": [],
+      "forensic_value": "high"
+    },
+    {
+      "category": "network_evidence",
+      "name": "Network Traffic Analysis",
+      "description": "Captured network communications and data flows",
+      "total_items": 3,
+      "analyzed_items": 0,
+      "key_findings": [],
+      "forensic_value": "medium"
+    }
+  ],
+  "case_information": {
+    "case_number": "CF-2024-0314-001",
+    "case_title": "Digital Forensics Investigation: The Null Identity",
+    "investigator": "Digital Forensics Specialist",
+    "start_time": null,
+    "estimated_completion": "90 minutes",
+    "priority_level": "Critical",
+    "legal_authority": "Federal Search Warrant #2024-SW-0314",
+    "compliance_requirements": ["NIST SP 800-86", "ISO/IEC 27037:2012"]
+  },
+  "progress_tracking": {
+    "overall_completion": 0,
+    "objectives_completed": 0,
+    "evidence_analyzed": 0,
+    "report_sections": 0,
+    "score": 0,
+    "max_score": 600,
+    "time_elapsed": 0,
+    "efficiency_rating": "Not Started"
+  },
+  "milestones": [
+    {
+      "id": "milestone_evidence_verified",
+      "name": "Evidence Verification Complete",
+      "description": "All evidence sources verified and documented",
+      "target_progress": 25,
+      "achieved": false,
+      "points_reward": 50
+    },
+    {
+      "id": "milestone_identity_found",
+      "name": "Identity Discovered", 
+      "description": "The Null's real identity successfully determined",
+      "target_progress": 60,
+      "achieved": false,
+      "points_reward": 100
+    },
+    {
+      "id": "milestone_analysis_complete",
+      "name": "Analysis Phase Complete",
+      "description": "All digital evidence thoroughly analyzed",
+      "target_progress": 80,
+      "achieved": false,
+      "points_reward": 75
+    },
+    {
+      "id": "milestone_investigation_complete",
+      "name": "Investigation Complete",
+      "description": "Full forensic report generated and submitted",
+      "target_progress": 100,
+      "achieved": false, 
+      "points_reward": 125
+    }
+  ],
+  "performance_metrics": {
+    "efficiency_thresholds": {
+      "excellent": 70,
+      "good": 60,
+      "satisfactory": 45,
+      "needs_improvement": 30
+    },
+    "accuracy_tracking": {
+      "correct_identifications": 0,
+      "missed_evidence": 0,
+      "false_positives": 0
+    },
+    "time_benchmarks": {
+      "target_completion": 80,
+      "average_completion": 90, 
+      "expert_completion": 60
+    }
+  }
+}
