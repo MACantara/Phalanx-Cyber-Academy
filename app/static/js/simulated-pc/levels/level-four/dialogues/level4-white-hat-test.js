@@ -5,138 +5,31 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "🎓 Professional Certification: Level 4 - The White Hat Test\nENGAGEMENT TYPE: Authorized Penetration Test\nCLIENT: TechCorp Industries\nSCOPE: Web Application Security Assessment\nDURATION: Full-scope evaluation\nMETHODOLOGY: NIST SP 800-115 & OWASP Testing Guide"
+                text: "🎓 Level 4: The White Hat Test\n\nWelcome to ethical hacking! You'll learn responsible security testing by finding hidden vulnerabilities in a safe environment."
             },
             {
-                text: "📜 Rules of Engagement:\nAUTHORIZED ACTIVITIES:\n• Reconnaissance and information gathering\n• Vulnerability scanning and analysis"
+                text: "🛡️ What is Ethical Hacking?\n\nEthical hackers are security professionals who find vulnerabilities to help organizations improve their security - with permission!"
             },
             {
-                text: "• Configuration review and assessment\n• Log file examination and forensic analysis"
+                text: "🎯 Your Mission:\n\nFind 3 security flags hidden in the system using basic terminal commands. Each flag teaches you a fundamental ethical hacking skill."
             },
             {
-                text: "STRICTLY PROHIBITED:\n• Social engineering against real personnel\n• Denial of service attacks\n• Data exfiltration or destruction\n• Unauthorized access to production systems"
+                text: "� Essential Commands:\n\nYou'll use these basic terminal commands to explore the system and find vulnerabilities:",
+                example: "Core Commands:\nls -la    # List all files (including hidden)\ncat file  # Read file contents\nfind /    # Search for files\ngrep text # Search inside files"
             },
             {
-                text: "🎯 Mission Objectives:\nTechCorp has hired you as an ethical hacker to assess their security posture before a major product launch."
+                text: "🔍 Where to Look:\n\n• Hidden files (start with .)\n• Configuration files in /etc/\n• Log files in /var/log/\n• User directories in /home/",
+                example: "Getting Started:\nls -la ~          # Check home directory\ncat ~/.bashrc     # Read shell config\nls /var/log/      # Check log directory"
             },
             {
-                text: "Your task is to identify security vulnerabilities (represented as flags) across their infrastructure using terminal commands and professional penetration testing methodologies."
+                text: "� What You'll Learn:\n\n1. Basic Reconnaissance - Find hidden files\n2. Log Analysis - Examine system logs\n3. Configuration Review - Check server settings\n4. Credential Discovery - Find exposed passwords\n5. Network Analysis - Understand network setup\n6. Process Analysis - Check running services\n7. Permission Analysis - Find security flaws\n8. Responsible Disclosure - Report findings ethically"
             },
             {
-                text: "🔍 Assessment Categories:\n• Environment Analysis: System configuration and deployment security\n• Access Control: Authentication and authorization mechanisms"
+                text: "🎮 Getting Started:\n\n1. Open the Terminal application\n2. Start exploring with 'ls -la ~' to list files\n3. Use 'hints' command when you need help\n4. Submit flags with 'submit-flag WHT{flag_value}'",
+                example: "First Commands to Try:\nls -la ~              # Check your home directory\ncat ~/.bashrc         # Read configuration files\nls /var/log/          # Look at system logs\nhints                 # Get help when stuck"
             },
             {
-                text: "• Data Exposure: Sensitive information in logs and files\n• Configuration Security: Server and application hardening\n• Code Review: Source code vulnerabilities"
-            },
-            {
-                text: "• Forensic Analysis: Historical security incidents\n• Network Security: Communication and protocol security"
-            },
-            {
-                text: "🔐 Core Ethical Hacking Principles:\n• Password Security: Understanding brute-force attack resistance\n• Social Engineering Awareness: Recognizing manipulation tactics",
-                example: "Strong Password Example:\nWeak: password123, ilovepizza\nStrong: q2W#r7&zLp0 (12+ chars, mixed case, symbols)"
-            },
-            {
-                text: "• Anomaly Detection: Identifying suspicious patterns\n• Incident Response: Proper breach containment procedures\n• Digital Hygiene: Maintaining secure practices",
-                example: "Suspicious Activity Indicators:\n- Login attempts at unusual hours (3 AM)\n- Multiple failed logins from foreign IPs\n- Unexpected privilege escalation attempts"
-            },
-            {
-                text: "🛡️ Attack Vector Analysis:\n• Denial-of-Service (DoS): Service disruption techniques\n• Malware Detection: File analysis and threat identification\n• Multi-Factor Authentication: Enhanced access controls",
-                example: "DoS Attack Goal:\nOverwhelm services to make them unavailable\nNOT: Steal credentials or gain system access"
-            },
-            {
-                text: "🛠️ CTF Challenge Approach:\nThis is a Capture The Flag (CTF) security challenge. Your goal is to find 7 hidden flags using terminal commands and system exploration.",
-                example: "Example commands to get started:\nls -la (list files)\ncat filename.txt (read files)\ngrep -r \"flag\" . (search for flags)"
-            },
-            {
-                text: "💻 Terminal Command Mastery Series:\nLet's learn the essential commands for ethical hacking and CTF challenges. Each command has specific use cases in security assessment."
-            },
-            {
-                text: "📂 FILE & DIRECTORY COMMANDS:\n• ls - List directory contents\n• ls -la - Show hidden files with detailed permissions",
-                example: "Basic File Listing:\nls                    # Current directory\nls -la               # Hidden files + permissions\nls -la /home/        # List all user directories\nls -la ~/.           # Show hidden config files"
-            },
-            {
-                text: "• cat - Display file contents\n• head/tail - Show beginning/end of files",
-                example: "Reading Files:\ncat /etc/passwd      # View system users\ncat ~/.bashrc        # Check shell config\nhead -20 /var/log/auth.log  # First 20 lines\ntail -50 /var/log/syslog    # Last 50 lines"
-            },
-            {
-                text: "🔍 SEARCH & PATTERN MATCHING:\n• grep - Search for text patterns in files\n• find - Locate files and directories",
-                example: "Text Search:\ngrep -r \"WHT{\" /        # Find flags recursively\ngrep -i \"password\" /etc/*  # Case-insensitive search\ngrep \"admin\" /var/log/*    # Search logs for admin"
-            },
-            {
-                text: "• find - Advanced file discovery\n• which/whereis - Locate executables",
-                example: "File Discovery:\nfind / -name \"*.conf\" 2>/dev/null  # All config files\nfind /home -name \".*\" -type f      # Hidden files\nfind /usr -perm -4000              # SUID binaries\nfind /var/log -mtime -1            # Recent log files"
-            },
-            {
-                text: "🌐 SYSTEM INFORMATION:\n• ps - Process information\n• env - Environment variables\n• whoami/id - User identity",
-                example: "System Analysis:\nps aux               # All running processes\nenv                  # Environment variables\nwhoami               # Current user\nid                   # User ID and groups\nuname -a             # System information"
-            },
-            {
-                text: "🔧 FILE PERMISSIONS & ATTRIBUTES:\n• chmod - Change permissions\n• chown - Change ownership\n• file - Determine file type",
-                example: "File Analysis:\nls -la /etc/passwd   # Check file permissions\nfile suspicious.exe  # Identify file type\nstrings binary_file  # Extract readable text\nstat /etc/shadow     # Detailed file info"
-            },
-            {
-                text: "📊 NETWORK & PROCESS ANALYSIS:\n• netstat - Network connections\n• ss - Socket statistics\n• lsof - List open files",
-                example: "Network Reconnaissance:\nnetstat -tuln        # Listening ports\nss -tuln             # Modern socket info\nlsof -i              # Files using network\nps aux | grep nginx  # Find web server process"
-            },
-            {
-                text: "🔐 SECURITY-FOCUSED COMMANDS:\n• sudo - Execute as another user\n• crontab - View scheduled tasks\n• history - Command history",
-                example: "Security Analysis:\nsudo -l              # Check sudo permissions\ncrontab -l           # Current user's cron jobs\ncat /etc/crontab     # System-wide cron jobs\nhistory              # Command history\ncat ~/.bash_history  # Persistent history"
-            },
-            {
-                text: "📝 LOG & CONFIGURATION ANALYSIS:\n• journalctl - System logs (systemd)\n• dmesg - Kernel messages\n• systemctl - Service management",
-                example: "System Logs:\njournalctl -f        # Follow live logs\ndmesg | tail         # Recent kernel messages\nsystemctl status nginx     # Service status\nsystemctl list-unit-files  # All services"
-            },
-            {
-                text: "🎯 CTF-SPECIFIC TECHNIQUES:\n• strings - Extract text from binaries\n• base64 - Decode encoded data\n• xxd - Hex dump analyzer",
-                example: "CTF Flag Hunting:\nstrings /usr/bin/app | grep WHT    # Extract flags\nbase64 -d encoded.txt              # Decode base64\nxxd binary_file | grep \"flag\"      # Hex analysis\ncat /proc/*/environ | grep WHT     # Process environment"
-            },
-            {
-                text: "🔄 COMMAND COMBINATIONS:\nCombine commands with pipes (|) and operators for powerful analysis:",
-                example: "Advanced Techniques:\nps aux | grep -v \"root\" | head -10    # Non-root processes\nfind /var/log -name \"*.log\" | xargs grep \"error\"\ncat /etc/passwd | cut -d: -f1,3 | sort\nhistory | grep \"sudo\" | tail -5      # Recent sudo usage"
-            },
-            {
-                text: "⚠️ COMMON CTF LOCATIONS:\nFlags are often hidden in these standard locations:",
-                example: "Flag Discovery Checklist:\n/home/*/.*           # Hidden user files\n/etc/*.conf          # Configuration files\n/var/log/*           # System & app logs\n/tmp/*               # Temporary files\n/proc/*/environ      # Process environments\n/usr/local/bin/*     # Custom scripts"
-            },
-            {
-                text: "🆘 BUILT-IN HELP SYSTEM:\n• hints - Get specific guidance for each CTF challenge\n• submit-flag --help - Flag submission assistance\n• help - General terminal command reference",
-                example: "Help Commands:\nhints                    # CTF-specific guidance\nhints 3                  # Hints for flag #3\nsubmit-flag --challenges # List all challenges\nhelp                     # Terminal command help\nman <command>           # Command manual (if available)"
-            },
-            {
-                text: "🏆 CTF SUCCESS METHODOLOGY:\n• Start with Reconnaissance: env, ls -la ~/, cat /etc/passwd\n• Check Configuration Files: /etc/*, ~/.bashrc, ~/.profile",
-                example: "Systematic Approach:\n1. env                    # Check environment\n2. ls -la ~/              # User home directory\n3. find /etc -name \"*.conf\"  # All config files\n4. cat /var/log/*/access.log  # Web server logs"
-            },
-            {
-                text: "• Analyze Logs Thoroughly: /var/log/*, /tmp/*, process memory\n• SUID Binary Analysis: find /usr -perm -4000",
-                example: "Deep Analysis Commands:\nfind /home -name \".*\" | xargs cat 2>/dev/null\ngrep -r \"WHT{\" /var/log/ 2>/dev/null\ncat /proc/*/environ | strings | grep -i flag\nfind / -name \"*backup*\" -o -name \"*config*\" 2>/dev/null"
-            },
-            {
-                text: "📊 Success Metrics:\n• Flag Discovery: Find 5 randomly selected security challenges per session\n• Methodology Score: Demonstrate proper testing techniques"
-            },
-            {
-                text: "• Documentation Quality: Clear evidence and explanations\n• Time Efficiency: Complete assessment within reasonable timeframe\n• Certification Goal: Earn 'Certified Ethical Hacker' badge"
-            },
-            {
-                text: "🎮 START YOUR ASSESSMENT:\nOpen Terminal and begin with systematic reconnaissance. Use 'submit-flag --help' to see submission options.",
-                example: "Essential Starting Commands:\n# Basic system info\nwhoami && pwd && ls -la\n\n# Check environment\nenv | grep -i wht\n\n# Find config files\nfind /etc -name \"*.conf\" 2>/dev/null | head -10\n\n# Check user directories\nls -la /home/*/\n\n# Submit flags when found\nsubmit-flag WHT{your_discovered_flag}"
-            },
-            {
-                text: "📋 CHALLENGE SUBMISSION:\nUse the integrated submit-flag terminal command for all flag submissions:",
-                example: "Submit-Flag Command Usage:\nsubmit-flag WHT{flag_value}     # Submit a flag\nsubmit-flag --progress          # Check progress\nsubmit-flag --challenges        # List challenges\nsubmit-flag --status           # Session status\nsubmit-flag --help             # Show all options"
-            },
-            {
-                text: "💡 GETTING HINTS & GUIDANCE:\nUse the hints command when you need assistance with specific challenges:",
-                example: "Hints Command Usage:\nhints                    # Show all available challenges\nhints 1                  # Get hints for flag #1\nhints WHT-ENV           # Get hints for specific flag ID\nhints --all             # Show hints for all flags\nhints --help            # Display command help"
-            },
-            {
-                text: "🎯 STRATEGIC HINT USAGE:\n• Start with 'hints' to see challenge overview\n• Use specific flag hints when stuck on a particular challenge\n• Hints include discovery commands and learning objectives",
-                example: "Smart Hint Strategy:\n1. hints                 # See all challenges first\n2. Try your own approach # Attempt flag discovery\n3. hints 2              # Get specific help if needed\n4. hints --all          # Review all hints for patterns"
-            },
-            {
-                text: "🚀 Professional Engagement:\nThis assessment simulates real-world penetration testing engagements. Your professionalism, methodology, and ethical approach demonstrate readiness for cybersecurity consulting roles."
-            },
-            {
-                text: "Remember: Great penetration testers combine technical skills with ethical responsibility and clear communication.\nReady to begin your professional security assessment?"
+                text: "🛡️ Remember: Always Practice Ethical Hacking!\n\n• Only test systems you have permission to test\n• Report vulnerabilities responsibly\n• Help organizations improve their security\n• Respect privacy and data protection\n\nReady to start your ethical hacking journey?"
             }
         ];
     }
