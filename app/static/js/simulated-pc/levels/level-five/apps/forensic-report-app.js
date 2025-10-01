@@ -728,6 +728,9 @@ export class ForensicReportApp extends ForensicAppBase {
         
         this.showNotification(`🏆 Investigation Complete! Preparing final assessment...`, 'success', 3000);
         
+        // End the level session using the game progress manager
+        await this.endLevel5Session();
+        
         // Mark level as completed
         localStorage.setItem('cyberquest_level_5_completed', 'true');
         
@@ -758,6 +761,70 @@ export class ForensicReportApp extends ForensicAppBase {
         // Clear the stored analysis data since investigation is complete
         localStorage.removeItem('level5_evidence_analysis_data');
         localStorage.removeItem('level5_evidence_analysis_complete');
+    }
+
+    async endLevel5Session() {
+        try {
+            // Check if we have a session ID or need to create one
+            const sessionId = sessionStorage.getItem('active_session_id') ||
+                             localStorage.getItem('cyberquest_active_session_id') ||
+                             window.currentSessionId;
+
+            console.log(`[ForensicReport] Ending Level 5 session with score: ${this.reportScore}`);
+
+            // Import centralized utilities
+            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+            const progressManager = new GameProgressManager();
+
+            if (sessionId) {
+                // First, attach to the existing session that was started externally
+                const startTime = parseInt(localStorage.getItem('cyberquest_level_5_start_time') || Date.now());
+                progressManager.attachToExistingSession(
+                    parseInt(sessionId),
+                    5, // Level ID
+                    'Hunt-for-the-Null', // Level name
+                    'expert', // Difficulty
+                    startTime
+                );
+            } else {
+                // If no session exists, start and immediately complete one
+                // This ensures we can track completion even if session wasn't formally started
+                const startTime = parseInt(localStorage.getItem('cyberquest_level_5_start_time') || Date.now());
+                await progressManager.startLevel(5, 'Hunt-for-the-Null', 'expert');
+            }
+
+            // Complete level using centralized system
+            const sessionResult = await progressManager.completeLevel(this.reportScore, {
+                reportScore: this.reportScore,
+                targetIdentified: this.targetIdentity?.real_name || 'Unknown',
+                evidenceAnalyzed: this.availableEvidence?.length || 0,
+                sectionsCompleted: Object.values(this.reportSections).filter(s => s.evidence.length > 0).length,
+                completionTime: Date.now() - parseInt(localStorage.getItem('cyberquest_level_5_start_time') || Date.now()),
+                levelId: 5,
+                forensicCompliance: true
+            });
+
+            if (sessionResult) {
+                console.log('[ForensicReport] Level 5 completed successfully with centralized system:', sessionResult);
+                
+                // Clear session data
+                localStorage.removeItem('cyberquest_active_session_id');
+                sessionStorage.removeItem('active_session_id');
+                window.currentSessionId = null;
+                
+                // Store completion data for potential use by completion dialogue
+                localStorage.setItem('cyberquest_level_5_session_result', JSON.stringify({
+                    score: this.reportScore,
+                    xp: sessionResult.xp,
+                    completionTime: sessionResult.time_spent
+                }));
+            }
+            
+        } catch (error) {
+            console.error('[ForensicReport] Failed to end Level 5 session:', error);
+            // Continue with completion even if session ending fails
+            this.showNotification('Level completed locally. Session data may not be saved.', 'warning', 4000);
+        }
     }
 
     async launchCompletionDialogue(investigationSummary) {
