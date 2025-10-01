@@ -11,7 +11,11 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
                 text: "🛡️ What is Ethical Hacking?\n\nEthical hackers are security professionals who find vulnerabilities to help organizations improve their security - with permission!"
             },
             {
-                text: "🎯 Your Mission:\n\nFind 3 security flags hidden in the system using basic terminal commands. Each flag teaches you a fundamental ethical hacking skill."
+                text: "🎯 Your Mission:\n\nFind 3 security flags hidden in the system using basic terminal commands. Each session randomly selects 3 flags from our comprehensive challenge library to ensure focused learning."
+            },
+            {
+                text: "🎲 Session-Based Challenge System:\n\nEach session presents 3 randomly selected flags from our challenge library, ensuring you get a focused yet varied learning experience every time you play.",
+                example: "How It Works:\n• 8 total challenges available in the library\n• 3 challenges randomly selected per session\n• Balanced mix of difficulty and skill types\n• 20-30 minute focused sessions\n• Replay for different challenge combinations"
             },
             {
                 text: "⚡ Performance-Based XP System:\n\nLevel 4 features dynamic XP rewards based on your efficiency and speed! Your XP is calculated using:",
@@ -38,7 +42,7 @@ export class Level4WhiteHatTestDialogue extends BaseDialogue {
             },
             {
                 text: "💰 XP Optimization Tips:\n\nMaximize your XP earnings with these strategies:",
-                example: "Pro Tips for High XP:\n• Think before you act - reduce failed attempts\n• Use systematic approach - check files methodically\n• Learn from hints - they guide you to flags efficiently\n• Work quickly but carefully - speed matters for bonus XP\n• Complete on first try for maximum efficiency rating\n\nExample: Perfect run (7 flags, 7 attempts, 18min) = ~290 XP\nTypical run (7 flags, 15 attempts, 35min) = ~210 XP"
+                example: "Pro Tips for High XP:\n• Think before you act - reduce failed attempts\n• Use systematic approach - check files methodically\n• Learn from hints - they guide you to flags efficiently\n• Work quickly but carefully - speed matters for bonus XP\n• Complete on first try for maximum efficiency rating\n\nExample: Perfect run (3 flags, 3 attempts, 15min) = ~290 XP\nTypical run (3 flags, 8 attempts, 25min) = ~210 XP"
             },
             {
                 text: "� Session Tracking:\n\nYour performance is continuously monitored and will be displayed in a detailed assessment summary upon completion.",
