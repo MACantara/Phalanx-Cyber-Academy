@@ -715,7 +715,7 @@ export class ForensicReportApp extends ForensicAppBase {
         }, 2000);
     }
 
-    completeInvestigation() {
+    async completeInvestigation() {
         const targetName = this.targetIdentity?.real_name || 'Unknown Target';
         const codeName = this.targetIdentity?.code_name || 'The Null';
         
@@ -726,11 +726,82 @@ export class ForensicReportApp extends ForensicAppBase {
             compliance: ['NIST SP 800-86', 'ISO/IEC 27037:2012']
         });
         
-        this.showNotification(`🏆 Level 5 Complete! ${codeName} (${targetName}) has been successfully identified and apprehended!`, 'success', 5000);
+        this.showNotification(`🏆 Investigation Complete! Preparing final assessment...`, 'success', 3000);
+        
+        // Mark level as completed
+        localStorage.setItem('cyberquest_level_5_completed', 'true');
+        
+        // Create investigation summary for completion dialogue
+        const investigationSummary = {
+            investigationScore: this.reportScore,
+            complianceScore: 95, // High compliance since report was completed
+            objectivesCompleted: [
+                'Chain of Custody Established',
+                'Evidence Analysis Complete',
+                'Identity Clues Extracted',
+                'Forensic Report Built',
+                'Target Identified'
+            ],
+            evidenceAnalyzed: this.availableEvidence?.map(e => e.title) || [],
+            correctActions: Math.floor(this.reportScore / 10), // Estimate based on score
+            incorrectActions: Math.max(0, 5 - Math.floor(this.reportScore / 20)),
+            targetIdentity: this.targetIdentity,
+            finalIdentity: targetName,
+            codeName: codeName
+        };
+        
+        // Wait a moment then launch completion dialogue
+        setTimeout(async () => {
+            await this.launchCompletionDialogue(investigationSummary);
+        }, 2000);
         
         // Clear the stored analysis data since investigation is complete
         localStorage.removeItem('level5_evidence_analysis_data');
         localStorage.removeItem('level5_evidence_analysis_complete');
+    }
+
+    async launchCompletionDialogue(investigationSummary) {
+        try {
+            // Import and start the Level 5 completion dialogue
+            const { Level5CompletionDialogue } = await import('../dialogues/level5-completion-dialogue.js');
+            
+            // Create a mock investigation tracker with the summary data
+            const mockInvestigationTracker = {
+                getStatus: () => investigationSummary,
+                forensicActions: [],
+                correctActions: [],
+                incorrectActions: []
+            };
+            
+            // Get desktop reference (try multiple methods)
+            let desktop = null;
+            if (window.desktopManager) {
+                desktop = window.desktopManager;
+            } else if (window.desktop) {
+                desktop = window.desktop;
+            } else if (this.desktop) {
+                desktop = this.desktop;
+            }
+            
+            if (desktop) {
+                Level5CompletionDialogue.startLevel5CompletionDialogue(desktop, mockInvestigationTracker);
+                console.log('[ForensicReport] Level 5 completion dialogue launched successfully');
+            } else {
+                console.error('[ForensicReport] Could not find desktop reference for dialogue');
+                // Fallback: redirect to levels after delay
+                setTimeout(() => {
+                    window.location.href = '/levels';
+                }, 3000);
+            }
+            
+        } catch (error) {
+            console.error('[ForensicReport] Failed to launch completion dialogue:', error);
+            
+            // Fallback: redirect to levels
+            setTimeout(() => {
+                window.location.href = '/levels';
+            }, 3000);
+        }
     }
 
     showNotification(message, type = 'info', duration = 3000) {
