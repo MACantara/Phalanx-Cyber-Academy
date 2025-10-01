@@ -90,7 +90,7 @@ export class ForensicReportApp extends ForensicAppBase {
                 <!-- Main Content -->
                 <div class="flex-1 flex flex-col lg:flex-row min-h-0">
                     <!-- Evidence Bank Sidebar -->
-                    <div id="evidence-bank-panel" class="w-full lg:w-1/4 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto max-h-[40vh] lg:max-h-full lg:block">
+                    <div id="evidence-bank-panel" class="w-full lg:w-1/4 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 p-3 sm:p-4 overflow-y-auto lg:max-h-full lg:block">
                         <h3 class="text-base sm:text-lg lg:text-xl font-semibold mb-3 text-blue-300">Evidence Bank</h3>
                         <p class="text-xs sm:text-sm lg:text-base text-gray-400 mb-4 break-words">
                             Drag evidence into report sections below or tap to select on mobile
