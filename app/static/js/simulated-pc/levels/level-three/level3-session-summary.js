@@ -111,7 +111,7 @@ export class Level3SessionSummary {
                 accuracy: Math.round(accuracy * 100) + '%',
                 reputationHealth: Math.round(reputationHealth * 100) + '%',
                 financialHealth: Math.round(financialHealth * 100) + '%',
-                stagesCompleted: this.stagesCompleted.length + '/3'
+                stagesCompleted: this.stagesCompleted.length + '/2'
             }
         });
         
@@ -154,7 +154,7 @@ export class Level3SessionSummary {
             const sessionResult = await progressManager.completeLevel(score, {
                 accuracy: accuracy,
                 stagesCompleted: this.stagesCompleted.length,
-                totalStages: 3,
+                totalStages: 2,
                 reputationDamage: timerStatus.reputationDamage,
                 financialDamage: timerStatus.financialDamage,
                 timeEfficiency: Math.round((timerStatus.timeRemaining / (15 * 60)) * 100),
@@ -286,7 +286,7 @@ export class Level3SessionSummary {
                                     <div class="text-green-100 text-sm">Performance Score</div>
                                 </div>
                                 <div class="bg-green-900/50 rounded-lg p-4">
-                                    <div class="text-2xl font-bold text-white">${this.stagesCompleted.length}/3</div>
+                                    <div class="text-2xl font-bold text-white">${this.stagesCompleted.length}/2</div>
                                     <div class="text-green-100 text-sm">Stages Completed</div>
                                 </div>
                                 <div class="bg-green-900/50 rounded-lg p-4">
@@ -448,23 +448,17 @@ export class Level3SessionSummary {
         
         // Stage Completion Analysis
         const stagesCompleted = this.stagesCompleted.length;
-        if (stagesCompleted === 3) {
+        if (stagesCompleted === 2) {
             insights.push({ 
                 icon: 'bi-trophy-fill', 
                 color: 'text-yellow-400', 
-                text: 'Perfect execution! Completed all three critical response stages successfully.' 
-            });
-        } else if (stagesCompleted === 2) {
-            insights.push({ 
-                icon: 'bi-check2-square', 
-                color: 'text-blue-400', 
-                text: 'Good progress - completed 2/3 stages. Full incident response requires all stages.' 
+                text: 'Perfect execution! Completed both critical response stages successfully.' 
             });
         } else if (stagesCompleted === 1) {
             insights.push({ 
-                icon: 'bi-exclamation-square', 
-                color: 'text-orange-400', 
-                text: 'Partial response - only 1/3 stages completed. Practice comprehensive incident handling.' 
+                icon: 'bi-check2-square', 
+                color: 'text-blue-400', 
+                text: 'Partial response - completed 1/2 stages. Full incident response requires both stages.' 
             });
         } else {
             insights.push({ 
