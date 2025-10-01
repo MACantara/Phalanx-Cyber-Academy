@@ -79,18 +79,21 @@ export class HelpCommand extends BaseCommand {
                     }
                 });
 
-                // Add dynamic CTF objectives based on selected flags
+                // Add beginner-friendly guidance
                 const footerLines = [
                     '',
+                    'Getting Started:',
+                    '  1. Start with "ls -la" to see all files (including hidden ones)',
+                    '  2. Use "cat filename" to read interesting files',
+                    '  3. Check different directories like /etc/, /var/log/, /tmp/',
+                    '  4. Use "find" and "grep" to search for files and text',
+                    '  5. Submit flags with "submit-flag WHT{flag-value}"',
+                    '',
                     'Tips:',
-                    '  - Start by exploring your home directory with "ls -la"',
-                    '  - Check configuration files, logs, and hidden files',
-                    '  - Use find and grep to search for flags',
-                    '  - Read the mission brief with "cat mission_brief.txt" for current challenges',
-                    '  - Use "submit-flag WHT{flag-value}" to submit captured flags',
-                    '  - Use "hints" command for flag-specific guidance',
-                    '  - Use Tab for command, option, file, and folder completion',
-                    '  - Use ↑/↓ arrow keys to navigate command history'
+                    '  - Hidden files start with a dot (.) - they often contain secrets!',
+                    '  - Use "hints" when you need help finding specific flags',
+                    '  - Try Tab to auto-complete commands and filenames',
+                    '  - Use ↑/↓ arrow keys to repeat previous commands'
                 ];
 
                 footerLines.forEach(line => this.addOutput(line));
@@ -133,24 +136,26 @@ export class HelpCommand extends BaseCommand {
             }
         });
 
-        // Add footer information
+        // Add beginner-friendly footer
         const footerLines = [
             '',
-            'CTF Objectives:',
-            '  • Explore the system to find hidden flags',
-            '  • Complete the responsible disclosure report using the desktop app',
-            '  • Document your findings and recommendations',
-            '  • Practice ethical security assessment techniques',
+            'Your Mission:',
+            '  • Find 3 hidden security flags in the system',
+            '  • Learn basic ethical hacking techniques',
+            '  • Practice responsible vulnerability discovery',
+            '',
+            'Getting Started:',
+            '  1. Start with "ls -la" to see all files (including hidden ones)',
+            '  2. Use "cat filename" to read interesting files',
+            '  3. Check different directories like /etc/, /var/log/, /tmp/',
+            '  4. Use "find" and "grep" to search for files and text',
+            '  5. Submit flags with "submit-flag WHT{flag-value}"',
             '',
             'Tips:',
-            '  - Start by exploring your home directory with "ls -la"',
-            '  - Check configuration files, logs, and hidden files',
-            '  - Use find and grep to search for flags',
-            '  - Read the mission brief with "cat mission_brief.txt" for current challenges',
-            '  - Use "submit-flag WHT{flag-value}" to submit captured flags',
-            '  - Use "hints" command for flag-specific guidance',
-            '  - Use Tab for command, option, file, and folder completion',
-            '  - Use ↑/↓ arrow keys to navigate command history'
+            '  - Hidden files start with a dot (.) - they often contain secrets!',
+            '  - Use "hints" when you need help finding specific flags',
+            '  - Try Tab to auto-complete commands and filenames',
+            '  - Use ↑/↓ arrow keys to repeat previous commands'
         ];
 
         footerLines.forEach(line => this.addOutput(line));
