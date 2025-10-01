@@ -61,6 +61,8 @@ class Session:
             result['xp_awarded'] = self._xp_awarded
         if hasattr(self, '_xp_calculation'):
             result['xp_calculation'] = self._xp_calculation
+        if hasattr(self, '_new_total_xp'):
+            result['new_total_xp'] = self._new_total_xp
             
         return result
 
@@ -137,10 +139,14 @@ class Session:
                         )
                         # Store XP info for reference
                         updated_session._xp_awarded = xp_result['xp_awarded']
+                        updated_session._xp_calculation = xp_result.get('calculation_details', {})
+                        updated_session._new_total_xp = xp_result.get('new_total', 0)
                     except Exception as xp_error:
                         # Log XP error but don't fail the session end
                         print(f"Warning: Failed to award XP for session: {xp_error}")
                         updated_session._xp_awarded = 0
+                        updated_session._xp_calculation = {}
+                        updated_session._new_total_xp = 0
                 
                 return updated_session
             raise DatabaseError("No data returned from session update")
