@@ -73,7 +73,7 @@ export class TabCompletion {
     }
 
     commandSupportsFileCompletion(command) {
-        const fileCommands = ['cd', 'ls', 'cat', 'help'];
+        const fileCommands = ['cd', 'ls', 'cat', 'help', 'sudo'];
         return fileCommands.includes(command);
     }
 
@@ -227,6 +227,8 @@ export class TabCompletion {
                 return null;
             case 'ls':
                 return this.completeLsArguments(parts, currentPart, beforeCursor, afterCursor);
+            case 'sudo':
+                return this.completeSudoArguments(parts, currentPart, beforeCursor, afterCursor);
             case 'submit-flag':
                 return this.completeSubmitFlagArguments(currentPart, beforeCursor, afterCursor);
             default:
@@ -305,6 +307,57 @@ export class TabCompletion {
         }
         
         // Fall back to file/directory completion
+        return null;
+    }
+
+    completeSudoArguments(parts, currentPart, beforeCursor, afterCursor) {
+        // If current part starts with -, suggest sudo options
+        if (currentPart.startsWith('-')) {
+            const sudoOptions = ['-l', '-h', '--help'];
+            const matches = sudoOptions.filter(opt => opt.startsWith(currentPart));
+            
+            if (matches.length === 1) {
+                const match = matches[0];
+                const beforeCompletion = beforeCursor.substring(0, beforeCursor.length - currentPart.length);
+                return {
+                    newText: beforeCompletion + match + ' ' + afterCursor,
+                    newCursorPosition: beforeCompletion.length + match.length + 1
+                };
+            }
+            
+            if (matches.length > 1) {
+                return {
+                    newText: beforeCursor + afterCursor,
+                    newCursorPosition: beforeCursor.length,
+                    suggestions: matches
+                };
+            }
+        }
+        
+        // If no flags, suggest common commands that work with sudo
+        if (parts.length === 2) { // sudo [command]
+            const sudoCommands = ['find', 'ls', 'cat', 'ps'];
+            const matches = sudoCommands.filter(cmd => cmd.startsWith(currentPart.toLowerCase()));
+            
+            if (matches.length === 1) {
+                const match = matches[0];
+                const beforeCompletion = beforeCursor.substring(0, beforeCursor.length - currentPart.length);
+                return {
+                    newText: beforeCompletion + match + ' ' + afterCursor,
+                    newCursorPosition: beforeCompletion.length + match.length + 1
+                };
+            }
+            
+            if (matches.length > 1) {
+                return {
+                    newText: beforeCursor + afterCursor,
+                    newCursorPosition: beforeCursor.length,
+                    suggestions: matches
+                };
+            }
+        }
+        
+        // Fall back to file/directory completion for paths
         return null;
     }
 
