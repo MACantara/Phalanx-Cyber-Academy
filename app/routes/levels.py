@@ -167,8 +167,6 @@ def get_level_js_files(level_id):
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/help-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/history-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/ls-command.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/nmap-command.js',
-            'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/ping-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/pwd-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/uname-command.js',
             'js/simulated-pc/levels/level-four/apps/terminal/terminal-commands/whoami-command.js',
