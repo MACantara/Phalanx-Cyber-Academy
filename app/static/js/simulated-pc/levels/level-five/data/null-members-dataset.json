@@ -2,27 +2,29 @@
   "null_members": [
     {
       "id": "member_001",
-      "code_name": "The Null",
-      "real_name": "Alex Morrison",
-      "email": "a.morrison@securemail.com",
-      "phone": "+1-555-0142",
-      "role": "Leader & Chief Architect",
+      "code_name": "Aberr4ti0n",
+      "real_name": "Amorsolo de la Cruz",
+      "email": "a.delacruz@darkweb.ph",
+      "phone": "+63-917-555-0184",
+      "role": "Aggressive Infiltration Specialist",
+      "nationality": "Filipino",
+      "personality": "Very aggressive and grudgeful hacker who unfortunately graces the net",
       "evidence_trail": [
         {
           "id": "evidence_001_browser",
           "type": "browser_autofill",
-          "source": "Laptop Browser Data",
+          "source": "Compromised Browser Data",
           "title": "Browser Autofill Profile",
-          "description": "Personal information stored in browser autofill settings",
+          "description": "Personal information stored in browser autofill settings from compromised system",
           "difficulty": "easy",
           "clue_type": "identity",
           "icon": "bi-person-badge",
-          "finding": "Real name 'Alex Morrison' found in browser autofill data",
+          "finding": "Real name 'Amorsolo de la Cruz' found in browser autofill data",
           "evidence_data": {
-            "autofill_name": "Alex Morrison",
-            "autofill_address": "142 Cyber Street, Tech City, TC 90210",
-            "browser": "Chrome",
-            "last_modified": "2024-03-14 18:30:15"
+            "autofill_name": "Amorsolo de la Cruz",
+            "autofill_address": "Makati City, Metro Manila, Philippines 1226",
+            "browser": "Firefox Developer Edition",
+            "last_modified": "2024-03-15 22:45:33"
           }
         },
         {
@@ -30,52 +32,52 @@
           "type": "process_memory",
           "source": "RAM Memory Dump",
           "title": "Email Login Credentials",
-          "description": "Active email session found in process memory",
+          "description": "Active email session found in process memory during aggressive attack",
           "difficulty": "medium",
           "clue_type": "contact",
           "icon": "bi-envelope",
-          "finding": "Email 'a.morrison@securemail.com' extracted from process memory",
+          "finding": "Email 'a.delacruz@darkweb.ph' extracted from process memory",
           "evidence_data": {
-            "email_address": "a.morrison@securemail.com",
-            "email_provider": "SecureMail",
-            "last_login": "2024-03-14 19:15:42",
-            "process_id": "3456"
+            "email_address": "a.delacruz@darkweb.ph",
+            "email_provider": "DarkWeb Philippines",
+            "last_login": "2024-03-15 23:12:18",
+            "process_id": "4782"
           }
         },
         {
           "id": "evidence_001_network",
           "type": "network_traffic",
           "source": "Network Packet Capture",
-          "title": "Contact Information Exfiltration",
-          "description": "Personal contact data found in encrypted network traffic",
+          "title": "Aggressive Attack Communication",
+          "description": "Phone contact data found in vindictive attack communication",
           "difficulty": "hard",
           "clue_type": "contact",
           "icon": "bi-phone",
-          "finding": "Phone number +1-555-0142 found in exfiltrated contact data",
+          "finding": "Phone number +63-917-555-0184 found in attack coordination data",
           "evidence_data": {
-            "phone_number": "+1-555-0142",
-            "contact_type": "primary",
-            "transmission_time": "2024-03-14 19:22:18",
-            "destination_ip": "185.243.67.89"
+            "phone_number": "+63-917-555-0184",
+            "contact_type": "primary_mobile",
+            "transmission_time": "2024-03-15 23:28:45",
+            "destination_ip": "203.177.45.123"
           }
         },
         {
           "id": "evidence_001_timeline",
           "type": "system_logs",
           "source": "System Event Logs",
-          "title": "Attack Timeline Evidence",
-          "description": "Chronological sequence of malicious activities",
+          "title": "Aggressive Attack Timeline",
+          "description": "Chronological sequence of vindictive malicious activities",
           "difficulty": "medium",
           "clue_type": "technical",
           "icon": "bi-clock-history",
-          "finding": "Systematic attack pattern orchestrated by Alex Morrison",
+          "finding": "Aggressive attack pattern orchestrated by Amorsolo de la Cruz",
           "evidence_data": {
-            "attack_start": "2024-03-14 18:00:00",
+            "attack_start": "2024-03-15 22:00:00",
             "key_events": [
-              "18:00 - Initial system compromise",
-              "18:30 - Browser data accessed",
-              "19:15 - Email credentials extracted",
-              "19:22 - Data exfiltration completed"
+              "22:00 - Aggressive system breach initiated",
+              "22:45 - Browser data compromised",
+              "23:12 - Email credentials stolen",
+              "23:28 - Vindictive data destruction sequence"
             ]
           }
         },
@@ -83,43 +85,45 @@
           "id": "evidence_001_malware",
           "type": "malware_analysis",
           "source": "Malware Sample",
-          "title": "Custom Backdoor Analysis",
-          "description": "Analysis of sophisticated backdoor tool",
+          "title": "Vindictive Destruction Tool",
+          "description": "Analysis of aggressive data destruction malware",
           "difficulty": "hard",
           "clue_type": "technical",
           "icon": "bi-bug",
-          "finding": "Advanced backdoor with Alex Morrison's digital signature",
+          "finding": "Vindictive malware with Amorsolo de la Cruz's signature",
           "evidence_data": {
-            "malware_name": "NullDoor v2.1",
-            "author_signature": "AM_2024",
-            "encryption": "AES-256",
-            "persistence_method": "Registry modification"
+            "malware_name": "Aberration Destroyer v1.4",
+            "author_signature": "ADC_Aberr4ti0n_2024",
+            "encryption": "Military-grade AES-256",
+            "persistence_method": "Aggressive rootkit installation"
           }
         }
       ]
     },
     {
       "id": "member_002",
-      "code_name": "Shadow",
-      "real_name": "Sarah Chen",
-      "email": "s.chen@darknet.onion",
-      "phone": "+1-555-0387",
-      "role": "Network Infiltration Specialist",
+      "code_name": "Du11ahan",
+      "real_name": "Carrie Ashworth",
+      "email": "c.ashworth@shadownet.uk",
+      "phone": "+44-20-7555-0298",
+      "role": "Meticulous Cyber Operations Specialist",
+      "nationality": "English",
+      "personality": "A meticulous, calculated hacker who plans every move with precision",
       "evidence_trail": [
         {
           "id": "evidence_002_browser",
           "type": "browser_cookies",
           "source": "Browser Cookie Store",
-          "title": "Authentication Cookies",
-          "description": "Persistent authentication cookies revealing identity",
+          "title": "Calculated Authentication Cookies",
+          "description": "Meticulously crafted persistent authentication cookies",
           "difficulty": "easy",
           "clue_type": "identity",
           "icon": "bi-person-badge",
-          "finding": "Real name 'Sarah Chen' found in authentication cookie",
+          "finding": "Real name 'Carrie Ashworth' found in authentication cookie",
           "evidence_data": {
-            "cookie_value": "user=Sarah%20Chen&role=admin",
-            "domain": "darkhub.onion",
-            "expiry": "2024-04-15 23:59:59",
+            "cookie_value": "user=Carrie%20Ashworth&role=operator&precision=maximum",
+            "domain": "shadownet.uk",
+            "expiry": "2024-06-21 11:59:59",
             "secure": true
           }
         },
@@ -127,366 +131,282 @@
           "id": "evidence_002_email",
           "type": "email_headers",
           "source": "Email Metadata",
-          "title": "Email Header Analysis",
-          "description": "SMTP headers revealing sender information",
+          "title": "Calculated Email Communication",
+          "description": "Precisely crafted SMTP headers with operational details",
           "difficulty": "medium",
           "clue_type": "contact",
           "icon": "bi-envelope",
-          "finding": "Email 's.chen@darknet.onion' found in message headers",
+          "finding": "Email 'c.ashworth@shadownet.uk' found in message headers",
           "evidence_data": {
-            "from_address": "s.chen@darknet.onion",
-            "x_mailer": "Tor-Secured-Mail 3.2",
-            "message_id": "<shadow2024@darknet.onion>",
-            "timestamp": "2024-03-12 15:42:33"
+            "from_address": "c.ashworth@shadownet.uk",
+            "x_mailer": "Precision-Mail-Client 4.1",
+            "message_id": "<dullahan2024@shadownet.uk>",
+            "timestamp": "2024-03-16 09:15:42"
           }
         },
         {
           "id": "evidence_002_voip",
           "type": "voip_logs",
           "source": "VoIP Call Records",
-          "title": "Voice Communication Logs",
-          "description": "Encrypted voice call metadata and phone number",
+          "title": "Calculated Voice Communications",
+          "description": "Precisely timed encrypted voice call metadata",
           "difficulty": "hard",
           "clue_type": "contact",
           "icon": "bi-phone",
-          "finding": "Phone number +1-555-0387 identified in VoIP call logs",
+          "finding": "Phone number +44-20-7555-0298 identified in VoIP call logs",
           "evidence_data": {
-            "caller_id": "+1-555-0387",
-            "call_duration": "00:15:42",
-            "encryption": "SRTP",
-            "call_time": "2024-03-12 20:18:15"
+            "caller_id": "+44-20-7555-0298",
+            "call_duration": "00:23:17",
+            "encryption": "Military-grade SRTP",
+            "call_time": "2024-03-16 14:30:00"
           }
         },
         {
           "id": "evidence_002_network",
           "type": "network_forensics",
           "source": "Network Flow Analysis",
-          "title": "Traffic Pattern Analysis",
-          "description": "Network behavior patterns identifying Shadow's activities",
+          "title": "Calculated Network Operations",
+          "description": "Meticulously planned network infiltration patterns",
           "difficulty": "medium",
           "clue_type": "technical",
           "icon": "bi-activity",
-          "finding": "Network infiltration patterns linked to Sarah Chen",
+          "finding": "Precise network operations traced to Carrie Ashworth",
           "evidence_data": {
-            "attack_vector": "DNS tunneling",
-            "target_networks": ["corporate.internal", "gov.secure"],
-            "data_exfil": "2.3GB over 6 hours"
+            "attack_vector": "Calculated DNS poisoning sequence",
+            "target_networks": ["financial.gov.uk", "MI6.secure"],
+            "data_exfil": "4.7GB over 12 hours with precision timing"
           }
         },
         {
           "id": "evidence_002_tools",
           "type": "hacking_tools",
           "source": "Tool Analysis",
-          "title": "Custom Network Tools",
-          "description": "Specialized network penetration tools",
+          "title": "Precision Hacking Toolkit",
+          "description": "Meticulously crafted penetration tools",
           "difficulty": "hard",
           "clue_type": "technical",
           "icon": "bi-tools",
-          "finding": "Network tools compiled with Sarah Chen's development signature",
+          "finding": "Precision tools compiled with Carrie Ashworth's signature",
           "evidence_data": {
-            "tool_name": "ShadowTunnel",
-            "compiler_version": "gcc 11.3 (SC-build)",
-            "compile_time": "2024-02-28 14:22:10",
-            "debug_symbols": "SC_DEBUG_2024"
+            "tool_name": "Dullahan Precision Kit",
+            "compiler_version": "gcc 12.1 (CA-precision-build)",
+            "compile_time": "2024-03-10 11:30:00",
+            "debug_symbols": "CA_DULLAHAN_2024"
           }
         }
       ]
     },
     {
       "id": "member_003", 
-      "code_name": "Cipher",
-      "real_name": "Marcus Rodriguez",
-      "email": "m.rodriguez@cryptonet.io",
-      "phone": "+1-555-0591",
-      "role": "Encryption & Data Security Expert",
+      "code_name": "Gem1n1",
+      "real_name": "Kaito and Kaori Ishikawa",
+      "email": "gemini.twins@cyberplay.jp",
+      "phone": "+81-90-555-4477",
+      "role": "Twin Challenge-Seeking Cyber Specialists",
+      "nationality": "Japanese",
+      "personality": "Playful twin hackers looking for a challenge, working in perfect synchronization",
       "evidence_trail": [
         {
           "id": "evidence_003_keychain",
           "type": "keychain_data",
-          "source": "macOS Keychain",
-          "title": "Stored Credentials",
-          "description": "Personal credentials stored in system keychain",
+          "source": "Shared Gaming Keychain",
+          "title": "Twin Gaming Credentials",
+          "description": "Shared credentials for twin gaming and hacking sessions",
           "difficulty": "easy",
           "clue_type": "identity", 
           "icon": "bi-person-badge",
-          "finding": "Real name 'Marcus Rodriguez' found in keychain entry",
+          "finding": "Real names 'Kaito and Kaori Ishikawa' found in shared keychain",
           "evidence_data": {
-            "account_name": "Marcus Rodriguez",
-            "service": "Apple ID",
-            "creation_date": "2023-08-15 10:30:00",
-            "last_modified": "2024-03-10 16:45:22"
+            "account_name": "Kaito and Kaori Ishikawa",
+            "service": "Gemini Gaming Network",
+            "creation_date": "2023-12-25 00:00:01",
+            "last_modified": "2024-03-17 19:33:22"
           }
         },
         {
           "id": "evidence_003_pgp",
           "type": "pgp_keys",
           "source": "PGP Key Analysis",
-          "title": "Cryptographic Key Identity",
-          "description": "PGP key metadata revealing user identity",
+          "title": "Twin Cryptographic Challenge",
+          "description": "Dual-signature PGP key system created by twin hackers",
           "difficulty": "medium",
           "clue_type": "contact",
           "icon": "bi-envelope",
-          "finding": "Email 'm.rodriguez@cryptonet.io' embedded in PGP key",
+          "finding": "Email 'gemini.twins@cyberplay.jp' embedded in twin PGP key",
           "evidence_data": {
-            "key_id": "0x4A3B2C1D",
-            "user_id": "Marcus Rodriguez <m.rodriguez@cryptonet.io>",
-            "key_creation": "2024-01-20 12:15:30",
-            "key_algorithm": "RSA 4096"
+            "key_id": "0xGEM1N1",
+            "user_id": "Gemini Twins <gemini.twins@cyberplay.jp>",
+            "key_creation": "2024-02-14 12:21:12",
+            "key_algorithm": "Dual RSA 4096 (Twin-Sync)"
           }
         },
         {
           "id": "evidence_003_sms",
           "type": "sms_backup",
           "source": "SMS Backup File",
-          "title": "Text Message Backup",
-          "description": "Encrypted SMS backup containing phone number",
+          "title": "Twin Challenge Messages",
+          "description": "Synchronized SMS backup from twin hacking challenges",
           "difficulty": "hard",
           "clue_type": "contact",
           "icon": "bi-phone",
-          "finding": "Phone number +1-555-0591 found in SMS backup metadata",
+          "finding": "Phone number +81-90-555-4477 found in challenge SMS backup",
           "evidence_data": {
-            "backup_phone": "+1-555-0591",
-            "backup_date": "2024-03-08 23:30:15",
-            "encryption": "AES-256-GCM",
-            "message_count": 1247
+            "backup_phone": "+81-90-555-4477",
+            "backup_date": "2024-03-17 21:21:21",
+            "encryption": "Gemini-Sync AES-256",
+            "message_count": 2222
           }
         },
         {
           "id": "evidence_003_crypto",
           "type": "cryptocurrency",
           "source": "Blockchain Analysis",
-          "title": "Cryptocurrency Transactions",
-          "description": "Digital currency transactions and wallet analysis",
+          "title": "Twin Gaming Cryptocurrency",
+          "description": "Synchronized cryptocurrency transactions from twin challenges",
           "difficulty": "medium",
           "clue_type": "technical",
           "icon": "bi-currency-bitcoin",
-          "finding": "Cryptocurrency payments linked to Marcus Rodriguez",
+          "finding": "Twin cryptocurrency wallet linked to Kaito and Kaori Ishikawa",
           "evidence_data": {
-            "wallet_address": "1CipherMRod2024BTC789XYZ",
-            "total_received": "12.5 BTC",
-            "transaction_count": 87,
-            "last_activity": "2024-03-11 14:20:33"
+            "wallet_address": "1Gem1n1Tw1ns2024BTC1212",
+            "total_received": "21.12 BTC",
+            "transaction_count": 212,
+            "last_activity": "2024-03-17 12:21:12"
           }
         },
         {
           "id": "evidence_003_algorithms",
           "type": "source_code",
           "source": "Code Repository",
-          "title": "Encryption Algorithm Source",
-          "description": "Custom encryption algorithms and implementations",
+          "title": "Twin Challenge Algorithm",
+          "description": "Synchronized dual-execution hacking algorithms",
           "difficulty": "hard",
           "clue_type": "technical",
           "icon": "bi-code-slash",
-          "finding": "Encryption code authored by Marcus Rodriguez with personal comments",
+          "finding": "Twin-authored challenge code by Kaito and Kaori Ishikawa",
           "evidence_data": {
-            "author": "Marcus Rodriguez <m.rodriguez@cryptonet.io>",
-            "algorithm": "Modified AES with custom S-boxes",
-            "commit_hash": "a7b3c9d2e5f8",
-            "commit_message": "Cipher's ultimate encryption - MR"
+            "author": "Gemini Twins <gemini.twins@cyberplay.jp>",
+            "algorithm": "Twin-Sync Challenge Protocol",
+            "commit_hash": "gem1n1121212",
+            "commit_message": "Ultimate twin challenge - Let's play! - K&K"
           }
         }
       ]
     },
     {
       "id": "member_004",
-      "code_name": "Ghost",
-      "real_name": "Elena Petrov",
-      "email": "e.petrov@phantom.sys",
-      "phone": "+1-555-0764",
-      "role": "Social Engineering & Identity Theft",
+      "code_name": "O2ymandi4s",
+      "real_name": "Dr. Clarice \"Cipher\" Kim",
+      "email": "dr.cipher@nullvision.net",
+      "phone": "+1-555-NULL",
+      "role": "The Mysterious Leader & Architect of Chaos",
+      "nationality": "Unknown",
+      "personality": "An ambitious, shady mastermind who wants the cyberspace wiped out into a clean slate",
       "evidence_trail": [
         {
           "id": "evidence_004_social",
           "type": "social_profiles",
-          "source": "Social Media Cache",
-          "title": "Cached Social Profile",
-          "description": "Personal social media profile data",
+          "source": "Academic Network Cache",
+          "title": "Academic Profile Fragment",
+          "description": "Fragments of academic credentials and identity",
           "difficulty": "easy",
           "clue_type": "identity",
           "icon": "bi-person-badge",
-          "finding": "Real name 'Elena Petrov' found in cached social profile",
+          "finding": "Real name 'Dr. Clarice \"Cipher\" Kim' found in academic cache",
           "evidence_data": {
-            "profile_name": "Elena Petrov",
-            "platform": "LinkedShadow",
-            "bio": "Digital Identity Architect",
-            "location": "Cyberspace, Virtual City"
+            "profile_name": "Dr. Clarice \"Cipher\" Kim",
+            "platform": "AcademicShadow",
+            "bio": "Digital Architect of Tomorrow's Null State",
+            "location": "The Void Between Zeros and Ones"
           }
         },
         {
           "id": "evidence_004_phishing",
           "type": "phishing_kit",
-          "source": "Phishing Tool Analysis",
-          "title": "Email Harvesting Kit",
-          "description": "Custom phishing tools with embedded contact info",
+          "source": "Master Control Analysis",
+          "title": "Null Vision Command Kit",
+          "description": "Master control system for orchestrating the digital apocalypse",
           "difficulty": "medium",
           "clue_type": "contact",
           "icon": "bi-envelope",
-          "finding": "Email 'e.petrov@phantom.sys' hardcoded in phishing kit",
+          "finding": "Email 'dr.cipher@nullvision.net' hardcoded in master control",
           "evidence_data": {
-            "kit_name": "GhostPhisher v3.1",
-            "admin_email": "e.petrov@phantom.sys",
-            "target_domains": ["banking.com", "secure.gov"],
-            "success_rate": "73.2%"
+            "kit_name": "NullVision Master Control v0.0",
+            "admin_email": "dr.cipher@nullvision.net",
+            "target_domains": ["*.gov", "*.mil", "*.critical"],
+            "success_rate": "99.7%"
           }
         },
         {
           "id": "evidence_004_burner",
           "type": "burner_phone",
-          "source": "Device Registry",
-          "title": "Burner Phone Registration", 
-          "description": "Temporary phone registration with real contact info",
+          "source": "Shadow Device Registry",
+          "title": "Null Command Phone", 
+          "description": "Encrypted command device for orchestrating global null operations",
           "difficulty": "hard",
           "clue_type": "contact",
           "icon": "bi-phone",
-          "finding": "Phone number +1-555-0764 linked to burner phone registration",
+          "finding": "Phone number +1-555-NULL linked to master command device",
           "evidence_data": {
-            "registered_number": "+1-555-0764",
-            "activation_date": "2024-02-15 09:22:11",
-            "payment_method": "Prepaid card ending in 7643",
-            "registration_location": "Anonymous VPN exit node"
+            "registered_number": "+1-555-NULL",
+            "activation_date": "2024-01-01 00:00:00",
+            "payment_method": "Untraceable digital currency",
+            "registration_location": "The Digital Void"
           }
         },
         {
           "id": "evidence_004_personas",
           "type": "fake_identities",
-          "source": "Identity Database",
-          "title": "Fake Identity Generation",
-          "description": "Database of fabricated identities and personas",
+          "source": "Null Identity Matrix",
+          "title": "Reality Manipulation System",
+          "description": "Master system for rewriting digital reality and identity",
           "difficulty": "medium",
           "clue_type": "technical",
           "icon": "bi-masks-theater",
-          "finding": "Identity generation system traced to Elena Petrov",
+          "finding": "Reality manipulation system architected by Dr. Clarice Kim",
           "evidence_data": {
-            "personas_created": 247,
-            "success_rate": "91.5%",
-            "creator_signature": "EP_Ghost_2024",
-            "last_generation": "2024-03-13 11:33:45"
+            "personas_created": 9999,
+            "success_rate": "100.0%",
+            "creator_signature": "CK_O2YMANDI4S_NULL",
+            "last_generation": "2024-03-18 23:59:59"
           }
         },
         {
           "id": "evidence_004_psychology",
           "type": "psychological_profiles",
-          "source": "Target Analysis",
-          "title": "Victim Psychological Profiles",
-          "description": "Detailed psychological manipulation strategies",
+          "source": "Global Behavioral Analysis",
+          "title": "Humanity Nullification Research",
+          "description": "Comprehensive research on global digital behavior elimination",
           "difficulty": "hard",
           "clue_type": "technical",
           "icon": "bi-brain",
-          "finding": "Psychological manipulation techniques designed by Elena Petrov",
+          "finding": "Global nullification psychology researched by Dr. Clarice Kim",
           "evidence_data": {
-            "profile_count": 156,
-            "manipulation_success": "88.7%",
-            "researcher": "Dr. Elena Petrov (alias)",
-            "methodology": "Advanced social engineering"
-          }
-        }
-      ]
-    },
-    {
-      "id": "member_005",
-      "code_name": "Vortex", 
-      "real_name": "David Kim",
-      "email": "d.kim@datastream.net",
-      "phone": "+1-555-0923",
-      "role": "Data Extraction & Financial Crimes",
-      "evidence_trail": [
-        {
-          "id": "evidence_005_banking",
-          "type": "banking_logs",
-          "source": "Financial Records",
-          "title": "Banking Transaction Logs",
-          "description": "Personal banking information from compromised systems",
-          "difficulty": "easy",
-          "clue_type": "identity",
-          "icon": "bi-person-badge",
-          "finding": "Real name 'David Kim' found in banking transaction records",
-          "evidence_data": {
-            "account_holder": "David Kim",
-            "account_number": "****-****-****-7891",
-            "bank": "CyberBank International",
-            "last_transaction": "2024-03-12 14:55:20"
-          }
-        },
-        {
-          "id": "evidence_005_trading",
-          "type": "trading_platform",
-          "source": "Cryptocurrency Exchange",
-          "title": "Trading Account Details",
-          "description": "Cryptocurrency trading account with verification documents",
-          "difficulty": "medium",
-          "clue_type": "contact",
-          "icon": "bi-envelope",
-          "finding": "Email 'd.kim@datastream.net' used for trading account verification",
-          "evidence_data": {
-            "trading_email": "d.kim@datastream.net",
-            "platform": "VortexTrade Exchange",
-            "kyc_status": "Verified",
-            "last_login": "2024-03-11 22:18:45"
-          }
-        },
-        {
-          "id": "evidence_005_fintech",
-          "type": "fintech_app",
-          "source": "Mobile App Data",
-          "title": "Financial App Registration",
-          "description": "Fintech mobile app with phone number verification",
-          "difficulty": "hard",
-          "clue_type": "contact", 
-          "icon": "bi-phone",
-          "finding": "Phone number +1-555-0923 verified in financial app",
-          "evidence_data": {
-            "verified_phone": "+1-555-0923",
-            "app_name": "VortexPay",
-            "verification_date": "2024-01-28 16:40:33",
-            "security_level": "Enhanced"
-          }
-        },
-        {
-          "id": "evidence_005_algorithms",
-          "type": "trading_bot",
-          "source": "Algorithm Analysis",
-          "title": "Automated Trading Algorithms",
-          "description": "High-frequency trading bots and market manipulation",
-          "difficulty": "medium",
-          "clue_type": "technical",
-          "icon": "bi-graph-up-arrow",
-          "finding": "Trading algorithms programmed by David Kim for market manipulation",
-          "evidence_data": {
-            "algorithm_name": "VortexBot 2.0",
-            "profit_generated": "$2,847,392",
-            "programmer": "DK_Vortex_2024",
-            "last_execution": "2024-03-13 03:22:11"
-          }
-        },
-        {
-          "id": "evidence_005_laundering",
-          "type": "money_laundering",
-          "source": "Transaction Analysis", 
-          "title": "Money Laundering Network",
-          "description": "Complex financial network for washing stolen funds",
-          "difficulty": "hard",
-          "clue_type": "technical",
-          "icon": "bi-arrow-repeat",
-          "finding": "Money laundering operation orchestrated by David Kim",
-          "evidence_data": {
-            "total_laundered": "$12,500,000",
-            "network_nodes": 47,
-            "success_rate": "96.8%",
-            "architect": "D. Kim (Vortex)"
+            "profile_count": 7800000000,
+            "manipulation_success": "99.99%",
+            "researcher": "Dr. Clarice \"Cipher\" Kim",
+            "methodology": "Complete digital reality nullification"
           }
         }
       ]
     }
   ],
   "investigation_metadata": {
-    "case_number": "CF-2024-NULL-001",
-    "case_title": "Operation Null Hunter: Identity Investigation",
-    "investigation_type": "Digital Forensics - Identity Determination",
-    "evidence_types": ["browser_data", "memory_analysis", "network_traffic", "system_logs", "malware_analysis", "social_media", "financial_records"],
+    "case_number": "CF-2024-NULL-002",
+    "case_title": "Operation Null Hunter: The Four Pillars Investigation",
+    "investigation_type": "Digital Forensics - Identity Determination of Core Members",
+    "organization": "The Null - Digital Apocalypse Collective",
+    "member_profiles": {
+      "Aberr4ti0n": "Filipino aggressive hacker with vindictive tendencies",
+      "Du11ahan": "English meticulous operative with calculated precision",
+      "Gem1n1": "Japanese twin hackers seeking challenges and synchronization",
+      "O2ymandi4s": "Mysterious leader architecting digital reality nullification"
+    },
+    "evidence_types": ["browser_data", "memory_analysis", "network_traffic", "system_logs", "malware_analysis", "academic_profiles", "command_systems"],
     "forensic_standards": ["NIST SP 800-86", "ISO/IEC 27037:2012"],
     "difficulty_levels": {
       "easy": "Direct evidence with clear identity markers",
-      "medium": "Requires analysis but evidence is accessible",
+      "medium": "Requires analysis but evidence is accessible", 
       "hard": "Complex analysis requiring technical expertise"
     }
   }
