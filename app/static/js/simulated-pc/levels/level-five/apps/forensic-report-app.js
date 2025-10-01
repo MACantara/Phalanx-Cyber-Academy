@@ -151,10 +151,10 @@ export class ForensicReportApp extends ForensicAppBase {
                                 Based on forensic analysis, "The Null" has been conclusively identified as:
                             </p>
                             <div class="mt-2 p-3 bg-red-800/50 rounded">
-                                <p class="text-base font-bold text-white">${this.targetIdentity?.real_name || 'Unknown'}</p>
-                                <p class="text-sm text-red-200">Email: ${this.targetIdentity?.email || 'Unknown'}</p>
-                                <p class="text-sm text-red-200">Phone: ${this.targetIdentity?.phone || 'Unknown'}</p>
-                                <p class="text-sm text-red-200">Role: ${this.targetIdentity?.role || 'Unknown'}</p>
+                                <p class="text-base font-bold text-white" id="conclusion-name">Loading...</p>
+                                <p class="text-sm text-red-200" id="conclusion-email">Email: Loading...</p>
+                                <p class="text-sm text-red-200" id="conclusion-phone">Phone: Loading...</p>
+                                <p class="text-sm text-red-200" id="conclusion-role">Role: Loading...</p>
                             </div>
                         </div>
                     </div>
@@ -219,10 +219,23 @@ export class ForensicReportApp extends ForensicAppBase {
 
     async initialize() {
         await super.initialize();
+        
+        // Check if evidence analysis is complete before initializing
+        const analysisComplete = localStorage.getItem('level5_evidence_analysis_complete');
+        if (analysisComplete !== 'true') {
+            this.showAccessDeniedState();
+            return;
+        }
+        
         window.forensicReportApp = this; // Make globally accessible for drag/drop
         this.loadEvidence();
         this.bindEvents();
         this.updateReportScore();
+        
+        // Show welcome message for successful access
+        setTimeout(() => {
+            this.showNotification('📝 Welcome to Forensic Report Builder! Evidence analysis data loaded from Evidence Viewer.', 'success', 4000);
+        }, 1000);
     }
 
     bindEvents() {
@@ -243,34 +256,163 @@ export class ForensicReportApp extends ForensicAppBase {
 
     async loadEvidence() {
         try {
-            // Load evidence from API - these are the extracted clues from evidence analysis
-            const response = await fetch('/api/level5/forensic-report-data');
-            const result = await response.json();
+            // First try to load transferred data from evidence analysis
+            const analysisDataStr = localStorage.getItem('level5_evidence_analysis_data');
             
-            if (result.success && result.data && result.data.evidence_bank) {
-                this.availableEvidence = result.data.evidence_bank;
-                this.targetIdentity = result.data.target_identity;
+            if (analysisDataStr) {
+                const analysisData = JSON.parse(analysisDataStr);
+                this.targetIdentity = analysisData.target_identity;
+                this.extractedClues = analysisData.clues;
                 
-                console.log(`Loaded ${this.availableEvidence.length} evidence clues for ${this.targetIdentity.code_name}`);
+                console.log(`[ForensicReport] Loaded transferred data for ${this.targetIdentity?.code_name} with ${this.extractedClues?.length || 0} clues`);
+                
+                // Generate evidence bank from the analyzed evidence
+                this.generateEvidenceBankFromAnalysis(analysisData);
             } else {
-                throw new Error('Failed to load forensic report data from API');
+                // Fallback to API if no transferred data
+                const response = await fetch('/api/level5/forensic-report-data');
+                const result = await response.json();
+                
+                if (result.success && result.data && result.data.evidence_bank) {
+                    this.availableEvidence = result.data.evidence_bank;
+                    this.targetIdentity = result.data.target_identity;
+                    
+                    console.log(`[ForensicReport] Loaded ${this.availableEvidence.length} evidence clues from API for ${this.targetIdentity?.code_name}`);
+                } else {
+                    throw new Error('Failed to load forensic report data from API');
+                }
             }
         } catch (error) {
-            console.error('Error loading evidence bank:', error);
-            // Fallback to embedded data
-            this.availableEvidence = [
-                {
-                    id: 'fallback_identity',
-                    title: 'Identity Evidence',
-                    description: 'Real name found in digital artifacts',
-                    type: 'identity',
-                    icon: 'bi-person-badge',
-                    points: 25
-                }
-            ];
+            console.error('[ForensicReport] Error loading evidence:', error);
+            this.loadFallbackEvidence();
         }
 
         this.renderEvidenceBank();
+        this.updateIdentityConclusion();
+    }
+
+    generateEvidenceBankFromAnalysis(analysisData) {
+        // Convert the analyzed evidence into evidence bank items for the report
+        this.availableEvidence = [];
+        
+        if (analysisData.evidence_pool && Array.isArray(analysisData.evidence_pool)) {
+            // Only include evidence that was actually analyzed (clues extracted)
+            const analyzedEvidence = analysisData.evidence_pool.filter(evidence => 
+                analysisData.clues.includes(evidence.id)
+            );
+            
+            analyzedEvidence.forEach(evidence => {
+                // Create evidence bank item from analyzed evidence
+                const evidenceItem = {
+                    id: evidence.id,
+                    title: evidence.finding || evidence.title || 'Evidence Clue',
+                    description: this.getClueDescription(evidence),
+                    type: evidence.clue_type || 'evidence',
+                    icon: evidence.icon || 'bi-file-earmark',
+                    points: this.getEvidencePoints(evidence.clue_type),
+                    source_evidence: evidence.title,
+                    clue_data: evidence.evidence_data
+                };
+                
+                this.availableEvidence.push(evidenceItem);
+            });
+        }
+        
+        // Ensure we have the key identity evidence pieces
+        this.ensureIdentityEvidence();
+        
+        console.log(`[ForensicReport] Generated ${this.availableEvidence.length} evidence items from analysis`);
+    }
+
+    getClueDescription(evidence) {
+        if (evidence.clue_type === 'identity') {
+            return `Real identity information: ${evidence.evidence_data?.autofill_name || evidence.evidence_data?.account_name || this.targetIdentity?.real_name || 'Name found'}`;
+        } else if (evidence.clue_type === 'contact') {
+            const email = evidence.evidence_data?.email_address || evidence.evidence_data?.from_address || evidence.evidence_data?.trading_email;
+            const phone = evidence.evidence_data?.phone_number || evidence.evidence_data?.caller_id || evidence.evidence_data?.registered_number;
+            
+            if (email) return `Contact information: ${email}`;
+            if (phone) return `Contact information: ${phone}`;
+            return 'Contact information extracted from evidence';
+        } else {
+            return evidence.finding || evidence.description || 'Technical evidence analyzed';
+        }
+    }
+
+    getEvidencePoints(clueType) {
+        const points = {
+            'identity': 30,
+            'contact': 25,
+            'technical': 20
+        };
+        return points[clueType] || 15;
+    }
+
+    ensureIdentityEvidence() {
+        // Ensure we have the core identity evidence needed for the conclusion
+        const hasIdentity = this.availableEvidence.some(e => e.type === 'identity');
+        const hasContact = this.availableEvidence.some(e => e.type === 'contact');
+        
+        if (!hasIdentity && this.targetIdentity?.real_name) {
+            this.availableEvidence.push({
+                id: 'identity_summary',
+                title: `Real Name: ${this.targetIdentity.real_name}`,
+                description: `"The Null" identified as ${this.targetIdentity.real_name}`,
+                type: 'identity',
+                icon: 'bi-person-badge',
+                points: 30
+            });
+        }
+        
+        if (!hasContact && this.targetIdentity?.email) {
+            this.availableEvidence.push({
+                id: 'contact_summary',
+                title: `Email: ${this.targetIdentity.email}`,
+                description: `Primary contact: ${this.targetIdentity.email}`,
+                type: 'contact',
+                icon: 'bi-envelope',
+                points: 25
+            });
+        }
+    }
+
+    updateIdentityConclusion() {
+        // Update the identity conclusion section with the actual target data
+        if (this.targetIdentity) {
+            const nameEl = document.getElementById('conclusion-name');
+            const emailEl = document.getElementById('conclusion-email');
+            const phoneEl = document.getElementById('conclusion-phone');
+            const roleEl = document.getElementById('conclusion-role');
+            
+            if (nameEl) nameEl.textContent = this.targetIdentity.real_name || 'Unknown';
+            if (emailEl) emailEl.textContent = `Email: ${this.targetIdentity.email || 'Unknown'}`;
+            if (phoneEl) phoneEl.textContent = `Phone: ${this.targetIdentity.phone || 'Unknown'}`;
+            if (roleEl) roleEl.textContent = `Role: ${this.targetIdentity.role || 'Cyber Criminal'}`;
+            
+            console.log(`[ForensicReport] Identity conclusion updated for ${this.targetIdentity.real_name}`);
+        }
+    }
+
+    loadFallbackEvidence() {
+        // Fallback evidence if all else fails
+        this.availableEvidence = [
+            {
+                id: 'fallback_identity',
+                title: 'Identity Evidence',
+                description: 'Real name found in digital artifacts',
+                type: 'identity',
+                icon: 'bi-person-badge',
+                points: 25
+            },
+            {
+                id: 'fallback_contact',
+                title: 'Contact Evidence', 
+                description: 'Email address discovered',
+                type: 'contact',
+                icon: 'bi-envelope',
+                points: 20
+            }
+        ];
     }
 
     renderEvidenceBank() {
@@ -553,11 +695,14 @@ export class ForensicReportApp extends ForensicAppBase {
         this.showNotification('Submitting forensic report...', 'info');
         
         setTimeout(() => {
-            this.showNotification(`Report submitted successfully! ${this.targetIdentity?.code_name || 'Target'} identified as ${this.targetIdentity?.real_name || 'Unknown'}.`, 'success', 5000);
+            const targetName = this.targetIdentity?.real_name || 'Unknown Target';
+            const codeName = this.targetIdentity?.code_name || 'The Null';
+            
+            this.showNotification(`🎉 Investigation Complete! ${codeName} identified as ${targetName}. Case closed!`, 'success', 5000);
             this.emitForensicEvent('report_submitted', { 
                 score: this.reportScore,
                 identity: this.targetIdentity?.real_name || 'Unknown',
-                code_name: this.targetIdentity?.code_name || 'Unknown',
+                code_name: this.targetIdentity?.code_name || 'Unknown', 
                 email: this.targetIdentity?.email || 'Unknown',
                 phone: this.targetIdentity?.phone || 'Unknown',
                 sections: this.reportSections 
@@ -571,13 +716,21 @@ export class ForensicReportApp extends ForensicAppBase {
     }
 
     completeInvestigation() {
+        const targetName = this.targetIdentity?.real_name || 'Unknown Target';
+        const codeName = this.targetIdentity?.code_name || 'The Null';
+        
         this.emitForensicEvent('investigation_complete', {
             finalScore: this.reportScore,
-            identity: 'Alex Morrison',
+            identity: targetName,
+            code_name: codeName,
             compliance: ['NIST SP 800-86', 'ISO/IEC 27037:2012']
         });
         
-        this.showNotification('Investigation complete! Level 5 finished successfully.', 'success', 5000);
+        this.showNotification(`🏆 Level 5 Complete! ${codeName} (${targetName}) has been successfully identified and apprehended!`, 'success', 5000);
+        
+        // Clear the stored analysis data since investigation is complete
+        localStorage.removeItem('level5_evidence_analysis_data');
+        localStorage.removeItem('level5_evidence_analysis_complete');
     }
 
     showNotification(message, type = 'info', duration = 3000) {
@@ -612,6 +765,50 @@ export class ForensicReportApp extends ForensicAppBase {
             notification.classList.add('translate-x-full');
             setTimeout(() => notification.remove(), 300);
         }, duration);
+    }
+
+    showAccessDeniedState() {
+        // Override the content to show access denied message
+        const container = document.querySelector('.forensic-report-container');
+        if (container) {
+            container.innerHTML = `
+                <div class="h-full flex flex-col items-center justify-center bg-gray-900 text-white p-8">
+                    <div class="text-center max-w-lg">
+                        <i class="bi bi-lock-fill text-6xl text-red-400 mb-4"></i>
+                        <h2 class="text-2xl font-bold text-red-400 mb-4">Access Denied</h2>
+                        <div class="bg-red-900/30 border border-red-600 rounded-lg p-6 mb-6">
+                            <h3 class="text-lg font-semibold text-red-300 mb-3">
+                                <i class="bi bi-exclamation-triangle mr-2"></i>
+                                Evidence Analysis Required
+                            </h3>
+                            <p class="text-red-200 mb-4">
+                                You must complete evidence analysis in the <strong>Evidence Viewer</strong> before accessing the Forensic Report Builder.
+                            </p>
+                            <div class="text-sm text-red-300 space-y-2">
+                                <div class="flex items-center">
+                                    <i class="bi bi-arrow-right mr-2"></i>
+                                    <span>Open Evidence Viewer application</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="bi bi-arrow-right mr-2"></i>
+                                    <span>Analyze evidence and extract 3+ identity clues</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="bi bi-arrow-right mr-2"></i>
+                                    <span>Complete analysis to unlock Report Builder</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            <i class="bi bi-info-circle mr-1"></i>
+                            Following proper digital forensics methodology - analysis before reporting
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        console.log('[ForensicReport] Access denied - evidence analysis not complete');
     }
 
     switchToTab(tabName) {
