@@ -219,22 +219,34 @@ def levels_overview():
         level_info = get_user_level_info(user_total_xp)
         
         # Get user's sessions for detailed progress
-        user_sessions = Session.get_user_sessions(current_user.id, limit=100)
+        # Get a large number of sessions to ensure we don't miss any completed ones
+        user_sessions = Session.get_user_sessions(current_user.id, limit=500)
         
         # Create lookup for latest session per level_id (user_sessions is ordered by created_at DESC)
         session_lookup = {}
         for session in user_sessions:
-            if session.level_id not in session_lookup and session.end_time is not None and session.level_id is not None:
-                session_lookup[session.level_id] = session
+            # Normalize level_id to int for consistent comparison (in case of mixed types from testing)
+            try:
+                normalized_level_id = int(session.level_id) if session.level_id is not None else None
+            except (ValueError, TypeError):
+                normalized_level_id = session.level_id
+            
+            if normalized_level_id not in session_lookup and session.end_time is not None and normalized_level_id is not None:
+                session_lookup[normalized_level_id] = session
         
         # Enhance levels with user progress data
         enhanced_levels = []
         for level in levels:
             level_data = level.copy()
             
-            # Check if user has completed this level (by level_id)
+            # Check if user has completed this level (by level_id, normalize to int for consistent comparison)
             level_id = level.get('id')
-            session = session_lookup.get(level_id)
+            try:
+                normalized_level_id = int(level_id) if level_id is not None else None
+            except (ValueError, TypeError):
+                normalized_level_id = level_id
+            
+            session = session_lookup.get(normalized_level_id)
             
             if session:
                 level_data['user_progress'] = {
