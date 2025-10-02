@@ -203,6 +203,12 @@ export class Level3SessionSummary {
      * Show comprehensive session summary modal
      */
     async showSessionSummary() {
+        // Stop the timer immediately when showing summary
+        if (this.timer) {
+            this.timer.stopTimer();
+            console.log('[Level3SessionSummary] Timer stopped for session summary');
+        }
+        
         // Show loading modal first for better UX
         const loadingModal = this.createLoadingModal();
         document.body.appendChild(loadingModal);
@@ -598,21 +604,31 @@ export class Level3SessionSummary {
         const levelsBtn = modal.querySelector('#levels-btn');
 
         if (continueBtn) {
-            continueBtn.addEventListener('click', () => this.continueToLevel4());
+            continueBtn.addEventListener('click', () => {
+                modal.remove(); // Close the summary modal first
+                this.continueToLevel4();
+            });
         }
         
         if (retryBtn) {
-            retryBtn.addEventListener('click', () => this.retryLevel3());
+            retryBtn.addEventListener('click', () => {
+                modal.remove(); // Close the summary modal first
+                this.retryLevel3();
+            });
         }
         
         if (levelsBtn) {
-            levelsBtn.addEventListener('click', () => this.navigateToLevelsOverview());
+            levelsBtn.addEventListener('click', () => {
+                modal.remove(); // Close the summary modal first
+                this.showShutdownSequenceAndNavigate();
+            });
         }
 
-        // Close modal on background click
+        // Close modal on background click - navigate back to levels
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
-                this.navigateToLevelsOverview();
+                modal.remove();
+                this.showShutdownSequenceAndNavigate();
             }
         });
     }
