@@ -218,12 +218,23 @@ def dashboard():
         # Create lookup for latest completed session per level_id (user_sessions is ordered by created_at DESC)
         session_lookup = {}
         for session in user_sessions:
-            if session.level_id not in session_lookup and session.end_time is not None and session.level_id is not None:
-                session_lookup[session.level_id] = session
+            # Normalize level_id to int for consistent comparison (in case of mixed types from testing)
+            try:
+                normalized_level_id = int(session.level_id) if session.level_id is not None else None
+            except (ValueError, TypeError):
+                normalized_level_id = session.level_id
+            
+            if normalized_level_id not in session_lookup and session.end_time is not None and normalized_level_id is not None:
+                session_lookup[normalized_level_id] = session
         
         for level in levels:
-            # Find session for this level by level_id
-            session = session_lookup.get(level.level_id)
+            # Find session for this level by level_id (normalize to int for consistent comparison)
+            try:
+                normalized_level_id = int(level.level_id) if level.level_id is not None else None
+            except (ValueError, TypeError):
+                normalized_level_id = level.level_id
+            
+            session = session_lookup.get(normalized_level_id)
             
             level_data = {
                 'id': level.level_id,
