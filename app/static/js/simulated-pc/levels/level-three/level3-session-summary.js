@@ -203,10 +203,10 @@ export class Level3SessionSummary {
      * Show comprehensive session summary modal
      */
     async showSessionSummary() {
-        // Stop the timer immediately when showing summary
-        if (this.timer) {
-            this.timer.stopTimer();
-            console.log('[Level3SessionSummary] Timer stopped for session summary');
+        // Timer should already be stopped by completion dialogue
+        // Just check if timer is still running and log it
+        if (this.timer && this.timer.isRunning) {
+            console.warn('[Level3SessionSummary] Timer still running when showing summary - this should have been stopped by completion dialogue');
         }
         
         // Show loading modal first for better UX
