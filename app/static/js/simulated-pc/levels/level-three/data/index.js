@@ -36,11 +36,35 @@ export class Level3DataManager {
 
             // Extract data from API response
             const gameData = apiData.data;
-            this.selectedMalware = gameData.malware || {};
+            
+            // Combine malware and false positives into a single object for scanning
+            // But mark false positives appropriately
+            this.selectedMalware = {};
+            
+            // Add actual malware (these should be quarantined)
+            const malwareItems = gameData.malware || {};
+            Object.keys(malwareItems).forEach(key => {
+                this.selectedMalware[key] = {
+                    ...malwareItems[key],
+                    isActualThreat: true,
+                    isFalsePositive: false
+                };
+            });
+            
+            // Add false positives (these should NOT be quarantined)
+            const falsePositiveItems = gameData.false_positives || {};
+            Object.keys(falsePositiveItems).forEach(key => {
+                this.selectedMalware[key] = {
+                    ...falsePositiveItems[key],
+                    isActualThreat: false,
+                    isFalsePositive: true
+                };
+            });
+            
             this.selectedProcesses = this.buildProcessList(gameData.processes || {});
             
             // For compatibility, also store the full data structures
-            this.malwareData = gameData.malware || {};
+            this.malwareData = this.selectedMalware;
             this.processData = gameData.processes || {};
             
             this.loaded = true;
@@ -56,7 +80,7 @@ export class Level3DataManager {
             
             // Fallback to empty data
             this.malwareData = {};
-            this.processData = { system: [], gaming: [], application: [], malware: [] };
+            this.processData = { system: [], legitimate: [], malware: [] };
             this.selectedMalware = {};
             this.selectedProcesses = [];
             this.loaded = true;
@@ -70,12 +94,14 @@ export class Level3DataManager {
         const allProcesses = [];
         
         // Add all process types
-        ['system', 'gaming', 'application', 'malware'].forEach(category => {
+        ['system', 'legitimate', 'malware'].forEach(category => {
             const processes = processData[category] || [];
             processes.forEach(process => {
                 // Add runtime properties for display
                 const processWithRuntime = {
                     ...process,
+                    // Override the category with the top-level category for proper visual grouping
+                    category: category,
                     pid: 1000 + Math.floor(Math.random() * 8999),
                     threads: Math.floor(Math.random() * 20) + 1,
                     startTime: new Date(Date.now() - Math.random() * 86400000).toLocaleString(),

@@ -111,7 +111,7 @@ export class Level3SessionSummary {
                 accuracy: Math.round(accuracy * 100) + '%',
                 reputationHealth: Math.round(reputationHealth * 100) + '%',
                 financialHealth: Math.round(financialHealth * 100) + '%',
-                stagesCompleted: this.stagesCompleted.length + '/3'
+                stagesCompleted: this.stagesCompleted.length + '/2'
             }
         });
         
@@ -154,7 +154,7 @@ export class Level3SessionSummary {
             const sessionResult = await progressManager.completeLevel(score, {
                 accuracy: accuracy,
                 stagesCompleted: this.stagesCompleted.length,
-                totalStages: 3,
+                totalStages: 2,
                 reputationDamage: timerStatus.reputationDamage,
                 financialDamage: timerStatus.financialDamage,
                 timeEfficiency: Math.round((timerStatus.timeRemaining / (15 * 60)) * 100),
@@ -203,21 +203,71 @@ export class Level3SessionSummary {
      * Show comprehensive session summary modal
      */
     async showSessionSummary() {
-        // End the session and get XP data
-        const sessionResult = await this.endSession();
+        // Timer should already be stopped by completion dialogue
+        // Just check if timer is still running and log it
+        if (this.timer && this.timer.isRunning) {
+            console.warn('[Level3SessionSummary] Timer still running when showing summary - this should have been stopped by completion dialogue');
+        }
         
-        // Get timer status for final stats
-        const timerStatus = this.timer.getStatus();
-        const score = this.calculateScore();
-        const accuracy = this.totalActions > 0 ? Math.round((this.accurateActions / this.totalActions) * 100) : 100;
+        // Show loading modal first for better UX
+        const loadingModal = this.createLoadingModal();
+        document.body.appendChild(loadingModal);
         
-        // Calculate total time spent
-        const totalTimeSpent = (15 * 60) - timerStatus.timeRemaining; // 15 minutes minus remaining time
-        
+        try {
+            // End the session and get XP data in background
+            const sessionResultPromise = this.endSession();
+            
+            // Get timer status and calculate scores (synchronous, fast)
+            const timerStatus = this.timer.getStatus();
+            const score = this.calculateScore();
+            const accuracy = this.totalActions > 0 ? Math.round((this.accurateActions / this.totalActions) * 100) : 100;
+            const totalTimeSpent = (15 * 60) - timerStatus.timeRemaining;
+            const levelCompleted = score >= 70;
+            
+            // Wait for session result
+            const sessionResult = await sessionResultPromise;
+            
+            // Remove loading modal
+            loadingModal.remove();
+            
+            // Create and show the actual summary modal
+            const modal = this.createSummaryModal(sessionResult, score, accuracy, totalTimeSpent, timerStatus, levelCompleted);
+            document.body.appendChild(modal);
+            
+            // Bind events
+            this.bindSummaryEvents(modal, levelCompleted);
+            
+        } catch (error) {
+            console.error('[Level3SessionSummary] Error showing summary:', error);
+            loadingModal.remove();
+            // Show error state
+            this.showErrorModal();
+        }
+    }
+
+    /**
+     * Create loading modal
+     */
+    createLoadingModal() {
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
+        modal.innerHTML = `
+            <div class="bg-gray-900 rounded-lg p-8 border border-gray-700 text-center">
+                <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-400 mx-auto mb-4"></div>
+                <p class="text-white text-lg">Calculating Performance...</p>
+                <p class="text-gray-400 text-sm mt-2">Processing session data and XP rewards</p>
+            </div>
+        `;
+        return modal;
+    }
+
+    /**
+     * Create summary modal (separated for better performance)
+     */
+    createSummaryModal(sessionResult, score, accuracy, totalTimeSpent, timerStatus, levelCompleted) {
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
         
-        const levelCompleted = score >= 70; // 70% threshold for completion
         const accuracyClass = this.getAccuracyClass(accuracy);
         
         modal.innerHTML = `
@@ -286,7 +336,7 @@ export class Level3SessionSummary {
                                     <div class="text-green-100 text-sm">Performance Score</div>
                                 </div>
                                 <div class="bg-green-900/50 rounded-lg p-4">
-                                    <div class="text-2xl font-bold text-white">${this.stagesCompleted.length}/3</div>
+                                    <div class="text-2xl font-bold text-white">${this.stagesCompleted.length}/2</div>
                                     <div class="text-green-100 text-sm">Stages Completed</div>
                                 </div>
                                 <div class="bg-green-900/50 rounded-lg p-4">
@@ -346,10 +396,32 @@ export class Level3SessionSummary {
             </div>
         `;
 
-        document.body.appendChild(modal);
+        return modal;
+    }
 
-        // Bind events
-        this.bindSummaryEvents(modal, levelCompleted);
+    /**
+     * Show error modal if session summary fails
+     */
+    showErrorModal() {
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
+        modal.innerHTML = `
+            <div class="bg-gray-900 rounded-lg p-8 border border-red-700 text-center max-w-md">
+                <i class="bi bi-exclamation-triangle-fill text-5xl text-red-400 mb-4"></i>
+                <h2 class="text-2xl font-bold text-white mb-2">Error Loading Summary</h2>
+                <p class="text-gray-300 mb-6">There was an issue loading your performance data.</p>
+                <button id="retry-summary-btn" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors cursor-pointer">
+                    Try Again
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        modal.querySelector('#retry-summary-btn').addEventListener('click', () => {
+            modal.remove();
+            this.showSessionSummary();
+        });
     }
 
     /**
@@ -448,23 +520,17 @@ export class Level3SessionSummary {
         
         // Stage Completion Analysis
         const stagesCompleted = this.stagesCompleted.length;
-        if (stagesCompleted === 3) {
+        if (stagesCompleted === 2) {
             insights.push({ 
                 icon: 'bi-trophy-fill', 
                 color: 'text-yellow-400', 
-                text: 'Perfect execution! Completed all three critical response stages successfully.' 
-            });
-        } else if (stagesCompleted === 2) {
-            insights.push({ 
-                icon: 'bi-check2-square', 
-                color: 'text-blue-400', 
-                text: 'Good progress - completed 2/3 stages. Full incident response requires all stages.' 
+                text: 'Perfect execution! Completed both critical response stages successfully.' 
             });
         } else if (stagesCompleted === 1) {
             insights.push({ 
-                icon: 'bi-exclamation-square', 
-                color: 'text-orange-400', 
-                text: 'Partial response - only 1/3 stages completed. Practice comprehensive incident handling.' 
+                icon: 'bi-check2-square', 
+                color: 'text-blue-400', 
+                text: 'Partial response - completed 1/2 stages. Full incident response requires both stages.' 
             });
         } else {
             insights.push({ 
@@ -538,21 +604,31 @@ export class Level3SessionSummary {
         const levelsBtn = modal.querySelector('#levels-btn');
 
         if (continueBtn) {
-            continueBtn.addEventListener('click', () => this.continueToLevel4());
+            continueBtn.addEventListener('click', () => {
+                modal.remove(); // Close the summary modal first
+                this.continueToLevel4();
+            });
         }
         
         if (retryBtn) {
-            retryBtn.addEventListener('click', () => this.retryLevel3());
+            retryBtn.addEventListener('click', () => {
+                modal.remove(); // Close the summary modal first
+                this.retryLevel3();
+            });
         }
         
         if (levelsBtn) {
-            levelsBtn.addEventListener('click', () => this.navigateToLevelsOverview());
+            levelsBtn.addEventListener('click', () => {
+                modal.remove(); // Close the summary modal first
+                this.showShutdownSequenceAndNavigate();
+            });
         }
 
-        // Close modal on background click
+        // Close modal on background click - navigate back to levels
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
-                this.navigateToLevelsOverview();
+                modal.remove();
+                this.showShutdownSequenceAndNavigate();
             }
         });
     }

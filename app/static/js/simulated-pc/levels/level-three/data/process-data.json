@@ -49,19 +49,9 @@
       "category": "system",
       "description": "Local Security Authority Subsystem",
       "trusted": true
-    },
-    {
-      "name": "svchost.exe",
-      "executable": "svchost.exe",
-      "cpu": 2.1,
-      "memory": 45.7,
-      "priority": "Normal",
-      "category": "system",
-      "description": "Service Host Process",
-      "trusted": true
     }
   ],
-  "gaming": [
+  "legitimate": [
     {
       "name": "steam.exe",
       "executable": "program files (x86)\\steam\\steam.exe",
@@ -101,9 +91,7 @@
       "category": "gaming",
       "description": "CyberQuest tournament client",
       "trusted": true
-    }
-  ],
-  "application": [
+    },
     {
       "name": "chrome.exe",
       "executable": "program files\\google\\chrome\\application\\chrome.exe",
@@ -112,16 +100,6 @@
       "priority": "Normal",
       "category": "application",
       "description": "Google Chrome web browser",
-      "trusted": true
-    },
-    {
-      "name": "antivirus.exe",
-      "executable": "program files\\windows defender\\antivirus.exe",
-      "cpu": 2.8,
-      "memory": 58.4,
-      "priority": "Normal",
-      "category": "security",
-      "description": "Windows Defender antivirus",
       "trusted": true
     }
   ],
@@ -133,34 +111,34 @@
       "memory": 298.4,
       "priority": "High",
       "category": "application",
-      "description": "ProGamer Boost v2.1 - Fake gaming performance enhancement tool",
+      "description": "DANGEROUS: Fake gaming tool that installs multiple malware components",
       "trusted": false,
-      "malwareType": "Multi-stage Trojan",
+      "malwareType": "Malicious Trojan",
       "riskFactors": [
         "Extremely high resource usage for a 'performance' tool",
         "Running from public downloads folder",
-        "Deploying additional malware components",
-        "Suspicious network connections to C&C servers",
+        "Steals personal information and passwords",
+        "Installs additional malware programs",
         "No legitimate software publisher information"
       ],
       "reputationDamage": 30,
       "financialDamage": 60000
     },
     {
-      "name": "tournament_hijacker.exe",
-      "executable": "temp\\tournament_hijacker.exe",
+      "name": "crypto_miner.exe",
+      "executable": "temp\\crypto_miner.exe",
       "cpu": 89.7,
       "memory": 267.3,
       "priority": "High",
       "category": "gaming",
-      "description": "Tournament system resource hijacker for cryptomining",
+      "description": "MALWARE: Secretly uses your computer to mine cryptocurrency",
       "trusted": false,
-      "malwareType": "Process Hijacker",
+      "malwareType": "Cryptocurrency Miner Malware",
       "riskFactors": [
         "Massive CPU usage indicating cryptomining activity",
         "Running from temporary directory", 
-        "Hijacking system resources during tournament",
-        "Causing performance degradation in gaming systems",
+        "Uses CPU and GPU power without permission",
+        "Slows down computer and games significantly",
         "Connects to cryptocurrency mining pools"
       ],
       "reputationDamage": 25,
@@ -187,146 +165,44 @@
       "financialDamage": 35000
     },
     {
-      "name": "false_positive_gen.exe",
-      "executable": "windows\\system32\\false_positive_gen.exe",
+      "name": "system_optimizer.exe",
+      "executable": "windows\\system32\\system_optimizer.exe",
       "cpu": 6.8,
       "memory": 78.2,
       "priority": "Normal",
       "category": "system",
-      "description": "False positive generator to confuse security analysts",
+      "description": "Malware disguised as system optimization tool, actually steals data",
       "trusted": false,
-      "malwareType": "Confusion Tool",
+      "malwareType": "Trojan Disguised as Utility",
       "riskFactors": [
         "Masquerading as system component in System32",
-        "Generating fake malware signatures in legitimate files",
-        "Manipulating security scanner results",
-        "Wasting analyst time with decoy threats",
-        "Coordinating with other ProGamer Boost components"
+        "Pretends to optimize system performance",
+        "Steals passwords from web browsers",
+        "Sends stolen data to remote servers",
+        "Installs additional malware components"
       ],
       "reputationDamage": 15,
       "financialDamage": 20000
     },
     {
-      "name": "tournament_spreader.exe",
-      "executable": "users\\public\\documents\\tournament_spreader.exe",
+      "name": "network_worm.exe",
+      "executable": "users\\public\\documents\\network_worm.exe",
       "cpu": 28.1,
       "memory": 189.5,
       "priority": "High",
       "category": "gaming",
-      "description": "Network worm spreading through tournament infrastructure",
+      "description": "DANGEROUS: Spreads copies of itself to other computers on network",
       "trusted": false,
-      "malwareType": "Network Worm",
+      "malwareType": "Network Worm Malware",
       "riskFactors": [
         "Rapid replication across tournament network",
-        "Exploiting gaming platform vulnerabilities",
-        "Coordinating with ProGamer Boost v2.1 campaign",
+        "Scans network for other vulnerable computers",
+        "Copies itself to shared folders and drives",
         "High resource usage during network propagation",
-        "Targeting all connected championship systems"
+        "Can spread to hundreds of computers quickly"
       ],
       "reputationDamage": 35,
       "financialDamage": 50000
-    }
-  ],
-  "falsePositives": [
-    {
-      "name": "graphics_optimizer.exe",
-      "executable": "program files\\nvidia\\graphics_optimizer.exe",
-      "cpu": 18.3,
-      "memory": 156.7,
-      "priority": "High",
-      "category": "gaming",
-      "description": "NVIDIA GPU optimization utility for tournament systems",
-      "trusted": true,
-      "malwareType": "None",
-      "riskFactors": [
-        "High resource usage during GPU optimization",
-        "Deep system access for hardware control",
-        "May trigger false alarms due to system modifications"
-      ],
-      "reputationDamage": 0,
-      "financialDamage": 0,
-      "isFalsePositive": true,
-      "falsePositiveReason": "Legitimate graphics optimizer may appear suspicious due to high system resource usage"
-    },
-    {
-      "name": "stream_assistant.exe", 
-      "executable": "program files\\streamlabs\\stream_assistant.exe",
-      "cpu": 24.1,
-      "memory": 187.3,
-      "priority": "Normal",
-      "category": "gaming",
-      "description": "StreamLabs tournament broadcasting utility",
-      "trusted": true,
-      "malwareType": "None",
-      "riskFactors": [
-        "Screen capture and recording capabilities",
-        "Network streaming activity",
-        "May appear suspicious due to monitoring behavior"
-      ],
-      "reputationDamage": 0,
-      "financialDamage": 0,
-      "isFalsePositive": true,
-      "falsePositiveReason": "Streaming software may trigger alerts due to screen capture and network activity"
-    },
-    {
-      "name": "tournament_updater.exe",
-      "executable": "program files\\cyberquest\\tournament_updater.exe", 
-      "cpu": 8.7,
-      "memory": 94.2,
-      "priority": "Normal",
-      "category": "gaming",
-      "description": "Official CyberQuest tournament software updater",
-      "trusted": true,
-      "malwareType": "None",
-      "riskFactors": [
-        "Downloads files from internet",
-        "Modifies system files during updates",
-        "Network communication with tournament servers"
-      ],
-      "reputationDamage": 0,
-      "financialDamage": 0,
-      "isFalsePositive": true,
-      "falsePositiveReason": "Official tournament software may be flagged due to update and network activities"
-    },
-    {
-      "name": "performance_monitor.exe",
-      "executable": "program files\\msi\\performance_monitor.exe",
-      "cpu": 11.4,
-      "memory": 78.9,
-      "priority": "Normal", 
-      "category": "application",
-      "description": "MSI Afterburner system monitoring utility",
-      "trusted": true,
-      "malwareType": "None",
-      "riskFactors": [
-        "Deep hardware monitoring and access",
-        "Continuous system performance tracking",
-        "May trigger monitoring-related alerts"
-      ],
-      "reputationDamage": 0,
-      "financialDamage": 0,
-      "isFalsePositive": true,
-      "falsePositiveReason": "Hardware monitoring software may appear suspicious due to deep system access"
-    },
-    {
-      "name": "browser_helper.exe",
-      "executable": "program files\\google\\chrome\\browser_helper.exe",
-      "cpu": 6.2,
-      "memory": 89.5,
-      "priority": "Normal",
-      "category": "application",
-      "description": "Chrome gaming extension helper service",
-      "trusted": true,
-      "malwareType": "None",
-      "riskFactors": [
-        "Browser automation and control",
-        "Gaming account management activities",
-        "Network communication for platform integration"
-      ],
-      "reputationDamage": 0,
-      "financialDamage": 0,
-      "isFalsePositive": true,
-      "falsePositiveReason": "Browser extension helper may be flagged due to automation and account management"
     }
   ]
 }
