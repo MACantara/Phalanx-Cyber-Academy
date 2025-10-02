@@ -24,6 +24,8 @@ gunicorn
 # Testing
 pytest
 pytest-flask
+pytest-playwright
+playwright
 
 # hCaptcha
 flask-hcaptcha
