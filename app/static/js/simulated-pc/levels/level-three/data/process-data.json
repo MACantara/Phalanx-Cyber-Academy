@@ -133,34 +133,34 @@
       "memory": 298.4,
       "priority": "High",
       "category": "application",
-      "description": "ProGamer Boost v2.1 - Fake gaming performance enhancement tool",
+      "description": "DANGEROUS: Fake gaming tool that installs multiple malware components",
       "trusted": false,
-      "malwareType": "Multi-stage Trojan",
+      "malwareType": "Malicious Trojan",
       "riskFactors": [
         "Extremely high resource usage for a 'performance' tool",
         "Running from public downloads folder",
-        "Deploying additional malware components",
-        "Suspicious network connections to C&C servers",
+        "Steals personal information and passwords",
+        "Installs additional malware programs",
         "No legitimate software publisher information"
       ],
       "reputationDamage": 30,
       "financialDamage": 60000
     },
     {
-      "name": "tournament_hijacker.exe",
-      "executable": "temp\\tournament_hijacker.exe",
+      "name": "crypto_miner.exe",
+      "executable": "temp\\crypto_miner.exe",
       "cpu": 89.7,
       "memory": 267.3,
       "priority": "High",
       "category": "gaming",
-      "description": "Tournament system resource hijacker for cryptomining",
+      "description": "MALWARE: Secretly uses your computer to mine cryptocurrency",
       "trusted": false,
-      "malwareType": "Process Hijacker",
+      "malwareType": "Cryptocurrency Miner Malware",
       "riskFactors": [
         "Massive CPU usage indicating cryptomining activity",
         "Running from temporary directory", 
-        "Hijacking system resources during tournament",
-        "Causing performance degradation in gaming systems",
+        "Uses CPU and GPU power without permission",
+        "Slows down computer and games significantly",
         "Connects to cryptocurrency mining pools"
       ],
       "reputationDamage": 25,
@@ -187,41 +187,41 @@
       "financialDamage": 35000
     },
     {
-      "name": "false_positive_gen.exe",
-      "executable": "windows\\system32\\false_positive_gen.exe",
+      "name": "system_optimizer.exe",
+      "executable": "windows\\system32\\system_optimizer.exe",
       "cpu": 6.8,
       "memory": 78.2,
       "priority": "Normal",
       "category": "system",
-      "description": "False positive generator to confuse security analysts",
+      "description": "Malware disguised as system optimization tool, actually steals data",
       "trusted": false,
-      "malwareType": "Confusion Tool",
+      "malwareType": "Trojan Disguised as Utility",
       "riskFactors": [
         "Masquerading as system component in System32",
-        "Generating fake malware signatures in legitimate files",
-        "Manipulating security scanner results",
-        "Wasting analyst time with decoy threats",
-        "Coordinating with other ProGamer Boost components"
+        "Pretends to optimize system performance",
+        "Steals passwords from web browsers",
+        "Sends stolen data to remote servers",
+        "Installs additional malware components"
       ],
       "reputationDamage": 15,
       "financialDamage": 20000
     },
     {
-      "name": "tournament_spreader.exe",
-      "executable": "users\\public\\documents\\tournament_spreader.exe",
+      "name": "network_worm.exe",
+      "executable": "users\\public\\documents\\network_worm.exe",
       "cpu": 28.1,
       "memory": 189.5,
       "priority": "High",
       "category": "gaming",
-      "description": "Network worm spreading through tournament infrastructure",
+      "description": "DANGEROUS: Spreads copies of itself to other computers on network",
       "trusted": false,
-      "malwareType": "Network Worm",
+      "malwareType": "Network Worm Malware",
       "riskFactors": [
         "Rapid replication across tournament network",
-        "Exploiting gaming platform vulnerabilities",
-        "Coordinating with ProGamer Boost v2.1 campaign",
+        "Scans network for other vulnerable computers",
+        "Copies itself to shared folders and drives",
         "High resource usage during network propagation",
-        "Targeting all connected championship systems"
+        "Can spread to hundreds of computers quickly"
       ],
       "reputationDamage": 35,
       "financialDamage": 50000
@@ -229,13 +229,13 @@
   ],
   "falsePositives": [
     {
-      "name": "graphics_optimizer.exe",
-      "executable": "program files\\nvidia\\graphics_optimizer.exe",
+      "name": "nvidia_control_panel.exe",
+      "executable": "program files\\nvidia\\nvidia_control_panel.exe",
       "cpu": 18.3,
       "memory": 156.7,
       "priority": "High",
       "category": "gaming",
-      "description": "NVIDIA GPU optimization utility for tournament systems",
+      "description": "Official NVIDIA graphics driver control panel - completely safe",
       "trusted": true,
       "malwareType": "None",
       "riskFactors": [
@@ -246,7 +246,7 @@
       "reputationDamage": 0,
       "financialDamage": 0,
       "isFalsePositive": true,
-      "falsePositiveReason": "Legitimate graphics optimizer may appear suspicious due to high system resource usage"
+      "falsePositiveReason": "Legitimate NVIDIA software may appear suspicious due to high system resource usage"
     },
     {
       "name": "stream_assistant.exe", 
@@ -309,24 +309,24 @@
       "falsePositiveReason": "Hardware monitoring software may appear suspicious due to deep system access"
     },
     {
-      "name": "browser_helper.exe",
-      "executable": "program files\\google\\chrome\\browser_helper.exe",
+      "name": "windows_defender.exe",
+      "executable": "program files\\windows defender\\windows_defender.exe",
       "cpu": 6.2,
       "memory": 89.5,
       "priority": "Normal",
       "category": "application",
-      "description": "Chrome gaming extension helper service",
+      "description": "Microsoft's built-in antivirus software - completely legitimate",
       "trusted": true,
       "malwareType": "None",
       "riskFactors": [
-        "Browser automation and control",
-        "Gaming account management activities",
-        "Network communication for platform integration"
+        "Deep system access for malware scanning",
+        "Continuous monitoring activities",
+        "Network communication for updates"
       ],
       "reputationDamage": 0,
       "financialDamage": 0,
       "isFalsePositive": true,
-      "falsePositiveReason": "Browser extension helper may be flagged due to automation and account management"
+      "falsePositiveReason": "Microsoft antivirus software may be flagged due to deep system access"
     }
   ]
 }
