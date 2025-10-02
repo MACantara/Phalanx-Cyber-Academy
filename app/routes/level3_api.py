@@ -42,15 +42,18 @@ def load_json_data():
         
         # Combine all data into cache
         _json_cache = {
-            'malware': malware_data,
+            'malware': malware_data.get('malware', {}),
+            'false_positives': malware_data.get('false_positives', {}),
             'processes': process_data
         }
         
-        malware_count = len(malware_data)
+        malware_count = len(malware_data.get('malware', {}))
+        false_positive_count = len(malware_data.get('false_positives', {}))
         process_count = len(process_data.get('malware', []))
         
         print(f"Loaded Level 3 data from JSON files:")
         print(f"Malware entries: {malware_count}")
+        print(f"False positive entries: {false_positive_count}")
         print(f"Malicious processes: {process_count}")
         
         return _json_cache
@@ -88,6 +91,12 @@ def get_level3_game_data():
         selected_malware_keys = get_random_items(malware_keys, 5)
         selected_malware = {key: malware_data[key] for key in selected_malware_keys}
         
+        # Get false positive data - select 5 random items
+        false_positive_data = data.get('false_positives', {})
+        false_positive_keys = list(false_positive_data.keys())
+        selected_false_positive_keys = get_random_items(false_positive_keys, 5)
+        selected_false_positives = {key: false_positive_data[key] for key in selected_false_positive_keys}
+        
         # Get process data - select 5 random malicious processes
         process_data = data.get('processes', {})
         malicious_processes = process_data.get('malware', [])
@@ -105,10 +114,12 @@ def get_level3_game_data():
             'success': True,
             'data': {
                 'malware': selected_malware,
+                'false_positives': selected_false_positives,
                 'processes': all_processes
             },
             'summary': {
                 'malware_count': len(selected_malware),
+                'false_positive_count': len(selected_false_positives),
                 'malicious_processes_count': len(selected_malicious_processes),
                 'legitimate_processes_count': len(process_data.get('system', [])) + 
                                            len(process_data.get('gaming', [])) + 
@@ -139,6 +150,7 @@ def get_malware_data():
             }), 500
         
         malware_data = data.get('malware', {})
+        false_positive_data = data.get('false_positives', {})
         
         # Check if randomization is requested
         randomize = request.args.get('randomize', 'false').lower() == 'true'
@@ -146,15 +158,22 @@ def get_malware_data():
         
         if randomize:
             malware_keys = list(malware_data.keys())
-            selected_keys = get_random_items(malware_keys, count)
-            selected_malware = {key: malware_data[key] for key in selected_keys}
+            selected_malware_keys = get_random_items(malware_keys, count)
+            selected_malware = {key: malware_data[key] for key in selected_malware_keys}
+            
+            false_positive_keys = list(false_positive_data.keys())
+            selected_false_positive_keys = get_random_items(false_positive_keys, count)
+            selected_false_positives = {key: false_positive_data[key] for key in selected_false_positive_keys}
         else:
             selected_malware = malware_data
+            selected_false_positives = false_positive_data
         
         return jsonify({
             'success': True,
             'malware': selected_malware,
-            'count': len(selected_malware)
+            'false_positives': selected_false_positives,
+            'count': len(selected_malware),
+            'false_positive_count': len(selected_false_positives)
         })
         
     except Exception as e:
@@ -227,6 +246,7 @@ def get_level3_stats():
             }), 500
         
         malware_data = data.get('malware', {})
+        false_positive_data = data.get('false_positives', {})
         process_data = data.get('processes', {})
         
         # Calculate malware statistics
@@ -234,17 +254,26 @@ def get_level3_stats():
         total_reputation_damage = 0
         total_financial_damage = 0
         
+        # Process actual malware
         for malware in malware_data.values():
             malware_type = malware.get('type', 'Unknown')
             malware_types[malware_type] = malware_types.get(malware_type, 0) + 1
             total_reputation_damage += malware.get('reputationDamage', 0)
             total_financial_damage += malware.get('financialDamage', 0)
         
+        # Count false positive types separately
+        false_positive_types = {}
+        for fp in false_positive_data.values():
+            fp_type = fp.get('type', 'Unknown')
+            false_positive_types[fp_type] = false_positive_types.get(fp_type, 0) + 1
+        
         return jsonify({
             'success': True,
             'stats': {
                 'total_malware': len(malware_data),
+                'total_false_positives': len(false_positive_data),
                 'malware_types': malware_types,
+                'false_positive_types': false_positive_types,
                 'total_reputation_damage': total_reputation_damage,
                 'total_financial_damage': total_financial_damage,
                 'total_processes': {
@@ -278,12 +307,14 @@ def get_data_status():
             })
         
         malware_count = len(data.get('malware', {}))
+        false_positive_count = len(data.get('false_positives', {}))
         process_count = len(data.get('processes', {}).get('malware', []))
         
         return jsonify({
             'success': True,
             'data_available': True,
             'malware_count': malware_count,
+            'false_positive_count': false_positive_count,
             'malicious_processes_count': process_count,
             'total_legitimate_processes': (
                 len(data.get('processes', {}).get('system', [])) +
@@ -321,6 +352,11 @@ def get_sample_data():
         sample_malware_keys = get_random_items(malware_keys, 2)
         sample_malware = {key: malware_data[key] for key in sample_malware_keys}
         
+        false_positive_data = data.get('false_positives', {})
+        false_positive_keys = list(false_positive_data.keys())
+        sample_false_positive_keys = get_random_items(false_positive_keys, 2)
+        sample_false_positives = {key: false_positive_data[key] for key in sample_false_positive_keys}
+        
         process_data = data.get('processes', {})
         sample_processes = get_random_items(process_data.get('malware', []), 2)
         
@@ -328,6 +364,7 @@ def get_sample_data():
             'success': True,
             'sample_data': {
                 'malware': sample_malware,
+                'false_positives': sample_false_positives,
                 'malicious_processes': sample_processes
             },
             'message': 'Sample Level 3 data for testing'
