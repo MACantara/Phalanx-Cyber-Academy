@@ -371,3 +371,54 @@ class Session:
             return None
         except Exception as e:
             raise DatabaseError(f"Failed to get active session: {str(e)}")
+
+    @classmethod
+    def get_latest_completed_sessions_per_level(cls, user_id: int) -> Dict[int, 'Session']:
+        """
+        Get the latest completed session for each level_id for a user.
+        Returns a dictionary mapping level_id to Session object.
+        
+        This is optimized to fetch only completed sessions (with end_time) that have a level_id,
+        and returns only the most recent one per level_id.
+        
+        Args:
+            user_id: The user's ID
+            
+        Returns:
+            Dictionary mapping level_id (as int) to Session object
+        """
+        try:
+            supabase = get_supabase()
+            
+            # Get all completed sessions with level_id for this user
+            # We need to get them all and filter in Python since Supabase doesn't support
+            # window functions in the Python client (DISTINCT ON is PostgreSQL-specific)
+            response = (supabase.table('sessions')
+                       .select('*')
+                       .eq('user_id', user_id)
+                       .not_.is_('end_time', 'null')  # Only completed sessions
+                       .not_.is_('level_id', 'null')  # Only sessions with level_id
+                       .order('created_at', desc=True)
+                       .execute())
+            data = handle_supabase_error(response)
+            
+            # Create lookup dict - since ordered by created_at DESC, first occurrence is latest
+            session_lookup = {}
+            if data:
+                for session_data in data:
+                    level_id = session_data.get('level_id')
+                    if level_id is not None:
+                        # Normalize level_id to int for consistent comparison
+                        try:
+                            normalized_level_id = int(level_id)
+                        except (ValueError, TypeError):
+                            normalized_level_id = level_id
+                        
+                        # Only add if we haven't seen this level_id yet (first = latest)
+                        if normalized_level_id not in session_lookup:
+                            session_lookup[normalized_level_id] = cls(session_data)
+            
+            return session_lookup
+            
+        except Exception as e:
+            raise DatabaseError(f"Failed to get latest completed sessions per level: {str(e)}")
