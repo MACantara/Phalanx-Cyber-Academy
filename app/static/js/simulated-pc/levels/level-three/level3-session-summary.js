@@ -203,21 +203,65 @@ export class Level3SessionSummary {
      * Show comprehensive session summary modal
      */
     async showSessionSummary() {
-        // End the session and get XP data
-        const sessionResult = await this.endSession();
+        // Show loading modal first for better UX
+        const loadingModal = this.createLoadingModal();
+        document.body.appendChild(loadingModal);
         
-        // Get timer status for final stats
-        const timerStatus = this.timer.getStatus();
-        const score = this.calculateScore();
-        const accuracy = this.totalActions > 0 ? Math.round((this.accurateActions / this.totalActions) * 100) : 100;
-        
-        // Calculate total time spent
-        const totalTimeSpent = (15 * 60) - timerStatus.timeRemaining; // 15 minutes minus remaining time
-        
+        try {
+            // End the session and get XP data in background
+            const sessionResultPromise = this.endSession();
+            
+            // Get timer status and calculate scores (synchronous, fast)
+            const timerStatus = this.timer.getStatus();
+            const score = this.calculateScore();
+            const accuracy = this.totalActions > 0 ? Math.round((this.accurateActions / this.totalActions) * 100) : 100;
+            const totalTimeSpent = (15 * 60) - timerStatus.timeRemaining;
+            const levelCompleted = score >= 70;
+            
+            // Wait for session result
+            const sessionResult = await sessionResultPromise;
+            
+            // Remove loading modal
+            loadingModal.remove();
+            
+            // Create and show the actual summary modal
+            const modal = this.createSummaryModal(sessionResult, score, accuracy, totalTimeSpent, timerStatus, levelCompleted);
+            document.body.appendChild(modal);
+            
+            // Bind events
+            this.bindSummaryEvents(modal, levelCompleted);
+            
+        } catch (error) {
+            console.error('[Level3SessionSummary] Error showing summary:', error);
+            loadingModal.remove();
+            // Show error state
+            this.showErrorModal();
+        }
+    }
+
+    /**
+     * Create loading modal
+     */
+    createLoadingModal() {
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
+        modal.innerHTML = `
+            <div class="bg-gray-900 rounded-lg p-8 border border-gray-700 text-center">
+                <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-400 mx-auto mb-4"></div>
+                <p class="text-white text-lg">Calculating Performance...</p>
+                <p class="text-gray-400 text-sm mt-2">Processing session data and XP rewards</p>
+            </div>
+        `;
+        return modal;
+    }
+
+    /**
+     * Create summary modal (separated for better performance)
+     */
+    createSummaryModal(sessionResult, score, accuracy, totalTimeSpent, timerStatus, levelCompleted) {
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
         
-        const levelCompleted = score >= 70; // 70% threshold for completion
         const accuracyClass = this.getAccuracyClass(accuracy);
         
         modal.innerHTML = `
@@ -346,10 +390,32 @@ export class Level3SessionSummary {
             </div>
         `;
 
-        document.body.appendChild(modal);
+        return modal;
+    }
 
-        // Bind events
-        this.bindSummaryEvents(modal, levelCompleted);
+    /**
+     * Show error modal if session summary fails
+     */
+    showErrorModal() {
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black/75 flex items-center justify-center z-50';
+        modal.innerHTML = `
+            <div class="bg-gray-900 rounded-lg p-8 border border-red-700 text-center max-w-md">
+                <i class="bi bi-exclamation-triangle-fill text-5xl text-red-400 mb-4"></i>
+                <h2 class="text-2xl font-bold text-white mb-2">Error Loading Summary</h2>
+                <p class="text-gray-300 mb-6">There was an issue loading your performance data.</p>
+                <button id="retry-summary-btn" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors cursor-pointer">
+                    Try Again
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        modal.querySelector('#retry-summary-btn').addEventListener('click', () => {
+            modal.remove();
+            this.showSessionSummary();
+        });
     }
 
     /**
