@@ -80,7 +80,7 @@ export class Level3DataManager {
             
             // Fallback to empty data
             this.malwareData = {};
-            this.processData = { system: [], gaming: [], application: [], malware: [] };
+            this.processData = { system: [], legitimate: [], malware: [] };
             this.selectedMalware = {};
             this.selectedProcesses = [];
             this.loaded = true;
@@ -94,7 +94,7 @@ export class Level3DataManager {
         const allProcesses = [];
         
         // Add all process types
-        ['system', 'gaming', 'application', 'malware'].forEach(category => {
+        ['system', 'legitimate', 'malware'].forEach(category => {
             const processes = processData[category] || [];
             processes.forEach(process => {
                 // Add runtime properties for display
