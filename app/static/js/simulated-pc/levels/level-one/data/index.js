@@ -32,29 +32,29 @@ export const Level1Data = {
     
     // Source verification database for misinformation detection training
     sourceDatabase: {
-        // Legitimate news sources
-        'apnews.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
-        'reuters.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
-        'bbc.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
-        'cnn.com': { credibility: 'high', bias: 'moderate', type: 'established_news' },
-        'wsj.com': { credibility: 'high', bias: 'slight', type: 'established_news' },
-        'usatoday.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
+        // Legitimate Philippine news sources
+        'rappler.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
+        'inquirer.net': { credibility: 'high', bias: 'minimal', type: 'established_news' },
+        'news.abs-cbn.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
+        'gmanetwork.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
+        'mb.com.ph': { credibility: 'high', bias: 'minimal', type: 'established_news' },
+        'philstar.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
         
-        // Suspicious/fake news sources - election misinformation
-        'truthpatriotnews.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'electiontruthexposed.com': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'americandefensewatch.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'electionfraudwatch.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'digitaltruthexposed.com': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'shadowgovernmentwatch.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'realpollwatch.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'votingtruthdefender.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'newworldorderexposed.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'techcensorshipwatch.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'voterfraudwatch.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'politicalcorruptionexposed.com': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'ballotfraudexposed.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
-        'mediabiastruth.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        // Suspicious/fake news sources - Philippine election misinformation
+        'truthpilipinasnews.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'electiontruthdotph.com': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'pilipinasfraudwatch.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'sovereignpilipinasdefender.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'realpinoynews.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'electionwatchdogph.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'philippinesecuritywatch.com': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'constitutiondefenderph.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'voterfraudexposedph.com': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'techfraudwatchph.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'ballotsecurityph.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'democracydefenseph.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'mediacorruptionph.com': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'philippinesovereignty.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
         
         'default': { credibility: 'unknown', bias: 'unknown', type: 'unknown' }
     },

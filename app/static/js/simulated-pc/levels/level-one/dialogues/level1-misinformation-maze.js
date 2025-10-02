@@ -8,7 +8,7 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "🎯 Mission Brief: Level 1 - The Misinformation Maze\nWelcome to your first cybersecurity challenge! As a junior security analyst, you've been assigned to investigate a coordinated disinformation campaign targeting upcoming elections."
+                text: "🎯 Mission Brief: Level 1 - The Misinformation Maze\nWelcome to your first cybersecurity challenge! As a junior security analyst, you've been assigned to investigate a coordinated disinformation campaign targeting the upcoming Philippine elections."
             },
             {
                 text: "📚 Learning Objectives:\n• Master critical thinking techniques for information verification\n• Identify common misinformation tactics and manipulation strategies"
@@ -32,7 +32,7 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
             },
             {
                 text: "⚠️ Warning Signs to Watch For:\n• Suspicious URLs or domain names\n• Missing author information or fake credentials",
-                example: "Suspicious: 'realcnnews.com' (mimicking cnn.com)\nLegitimate: 'reuters.com', 'apnews.com', 'bbc.com'"
+                example: "Suspicious: 'truthpilipinasnews.net' (mimicking legitimate news)\nLegitimate: 'rappler.com', 'inquirer.net', 'news.abs-cbn.com'"
             },
             {
                 text: "• Extreme emotional language designed to provoke anger\n• Claims without credible sources or evidence\n• Headlines that don't match the article content",
@@ -54,7 +54,7 @@ export class Level1MisinformationMazeDialogue extends BaseDialogue {
                 text: "💡 Pro Tips for All 10 Articles:\n• Take time to read carefully - rushing through the 10 articles leads to mistakes\n• Check multiple indicators: source domain, author credentials, writing style"
             },
             {
-                text: "• Compare article quality between legitimate sources (AP, Reuters, BBC) vs suspicious domains\n• Real news includes verifiable sources and balanced reporting style"
+                text: "• Compare article quality between legitimate sources (Rappler, Inquirer, ABS-CBN News) vs suspicious domains\n• Real news includes verifiable sources and balanced reporting style"
             },
             {
                 text: "🚀 Ready for Action?\nThis mission is crucial for national security. You'll evaluate 10 articles that represent real-world examples of both legitimate journalism and sophisticated misinformation."
