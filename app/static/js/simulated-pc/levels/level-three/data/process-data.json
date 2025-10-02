@@ -49,19 +49,9 @@
       "category": "system",
       "description": "Local Security Authority Subsystem",
       "trusted": true
-    },
-    {
-      "name": "svchost.exe",
-      "executable": "svchost.exe",
-      "cpu": 2.1,
-      "memory": 45.7,
-      "priority": "Normal",
-      "category": "system",
-      "description": "Service Host Process",
-      "trusted": true
     }
   ],
-  "gaming": [
+  "legitimate": [
     {
       "name": "steam.exe",
       "executable": "program files (x86)\\steam\\steam.exe",
@@ -101,9 +91,7 @@
       "category": "gaming",
       "description": "CyberQuest tournament client",
       "trusted": true
-    }
-  ],
-  "application": [
+    },
     {
       "name": "chrome.exe",
       "executable": "program files\\google\\chrome\\application\\chrome.exe",
@@ -112,16 +100,6 @@
       "priority": "Normal",
       "category": "application",
       "description": "Google Chrome web browser",
-      "trusted": true
-    },
-    {
-      "name": "antivirus.exe",
-      "executable": "program files\\windows defender\\antivirus.exe",
-      "cpu": 2.8,
-      "memory": 58.4,
-      "priority": "Normal",
-      "category": "security",
-      "description": "Windows Defender antivirus",
       "trusted": true
     }
   ],
@@ -225,108 +203,6 @@
       ],
       "reputationDamage": 35,
       "financialDamage": 50000
-    }
-  ],
-  "falsePositives": [
-    {
-      "name": "nvidia_control_panel.exe",
-      "executable": "program files\\nvidia\\nvidia_control_panel.exe",
-      "cpu": 18.3,
-      "memory": 156.7,
-      "priority": "High",
-      "category": "gaming",
-      "description": "Official NVIDIA graphics driver control panel - completely safe",
-      "trusted": true,
-      "malwareType": "None",
-      "riskFactors": [
-        "High resource usage during GPU optimization",
-        "Deep system access for hardware control",
-        "May trigger false alarms due to system modifications"
-      ],
-      "reputationDamage": 0,
-      "financialDamage": 0,
-      "isFalsePositive": true,
-      "falsePositiveReason": "Legitimate NVIDIA software may appear suspicious due to high system resource usage"
-    },
-    {
-      "name": "stream_assistant.exe", 
-      "executable": "program files\\streamlabs\\stream_assistant.exe",
-      "cpu": 24.1,
-      "memory": 187.3,
-      "priority": "Normal",
-      "category": "gaming",
-      "description": "StreamLabs tournament broadcasting utility",
-      "trusted": true,
-      "malwareType": "None",
-      "riskFactors": [
-        "Screen capture and recording capabilities",
-        "Network streaming activity",
-        "May appear suspicious due to monitoring behavior"
-      ],
-      "reputationDamage": 0,
-      "financialDamage": 0,
-      "isFalsePositive": true,
-      "falsePositiveReason": "Streaming software may trigger alerts due to screen capture and network activity"
-    },
-    {
-      "name": "tournament_updater.exe",
-      "executable": "program files\\cyberquest\\tournament_updater.exe", 
-      "cpu": 8.7,
-      "memory": 94.2,
-      "priority": "Normal",
-      "category": "gaming",
-      "description": "Official CyberQuest tournament software updater",
-      "trusted": true,
-      "malwareType": "None",
-      "riskFactors": [
-        "Downloads files from internet",
-        "Modifies system files during updates",
-        "Network communication with tournament servers"
-      ],
-      "reputationDamage": 0,
-      "financialDamage": 0,
-      "isFalsePositive": true,
-      "falsePositiveReason": "Official tournament software may be flagged due to update and network activities"
-    },
-    {
-      "name": "performance_monitor.exe",
-      "executable": "program files\\msi\\performance_monitor.exe",
-      "cpu": 11.4,
-      "memory": 78.9,
-      "priority": "Normal", 
-      "category": "application",
-      "description": "MSI Afterburner system monitoring utility",
-      "trusted": true,
-      "malwareType": "None",
-      "riskFactors": [
-        "Deep hardware monitoring and access",
-        "Continuous system performance tracking",
-        "May trigger monitoring-related alerts"
-      ],
-      "reputationDamage": 0,
-      "financialDamage": 0,
-      "isFalsePositive": true,
-      "falsePositiveReason": "Hardware monitoring software may appear suspicious due to deep system access"
-    },
-    {
-      "name": "windows_defender.exe",
-      "executable": "program files\\windows defender\\windows_defender.exe",
-      "cpu": 6.2,
-      "memory": 89.5,
-      "priority": "Normal",
-      "category": "application",
-      "description": "Microsoft's built-in antivirus software - completely legitimate",
-      "trusted": true,
-      "malwareType": "None",
-      "riskFactors": [
-        "Deep system access for malware scanning",
-        "Continuous monitoring activities",
-        "Network communication for updates"
-      ],
-      "reputationDamage": 0,
-      "financialDamage": 0,
-      "isFalsePositive": true,
-      "falsePositiveReason": "Microsoft antivirus software may be flagged due to deep system access"
     }
   ]
 }
