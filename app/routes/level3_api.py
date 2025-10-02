@@ -105,8 +105,7 @@ def get_level3_game_data():
         # Combine with all legitimate processes for realistic process monitor
         all_processes = {
             'system': process_data.get('system', []),
-            'gaming': process_data.get('gaming', []),
-            'application': process_data.get('application', []),
+            'legitimate': process_data.get('legitimate', []),
             'malware': selected_malicious_processes
         }
         
@@ -122,8 +121,7 @@ def get_level3_game_data():
                 'false_positive_count': len(selected_false_positives),
                 'malicious_processes_count': len(selected_malicious_processes),
                 'legitimate_processes_count': len(process_data.get('system', [])) + 
-                                           len(process_data.get('gaming', [])) + 
-                                           len(process_data.get('application', [])),
+                                           len(process_data.get('legitimate', [])),
                 'source': 'Level 3 JSON data files with randomization'
             }
         })
@@ -208,8 +206,7 @@ def get_process_data():
             # Return all legitimate processes + selected malicious ones
             result_data = {
                 'system': process_data.get('system', []),
-                'gaming': process_data.get('gaming', []),
-                'application': process_data.get('application', []),
+                'legitimate': process_data.get('legitimate', []),
                 'malware': selected_malicious
             }
         else:
@@ -220,8 +217,7 @@ def get_process_data():
             'processes': result_data,
             'summary': {
                 'system_processes': len(result_data.get('system', [])),
-                'gaming_processes': len(result_data.get('gaming', [])),
-                'application_processes': len(result_data.get('application', [])),
+                'legitimate_processes': len(result_data.get('legitimate', [])),
                 'malicious_processes': len(result_data.get('malware', []))
             }
         })
@@ -278,8 +274,7 @@ def get_level3_stats():
                 'total_financial_damage': total_financial_damage,
                 'total_processes': {
                     'system': len(process_data.get('system', [])),
-                    'gaming': len(process_data.get('gaming', [])),
-                    'application': len(process_data.get('application', [])),
+                    'legitimate': len(process_data.get('legitimate', [])),
                     'malware': len(process_data.get('malware', []))
                 },
                 'source': 'Level 3 JSON data files'
@@ -318,8 +313,7 @@ def get_data_status():
             'malicious_processes_count': process_count,
             'total_legitimate_processes': (
                 len(data.get('processes', {}).get('system', [])) +
-                len(data.get('processes', {}).get('gaming', [])) +
-                len(data.get('processes', {}).get('application', []))
+                len(data.get('processes', {}).get('legitimate', []))
             ),
             'source_files': [
                 'malware-data.json',
