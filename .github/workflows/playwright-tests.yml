@@ -1,0 +1,120 @@
+# GitHub Actions Workflow for Playwright Tests
+name: Playwright Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Install Playwright Browsers
+      run: playwright install --with-deps chromium
+    
+    - name: Set up test environment
+      run: |
+        cp .env.template .env
+        echo "FLASK_ENV=testing" >> .env
+        echo "HCAPTCHA_ENABLED=False" >> .env
+        echo "BASE_URL=http://localhost:5000" >> .env
+    
+    - name: Initialize database
+      run: |
+        # Add database initialization if needed
+        # python scripts/init_test_db.py
+        echo "Database initialization placeholder"
+    
+    - name: Start Flask application
+      run: |
+        python run.py &
+        sleep 5
+        # Wait for server to be ready
+        curl --retry 10 --retry-delay 1 --retry-connrefused http://localhost:5000/ || exit 1
+    
+    - name: Run Playwright tests
+      run: pytest --browser=chromium --headed=false
+    
+    - name: Upload test artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-results-${{ matrix.python-version }}
+        path: |
+          tests/screenshots/
+          test-results/
+          playwright-report/
+        retention-days: 30
+    
+    - name: Upload test report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-report-${{ matrix.python-version }}
+        path: report.html
+        retention-days: 30
+
+  # Separate job for accessibility tests
+  accessibility:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Install Playwright Browsers
+      run: playwright install --with-deps chromium
+    
+    - name: Start Flask application
+      run: |
+        python run.py &
+        sleep 5
+    
+    - name: Run accessibility tests
+      run: pytest -m accessibility --browser=chromium
+    
+    - name: Upload accessibility results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: accessibility-results
+        path: tests/screenshots/
+        retention-days: 30
