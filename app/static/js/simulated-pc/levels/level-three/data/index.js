@@ -100,6 +100,8 @@ export class Level3DataManager {
                 // Add runtime properties for display
                 const processWithRuntime = {
                     ...process,
+                    // Override the category with the top-level category for proper visual grouping
+                    category: category,
                     pid: 1000 + Math.floor(Math.random() * 8999),
                     threads: Math.floor(Math.random() * 20) + 1,
                     startTime: new Date(Date.now() - Math.random() * 86400000).toLocaleString(),
