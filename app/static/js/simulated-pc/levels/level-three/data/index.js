@@ -36,11 +36,35 @@ export class Level3DataManager {
 
             // Extract data from API response
             const gameData = apiData.data;
-            this.selectedMalware = gameData.malware || {};
+            
+            // Combine malware and false positives into a single object for scanning
+            // But mark false positives appropriately
+            this.selectedMalware = {};
+            
+            // Add actual malware (these should be quarantined)
+            const malwareItems = gameData.malware || {};
+            Object.keys(malwareItems).forEach(key => {
+                this.selectedMalware[key] = {
+                    ...malwareItems[key],
+                    isActualThreat: true,
+                    isFalsePositive: false
+                };
+            });
+            
+            // Add false positives (these should NOT be quarantined)
+            const falsePositiveItems = gameData.false_positives || {};
+            Object.keys(falsePositiveItems).forEach(key => {
+                this.selectedMalware[key] = {
+                    ...falsePositiveItems[key],
+                    isActualThreat: false,
+                    isFalsePositive: true
+                };
+            });
+            
             this.selectedProcesses = this.buildProcessList(gameData.processes || {});
             
             // For compatibility, also store the full data structures
-            this.malwareData = gameData.malware || {};
+            this.malwareData = this.selectedMalware;
             this.processData = gameData.processes || {};
             
             this.loaded = true;
