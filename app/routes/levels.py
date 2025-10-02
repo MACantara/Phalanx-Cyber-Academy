@@ -219,7 +219,8 @@ def levels_overview():
         level_info = get_user_level_info(user_total_xp)
         
         # Get user's sessions for detailed progress
-        user_sessions = Session.get_user_sessions(current_user.id, limit=100)
+        # Get a large number of sessions to ensure we don't miss any completed ones
+        user_sessions = Session.get_user_sessions(current_user.id, limit=500)
         
         # Create lookup for latest session per level_id (user_sessions is ordered by created_at DESC)
         session_lookup = {}

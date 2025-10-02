@@ -212,7 +212,8 @@ def dashboard():
         
         # Prepare levels with completion status based on sessions
         levels_progress = []
-        user_sessions = Session.get_user_sessions(current_user.id, limit=100)
+        # Get a large number of sessions to ensure we don't miss any completed ones
+        user_sessions = Session.get_user_sessions(current_user.id, limit=500)
         
         # Create lookup for latest completed session per level_id (user_sessions is ordered by created_at DESC)
         session_lookup = {}
