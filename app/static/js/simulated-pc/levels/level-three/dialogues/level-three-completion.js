@@ -14,6 +14,12 @@ export class LevelThreeCompletionDialogue extends BaseDialogue {
     }
 
     async onComplete() {
+        // Stop the timer immediately when level completes
+        if (window.level3Timer) {
+            window.level3Timer.stopTimer();
+            console.log('[LevelThreeCompletion] Timer stopped for level completion');
+        }
+        
         // Mark Level 3 as completed and update progress
         localStorage.setItem('cyberquest_level_3_completed', 'true');
         localStorage.setItem('cyberquest_current_level', '4');
@@ -132,18 +138,15 @@ export class LevelThreeCompletionDialogue extends BaseDialogue {
 
     static shouldAutoStart() {
         const levelCompleted = localStorage.getItem('cyberquest_level_3_completed');
-        const decryptionCompleted = localStorage.getItem('cyberquest_level_3_decryption_completed');
-        return decryptionCompleted && !levelCompleted;
+
+        return !levelCompleted;
     }
     
-    // Listen for decryption completion event
+    // Setup event listeners
     static setupEventListeners(desktop) {
-        window.addEventListener('level3-decryption-complete', () => {
-            if (LevelThreeCompletionDialogue.shouldAutoStart()) {
-                const dialogue = new LevelThreeCompletionDialogue(desktop);
-                dialogue.start();
-            }
-        });
+        // Level 3 completion is now triggered directly by the malware scanner
+        // Keep this method for compatibility but no active listeners needed
+        console.log('[LevelThreeCompletion] Event listeners setup - completion triggered directly by malware scanner');
     }
 
     // Manual trigger for testing
