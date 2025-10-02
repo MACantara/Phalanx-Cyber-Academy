@@ -212,7 +212,7 @@ def dashboard():
         
         # Prepare levels with completion status based on sessions
         levels_progress = []
-        user_sessions = Session.get_user_sessions(current_user.id)
+        user_sessions = Session.get_user_sessions(current_user.id, limit=100)
         
         # Create lookup for latest completed session per level_id (user_sessions is ordered by created_at DESC)
         session_lookup = {}
@@ -238,9 +238,9 @@ def dashboard():
                 'coming_soon': level.coming_soon,
                 # Progress data from sessions
                 'completed': session is not None,
-                'score': session.score if session else 0,
+                'score': session.score or 0 if session else 0,
                 'attempts': 1 if session else 0,  # For now, count session as 1 attempt
-                'time_spent': session.time_spent if session else 0,
+                'time_spent': session.time_spent or 0 if session else 0,
                 'xp_earned': level.xp_reward if session else 0
             }
             
