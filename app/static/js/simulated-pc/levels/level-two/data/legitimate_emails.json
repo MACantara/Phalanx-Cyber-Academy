@@ -1,272 +1,330 @@
 [
   {
     "id": "legit_001",
-    "sender": "security@microsoft.com",
-    "receiver": "sarah.johnson@company.com",
+    "sender": "security@globe.com.ph",
+    "receiver": "it.admin@company.ph",
     "date": "2024-03-17 09:18:42",
-    "subject": "Microsoft 365 sign-in from new device",
-    "body": "Hi Sarah,\n\nWe noticed a sign-in to your Microsoft 365 account from a new device.\n\nSign-in details:\n- Device: iPhone (iOS 17.3)\n- Location: San Francisco, CA, United States\n- Date and time: March 17, 2024, 9:15 AM PST\n- App: Outlook Mobile\n\nIf this was you, no action is needed. If this wasn't you, please secure your account.\n\nReview recent activity: https://account.microsoft.com/security\n\nBest regards,\nMicrosoft Account Team",
+    "subject": "Globe Business - New device login detected",
+    "body": "Good day,\n\nWe detected a sign-in to your Globe Business account from a new device.\n\nSign-in details:\n- Device: Samsung Galaxy S23 (Android 14)\n- Location: Makati City, Metro Manila\n- Date and time: March 17, 2024, 9:15 AM PHT\n- App: Globe One Business App\n\nIf this was you, no action is needed. If this wasn't you, please secure your account immediately.\n\nReview recent activity: https://business.globe.com.ph/security\n\nBest regards,\nGlobe Business Security Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official globe.com.ph domain",
+        "Specific device and location details (Makati)",
+        "Professional Globe Business branding",
+        "Links to official Globe Business portal",
+        "No urgent threats or pressure tactics",
+        "Uses Philippine timezone (PHT)"
+      ],
+      "educational_focus": "Legitimate security notification from a major Philippine telecommunications provider - uses official domain, specific local details, and professional tone.",
+      "red_flags": [],
+      "verification_tips": [
+        "Verify the sign-in actually occurred in your Globe Business account",
+        "Check if you recognize the device and Makati location",
+        "Official Globe emails always use globe.com.ph domain",
+        "Look for specific technical details rather than vague warnings"
+      ]
+    }
+  },
+  {
+    "id": "legit_002",
+    "sender": "noreply@lazada.com.ph",
+    "receiver": "procurement@company.ph",
+    "date": "2024-03-16 11:45:17",
+    "subject": "Your LazMall order #LZ789456123PH has shipped",
+    "body": "Hello Procurement Team,\n\nYour corporate order has shipped and is on the way.\n\nOrder Details:\n- Order #: LZ789456123PH\n- Shipped: March 16, 2024\n- Carrier: J&T Express\n- Tracking: JT0234567890PH\n- Estimated Delivery: March 18, 2024\n\nItems in this shipment:\n- HP LaserJet Pro Printer (3 units) - ₱45,999.00\n- Office supplies bundle - ₱2,850.00\n\nYou can track your package in your Lazada Business account.\n\nTrack your package: https://www.lazada.com.ph/my-orders\n\nSalamat for shopping with LazMall!\nLazada Philippines Customer Service",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Legitimate lazada.com.ph domain",
+        "Proper Lazada order number format with PH suffix",
+        "Specific shipping and item details",
+        "Uses Philippine peso (₱) currency",
+        "Links to official Lazada Philippines pages",
+        "Professional business communication in English and Filipino"
+      ],
+      "educational_focus": "Legitimate e-commerce business order notification from major Philippine marketplace - includes local currency, carriers, and proper order tracking.",
+      "red_flags": [],
+      "verification_tips": [
+        "Verify order number exists in your Lazada Business account",
+        "Check that procurement actually made this purchase",
+        "Confirm tracking number with J&T Express directly",
+        "Lazada Philippines always uses lazada.com.ph domain"
+      ]
+    }
+  },
+  {
+    "id": "legit_003",
+    "sender": "notifications@bdo.com.ph",
+    "receiver": "finance@company.ph",
+    "date": "2024-03-18 16:33:28",
+    "subject": "BDO Corporate Banking: March statement available",
+    "body": "Good day,\n\nYour BDO Corporate Account statement for March 2024 is now available.\n\nAccount Summary:\n- Account Number: **** 4892\n- Statement Period: March 1-31, 2024\n- Opening Balance: ₱2,547,830.50\n- Closing Balance: ₱3,125,456.75\n- Total Deposits: ₱1,897,450.00\n- Total Withdrawals: ₱1,319,823.75\n\nView your statement securely:\nhttps://online.bdo.com.ph/corporate-banking/statements\n\nFor assistance, contact your Relationship Manager or visit your home branch in BGC, Taguig.\n\nThank you for banking with BDO.\nBDO Corporate Banking Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official bdo.com.ph domain",
+        "Specific account details with partial masking",
+        "Philippine peso (₱) amounts",
+        "Professional BDO Corporate Banking language",
+        "Links to official BDO online banking portal",
+        "References specific BGC, Taguig location"
+      ],
+      "educational_focus": "Legitimate banking statement from largest Philippine bank - proper security practices with partial account numbers and realistic transaction amounts.",
+      "red_flags": [],
+      "verification_tips": [
+        "Verify account details match your BDO corporate account",
+        "Check statement in BDO online banking portal",
+        "Confirm transaction amounts align with records",
+        "BDO always uses bdo.com.ph for official communications"
+      ]
+    }
+  },
+  {
+    "id": "legit_004",
+    "sender": "support@meralco.com.ph",
+    "receiver": "facilities@company.ph",
+    "date": "2024-03-19 12:15:55",
+    "subject": "MERALCO Bill Ready - Account #1234-5678-90",
+    "body": "Good day,\n\nYour MERALCO bill for March 2024 is now available.\n\nBilling Summary:\n- Account Number: 1234-5678-90\n- Service Address: 123 Ayala Avenue, Makati City\n- Billing Period: February 20 - March 19, 2024\n- Total Amount Due: ₱45,673.25\n- Due Date: April 5, 2024\n- Consumption: 3,245 kWh\n\nPay online via Meralco Online or authorized payment channels:\nhttps://app.meralco.com.ph/pay-bill\n\nFor billing inquiries, call our Business Hotline: (02) 16211 or visit your District Office.\n\nMaraming salamat,\nMERALCO Customer Service",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official meralco.com.ph domain",
+        "Specific account and consumption details",
+        "Philippine peso amounts",
+        "Legitimate MERALCO billing format",
+        "Links to official MERALCO payment portal",
+        "Professional utility company communication with Filipino closing"
+      ],
+      "educational_focus": "Legitimate utility billing from MERALCO (Manila Electric Company) - includes verifiable account details and local payment options.",
+      "red_flags": [],
+      "verification_tips": [
+        "Verify account number matches your MERALCO business account",
+        "Check consumption aligns with typical usage",
+        "Confirm service address is correct",
+        "MERALCO always uses meralco.com.ph domain"
+      ]
+    }
+  },
+  {
+    "id": "legit_005",
+    "sender": "business@gcash.com",
+    "receiver": "accounting@company.ph",
+    "date": "2024-03-20 14:28:33",
+    "subject": "GCash for Business: Payment received - ₱12,500.00",
+    "body": "Good day,\n\nYou've received a payment to your GCash for Business account.\n\nTransaction Details:\n- Amount: ₱12,500.00\n- From: Juan dela Cruz (09171234567)\n- Transaction ID: GCB20240320142830PH\n- Date: March 20, 2024\n- Time: 2:25 PM PHT\n- Note: \"Payment for March consulting services\"\n\nThis payment has been added to your GCash Business wallet. You can transfer it to your linked BDO account or use it for business payments.\n\nView transaction: https://business.gcash.com/transactions\n\nFor support, chat with GHelp or call GCash Business Hotline: 2882.\n\nSalamat for using GCash for Business!\nGCash Philippines",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official gcash.com domain",
+        "Specific transaction ID with PH identifier",
+        "Philippine peso amount and mobile number format",
+        "Professional GCash Business branding",
+        "Links to official GCash Business portal",
+        "Local support options (GHelp, 2882 hotline)"
+      ],
+      "educational_focus": "Legitimate mobile wallet payment notification from leading Philippine fintech - includes local payment methods and proper transaction tracking.",
+      "red_flags": [],
+      "verification_tips": [
+        "Verify transaction appears in your GCash Business account",
+        "Check sender mobile number format is valid (09XX-XXX-XXXX)",
+        "Confirm transaction ID exists in payment history",
+        "GCash always uses gcash.com domain for official emails"
+      ]
+    }
+  },
+  {
+    "id": "legit_006",
+    "sender": "no-reply@sss.gov.ph",
+    "receiver": "hr@company.ph",
+    "date": "2024-03-21 10:15:22",
+    "subject": "SSS Employer Contribution Posted - March 2024",
+    "body": "Good day,\n\nYour employer contribution for March 2024 has been successfully posted.\n\nContribution Details:\n- Employer: CYBERQUEST TECHNOLOGIES INC.\n- Employer Number: 03-1234567-8\n- Period: March 2024\n- Total Contribution: ₱87,450.00\n- Number of Employees: 25\n- Payment Reference: SSS20240321-PH-789456\n- Date Posted: March 21, 2024\n\nView contribution details: https://www.sss.gov.ph/employers/\n\nFor inquiries, contact SSS Helpline: 1455 or visit your nearest SSS branch.\n\nSocial Security System\nRepublic of the Philippines",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official sss.gov.ph government domain",
+        "Specific employer and contribution details",
+        "Philippine peso amounts",
+        "Proper SSS employer number format",
+        "Links to official SSS employer portal",
+        "Government agency professional communication"
+      ],
+      "educational_focus": "Legitimate government agency notification for mandatory employer contributions - uses official .gov.ph domain and includes verifiable reference numbers.",
+      "red_flags": [],
+      "verification_tips": [
+        "Verify employer number matches your SSS registration",
+        "Check contribution amount aligns with payroll",
+        "Confirm payment reference in SSS online portal",
+        "SSS always uses sss.gov.ph for official communications"
+      ]
+    }
+  },
+  {
+    "id": "legit_007",
+    "sender": "notifications@philhealth.gov.ph",
+    "receiver": "hr@company.ph",
+    "date": "2024-03-22 14:30:18",
+    "subject": "PhilHealth Premium Payment Confirmation",
+    "body": "Good day,\n\nYour PhilHealth premium payment for March 2024 has been received and posted.\n\nPayment Details:\n- Employer: CYBERQUEST TECHNOLOGIES INC.\n- Employer Number: 1234567890\n- Payment Period: March 2024\n- Total Premium: ₱65,280.00\n- Coverage: 25 employees\n- OR Number: 2024-03-22-789456\n- Date Posted: March 22, 2024\n\nView your employer account: https://www.philhealth.gov.ph/partners/employers/\n\nFor assistance, visit your nearest PhilHealth office or call the Action Center: (02) 8441-7442.\n\nPhilHealth - Philippine Health Insurance Corporation\nRepublic of the Philippines",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official philhealth.gov.ph government domain",
+        "Specific employer and premium details",
+        "Official Receipt (OR) number",
+        "Philippine peso amounts",
+        "Links to official PhilHealth employer portal",
+        "Government agency professional format"
+      ],
+      "educational_focus": "Legitimate health insurance agency notification - uses .gov.ph domain and includes official receipt numbers for government transactions.",
+      "red_flags": [],
+      "verification_tips": [
+        "Verify employer number matches PhilHealth records",
+        "Check OR number in PhilHealth online system",
+        "Confirm premium amount aligns with employee coverage",
+        "PhilHealth always uses philhealth.gov.ph domain"
+      ]
+    }
+  },
+  {
+    "id": "legit_008",
+    "sender": "support@pldt.com.ph",
+    "receiver": "it.admin@company.ph",
+    "date": "2024-03-23 19:45:33",
+    "subject": "PLDT Enterprise - Fiber connection maintenance notice",
+    "body": "Good day,\n\nThis is to inform you of scheduled maintenance on your PLDT Enterprise Fiber connection.\n\nMaintenance Details:\n- Account: PLDT-ENT-789456\n- Service Address: 123 Ayala Avenue, Makati City\n- Date: March 26, 2024\n- Time: 2:00 AM - 5:00 AM PHT\n- Duration: Up to 3 hours\n- Affected Service: Internet connectivity\n- Speed: 500 Mbps Fiber\n\nThis maintenance is necessary to upgrade network equipment and improve service quality.\n\nFor urgent concerns, contact PLDT Enterprise Hotline: (02) 8888-0-101\nCheck status: https://business.pldthome.com/service-status\n\nWe apologize for any inconvenience.\nPLDT Enterprise Support Team",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official pldt.com.ph domain",
+        "Specific account and service details",
+        "Reasonable maintenance window (late night)",
+        "Professional PLDT Enterprise branding",
+        "Links to official PLDT business portal",
+        "Provides customer service contact information"
+      ],
+      "educational_focus": "Legitimate ISP maintenance notification from major Philippine telecommunications provider - includes specific service details and advance notice.",
+      "red_flags": [],
+      "verification_tips": [
+        "Verify account number matches your PLDT Enterprise account",
+        "Check service address is correct",
+        "Confirm maintenance window with PLDT Enterprise hotline",
+        "PLDT always uses pldt.com.ph or pldthome.com domains"
+      ]
+    }
+  },
+  {
+    "id": "legit_009",
+    "sender": "invoices@shopee.ph",
+    "receiver": "procurement@company.ph",
+    "date": "2024-03-24 08:00:15",
+    "subject": "Shopee Business: Invoice for order #240324ABCD1234",
+    "body": "Magandang araw,\n\nYour Shopee Business invoice is ready for order #240324ABCD1234.\n\nOrder Summary:\n- Order Date: March 23, 2024\n- Seller: TechHub Philippines Official Store\n- Items: 5 units\n- Subtotal: ₱24,500.00\n- Shipping: ₱150.00\n- Total: ₱24,650.00\n- Payment Method: Corporate Card (••••4567)\n\nItems Ordered:\n- Wireless Mouse (5 units) - ₱1,200 each\n- USB Hub (5 units) - ₱850 each\n- HDMI Cable (5 units) - ₱450 each\n\nDownload Invoice: https://seller.shopee.ph/portal/purchase/invoice/240324ABCD1234\n\nNeed help? Chat with Shopee Business Support or call: 02-8820-8800\n\nThank you for shopping on Shopee!\nShopee Philippines",
+    "is_phishing": 0,
+    "ai_analysis": {
+      "risk_level": "low",
+      "phishing_indicators": [],
+      "safety_factors": [
+        "Official shopee.ph domain",
+        "Proper Shopee order number format",
+        "Itemized invoice details",
+        "Philippine peso amounts",
+        "Links to official Shopee seller portal",
+        "Filipino greeting (Magandang araw)"
+      ],
+      "educational_focus": "Legitimate business marketplace invoice - includes detailed order breakdown and official payment confirmation.",
+      "red_flags": [],
+      "verification_tips": [
+        "Verify order number in your Shopee Business account",
+        "Check items match your procurement request",
+        "Confirm total amount with payment records",
+        "Shopee Philippines always uses shopee.ph domain"
+      ]
+    }
+  },
+  {
+    "id": "legit_010",
+    "sender": "billing@microsoft.com",
+    "receiver": "it.admin@company.ph",
+    "date": "2024-03-25 11:20:44",
+    "subject": "Microsoft 365 Business - Invoice March 2024",
+    "body": "Hello,\n\nYour Microsoft 365 Business invoice for March 2024 is now available.\n\nSubscription Details:\n- Customer: CyberQuest Technologies Inc.\n- Invoice: INV-2024-03-25-789456\n- Billing Period: March 1-31, 2024\n- Plan: Microsoft 365 Business Premium (25 licenses)\n- Amount: ₱21,875.00 (25 × ₱875/user/month)\n- Payment Method: Corporate Card (••••4567)\n- Due Date: April 8, 2024\n\nView invoice: https://admin.microsoft.com/billing/invoices\n\nQuestions? Contact Microsoft Philippines Support: (02) 7793-5500\n\nThank you for choosing Microsoft 365.\nMicrosoft Philippines",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
         "Official microsoft.com domain",
-        "Specific device and location details",
-        "Personalized with user's actual name",
-        "Professional Microsoft branding",
-        "Links to official Microsoft account pages",
-        "No urgent threats or pressure tactics"
+        "Detailed subscription and invoice information",
+        "Philippine peso pricing",
+        "Realistic per-user licensing costs",
+        "Links to official Microsoft admin portal",
+        "Local Microsoft Philippines contact"
       ],
-      "educational_focus": "Perfect example of legitimate security notification - uses real name, specific details, official domain, and professional tone without creating panic.",
+      "educational_focus": "Legitimate SaaS subscription billing from global provider with Philippine localization - includes proper invoice format and support contacts.",
       "red_flags": [],
       "verification_tips": [
-        "Verify the sign-in actually occurred in your recent activity",
-        "Check if you recognize the device and location",
-        "Official Microsoft emails always use microsoft.com domain",
-        "Look for specific technical details rather than vague warnings"
+        "Verify invoice in Microsoft 365 admin center",
+        "Check license count matches your organization",
+        "Confirm payment method with accounting",
+        "Microsoft always uses microsoft.com for billing"
       ]
     }
   },
   {
-    "id": "legit_002", 
-    "sender": "receipts@amazon.com",
-    "receiver": "john.smith@email.com",
-    "date": "2024-03-16 11:45:17",
-    "subject": "Your order #112-7894563-1234567 has shipped",
-    "body": "Hello John Smith,\n\nYour order has shipped and is on the way.\n\nOrder Details:\n- Order #: 112-7894563-1234567\n- Shipped: March 16, 2024\n- Carrier: UPS\n- Tracking: 1Z999AA1234567890\n- Estimated Delivery: March 18, 2024\n\nItems in this shipment:\n- JavaScript: The Definitive Guide (Paperback) - $34.99\n\nYou can track your package or manage your orders in Your Account.\n\nTrack your package: https://www.amazon.com/gp/css/order-history\n\nThanks for shopping with us!\nAmazon Customer Service",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low", 
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Legitimate amazon.com domain",
-        "Proper Amazon order number format",
-        "Specific shipping and item details",
-        "Personalized greeting with full name",
-        "Links to official Amazon account pages",
-        "Professional business communication"
-      ],
-      "educational_focus": "Excellent example of legitimate e-commerce communication - personalized, detailed, and uses official domains with no urgency tactics.",
-      "red_flags": [],
-      "verification_tips": [
-        "Verify order number exists in your Amazon account",
-        "Check that you actually made this purchase",
-        "Confirm tracking number with UPS directly",
-        "Amazon always uses amazon.com for order notifications"
-      ]
-    }
-  },
-  {
-    "id": "legit_003",
-    "sender": "notifications@slack.com", 
-    "receiver": "alex.chen@company.com",
-    "date": "2024-03-18 16:33:28",
-    "subject": "Weekly digest for Tech Team workspace",
-    "body": "Hi Alex,\n\nHere's what happened in your Tech Team workspace this week:\n\n📊 Workspace Activity:\n- 147 messages sent\n- 23 files shared\n- 8 channels active\n- 12 team members participated\n\n🔥 Most Active Channels:\n1. #development (45 messages)\n2. #general (32 messages)  \n3. #design-review (28 messages)\n\n📎 Recent Files:\n- API Documentation v2.1.pdf\n- Sprint Planning Notes.docx\n- UI Mockups.sketch\n\nOpen Slack: https://app.slack.com/client/T1234567/C1234567\n\nManage your notification preferences anytime in your account settings.\n\nBest,\nThe Slack Team",
+    "id": "legit_011",
+    "sender": "notifications@bir.gov.ph",
+    "receiver": "finance@company.ph",
+    "date": "2024-03-26 16:18:29",
+    "subject": "BIR eFPS: 2307 Filing Confirmation - March 2024",
+    "body": "Good day,\n\nYour BIR Form 2307 (Certificate of Creditable Tax Withheld at Source) has been successfully filed.\n\nFiling Details:\n- TIN: 123-456-789-000\n- Registered Name: CYBERQUEST TECHNOLOGIES INC.\n- Tax Type: Income Tax\n- Period: March 2024\n- Amount Withheld: ₱45,600.00\n- Reference Number: BIR-2307-20240326-789456\n- Date Filed: March 26, 2024\n- Status: Accepted\n\nView filing details: https://efps.bir.gov.ph/dashboard\n\nFor assistance, contact BIR Customer Assistance Division: 8538-3200\n\nBureau of Internal Revenue\nRepublic of the Philippines",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
-        "Official slack.com domain",
-        "Detailed workspace statistics that can be verified", 
-        "Personalized with actual workspace information",
-        "Professional Slack branding and language",
-        "Links to legitimate Slack application URLs",
-        "Includes unsubscribe/preference options"
+        "Official bir.gov.ph government domain",
+        "Specific TIN and filing details",
+        "Proper BIR form number (2307)",
+        "Philippine peso tax amounts",
+        "Links to official BIR eFPS portal",
+        "Government agency professional format"
       ],
-      "educational_focus": "Shows how legitimate automated emails provide verifiable, specific information about your actual account activity.",
+      "educational_focus": "Legitimate tax filing confirmation from Philippine revenue agency - uses .gov.ph domain and includes official reference numbers.",
       "red_flags": [],
       "verification_tips": [
-        "Verify you're actually a member of this workspace",
-        "Check if channel names match your actual workspace",
-        "Confirm recent activity aligns with your usage",
-        "Slack notifications always come from slack.com"
+        "Verify TIN matches your business registration",
+        "Check filing in BIR eFPS online portal",
+        "Confirm amount withheld with accounting records",
+        "BIR always uses bir.gov.ph for official communications"
       ]
     }
   },
   {
-    "id": "legit_004",
-    "sender": "billing@dropbox.com",
-    "receiver": "admin@startup.com", 
-    "date": "2024-03-19 12:15:55",
-    "subject": "Dropbox Business invoice for March 2024",
-    "body": "Hello,\n\nYour Dropbox Business invoice is ready for the March billing period.\n\nInvoice Summary:\n- Invoice #: INV-2024-03-19-789456\n- Billing Period: March 1-31, 2024\n- Plan: Business Plus (5 users)\n- Amount: $60.00\n- Payment Method: •••• 4567 (Visa ending in 4567)\n- Due Date: April 2, 2024\n\nTo view your complete invoice with itemized charges:\nView Invoice: https://www.dropbox.com/business/billing\n\nQuestions about your bill? Contact our Business Support team at support@dropbox.com\n\nThank you for your business,\nDropbox Business Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official dropbox.com domain", 
-        "Detailed and realistic invoice information",
-        "Professional business language and formatting",
-        "Legitimate payment method display (partial card number)",
-        "Links to official Dropbox business portal",
-        "Includes customer service contact information"
-      ],
-      "educational_focus": "Demonstrates legitimate business billing communication with proper formatting, realistic amounts, and official contact information.",
-      "red_flags": [],
-      "verification_tips": [
-        "Verify you have an active Dropbox Business subscription",
-        "Check that billing amounts match your plan",
-        "Confirm payment method matches your records",
-        "Login directly to Dropbox to verify invoice details"
-      ]
-    }
-  },
-  {
-    "id": "legit_005",
-    "sender": "support@paypal.com",
-    "receiver": "maria.garcia@business.com",
-    "date": "2024-03-20 14:28:33", 
-    "subject": "Payment received - Transaction ID: 8XY47291JK5623847",
-    "body": "Hello Maria Garcia,\n\nYou've received a payment.\n\nTransaction Details:\n- Amount: $450.00 USD\n- From: David Wilson (david.wilson@client.com)\n- Transaction ID: 8XY47291JK5623847\n- Date: March 20, 2024\n- Time: 2:25 PM PST\n- Note: \"Payment for March consulting services\"\n\nThis payment has been added to your PayPal balance. You can transfer it to your bank account or use it for purchases.\n\nView transaction details: https://www.paypal.com/myaccount/transactions\n\nIf you have questions about this payment, you can contact the sender directly or visit our Resolution Center.\n\nThank you for using PayPal,\nPayPal Customer Service",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low", 
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official paypal.com domain (note: correct spelling)",
-        "Specific transaction ID and realistic details", 
-        "Personalized with recipient's full name",
-        "Professional PayPal branding and language",
-        "Links to official PayPal account pages",
-        "No urgency or suspicious requests"
-      ],
-      "educational_focus": "Perfect example referenced in training - shows legitimate paypal.com vs suspicious misspellings. Professional tone with verifiable transaction details.",
-      "red_flags": [],
-      "verification_tips": [
-        "Verify transaction appears in your PayPal account",
-        "Check that sender information matches expected client", 
-        "Confirm transaction ID exists in your payment history",
-        "Always look for exact paypal.com spelling (not paypaI.com or similar)"
-      ]
-    }
-  },
-  {
-    "id": "legit_006",
-    "sender": "noreply@github.com",
-    "receiver": "developer@startup.com",
-    "date": "2024-03-21 10:15:22",
-    "subject": "Pull request merged: Fix authentication bug",
-    "body": "Hi Emma,\n\nYour pull request has been merged into the main branch.\n\nPull Request Details:\n- Repository: startup-app/backend-api\n- Title: Fix authentication bug in user login\n- Merged by: @teamlead\n- Commits: 3\n- Files changed: 2\n- Lines added: 47, removed: 23\n\nView the merged changes: https://github.com/startup-app/backend-api/pull/142\n\nThanks for your contribution!\nThe GitHub Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official github.com domain",
-        "Specific repository and PR details",
-        "Personalized with developer's name",
-        "Technical details that can be verified",
-        "Links to actual GitHub repository",
-        "Professional development workflow context"
-      ],
-      "educational_focus": "Demonstrates legitimate development platform notifications with verifiable technical details.",
-      "red_flags": [],
-      "verification_tips": [
-        "Check your GitHub notifications for this PR",
-        "Verify the repository name matches your projects",
-        "Confirm the PR number exists in the repository",
-        "GitHub always uses github.com domain for notifications"
-      ]
-    }
-  },
-  {
-    "id": "legit_007",
-    "sender": "notifications@linkedin.com",
-    "receiver": "professional@company.com",
-    "date": "2024-03-22 14:30:18",
-    "subject": "Sarah Chen has endorsed you for JavaScript",
-    "body": "Hi Michael,\n\nGreat news! Sarah Chen has endorsed you for JavaScript.\n\nYour Profile:\n- JavaScript: 12 endorsements\n- React: 8 endorsements  \n- Node.js: 6 endorsements\n\nEndorsements help showcase your skills to potential employers and colleagues.\n\nView your endorsements: https://www.linkedin.com/in/michael-developer/details/skills\n\nThanks for being part of LinkedIn!\nThe LinkedIn Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official linkedin.com domain",
-        "Specific endorsement details",
-        "Personalized with both names",
-        "Professional skills context",
-        "Links to official LinkedIn profile",
-        "Realistic endorsement counts"
-      ],
-      "educational_focus": "Shows legitimate professional network notifications with specific, verifiable information.",
-      "red_flags": [],
-      "verification_tips": [
-        "Check your LinkedIn profile for this endorsement",
-        "Verify you know the person who endorsed you",
-        "Confirm skill endorsement counts match your profile",
-        "LinkedIn always uses linkedin.com domain"
-      ]
-    }
-  },
-  {
-    "id": "legit_008",
-    "sender": "no-reply@spotify.com",
-    "receiver": "user@email.com",
-    "date": "2024-03-23 19:45:33",
-    "subject": "Your Discover Weekly is ready",
-    "body": "Hey David,\n\n🎵 Your personalized Discover Weekly playlist is here!\n\nThis Week's Mix:\n- 30 songs picked just for you\n- Based on your recent listening\n- Updated every Monday\n- 2 hours of fresh music\n\nFeatured Artists This Week:\n- Arctic Monkeys\n- Billie Eilish\n- The Strokes\n- Tame Impala\n\nListen now: https://open.spotify.com/playlist/37i9dQZEVXcQ9COmYs5Y2j\n\nHappy listening!\nSpotify",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official spotify.com domain",
-        "Personalized with user's name",
-        "Specific playlist details",
-        "Consistent with Spotify's weekly features",
-        "Links to official Spotify playlist",
-        "Professional music service branding"
-      ],
-      "educational_focus": "Legitimate music service automation with personalized content and official branding.",
-      "red_flags": [],
-      "verification_tips": [
-        "Check your Spotify app for this playlist",
-        "Verify the playlist link opens in official Spotify",
-        "Confirm you have Spotify account with this email",
-        "Spotify always uses spotify.com domain"
-      ]
-    }
-  },
-  {
-    "id": "legit_009",
-    "sender": "statements@chase.com",
-    "receiver": "customer@email.com",
-    "date": "2024-03-24 08:00:15",
-    "subject": "Your March statement is available",
-    "body": "Dear Jennifer Martinez,\n\nYour Chase credit card statement for March 2024 is now available.\n\nStatement Summary:\n- Account: •••• 4892\n- Statement Date: March 24, 2024\n- Payment Due: April 18, 2024\n- Minimum Payment: $45.00\n- Current Balance: $1,247.83\n\nView your statement securely online:\nhttps://www.chase.com/digital/online-banking\n\nQuestions? Call us at the number on the back of your card.\n\nThank you,\nChase Customer Service",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official chase.com domain",
-        "Personalized with full customer name",
-        "Specific account details (partial card number)",
-        "Realistic payment amounts and dates",
-        "Links to official Chase banking portal",
-        "Professional banking communication"
-      ],
-      "educational_focus": "Legitimate banking statement notification with proper security practices (partial account numbers).",
-      "red_flags": [],
-      "verification_tips": [
-        "Verify account details match your actual Chase account",
-        "Check statement availability in Chase online banking",
-        "Confirm payment due date and amounts",
-        "Chase always uses chase.com for official communications"
-      ]
-    }
-  },
-  {
-    "id": "legit_010",
+    "id": "legit_012",
     "sender": "support@zoom.us",
-    "receiver": "host@company.com",
-    "date": "2024-03-25 11:20:44",
-    "subject": "Meeting summary: Weekly Team Standup",
-    "body": "Hi Rachel,\n\nHere's your meeting summary for Weekly Team Standup.\n\nMeeting Details:\n- Date: March 25, 2024\n- Duration: 32 minutes\n- Participants: 8 people joined\n- Recording: Available for 30 days\n\nParticipants:\n- Rachel Kim (Host)\n- Alex Chen, Sarah Lopez, Mike Wilson, and 4 others\n\nNext Meeting: March 25, 2024 at 10:00 AM\n\nView recording: https://zoom.us/rec/share/xyz789abc123\nSchedule next meeting: https://zoom.us/j/1234567890\n\nZoom Team",
+    "receiver": "it.admin@company.ph",
+    "date": "2024-03-27 13:45:17",
+    "subject": "Zoom Business: Meeting recording ready",
+    "body": "Hi IT Admin,\n\nYour cloud recording is now available.\n\nMeeting Details:\n- Topic: Q1 Business Review - Manila Office\n- Date: March 27, 2024\n- Duration: 1 hour 23 minutes\n- Host: maria.santos@company.ph\n- Participants: 15 attendees\n- Recording Size: 847 MB\n\nThe recording is available for 30 days in your Zoom cloud storage.\n\nView recording: https://zoom.us/rec/share/xyz789abc123ph\nManage recordings: https://zoom.us/recording/management\n\nQuestions? Contact Zoom Support Philippines.\n\nZoom Video Communications",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
@@ -274,308 +332,250 @@
       "safety_factors": [
         "Official zoom.us domain",
         "Specific meeting details",
-        "Personalized with host name",
-        "Realistic participant counts and duration",
-        "Links to official Zoom recording platform",
-        "Professional meeting service branding"
+        "Realistic recording size and duration",
+        "Links to official Zoom recording portal",
+        "Professional video conferencing context",
+        "References Philippine office location"
       ],
-      "educational_focus": "Legitimate video conferencing summary with specific, verifiable meeting data.",
+      "educational_focus": "Legitimate video conferencing service notification - includes verifiable meeting details and proper recording management links.",
       "red_flags": [],
       "verification_tips": [
-        "Verify you hosted this meeting on Zoom",
-        "Check participant list matches actual attendees",
-        "Confirm meeting duration and date",
-        "Zoom always uses zoom.us domain for official emails"
-      ]
-    }
-  },
-  {
-    "id": "legit_011",
-    "sender": "noreply@trello.com",
-    "receiver": "manager@team.com",
-    "date": "2024-03-26 16:18:29",
-    "subject": "Card assigned: Update user documentation",
-    "body": "Hi Lisa,\n\nYou've been assigned to a new card in the Product Development board.\n\nCard Details:\n- Title: Update user documentation\n- List: In Progress\n- Due Date: March 30, 2024\n- Assigned by: Tom Rodriguez\n- Board: Product Development\n\nDescription:\nUpdate the API documentation to reflect the new authentication endpoints. Include code examples and error handling.\n\nView card: https://trello.com/c/abc123/update-user-documentation\n\nTrello Team",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official trello.com domain",
-        "Specific project management details",
-        "Personalized with assignee name",
-        "Professional task management context",
-        "Links to official Trello card",
-        "Realistic project workflow information"
-      ],
-      "educational_focus": "Legitimate project management notification with specific task assignment details.",
-      "red_flags": [],
-      "verification_tips": [
-        "Check your Trello boards for this card assignment",
-        "Verify you're a member of the Product Development board",
-        "Confirm the person who assigned the task",
-        "Trello always uses trello.com domain"
-      ]
-    }
-  },
-  {
-    "id": "legit_012",
-    "sender": "billing@adobe.com",
-    "receiver": "creative@agency.com",
-    "date": "2024-03-27 13:45:17",
-    "subject": "Payment successful - Creative Cloud subscription renewed",
-    "body": "Thank you for your payment, Creative Team.\n\nSubscription Renewed:\n- Plan: Creative Cloud All Apps (Team)\n- Billing Period: March 27 - April 26, 2024\n- Amount: $239.88 (4 licenses)\n- Payment Method: •••• 7823 (Company Card)\n- Next Billing: April 27, 2024\n\nYour team has access to:\n- Photoshop, Illustrator, InDesign, Premiere Pro\n- After Effects, XD, Lightroom, and more\n- 1TB cloud storage per user\n- Premium fonts and stock assets\n\nManage your team: https://adminconsole.adobe.com\n\nAdobe Customer Care",
-    "is_phishing": 0,
-    "ai_analysis": {
-      "risk_level": "low",
-      "phishing_indicators": [],
-      "safety_factors": [
-        "Official adobe.com domain",
-        "Detailed subscription information",
-        "Professional business language",
-        "Realistic team pricing and license counts",
-        "Links to official Adobe Admin Console",
-        "Proper payment confirmation format"
-      ],
-      "educational_focus": "Legitimate software subscription renewal with detailed billing information.",
-      "red_flags": [],
-      "verification_tips": [
-        "Verify subscription details match your Adobe account",
-        "Check payment amount against expected team pricing",
-        "Confirm license count matches your team size",
-        "Adobe always uses adobe.com for billing communications"
+        "Verify meeting was actually held on this date",
+        "Check recording in Zoom account",
+        "Confirm host email matches organization",
+        "Zoom always uses zoom.us domain for notifications"
       ]
     }
   },
   {
     "id": "legit_013",
-    "sender": "notifications@figma.com",
-    "receiver": "designer@studio.com",
+    "sender": "noreply@grab.com",
+    "receiver": "admin@company.ph",
     "date": "2024-03-28 09:32:51",
-    "subject": "Comment added to Mobile App Wireframes",
-    "body": "Hi Chris,\n\nYou have a new comment on your design.\n\nFile: Mobile App Wireframes\nCommenter: Jessica Park\nTime: 9:30 AM\n\nComment: \"Great work on the navigation flow! Can we adjust the button spacing on the home screen? Also, consider making the search bar more prominent.\"\n\nLocation: Frame 3 - Home Screen Design\n\nReply to comment: https://www.figma.com/file/def456/mobile-app-wireframes?node-id=123:456\n\nHappy designing!\nFigma Team",
+    "subject": "GrabBiz: Monthly usage report - March 2024",
+    "body": "Good day,\n\nYour GrabBiz usage report for March 2024 is now available.\n\nUsage Summary:\n- Company: CyberQuest Technologies Inc.\n- Total Rides: 47\n- Total Spent: ₱8,450.00\n- Most Active Route: Makati to BGC\n- Top 3 Users: m.santos, j.reyes, l.cruz\n\nBreakdown by Service:\n- GrabCar: 35 rides (₱6,200.00)\n- GrabFood: 12 orders (₱2,250.00)\n\nView detailed report: https://business.grab.com/ph/reports\nManage company account: https://business.grab.com/ph/dashboard\n\nFor GrabBiz support: (02) 8888-7272\n\nSalamat for choosing GrabBiz!\nGrab Philippines",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
-        "Official figma.com domain",
-        "Specific design collaboration details",
-        "Personalized with designer and commenter names",
-        "Professional design feedback context",
-        "Links to official Figma file",
-        "Realistic design collaboration workflow"
+        "Official grab.com domain",
+        "Detailed usage statistics",
+        "Philippine peso amounts",
+        "Realistic Manila routes (Makati-BGC)",
+        "Links to official Grab business portal",
+        "Local Grab Philippines support"
       ],
-      "educational_focus": "Legitimate design collaboration notification with specific project details.",
+      "educational_focus": "Legitimate ride-hailing business account report - includes verifiable usage data and official business portal access.",
       "red_flags": [],
       "verification_tips": [
-        "Check your Figma files for this comment",
-        "Verify you're collaborating with Jessica Park",
-        "Confirm the file name matches your project",
-        "Figma always uses figma.com domain for notifications"
+        "Verify company name matches GrabBiz account",
+        "Check usage aligns with employee transportation",
+        "Confirm amounts with expense reports",
+        "Grab always uses grab.com for official communications"
       ]
     }
   },
   {
     "id": "legit_014",
-    "sender": "digest@stackoverflow.com",
-    "receiver": "developer@tech.com",
+    "sender": "security@paymaya.com",
+    "receiver": "finance@company.ph",
     "date": "2024-03-29 07:30:15",
-    "subject": "Your weekly Stack Overflow summary",
-    "body": "Hello Kevin,\n\nHere's your personalized Stack Overflow activity this week:\n\n📊 Your Activity:\n- 3 questions answered\n- 2 answers accepted\n- 47 reputation points earned\n- 1 badge earned: \"Nice Answer\"\n\n🔥 Top Tags This Week:\n- JavaScript (5 interactions)\n- React (3 interactions)\n- Node.js (2 interactions)\n\n📈 Trending in Your Tags:\n- \"How to handle async/await in React hooks?\"\n- \"Best practices for Node.js error handling\"\n- \"Optimizing React component performance\"\n\nView your profile: https://stackoverflow.com/users/123456/kevin\n\nStack Overflow Team",
+    "subject": "PayMaya Business: Transaction alert - ₱25,000",
+    "body": "Good day,\n\nA large transaction was processed on your PayMaya Business account.\n\nTransaction Details:\n- Amount: ₱25,000.00\n- Type: Online Payment\n- Merchant: AWS Philippines\n- Date: March 29, 2024\n- Time: 7:25 AM PHT\n- Transaction ID: PM20240329072530PH\n- Status: Successful\n- Description: Monthly cloud services subscription\n\nIf you authorized this transaction, no action is needed.\n\nView transaction: https://business.paymaya.com/transactions\n\nFor concerns, contact PayMaya Business Support: (02) 8-845-7788\n\nPayMaya Philippines",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
-        "Official stackoverflow.com domain",
-        "Personalized activity statistics",
-        "Specific reputation and badge information",
-        "Professional developer community context",
-        "Links to official Stack Overflow profile",
-        "Realistic programming topics and interactions"
+        "Official paymaya.com domain",
+        "Specific transaction details",
+        "Philippine peso amount",
+        "Legitimate merchant (AWS Philippines)",
+        "Links to official PayMaya business portal",
+        "Clear transaction description"
       ],
-      "educational_focus": "Legitimate developer community digest with personalized activity data.",
+      "educational_focus": "Legitimate fintech transaction alert - provides detailed transaction information for business verification without creating panic.",
       "red_flags": [],
       "verification_tips": [
-        "Check your Stack Overflow profile for these statistics",
-        "Verify reputation points match your account",
-        "Confirm badge earnings in your profile",
-        "Stack Overflow always uses stackoverflow.com domain"
+        "Verify transaction in PayMaya Business account",
+        "Check if AWS payment was scheduled",
+        "Confirm transaction ID in payment history",
+        "PayMaya always uses paymaya.com domain"
       ]
     }
   },
   {
     "id": "legit_015",
-    "sender": "team@notion.so",
-    "receiver": "organizer@company.com",
+    "sender": "notifications@sec.gov.ph",
+    "receiver": "legal@company.ph",
     "date": "2024-03-30 15:22:38",
-    "subject": "Page shared with you: Q2 Planning Document",
-    "body": "Hello Taylor,\n\nRobert Kim has shared a page with you in the Marketing Team workspace.\n\nPage Details:\n- Title: Q2 Planning Document\n- Workspace: Marketing Team\n- Permission: Can edit\n- Shared: March 30, 2024\n\nPage Preview:\n\"Q2 Marketing Strategy and Campaign Planning - This document outlines our marketing objectives for the second quarter, including campaign timelines, budget allocation, and success metrics.\"\n\nOpen page: https://www.notion.so/marketing-team/q2-planning-document\n\nStay organized!\nNotion Team",
+    "subject": "SEC: Annual Financial Statement filing reminder",
+    "body": "Good day,\n\nThis is a reminder to file your company's Annual Financial Statements (AFS) with the Securities and Exchange Commission.\n\nCompany Information:\n- Company: CYBERQUEST TECHNOLOGIES INC.\n- SEC Registration: CS202012345\n- Fiscal Year End: December 31, 2023\n- Filing Deadline: April 15, 2024\n- Status: Pending Submission\n\nFile online via SEC i-Register: https://www.sec.gov.ph/i-register/\n\nRequired documents:\n- Audited Financial Statements\n- General Information Sheet (GIS)\n- Board Resolution\n\nFor assistance, visit SEC Head Office in Mandaluyong or call: (02) 8818-0921\n\nSecurities and Exchange Commission\nRepublic of the Philippines",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
-        "Official notion.so domain",
-        "Specific workspace and document details",
-        "Personalized with sharer and recipient names",
-        "Professional business document context",
-        "Links to official Notion workspace",
-        "Realistic document sharing scenario"
+        "Official sec.gov.ph government domain",
+        "Specific company registration details",
+        "Proper SEC registration format",
+        "Reasonable filing deadline",
+        "Links to official SEC online portal",
+        "Government agency professional communication"
       ],
-      "educational_focus": "Legitimate document collaboration notification with specific sharing details.",
+      "educational_focus": "Legitimate government compliance reminder - uses .gov.ph domain and includes official filing requirements and deadlines.",
       "red_flags": [],
       "verification_tips": [
-        "Check your Notion workspace for this shared document",
-        "Verify you're a member of the Marketing Team workspace",
-        "Confirm Robert Kim is a known colleague",
-        "Notion always uses notion.so domain for official emails"
+        "Verify SEC registration number matches company records",
+        "Check filing deadline with SEC calendar",
+        "Confirm reminder in SEC i-Register portal",
+        "SEC always uses sec.gov.ph for official communications"
       ]
     }
   },
   {
     "id": "legit_016",
-    "sender": "security@1password.com",
-    "receiver": "admin@company.com",
+    "sender": "support@unionbank.ph",
+    "receiver": "finance@company.ph",
     "date": "2024-03-31 12:45:22",
-    "subject": "Security report: Strong password practices detected",
-    "body": "Hi Alex,\n\n🛡️ Great news! Your team is following excellent password security practices.\n\nSecurity Report:\n- Team size: 25 members\n- Strong passwords: 94% (excellent!)\n- Two-factor authentication: 88% enabled\n- Compromised passwords: 0 detected\n- Average security score: 92/100\n\nTop Security Practices:\n- All team members using unique passwords\n- Most accounts have 2FA enabled\n- Regular password updates\n- No shared passwords detected\n\nView detailed report: https://my.1password.com/security/reports\n\nKeep up the great work!\n1Password Security Team",
+    "subject": "UnionBank Corporate: Payroll processing completed",
+    "body": "Good day,\n\nYour March 2024 payroll has been successfully processed.\n\nPayroll Summary:\n- Company: CyberQuest Technologies Inc.\n- Account: UnionBank Corporate Account ****7890\n- Processing Date: March 31, 2024\n- Number of Employees: 25\n- Total Payroll: ₱875,000.00\n- Status: Completed\n- Reference: UB-PAYROLL-20240331-789456\n\nAll employee accounts have been credited. Employees can check their UnionBank accounts.\n\nView payroll details: https://online.unionbankph.com/corporate/payroll\n\nFor payroll concerns: Corporate Banking Hotline (02) 8841-8600\n\nMaraming salamat,\nUnionBank of the Philippines",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
-        "Official 1password.com domain",
-        "Positive security report context",
-        "Specific team statistics",
-        "Professional security service branding",
-        "Links to official 1Password security dashboard",
-        "Realistic security metrics and scores"
+        "Official unionbank.ph domain",
+        "Specific payroll processing details",
+        "Philippine peso amounts",
+        "Realistic employee count and amounts",
+        "Links to official UnionBank corporate portal",
+        "Filipino closing phrase"
       ],
-      "educational_focus": "Legitimate password manager security report with detailed team analytics.",
+      "educational_focus": "Legitimate banking payroll notification - includes proper transaction reference and verifiable processing details.",
       "red_flags": [],
       "verification_tips": [
-        "Check your 1Password business dashboard for this report",
-        "Verify team size matches your organization",
-        "Confirm security scores align with your dashboard",
-        "1Password always uses 1password.com domain"
+        "Verify payroll amount matches accounting records",
+        "Check reference number in UnionBank portal",
+        "Confirm all 25 employees received payment",
+        "UnionBank always uses unionbank.ph domain"
       ]
     }
   },
   {
     "id": "legit_017",
-    "sender": "no-reply@docker.com",
-    "receiver": "devops@startup.com",
+    "sender": "noreply@pagibig.gov.ph",
+    "receiver": "hr@company.ph",
     "date": "2024-04-01 16:18:44",
-    "subject": "Docker Hub: Repository star milestone reached",
-    "body": "Hi Morgan,\n\n⭐ Congratulations! Your repository has reached 100 stars.\n\nRepository: morgan/web-toolkit\nStars: 100 (milestone reached!)\nForks: 23\nPulls this month: 1,247\n\nYour Popular Tags:\n- v2.1.0 (latest)\n- v2.0.3 (stable)\n- v1.9.8 (legacy)\n\nRepository Impact:\n- Downloads this month: 5,432\n- Used by 89 public repositories\n- Community feedback: 4.8/5 stars\n\nView repository: https://hub.docker.com/r/morgan/web-toolkit\n\nThanks for contributing to the Docker community!\nDocker Team",
+    "subject": "Pag-IBIG Fund: March 2024 contribution posted",
+    "body": "Magandang araw,\n\nYour employer contribution to Pag-IBIG Fund for March 2024 has been posted successfully.\n\nContribution Details:\n- Employer: CYBERQUEST TECHNOLOGIES INC.\n- Employer ID: 1234567890\n- Period: March 2024\n- Total Contribution: ₱32,500.00\n- Number of Members: 25 employees\n- Payment Date: March 31, 2024\n- Reference: HDMF-2024-03-789456\n\nView employer account: https://www.pagibigfundservices.com/VirtualPagibig/\n\nFor inquiries, contact Pag-IBIG Hotline: 8-724-4244 or visit your nearest branch.\n\nHome Development Mutual Fund (Pag-IBIG)\nRepublic of the Philippines",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
-        "Official docker.com domain",
-        "Specific repository milestone information",
-        "Realistic download and usage statistics",
-        "Professional open source community context",
-        "Links to official Docker Hub repository",
-        "Positive achievement notification"
+        "Official pagibig.gov.ph government domain",
+        "Specific employer and contribution details",
+        "Philippine peso amounts",
+        "Proper Pag-IBIG employer ID format",
+        "Links to official Pag-IBIG online portal",
+        "Filipino greeting"
       ],
-      "educational_focus": "Legitimate open source platform milestone notification with detailed repository statistics.",
+      "educational_focus": "Legitimate housing fund contribution notification - uses .gov.ph domain and includes official HDMF reference number.",
       "red_flags": [],
       "verification_tips": [
-        "Check your Docker Hub profile for this repository",
-        "Verify star count matches your repository page",
-        "Confirm download statistics align with your metrics",
-        "Docker always uses docker.com for official communications"
+        "Verify employer ID matches Pag-IBIG records",
+        "Check contribution amount aligns with payroll",
+        "Confirm reference in Virtual Pag-IBIG portal",
+        "Pag-IBIG always uses pagibig.gov.ph domain"
       ]
     }
   },
   {
     "id": "legit_018",
-    "sender": "digest@medium.com",
-    "receiver": "writer@freelance.com",
+    "sender": "alerts@bpi.com.ph",
+    "receiver": "finance@company.ph",
     "date": "2024-04-02 11:35:17",
-    "subject": "Your story was featured in a publication",
-    "body": "Hi Jordan,\n\n🎉 Great news! Your story has been featured by a publication.\n\nStory Details:\n- Title: \"10 JavaScript Performance Tips Every Developer Should Know\"\n- Featured by: JavaScript Weekly\n- Publication date: April 1, 2024\n- Current stats: 2,847 views, 156 claps\n\nEditor's Note:\n\"Excellent practical advice for JavaScript optimization. The performance examples are particularly valuable for intermediate developers.\"\n\nYour Story Impact:\n- 47 new followers from this feature\n- 23 thoughtful responses\n- Shared 89 times on social media\n\nView your story: https://medium.com/@jordan/javascript-performance-tips-abc123\n\nKeep writing amazing content!\nMedium Team",
+    "subject": "BPI Corporate: Large transaction alert - ₱500,000",
+    "body": "Good day,\n\nA large transaction was processed on your BPI Corporate Account.\n\nTransaction Details:\n- Account: BPI Corporate ****5678\n- Type: Online Transfer\n- Amount: ₱500,000.00\n- Recipient: Office Equipment Supplier Inc.\n- Date: April 2, 2024\n- Time: 11:30 AM PHT\n- Reference: BPI-OLT-20240402113045\n- Description: Equipment purchase payment\n\nIf you did not authorize this transaction, please contact us immediately.\n\nCall BPI Corporate Banking: (02) 889-10000\nVisit: https://online.bpi.com.ph/corporate\n\nBank of the Philippine Islands\nSecurity Team",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
-        "Official medium.com domain",
-        "Specific publication and story details",
-        "Realistic engagement statistics",
-        "Professional writing platform context",
-        "Links to official Medium story",
-        "Positive achievement notification with editor feedback"
+        "Official bpi.com.ph domain",
+        "Specific transaction details",
+        "Philippine peso amount",
+        "Legitimate business recipient",
+        "Links to official BPI corporate portal",
+        "Clear description of transaction purpose"
       ],
-      "educational_focus": "Legitimate writing platform feature notification with detailed engagement metrics.",
+      "educational_focus": "Legitimate large transaction security alert from major Philippine bank - provides verification without creating undue alarm.",
       "red_flags": [],
       "verification_tips": [
-        "Check your Medium profile for this story",
-        "Verify engagement statistics match your dashboard",
-        "Confirm the publication actually featured your story",
-        "Medium always uses medium.com domain for notifications"
+        "Verify transaction was authorized by finance team",
+        "Check recipient matches approved supplier",
+        "Confirm reference number in BPI online banking",
+        "BPI always uses bpi.com.ph domain"
       ]
     }
   },
   {
     "id": "legit_019",
-    "sender": "support@stripe.com",
-    "receiver": "finance@ecommerce.com",
+    "sender": "notifications@dti.gov.ph",
+    "receiver": "legal@company.ph",
     "date": "2024-04-03 14:22:15",
-    "subject": "Monthly transaction summary - March 2024",
-    "body": "Hello,\n\nYour Stripe account summary for March 2024.\n\nTransaction Summary:\n- Total transactions: 1,247\n- Successful payments: 1,198 (96.1%)\n- Failed payments: 49 (3.9%)\n- Gross revenue: $47,832.15\n- Stripe fees: $1,389.47\n- Net revenue: $46,442.68\n\nTop Payment Methods:\n- Credit/Debit cards: 89%\n- Digital wallets: 8%\n- Bank transfers: 3%\n\nPerformance Insights:\n- Average transaction: $39.87\n- Peak transaction day: March 15 (127 payments)\n- Customer satisfaction: 98.2%\n\nView detailed analytics: https://dashboard.stripe.com/reports\n\nStripe Support Team",
+    "subject": "DTI: Business Name Renewal reminder",
+    "body": "Good day,\n\nThis is a reminder to renew your business name registration with the Department of Trade and Industry.\n\nBusiness Information:\n- Business Name: CYBERQUEST TECHNOLOGIES\n- Registration Number: DTI-2020-123456-M\n- Original Registration: April 15, 2020\n- Expiration Date: April 15, 2024\n- Status: Due for Renewal\n\nRenew online: https://bnrs.dti.gov.ph/\n\nRequired:\n- DTI application form\n- Renewal fee: ₱500.00\n- Valid ID\n\nFor assistance, visit DTI Makati Office or call DTI Hotline: 751-3330\n\nDepartment of Trade and Industry\nRepublic of the Philippines",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
-        "Official stripe.com domain",
-        "Detailed financial analytics",
-        "Realistic transaction statistics and amounts",
-        "Professional payment platform branding",
-        "Links to official Stripe dashboard",
-        "Comprehensive business metrics"
+        "Official dti.gov.ph government domain",
+        "Specific business registration details",
+        "Reasonable renewal fee (₱500)",
+        "Links to official DTI online portal",
+        "Government agency professional communication",
+        "Advance renewal reminder"
       ],
-      "educational_focus": "Legitimate payment processor monthly summary with detailed business analytics.",
+      "educational_focus": "Legitimate government business renewal reminder - uses .gov.ph domain and includes proper registration details.",
       "red_flags": [],
       "verification_tips": [
-        "Check your Stripe dashboard for these statistics",
-        "Verify transaction counts match your records",
-        "Confirm fee calculations align with Stripe pricing",
-        "Stripe always uses stripe.com for official communications"
+        "Verify DTI registration number matches records",
+        "Check expiration date with business documents",
+        "Confirm renewal in DTI BNRS portal",
+        "DTI always uses dti.gov.ph for official communications"
       ]
     }
   },
   {
     "id": "legit_020",
-    "sender": "education@coursera.org",
-    "receiver": "student@university.edu",
+    "sender": "support@salesforce.com",
+    "receiver": "sales@company.ph",
     "date": "2024-04-04 09:15:33",
-    "subject": "Certificate earned: Machine Learning Specialization",
-    "body": "Congratulations Sam!\n\n🎓 You've successfully completed the Machine Learning Specialization.\n\nCertificate Details:\n- Course: Machine Learning (Stanford University)\n- Instructor: Andrew Ng\n- Completed: April 4, 2024\n- Final Grade: 94.7% (Excellent)\n- Certificate ID: ML-SPEC-2024-789456\n\nYour Achievements:\n- 4 courses completed\n- 16 programming assignments passed\n- 12 quizzes completed with high scores\n- Capstone project: 96% score\n\nShare your achievement:\n- Add to LinkedIn profile\n- Download certificate PDF\n- Share on social media\n\nView certificate: https://www.coursera.org/account/accomplishments/specialization/abc123\n\nWe're proud of your dedication to learning!\nCoursera Team",
+    "subject": "Salesforce: Q1 2024 usage report available",
+    "body": "Hello Sales Team,\n\nYour Salesforce quarterly usage report for Q1 2024 is now available.\n\nUsage Summary:\n- Organization: CyberQuest Technologies Inc.\n- License Type: Salesforce Professional Edition\n- Active Users: 15 out of 20 licenses\n- Storage Used: 8.4 GB / 20 GB\n- API Calls: 847,230 / 5,000,000\n- Leads Created: 234\n- Opportunities Won: 45\n\nView detailed analytics: https://login.salesforce.com/reports\n\nQuestions? Contact Salesforce Philippines Support: (02) 8255-9191\n\nThank you for using Salesforce.\nSalesforce Philippines Team",
     "is_phishing": 0,
     "ai_analysis": {
       "risk_level": "low",
       "phishing_indicators": [],
       "safety_factors": [
-        "Official coursera.org domain",
-        "Specific course and instructor details",
-        "Realistic academic achievement information",
-        "Professional education platform branding",
-        "Links to official Coursera certificate page",
-        "Detailed completion statistics and grades"
+        "Official salesforce.com domain",
+        "Detailed usage statistics",
+        "Realistic CRM metrics",
+        "Links to official Salesforce portal",
+        "Professional SaaS reporting format",
+        "Local Philippines support contact"
       ],
-      "educational_focus": "Legitimate online education certificate notification with specific academic achievements.",
+      "educational_focus": "Legitimate CRM platform usage report - includes verifiable business metrics and proper license information.",
       "red_flags": [],
       "verification_tips": [
-        "Check your Coursera profile for this certificate",
-        "Verify course completion date and grades",
-        "Confirm certificate ID matches your records",
-        "Coursera always uses coursera.org for official emails"
+        "Verify organization name matches Salesforce account",
+        "Check usage metrics in Salesforce dashboard",
+        "Confirm license count with IT department",
+        "Salesforce always uses salesforce.com domain"
       ]
     }
   }
