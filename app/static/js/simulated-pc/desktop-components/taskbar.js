@@ -53,9 +53,10 @@ export class Taskbar {
         });
         
         // Add touch event for better mobile interaction
-        taskbarItem.addEventListener('touchstart', () => {
+        taskbarItem.addEventListener('touchstart', (e) => {
+            e.preventDefault();
             this.windowManager.toggleWindow(id);
-        }, { passive: true });
+        });
         
         taskbarItems.appendChild(taskbarItem);
         
