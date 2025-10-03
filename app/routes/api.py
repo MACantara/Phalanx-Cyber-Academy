@@ -86,3 +86,25 @@ def features_status():
     except Exception as e:
         current_app.logger.error(f"Features status error: {e}")
         return jsonify({'error': 'Unable to get features status'}), 500
+
+@api_bp.route('/check-password-strength', methods=['POST'])
+def check_password_strength():
+    """Check password strength in real-time using zxcvbn."""
+    try:
+        from app.utils.password_validator import PasswordValidator
+        
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Invalid request'}), 400
+        
+        password = data.get('password', '')
+        user_inputs = data.get('user_inputs', [])
+        
+        # Get strength information using zxcvbn
+        strength_info = PasswordValidator.get_strength_info(password, user_inputs)
+        
+        return jsonify(strength_info)
+        
+    except Exception as e:
+        current_app.logger.error(f"Password strength check error: {e}")
+        return jsonify({'error': 'Unable to check password strength'}), 500
