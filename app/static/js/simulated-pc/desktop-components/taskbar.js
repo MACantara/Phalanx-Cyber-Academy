@@ -14,7 +14,7 @@ export class Taskbar {
 
     createTaskbar() {
         this.taskbarElement = document.createElement('div');
-        this.taskbarElement.className = 'fixed bottom-0 left-0 w-full h-12 bg-gray-800 border-t border-gray-600 flex items-center px-2 sm:px-2.5 shadow-lg z-[9999]';
+        this.taskbarElement.className = 'w-full h-12 bg-gray-800 border-t border-gray-600 flex items-center px-2 sm:px-2.5 shadow-lg';
         this.taskbarElement.innerHTML = `
             <button class="bg-gray-700 border border-gray-600 text-white px-2 sm:px-4 py-2 text-xs font-mono hover:bg-green-400 hover:text-black transition-all duration-200 hover:shadow-lg cursor-pointer rounded flex-shrink-0" id="start-btn">
                 <i class="bi bi-grid-3x3-gap mr-1 sm:mr-1"></i><span class="hidden sm:inline">Start</span>
