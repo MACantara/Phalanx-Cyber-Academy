@@ -105,13 +105,18 @@ class PasswordValidator:
                 4: 'very strong'
             }
             
+            # Convert calc_time to float if it's a timedelta
+            calc_time = result.get('calc_time', 0)
+            if hasattr(calc_time, 'total_seconds'):
+                calc_time = calc_time.total_seconds()
+            
             return {
                 'score': result['score'],
                 'strength': strength_labels[result['score']],
                 'crack_time': result['crack_times_display']['offline_slow_hashing_1e4_per_second'],
                 'feedback': result.get('feedback', {'warning': '', 'suggestions': []}),
                 'guesses': result.get('guesses', 0),
-                'calc_time': result.get('calc_time', 0)
+                'calc_time': calc_time
             }
             
         except Exception:

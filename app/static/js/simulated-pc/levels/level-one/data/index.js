@@ -32,24 +32,29 @@ export const Level1Data = {
     
     // Source verification database for misinformation detection training
     sourceDatabase: {
-        // Legitimate news sources
-        'apnews.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
-        'reuters.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
-        'bbc.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
-        'cnn.com': { credibility: 'high', bias: 'moderate', type: 'established_news' },
-        'wsj.com': { credibility: 'high', bias: 'slight', type: 'established_news' },
-        'nationalgeographic.com': { credibility: 'high', bias: 'minimal', type: 'specialized' },
-        'heraldtribune.com': { credibility: 'moderate', bias: 'slight', type: 'local_news' },
+        // Legitimate Philippine news sources
+        'rappler.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
+        'inquirer.net': { credibility: 'high', bias: 'minimal', type: 'established_news' },
+        'news.abs-cbn.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
+        'gmanetwork.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
+        'mb.com.ph': { credibility: 'high', bias: 'minimal', type: 'established_news' },
+        'philstar.com': { credibility: 'high', bias: 'minimal', type: 'established_news' },
         
-        // Suspicious/fake news sources (examples from dataset)
-        'truthpatriotnews.net': { credibility: 'very_low', bias: 'extreme', type: 'conspiracy' },
-        'realhealthtruth.com': { credibility: 'very_low', bias: 'extreme', type: 'pseudoscience' },
-        'americandefensewatch.org': { credibility: 'very_low', bias: 'extreme', type: 'conspiracy' },
-        'hiddentruthexposed.net': { credibility: 'very_low', bias: 'extreme', type: 'conspiracy' },
-        'exposetheconspiracy.com': { credibility: 'very_low', bias: 'extreme', type: 'conspiracy' },
-        'techfreedomfighter.org': { credibility: 'very_low', bias: 'extreme', type: 'conspiracy' },
-        'pyramidpowersecrets.org': { credibility: 'very_low', bias: 'extreme', type: 'pseudoscience' },
-        'climatetruthexposed.com': { credibility: 'very_low', bias: 'extreme', type: 'conspiracy' },
+        // Suspicious/fake news sources - Philippine election misinformation
+        'truthpilipinasnews.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'electiontruthdotph.com': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'pilipinasfraudwatch.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'sovereignpilipinasdefender.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'realpinoynews.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'electionwatchdogph.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'philippinesecuritywatch.com': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'constitutiondefenderph.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'voterfraudexposedph.com': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'techfraudwatchph.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'ballotsecurityph.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'democracydefenseph.org': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'mediacorruptionph.com': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
+        'philippinesovereignty.net': { credibility: 'very_low', bias: 'extreme', type: 'election_disinfo' },
         
         'default': { credibility: 'unknown', bias: 'unknown', type: 'unknown' }
     },

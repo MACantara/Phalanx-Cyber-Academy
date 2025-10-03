@@ -1,681 +1,758 @@
 [
   {
     "id": "phish_001",
-    "sender": "security@paypaI-verification.com",
-    "receiver": "user@example.com",
-    "date": "2024-03-15 09:32:15",
-    "subject": "URGENT: Your PayPal Account Has Been Limited",
-    "body": "Dear PayPal User,\n\nWe have detected suspicious activity on your account. Your account has been temporarily limited for your security.\n\nTo restore full access, please verify your identity immediately by clicking the link below:\n\nhttp://paypal-secure-verify.tk/restore\n\nFailure to verify within 24 hours will result in permanent account closure.\n\nThank you,\nPayPal Security Team",
+    "sender": "security-alert@globe-com-ph.verify.online",
+    "receiver": "it.admin@company.ph",
+    "date": "2024-03-17 22:45:33",
+    "subject": "URGENT: Globe Account Suspended - Verify Now",
+    "body": "URGENT SECURITY ALERT\n\nYour Globe Business account has been temporarily suspended due to suspicious activity.\n\nWe detected multiple failed login attempts from China. Your account will be PERMANENTLY DELETED in 24 hours if you don't verify your identity immediately.\n\nCLICK HERE TO VERIFY: http://globe-com-ph-verify.online/secure-login\n\nEnter your Globe credentials and OTP to restore access.\n\nFailure to verify will result in:\n- Account termination\n- Loss of all data\n- Service disconnection\n\nGlobe Security Team (URGENT)\nDO NOT IGNORE THIS MESSAGE",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Suspicious domain with uppercase 'I' instead of lowercase 'l' (paypaI vs paypal)",
-        "Generic greeting 'Dear PayPal User' instead of actual name",
-        "Urgent threats about account closure",
-        "Suspicious domain (.tk) for verification link",
-        "Pressure tactics with time limit"
+        "Fake domain: globe-com-ph.verify.online (not globe.com.ph)",
+        "Extreme urgency and threats (24 hours, PERMANENT DELETION)",
+        "Suspicious login attempts from China (fear tactic)",
+        "Requests credentials and OTP directly",
+        "Threatening consequences for not complying",
+        "ALL CAPS excessive urgency",
+        "Generic 'DO NOT IGNORE' pressure",
+        "Links to non-Globe domain"
       ],
       "safety_factors": [],
-      "educational_focus": "Perfect example from dialogue training - demonstrates paypaI.com vs paypal.com domain spoofing and generic greetings instead of personalized names.",
+      "educational_focus": "Classic urgency-based phishing targeting Globe customers - uses fear tactics and fake domain to steal credentials. Real Globe never asks for OTP via email.",
       "red_flags": [
-        "Domain spoofing: paypaI-verification.com (uppercase I instead of l)",
-        "External suspicious domain for account verification",
-        "Generic customer greetings instead of your name",
-        "Urgent time-based threats",
-        "Requests to click suspicious links for account access"
+        "Domain is NOT globe.com.ph - it's a spoofed lookalike",
+        "Legitimate companies never request OTP codes",
+        "Unrealistic threat of 24-hour account deletion",
+        "Poor grammar and excessive capitalization",
+        "Creates panic to bypass critical thinking"
       ],
       "verification_tips": [
-        "Always check for exact spelling of official domains",
-        "PayPal will never use .tk or similar domains for verification",
-        "Legitimate emails address you by your registered name",
-        "Never click suspicious links - login directly to PayPal instead"
+        "Check sender domain carefully - 'verify.online' is NOT Globe",
+        "Globe never asks for OTP codes via email",
+        "Login directly to business.globe.com.ph to check account status",
+        "Contact Globe Business Hotline: (02) 16211 to verify",
+        "Hover over links before clicking to see real destination"
       ]
     }
   },
   {
     "id": "phish_002",
-    "sender": "noreply@amazon-security.net",
-    "receiver": "customer@email.com",
-    "date": "2024-03-16 14:45:22",
-    "subject": "Your Amazon Order #AMZ-7829483 Requires Payment Update",
-    "body": "Hello,\n\nYour recent Amazon order could not be processed due to payment issues.\n\nOrder Details:\n- Order #: AMZ-7829483\n- Item: iPhone 15 Pro Max\n- Amount: $1,199.99\n\nPlease update your payment information to avoid order cancellation:\nhttps://amazon-payment-update.org/secure\n\nRegards,\nAmazon Customer Service",
+    "sender": "no-reply@bir.gov-ph.online",
+    "receiver": "finance@company.ph",
+    "date": "2024-03-18 08:15:22",
+    "subject": "BIR: Tax Refund Approval - ₱125,000.00",
+    "body": "Bureau of Internal Revenue\nRepublic of the Philippines\n\nGood news! Your company's tax refund has been approved.\n\nRefund Details:\n- TIN: 123-456-789-000\n- Company: CYBERQUEST TECHNOLOGIES INC.\n- Refund Amount: ₱125,000.00\n- Tax Year: 2023\n- Status: APPROVED FOR RELEASE\n\nTo process your refund, complete the verification form:\nhttp://bir.gov-ph.online/refund/verify.php\n\nRequired information:\n- Company TIN\n- Authorized Representative Details\n- Bank Account Number for deposit\n- Mobile number for OTP\n\nRefund will be released within 3 business days after verification.\n\nClick here to claim: http://bir.gov-ph.online/refund\n\nBIR Refund Processing Center",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Non-Amazon domain (amazon-security.net vs amazon.com)",
-        "Fake high-value order to create urgency",
-        "External domain for payment updates",
-        "Generic greeting without customer name",
-        "Fake order number format"
+        "Fake domain: bir.gov-ph.online (not bir.gov.ph)",
+        "Unsolicited tax refund offer (too good to be true)",
+        "Requests sensitive information (TIN, bank account, OTP)",
+        "Suspicious PHP file in URL (verify.php)",
+        "BIR doesn't process refunds this way",
+        "Asks for bank account number via form",
+        "Creates excitement to lower guard"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows how attackers use fake high-value orders and pressure tactics combined with domain spoofing to steal payment information.",
+      "educational_focus": "Government impersonation phishing - exploits desire for tax refunds. Real BIR uses bir.gov.ph and never requests bank details via email links.",
       "red_flags": [
-        "Wrong domain: amazon-security.net instead of amazon.com",
-        "Suspicious payment update domain (.org instead of official Amazon)",
-        "Generic greeting instead of your actual name",
-        "Unexpected high-value order you didn't make",
-        "External links for payment sensitive operations"
+        "Domain is bir.gov-ph.online, NOT bir.gov.ph (fake)",
+        "BIR never notifies refunds via unsolicited email",
+        "Requesting bank account details is huge red flag",
+        "Real BIR refunds go through official eFPS portal",
+        "No legitimate BIR reference number provided"
       ],
       "verification_tips": [
-        "Amazon only sends order emails from @amazon.com",
-        "Check your actual Amazon account for this order number",
-        "Never update payment info through email links",
-        "Amazon addresses customers by their registered name"
+        "Verify domain is exactly bir.gov.ph (no hyphens or extensions)",
+        "Check BIR eFPS portal directly for refund status",
+        "BIR never requests bank details via email forms",
+        "Call BIR hotline: 8538-3200 to verify any refund claims",
+        "Real refunds require extensive documentation, not just a form"
       ]
     }
   },
   {
     "id": "phish_003",
-    "sender": "support@microsoft-security.org",
-    "receiver": "user@company.com",
-    "date": "2024-03-17 11:15:08",
-    "subject": "Microsoft Windows Security Alert - Virus Detected",
-    "body": "SECURITY ALERT\n\nOur systems have detected multiple viruses on your computer.\n\nImmediately download our security scan tool to remove threats:\n\nDownload: http://windows-security-fix.com/scanner.exe\n\nWarning: Your files may be permanently damaged if not addressed within 2 hours.\n\nMicrosoft Security Team\nToll-Free Support: 1-800-123-FAKE",
+    "sender": "support@bdoonline-banking.com",
+    "receiver": "finance@company.ph",
+    "date": "2024-03-19 14:30:18",
+    "subject": "BDO Security: Unusual activity detected",
+    "body": "Dear Valued Customer,\n\nWe detected unusual transactions on your BDO Corporate Account ****4892.\n\nSuspicious Activity:\n- Large withdrawal attempt: ₱450,000.00\n- Location: Cebu City\n- Device: Unknown smartphone\n- Time: March 19, 2024, 2:15 PM\n\nThis transaction has been TEMPORARILY BLOCKED for your security.\n\nVerify if this was you: http://bdoonline-banking.com/verify-transaction\n\nIf you don't recognize this activity:\n1. Login immediately to confirm\n2. Update your security settings\n3. Verify recent transactions\n\nAccount will be locked after 6 hours if no response.\n\nBDO Corporate Security\n24/7 Protection Monitoring",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Fake Microsoft domain (microsoft-security.org vs microsoft.com)",
-        "Requests to download executable files (.exe)",
-        "Extreme urgency with 2-hour deadline",
-        "Fear tactics about file damage",
-        "Fake phone number"
+        "Fake domain: bdoonline-banking.com (not bdo.com.ph)",
+        "Creates urgency with 6-hour deadline",
+        "Suspicious transaction from Cebu (fear tactic)",
+        "Requests immediate login via provided link",
+        "Account lockout threat",
+        "Generic 'Dear Valued Customer' greeting",
+        "Links to non-BDO domain"
       ],
       "safety_factors": [],
-      "educational_focus": "Demonstrates tech support scam tactics using fear, fake security alerts, and malware distribution through executable downloads.",
+      "educational_focus": "Banking credential theft phishing - uses realistic transaction details and security concern to trick users into entering credentials on fake site.",
       "red_flags": [
-        "Wrong domain: microsoft-security.org vs official microsoft.com",
-        "Requests to download .exe files from external sites",
-        "Extreme urgency tactics (2-hour deadline)",
-        "Microsoft doesn't send virus alerts via email",
-        "Suspicious phone numbers for 'support'"
+        "Domain is bdoonline-banking.com, NOT bdo.com.ph",
+        "BDO uses online.bdo.com.ph for online banking, not separate domains",
+        "Real security alerts come through official BDO app",
+        "Suspicious transaction details designed to create panic",
+        "Time pressure tactic (6 hours)"
       ],
       "verification_tips": [
-        "Microsoft never sends virus detection emails",
-        "Never download .exe files from email links",
-        "Official Microsoft emails come from microsoft.com domain",
-        "Use official antivirus software, not email downloads"
+        "Never click links in suspicious bank emails",
+        "Type online.bdo.com.ph directly in browser",
+        "Check account activity in official BDO app",
+        "Call BDO Corporate Banking: (02) 8631-8000 to verify",
+        "BDO never threatens account lockout via email"
       ]
     }
   },
   {
     "id": "phish_004",
-    "sender": "bankingsecurity@chase-alert.com",
-    "receiver": "customer@email.com",
-    "date": "2024-03-18 08:22:41",
-    "subject": "Suspicious Login Attempt - Immediate Action Required",
-    "body": "Dear Chase Customer,\n\nWe detected a login attempt from an unrecognized device:\n\nLocation: Nigeria\nIP Address: 197.89.123.456\nTime: March 18, 2024 3:45 AM\n\nIf this was not you, secure your account immediately:\nhttps://chase-secure-login.net/verify\n\nYour account will be locked in 30 minutes if no action is taken.\n\nChase Bank Security",
+    "sender": "payroll@hr-dept.company-ph.com",
+    "receiver": "employees@company.ph",
+    "date": "2024-03-20 16:45:11",
+    "subject": "URGENT: Update payroll information for March salary",
+    "body": "Dear Team Member,\n\nOur payroll system is undergoing maintenance. We need all employees to update their bank account information to ensure March salaries are processed correctly.\n\nIMPORTANT: Failure to update by March 22 will delay your salary payment.\n\nUpdate your information here:\nhttp://company-ph.com/hr-portal/payroll-update\n\nRequired details:\n- Full Name\n- Employee ID\n- Current Bank Account Number\n- New Bank Account Number (if changed)\n- Contact Number\n- Email Password (for verification)\n\nThis is mandatory for all employees. Process takes only 2 minutes.\n\nThank you for your immediate cooperation.\n\nHR Department\nCyberQuest Technologies Inc.",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Fake Chase domain (chase-alert.com vs chase.com)",
-        "Geographic scare tactics (Nigeria reference)",
-        "Urgent 30-minute deadline pressure",
-        "Invalid IP address format",
-        "Suspicious verification link"
+        "Requests email password (MAJOR RED FLAG)",
+        "Fake HR domain: company-ph.com (not company.ph)",
+        "Urgent deadline to create pressure",
+        "Threatens salary delay",
+        "Requests sensitive banking information",
+        "Generic greeting ('Dear Team Member')",
+        "Unsolicited information update request",
+        "No official HR contact information"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows banking security phishing using geographic fears, fake login alerts, and urgent time pressure to steal banking credentials.",
+      "educational_focus": "Internal impersonation phishing - pretends to be from HR to steal banking and email credentials. Real HR never asks for passwords.",
       "red_flags": [
-        "Wrong domain: chase-alert.com instead of official chase.com",
-        "Uses geographic stereotypes to create fear",
-        "Invalid IP address format (should not end in .456)",
-        "External domain for banking security operations",
-        "Extreme urgency with 30-minute threat"
+        "NEVER provide email password to anyone, including HR",
+        "Domain is company-ph.com, not your actual company.ph",
+        "Legitimate HR uses internal systems, not external links",
+        "Real payroll updates don't require email passwords",
+        "Creates artificial urgency about salary payment"
       ],
       "verification_tips": [
-        "Chase bank emails come from chase.com domain only",
-        "Login directly to Chase website to check alerts",
-        "IP addresses don't end in numbers over 255",
-        "Banks don't lock accounts with 30-minute email warnings"
+        "Contact HR department directly via phone or in person",
+        "Check if HR sent official memo through proper channels",
+        "Never provide passwords to anyone, ever",
+        "Real payroll updates handled through internal HR system",
+        "Verify sender email is from actual company.ph domain"
       ]
     }
   },
   {
     "id": "phish_005",
-    "sender": "admin@facebook-security.net",
-    "receiver": "user@email.com",
-    "date": "2024-03-19 16:33:17",
-    "subject": "Your Facebook Account Will Be Deleted Tomorrow",
-    "body": "Hello Facebook User,\n\nDue to new privacy regulations, inactive accounts will be permanently deleted.\n\nYour account has been marked for deletion on March 20, 2024.\n\nTo keep your account and all your photos/memories, verify your identity:\n\nhttps://facebook-account-verification.tk/confirm\n\nThis process must be completed within 24 hours.\n\nFacebook Team",
+    "sender": "no-reply@sss.gov.online",
+    "receiver": "hr@company.ph",
+    "date": "2024-03-21 11:20:45",
+    "subject": "SSS: Employer account suspension notice",
+    "body": "Social Security System\nRepublic of the Philippines\n\nIMPORTANT NOTICE\n\nYour employer account has been flagged for unpaid contributions.\n\nEmployer: CYBERQUEST TECHNOLOGIES INC.\nEmployer Number: 03-1234567-8\nOutstanding Amount: ₱87,450.00\nPenalty if unpaid: ₱15,000.00\n\nTo avoid penalties and legal action:\n1. Verify your contribution status\n2. Submit payment immediately\n3. Update employer information\n\nAccess your account: http://sss.gov.online/employers/login\n\nProvide:\n- Employer Number\n- TIN\n- Authorized Representative ID\n- Mobile OTP\n\nDeadline: March 23, 2024\nLegal action will be taken if unresolved.\n\nSSS Compliance Division",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Fake Facebook domain (facebook-security.net vs facebook.com)",
-        "Emotional manipulation about losing photos/memories",
-        "Generic greeting instead of your actual name",
-        "Suspicious .tk domain for verification",
-        "Urgent 24-hour deadline"
+        "Fake domain: sss.gov.online (not sss.gov.ph)",
+        "Threatens legal action to create fear",
+        "Requests TIN and representative ID",
+        "Asks for mobile OTP",
+        "Short deadline (2 days)",
+        "Claims unpaid contributions without proof",
+        "Suspicious .online TLD instead of .gov.ph"
       ],
       "safety_factors": [],
-      "educational_focus": "Demonstrates emotional manipulation phishing using fear of data loss and personal memories to bypass logical thinking.",
+      "educational_focus": "Government agency impersonation - uses fear of legal action and penalties. Real SSS uses sss.gov.ph and proper notification procedures.",
       "red_flags": [
-        "Wrong domain: facebook-security.net vs official facebook.com",
-        "Generic greeting 'Facebook User' instead of your name",
-        "Emotional manipulation about losing personal data",
-        "Suspicious .tk domain for account verification",
-        "Fake privacy regulation claims"
+        "Domain is sss.gov.online, NOT sss.gov.ph (fake government site)",
+        "Real SSS sends official letters for compliance issues",
+        "SSS never requests OTP via email",
+        "Legitimate government sites use .gov.ph extension",
+        "Legal action threats without proper documentation"
       ],
       "verification_tips": [
-        "Facebook emails come from facebook.com or facebookmail.com",
-        "Facebook addresses users by their registered names",
-        "Never use .tk domains for account verification",
-        "Check Facebook directly for account status notifications"
+        "Verify domain is exactly sss.gov.ph",
+        "Check contribution status directly at www.sss.gov.ph",
+        "Call SSS Hotline: 1455 to verify any compliance issues",
+        "Real SSS sends official correspondence via mail",
+        "Never provide OTP codes to anyone"
       ]
     }
   },
   {
     "id": "phish_006",
-    "sender": "billing@netfIix-support.org",
-    "receiver": "subscriber@email.com",
-    "date": "2024-03-20 12:18:55",
-    "subject": "Netflix Payment Failed - Service Suspended",
-    "body": "Hi there,\n\nYour Netflix subscription payment was declined by your bank.\n\nYour account has been temporarily suspended. To restore service:\n\n1. Update your payment method\n2. Confirm your billing information\n\nRestore Service: https://netflix-billing.net/update\n\nNote: Failure to update within 48 hours will result in account cancellation.\n\nNetflix Billing Team",
+    "sender": "billing@microsoft-365.com.ph",
+    "receiver": "it.admin@company.ph",
+    "date": "2024-03-22 09:30:22",
+    "subject": "Microsoft 365: Payment failed - Service suspension",
+    "body": "Microsoft 365 Business Alert\n\nYour payment for Microsoft 365 Business Premium has failed.\n\nAccount Details:\n- Customer: CyberQuest Technologies Inc.\n- Failed Payment: ₱21,875.00\n- Attempted: March 22, 2024\n- Reason: Card declined\n\nYour services will be suspended in 24 hours if payment is not updated.\n\nServices affected:\n- Email (Outlook)\n- OneDrive storage\n- Teams\n- All Microsoft 365 apps\n\nUpdate payment method now:\nhttp://microsoft-365.com.ph/billing/payment-update\n\nEnter your admin credentials and new payment card details.\n\nTime remaining: 23 hours\n\nMicrosoft Philippines Support",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Domain spoofing with capital 'I' instead of lowercase 'l' (netfIix vs netflix)",
-        "Generic greeting instead of account holder name",
-        "External domain for payment updates",
-        "48-hour pressure deadline",
-        "External domain for sensitive operations"
+        "Fake domain: microsoft-365.com.ph (not microsoft.com)",
+        "Creates urgency with 24-hour suspension threat",
+        "Requests admin credentials",
+        "Asks for payment card details via email link",
+        "Microsoft never uses country-specific TLDs for billing",
+        "Time pressure countdown tactic",
+        "Links to non-Microsoft domain"
       ],
       "safety_factors": [],
-      "educational_focus": "Another example of character substitution domain spoofing, similar to PayPal example in dialogue.",
+      "educational_focus": "SaaS credential theft - impersonates Microsoft to steal admin access and payment information. Microsoft uses admin.microsoft.com for billing.",
       "red_flags": [
-        "Domain spoofing: netfIix-support.org (uppercase I instead of lowercase l)",
-        "Generic greeting 'Hi there' instead of your name",
-        "External .net domain for Netflix billing operations",
-        "Urgent payment deadline pressure",
-        "Suspicious billing domains"
+        "Domain is microsoft-365.com.ph, NOT microsoft.com",
+        "Microsoft billing always through admin.microsoft.com",
+        "Real payment failures show in Microsoft 365 admin center",
+        "Microsoft never requests credentials via email",
+        "Country-specific domain is suspicious for global service"
       ],
       "verification_tips": [
-        "Netflix emails come from netflix.com domain only",
-        "Check your actual Netflix account for payment issues",
-        "Never update payment info through email links",
-        "Netflix addresses subscribers by their registered names"
+        "Login directly to admin.microsoft.com to check billing",
+        "Microsoft sends billing alerts through admin portal",
+        "Call Microsoft Philippines: (02) 7793-5500 to verify",
+        "Never click payment update links in emails",
+        "Check credit card statement for actual charges"
       ]
     }
   },
   {
     "id": "phish_007",
-    "sender": "security@apple-id-verification.com",
-    "receiver": "customer@email.com",
-    "date": "2024-03-21 09:41:33",
-    "subject": "Apple ID Locked Due to Suspicious Activity",
-    "body": "Dear Apple Customer,\n\nYour Apple ID has been locked due to multiple failed login attempts from an unknown device.\n\nDevice Information:\n- iPhone 13 Pro\n- Location: Moscow, Russia\n- Date: March 21, 2024\n\nUnlock your Apple ID now:\nhttps://appleid-security-unlock.com/restore\n\nImportant: Your account will be permanently disabled if not verified within 12 hours.\n\nApple Security",
+    "sender": "security@lazada-ph.online",
+    "receiver": "procurement@company.ph",
+    "date": "2024-03-23 15:18:44",
+    "subject": "Lazada: Your account has been compromised",
+    "body": "SECURITY ALERT\n\nWe detected unauthorized access to your Lazada Business account.\n\nSuspicious Activity:\n- Login from: Indonesia\n- Attempted orders: ₱45,000.00\n- Payment method: Changed\n- Shipping address: Modified\n\nWe have BLOCKED these transactions and locked your account.\n\nTo unlock and secure your account:\n1. Verify your identity\n2. Review suspicious activities\n3. Reset your password\n\nSecure your account now:\nhttp://lazada-ph.online/security/account-recovery\n\nProvide:\n- Email address\n- Current password\n- Mobile number\n- OTP code\n\nAccount will remain locked until verification complete.\n\nLazada Security Team (Philippines)",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Fake Apple domain (apple-id-verification.com vs apple.com)",
-        "Geographic scare tactics using Russia",
-        "External domain for account unlock",
-        "Generic greeting 'Dear Apple Customer'",
-        "Urgent 12-hour deadline"
+        "Fake domain: lazada-ph.online (not lazada.com.ph)",
+        "Claims account compromise to create panic",
+        "Requests current password (NEVER legitimate)",
+        "Asks for OTP code",
+        "Suspicious activity from Indonesia (fear tactic)",
+        "Account lockout pressure",
+        "Links to non-Lazada domain"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows Apple ID phishing using device security alerts and geographic scare tactics.",
+      "educational_focus": "E-commerce account takeover attempt - uses security scare to trick users into revealing credentials. Real Lazada never asks for current passwords.",
       "red_flags": [
-        "Wrong domain: apple-id-verification.com vs official apple.com",
-        "Generic greeting instead of your actual name",
-        "External domain for Apple ID security operations",
-        "Geographic fear tactics",
-        "Extreme urgency with 12-hour threat"
+        "Domain is lazada-ph.online, NOT lazada.com.ph",
+        "NEVER provide current password to anyone",
+        "Legitimate password resets don't ask for old password",
+        "Real Lazada security alerts show in app/account",
+        "OTP codes should never be shared"
       ],
       "verification_tips": [
-        "Apple emails come from apple.com or icloud.com domains only",
-        "Check your Apple ID account directly for security alerts",
-        "Apple addresses customers by their registered names",
-        "Never unlock accounts through external domains"
+        "Login directly to www.lazada.com.ph to check account",
+        "Check for security alerts in Lazada app",
+        "Lazada never asks for current password via email",
+        "Contact Lazada Customer Service: 02-8820-8800",
+        "Real account recovery uses secure in-app process"
       ]
     }
   },
   {
     "id": "phish_008",
-    "sender": "noreply@googIe-security-alert.net",
-    "receiver": "user@gmail.com",
-    "date": "2024-03-22 15:27:09",
-    "subject": "Google Account: Sign-in Blocked",
-    "body": "Hello,\n\nWe blocked a sign-in attempt to your Google Account.\n\nDetails:\n- Email: user@gmail.com\n- Time: March 22, 2024 10:15 AM\n- Location: Lagos, Nigeria\n- Device: Windows PC\n\nIf this wasn't you, secure your account:\nhttps://google-account-recovery.org/secure\n\nYour account may be compromised. Act immediately.\n\nGoogle Account Team",
+    "sender": "it-support@company.support-ph.com",
+    "receiver": "all-staff@company.ph",
+    "date": "2024-03-24 08:45:17",
+    "subject": "Mandatory: Email system upgrade - Action required",
+    "body": "IT Department Announcement\n\nWe are upgrading our email system to improve security and performance.\n\nAll employees must verify their email accounts by March 25, 2024 to avoid service interruption.\n\nVerification process:\n1. Click the link below\n2. Enter your email credentials\n3. Complete security questions\n4. Download security certificate\n\nVerify your email: http://company.support-ph.com/email-upgrade\n\nRequired information:\n- Full email address\n- Current password\n- Security questions\n- Mobile number\n\nFailing to complete verification will result in:\n- Email access loss\n- Calendar data deletion\n- Contact list removal\n\nComplete by: March 25, 2024, 5:00 PM\n\nIT Support Team\nCyberQuest Technologies",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Domain spoofing with uppercase 'I' (googIe vs google)",
-        "Geographic scare tactics using Nigeria",
-        "External domain for account recovery",
-        "Generic greeting without personalization",
-        "Non-Google security domain"
+        "Fake IT support domain: company.support-ph.com",
+        "Requests email passwords (NEVER legitimate)",
+        "Mandatory compliance language",
+        "Threatens data loss",
+        "Short deadline (1 day)",
+        "Links to external, non-company domain",
+        "Asks for security questions",
+        "Generic 'IT Department' sender"
       ],
       "safety_factors": [],
-      "educational_focus": "Demonstrates Google account phishing using blocked sign-in alerts and compromise fears.",
+      "educational_focus": "Internal IT impersonation - pretends to be from IT department to harvest email credentials. Real IT never requests passwords.",
       "red_flags": [
-        "Domain spoofing: googIe-security-alert.net (uppercase I instead of lowercase l)",
-        "External domain for Google account operations",
-        "Generic greeting instead of your name",
-        "Geographic fear tactics",
-        "Non-Google domains for security"
+        "Domain is company.support-ph.com, not company.ph",
+        "IT NEVER asks for email passwords",
+        "Real system upgrades done by IT without user passwords",
+        "Threatening data deletion is scare tactic",
+        "Legitimate IT uses internal ticketing system"
       ],
       "verification_tips": [
-        "Google emails come from google.com or gmail.com domains only",
-        "Check Google account security page directly",
-        "Google addresses users by their registered names",
-        "Never use external sites for Google account recovery"
+        "Contact IT department directly via phone or helpdesk",
+        "Verify if upgrade announcement was sent officially",
+        "Real IT system upgrades don't require user passwords",
+        "Check with colleagues if they received same email",
+        "Report suspicious IT emails to actual IT security team"
       ]
     }
   },
   {
     "id": "phish_009",
-    "sender": "customerservice@ebay-resolution.com",
-    "receiver": "seller@email.com",
-    "date": "2024-03-23 13:14:46",
-    "subject": "eBay Dispute: Customer Claims Item Not Received",
-    "body": "Dear eBay Seller,\n\nA buyer has opened a dispute claiming they never received item #394857291.\n\nDispute Amount: $1,247.50\nBuyer: john_smith_2024\nItem: MacBook Pro 16-inch\n\nYou must respond within 48 hours or funds will be automatically refunded to buyer.\n\nRespond to Dispute: https://ebay-seller-center.net/dispute\n\neBay Customer Service",
+    "sender": "notifications@gcash-secure.com.ph",
+    "receiver": "accounting@company.ph",
+    "date": "2024-03-25 19:30:55",
+    "subject": "GCash: Suspicious transaction detected - ₱50,000",
+    "body": "GCash Security Alert\n\nWe detected a suspicious transaction on your GCash Business account.\n\nTransaction Details:\n- Amount: ₱50,000.00\n- Recipient: Unknown (09XX-XXX-XXXX)\n- Status: Pending approval\n- Time: March 25, 2024, 7:15 PM\n\nThis transaction is unusual for your account pattern.\n\nIf you did NOT authorize this:\n1. Cancel transaction immediately\n2. Verify your account security\n3. Update your MPIN\n\nCancel transaction: http://gcash-secure.com.ph/cancel-transaction\n\nLogin with:\n- Mobile number\n- MPIN\n- OTP code\n\nTransaction will process in 2 hours if not cancelled.\n\nGCash Security Team\nProtecting your funds 24/7",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Fake eBay domain (ebay-resolution.com vs ebay.com)",
-        "High-value fake dispute to create panic",
-        "External domain for dispute resolution",
-        "Generic seller greeting",
-        "48-hour pressure deadline"
+        "Fake domain: gcash-secure.com.ph (not gcash.com)",
+        "Requests MPIN (mobile PIN)",
+        "Asks for OTP code",
+        "Creates urgency with 2-hour window",
+        "Suspicious transaction scare tactic",
+        "Links to non-GCash domain",
+        "Late evening timing (less alert)"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows eBay seller phishing using fake disputes and financial pressure tactics.",
+      "educational_focus": "Mobile wallet credential theft - exploits fear of unauthorized transactions. Real GCash never asks for MPIN or OTP via email.",
       "red_flags": [
-        "Wrong domain: ebay-resolution.com instead of official ebay.com",
-        "High-value dispute you likely didn't have",
-        "External domain for eBay seller operations",
-        "Generic greeting instead of your seller name",
-        "Suspicious seller center domains"
+        "Domain is gcash-secure.com.ph, NOT gcash.com",
+        "GCash NEVER asks for MPIN via email",
+        "Never share OTP codes with anyone",
+        "Real transaction alerts show in GCash app",
+        "Time pressure to bypass critical thinking"
       ],
       "verification_tips": [
-        "eBay emails come from ebay.com domain only",
-        "Check your eBay seller dashboard for actual disputes",
-        "Verify high-value transactions in your sales history",
-        "Never handle disputes through external websites"
+        "Open GCash app directly to check transactions",
+        "GCash security alerts appear in-app, not just email",
+        "Never provide MPIN or OTP via any link",
+        "Contact GCash Hotline: 2882 to verify",
+        "Real GCash always uses gcash.com domain"
       ]
     }
   },
   {
     "id": "phish_010",
-    "sender": "fraud@visa-security.org",
-    "receiver": "cardholder@email.com",
-    "date": "2024-03-24 10:55:18",
-    "subject": "FRAUD ALERT: Unauthorized Transaction Detected",
-    "body": "URGENT FRAUD ALERT\n\nWe have detected a suspicious transaction on your Visa card:\n\nTransaction Details:\n- Amount: $2,899.00\n- Merchant: Bitcoin Exchange\n- Location: Romania\n- Date: March 24, 2024\n\nIf you did not authorize this transaction, immediately secure your card:\n\nhttps://visa-fraud-protection.net/secure\n\nWARNING: Additional unauthorized charges may occur if not addressed within 1 hour.\n\nVisa Fraud Protection",
+    "sender": "support@philhealth-online.gov.ph.com",
+    "receiver": "hr@company.ph",
+    "date": "2024-03-26 13:15:28",
+    "subject": "PhilHealth: Update employer information immediately",
+    "body": "Philippine Health Insurance Corporation\nRepublic of the Philippines\n\nIMPORTANT COMPLIANCE NOTICE\n\nYour PhilHealth employer record requires immediate update to comply with new Republic Act requirements.\n\nEmployer: CYBERQUEST TECHNOLOGIES INC.\nEmployer Number: 1234567890\nStatus: NON-COMPLIANT\nPenalty if not updated: ₱25,000.00\n\nUpdate required information:\n- Employer details\n- List of employees with PhilHealth numbers\n- Updated payroll information\n- Authorized representative credentials\n\nComplete update: http://philhealth-online.gov.ph.com/employer-update\n\nDeadline: March 28, 2024\nNon-compliance may result in suspension of employee benefits.\n\nPhilHealth Employer Services\nCompliance Division",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Fake Visa domain (visa-security.org vs visa.com)",
-        "High-value cryptocurrency transaction to create fear",
-        "External domain for fraud protection",
-        "Geographic scare tactics using Romania",
-        "Extreme 1-hour urgency"
+        "Fake domain: philhealth-online.gov.ph.com (not philhealth.gov.ph)",
+        "Suspicious .com after .gov.ph (double extension)",
+        "Threatens penalties and benefit suspension",
+        "Requests employee PhilHealth numbers (sensitive data)",
+        "Asks for payroll information",
+        "Short deadline (2 days)",
+        "Claims new RA requirements without specifics"
       ],
       "safety_factors": [],
-      "educational_focus": "Demonstrates credit card fraud phishing using cryptocurrency and foreign transaction fears.",
+      "educational_focus": "Government impersonation with data harvesting - tries to collect employee personal information. Real PhilHealth uses philhealth.gov.ph only.",
       "red_flags": [
-        "Wrong domain: visa-security.org vs official visa.com",
-        "External domain for Visa security operations",
-        "Cryptocurrency transaction scare tactics",
-        "Geographic fear tactics",
-        "Extreme urgency tactics"
+        "Domain has suspicious .com after .gov.ph",
+        "Real government sites only use .gov.ph",
+        "PhilHealth sends official letters for compliance",
+        "Requesting all employee PhilHealth numbers is suspicious",
+        "Vague 'Republic Act requirements' without specifics"
       ],
       "verification_tips": [
-        "Visa communications come from official visa.com domain",
-        "Check your actual bank/card issuer for fraud alerts",
-        "Call the number on your card for fraud concerns",
-        "Banks don't use 1-hour email deadlines for fraud"
+        "Verify domain is exactly philhealth.gov.ph (no .com)",
+        "Check PhilHealth employer portal directly",
+        "Call PhilHealth Action Center: (02) 8441-7442",
+        "Real compliance notices come via official mail",
+        "Government agencies don't threaten via email"
       ]
     }
   },
   {
     "id": "phish_011",
-    "sender": "support@crypto-exchange.org",
-    "receiver": "investor@email.com",
-    "date": "2024-03-25 16:42:27",
-    "subject": "Limited Time: 300% Bitcoin Investment Returns",
-    "body": "Congratulations!\n\nYou've been selected for our exclusive Bitcoin investment program.\n\nInvestment Details:\n- Minimum Investment: $500\n- Guaranteed Return: 300% in 30 days\n- Risk Level: ZERO\n- Spots Available: Only 50 remaining\n\nStart earning today:\nhttps://crypto-profit-max.com/invest\n\nThis offer expires in 24 hours. Don't miss out on guaranteed profits!\n\nCrypto Investment Team",
+    "sender": "noreply@zoom-philippines.com",
+    "receiver": "it.admin@company.ph",
+    "date": "2024-03-27 10:20:44",
+    "subject": "Zoom: Your recording will be deleted - Download now",
+    "body": "Zoom Video Communications\n\nIMPORTANT: Your cloud recording will be automatically deleted in 48 hours.\n\nRecording Details:\n- Meeting: Q1 Business Review - Manila Office\n- Date: March 27, 2024\n- Size: 847 MB\n- Expires: March 29, 2024\n\nDue to storage limits, this recording must be downloaded before expiration.\n\nDownload recording: http://zoom-philippines.com/recording/download/xyz789\n\nTo download:\n1. Click the link above\n2. Login with Zoom credentials\n3. Verify account with OTP\n4. Download file\n\nAfter deletion, recordings cannot be recovered.\n\nZoom Support Philippines",
     "is_phishing": 1,
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Unrealistic 300% return promises",
-        "Claims of 'guaranteed' profits with zero risk",
-        "Pressure tactics with limited spots",
-        "Generic congratulations without personalization",
-        "Suspicious crypto domain"
+        "Fake domain: zoom-philippines.com (not zoom.us)",
+        "Creates urgency with 48-hour deletion threat",
+        "Requests Zoom credentials via email link",
+        "Asks for OTP verification",
+        "Zoom doesn't use country-specific domains",
+        "Suspicious download link structure",
+        "Threatens permanent loss of data"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows cryptocurrency investment scam using unrealistic return promises and urgency.",
+      "educational_focus": "Video platform credential theft - uses fake recording deletion to steal Zoom account access. Real Zoom uses zoom.us only.",
       "red_flags": [
-        "Unrealistic investment returns (300% in 30 days)",
-        "Claims of zero risk with guaranteed profits",
-        "Generic 'Congratulations' without explanation",
-        "Limited time offers with artificial scarcity",
-        "Cryptocurrency get-rich-quick schemes"
+        "Domain is zoom-philippines.com, NOT zoom.us",
+        "Zoom uses zoom.us globally, not country domains",
+        "Real recordings accessed through zoom.us/recording",
+        "Zoom doesn't auto-delete after 48 hours",
+        "Requesting OTP via email link is suspicious"
       ],
       "verification_tips": [
-        "No legitimate investment guarantees 300% returns",
-        "All investments carry risk - 'zero risk' is a red flag",
-        "Research any investment platform thoroughly",
-        "Be extremely wary of unsolicited investment offers"
+        "Login directly to zoom.us to check recordings",
+        "Zoom cloud recordings have longer retention (days/months)",
+        "Never enter Zoom credentials via email links",
+        "Check recording management in official Zoom portal",
+        "Zoom always uses zoom.us domain for services"
       ]
     }
   },
   {
     "id": "phish_012",
-    "sender": "shipping@fedex-delivery.net",
-    "receiver": "customer@email.com",
-    "date": "2024-03-26 11:18:44",
-    "subject": "FedEx Package Delivery Failed - Action Required",
-    "body": "Dear Customer,\n\nYour FedEx package delivery failed due to an incorrect address.\n\nPackage Information:\n- Tracking: FX-9847562301\n- From: Apple Store\n- Contents: iPhone 15 Pro\n- Value: $1,199\n\nTo reschedule delivery and confirm your address:\nhttps://fedex-redelivery.org/schedule\n\nPackage will be returned to sender if not rescheduled within 72 hours.\n\nFedEx Customer Service",
+    "sender": "admin@unionbank-corporate.ph.com",
+    "receiver": "finance@company.ph",
+    "date": "2024-03-28 14:45:33",
+    "subject": "UnionBank: Confirm wire transfer - ₱875,000",
+    "body": "UnionBank Corporate Banking\n\nWire Transfer Authorization Required\n\nA wire transfer request has been initiated from your account:\n\nTransfer Details:\n- From: UnionBank Corporate ****7890\n- To: International Account (Singapore)\n- Amount: ₱875,000.00\n- Reference: WIRE-2024-03-28-789\n- Initiated by: Unknown user\n\nThis transaction requires your authorization.\n\nIf you did NOT initiate this transfer:\n1. Cancel immediately\n2. Verify account security\n3. Report unauthorized access\n\nAuthorize or cancel:\nhttp://unionbank-corporate.ph.com/wire-transfer/confirm\n\nLogin required:\n- Corporate account credentials\n- Transaction PIN\n- SMS OTP\n\nTransfer will process in 1 hour if not cancelled.\n\nUnionBank Security Team",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Fake FedEx domain (fedex-delivery.net vs fedex.com)",
-        "High-value fake package to create urgency",
-        "External domain for package redelivery",
-        "Generic customer greeting",
-        "Fake tracking number format"
+        "Fake domain: unionbank-corporate.ph.com (not unionbank.ph)",
+        "Large amount wire transfer to create alarm",
+        "International transfer to Singapore (suspicious)",
+        "Requests transaction PIN and OTP",
+        "Unknown initiator to create fear",
+        "1-hour urgency window",
+        "Links to non-UnionBank domain"
       ],
       "safety_factors": [],
-      "educational_focus": "Demonstrates shipping scam using fake delivery failures and valuable package claims.",
+      "educational_focus": "Banking wire transfer scam - uses fear of large unauthorized transfer to steal banking credentials and OTP codes.",
       "red_flags": [
-        "Wrong domain: fedex-delivery.net vs official fedex.com",
-        "High-value package you didn't order",
-        "External domain for FedEx operations",
-        "Generic greeting instead of recipient name",
-        "Suspicious tracking number formats"
+        "Domain is unionbank-corporate.ph.com, NOT unionbank.ph",
+        "UnionBank uses online.unionbankph.com for transactions",
+        "Real wire transfers show in online banking portal",
+        "Never provide transaction PIN or OTP via email links",
+        "International transfers require multiple authorizations"
       ],
       "verification_tips": [
-        "FedEx emails come from fedex.com domain only",
-        "Track packages directly on fedex.com website",
-        "Verify you're expecting a package from Apple",
-        "Check tracking numbers on official FedEx site"
+        "Login directly to online.unionbankph.com",
+        "Check for pending transactions in official portal",
+        "Call UnionBank Corporate: (02) 8841-8600 immediately",
+        "Never share OTP or transaction PIN",
+        "Real wire transfers require in-app authorization"
       ]
     }
   },
   {
     "id": "phish_013",
-    "sender": "security@whatsapp-verification.com",
-    "receiver": "user@email.com",
-    "date": "2024-03-27 14:33:51",
-    "subject": "WhatsApp Account Verification Required",
-    "body": "Hello WhatsApp User,\n\nDue to new security policies, all accounts must be verified to continue using WhatsApp.\n\nVerification Code: WA-Ver-8829341\n\nVerify your account to avoid suspension:\nhttps://whatsapp-verify.tk/confirm?code=WA-Ver-8829341\n\nUnverified accounts will be deleted after 48 hours.\n\nWhatsApp Security Team\n\nNote: This is an automated message. Do not reply.",
+    "sender": "security@bpi-online.com.ph",
+    "receiver": "finance@company.ph",
+    "date": "2024-03-29 07:30:18",
+    "subject": "BPI: New security token required for online banking",
+    "body": "Bank of the Philippine Islands\nSecurity Enhancement Notice\n\nBPI is implementing enhanced security measures for all corporate accounts.\n\nNEW REQUIREMENT: Security Token Installation\n\nAll corporate account holders must install a new security token to continue using BPI online banking.\n\nInstallation deadline: March 31, 2024\n\nInstall security token:\nhttp://bpi-online.com.ph/security/token-install\n\nInstallation process:\n1. Download security certificate\n2. Enter corporate account credentials\n3. Verify identity with OTP\n4. Install token on device\n\nAccounts without security token will be suspended after March 31.\n\nThis is mandatory for all BPI Corporate Banking users.\n\nBPI Corporate Security Team\nEnhanced Protection Initiative",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Fake WhatsApp domain (whatsapp-verification.com vs whatsapp.com)",
-        "Generic greeting 'WhatsApp User'",
-        "External .tk domain for verification",
-        "Fake security policy claims",
-        "Fake verification codes"
+        "Fake domain: bpi-online.com.ph (not bpi.com.ph)",
+        "Requests account credentials for 'token installation'",
+        "Threatens account suspension",
+        "Asks to download security certificate (likely malware)",
+        "Requests OTP codes",
+        "Short deadline (2 days)",
+        "BPI doesn't use separate domains for security"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows messaging app phishing using fake security policy changes and verification requirements.",
+      "educational_focus": "Banking malware distribution - disguises malware as security token while stealing credentials. Real BPI security updates through official channels.",
       "red_flags": [
-        "Wrong domain: whatsapp-verification.com vs official whatsapp.com",
-        "Generic greeting instead of your phone number",
-        "External .tk domain for WhatsApp verification",
-        "Fake verification codes in email",
-        "Fake security policy changes"
+        "Domain is bpi-online.com.ph, NOT bpi.com.ph or online.bpi.com.ph",
+        "Downloading 'security certificates' via email is dangerous",
+        "Real security tokens distributed through bank branches",
+        "BPI never requests credentials for security updates",
+        "Mandatory installation threats are pressure tactics"
       ],
       "verification_tips": [
-        "WhatsApp verification happens within the app, not email",
-        "WhatsApp doesn't send verification codes via email",
-        "Check WhatsApp official channels for policy changes",
-        "WhatsApp uses whatsapp.com for official communications"
+        "Visit BPI branch to verify security requirements",
+        "Call BPI Corporate: (02) 889-10000 to confirm",
+        "Never download security software from email links",
+        "Real BPI security uses official app and branch procedures",
+        "Check online.bpi.com.ph for legitimate security announcements"
       ]
     }
   },
   {
     "id": "phish_014",
-    "sender": "taxrefund@irs-treasury.org",
-    "receiver": "taxpayer@email.com",
-    "date": "2024-03-28 09:27:15",
-    "subject": "IRS Tax Refund: $3,247.89 Ready for Deposit",
-    "body": "Dear Taxpayer,\n\nGood news! You are eligible for a tax refund of $3,247.89.\n\nRefund Processing ID: IRS-REF-2024-7829\n\nTo receive your refund quickly, please verify your banking information:\n\nhttps://irs-refund-portal.net/claim\n\nYou must claim your refund within 30 days or it will be forfeited to the US Treasury.\n\nInternal Revenue Service\nTax Refund Department",
+    "sender": "notifications@sec-online.gov.ph.net",
+    "receiver": "legal@company.ph",
+    "date": "2024-03-30 16:45:22",
+    "subject": "SEC: Final notice - Submit documents or face penalties",
+    "body": "Securities and Exchange Commission\nRepublic of the Philippines\n\nFINAL COMPLIANCE NOTICE\n\nYour company has outstanding SEC requirements that must be submitted immediately.\n\nCompany: CYBERQUEST TECHNOLOGIES INC.\nSEC Registration: CS202012345\nStatus: NON-COMPLIANT\nPenalty accrued: ₱50,000.00\n\nOutstanding requirements:\n- General Information Sheet (GIS)\n- Audited Financial Statements 2023\n- Board Resolution\n- Articles of Incorporation (updated)\n\nSubmit documents: http://sec-online.gov.ph.net/submit-documents\n\nUpload:\n- Required documents\n- Penalty payment proof\n- Authorized representative ID\n- Company TIN\n\nFinal deadline: April 1, 2024\nFailure to comply will result in SEC administrative case and business suspension.\n\nSEC Compliance Division",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Fake IRS domain (irs-treasury.org vs irs.gov)",
-        "Unexpected refund with specific amount",
-        "External domain for IRS operations",
-        "Generic taxpayer greeting",
-        "Generic taxpayer greeting"
+        "Fake domain: sec-online.gov.ph.net (not sec.gov.ph)",
+        "Suspicious .net after .gov.ph (double extension)",
+        "Threatens penalties and business suspension",
+        "Requests company TIN and ID documents",
+        "Asks for payment proof upload (credit card info)",
+        "Short final deadline (2 days)",
+        "Creates fear of administrative case"
       ],
       "safety_factors": [],
-      "educational_focus": "Demonstrates tax refund scam using government impersonation and financial incentives.",
+      "educational_focus": "Government impersonation for document/identity theft - harvests sensitive business documents and IDs. Real SEC uses sec.gov.ph only.",
       "red_flags": [
-        "Wrong domain: irs-treasury.org vs official irs.gov",
-        "Unexpected tax refund notification",
-        "External domain for IRS refund operations",
-        "Generic greeting 'Dear Taxpayer'",
-        "Generic government greetings"
+        "Domain has .net after .gov.ph (fake government site)",
+        "Real government sites ONLY use .gov.ph",
+        "SEC sends official letters for compliance",
+        "Uploading representative ID to website is dangerous",
+        "Vague 'administrative case' threat without specifics"
       ],
       "verification_tips": [
-        "IRS uses irs.gov domain for official communications",
-        "Check your tax return status directly on irs.gov",
-        "IRS doesn't initiate contact via email for refunds",
-        "Be suspicious of unexpected refund notifications"
+        "Verify domain is exactly sec.gov.ph (no extensions)",
+        "Check SEC i-Register portal directly",
+        "Call SEC: (02) 8818-0921 to verify compliance status",
+        "Real SEC notices come via registered mail",
+        "Never upload IDs or TINs via email links"
       ]
     }
   },
   {
     "id": "phish_015",
-    "sender": "support@instagram-heIp.org",
-    "receiver": "influencer@email.com",
-    "date": "2024-03-29 12:45:38",
-    "subject": "Instagram Verification Badge Available",
-    "body": "Congratulations!\n\nYour Instagram account has been approved for the blue verification badge.\n\nAccount: @your_username\nFollowers: 25,847\nEngagement Rate: 4.2%\n\nTo activate your verification badge:\nhttps://instagram-verification.net/activate\n\nThis offer is valid for 7 days only. After that, you'll need to reapply and wait 6 months.\n\nInstagram Verification Team",
+    "sender": "support@meralco-billing.com.ph",
+    "receiver": "facilities@company.ph",
+    "date": "2024-03-31 18:30:44",
+    "subject": "MERALCO: Final disconnection notice - Pay now",
+    "body": "Manila Electric Company\n\nFINAL DISCONNECTION NOTICE\n\nYour MERALCO account has an overdue balance. Service will be disconnected in 24 hours.\n\nAccount Number: 1234-5678-90\nService Address: 123 Ayala Avenue, Makati City\nOverdue Amount: ₱45,673.25\nPenalty: ₱5,000.00\nTotal Due: ₱50,673.25\n\nDisconnection Date: April 1, 2024, 9:00 AM\n\nPay immediately to avoid disconnection:\nhttp://meralco-billing.com.ph/pay-now\n\nPayment options:\n- Credit Card\n- Debit Card\n- Online Banking\n\nProvide:\n- Account number\n- Payment amount\n- Card details\n\nDisconnection cannot be reversed once executed.\n\nMERALCO Collection Department\nURGENT ACTION REQUIRED",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Domain spoofing with uppercase 'I' (instagram-heIp vs instagram-help)",
-        "Fake verification badge offer",
-        "External domain for Instagram verification",
-        "Generic account statistics",
-        "Fake follower statistics"
+        "Fake domain: meralco-billing.com.ph (not meralco.com.ph)",
+        "Extreme urgency (24 hours to disconnection)",
+        "Requests credit card details via email link",
+        "Adds penalty to create larger amount",
+        "Disconnection threat to create panic",
+        "MERALCO doesn't use separate billing domains",
+        "Late evening timing (less alert)"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows social media verification scam targeting influencers and content creators.",
+      "educational_focus": "Utility billing scam - uses fear of service disconnection to steal payment card information. Real MERALCO has proper procedures.",
       "red_flags": [
-        "Wrong domain: instagram-heIp.org (uppercase I instead of lowercase l)",
-        "Unexpected verification badge approval",
-        "External domain for Instagram verification",
-        "Generic follower counts",
-        "Time pressure for verification"
+        "Domain is meralco-billing.com.ph, NOT meralco.com.ph",
+        "Real MERALCO uses app.meralco.com.ph for payments",
+        "MERALCO sends physical disconnection notices",
+        "Never provide card details via email links",
+        "24-hour disconnection is unrealistic"
       ],
       "verification_tips": [
-        "Instagram verification happens within the app",
-        "Instagram uses instagram.com for official emails",
-        "Check Instagram's official verification process",
-        "Be wary of unsolicited verification offers"
+        "Login to app.meralco.com.ph to check actual bill",
+        "Call MERALCO Hotline: (02) 16211 to verify",
+        "Real disconnection notices come via registered mail",
+        "Pay only through official MERALCO channels",
+        "Check MERALCO app for real account status"
       ]
     }
   },
   {
     "id": "phish_016",
-    "sender": "billing@spotify-premium.net",
-    "receiver": "subscriber@email.com",
-    "date": "2024-03-30 15:52:41",
-    "subject": "Spotify Premium: Payment Declined",
-    "body": "Hi,\n\nYour Spotify Premium payment was declined.\n\nSubscription Details:\n- Plan: Premium Family\n- Monthly Cost: $15.99\n- Billing Date: March 30, 2024\n\nUpdate your payment method to continue enjoying Premium features:\n\nhttps://spotify-billing.org/update\n\nYour account will downgrade to free tier in 24 hours if payment is not updated.\n\nSpotify Billing Team",
+    "sender": "ceo@company-urgent.ph",
+    "receiver": "finance@company.ph",
+    "date": "2024-04-01 17:15:33",
+    "subject": "URGENT: Wire transfer needed for client payment",
+    "body": "Hi Finance Team,\n\nI need you to process an urgent wire transfer immediately. I'm in a meeting with our biggest client in Singapore and can't access my computer.\n\nTransfer Details:\n- Amount: ₱500,000.00\n- Recipient: TechSupply Solutions Pte Ltd\n- Bank: DBS Bank Singapore\n- Account: 1234567890\n- Swift: DBSSSGSG\n- Reference: Invoice #SG-2024-789\n\nThis is for equipment we need by tomorrow. The client is waiting for payment confirmation.\n\nPlease process this immediately and send me confirmation at this email.\n\nDon't call my regular number - I'm using a client phone. Will explain later.\n\nThanks,\nCEO Name\nSent from my iPhone",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Fake Spotify domain (spotify-premium.net vs spotify.com)",
-        "Generic greeting 'Hi' without name",
-        "External domain for billing updates",
-        "24-hour pressure deadline",
-        "Immediate 24-hour pressure"
+        "CEO impersonation (Business Email Compromise)",
+        "Fake domain: company-urgent.ph (not company.ph)",
+        "Creates urgency (client waiting, needed tomorrow)",
+        "Large amount (₱500,000)",
+        "International transfer to Singapore",
+        "Discourages verification (don't call)",
+        "Suspicious reason for alternate email",
+        "Generic 'Sent from iPhone' signature"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows subscription payment scam using service downgrade fears and payment urgency.",
+      "educational_focus": "CEO fraud/Business Email Compromise - impersonates executive to authorize fraudulent wire transfer. Classic BEC attack targeting finance departments.",
       "red_flags": [
-        "Wrong domain: spotify-premium.net vs official spotify.com",
-        "Generic greeting without subscriber name",
-        "External domain for Spotify billing",
-        "24-hour downgrade threat",
-        "Suspicious billing domains"
+        "Sender domain is company-urgent.ph, NOT company.ph",
+        "Real CEO wouldn't use alternate email for wire transfers",
+        "Discouraging phone verification is major red flag",
+        "Urgent international transfers without proper process",
+        "No standard wire transfer documentation",
+        "Convenient excuse for being unreachable"
       ],
       "verification_tips": [
-        "Spotify emails come from spotify.com domain only",
-        "Check your Spotify account directly for billing issues",
-        "Spotify addresses subscribers by their names",
-        "Never update payment info through email links"
+        "ALWAYS verify wire transfers via phone or in-person",
+        "Call CEO's known number regardless of email instructions",
+        "Check sender email domain carefully",
+        "Follow company wire transfer approval procedures",
+        "Verify recipient company with Singapore registry",
+        "BEC attacks rely on bypassing verification"
       ]
     }
   },
   {
     "id": "phish_017",
-    "sender": "security@Iinkedin-professional.com",
-    "receiver": "professional@email.com",
-    "date": "2024-03-31 08:19:33",
-    "subject": "LinkedIn: Your Profile Has Been Viewed 247 Times",
-    "body": "Hello Professional,\n\nGreat news! Your LinkedIn profile has been viewed 247 times this week.\n\nProfile Views This Week:\n- Recruiters: 89 views\n- Hiring Managers: 124 views\n- Industry Professionals: 34 views\n\nUpgrade to LinkedIn Premium to see who viewed your profile:\n\nhttps://linkedin-premium-upgrade.net/offer\n\nSpecial Offer: 50% off Premium for new subscribers (expires today)\n\nLinkedIn Professional Team",
+    "sender": "support@pldt-fiber.com.ph",
+    "receiver": "it.admin@company.ph",
+    "date": "2024-04-02 11:20:55",
+    "subject": "PLDT: Upgrade to 1Gbps Fiber - Limited time offer",
+    "body": "PLDT Enterprise Fiber Promotion\n\nExclusive offer for valued corporate customers!\n\nUpgrade your 500 Mbps connection to 1 Gbps Fiber at NO ADDITIONAL COST for 6 months.\n\nCurrent Plan: 500 Mbps - ₱8,999/month\nUpgrade Plan: 1 Gbps - ₱8,999/month (50% discount)\n\nThis limited-time promotion expires April 5, 2024.\n\nAccept upgrade offer:\nhttp://pldt-fiber.com.ph/enterprise/upgrade\n\nTo process upgrade:\n1. Verify account details\n2. Confirm current plan\n3. Provide payment information\n4. Sign digital contract\n\nOffer available only to accounts in good standing. Installation within 5 business days.\n\nPLDT Enterprise Sales Team\nMakati Business District Office",
     "is_phishing": 1,
     "ai_analysis": {
       "risk_level": "high",
       "phishing_indicators": [
-        "Domain spoofing with uppercase 'I' (Iinkedin vs linkedin)",
-        "Generic greeting 'Hello Professional'",
-        "External domain for LinkedIn Premium",
-        "Fake profile view statistics",
-        "Generic professional greeting"
+        "Fake domain: pldt-fiber.com.ph (not pldt.com.ph)",
+        "Too good to be true offer (free upgrade)",
+        "Short deadline to create urgency",
+        "Requests account and payment information",
+        "Asks to sign 'digital contract' via link",
+        "PLDT doesn't use separate fiber domains",
+        "Unsolicited promotional offer"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows professional networking scam using career advancement and profile visibility tactics.",
+      "educational_focus": "ISP promotional scam - uses attractive upgrade offer to harvest account information and payment details. Real PLDT promotions through official channels.",
       "red_flags": [
-        "Wrong domain: Iinkedin-professional.com (uppercase I instead of lowercase l)",
-        "Generic greeting instead of your actual name",
-        "External domain for LinkedIn Premium upgrades",
-        "Fake profile statistics",
-        "Generic professional greetings"
+        "Domain is pldt-fiber.com.ph, NOT pldt.com.ph",
+        "Free double speed upgrade is suspiciously generous",
+        "Real PLDT promotions announced through official channels",
+        "Requesting payment info for 'upgrade' is suspicious",
+        "Limited-time pressure tactic",
+        "Digital contract signing via email link is unsafe"
       ],
       "verification_tips": [
-        "LinkedIn emails come from linkedin.com domain only",
-        "Check your actual LinkedIn notifications for profile views",
-        "LinkedIn addresses members by their registered names",
-        "Upgrade to Premium only through official LinkedIn website"
+        "Contact PLDT Enterprise Hotline: (02) 8888-0-101",
+        "Check official PLDT website for promotions",
+        "Visit PLDT business center to verify offer",
+        "Real upgrades processed through account manager",
+        "PLDT uses pldt.com.ph or pldthome.com only"
       ]
     }
   },
   {
     "id": "phish_018",
-    "sender": "support@zoom-security.org",
-    "receiver": "user@company.com",
-    "date": "2024-04-01 13:41:27",
-    "subject": "Zoom Meeting Security Update Required",
-    "body": "Dear Zoom User,\n\nDue to recent security vulnerabilities, all Zoom accounts must install a critical security update.\n\nSecurity Update Details:\n- Version: Zoom Security Patch 5.14.2\n- Release Date: April 1, 2024\n- Priority: CRITICAL\n\nDownload the security update:\nhttps://zoom-security-update.com/download\n\nWarning: Accounts without this update will be suspended after April 3, 2024.\n\nZoom Security Team",
+    "sender": "noreply@dti-business-renewal.gov.ph.org",
+    "receiver": "legal@company.ph",
+    "date": "2024-04-03 09:45:22",
+    "subject": "DTI: Business name expired - Renew within 48 hours",
+    "body": "Department of Trade and Industry\nRepublic of the Philippines\n\nBUSINESS NAME EXPIRATION ALERT\n\nYour business name registration has EXPIRED.\n\nBusiness: CYBERQUEST TECHNOLOGIES\nRegistration: DTI-2020-123456-M\nExpiration: April 15, 2020\nStatus: EXPIRED (4 years)\n\nYour business is currently operating with an expired registration, which is illegal under DTI regulations.\n\nPenalties:\n- Administrative fine: ₱20,000.00\n- Business closure risk\n- Legal liability\n\nRenew immediately:\nhttp://dti-business-renewal.gov.ph.org/renew-now\n\nRequired:\n- Business information\n- Owner's valid ID\n- TIN\n- Renewal fee: ₱500.00\n- Penalty payment: ₱20,000.00\n\nProcess within 48 hours to avoid business closure.\n\nDTI Compliance and Enforcement Division",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Fake Zoom domain (zoom-security.org vs zoom.us)",
-        "Requests to download security updates via email",
-        "Generic greeting 'Dear Zoom User'",
-        "Fake security vulnerability claims",
-        "External download requirements"
+        "Fake domain: dti-business-renewal.gov.ph.org (not dti.gov.ph)",
+        "Suspicious .org after .gov.ph (triple extension)",
+        "Creates panic with expired registration claim",
+        "Requests owner's ID and TIN",
+        "Inflated penalty amount (₱20,000)",
+        "48-hour pressure tactic",
+        "Threatens business closure",
+        "Claims 4-year expiration (unrealistic)"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows software update scam using fake security alerts to distribute malware.",
+      "educational_focus": "Government impersonation with extortion - uses fear of business closure and fines to steal personal information and payments. Real DTI uses dti.gov.ph only.",
       "red_flags": [
-        "Wrong domain: zoom-security.org vs official zoom.us",
-        "Generic greeting instead of your account name",
-        "External domain for Zoom security downloads",
-        "Email requests to download software updates",
-        "Fake security patch version numbers"
+        "Domain has .org after .gov.ph (fake government site)",
+        "Real government sites ONLY use .gov.ph extension",
+        "DTI renewal deadline is expiration date, not 4 years after",
+        "₱20,000 penalty for renewal is inflated/fake",
+        "DTI sends official notices via mail, not email threats",
+        "48-hour business closure is unrealistic"
       ],
       "verification_tips": [
-        "Zoom uses zoom.us domain for official communications",
-        "Updates come through the Zoom application, not email downloads",
-        "Check Zoom's official website for security announcements",
-        "Never download software from email links"
+        "Verify domain is exactly dti.gov.ph",
+        "Check renewal status at bnrs.dti.gov.ph directly",
+        "Call DTI Hotline: 751-3330 to verify",
+        "Real DTI renewal fee is ₱500, not ₱20,500",
+        "Visit DTI office to verify business status",
+        "Government agencies don't threaten via email"
       ]
     }
   },
   {
     "id": "phish_019",
-    "sender": "lottery@international-winners.org",
-    "receiver": "winner@email.com",
-    "date": "2024-04-02 10:33:19",
-    "subject": "CONGRATULATIONS! You've Won $750,000 USD",
-    "body": "CONGRATULATIONS!!!\n\nYou have won the International Email Lottery!\n\nWinning Details:\n- Prize Amount: $750,000 USD\n- Ticket Number: INT-2024-7829\n- Draw Date: April 1, 2024\n- Winning Numbers: 7, 14, 23, 31, 42, 49\n\nTo claim your prize, contact our claims agent:\nEmail: claims@lottery-winners.net\nPhone: +44-700-123-4567\n\nYou must claim within 14 days or forfeit your winnings.\n\nInternational Lottery Commission",
+    "sender": "admin@payroll-system.company.ph.net",
+    "receiver": "all-employees@company.ph",
+    "date": "2024-04-04 14:30:18",
+    "subject": "Payroll System: Verify employment to receive April salary",
+    "body": "CyberQuest Technologies Inc.\nPayroll Department\n\nIMPORTANT: Employment Verification Required\n\nDue to recent system upgrades, all employees must verify their employment status to receive April 2024 salary.\n\nVerification deadline: April 5, 2024\n\nFailing to verify will result in salary payment delay.\n\nVerify employment:\nhttp://payroll-system.company.ph.net/verify-employee\n\nRequired information:\n- Full Name\n- Employee ID\n- Department\n- Bank Account Number\n- Email Password (system authentication)\n- Government ID Number\n- TIN\n\nThis is a mandatory process for all employees. Verification takes 3 minutes.\n\nSalaries will only be processed for verified employees.\n\nPayroll Administration\nHR Department",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Unsolicited lottery win notification",
-        "Large prize amount to create excitement",
-        "Requests to contact external agents",
-        "Generic lottery organization name",
-        "Fake international lottery claims"
+        "Fake domain: payroll-system.company.ph.net (not company.ph)",
+        "Requests email password (CRITICAL RED FLAG)",
+        "Asks for government ID and TIN numbers",
+        "Requests bank account number",
+        "Threatens salary delay",
+        "Short deadline (1 day)",
+        "Generic HR/Payroll sender",
+        "Suspicious .net extension"
       ],
       "safety_factors": [],
-      "educational_focus": "Classic lottery scam using large prize amounts and fake international organizations.",
+      "educational_focus": "Internal payroll scam - harvests comprehensive employee PII including passwords, IDs, and banking information. NEVER share passwords with anyone.",
       "red_flags": [
-        "Unexpected lottery win without entering",
-        "Large prize amount ($750,000)",
-        "Generic 'International Lottery Commission'",
-        "Requests to contact external claims agents",
-        "Fake lottery numbers and ticket information"
+        "Domain is payroll-system.company.ph.net, NOT company.ph",
+        "NEVER EVER provide email password to anyone, including HR",
+        "Real HR already has your employment information",
+        "Requesting government ID and TIN via email is suspicious",
+        "Salary threat is pressure tactic",
+        "Legitimate payroll doesn't require 'verification' links"
       ],
       "verification_tips": [
-        "You cannot win a lottery you didn't enter",
-        "Legitimate lotteries don't notify winners via email",
-        "Be extremely suspicious of unexpected large prizes",
-        "Research any lottery organization before responding"
+        "Contact HR department directly via phone or in-person",
+        "NEVER provide passwords under any circumstances",
+        "Real HR uses internal HRIS, not external links",
+        "Check with colleagues if this is legitimate",
+        "Report suspicious HR emails to IT security immediately",
+        "Verify sender domain is exactly company.ph"
       ]
     }
   },
   {
     "id": "phish_020",
-    "sender": "admin@windows-update.net",
-    "receiver": "user@email.com",
-    "date": "2024-04-03 16:28:45",
-    "subject": "Critical Windows Security Update - Install Now",
-    "body": "Important Security Notice\n\nMicrosoft has released a critical security update for Windows.\n\nUpdate Information:\n- Update ID: KB2024-CRITICAL\n- Severity: CRITICAL\n- Affects: All Windows versions\n- CVE Score: 9.8/10\n\nInstall immediately:\nhttps://windows-critical-update.com/install\n\nThis vulnerability allows remote attackers to take complete control of your computer.\n\nMicrosoft Windows Update Team\n\nDO NOT DELAY - INSTALL NOW",
+    "sender": "security@pagibig-fund.gov.ph.com",
+    "receiver": "hr@company.ph",
+    "date": "2024-04-05 16:45:55",
+    "subject": "Pag-IBIG: Employer account suspended - Update now",
+    "body": "Home Development Mutual Fund (Pag-IBIG)\nRepublic of the Philippines\n\nEMPLOYER ACCOUNT SUSPENSION NOTICE\n\nYour Pag-IBIG employer account has been suspended due to incomplete information.\n\nEmployer: CYBERQUEST TECHNOLOGIES INC.\nEmployer ID: 1234567890\nStatus: SUSPENDED\nReason: Missing employee information\n\nTo restore your account and avoid penalties:\n1. Update employee master list\n2. Submit updated member data sheets (MDS)\n3. Verify employer information\n4. Pay reactivation fee: ₱5,000.00\n\nReactivate account:\nhttp://pagibig-fund.gov.ph.com/employer/reactivate\n\nSubmit:\n- Complete list of employees with Pag-IBIG numbers\n- Employee personal information (birthdates, addresses)\n- Employment dates and salaries\n- Authorized representative ID\n\nAccount must be reactivated by April 7, 2024 or employees cannot access Pag-IBIG benefits.\n\nPag-IBIG Employer Services\nCompliance and Collection Department",
     "is_phishing": 1,
     "ai_analysis": {
-      "risk_level": "high",
+      "risk_level": "critical",
       "phishing_indicators": [
-        "Fake Windows domain (windows-update.net vs microsoft.com)",
-        "Requests to download updates via email",
-        "Fear tactics about system compromise",
-        "External domain for Microsoft updates",
-        "Fake CVE scores and update IDs"
+        "Fake domain: pagibig-fund.gov.ph.com (not pagibig.gov.ph)",
+        "Suspicious .com after .gov.ph (double extension)",
+        "Requests comprehensive employee PII",
+        "Asks for employee salaries and personal data",
+        "Fake 'reactivation fee' (₱5,000)",
+        "Threatens employee benefit suspension",
+        "Requests representative ID upload",
+        "Short deadline (2 days)"
       ],
       "safety_factors": [],
-      "educational_focus": "Shows operating system update scam using fake security alerts to distribute malware.",
+      "educational_focus": "Government impersonation for mass PII theft - attempts to harvest complete employee database including sensitive personal information. Real Pag-IBIG uses pagibig.gov.ph only.",
       "red_flags": [
-        "Wrong domain: windows-update.net vs official microsoft.com",
-        "Microsoft doesn't send update notifications via email",
-        "External domain for Windows security updates",
-        "Fear tactics about system compromise",
-        "Urgent all-caps instructions to install now"
+        "Domain has .com after .gov.ph (fake government site)",
+        "Real government sites ONLY use .gov.ph",
+        "Pag-IBIG doesn't charge 'reactivation fees'",
+        "Requesting all employee salaries and personal data is suspicious",
+        "Real compliance issues handled through official letters",
+        "Uploading representative ID to website is dangerous",
+        "Threatens employee benefits to create urgency"
       ],
       "verification_tips": [
-        "Windows updates come through Windows Update, not email",
-        "Microsoft uses microsoft.com for official communications",
-        "Check Windows Update settings in your system",
-        "Never download Windows updates from email links"
+        "Verify domain is exactly pagibig.gov.ph",
+        "Check employer account at Virtual Pag-IBIG directly",
+        "Call Pag-IBIG Hotline: 8-724-4244 to verify",
+        "Real Pag-IBIG sends official correspondence via mail",
+        "Never submit employee PII via email links",
+        "Visit nearest Pag-IBIG branch to verify account status"
       ]
     }
   }

@@ -727,7 +727,7 @@ export class Level4SessionSummary extends BaseModalComponent {
             // Create shutdown overlay
             const shutdownOverlay = document.createElement('div');
             shutdownOverlay.className = 'fixed inset-0 bg-black z-50';
-            shutdownOverlay.style.zIndex = '9999';
+            shutdownOverlay.style.zIndex = '10000';
             document.body.appendChild(shutdownOverlay);
             
             // Run shutdown sequence
@@ -756,7 +756,7 @@ export class Level4SessionSummary extends BaseModalComponent {
             // Create shutdown overlay
             const shutdownOverlay = document.createElement('div');
             shutdownOverlay.className = 'fixed inset-0 bg-black z-50';
-            shutdownOverlay.style.zIndex = '9999';
+            shutdownOverlay.style.zIndex = '10000';
             document.body.appendChild(shutdownOverlay);
             
             // Run shutdown sequence
