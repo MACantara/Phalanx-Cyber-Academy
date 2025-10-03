@@ -104,6 +104,10 @@ def create_app(config_name=None):
     # Register blueprints
     from app.routes import register_blueprints
     register_blueprints(app)
+    
+    # Exempt specific API endpoints from CSRF protection
+    from app.routes.api import check_password_strength
+    csrf.exempt(check_password_strength)
 
     # Create default admin user if it doesn't exist (only if database is not disabled)
     with app.app_context():
