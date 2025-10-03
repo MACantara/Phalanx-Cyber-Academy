@@ -676,9 +676,10 @@ ${this.formatText(message.example)}
         buttons.forEach(button => {
             const onclickHandler = button.getAttribute('onclick');
             if (onclickHandler) {
-                button.addEventListener('touchstart', () => {
+                button.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
                     eval(onclickHandler);
-                }, { passive: true });
+                });
             }
         });
     }
