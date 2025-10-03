@@ -314,11 +314,74 @@ class CyberQuestSignup {
         return isValid;
     }
 
-    validateStep2() {
+    async validateStep2() {
+        // First check basic password requirements
         if (!this.passwordValidator.isValid()) {
             const errors = this.passwordValidator.getValidationErrors();
             this.showNotification(errors[0] || 'Agent password requirements not met', 'error');
             return false;
+        }
+        
+        // Get password value
+        const password = document.getElementById('password').value;
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        
+        // Check password strength with backend API
+        try {
+            const userInputs = [username, email ? email.split('@')[0] : ''].filter(Boolean);
+            
+            const response = await fetch('/api/check-password-strength', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    password: password,
+                    user_inputs: userInputs
+                })
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                
+                // Block if password score is too low (less than 2 = fair)
+                if (result.score < 2) {
+                    let errorMessage = `Password is too weak (${result.strength}). Please create a stronger password.`;
+                    
+                    // Add specific feedback if available
+                    if (result.feedback && result.feedback.warning) {
+                        errorMessage += ` ${result.feedback.warning}`;
+                    }
+                    
+                    // Add first suggestion if available
+                    if (result.feedback && result.feedback.suggestions && result.feedback.suggestions.length > 0) {
+                        errorMessage += ` Suggestion: ${result.feedback.suggestions[0]}`;
+                    }
+                    
+                    this.showNotification(errorMessage, 'error');
+                    return false;
+                }
+                
+                // Check for common password patterns specifically
+                if (result.feedback && result.feedback.warning) {
+                    const warningLower = result.feedback.warning.toLowerCase();
+                    if (warningLower.includes('common') || 
+                        warningLower.includes('dictionary') || 
+                        warningLower.includes('keyboard') ||
+                        warningLower.includes('repeated') ||
+                        warningLower.includes('predictable')) {
+                        
+                        this.showNotification(`Password contains common patterns: ${result.feedback.warning}`, 'error');
+                        return false;
+                    }
+                }
+                
+            } else {
+                console.warn('Password strength check failed, falling back to basic validation');
+            }
+        } catch (error) {
+            console.warn('Password strength check error, falling back to basic validation:', error);
         }
         
         this.showNotification('Agent password created successfully!', 'success');
