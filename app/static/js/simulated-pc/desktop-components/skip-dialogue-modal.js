@@ -78,10 +78,11 @@ export class SkipDialogueModal {
         });
         
         // Touch support for cancel button
-        cancelBtn.addEventListener('touchstart', () => {
+        cancelBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
             this.hide();
             resolve(false);
-        }, { passive: true });
+        });
         
         // Confirm button
         confirmBtn.addEventListener('click', () => {
@@ -90,10 +91,11 @@ export class SkipDialogueModal {
         });
         
         // Touch support for confirm button
-        confirmBtn.addEventListener('touchstart', () => {
+        confirmBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
             this.hide();
             resolve(true);
-        }, { passive: true });
+        });
         
         // Click outside to cancel
         this.modal.addEventListener('click', (e) => {
