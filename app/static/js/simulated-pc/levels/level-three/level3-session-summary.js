@@ -686,7 +686,7 @@ export class Level3SessionSummary {
             const { ShutdownSequence } = await import('../../shutdown-sequence.js');
             const shutdownOverlay = document.createElement('div');
             shutdownOverlay.className = 'fixed inset-0 bg-black z-50';
-            shutdownOverlay.style.zIndex = '9999';
+            shutdownOverlay.style.zIndex = '10000';
             document.body.appendChild(shutdownOverlay);
             
             await ShutdownSequence.runShutdown(shutdownOverlay);
@@ -706,7 +706,7 @@ export class Level3SessionSummary {
             const { ShutdownSequence } = await import('../../shutdown-sequence.js');
             const shutdownOverlay = document.createElement('div');
             shutdownOverlay.className = 'fixed inset-0 bg-black z-50';
-            shutdownOverlay.style.zIndex = '9999';
+            shutdownOverlay.style.zIndex = '10000';
             document.body.appendChild(shutdownOverlay);
             
             await ShutdownSequence.runShutdown(shutdownOverlay);
