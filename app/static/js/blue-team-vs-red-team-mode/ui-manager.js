@@ -858,16 +858,22 @@ class UIManager {
     }
 
     addTerminalOutput(text, type = 'normal') {
-        const timestamp = new Date().toLocaleTimeString();
-        const prefix = type === 'success' ? '✓' : type === 'error' ? '✗' : '$';
-        const colorClass = type === 'success' ? 'text-green-400' : type === 'error' ? 'text-red-400' : 'text-gray-300';
-        
-        this.terminalOutput.push({
-            text: `[${timestamp}] ${prefix} ${text}`,
-            class: colorClass
-        });
-        
-        this.updateTerminal();
+        // Use xterm adapter if available
+        if (this.gameController.xtermAdapter) {
+            this.gameController.xtermAdapter.addOutput(text, type);
+        } else {
+            // Fallback to old method
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'success' ? '✓' : type === 'error' ? '✗' : '$';
+            const colorClass = type === 'success' ? 'text-green-400' : type === 'error' ? 'text-red-400' : 'text-gray-300';
+            
+            this.terminalOutput.push({
+                text: `[${timestamp}] ${prefix} ${text}`,
+                class: colorClass
+            });
+            
+            this.updateTerminal();
+        }
     }
 }
 

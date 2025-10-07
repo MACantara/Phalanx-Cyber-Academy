@@ -292,7 +292,9 @@
                     <h3 class="text-lg font-semibold text-green-400 mb-4 flex items-center">
                         <i class="bi bi-terminal me-2"></i>Defense Command Terminal
                     </h3>
-                    <div id="terminal-output" class="bg-black text-green-400 font-mono text-sm p-3 border border-gray-600 h-80 overflow-y-auto terminal-output">
+                    <div id="xterm-terminal-container" class="bg-black border border-gray-600 h-80"></div>
+                    <!-- Fallback for old terminal (hidden when xterm is active) -->
+                    <div id="terminal-output" class="bg-black text-green-400 font-mono text-sm p-3 border border-gray-600 h-80 overflow-y-auto terminal-output" style="display: none;">
                         <!-- Terminal content will be populated by JavaScript -->
                         <div id="response-actions" class="mt-2 hidden">
                             <div class="text-yellow-400">╔══ THREAT RESPONSE ACTIONS ══╗</div>

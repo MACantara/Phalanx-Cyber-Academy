@@ -30,6 +30,7 @@ class GameController {
         this.aiEngine = null;
         this.uiManager = null;
         this.gameTimer = null;
+        this.xtermAdapter = null;
         
         this.init();
     }
@@ -38,17 +39,19 @@ class GameController {
         // Import and initialize AI engine and UI manager
         const { AIEngine } = await import('./ai-engine.js');
         const { UIManager } = await import('./ui-manager.js');
+        const { BlueTeamXtermAdapter } = await import('./xterm-adapter.js');
         
         this.aiEngine = new AIEngine(this);
         this.uiManager = new UIManager(this);
         
+        // Initialize xterm terminal
+        const terminalContainer = document.getElementById('xterm-terminal-container');
+        if (terminalContainer) {
+            this.xtermAdapter = new BlueTeamXtermAdapter(terminalContainer, this);
+        }
+        
         this.setupEventListeners();
         this.uiManager.updateDisplay();
-        
-        // Initialize terminal with welcome message
-        this.uiManager.addTerminalOutput('$ Defense Command Terminal - Ready');
-        this.uiManager.addTerminalOutput('$ Monitoring Project Sentinel Academy...');
-        this.uiManager.addTerminalOutput('$ Type "help" for available commands');
         
         // Initialize XP tracking
         await this.initializeXPTracking();
@@ -559,8 +562,6 @@ class GameController {
         const args = trimmedCommand.split(' ');
         const baseCmd = args[0].toLowerCase(); // Only convert base command to lowercase
         
-        this.uiManager.addTerminalOutput(`$ ${command}`);
-        
         switch (baseCmd) {
             case 'status':
                 this.showSystemStatus();
@@ -631,8 +632,12 @@ class GameController {
                 this.showResetGuidance();
                 break;
             case 'clear':
-                this.uiManager.clearTerminal();
-                this.uiManager.addTerminalOutput('$ Defense Command Terminal - Ready');
+                if (this.xtermAdapter) {
+                    this.xtermAdapter.clear();
+                } else {
+                    this.uiManager.clearTerminal();
+                    this.uiManager.addTerminalOutput('$ Defense Command Terminal - Ready');
+                }
                 break;
             default:
                 this.uiManager.addTerminalOutput(`Command not found: ${baseCmd}. Type 'help' for available commands.`);
