@@ -191,7 +191,7 @@ def verify_code():
             
             flash(f'Welcome back, {user.username}!', 'success')
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('levels.levels'))
+            return redirect(next_page) if next_page else redirect(url_for('levels.levels_overview'))
             
         except Exception as e:
             current_app.logger.error(f"Code verification error: {e}")
@@ -358,7 +358,7 @@ def verify_signup_code():
 def onboarding():
     # Check if user already completed onboarding
     if current_user.onboarding_completed and current_user.username:
-        return redirect(url_for('levels.levels'))
+        return redirect(url_for('levels.levels_overview'))
     
     if request.method == 'POST':
         username = request.form.get('username', '').strip().lower()
