@@ -1,6 +1,6 @@
-from .user import User, PasswordResetToken
+from .user import User
 from .contact import Contact
 from .login_attempt import LoginAttempt
 from .email_verification import EmailVerification
 
-__all__ = ['User', 'PasswordResetToken', 'Contact', 'LoginAttempt', 'EmailVerification']
+__all__ = ['User', 'Contact', 'LoginAttempt', 'EmailVerification']
