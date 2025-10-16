@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Complete Your Profile{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 dark:bg-gradient-to-br dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-500">
+    <!-- Animated background elements -->
+    <div class="absolute top-20 left-10 w-32 h-32 bg-purple-500/20 dark:bg-purple-400/10 rounded-full animate-bounce shadow-lg" style="animation-duration: 4s;" aria-hidden="true"></div>
+    <div class="absolute bottom-20 right-10 w-24 h-24 bg-indigo-500/20 dark:bg-indigo-400/10 rounded-full animate-bounce shadow-lg" style="animation-delay: 2s; animation-duration: 5s;" aria-hidden="true"></div>
+    <div class="absolute top-1/3 right-1/4 w-16 h-16 bg-blue-500/20 dark:bg-blue-400/10 rounded-full animate-pulse shadow-lg" aria-hidden="true"></div>
+    
+    <div class="max-w-2xl w-full space-y-8 relative z-10">
+        <form class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-8 space-y-6 opacity-0 animate-fade-in-up shadow-xl border border-gray-200/50 dark:border-gray-700/50" method="POST">
+            <input type="hidden" id="csrf_token" name="csrf_token" value="{{csrf_token()}}">
+            
+            <div class="text-center mb-6">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="w-20 h-20 bg-gradient-to-r from-purple-500 to-indigo-600 dark:from-purple-400 dark:to-indigo-500 rounded-full flex items-center justify-center shadow-lg">
+                        <i class="bi bi-person-gear text-3xl text-white"></i>
+                    </div>
+                </div>
+                <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                    Welcome to <span class="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">CyberQuest</span>!
+                </h1>
+                <p class="text-lg text-gray-600 dark:text-gray-300">Let's set up your cybersecurity profile</p>
+            </div>
+
+            <!-- Progress indicator -->
+            <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.2s;">
+                <div class="flex items-center justify-center space-x-2 mb-6">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
+                            <i class="bi bi-check"></i>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-600 dark:text-gray-300">Email Verified</span>
+                    </div>
+                    <div class="w-12 h-1 bg-purple-300 dark:bg-purple-600"></div>
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                            2
+                        </div>
+                        <span class="ml-2 text-sm text-purple-600 dark:text-purple-400 font-semibold">Profile Setup</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Username -->
+                <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
+                    <label for="username" class="block text-sm font-semibold text-purple-600 dark:text-purple-400 mb-2">
+                        <i class="bi bi-person-badge mr-2"></i>Choose Your Agent Username
+                    </label>
+                    <input id="username" name="username" type="text" required 
+                           class="w-full px-4 py-4 bg-gray-50 dark:bg-gray-700/50 border border-purple-300 dark:border-purple-500/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                           placeholder="Enter your username (3-30 characters)"
+                           pattern="[a-zA-Z0-9_]{3,30}"
+                           maxlength="30">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                        3-30 characters, letters, numbers, and underscores only
+                    </p>
+                </div>
+
+                <!-- Experience Level -->
+                <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.4s;">
+                    <label class="block text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-3">
+                        <i class="bi bi-shield-shaded mr-2"></i>Cybersecurity Experience Level
+                    </label>
+                    <div class="space-y-3">
+                        <!-- Beginner -->
+                        <label class="flex items-start p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-200 group">
+                            <input type="radio" name="experience" value="beginner" required
+                                   class="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                            <div class="ml-3">
+                                <div class="text-base font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                                    🌱 Beginner - New to Cybersecurity
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                    I'm just starting my journey in cybersecurity and want to learn the basics
+                                </p>
+                            </div>
+                        </label>
+
+                        <!-- Intermediate -->
+                        <label class="flex items-start p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-200 group">
+                            <input type="radio" name="experience" value="intermediate" required
+                                   class="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                            <div class="ml-3">
+                                <div class="text-base font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                                    🔧 Intermediate - Some Experience
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                    I have some knowledge and want to deepen my understanding of security concepts
+                                </p>
+                            </div>
+                        </label>
+
+                        <!-- Advanced -->
+                        <label class="flex items-start p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-200 group">
+                            <input type="radio" name="experience" value="advanced" required
+                                   class="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500">
+                            <div class="ml-3">
+                                <div class="text-base font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                                    🚀 Advanced - Experienced Professional
+                                </div>
+                                <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                    I have significant experience and want to challenge myself with advanced scenarios
+                                </p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Welcome Message -->
+                <div class="opacity-0 animate-fade-in-up bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border border-purple-200 dark:border-purple-500/30 rounded-xl p-6" style="animation-delay: 0.5s;">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-rocket-takeoff text-purple-600 dark:text-purple-400 text-3xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-bold text-purple-900 dark:text-purple-200 mb-2">
+                                Your Cybersecurity Journey Begins!
+                            </h3>
+                            <p class="text-sm text-purple-800 dark:text-purple-300">
+                                Get ready to explore interactive challenges, earn XP, unlock achievements, and master the art of cybersecurity through hands-on learning. Your adventure awaits!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.6s;">
+                <button type="submit" id="onboarding-btn"
+                        class="group w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold text-lg rounded-xl hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-purple-500/25 shadow-xl hover:shadow-2xl hover:scale-105 transform cursor-pointer">
+                    <i class="bi bi-rocket-takeoff mr-3"></i>
+                    <span>Start My Journey</span>
+                    <i class="bi bi-arrow-right ml-3"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const usernameInput = document.getElementById('username');
+    
+    // Auto-focus on username input
+    usernameInput.focus();
+    
+    // Convert to lowercase as user types
+    usernameInput.addEventListener('input', function(e) {
+        this.value = this.value.toLowerCase();
+    });
+});
+</script>
+{% endblock %}

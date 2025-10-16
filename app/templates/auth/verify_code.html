@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Login Code{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+<style>
+    .code-input {
+        font-size: 2rem;
+        letter-spacing: 1rem;
+        text-align: center;
+        font-family: 'Courier New', monospace;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 dark:bg-gradient-to-br dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden transition-colors duration-500">
+    <!-- Animated background elements -->
+    <div class="absolute top-20 left-10 w-32 h-32 bg-blue-500/20 dark:bg-blue-400/10 rounded-full animate-bounce shadow-lg" style="animation-duration: 4s;" aria-hidden="true"></div>
+    <div class="absolute bottom-20 right-10 w-24 h-24 bg-green-500/20 dark:bg-green-400/10 rounded-full animate-bounce shadow-lg" style="animation-delay: 2s; animation-duration: 5s;" aria-hidden="true"></div>
+    
+    <div class="max-w-md w-full space-y-8 relative z-10">
+        <form class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-8 space-y-6 opacity-0 animate-fade-in-up shadow-xl border border-gray-200/50 dark:border-gray-700/50" method="POST">
+            <input type="hidden" id="csrf_token" name="csrf_token" value="{{csrf_token()}}">
+            
+            <div class="text-center mb-6">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 dark:from-blue-400 dark:to-cyan-500 rounded-full flex items-center justify-center shadow-lg">
+                        <i class="bi bi-shield-lock text-2xl text-white"></i>
+                    </div>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    Enter Verification <span class="bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-400 dark:to-cyan-400 bg-clip-text text-transparent">Code</span>
+                </h1>
+                <p class="text-gray-600 dark:text-gray-300">We've sent a 6-digit code to:</p>
+                <p class="text-sm font-mono text-blue-600 dark:text-cyan-400 mt-1">{{ email }}</p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
+                    <label for="code" class="block text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2 text-center">
+                        <i class="bi bi-key mr-2"></i>Verification Code
+                    </label>
+                    <input id="code" name="code" type="text" required maxlength="6" pattern="[0-9]{6}"
+                           class="code-input w-full px-4 py-4 bg-gray-50 dark:bg-gray-700/50 border border-blue-300 dark:border-blue-500/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                           placeholder="000000"
+                           autocomplete="off">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">
+                        Enter the 6-digit code from your email
+                    </p>
+                </div>
+                
+                <div class="opacity-0 animate-fade-in-up bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-500/30 rounded-xl p-4" style="animation-delay: 0.4s;">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-clock text-yellow-600 dark:text-yellow-400 text-xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-800 dark:text-yellow-300">
+                                <strong>Code expires in 15 minutes</strong><br>
+                                You have up to 5 attempts to enter the correct code.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.5s;">
+                <button type="submit" id="verify-btn"
+                        class="group w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white font-semibold text-lg rounded-xl hover:from-blue-600 hover:to-cyan-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/25 shadow-xl hover:shadow-2xl hover:scale-105 transform cursor-pointer">
+                    <i class="bi bi-check-circle mr-3"></i>
+                    <span>Verify & Login</span>
+                </button>
+            </div>
+
+            <!-- Back to Login -->
+            <div class="text-center opacity-0 animate-fade-in-up" style="animation-delay: 0.6s;">
+                <p class="text-gray-600 dark:text-gray-300">
+                    Didn't receive the code?
+                    <a href="{{ url_for('auth.login') }}" class="font-medium text-blue-600 dark:text-cyan-400 hover:text-blue-500 dark:hover:text-cyan-300 transition-colors duration-200 hover:underline ml-2">
+                        Back to Login
+                    </a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const codeInput = document.getElementById('code');
+    
+    // Auto-focus on code input
+    codeInput.focus();
+    
+    // Only allow numbers
+    codeInput.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+    
+    // Auto-submit when 6 digits entered
+    codeInput.addEventListener('input', function(e) {
+        if (this.value.length === 6) {
+            document.querySelector('form').submit();
+        }
+    });
+});
+</script>
+{% endblock %}
