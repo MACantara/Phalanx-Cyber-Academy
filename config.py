@@ -100,7 +100,6 @@ class Config:
     
     # Feature flags
     FEATURES = {
-        'HCAPTCHA': True,  # Enable/disable hCaptcha globally
         'EMAIL_VERIFICATION': True,  # Enable/disable email verification
         'LOGIN_ATTEMPTS': True,  # Enable/disable login attempt tracking
         'ADMIN_PANEL': True,  # Enable/disable admin panel
@@ -109,11 +108,6 @@ class Config:
     # Timezone Configuration
     DEFAULT_TIMEZONE = 'UTC'  # Default timezone for the application
     USER_TIMEZONE_ENABLED = True  # Allow users to set their own timezone
-    
-    # hCaptcha Configuration
-    HCAPTCHA_ENABLED = True  # Master switch for hCaptcha
-    HCAPTCHA_SITE_KEY = os.environ.get('HCAPTCHA_SITE_KEY', '')
-    HCAPTCHA_SECRET_KEY = os.environ.get('HCAPTCHA_SECRET_KEY', '')
 
 class DevelopmentConfig(Config):
     """Development configuration."""
@@ -126,13 +120,10 @@ class DevelopmentConfig(Config):
     
     # Override feature flags for development
     FEATURES = {
-        'HCAPTCHA': False,  # Disable hCaptcha in development
         'EMAIL_VERIFICATION': True,
         'LOGIN_ATTEMPTS': True,
         'ADMIN_PANEL': True,
     }
-    
-    HCAPTCHA_ENABLED = False  # Disable for easier development
 
 class ProductionConfig(Config):
     """Production configuration."""
@@ -212,13 +203,10 @@ class TestingConfig(Config):
     
     # Override feature flags for testing
     FEATURES = {
-        'HCAPTCHA': False,  # Disable hCaptcha in testing
         'EMAIL_VERIFICATION': False,  # Disable email verification in testing
         'LOGIN_ATTEMPTS': False,  # Disable login attempts in testing
         'ADMIN_PANEL': True,
     }
-    
-    HCAPTCHA_ENABLED = False  # Disable for testing
 
 # Configuration dictionary
 config = {
