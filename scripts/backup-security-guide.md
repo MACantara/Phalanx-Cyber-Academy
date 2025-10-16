@@ -1,6 +1,6 @@
 # Backup Security Script Usage
 
-This PowerShell script (`backup-manager.ps1`) helps encrypt and securely store CyberQuest backup files.
+This PowerShell script (`backup-manager.ps1`) helps encrypt and securely store Phalanx Cyber Academy backup files.
 
 ## Prerequisites
 
@@ -25,8 +25,8 @@ This PowerShell script (`backup-manager.ps1`) helps encrypt and securely store C
 
 ### Encrypt a backup file
 ```powershell
-.\backup-manager.ps1 -Action encrypt -BackupFile "cyberquest_backup_20250822.zip"
-# Will prompt for password and create cyberquest_backup_20250822.zip.enc
+.\backup-manager.ps1 -Action encrypt -BackupFile "Phalanx Cyber Academy_backup_20250822.zip"
+# Will prompt for password and create Phalanx Cyber Academy_backup_20250822.zip.enc
 ```
 
 ### Encrypt with custom output file
@@ -36,8 +36,8 @@ This PowerShell script (`backup-manager.ps1`) helps encrypt and securely store C
 
 ### Decrypt a backup file
 ```powershell
-.\backup-manager.ps1 -Action decrypt -BackupFile "cyberquest_backup_20250822.zip.enc"
-# Will prompt for password and create cyberquest_backup_20250822.zip
+.\backup-manager.ps1 -Action decrypt -BackupFile "Phalanx Cyber Academy_backup_20250822.zip.enc"
+# Will prompt for password and create Phalanx Cyber Academy_backup_20250822.zip
 ```
 
 ### Upload to S3 (with encryption recommended)
@@ -65,8 +65,8 @@ Create a scheduled task for automatic encrypted backups:
 
 ```powershell
 # backup-automation.ps1
-$backupDir = "C:\CyberQuest\backups"
-$encryptedDir = "C:\CyberQuest\encrypted-backups"
+$backupDir = "C:\Phalanx Cyber Academy\backups"
+$encryptedDir = "C:\Phalanx Cyber Academy\encrypted-backups"
 $s3Bucket = "your-secure-backup-bucket"
 
 # Find latest backup

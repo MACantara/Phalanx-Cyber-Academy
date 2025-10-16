@@ -4,7 +4,7 @@
     "module_name": "Contact-Page",
     "screen_design_ref": "Figure 3.1: Contact Page Layout",
     "description": "Verify that the Contact page loads correctly when accessing the /contact URL",
-    "scenario": "User navigates to the Contact page to send a message to [Web Site Name] team",
+    "scenario": "User navigates to the Contact page to send a message to Phalanx Cyber Academy team",
     "expected_results": "Display the complete Contact page with header section, contact form, and contact information panel",
     "procedure": "1. Open web browser\n2. Navigate to http://localhost:5000/contact\n3. Verify page loads completely\n4. Check page title displays 'Contact'\n5. Verify contact form and contact info sections are visible",
     "test_status": "pending",
@@ -90,7 +90,7 @@
     "description": "Verify contact information panel displays correctly",
     "scenario": "User views contact information section for business details",
     "expected_results": "Display contact information with address, email, and proper formatting",
-    "procedure": "1. Navigate to /contact page\n2. Scroll to contact information panel\n3. Verify 'Get in Touch' heading is displayed\n4. Check address card shows '[Web Site Name] HQ, Makati City, Metro Manila, Philippines'\n5. Verify email card shows 'contact@example.com'\n6. Check email link is clickable and opens email client\n7. Verify icons are displayed correctly\n8. Test hover effects on contact cards",
+    "procedure": "1. Navigate to /contact page\n2. Scroll to contact information panel\n3. Verify 'Get in Touch' heading is displayed\n4. Check address card shows 'Phalanx Cyber Academy HQ, Makati City, Metro Manila, Philippines'\n5. Verify email card shows 'contact@example.com'\n6. Check email link is clickable and opens email client\n7. Verify icons are displayed correctly\n8. Test hover effects on contact cards",
     "test_status": "pending",
     "priority": "medium",
     "category": "ui"

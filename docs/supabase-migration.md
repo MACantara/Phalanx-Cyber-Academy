@@ -1,10 +1,10 @@
-# CyberQuest - Supabase Migration
+# Phalanx Cyber Academy - Supabase Migration
 
-This document outlines the migration from SQLAlchemy/SQLite to Supabase (PostgreSQL) for the CyberQuest application.
+This document outlines the migration from SQLAlchemy/SQLite to Supabase (PostgreSQL) for the Phalanx Cyber Academy application.
 
 ## Migration Overview
 
-The CyberQuest application has been migrated from using SQLAlchemy ORM with SQLite to using Supabase as the database backend. This migration provides better scalability, reliability, and production readiness.
+The Phalanx Cyber Academy application has been migrated from using SQLAlchemy ORM with SQLite to using Supabase as the database backend. This migration provides better scalability, reliability, and production readiness.
 
 ### What Changed
 

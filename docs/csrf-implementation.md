@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the CSRF (Cross-Site Request Forgery) token implementation that has been added to CyberQuest to ensure secure form submissions and API requests, particularly in the Vercel serverless deployment environment.
+This document describes the CSRF (Cross-Site Request Forgery) token implementation that has been added to Phalanx Cyber Academy to ensure secure form submissions and API requests, particularly in the Vercel serverless deployment environment.
 
 ## Problem Solved
 

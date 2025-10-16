@@ -42,7 +42,7 @@
     "description": "Verify the acceptance of terms section displays correctly with binding language",
     "scenario": "User reads the opening terms section to understand binding nature of agreement",
     "expected_results": "Display clear acceptance clause explaining binding nature of terms",
-    "procedure": "1. Navigate to /terms-of-service page\n2. Scroll to 'Acceptance of Terms' section\n3. Verify section heading '1. Acceptance of Terms' is displayed\n4. Check content mentions 'CyberQuest' service name\n5. Verify binding language 'accept and agree to be bound' is present\n6. Check text explains consequences of non-acceptance\n7. Verify proper formatting and readability",
+    "procedure": "1. Navigate to /terms-of-service page\n2. Scroll to 'Acceptance of Terms' section\n3. Verify section heading '1. Acceptance of Terms' is displayed\n4. Check content mentions 'Phalanx Cyber Academy' service name\n5. Verify binding language 'accept and agree to be bound' is present\n6. Check text explains consequences of non-acceptance\n7. Verify proper formatting and readability",
     "test_status": "pending",
     "priority": "high",
     "category": "functional"
@@ -90,7 +90,7 @@
     "description": "Verify intellectual property rights section displays our rights and user rights",
     "scenario": "User wants to understand intellectual property ownership and licensing",
     "expected_results": "Display subsections for Our Rights (5.1) and Your Rights (5.2) with licensing information",
-    "procedure": "1. Navigate to /terms-of-service page\n2. Scroll to 'Intellectual Property Rights' section\n3. Verify main heading '5. Intellectual Property Rights' is displayed\n4. Check '5.1 Our Rights' subsection exists\n5. Verify content mentions 'CyberQuest and its licensors'\n6. Check copyright and trademark protection is mentioned\n7. Verify '5.2 Your Rights' subsection is present\n8. Check user content retention rights are explained\n9. Verify licensing grant language is included",
+    "procedure": "1. Navigate to /terms-of-service page\n2. Scroll to 'Intellectual Property Rights' section\n3. Verify main heading '5. Intellectual Property Rights' is displayed\n4. Check '5.1 Our Rights' subsection exists\n5. Verify content mentions 'Phalanx Cyber Academy and its licensors'\n6. Check copyright and trademark protection is mentioned\n7. Verify '5.2 Your Rights' subsection is present\n8. Check user content retention rights are explained\n9. Verify licensing grant language is included",
     "test_status": "pending",
     "priority": "medium",
     "category": "functional"

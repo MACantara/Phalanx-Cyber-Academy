@@ -61,7 +61,7 @@ export class BrowserApp extends WindowBase {
                 <div class="min-h-full bg-white flex items-center justify-center overflow-y-auto">
                     <div class="text-center p-4">
                         <div class="text-6xl mb-4">🌐</div>
-                        <h2 class="text-xl font-semibold text-gray-800 mb-2">Welcome to [Web Site Name] Browser</h2>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-2">Welcome to Phalanx Cyber Academy Browser</h2>
                         <p class="text-gray-600 mb-4">Enter a URL in the address bar to start browsing</p>
                         <div class="text-sm text-gray-500">
                             <p>🔒 Security monitoring is active</p>

@@ -1,4 +1,4 @@
-## ✅ CyberQuest Requirements Checklist
+## ✅ Phalanx Cyber Academy Requirements Checklist
 
 ### 🧩 Functional Requirements (FR)
 

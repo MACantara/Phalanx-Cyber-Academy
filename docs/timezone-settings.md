@@ -1,6 +1,6 @@
 # Timezone Settings Implementation
 
-This document describes the timezone settings feature implementation for CyberQuest, allowing users to set their preferred timezone for date and time display.
+This document describes the timezone settings feature implementation for Phalanx Cyber Academy, allowing users to set their preferred timezone for date and time display.
 
 ## Overview
 

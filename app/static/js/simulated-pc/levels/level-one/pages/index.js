@@ -14,7 +14,7 @@ export { BasePage } from './base-page.js';
 // Page categories for Level 1
 export const LEVEL_1_PAGES = {
     EDUCATIONAL: {
-        cyberquest: 'CyberQuest Academy homepage',
+        cyberquest: 'Phalanx Cyber Academy Academy homepage',
         news_site: 'Legitimate news site for comparison'
     },
     TRAINING_TARGETS: {

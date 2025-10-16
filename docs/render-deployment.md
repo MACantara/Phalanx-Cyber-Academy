@@ -1,6 +1,6 @@
-# CyberQuest Render.com Deployment Guide
+# Phalanx Cyber Academy Render.com Deployment Guide
 
-This guide will help you deploy your CyberQuest Flask application to Render.com.
+This guide will help you deploy your Phalanx Cyber Academy Flask application to Render.com.
 
 ## Prerequisites
 
@@ -14,13 +14,13 @@ This guide will help you deploy your CyberQuest Flask application to Render.com.
 
 1. Go to [render.com](https://render.com) and sign in
 2. Click "New +" and select "Web Service"
-3. Connect your GitHub account and select your CyberQuest repository
+3. Connect your GitHub account and select your Phalanx Cyber Academy repository
 4. Choose the branch you want to deploy (e.g., `main` or current branch)
 
 ### 2. Configure Service Settings
 
 **Basic Settings:**
-- **Name**: `cyberquest` (or your preferred name)
+- **Name**: `Phalanx Cyber Academy` (or your preferred name)
 - **Environment**: `Python 3`
 - **Region**: Choose the closest to your users
 - **Branch**: Your main branch
@@ -70,7 +70,7 @@ LOGIN_LOCKOUT_MINUTES=15
 1. Click "Create Web Service"
 2. Render will automatically build and deploy your application
 3. Monitor the build logs for any issues
-4. Once deployed, you'll get a URL like `https://cyberquest.onrender.com`
+4. Once deployed, you'll get a URL like `https://phalanxcyberacademy.onrender.com`
 
 ## Files Added for Render Deployment
 

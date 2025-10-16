@@ -54,7 +54,7 @@
     "description": "Verify the browser application launches correctly when starting Level 1 challenge",
     "scenario": "System automatically opens browser application to begin the misinformation analysis challenge",
     "expected_results": "Browser window opens with proper interface including navigation bar, bookmarks, and content area",
-    "procedure": "1. Complete Level 1 introduction dialogue\n2. Click 'Start Simulation' button\n3. Verify browser application launches via applicationLauncher\n4. Check browser window displays with proper title 'Web Browser'\n5. Confirm navigation controls (back, forward, refresh, home) are present\n6. Verify URL bar is functional\n7. Check bookmarks bar displays with [Web Site Name] bookmark",
+    "procedure": "1. Complete Level 1 introduction dialogue\n2. Click 'Start Simulation' button\n3. Verify browser application launches via applicationLauncher\n4. Check browser window displays with proper title 'Web Browser'\n5. Confirm navigation controls (back, forward, refresh, home) are present\n6. Verify URL bar is functional\n7. Check bookmarks bar displays with Phalanx Cyber Academy bookmark",
     "test_status": "pending",
     "priority": "critical",
     "category": "functional"

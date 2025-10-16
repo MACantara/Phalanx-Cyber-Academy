@@ -1,5 +1,5 @@
 /**
- * CSRF Utilities for CyberQuest
+ * CSRF Utilities for Phalanx Cyber Academy
  * Provides helper functions for handling CSRF tokens in AJAX requests
  */
 

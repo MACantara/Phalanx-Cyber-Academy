@@ -1,6 +1,6 @@
 # Dialogue Trigger Documentation
 
-## Dialogue Flow Throughout CyberQuest Interface
+## Dialogue Flow Throughout Phalanx Cyber Academy Interface
 
 ### 1. **Level Dialogues** (Level-specific introduction dialogues)
 
@@ -39,12 +39,12 @@ if (this.desktop.level) {
 #### **Trigger Logic:**
 ```javascript
 static shouldAutoStart() {
-    return !localStorage.getItem('cyberquest_tutorial_intro_completed');
+    return !localStorage.getItem('Phalanx Cyber Academy_tutorial_intro_completed');
 }
 ```
 
 #### **What Happens After:**
-- Sets: `cyberquest_tutorial_intro_completed = 'true'`
+- Sets: `Phalanx Cyber Academy_tutorial_intro_completed = 'true'`
 - **Auto-triggers**: Initial Tutorial (`startInitialTutorial()`)
 - **Character**: Dr. Cipher (Instructor)
 - **Purpose**: Bridge between level start and hands-on tutorials
@@ -61,19 +61,19 @@ static shouldAutoStart() {
 #### **Trigger Conditions:**
 ```javascript
 const allTutorialsCompleted = [
-    'cyberquest_tutorial_completed',           // Initial tutorial
-    'cyberquest_email_tutorial_completed',     // Email security
-    'cyberquest_browser_tutorial_completed',   // Web security  
-    'cyberquest_filemanager_tutorial_completed', // File security
-    'cyberquest_networkmonitor_tutorial_completed', // Network analysis
-    'cyberquest_securitytools_tutorial_completed',  // Security tools
-    'cyberquest_systemlogs_tutorial_completed',     // Log analysis
-    'cyberquest_terminal_tutorial_completed'        // Command line
+    'Phalanx Cyber Academy_tutorial_completed',           // Initial tutorial
+    'Phalanx Cyber Academy_email_tutorial_completed',     // Email security
+    'Phalanx Cyber Academy_browser_tutorial_completed',   // Web security  
+    'Phalanx Cyber Academy_filemanager_tutorial_completed', // File security
+    'Phalanx Cyber Academy_networkmonitor_tutorial_completed', // Network analysis
+    'Phalanx Cyber Academy_securitytools_tutorial_completed',  // Security tools
+    'Phalanx Cyber Academy_systemlogs_tutorial_completed',     // Log analysis
+    'Phalanx Cyber Academy_terminal_tutorial_completed'        // Command line
 ].every(key => localStorage.getItem(key));
 ```
 
 #### **What Happens After:**
-- Sets: `cyberquest_mission_briefing_completed = 'true'`
+- Sets: `Phalanx Cyber Academy_mission_briefing_completed = 'true'`
 - **Ready for**: Live mission scenarios
 - **Character**: Commander Steel
 - **Purpose**: Transition from training to real scenarios

@@ -1,6 +1,6 @@
 # Centralized XP and Session Management Utilities
 
-This documentation describes the centralized utility system for XP performance-based tracking and session management across all CyberQuest levels and modes.
+This documentation describes the centralized utility system for XP performance-based tracking and session management across all Phalanx Cyber Academy levels and modes.
 
 ## Overview
 
@@ -391,4 +391,4 @@ try {
 }
 ```
 
-This centralized system ensures consistent XP tracking and session management across all CyberQuest components while maintaining compatibility with existing implementations.
+This centralized system ensures consistent XP tracking and session management across all Phalanx Cyber Academy components while maintaining compatibility with existing implementations.

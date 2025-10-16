@@ -213,7 +213,7 @@ analysisPipeline: [
 ## 💻 Level 5 Application Architecture
 
 ### Required Applications Overview
-Based on the CyberQuest application framework, Level 5 requires specialized forensic applications that extend `WindowBase` and integrate with the `ApplicationRegistry` and `ApplicationLauncher` systems.
+Based on the Phalanx Cyber Academy application framework, Level 5 requires specialized forensic applications that extend `WindowBase` and integrate with the `ApplicationRegistry` and `ApplicationLauncher` systems.
 
 ### Core Forensic Applications
 
@@ -438,7 +438,7 @@ const level5AppState = {
 };
 ```
 
-This application architecture ensures that Level 5 provides a comprehensive, realistic, and educational digital forensics experience while maintaining consistency with the existing CyberQuest application framework.
+This application architecture ensures that Level 5 provides a comprehensive, realistic, and educational digital forensics experience while maintaining consistency with the existing Phalanx Cyber Academy application framework.
 
 ## 🎭 Narrative Elements
 

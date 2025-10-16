@@ -1,7 +1,7 @@
 # Player Data Analytics MVP
 
 ## Overview
-This MVP implementation provides comprehensive player data analytics for the [Web Site Name] cybersecurity training platform based on the metrics defined in `docs/ideas/player-data-analytics-ideas.md`.
+This MVP implementation provides comprehensive player data analytics for the Phalanx Cyber Academy cybersecurity training platform based on the metrics defined in `docs/ideas/player-data-analytics-ideas.md`.
 
 ## Features
 

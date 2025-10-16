@@ -103,7 +103,7 @@
 | **Screen Design Ref No** | Figure 2.9: Hero Section |
 | **Description / Scenario** | Verify hero section loads with proper animations and floating elements |
 | **Expected Results** | Hero text fades in with staggered animation, floating cyber elements visible |
-| **Procedure** | 1. Navigate to home page <br> 2. Observe hero section load <br> 3. Verify "Welcome to CyberQuest" text animates in <br> 4. Check floating colored circles are animated |
+| **Procedure** | 1. Navigate to home page <br> 2. Observe hero section load <br> 3. Verify "Welcome to Phalanx Cyber Academy" text animates in <br> 4. Check floating colored circles are animated |
 | **Remarks** | Pending |
 
 ---

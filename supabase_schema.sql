@@ -1,4 +1,4 @@
--- CyberQuest Supabase Database Schema
+-- Phalanx Cyber Academy Supabase Database Schema
 -- Run this script in your Supabase SQL editor to create the required tables
 
 -- Create users table

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: cyberquest
+    name: Phalanx Cyber Academy
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn -w 4 -b 0.0.0.0:$PORT run:app

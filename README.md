@@ -1,6 +1,6 @@
-# CyberQuest
+# Phalanx Cyber Academy
 
-CyberQuest is a game-based learning platform designed to enhance digital literacy, cybersecurity awareness, and ethical online behavior through interactive gamification. Players engage in realistic scenarios, earn XP, unlock achievements, and receive AI-powered personalized guidance to master essential digital safety skills.
+Phalanx Cyber Academy is a game-based learning platform designed to enhance digital literacy, cybersecurity awareness, and ethical online behavior through interactive gamification. Players engage in realistic scenarios, earn XP, unlock achievements, and receive AI-powered personalized guidance to master essential digital safety skills.
 
 ## ✨ Key Features
 
@@ -71,7 +71,7 @@ CyberQuest is a game-based learning platform designed to enhance digital literac
 ### 1. Clone Repository
 ```bash
 git clone <repository-url>
-cd CyberQuest
+cd Phalanx-Cyber-Academy
 ```
 
 ### 2. Create Virtual Environment
@@ -214,7 +214,7 @@ LEADERBOARDS_PUBLIC=true
 ## 📁 Project Structure
 
 ```
-CyberQuest/
+Phalanx Cyber Academy/
 ├── app/                          # Main application package
 │   ├── models/                   # Database models
 │   ├── routes/                   # Application routes
@@ -307,7 +307,7 @@ See the [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
 
 ## 🎓 Educational Impact
 
-CyberQuest addresses critical digital literacy gaps through:
+Phalanx Cyber Academy addresses critical digital literacy gaps through:
 
 - **Practical Application**: Real-world scenario practice with immediate feedback
 - **Retention Enhancement**: Gamification increases knowledge retention by 75%

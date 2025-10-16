@@ -1,6 +1,6 @@
 """
 Level Model
-Represents level metadata and configuration for the [Web Site Name] system
+Represents level metadata and configuration for the Phalanx Cyber Academy system
 """
 from datetime import datetime
 from typing import Dict, Any, List, Optional

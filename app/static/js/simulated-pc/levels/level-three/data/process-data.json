@@ -84,12 +84,12 @@
     },
     {
       "name": "tournament_client.exe",
-      "executable": "program files\\cyberquest\\tournament_client.exe",
+      "executable": "program files\\Phalanx Cyber Academy\\tournament_client.exe",
       "cpu": 5.2,
       "memory": 95.9,
       "priority": "High",
       "category": "gaming",
-      "description": "CyberQuest tournament client",
+      "description": "Phalanx Cyber Academy tournament client",
       "trusted": true
     },
     {

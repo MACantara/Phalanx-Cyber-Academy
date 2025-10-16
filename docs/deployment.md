@@ -1,6 +1,6 @@
 # Deployment Documentation
 
-This guide covers deployment options for the CyberQuest platform, including Vercel, traditional hosting, and production considerations.
+This guide covers deployment options for the Phalanx Cyber Academy platform, including Vercel, traditional hosting, and production considerations.
 
 ## 🚀 Vercel Deployment (Serverless)
 

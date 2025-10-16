@@ -338,8 +338,8 @@
   {
     "test_plan_no": "STP-039-29",
     "module_name": "Blue-Team-vs-Red-Team-Mode",
-    "screen_design_ref": "Figure 39.29: Integration with Main CyberQuest System",
-    "description": "Verify Blue Team vs Red Team mode integrates properly with main CyberQuest platform",
+    "screen_design_ref": "Figure 39.29: Integration with Main Phalanx Cyber Academy System",
+    "description": "Verify Blue Team vs Red Team mode integrates properly with main Phalanx Cyber Academy platform",
     "scenario": "Mode integrates seamlessly with user authentication, progress tracking, and navigation system",
     "expected_results": "Proper integration with authentication, navbar, user progress, and platform navigation",
     "procedure": "1. Verify authentication requirements for mode access\n2. Check user session management integration\n3. Test navigation integration with main platform\n4. Verify progress tracking and analytics integration\n5. Check logout functionality and session cleanup\n6. Test breadcrumb navigation and back buttons\n7. Verify consistent styling with platform theme",

@@ -218,7 +218,7 @@ def create_backup():
         
         # Generate backup filename with timestamp
         timestamp = utc_now().strftime('%Y%m%d_%H%M%S')
-        backup_filename = f'cyberquest_backup_{timestamp}.zip'
+        backup_filename = f'Phalanx_Cyber_Academy_backup_{timestamp}.zip'
         
         # Create backup data
         backup_data = _create_database_backup()
@@ -240,7 +240,7 @@ def create_backup():
                 'tables_backed_up': len(backup_data.keys()),
                 'total_records': total_records,
                 'record_counts': {table: len(data) for table, data in backup_data.items()},
-                'app_version': 'CyberQuest v1.0',
+                'app_version': 'Phalanx Cyber Academy v1.0',
                 'database_type': 'Supabase PostgreSQL',
                 'backup_size_estimate': 'See file properties'
             }
@@ -248,7 +248,7 @@ def create_backup():
             
             # Add application info
             app_info = {
-                'app_name': 'CyberQuest',
+                'app_name': 'Phalanx Cyber Academy',
                 'backup_created_at': utc_now().isoformat(),
                 'python_version': '3.12',
                 'database_type': 'Supabase PostgreSQL'
@@ -386,7 +386,7 @@ def restore_backup():
                 
             except json.JSONDecodeError as e:
                 current_app.logger.error(f"Invalid backup file format: {e}")
-                flash('Invalid backup file format. Please ensure you are uploading a valid CyberQuest backup.', 'error')
+                flash('Invalid backup file format. Please ensure you are uploading a valid Phalanx Cyber Academy backup.', 'error')
             except KeyError as e:
                 current_app.logger.error(f"Missing backup file components: {e}")
                 flash('Incomplete backup file. Missing required components.', 'error')
@@ -451,7 +451,7 @@ def restore_from_server():
                 
             except json.JSONDecodeError as e:
                 current_app.logger.error(f"Invalid backup file format: {e}")
-                flash('Invalid backup file format. Please ensure the file is a valid CyberQuest backup.', 'error')
+                flash('Invalid backup file format. Please ensure the file is a valid Phalanx Cyber Academy backup.', 'error')
             except KeyError as e:
                 current_app.logger.error(f"Missing backup file components: {e}")
                 flash('Incomplete backup file. Missing required components.', 'error')

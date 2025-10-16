@@ -185,7 +185,7 @@ class Challenge1PageClass extends BasePage {
                 <!-- Footer Section -->
                 <section class="bg-slate-50 p-5 text-center text-slate-600 border-t border-slate-200">
                     <div class="max-w-4xl mx-auto">
-                        <p class="mb-3 font-medium text-slate-800">© 2025 Daily Politico News - CyberQuest Training Environment</p>
+                        <p class="mb-3 font-medium text-slate-800">© 2025 Daily Politico News - Phalanx Cyber Academy Training Environment</p>
                         <div class="text-xs leading-relaxed text-slate-700">
                             <p class="my-1">
                                 <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-medium"><i class="bi bi-exclamation-triangle"></i> Training Purpose Only</span>
@@ -363,7 +363,7 @@ class Challenge1PageClass extends BasePage {
                 <!-- Footer Section -->
                 <section class="bg-slate-50 p-5 text-center text-slate-600 border-t border-slate-200">
                     <div class="max-w-4xl mx-auto">
-                        <p class="mb-3 font-medium text-slate-800">© 2025 Daily Politico News - CyberQuest Training Environment</p>
+                        <p class="mb-3 font-medium text-slate-800">© 2025 Daily Politico News - Phalanx Cyber Academy Training Environment</p>
                         <div class="text-xs leading-relaxed text-slate-700">
                             <p class="my-1">
                                 <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded font-medium"><i class="bi bi-exclamation-triangle"></i> Training Purpose Only</span>

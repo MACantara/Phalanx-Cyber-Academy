@@ -1,6 +1,6 @@
 # Data Preprocessing Scripts
 
-This directory contains scripts for preprocessing the news articles dataset used in CyberQuest Level 1.
+This directory contains scripts for preprocessing the news articles dataset used in Phalanx Cyber Academy Level 1.
 
 ## Scripts
 
@@ -139,7 +139,7 @@ The AI analysis functionality is also available via Flask API endpoints:
 ## Directory Structure
 
 ```
-CyberQuest/
+Phalanx Cyber Academy/
 ├── scripts/
 │   ├── preprocess_english_articles.py
 │   ├── batch_analyze_dataset.py

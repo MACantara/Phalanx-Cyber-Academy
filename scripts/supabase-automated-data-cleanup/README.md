@@ -4,7 +4,7 @@ This directory contains SQL scripts for setting up automated data retention comp
 
 ## 📋 Overview
 
-The CyberQuest application implements automated data cleanup to comply with the privacy policy retention periods:
+The Phalanx Cyber Academy application implements automated data cleanup to comply with the privacy policy retention periods:
 
 - **Security Logs (Login Attempts)**: 30 days
 - **Password Reset Tokens**: 7 days (expired tokens only)
@@ -49,7 +49,7 @@ CREATE EXTENSION IF NOT EXISTS pg_cron;
 ### Step 4: Verify Setup
 ```sql
 -- Check if cron jobs are scheduled
-SELECT * FROM cron.job WHERE jobname LIKE 'cyberquest%';
+SELECT * FROM cron.job WHERE jobname LIKE 'Phalanx Cyber Academy%';
 
 -- Test cleanup function
 SELECT run_automated_cleanup();
@@ -69,13 +69,13 @@ SELECT
     last_run,
     next_run
 FROM cron.job 
-WHERE jobname LIKE 'cyberquest%';
+WHERE jobname LIKE 'Phalanx Cyber Academy%';
 ```
 
 ### Check Job Execution History
 ```sql
 SELECT * FROM cron.job_run_details 
-WHERE jobname LIKE 'cyberquest%' 
+WHERE jobname LIKE 'Phalanx Cyber Academy%' 
 ORDER BY start_time DESC LIMIT 10;
 ```
 
@@ -111,9 +111,9 @@ SELECT check_cleanup_health();
 
 ### Unschedule Jobs (if needed)
 ```sql
-SELECT cron.unschedule('cyberquest-daily-cleanup');
-SELECT cron.unschedule('cyberquest-weekly-cleanup-report');
-SELECT cron.unschedule('cyberquest-cleanup-health-check');
+SELECT cron.unschedule('Phalanx Cyber Academy-daily-cleanup');
+SELECT cron.unschedule('Phalanx Cyber Academy-weekly-cleanup-report');
+SELECT cron.unschedule('Phalanx Cyber Academy-cleanup-health-check');
 ```
 
 ## ⚙️ Configuration Options
@@ -123,11 +123,11 @@ To change the cleanup frequency, unschedule the existing job and create a new on
 
 ```sql
 -- Unschedule existing job
-SELECT cron.unschedule('cyberquest-daily-cleanup');
+SELECT cron.unschedule('Phalanx Cyber Academy-daily-cleanup');
 
 -- Schedule new frequency (example: every 6 hours)
 SELECT cron.schedule(
-    'cyberquest-frequent-cleanup',
+    'Phalanx Cyber Academy-frequent-cleanup',
     '0 */6 * * *',
     'SELECT run_automated_cleanup();'
 );
@@ -186,7 +186,7 @@ For Supabase-specific issues:
 This setup ensures compliance with:
 - **RA 10173 (Data Privacy Act of 2012)** - Philippines
 - **GDPR data retention principles**
-- **CyberQuest Privacy Policy** retention periods
+- **Phalanx Cyber Academy Privacy Policy** retention periods
 
 All cleanup operations are logged for audit purposes and compliance verification.
 
