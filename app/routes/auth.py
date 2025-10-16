@@ -125,7 +125,7 @@ def verify_code():
         
         if not code:
             flash('Please enter the verification code.', 'error')
-            return render_template('auth/verify_code.html', email=email)
+            return render_template('auth/verify_code.html', email=email, code_type='login')
         
         # Check if database is disabled
         if current_app.config.get('DISABLE_DATABASE', False):
@@ -138,7 +138,7 @@ def verify_code():
             
             if not verification:
                 flash('Invalid verification code.', 'error')
-                return render_template('auth/verify_code.html', email=email)
+                return render_template('auth/verify_code.html', email=email, code_type='login')
             
             # Check if expired
             if verification.is_expired():
@@ -160,7 +160,7 @@ def verify_code():
                 verification.increment_attempts()
                 remaining = 5 - verification.attempts
                 flash(f'Invalid code. {remaining} attempts remaining.', 'error')
-                return render_template('auth/verify_code.html', email=email)
+                return render_template('auth/verify_code.html', email=email, code_type='login')
             
             # Mark as verified
             verification.verify()
@@ -197,7 +197,7 @@ def verify_code():
             current_app.logger.error(f"Code verification error: {e}")
             flash('An error occurred. Please try again.', 'error')
     
-    return render_template('auth/verify_code.html', email=email)
+    return render_template('auth/verify_code.html', email=email, code_type='login')
 
 @auth_bp.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -295,7 +295,7 @@ def verify_signup_code():
         
         if not code:
             flash('Please enter the verification code.', 'error')
-            return render_template('auth/verify_signup_code.html', email=email)
+            return render_template('auth/verify_code.html', email=email, code_type='signup')
         
         try:
             # Get verification by code
@@ -303,7 +303,7 @@ def verify_signup_code():
             
             if not verification:
                 flash('Invalid verification code.', 'error')
-                return render_template('auth/verify_signup_code.html', email=email)
+                return render_template('auth/verify_code.html', email=email, code_type='signup')
             
             # Check if expired
             if verification.is_expired():
@@ -324,7 +324,7 @@ def verify_signup_code():
                 verification.increment_attempts()
                 remaining = 5 - verification.attempts
                 flash(f'Invalid code. {remaining} attempts remaining.', 'error')
-                return render_template('auth/verify_signup_code.html', email=email)
+                return render_template('auth/verify_code.html', email=email, code_type='signup')
             
             # Mark as verified
             verification.verify()
@@ -351,7 +351,7 @@ def verify_signup_code():
             current_app.logger.error(f"Signup code verification error: {e}")
             flash('An error occurred. Please try again.', 'error')
     
-    return render_template('auth/verify_signup_code.html', email=email)
+    return render_template('auth/verify_code.html', email=email, code_type='signup')
 
 @auth_bp.route('/onboarding', methods=['GET', 'POST'])
 @login_required
