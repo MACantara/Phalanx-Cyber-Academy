@@ -65,7 +65,7 @@
                 </a>
             </div>
             <div class="flex items-center space-x-4">
-                <span class="text-gray-300">Welcome, {{ current_user.username }}</span>
+                <span class="text-gray-300">Welcome{% if current_user.username %}, {{ current_user.username }}{% endif %}</span>
                 <a href="{{ url_for('auth.logout') }}" class="text-red-400 hover:text-red-300 transition-colors">
                     <i class="bi bi-box-arrow-right"></i> Logout
                 </a>
