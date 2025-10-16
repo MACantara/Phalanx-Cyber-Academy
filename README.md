@@ -1,5 +1,7 @@
 # Phalanx Cyber Academy
 
+**Train. Coordinate. Defend.**
+
 Phalanx Cyber Academy is a game-based learning platform designed to enhance digital literacy, cybersecurity awareness, and ethical online behavior through interactive gamification. Players engage in realistic scenarios, earn XP, unlock achievements, and receive AI-powered personalized guidance to master essential digital safety skills.
 
 ## ✨ Key Features
