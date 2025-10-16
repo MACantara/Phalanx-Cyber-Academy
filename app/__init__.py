@@ -100,10 +100,6 @@ def create_app(config_name=None):
     # Register blueprints
     from app.routes import register_blueprints
     register_blueprints(app)
-    
-    # Exempt specific API endpoints from CSRF protection
-    from app.routes.api import check_password_strength
-    csrf.exempt(check_password_strength)
 
     # Create default admin user if it doesn't exist (only if database is not disabled)
     with app.app_context():
@@ -119,28 +115,20 @@ def create_app(config_name=None):
                     admin_user = User.create(
                         username='admin',
                         email='admin@example.com',
-                        password='admin123'  # Change this in production!
+                        timezone='UTC'
                     )
                     admin_user.is_admin = True
+                    admin_user.is_verified = True
+                    admin_user.onboarding_completed = True
                     admin_user.save()
                     
-                    # Create verified email verification for admin
-                    admin_verification = EmailVerification.create_verification(
-                        admin_user.id,
-                        admin_user.email
-                    )
-                    admin_verification.verify()
-                    
-                    app.logger.info("Default admin user created: admin/admin123 (email verified)")
+                    app.logger.info("Default admin user created: admin@example.com (passwordless auth)")
                 else:
                     # Ensure existing admin has verified email
-                    if not EmailVerification.is_email_verified(admin_user.id, admin_user.email):
-                        admin_verification = EmailVerification.create_verification(
-                            admin_user.id,
-                            admin_user.email
-                        )
-                        admin_verification.verify()
-                        app.logger.info("Admin email verification created and verified")
+                    if not admin_user.is_verified:
+                        admin_user.is_verified = True
+                        admin_user.save()
+                        app.logger.info("Admin email marked as verified")
                     
             except DatabaseError as e:
                 app.logger.warning(f"Database initialization failed: {e}")

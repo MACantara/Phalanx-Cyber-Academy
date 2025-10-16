@@ -4,15 +4,17 @@
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(80) UNIQUE NOT NULL,
+    username VARCHAR(80) UNIQUE,
     email VARCHAR(120) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255),  -- Made nullable for passwordless auth migration
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     last_login TIMESTAMPTZ,
     is_admin BOOLEAN NOT NULL DEFAULT false,
     timezone VARCHAR(50) NOT NULL DEFAULT 'UTC',
-    is_verified BOOLEAN NOT NULL DEFAULT false
+    is_verified BOOLEAN NOT NULL DEFAULT false,
+    cybersecurity_experience VARCHAR(20),  -- 'beginner', 'intermediate', 'advanced'
+    onboarding_completed BOOLEAN NOT NULL DEFAULT false
 );
 
 -- Create indexes for users table
@@ -85,36 +87,26 @@ CREATE INDEX IF NOT EXISTS idx_system_test_plans_execution_date ON system_test_p
 CREATE INDEX IF NOT EXISTS idx_system_test_plans_created_at ON system_test_plans(created_at);
 CREATE INDEX IF NOT EXISTS idx_system_test_plans_updated_at ON system_test_plans(updated_at);
 
--- Create email_verifications table
+-- Create email_verifications table (now used for passwordless login codes)
 CREATE TABLE IF NOT EXISTS email_verifications (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    email VARCHAR(120) NOT NULL,  -- Store email for unregistered users during signup
     token VARCHAR(100) UNIQUE NOT NULL,
+    verification_code VARCHAR(10),  -- 6-digit code for passwordless login
+    code_type VARCHAR(20) DEFAULT 'signup',  -- 'signup', 'login'
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     expires_at TIMESTAMPTZ NOT NULL,
-    verified_at TIMESTAMPTZ
+    verified_at TIMESTAMPTZ,
+    attempts INTEGER DEFAULT 0  -- Track verification attempts
 );
 
 -- Create indexes for email_verifications table
 CREATE INDEX IF NOT EXISTS idx_email_verifications_token ON email_verifications(token);
-CREATE INDEX IF NOT EXISTS idx_email_verifications_user_email ON email_verifications(user_id, email);
+CREATE INDEX IF NOT EXISTS idx_email_verifications_user_id ON email_verifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_email_verifications_email ON email_verifications(email);
 CREATE INDEX IF NOT EXISTS idx_email_verifications_expires_at ON email_verifications(expires_at);
-
--- Create password_reset_tokens table
-CREATE TABLE IF NOT EXISTS password_reset_tokens (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    token VARCHAR(255) UNIQUE NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    expires_at TIMESTAMPTZ NOT NULL,
-    is_active BOOLEAN NOT NULL DEFAULT true,
-    used_at TIMESTAMPTZ
-);
-
--- Create indexes for password_reset_tokens table
-CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_token ON password_reset_tokens(token);
-CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_user_id ON password_reset_tokens(user_id);
-CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_expires_at ON password_reset_tokens(expires_at);
+CREATE INDEX IF NOT EXISTS idx_email_verifications_code ON email_verifications(verification_code);
 
 -- Add total_xp to users table for tracking XP
 ALTER TABLE users ADD COLUMN IF NOT EXISTS total_xp INTEGER DEFAULT 0;
@@ -226,7 +218,6 @@ ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE login_attempts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE email_verifications ENABLE ROW LEVEL SECURITY;
-ALTER TABLE password_reset_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE levels ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE xp_history ENABLE ROW LEVEL SECURITY;
@@ -270,13 +261,6 @@ CREATE POLICY "Users can view their own email verifications" ON email_verificati
     ));
 
 CREATE POLICY "System can manage email verifications" ON email_verifications
-    FOR ALL WITH CHECK (true);
-
--- Password reset tokens policies
-CREATE POLICY "Users can view their own reset tokens" ON password_reset_tokens
-    FOR SELECT USING (user_id = auth.uid()::integer);
-
-CREATE POLICY "System can manage reset tokens" ON password_reset_tokens
     FOR ALL WITH CHECK (true);
 
 -- Levels table policies

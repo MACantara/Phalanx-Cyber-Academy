@@ -13,7 +13,7 @@
         <div class="mb-8 opacity-0 animate-fade-in-up">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                 <div>
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Welcome back, {{ current_user.username }}!</h1>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Welcome back{% if current_user.username %}, {{ current_user.username }}{% endif %}!</h1>
                     <p class="text-gray-600 dark:text-gray-300 mt-2">Track your cybersecurity learning progress and achievements</p>
                 </div>
                 <div class="flex space-x-4">

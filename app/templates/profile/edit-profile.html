@@ -177,58 +177,8 @@
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Times will be displayed in your selected timezone</p>
                 </div>
 
-                <!-- Password Change Section -->
-                <div class="border-t border-gray-200 dark:border-gray-700 pt-6 opacity-0 animate-fade-in-up" style="animation-delay: 0.4s;">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                        Change Password (Optional)
-                    </h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                        Leave blank if you don't want to change your password.
-                    </p>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label for="new_password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                New Password
-                            </label>
-                            <div class="relative">
-                                <input type="password" id="new_password" name="new_password"
-                                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:shadow-md"
-                                       placeholder="Enter new password (optional)">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="confirm_password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                Confirm New Password
-                            </label>
-                            <div class="relative">
-                                <input type="password" id="confirm_password" name="confirm_password"
-                                       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:shadow-md"
-                                       placeholder="Confirm new password">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Divider -->
-                <div class="border-t border-gray-200 dark:border-gray-700 opacity-0 animate-fade-in-up" style="animation-delay: 0.5s;"></div>
-
-                <!-- Current Password Confirmation -->
-                <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.6s;">
-                    <label for="current_password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        Current Password <span class="text-red-500">*</span>
-                    </label>
-                    <div class="relative">
-                        <input type="password" id="current_password" name="current_password" required
-                               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:shadow-md"
-                               placeholder="Enter your current password to confirm changes">
-                    </div>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Required to verify your identity before making any changes</p>
-                </div>
-
                 <!-- Submit Button -->
-                <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.7s;">
+                <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.5s;">
                     <button type="submit" id="profile-btn"
                             class="group w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 to-teal-600 text-white font-semibold text-lg rounded-xl hover:from-green-700 hover:to-teal-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-500/25 shadow-xl hover:shadow-2xl hover:scale-105 transform cursor-pointer">
                         <i class="bi bi-check-circle mr-3 submit-icon"></i>
@@ -247,77 +197,4 @@
 
 {% block extra_js %}
 <script type="module" src="{{ url_for('static', filename='js/utils/password-visibility.js') }}"></script>
-<script type="module" src="{{ url_for('static', filename='js/components/password-strength.js') }}"></script>
-<script type="module" src="{{ url_for('static', filename='js/components/password-validator.js') }}"></script>
-
-<script type="module">
-import PasswordStrengthChecker from "{{ url_for('static', filename='js/components/password-strength.js') }}";
-import PasswordValidator from "{{ url_for('static', filename='js/components/password-validator.js') }}";
-
-document.addEventListener('DOMContentLoaded', function() {
-    const newPassword = document.getElementById('new_password');
-    const confirmPassword = document.getElementById('confirm_password');
-    
-    // Initialize password components immediately on page load
-    let strengthChecker = null;
-    let passwordValidator = null;
-    
-    // Wait a bit for password visibility toggles to be inserted, then initialize components
-    setTimeout(() => {
-        strengthChecker = new PasswordStrengthChecker('new_password', {
-            showMeter: true,
-            showFeedback: true,
-            userInputs: [
-                document.getElementById('username').value,
-                document.getElementById('email').value.split('@')[0]
-            ],
-            customClasses: {
-                container: 'mt-2 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-300 dark:border-gray-600',
-                meter: 'h-2 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-600',
-                feedback: 'text-sm text-gray-600 dark:text-gray-300 mt-2'
-            }
-        });
-
-        passwordValidator = new PasswordValidator('new_password', 'confirm_password', {
-            showValidation: true,
-            showMatching: true,
-            minLength: 8,
-            requireUppercase: true,
-            requireLowercase: true,
-            requireNumbers: true,
-            requireSpecialChars: true,
-            customClasses: {
-                valid: 'text-green-600 dark:text-green-400',
-                invalid: 'text-gray-600 dark:text-gray-400',
-                container: 'mt-2 text-sm'
-            }
-        });
-    }, 100);
-    
-    // Enable/disable confirm password based on new password
-    newPassword.addEventListener('input', function() {
-        if (this.value) {
-            confirmPassword.required = true;
-            confirmPassword.disabled = false;
-        } else {
-            confirmPassword.required = false;
-            confirmPassword.value = '';
-        }
-    });
-    
-    // Update user inputs when username or email changes
-    const updateUserInputs = () => {
-        if (strengthChecker) {
-            const userInputs = [
-                document.getElementById('username').value,
-                document.getElementById('email').value.split('@')[0]
-            ];
-            strengthChecker.setUserInputs(userInputs);
-        }
-    };
-    
-    document.getElementById('username').addEventListener('input', updateUserInputs);
-    document.getElementById('email').addEventListener('input', updateUserInputs);
-});
-</script>
 {% endblock %}

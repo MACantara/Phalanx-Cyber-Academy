@@ -38,14 +38,6 @@ def edit_profile():
         username = request.form.get('username', '').strip().lower()
         email = request.form.get('email', '').strip().lower()
         timezone = request.form.get('timezone', 'UTC').strip()
-        current_password = request.form.get('current_password', '').strip()
-        new_password = request.form.get('new_password', '').strip()
-        confirm_password = request.form.get('confirm_password', '').strip()
-        
-        # Validate current password for any changes
-        if not current_user.check_password(current_password):
-            flash('Current password is incorrect.', 'error')
-            return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
         
         # Validate username
         if not username or len(username) < 3 or len(username) > 30 or not is_valid_username(username):
@@ -76,25 +68,11 @@ def edit_profile():
             flash('Please select a valid timezone.', 'error')
             return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
         
-        # Validate new password if provided
-        if new_password:
-            if len(new_password) < 8:
-                flash('Password must be at least 8 characters long.', 'error')
-                return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
-            
-            if new_password != confirm_password:
-                flash('New passwords do not match.', 'error')
-                return render_template('profile/edit-profile.html', user=current_user, common_timezones=common_timezones)
-        
         try:
             # Update user information
             current_user.username = username
             current_user.email = email
             current_user.timezone = timezone
-            
-            # Update password if provided
-            if new_password:
-                current_user.set_password(new_password)
             
             current_user.save()
             

@@ -79,47 +79,18 @@
 
             <div class="space-y-6">
                 <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
-                    <label for="username_or_email" class="block text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
-                        <i class="bi bi-person-badge mr-2"></i>Agent Username or Email
+                    <label for="email" class="block text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2">
+                        <i class="bi bi-envelope mr-2"></i>Email Address
                     </label>
-                    <input id="username_or_email" name="username_or_email" type="text" required 
+                    <input id="email" name="email" type="email" required 
                            class="w-full px-4 py-4 bg-gray-50 dark:bg-gray-700/50 border border-blue-300 dark:border-blue-500/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:border-blue-400 dark:hover:border-blue-500/50"
-                           placeholder="Enter username or email" value="{{ request.form.username_or_email }}"
+                           placeholder="Enter your email address" value="{{ request.form.email }}"
                            {% if locked_out %}disabled{% endif %}>
-                </div>
-                
-                <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.4s;">
-                    <label for="password" class="block text-sm font-semibold text-purple-600 dark:text-purple-400 mb-2">
-                        <i class="bi bi-key mr-2"></i>Agent Password
-                    </label>
-                    <div class="relative">
-                        <input id="password" name="password" type="password" required 
-                               class="w-full px-4 py-4 bg-gray-50 dark:bg-gray-700/50 border border-purple-300 dark:border-purple-500/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:border-purple-400 dark:hover:border-purple-500/50"
-                               placeholder="Enter password"
-                               {% if locked_out %}disabled{% endif %}>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex items-center justify-between opacity-0 animate-fade-in-up" style="animation-delay: 0.5s;">
-                <div class="flex items-center">
-                    <input id="remember_me" name="remember_me" type="checkbox" 
-                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded transition-colors duration-200 {% if not locked_out %}cursor-pointer{% endif %}"
-                           {% if locked_out %}disabled{% endif %}>
-                    <label for="remember_me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300 transition-colors duration-200 {% if not locked_out %}cursor-pointer{% endif %}">
-                        Remember me
-                    </label>
-                </div>
-
-                <div class="text-sm">
-                    <a href="{{ url_for('password_reset.forgot_password') }}" class="font-medium text-blue-600 dark:text-cyan-400 hover:text-blue-500 dark:hover:text-cyan-300 transition-colors duration-200 hover:underline">
-                        Forgot password?
-                    </a>
                 </div>
             </div>
 
 
-            <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.6s;">
+            <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.5s;">
                 <button type="submit" id="login-btn"
                         class="group w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white font-semibold text-lg rounded-xl hover:from-blue-600 hover:to-cyan-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/25 shadow-xl hover:shadow-2xl hover:scale-105 transform cursor-pointer {% if locked_out %}opacity-50 cursor-not-allowed{% endif %}"
                         {% if locked_out %}disabled{% endif %}>
@@ -127,18 +98,18 @@
                         <i class="bi bi-lock mr-3"></i>
                         <span>Portal Locked</span>
                     {% else %}
-                        <i class="bi bi-shield-check mr-3 submit-icon"></i>
+                        <i class="bi bi-envelope-check mr-3 submit-icon"></i>
                         <div class="hidden animate-spin submit-spinner">
                             <i class="bi bi-arrow-clockwise"></i>
                         </div>
                         <span class="submit-text">Log In</span>
-                        <span class="hidden submit-loading-text">Authenticating...</span>
+                        <span class="hidden submit-loading-text">Sending...</span>
                     {% endif %}
                 </button>
             </div>
 
             <!-- Alternative Sign Up -->
-            <div class="text-center opacity-0 animate-fade-in-up" style="animation-delay: 0.7s;">
+            <div class="text-center opacity-0 animate-fade-in-up" style="animation-delay: 0.6s;">
                 <p class="text-gray-600 dark:text-gray-300">
                     Don't have an account?
                     <a href="{{ url_for('auth.signup') }}" class="font-medium text-green-600 dark:text-green-400 hover:text-green-500 dark:hover:text-green-300 transition-colors duration-200 hover:underline ml-2">

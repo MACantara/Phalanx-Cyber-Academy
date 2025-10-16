@@ -43,7 +43,6 @@ class Tables:
     CONTACT_SUBMISSIONS = "contact_submissions"
     LOGIN_ATTEMPTS = "login_attempts"
     EMAIL_VERIFICATIONS = "email_verifications"
-    PASSWORD_RESET_TOKENS = "password_reset_tokens"
 
 # Common database operations
 class DatabaseError(Exception):

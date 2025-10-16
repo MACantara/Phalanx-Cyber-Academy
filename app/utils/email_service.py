@@ -237,57 +237,22 @@ class EmailService:
         )
     
     @staticmethod
-    def send_password_reset_email(user, token: str) -> bool:
-        """Send password reset email."""
-        # Ensure URL configuration
-        EmailService._ensure_url_config()
-        
-        # Generate reset URL
-        reset_url = url_for('password_reset.reset_password', token=token, _external=True)
-        
+    def send_login_verification_code(email: str, verification) -> bool:
+        """Send login verification code email."""
         return EmailService.send_email(
-            email_type='password_reset',
-            template_name='password_reset.html',
-            subject='Password Reset Request - [Web Site Name]',
-            to_emails=[user.email],
+            email_type='login_verification',
+            template_name='login_verification.html',
+            subject='Your Login Verification Code - CyberQuest',
+            to_emails=[email],
             template_context={
-                'user': user,
-                'reset_url': reset_url,
-                'token': token
+                'email': email,
+                'verification_code': verification.verification_code,
+                'expires_minutes': 15
             },
             headers={
-                'X-Mailer': '[Web Site Name] Application',
-                'X-Priority': '2',
-                'Message-ID': f'<password-reset-{token}@example.com>',
-                'List-Unsubscribe': '<mailto:unsubscribe@example.com>',
-                'Precedence': 'bulk'
-            }
-        )
-    
-    @staticmethod
-    def send_email_verification(user, verification) -> bool:
-        """Send email verification email."""
-        # Ensure URL configuration
-        EmailService._ensure_url_config()
-        
-        # Generate verification URL
-        verification_url = url_for('email_verification.verify_email', token=verification.token, _external=True)
-        
-        return EmailService.send_email(
-            email_type='email_verification',
-            template_name='email_verification.html',
-            subject='Verify Your Email Address - [Web Site Name]',
-            to_emails=[user.email],
-            template_context={
-                'user': user,
-                'verification': verification,
-                'verification_url': verification_url
-            },
-            headers={
-                'X-Mailer': '[Web Site Name] Application',
-                'X-Priority': '3',
-                'Message-ID': f'<verification-{verification.token}@example.com>',
-                'List-Unsubscribe': '<mailto:unsubscribe@example.com>',
+                'X-Mailer': 'CyberQuest Application',
+                'X-Priority': '1',
+                'Message-ID': f'<login-verification-{verification.token}@cyberquest.com>',
                 'Precedence': 'bulk'
             }
         )
