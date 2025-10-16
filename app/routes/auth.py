@@ -4,7 +4,6 @@ from app.models.user import User
 from app.models.email_verification import EmailVerification
 from app.routes.login_attempts import check_ip_lockout, record_login_attempt, get_remaining_attempts, is_lockout_triggered
 from app.routes.email_verification import create_and_send_verification, check_email_verification_status
-from app.utils.hcaptcha_utils import verify_hcaptcha
 from app.utils.password_validator import PasswordValidator
 from app.utils.timezone_utils import get_timezones
 from app.database import DatabaseError
@@ -61,12 +60,6 @@ def login():
         
         if not username_or_email or not password:
             flash('Please provide both username/email and password.', 'error')
-            return render_template('auth/login.html')
-        
-        # Verify hCaptcha only if enabled
-        from app.utils.hcaptcha_utils import is_hcaptcha_enabled
-        if is_hcaptcha_enabled() and not verify_hcaptcha():
-            flash('Please complete the captcha verification.', 'error')
             return render_template('auth/login.html')
         
         # Check if database is disabled (Vercel environment)
@@ -140,11 +133,6 @@ def signup():
             flash('User registration is not available in this deployment environment.', 'warning')
             return render_template('auth/signup.html')
         
-        # Verify hCaptcha only if enabled
-        from app.utils.hcaptcha_utils import is_hcaptcha_enabled
-        if is_hcaptcha_enabled() and not verify_hcaptcha():
-            flash('Please complete the captcha verification.', 'error')
-            return render_template('auth/signup.html')
         
         # Validation
         errors = []
