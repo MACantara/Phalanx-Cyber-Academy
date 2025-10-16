@@ -514,8 +514,6 @@ def _create_database_backup() -> Dict[str, Any]:
         response = supabase.table(Tables.CONTACT_SUBMISSIONS).select("*").execute()
         backup_data['contact_submissions'] = response.data if response.data else []
         
-        # Note: Password reset tokens table removed - using passwordless authentication
-        
         return backup_data
         
     except Exception as e:
@@ -533,7 +531,6 @@ def _restore_database_backup(backup_data: Dict[str, Any], restore_type: str = 'm
             current_app.logger.warning(f"Full database replacement initiated by {current_user.username}")
             
             # Delete existing data (in reverse dependency order)
-            supabase.table(Tables.PASSWORD_RESET_TOKENS).delete().neq('id', 0).execute()
             supabase.table(Tables.EMAIL_VERIFICATIONS).delete().neq('id', 0).execute()
             supabase.table(Tables.CONTACT_SUBMISSIONS).delete().neq('id', 0).execute()
             supabase.table(Tables.LOGIN_ATTEMPTS).delete().neq('id', 0).execute()
