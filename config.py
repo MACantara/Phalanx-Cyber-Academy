@@ -50,12 +50,12 @@ class Config:
         print(f"[CONFIG DEBUG] CUSTOM_DOMAIN: {custom_domain_env}")
         print(f"[CONFIG DEBUG] VERCEL_URL: {vercel_url_env}")
         
-        SERVER_NAME = custom_domain_env or vercel_url_env or 'cyberquest.live'
+        SERVER_NAME = custom_domain_env or vercel_url_env or 'example.com'
         
         # Double-check: if we still get a Vercel auto URL, force our domain
         if SERVER_NAME and ('.vercel.app' in SERVER_NAME or SERVER_NAME.startswith('https://')):
-            print(f"[CONFIG DEBUG] Detected Vercel auto URL ({SERVER_NAME}), forcing cyberquest.live")
-            SERVER_NAME = 'cyberquest.live'
+            print(f"[CONFIG DEBUG] Detected Vercel auto URL ({SERVER_NAME}), forcing custom domain")
+            SERVER_NAME = 'example.com'
             
         print(f"[CONFIG DEBUG] Final SERVER_NAME: {SERVER_NAME}")
     else:

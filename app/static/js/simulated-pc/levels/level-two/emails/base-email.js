@@ -133,14 +133,14 @@ export class BaseEmail {
 
     // Helper method to check if email is from a trusted domain
     isFromTrustedDomain() {
-        const trustedDomains = ['cyberquest.com', 'securebank.com'];
+        const trustedDomains = ['example.com', 'securebank.com'];
         return trustedDomains.includes(this.getSenderDomain());
     }
 
     // Helper method to get email server
     getEmailServer() {
         const domain = this.getSenderDomain();
-        return domain.includes('cyberquest.com') ? 'mail.cyberquest.com' : domain;
+        return domain.includes('example.com') ? 'mail.example.com' : domain;
     }
 
     // Static method to create timestamps

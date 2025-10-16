@@ -2,8 +2,8 @@ export class BootSequence {
     constructor(container) {
         this.container = container;
         this.bootLines = [
-            { text: 'CyberQuest Security Training Environment v2.1.0', type: 'info', delay: 30 },
-            { text: 'Copyright (c) 2025 CyberQuest Training Systems', type: 'info', delay: 30 },
+            { text: '[Web Site Name] Security Training Environment v2.1.0', type: 'info', delay: 30 },
+            { text: 'Copyright (c) 2025 [Web Site Name] Training Systems', type: 'info', delay: 30 },
             { text: '', type: 'info', delay: 10 },
             { text: 'Initializing secure training environment', type: 'info', delay: 50, hasStatus: true, status: '[  OK  ]' },
             { text: 'Loading kernel modules and core services', type: 'info', delay: 60, hasStatus: true, status: '[  OK  ]' },
@@ -21,7 +21,7 @@ export class BootSequence {
             { text: 'Preparing virtual environment', type: 'info', delay: 20, hasStatus: false, bundle: 'training' },
             { text: 'Finalizing training setup', type: 'success', delay: 30, hasStatus: false, bundle: 'training' },
             { text: '', type: 'info', delay: 30 },
-            { text: 'Welcome to the CyberQuest Training Lab', type: 'success', delay: 50 },
+            { text: 'Welcome to the [Web Site Name] Training Lab', type: 'success', delay: 50 },
             { text: 'Type "help" for available commands', type: 'info', delay: 30 },
             { text: '', type: 'info', delay: 100 }
         ];

@@ -208,10 +208,10 @@ class EmailService:
             },
             reply_to=[contact_submission.email],
             headers={
-                'X-Mailer': 'CyberQuest Application',
+                'X-Mailer': '[Web Site Name] Application',
                 'X-Priority': '2',
-                'Message-ID': f'<contact-{contact_submission.id if hasattr(contact_submission, "id") else "temp"}@cyberquest.live>',
-                'List-Unsubscribe': '<mailto:unsubscribe@cyberquest.live>',
+                'Message-ID': f'<contact-{contact_submission.id if hasattr(contact_submission, "id") else "temp"}@example.com>',
+                'List-Unsubscribe': '<mailto:unsubscribe@example.com>',
                 'Precedence': 'bulk'
             }
         )
@@ -222,16 +222,16 @@ class EmailService:
         return EmailService.send_email(
             email_type='contact_auto_reply',
             template_name='contact_auto_reply.html',
-            subject='Thank you for contacting us - CyberQuest',
+            subject='Thank you for contacting us - [Web Site Name]',
             to_emails=[contact_submission.email],
             template_context={
                 'contact': contact_submission
             },
             headers={
-                'X-Mailer': 'CyberQuest Application',
+                'X-Mailer': '[Web Site Name] Application',
                 'X-Priority': '3',
-                'Message-ID': f'<contact-reply-{contact_submission.id if hasattr(contact_submission, "id") else "temp"}@ccyberquest.live>',
-                'List-Unsubscribe': '<mailto:unsubscribe@cyberquest.live>',
+                'Message-ID': f'<contact-reply-{contact_submission.id if hasattr(contact_submission, "id") else "temp"}@example.com>',
+                'List-Unsubscribe': '<mailto:unsubscribe@example.com>',
                 'Precedence': 'bulk'
             }
         )
@@ -248,7 +248,7 @@ class EmailService:
         return EmailService.send_email(
             email_type='password_reset',
             template_name='password_reset.html',
-            subject='Password Reset Request - CyberQuest',
+            subject='Password Reset Request - [Web Site Name]',
             to_emails=[user.email],
             template_context={
                 'user': user,
@@ -256,10 +256,10 @@ class EmailService:
                 'token': token
             },
             headers={
-                'X-Mailer': 'CyberQuest Application',
+                'X-Mailer': '[Web Site Name] Application',
                 'X-Priority': '2',
-                'Message-ID': f'<password-reset-{token}@cyberquest.live>',
-                'List-Unsubscribe': '<mailto:unsubscribe@cyberquest.live>',
+                'Message-ID': f'<password-reset-{token}@example.com>',
+                'List-Unsubscribe': '<mailto:unsubscribe@example.com>',
                 'Precedence': 'bulk'
             }
         )
@@ -276,7 +276,7 @@ class EmailService:
         return EmailService.send_email(
             email_type='email_verification',
             template_name='email_verification.html',
-            subject='Verify Your Email Address - CyberQuest',
+            subject='Verify Your Email Address - [Web Site Name]',
             to_emails=[user.email],
             template_context={
                 'user': user,
@@ -284,10 +284,10 @@ class EmailService:
                 'verification_url': verification_url
             },
             headers={
-                'X-Mailer': 'CyberQuest Application',
+                'X-Mailer': '[Web Site Name] Application',
                 'X-Priority': '3',
-                'Message-ID': f'<verification-{verification.token}@cyberquest.live>',
-                'List-Unsubscribe': '<mailto:unsubscribe@cyberquest.live>',
+                'Message-ID': f'<verification-{verification.token}@example.com>',
+                'List-Unsubscribe': '<mailto:unsubscribe@example.com>',
                 'Precedence': 'bulk'
             }
         )

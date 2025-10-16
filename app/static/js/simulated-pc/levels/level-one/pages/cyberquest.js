@@ -3,7 +3,7 @@ import { BasePage } from './base-page.js';
 class CyberQuestPageClass extends BasePage {
     constructor() {
         super({
-            url: 'https://cyberquest.com',
+            url: 'https://example.com',
             title: 'CyberQuest Training',
             ipAddress: '104.26.10.72',
             securityLevel: 'safe',
@@ -68,7 +68,7 @@ class CyberQuestPageClass extends BasePage {
                     <section>
                         <h2 class="text-xl font-semibold mb-3">Contact Information</h2>
                         <div class="bg-gray-50 p-4 rounded">
-                            <p><strong>Email:</strong> support@cyberquest.com</p>
+                            <p><strong>Email:</strong> support@example.com</p>
                             <p><strong>Phone:</strong> +1 (555) 123-4567</p>
                             <p><strong>Address:</strong> 123 Security Blvd, Cyber City, CC 12345</p>
                         </div>

@@ -24,7 +24,7 @@ async function loadEmailsFromJSON() {
                     id: email.id || `email_${index + 1}`,
                     folder: 'inbox',
                     sender: email.sender || 'unknown@example.com',
-                    receiver: email.receiver || 'user@cyberquest.com',
+                    receiver: email.receiver || 'user@example.com',
                     subject: email.subject || 'No Subject',
                     body: email.body || 'No content available.',
                     time: email.date ? formatEmailTime(email.date) : formatEmailTime(new Date()),
