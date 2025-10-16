@@ -58,9 +58,10 @@
                            class="w-full px-4 py-4 bg-gray-50 dark:bg-gray-700/50 border border-purple-300 dark:border-purple-500/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                            placeholder="Enter your username (3-30 characters)"
                            pattern="[a-zA-Z0-9_]{3,30}"
-                           maxlength="30">
+                           maxlength="30"
+                           value="{{ current_user.email.split('@')[0] if current_user.email else '' }}">
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                        3-30 characters, letters, numbers, and underscores only
+                        3-30 characters, letters, numbers, and underscores only. We've suggested your email prefix, but feel free to customize it!
                     </p>
                 </div>
 
@@ -150,12 +151,41 @@
 document.addEventListener('DOMContentLoaded', function() {
     const usernameInput = document.getElementById('username');
     
-    // Auto-focus on username input
-    usernameInput.focus();
+    // Sanitize pre-filled username to meet requirements
+    if (usernameInput.value) {
+        // Remove any characters that aren't alphanumeric or underscore
+        let sanitized = usernameInput.value.toLowerCase().replace(/[^a-z0-9_]/g, '');
+        
+        // Ensure it's at least 3 characters
+        if (sanitized.length < 3) {
+            sanitized = sanitized.padEnd(3, '0');
+        }
+        
+        // Ensure it's not more than 30 characters
+        if (sanitized.length > 30) {
+            sanitized = sanitized.substring(0, 30);
+        }
+        
+        usernameInput.value = sanitized;
+    }
     
-    // Convert to lowercase as user types
+    // Auto-focus and select the pre-filled text so user can easily change it
+    usernameInput.focus();
+    usernameInput.select();
+    
+    // Convert to lowercase and sanitize as user types
     usernameInput.addEventListener('input', function(e) {
-        this.value = this.value.toLowerCase();
+        let cursorPos = this.selectionStart;
+        let originalLength = this.value.length;
+        
+        // Convert to lowercase and remove invalid characters
+        this.value = this.value.toLowerCase().replace(/[^a-z0-9_]/g, '');
+        
+        // Adjust cursor position if characters were removed
+        let lengthDiff = originalLength - this.value.length;
+        if (lengthDiff > 0) {
+            this.setSelectionRange(cursorPos - lengthDiff, cursorPos - lengthDiff);
+        }
     });
 });
 </script>
