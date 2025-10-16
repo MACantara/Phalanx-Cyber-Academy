@@ -108,8 +108,6 @@ CREATE INDEX IF NOT EXISTS idx_email_verifications_email ON email_verifications(
 CREATE INDEX IF NOT EXISTS idx_email_verifications_expires_at ON email_verifications(expires_at);
 CREATE INDEX IF NOT EXISTS idx_email_verifications_code ON email_verifications(verification_code);
 
--- Password reset tokens table removed - no longer needed for passwordless auth
-
 -- Add total_xp to users table for tracking XP
 ALTER TABLE users ADD COLUMN IF NOT EXISTS total_xp INTEGER DEFAULT 0;
 
