@@ -73,13 +73,11 @@ def auth_expired():
 def features_status():
     """Get current feature flags status."""
     try:
-        from app.utils.hcaptcha_utils import get_hcaptcha_status
         
         features = current_app.config.get('FEATURES', {})
         
         return jsonify({
             'features': features,
-            'hcaptcha': get_hcaptcha_status(),
             'environment': current_app.config.get('ENV', 'unknown')
         })
         

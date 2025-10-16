@@ -35,9 +35,6 @@
 {% endblock %}
 
 {% block extra_js %}
-{% if hcaptcha_enabled() %}
-<script src="{{ url_for('static', filename='js/hcaptcha-handler.js') }}"></script>
-{% endif %}
 
 <script type="module" src="{{ url_for('static', filename='js/utils/password-visibility.js') }}"></script>
 <script type="module" src="{{ url_for('static', filename='js/sign-up.js') }}"></script>

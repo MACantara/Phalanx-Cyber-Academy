@@ -28,7 +28,6 @@ export class FeatureFlags {
             if (response.ok) {
                 const data = await response.json();
                 this.features = data.features;
-                this.hcaptchaStatus = data.hcaptcha;
                 this.environment = data.environment;
                 this.initialized = true;
                 console.log('Feature flags loaded:', this.features);
@@ -37,7 +36,6 @@ export class FeatureFlags {
             console.warn('Failed to load feature flags:', error);
             // Set defaults if API fails
             this.features = {
-                HCAPTCHA: true,
                 EMAIL_VERIFICATION: true,
                 LOGIN_ATTEMPTS: true,
                 ADMIN_PANEL: true
@@ -61,32 +59,11 @@ export class FeatureFlags {
     }
 
     /**
-     * Check if hCaptcha is enabled
-     * @returns {boolean} Whether hCaptcha is enabled
-     */
-    isHCaptchaEnabled() {
-        if (!this.initialized) {
-            // Check DOM for hCaptcha elements as fallback
-            return document.querySelector('.h-captcha') !== null;
-        }
-
-        return this.hcaptchaStatus ? this.hcaptchaStatus.overall_enabled : false;
-    }
-
-    /**
      * Get all feature flags
      * @returns {Object} All feature flags
      */
     getAll() {
         return this.features || {};
-    }
-
-    /**
-     * Get hCaptcha status details
-     * @returns {Object} hCaptcha status information
-     */
-    getHCaptchaStatus() {
-        return this.hcaptchaStatus || {};
     }
 
     /**

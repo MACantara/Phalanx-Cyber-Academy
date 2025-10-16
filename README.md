@@ -33,7 +33,7 @@ CyberQuest is a game-based learning platform designed to enhance digital literac
 - **🎨 Responsive Design**: Tailwind CSS with Bootstrap Icons
 - **🔐 Complete Authentication**: Registration, login, password reset, email verification
 - **👥 Admin Panel**: User management, system monitoring, security logs
-- **🛡️ Advanced Security**: Account lockout, rate limiting, hCaptcha integration
+- **🛡️ Advanced Security**: Account lockout, rate limiting, CSRF protection
 - **🌓 Theme System**: Light/Dark/System modes with persistent preferences
 - **📧 Email Integration**: Contact forms, password reset, verification emails
 - **📋 Legal Compliance**: Privacy policy, terms of service, cookie policy
@@ -137,7 +137,6 @@ Visit `http://localhost:5000` to start your cybersecurity learning journey.
 - **[Community Features](docs/COMMUNITY.md)** - Forums, tournaments, and collaboration (WIP)
 - **[Authentication System](docs/AUTHENTICATION.md)** - Complete authentication with email verification
 - **[Admin Panel](docs/ADMIN_PANEL.md)** - User management and system monitoring
-- **[hCaptcha Integration](docs/HCAPTCHA.md)** - Bot protection and security
 - **[Deployment Guide](docs/DEPLOYMENT.md)** - Vercel, VPS, and production deployment
 
 ### Technical Features Overview
@@ -160,7 +159,6 @@ Visit `http://localhost:5000` to start your cybersecurity learning journey.
 
 #### 🛡️ Security Features
 - **Account Lockout**: 5 failed attempts = 15-minute lockout (configurable)
-- **hCaptcha Protection**: Bot prevention on forms
 - **Rate Limiting**: IP-based request limiting
 - **CSRF Protection**: Built-in CSRF protection
 - **Secure Headers**: Security headers for production
@@ -206,11 +204,6 @@ MAIL_PASSWORD=your-app-password
 # Security Settings
 MAX_LOGIN_ATTEMPTS=5
 LOGIN_LOCKOUT_MINUTES=15
-
-# hCaptcha (optional)
-HCAPTCHA_ENABLED=true
-HCAPTCHA_SITE_KEY=your-site-key
-HCAPTCHA_SECRET_KEY=your-secret-key
 
 # Community Features
 FORUMS_ENABLED=true
@@ -290,9 +283,8 @@ See the [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
 1. **Change Default Credentials**: Update admin username/password
 2. **Configure HTTPS**: Essential for secure cookies and authentication
 3. **Set Strong Secret Key**: Use a cryptographically secure secret
-4. **Enable hCaptcha**: Protect forms from bot submissions
-5. **Configure Email**: Set up production email service
-6. **Monitor Logs**: Regular review of security and access logs
+4. **Configure Email**: Set up production email service
+5. **Monitor Logs**: Regular review of security and access logs
 
 ### Production Checklist
 - [ ] HTTPS configured with valid SSL certificate
@@ -300,7 +292,6 @@ See the [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
 - [ ] Default admin credentials changed
 - [ ] Database credentials secured
 - [ ] Email service configured
-- [ ] hCaptcha enabled and configured
 - [ ] Security headers configured
 - [ ] Backup strategy implemented
 - [ ] Monitoring and alerting set up
@@ -310,7 +301,7 @@ See the [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
 - **Backend**: Python Flask, SQLAlchemy, Flask-Migrate
 - **Frontend**: Tailwind CSS, Bootstrap Icons, Vanilla JavaScript
 - **Database**: SQLite (dev), PostgreSQL/MySQL (production)
-- **Security**: Argon2, Flask-WTF, hCaptcha
+- **Security**: Argon2, Flask-WTF, CSRF Protection
 - **Email**: Flask-Mail with SMTP support
 - **Deployment**: Vercel, traditional hosting
 

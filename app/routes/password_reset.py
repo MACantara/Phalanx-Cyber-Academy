@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from flask_login import current_user
 from app.models.user import User, PasswordResetToken
-from app.utils.hcaptcha_utils import verify_hcaptcha
 from app.utils.password_validator import PasswordValidator
 from app.utils.email_service import EmailService
 from app.database import DatabaseError
@@ -27,11 +26,6 @@ def forgot_password():
             flash('Please provide your email address.', 'error')
             return render_template('password/forgot-password.html')
         
-        # Verify hCaptcha only if enabled
-        from app.utils.hcaptcha_utils import is_hcaptcha_enabled
-        if is_hcaptcha_enabled() and not verify_hcaptcha():
-            flash('Please complete the captcha verification.', 'error')
-            return render_template('password/forgot-password.html')
         
         # Check if database is disabled (Vercel environment)
         if current_app.config.get('DISABLE_DATABASE', False):
@@ -75,12 +69,6 @@ def reset_password(token):
     if request.method == 'POST':
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
-        
-        # Verify hCaptcha only if enabled
-        from app.utils.hcaptcha_utils import is_hcaptcha_enabled
-        if is_hcaptcha_enabled() and not verify_hcaptcha():
-            flash('Please complete the captcha verification.', 'error')
-            return render_template('password/reset-password.html', token=token)
         
         errors = []
         

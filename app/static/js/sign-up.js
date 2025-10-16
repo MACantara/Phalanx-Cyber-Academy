@@ -1,6 +1,5 @@
 import PasswordStrengthChecker from "./components/password-strength.js";
 import PasswordValidator from "./components/password-validator.js";
-import hcaptchaValidator from "./utils/hcaptcha-validator.js";
 import PasswordVisibility from "./utils/password-visibility.js";
 
 class CyberQuestSignup {
@@ -406,10 +405,6 @@ class CyberQuestSignup {
             return false;
         }
         
-        // Validate hCaptcha if enabled
-        if (!hcaptchaValidator.validateForm(this.form)) {
-            return false;
-        }
         
         return true;
     }

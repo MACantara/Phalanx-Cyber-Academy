@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from app.models.contact import Contact
-from app.utils.hcaptcha_utils import verify_hcaptcha
 from app.utils.email_service import EmailService
 from app.database import DatabaseError
 from app.utils.timezone_utils import utc_now
@@ -33,11 +32,6 @@ def contact_page():
         subject = request.form.get('subject', '').strip()
         message = request.form.get('message', '').strip()
         
-        # Verify hCaptcha only if enabled
-        from app.utils.hcaptcha_utils import is_hcaptcha_enabled
-        if is_hcaptcha_enabled() and not verify_hcaptcha():
-            flash('Please complete the captcha verification.', 'error')
-            return redirect(url_for('contact.contact_page'))
         
         # Validation
         errors = []
