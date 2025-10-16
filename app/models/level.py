@@ -1,6 +1,6 @@
 """
 Level Model
-Represents level metadata and configuration for the CyberQuest system
+Represents level metadata and configuration for the [Web Site Name] system
 """
 from datetime import datetime
 from typing import Dict, Any, List, Optional

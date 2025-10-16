@@ -150,7 +150,7 @@
     "description": "Verify email service integration and HTML email template rendering",
     "scenario": "System sends verification email with proper HTML template and content",
     "expected_results": "Email is sent with cybersecurity-themed HTML template and proper verification link",
-    "procedure": "1. Register new user account\n2. Check email is received in user's inbox\n3. Verify email subject 'Verify Your Email Address - CyberQuest'\n4. Check HTML email template with blue gradient header\n5. Verify welcome message with username personalization\n6. Check verification button with proper URL\n7. Test fallback link in email\n8. Verify 24-hour expiration notice in email\n9. Check email displays correctly in various email clients",
+    "procedure": "1. Register new user account\n2. Check email is received in user's inbox\n3. Verify email subject 'Verify Your Email Address - [Web Site Name]'\n4. Check HTML email template with blue gradient header\n5. Verify welcome message with username personalization\n6. Check verification button with proper URL\n7. Test fallback link in email\n8. Verify 24-hour expiration notice in email\n9. Check email displays correctly in various email clients",
     "test_status": "pending",
     "priority": "high",
     "category": "functional"

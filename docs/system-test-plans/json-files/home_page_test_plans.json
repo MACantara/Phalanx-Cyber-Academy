@@ -102,7 +102,7 @@
     "description": "Verify hero section loads with proper animations and floating elements",
     "scenario": "User lands on the home page and sees the main hero section",
     "expected_results": "Hero text fades in with staggered animation, floating cyber elements visible",
-    "procedure": "1. Navigate to home page\n2. Observe hero section load\n3. Verify 'Welcome to CyberQuest' text animates in\n4. Check floating colored circles are animated",
+    "procedure": "1. Navigate to home page\n2. Observe hero section load\n3. Verify 'Welcome to [Web Site Name]' text animates in\n4. Check floating colored circles are animated",
     "test_status": "pending",
     "priority": "low",
     "category": "ui"

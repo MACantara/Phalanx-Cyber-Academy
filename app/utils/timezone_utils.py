@@ -1,5 +1,5 @@
 """
-Timezone-aware datetime utilities for CyberQuest application.
+Timezone-aware datetime utilities for [Web Site Name] application.
 
 This module provides centralized timezone-aware datetime handling to replace 
 naive datetime operations throughout the application. All functions return 

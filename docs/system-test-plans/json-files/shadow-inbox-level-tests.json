@@ -54,7 +54,7 @@
     "description": "Verify the email registry contains diverse phishing and legitimate emails for comprehensive training",
     "scenario": "Email application displays variety of emails with progressive difficulty for skill development",
     "expected_results": "Email registry includes legitimate emails, obvious phishing, and sophisticated attacks with proper categorization",
-    "procedure": "1. Open email application\n2. Verify presence of legitimate emails (CyberQuest Welcome, Company Update, Password Reset)\n3. Check obvious phishing emails (Nigerian Prince)\n4. Confirm sophisticated phishing attempts (Fake PayPal, Bank, Microsoft)\n5. Verify spear phishing examples for advanced training\n6. Check progressive difficulty ordering\n7. Confirm emails have proper suspicious/legitimate flags",
+    "procedure": "1. Open email application\n2. Verify presence of legitimate emails ([Web Site Name] Welcome, Company Update, Password Reset)\n3. Check obvious phishing emails (Nigerian Prince)\n4. Confirm sophisticated phishing attempts (Fake PayPal, Bank, Microsoft)\n5. Verify spear phishing examples for advanced training\n6. Check progressive difficulty ordering\n7. Confirm emails have proper suspicious/legitimate flags",
     "test_status": "pending",
     "priority": "high",
     "category": "functional"
@@ -102,7 +102,7 @@
     "description": "Verify the 'Mark as Legitimate' action works correctly for genuine emails",
     "scenario": "User identifies a legitimate email and marks it as safe through the security interface",
     "expected_results": "Mark as legitimate action provides immediate feedback and updates email status",
-    "procedure": "1. Open a legitimate email (e.g., CyberQuest Welcome)\n2. Click 'Mark as Legitimate' button\n3. Verify immediate feedback toast appears\n4. Check email status indicator updates\n5. Confirm action is recorded in session tracking\n6. Test multiple legitimate email marking\n7. Verify no confirmation modal is needed for legitimate marking",
+    "procedure": "1. Open a legitimate email (e.g., [Web Site Name] Welcome)\n2. Click 'Mark as Legitimate' button\n3. Verify immediate feedback toast appears\n4. Check email status indicator updates\n5. Confirm action is recorded in session tracking\n6. Test multiple legitimate email marking\n7. Verify no confirmation modal is needed for legitimate marking",
     "test_status": "pending",
     "priority": "high",
     "category": "functional"
@@ -246,7 +246,7 @@
     "description": "Verify email content renders correctly with proper HTML formatting and security",
     "scenario": "Email application displays email content with proper formatting while maintaining security",
     "expected_results": "Email content shows proper HTML rendering, images, and styling while preventing malicious code execution",
-    "procedure": "1. Open various email types (PayPal, Microsoft, CyberQuest)\n2. Verify HTML content renders correctly\n3. Check images display properly (PayPal logo, etc.)\n4. Confirm styling preserves email appearance\n5. Verify links are rendered but safe\n6. Check email headers display correctly\n7. Test content security prevents malicious execution",
+    "procedure": "1. Open various email types (PayPal, Microsoft, [Web Site Name])\n2. Verify HTML content renders correctly\n3. Check images display properly (PayPal logo, etc.)\n4. Confirm styling preserves email appearance\n5. Verify links are rendered but safe\n6. Check email headers display correctly\n7. Test content security prevents malicious execution",
     "test_status": "pending",
     "priority": "medium",
     "category": "security"

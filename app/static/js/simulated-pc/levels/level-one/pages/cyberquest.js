@@ -4,7 +4,7 @@ class CyberQuestPageClass extends BasePage {
     constructor() {
         super({
             url: 'https://example.com',
-            title: 'CyberQuest Training',
+            title: '[Web Site Name] Training',
             ipAddress: '104.26.10.72',
             securityLevel: 'safe',
             security: {

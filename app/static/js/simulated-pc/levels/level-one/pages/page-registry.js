@@ -65,7 +65,7 @@ export class PageRegistry {
                         <div class="mt-6">
                             <button onclick="window.browserApp?.navigation.navigateToUrl('https://example.com')" 
                                     class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
-                                Go to CyberQuest Home
+                                Go to [Web Site Name] Home
                             </button>
                         </div>
                     </div>

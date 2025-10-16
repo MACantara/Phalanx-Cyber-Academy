@@ -1,5 +1,5 @@
 """
-Centralized Email Service for CyberQuest Application
+Centralized Email Service for [Web Site Name] Application
 
 This module provides a centralized email service that handles all email sending
 functionality throughout the application, including templates, error handling,

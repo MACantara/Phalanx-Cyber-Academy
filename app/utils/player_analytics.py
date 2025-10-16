@@ -1,5 +1,5 @@
 """
-Centralized Player Analytics Engine for CyberQuest
+Centralized Player Analytics Engine for [Web Site Name]
 Handles data collection, processing, and storage for all game modes and levels
 """
 

@@ -4,9 +4,9 @@
     "module_name": "Sign-Up-Page",
     "screen_design_ref": "Figure 8.1: Sign Up Page Layout",
     "description": "Verify that the Sign Up page loads correctly when accessing the /auth/signup URL",
-    "scenario": "New user navigates to the signup page to create a CyberQuest account",
+    "scenario": "New user navigates to the signup page to create a [Web Site Name] account",
     "expected_results": "Display the complete signup page with multi-step form, cybersecurity theme, and proper initialization",
-    "procedure": "1. Open web browser\n2. Navigate to http://localhost:5000/auth/signup\n3. Verify page loads completely\n4. Check page title displays 'Join CyberQuest'\n5. Verify multi-step signup form is visible and properly styled\n6. Check JavaScript components initialize correctly",
+    "procedure": "1. Open web browser\n2. Navigate to http://localhost:5000/auth/signup\n3. Verify page loads completely\n4. Check page title displays 'Join [Web Site Name]'\n5. Verify multi-step signup form is visible and properly styled\n6. Check JavaScript components initialize correctly",
     "test_status": "pending",
     "priority": "critical",
     "category": "functional"
