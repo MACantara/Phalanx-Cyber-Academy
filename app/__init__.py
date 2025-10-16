@@ -97,10 +97,6 @@ def create_app(config_name=None):
         # For other 400 errors, return normally
         return str(e), 400
 
-    # Initialize hCaptcha
-    from app.utils.hcaptcha_utils import init_hcaptcha
-    init_hcaptcha(app)
-
     # Register blueprints
     from app.routes import register_blueprints
     register_blueprints(app)
@@ -258,10 +254,6 @@ def create_app(config_name=None):
                 return str(int(num))  # Return as integer for smaller numbers
         except (ValueError, TypeError):
             return str(number) if number else "0"
-
-    # Make hCaptcha available in templates
-    from app.utils.hcaptcha_utils import hcaptcha, is_hcaptcha_enabled
-    app.jinja_env.globals.update(hcaptcha=hcaptcha, hcaptcha_enabled=is_hcaptcha_enabled)
     
     # Error handlers
     @app.errorhandler(400)
