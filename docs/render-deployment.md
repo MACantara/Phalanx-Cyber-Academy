@@ -6,7 +6,7 @@ This guide will help you deploy your CyberQuest Flask application to Render.com.
 
 1. A Render.com account (free tier available)
 2. Your GitHub repository pushed to GitHub
-3. Environment variables ready (Supabase, email, hCaptcha credentials)
+3. Environment variables ready (Supabase, email credentials)
 
 ## Deployment Steps
 
@@ -55,12 +55,6 @@ MAIL_PORT=587
 MAIL_USE_TLS=true
 MAIL_USERNAME=your_email_username
 MAIL_PASSWORD=your_email_password
-```
-
-**hCaptcha (if using):**
-```
-HCAPTCHA_SITE_KEY=your_hcaptcha_site_key
-HCAPTCHA_SECRET_KEY=your_hcaptcha_secret_key
 ```
 
 **Optional Configuration:**

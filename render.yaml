@@ -25,5 +25,3 @@ services:
     # - MAIL_USE_TLS
     # - MAIL_USERNAME
     # - MAIL_PASSWORD
-    # - HCAPTCHA_SITE_KEY
-    # - HCAPTCHA_SECRET_KEY

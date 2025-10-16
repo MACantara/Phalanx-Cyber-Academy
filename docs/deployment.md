@@ -30,8 +30,6 @@ This guide covers deployment options for the CyberQuest platform, including Verc
    MAIL_SERVER=smtp.gmail.com
    MAIL_USERNAME=your-email@gmail.com
    MAIL_PASSWORD=your-app-password
-   HCAPTCHA_SITE_KEY=your-hcaptcha-site-key
-   HCAPTCHA_SECRET_KEY=your-hcaptcha-secret-key
    ```
 
 4. **Deploy**
@@ -142,11 +140,6 @@ MAIL_PASSWORD=your-app-password
 # Security settings
 MAX_LOGIN_ATTEMPTS=5
 LOGIN_LOCKOUT_MINUTES=15
-
-# hCaptcha
-HCAPTCHA_ENABLED=true
-HCAPTCHA_SITE_KEY=your-site-key
-HCAPTCHA_SECRET_KEY=your-secret-key
 ```
 
 #### 5. Database Migration
@@ -280,7 +273,6 @@ add_header X-Frame-Options "SAMEORIGIN" always;
 add_header X-Content-Type-Options "nosniff" always;
 add_header X-XSS-Protection "1; mode=block" always;
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.hcaptcha.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://hcaptcha.com;" always;
 add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 ```
 

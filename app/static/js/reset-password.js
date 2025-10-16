@@ -1,6 +1,5 @@
 import PasswordStrengthChecker from "./components/password-strength.js";
 import PasswordValidator from "./components/password-validator.js";
-import hcaptchaValidator from "./utils/hcaptcha-validator.js";
 import PasswordVisibility from "./utils/password-visibility.js";
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -43,12 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (window.toastManager && errors.length > 0) {
                     window.toastManager.showToast(errors[0], 'error');
                 }
-            }
-            
-            // Check hCaptcha validation
-            if (!hcaptchaValidator.validateForm(form)) {
-                isValid = false;
-                // hcaptchaValidator will handle showing the error
             }
             
             if (!isValid) {
