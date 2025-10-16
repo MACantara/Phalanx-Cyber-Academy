@@ -387,7 +387,7 @@ def onboarding():
             current_user.complete_onboarding(username, experience)
             
             flash(f'Welcome to CyberQuest, {username}! Your journey begins now.', 'success')
-            return redirect(url_for('levels.levels'))
+            return redirect(url_for('levels.levels_overview'))
             
         except Exception as e:
             current_app.logger.error(f"Onboarding error: {e}")
