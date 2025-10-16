@@ -237,29 +237,22 @@ class EmailService:
         )
     
     @staticmethod
-    def send_password_reset_email(user, token: str) -> bool:
-        """Send password reset email."""
-        # Ensure URL configuration
-        EmailService._ensure_url_config()
-        
-        # Generate reset URL
-        reset_url = url_for('password_reset.reset_password', token=token, _external=True)
-        
+    def send_login_verification_code(email: str, verification) -> bool:
+        """Send login verification code email."""
         return EmailService.send_email(
-            email_type='password_reset',
-            template_name='password_reset.html',
-            subject='Password Reset Request - [Web Site Name]',
-            to_emails=[user.email],
+            email_type='login_verification',
+            template_name='login_verification.html',
+            subject='Your Login Verification Code - CyberQuest',
+            to_emails=[email],
             template_context={
-                'user': user,
-                'reset_url': reset_url,
-                'token': token
+                'email': email,
+                'verification_code': verification.verification_code,
+                'expires_minutes': 15
             },
             headers={
-                'X-Mailer': '[Web Site Name] Application',
-                'X-Priority': '2',
-                'Message-ID': f'<password-reset-{token}@example.com>',
-                'List-Unsubscribe': '<mailto:unsubscribe@example.com>',
+                'X-Mailer': 'CyberQuest Application',
+                'X-Priority': '1',
+                'Message-ID': f'<login-verification-{verification.token}@cyberquest.com>',
                 'Precedence': 'bulk'
             }
         )
