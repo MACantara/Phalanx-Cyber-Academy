@@ -20,7 +20,7 @@ export class ShutdownSequence {
             { text: 'Uploading progress to secure cloud storage', type: 'info', delay: 60, hasStatus: true, status: '[  OK  ]' },
             { text: 'Verifying data integrity', type: 'info', delay: 30, hasStatus: true, status: '[  OK  ]' },
             { text: '', type: 'info', delay: 30 },
-            { text: 'Thank you for training with CyberQuest Academy', type: 'success', delay: 50 },
+            { text: 'Thank you for training with [Web Site Name] Academy', type: 'success', delay: 50 },
             { text: 'Your progress has been securely saved', type: 'info', delay: 30 },
             { text: 'System shutdown complete', type: 'success', delay: 40 },
             { text: '', type: 'info', delay: 100 }

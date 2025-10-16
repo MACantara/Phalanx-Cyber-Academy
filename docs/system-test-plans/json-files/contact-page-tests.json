@@ -90,7 +90,7 @@
     "description": "Verify contact information panel displays correctly",
     "scenario": "User views contact information section for business details",
     "expected_results": "Display contact information with address, email, and proper formatting",
-    "procedure": "1. Navigate to /contact page\n2. Scroll to contact information panel\n3. Verify 'Get in Touch' heading is displayed\n4. Check address card shows 'CyberQuest HQ, Makati City, Metro Manila, Philippines'\n5. Verify email card shows 'contact@cyberquest.com'\n6. Check email link is clickable and opens email client\n7. Verify icons are displayed correctly\n8. Test hover effects on contact cards",
+    "procedure": "1. Navigate to /contact page\n2. Scroll to contact information panel\n3. Verify 'Get in Touch' heading is displayed\n4. Check address card shows '[Web Site Name] HQ, Makati City, Metro Manila, Philippines'\n5. Verify email card shows 'contact@example.com'\n6. Check email link is clickable and opens email client\n7. Verify icons are displayed correctly\n8. Test hover effects on contact cards",
     "test_status": "pending",
     "priority": "medium",
     "category": "ui"

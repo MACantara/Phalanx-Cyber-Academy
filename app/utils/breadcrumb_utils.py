@@ -14,7 +14,7 @@ def get_breadcrumb_data():
     
     # Base breadcrumb - Home
     breadcrumbs.append({
-        'title': 'CyberQuest',
+        'title': '[Web Site Name]',
         'url': url_for('main.home'),
         'icon': 'bi-house-door',
         'active': False
