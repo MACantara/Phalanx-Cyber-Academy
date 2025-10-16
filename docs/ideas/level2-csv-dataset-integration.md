@@ -197,7 +197,7 @@ Level 2 now uses a real-world phishing dataset with 39,126 emails, providing aut
 
 **Primary Developer:** GitHub Copilot Assistant  
 **Branch Owner:** MACantara  
-**Repository:** CyberQuest  
+**Repository:** Phalanx Cyber Academy  
 **Documentation Date:** September 19, 2025
 
 ---

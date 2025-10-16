@@ -6,7 +6,7 @@
     "description": "Verify that the Level Analytics page loads correctly when accessing /admin/player-analytics/levels with authenticated admin user",
     "scenario": "Admin user navigates to the level analytics page to view detailed performance metrics for each cybersecurity level",
     "expected_results": "Display the complete level analytics dashboard with level performance overview and detailed metrics for all 5 cybersecurity levels",
-    "procedure": "1. Login with admin user credentials (is_admin=True)\n2. Navigate to http://localhost:5000/admin/player-analytics/levels\n3. Verify page loads completely\n4. Check page title displays 'Level Analytics - [Web Site Name] Admin'\n5. Verify dashboard header with title and navigation buttons\n6. Check all level analytics sections are visible and properly styled\n7. Verify responsive layout and gradient background",
+    "procedure": "1. Login with admin user credentials (is_admin=True)\n2. Navigate to http://localhost:5000/admin/player-analytics/levels\n3. Verify page loads completely\n4. Check page title displays 'Level Analytics - Phalanx Cyber Academy Admin'\n5. Verify dashboard header with title and navigation buttons\n6. Check all level analytics sections are visible and properly styled\n7. Verify responsive layout and gradient background",
     "test_status": "pending",
     "priority": "critical",
     "category": "functional"

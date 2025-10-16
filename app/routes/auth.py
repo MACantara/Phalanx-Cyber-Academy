@@ -386,7 +386,7 @@ def onboarding():
             # Complete onboarding
             current_user.complete_onboarding(username, experience)
             
-            flash(f'Welcome to CyberQuest, {username}! Your journey begins now.', 'success')
+            flash(f'Welcome to Phalanx Cyber Academy, {username}! Your journey begins now.', 'success')
             return redirect(url_for('levels.levels_overview'))
             
         except Exception as e:

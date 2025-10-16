@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Render.com startup script for CyberQuest Flask app
+# Render.com startup script for Phalanx Cyber Academy Flask app
 
-echo "Starting CyberQuest application..."
+echo "Starting Phalanx Cyber Academy application..."
 
 # Set Render environment variable
 export RENDER=1

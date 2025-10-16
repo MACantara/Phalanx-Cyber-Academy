@@ -1,8 +1,8 @@
-# CyberQuest Tutorial System Documentation
+# Phalanx Cyber Academy Tutorial System Documentation
 
 ## Overview
 
-The CyberQuest tutorial system is a comprehensive, interactive framework designed to guide users through cybersecurity applications and concepts. The system uses a modular architecture with automatic application integration, visual highlighting, step-by-step guidance, and progress tracking.
+The Phalanx Cyber Academy tutorial system is a comprehensive, interactive framework designed to guide users through cybersecurity applications and concepts. The system uses a modular architecture with automatic application integration, visual highlighting, step-by-step guidance, and progress tracking.
 
 ## System Architecture
 
@@ -32,7 +32,7 @@ All tutorials are registered in `TutorialRegistry` with configuration including:
     description: 'Learn essential command line tools',
     category: 'Command Line',                // Grouping category
     estimatedTime: '12 minutes',             // Expected duration
-    storageKey: 'cyberquest_terminal_tutorial_completed',  // Completion tracking
+    storageKey: 'Phalanx Cyber Academy_terminal_tutorial_completed',  // Completion tracking
     tutorialMethod: 'shouldAutoStartTerminal',            // Auto-start check method
     startMethod: 'startTerminalTutorial',                 // Manual start method
     restartMethod: 'restartTerminalTutorial'              // Restart method
@@ -45,7 +45,7 @@ Applications are linked to tutorials through `ApplicationRegistry`:
 ```javascript
 'terminal': {
     class: TerminalApp,
-    storageKey: 'cyberquest_terminal_opened',
+    storageKey: 'Phalanx Cyber Academy_terminal_opened',
     tutorialMethod: 'shouldAutoStartTerminal',    // Links to tutorial auto-start
     startMethod: 'startTerminalTutorial',         // Links to tutorial start
     iconClass: 'bi-terminal',
@@ -207,8 +207,8 @@ export class YourTutorialNameTutorial extends BaseTutorial {
 
     // Static methods for auto-start functionality
     static shouldAutoStart() {
-        const tutorialCompleted = localStorage.getItem('cyberquest_yourapp_tutorial_completed');
-        const appOpened = localStorage.getItem('cyberquest_yourapp_opened');
+        const tutorialCompleted = localStorage.getItem('Phalanx Cyber Academy_yourapp_tutorial_completed');
+        const appOpened = localStorage.getItem('Phalanx Cyber Academy_yourapp_opened');
         return !tutorialCompleted && appOpened;
     }
 
@@ -219,7 +219,7 @@ export class YourTutorialNameTutorial extends BaseTutorial {
     }
 
     static restart() {
-        localStorage.removeItem('cyberquest_yourapp_tutorial_completed');
+        localStorage.removeItem('Phalanx Cyber Academy_yourapp_tutorial_completed');
         if (window.yourAppTutorial) {
             window.yourAppTutorial.cleanup();
         }
@@ -239,7 +239,7 @@ this.registerTutorial('your-tutorial-name', {
     description: 'Learn how to use Your App effectively',
     category: 'Your Category',
     estimatedTime: '10 minutes',
-    storageKey: 'cyberquest_yourapp_tutorial_completed',
+    storageKey: 'Phalanx Cyber Academy_yourapp_tutorial_completed',
     tutorialMethod: 'shouldAutoStartYourApp',
     startMethod: 'startYourAppTutorial',
     restartMethod: 'restartYourAppTutorial'
@@ -253,7 +253,7 @@ Add to `ApplicationRegistry` constructor:
 ```javascript
 'your-app-id': {
     class: YourAppClass,
-    storageKey: 'cyberquest_yourapp_opened',
+    storageKey: 'Phalanx Cyber Academy_yourapp_opened',
     tutorialMethod: 'shouldAutoStartYourApp',
     startMethod: 'startYourAppTutorial',
     iconClass: 'bi-your-icon',
@@ -467,7 +467,7 @@ console.log(window.tutorialManager.getCompletionStats());
 
 ## Example: Existing Tutorials
 
-The CyberQuest tutorial system includes several comprehensive tutorials that demonstrate advanced features:
+The Phalanx Cyber Academy tutorial system includes several comprehensive tutorials that demonstrate advanced features:
 
 ### Terminal Tutorial (`terminal-tutorial.js`)
 - **Application Integration**: Automatically opens terminal if not open
@@ -504,4 +504,4 @@ Study these tutorials for complete implementation examples of different applicat
 4. **Progress Sharing**: Cross-session progress sync
 5. **Adaptive Tutorials**: AI-driven personalization
 
-This tutorial system provides a solid foundation for creating engaging, interactive cybersecurity education experiences in CyberQuest.
+This tutorial system provides a solid foundation for creating engaging, interactive cybersecurity education experiences in Phalanx Cyber Academy.

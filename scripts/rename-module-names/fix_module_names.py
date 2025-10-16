@@ -9,7 +9,7 @@ and avoid potential issues with systems that don't handle spaces well.
 Usage:
     python scripts/fix_module_names.py
 
-Author: CyberQuest Development Team
+Author: Phalanx Cyber Academy Development Team
 Date: August 28, 2025
 """
 
@@ -79,7 +79,7 @@ def main():
     project_root = script_dir.parent
     json_files_dir = project_root / 'docs' / 'system-test-plans' / 'json-files'
     
-    print("🔧 CyberQuest Module Name Fixer")
+    print("🔧 Phalanx Cyber Academy Module Name Fixer")
     print("=" * 50)
     print(f"📁 Processing directory: {json_files_dir}")
     print(f"🔄 Replacement character: '{REPLACEMENT_CHAR}'")

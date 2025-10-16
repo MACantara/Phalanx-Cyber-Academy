@@ -8,7 +8,7 @@ This script processes all batch CSV files to:
 3. Clean up text while preserving main content
 4. Update batch summary with new article counts
 
-Author: Generated for CyberQuest Level 1 Challenge
+Author: Generated for Phalanx Cyber Academy Level 1 Challenge
 Date: September 2025
 """
 

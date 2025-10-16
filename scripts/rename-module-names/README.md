@@ -93,7 +93,7 @@ Both scripts process JSON files in the `docs/system-test-plans/json-files/` dire
 ## Example Output
 
 ```
-🔧 CyberQuest Module Name Fixer
+🔧 Phalanx Cyber Academy Module Name Fixer
 ==================================================
 📁 Processing directory: docs/system-test-plans/json-files
 🔄 Replacement character: '_'

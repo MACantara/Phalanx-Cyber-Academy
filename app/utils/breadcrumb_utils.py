@@ -14,7 +14,7 @@ def get_breadcrumb_data():
     
     # Base breadcrumb - Home
     breadcrumbs.append({
-        'title': '[Web Site Name]',
+        'title': 'Phalanx Cyber Academy',
         'url': url_for('main.home'),
         'icon': 'bi-house-door',
         'active': False

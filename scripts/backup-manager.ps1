@@ -1,4 +1,4 @@
-# CyberQuest Backup Management Script
+# Phalanx Cyber Academy Backup Management Script
 # This script helps encrypt and securely store backup files
 
 param(
@@ -67,7 +67,7 @@ function Upload-ToS3 {
     
     if (Get-Command aws -ErrorAction SilentlyContinue) {
         $fileName = Split-Path $BackupFile -Leaf
-        $s3Key = "cyberquest_backups/$fileName"
+        $s3Key = "Phalanx Cyber Academy_backups/$fileName"
         
         aws s3 cp $BackupFile "s3://$S3Bucket/$s3Key" --acl private --server-side-encryption AES256
         

@@ -83,5 +83,5 @@ def health_check():
     """
     return jsonify({
         'status': 'healthy',
-        'message': 'CyberQuest API is running'
+        'message': 'Phalanx Cyber Academy API is running'
     })

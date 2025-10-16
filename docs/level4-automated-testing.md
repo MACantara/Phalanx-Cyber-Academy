@@ -21,7 +21,7 @@ This document describes the automated testing system for Level 4's performance-b
 
 ### Quick Start
 ```javascript
-// In browser console on any CyberQuest page:
+// In browser console on any Phalanx Cyber Academy page:
 
 // Option 1: Full automated flow (recommended)
 automateLevel4Completion();
@@ -197,7 +197,7 @@ dialogue.onComplete() // Triggers session summary transition
 ## Troubleshooting
 
 ### Common Issues
-1. **Import Errors**: Verify you're on a CyberQuest page with proper module support
+1. **Import Errors**: Verify you're on a Phalanx Cyber Academy page with proper module support
 2. **Desktop Not Found**: Script creates mock desktop automatically
 3. **Session Summary Missing**: Use fallback mode or complete Level 4 manually
 

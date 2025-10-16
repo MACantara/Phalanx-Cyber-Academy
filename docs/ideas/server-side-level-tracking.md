@@ -2,7 +2,7 @@
 
 Status: Draft
 
-This document outlines a plan to implement server-side tracking of learning sessions and XP in CyberQuest. It relies on the existing client-side level completion logic found under `app/static/js/simulated-pc/levels/` and introduces a robust back-end system to record session activity, XP awards, and history.
+This document outlines a plan to implement server-side tracking of learning sessions and XP in Phalanx Cyber Academy. It relies on the existing client-side level completion logic found under `app/static/js/simulated-pc/levels/` and introduces a robust back-end system to record session activity, XP awards, and history.
 
 ## Goals
 

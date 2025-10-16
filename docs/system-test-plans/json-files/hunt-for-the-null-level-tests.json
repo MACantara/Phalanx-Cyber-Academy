@@ -340,7 +340,7 @@
     "module_name": "The-Hunt-for-The-Null-Level",
     "screen_design_ref": "Figure 38.29: Integration with Level Progression System",
     "description": "Verify Level 5 completion properly integrates with the overall level progression system and campaign completion",
-    "scenario": "Completing Level 5 correctly updates progress and marks full CyberQuest campaign completion",
+    "scenario": "Completing Level 5 correctly updates progress and marks full Phalanx Cyber Academy campaign completion",
     "expected_results": "Level 5 completion updates levels page, shows completed status, and triggers campaign completion celebration",
     "procedure": "1. Complete Level 5 digital forensics investigation\n2. Return to /levels page\n3. Verify Level 5 shows completed status with gold styling\n4. Check Level 5 displays 'Replay Level' button\n5. Confirm campaign completion celebration triggers\n6. Verify progress statistics show (5/5 completed, 1300 XP total)\n7. Check progress bar reflects 100% completion",
     "test_status": "pending",

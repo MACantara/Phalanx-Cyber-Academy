@@ -6,7 +6,7 @@
     "description": "Verify that the Player Data Analytics page loads correctly when accessing /admin/player-analytics with authenticated admin user",
     "scenario": "Admin user navigates to the player analytics dashboard to view comprehensive player engagement and learning metrics",
     "expected_results": "Display the complete analytics dashboard with general usage stats, retention rates, engagement quality, level completion, and weekly trends",
-    "procedure": "1. Login with admin user credentials (is_admin=True)\n2. Navigate to http://localhost:5000/admin/player-analytics\n3. Verify page loads completely\n4. Check page title displays 'Player Data Analytics - [Web Site Name] Admin'\n5. Verify dashboard header with title and navigation buttons\n6. Check all analytics sections are visible and properly styled\n7. Verify responsive layout and gradient background",
+    "procedure": "1. Login with admin user credentials (is_admin=True)\n2. Navigate to http://localhost:5000/admin/player-analytics\n3. Verify page loads completely\n4. Check page title displays 'Player Data Analytics - Phalanx Cyber Academy Admin'\n5. Verify dashboard header with title and navigation buttons\n6. Check all analytics sections are visible and properly styled\n7. Verify responsive layout and gradient background",
     "test_status": "pending",
     "priority": "critical",
     "category": "functional"

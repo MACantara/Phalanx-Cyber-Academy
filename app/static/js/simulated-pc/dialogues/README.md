@@ -1,6 +1,6 @@
-# CyberQuest Dialogue System
+# Phalanx Cyber Academy Dialogue System
 
-The CyberQuest Dialogue System provides both narrative storytelling and interactive guidance capabilities. It replaces the previous separate tutorial system by integrating guidance features directly into dialogues.
+The Phalanx Cyber Academy Dialogue System provides both narrative storytelling and interactive guidance capabilities. It replaces the previous separate tutorial system by integrating guidance features directly into dialogues.
 
 ## 🎯 Overview
 
@@ -120,7 +120,7 @@ export class DesktopGuidanceDialogue extends BaseDialogue {
         super(desktop, character);
         this.messages = [
             {
-                text: "Welcome to CyberQuest! I'm Dr. Cipher, your instructor. Let me show you around the desktop environment.",
+                text: "Welcome to Phalanx Cyber Academy! I'm Dr. Cipher, your instructor. Let me show you around the desktop environment.",
                 typing: true
             },
             {
@@ -383,4 +383,4 @@ console.log('Allowed interactions:', dialogue?.allowedInteractions);
 
 ---
 
-*For more information about the CyberQuest project, see the main project documentation.*
+*For more information about the Phalanx Cyber Academy project, see the main project documentation.*

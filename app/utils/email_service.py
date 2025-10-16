@@ -1,5 +1,5 @@
 """
-Centralized Email Service for [Web Site Name] Application
+Centralized Email Service for Phalanx Cyber Academy Application
 
 This module provides a centralized email service that handles all email sending
 functionality throughout the application, including templates, error handling,
@@ -208,7 +208,7 @@ class EmailService:
             },
             reply_to=[contact_submission.email],
             headers={
-                'X-Mailer': '[Web Site Name] Application',
+                'X-Mailer': 'Phalanx Cyber Academy Application',
                 'X-Priority': '2',
                 'Message-ID': f'<contact-{contact_submission.id if hasattr(contact_submission, "id") else "temp"}@example.com>',
                 'List-Unsubscribe': '<mailto:unsubscribe@example.com>',
@@ -222,13 +222,13 @@ class EmailService:
         return EmailService.send_email(
             email_type='contact_auto_reply',
             template_name='contact_auto_reply.html',
-            subject='Thank you for contacting us - [Web Site Name]',
+            subject='Thank you for contacting us - Phalanx Cyber Academy',
             to_emails=[contact_submission.email],
             template_context={
                 'contact': contact_submission
             },
             headers={
-                'X-Mailer': '[Web Site Name] Application',
+                'X-Mailer': 'Phalanx Cyber Academy Application',
                 'X-Priority': '3',
                 'Message-ID': f'<contact-reply-{contact_submission.id if hasattr(contact_submission, "id") else "temp"}@example.com>',
                 'List-Unsubscribe': '<mailto:unsubscribe@example.com>',
@@ -242,7 +242,7 @@ class EmailService:
         return EmailService.send_email(
             email_type='login_verification',
             template_name='login_verification.html',
-            subject='Your Login Verification Code - CyberQuest',
+            subject='Your Login Verification Code - Phalanx Cyber Academy',
             to_emails=[email],
             template_context={
                 'email': email,
@@ -250,9 +250,9 @@ class EmailService:
                 'expires_minutes': 15
             },
             headers={
-                'X-Mailer': 'CyberQuest Application',
+                'X-Mailer': 'Phalanx Cyber Academy Application',
                 'X-Priority': '1',
-                'Message-ID': f'<login-verification-{verification.token}@cyberquest.com>',
+                'Message-ID': f'<login-verification-{verification.token}@phalanxcyberacademy.com>',
                 'Precedence': 'bulk'
             }
         )

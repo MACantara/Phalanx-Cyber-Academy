@@ -43,7 +43,7 @@
     "receiver": "finance@company.ph",
     "date": "2024-03-18 08:15:22",
     "subject": "BIR: Tax Refund Approval - ₱125,000.00",
-    "body": "Bureau of Internal Revenue\nRepublic of the Philippines\n\nGood news! Your company's tax refund has been approved.\n\nRefund Details:\n- TIN: 123-456-789-000\n- Company: CYBERQUEST TECHNOLOGIES INC.\n- Refund Amount: ₱125,000.00\n- Tax Year: 2023\n- Status: APPROVED FOR RELEASE\n\nTo process your refund, complete the verification form:\nhttp://bir.gov-ph.online/refund/verify.php\n\nRequired information:\n- Company TIN\n- Authorized Representative Details\n- Bank Account Number for deposit\n- Mobile number for OTP\n\nRefund will be released within 3 business days after verification.\n\nClick here to claim: http://bir.gov-ph.online/refund\n\nBIR Refund Processing Center",
+    "body": "Bureau of Internal Revenue\nRepublic of the Philippines\n\nGood news! Your company's tax refund has been approved.\n\nRefund Details:\n- TIN: 123-456-789-000\n- Company: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\n- Refund Amount: ₱125,000.00\n- Tax Year: 2023\n- Status: APPROVED FOR RELEASE\n\nTo process your refund, complete the verification form:\nhttp://bir.gov-ph.online/refund/verify.php\n\nRequired information:\n- Company TIN\n- Authorized Representative Details\n- Bank Account Number for deposit\n- Mobile number for OTP\n\nRefund will be released within 3 business days after verification.\n\nClick here to claim: http://bir.gov-ph.online/refund\n\nBIR Refund Processing Center",
     "is_phishing": 1,
     "ai_analysis": {
       "risk_level": "critical",
@@ -117,7 +117,7 @@
     "receiver": "employees@company.ph",
     "date": "2024-03-20 16:45:11",
     "subject": "URGENT: Update payroll information for March salary",
-    "body": "Dear Team Member,\n\nOur payroll system is undergoing maintenance. We need all employees to update their bank account information to ensure March salaries are processed correctly.\n\nIMPORTANT: Failure to update by March 22 will delay your salary payment.\n\nUpdate your information here:\nhttp://company-ph.com/hr-portal/payroll-update\n\nRequired details:\n- Full Name\n- Employee ID\n- Current Bank Account Number\n- New Bank Account Number (if changed)\n- Contact Number\n- Email Password (for verification)\n\nThis is mandatory for all employees. Process takes only 2 minutes.\n\nThank you for your immediate cooperation.\n\nHR Department\nCyberQuest Technologies Inc.",
+    "body": "Dear Team Member,\n\nOur payroll system is undergoing maintenance. We need all employees to update their bank account information to ensure March salaries are processed correctly.\n\nIMPORTANT: Failure to update by March 22 will delay your salary payment.\n\nUpdate your information here:\nhttp://company-ph.com/hr-portal/payroll-update\n\nRequired details:\n- Full Name\n- Employee ID\n- Current Bank Account Number\n- New Bank Account Number (if changed)\n- Contact Number\n- Email Password (for verification)\n\nThis is mandatory for all employees. Process takes only 2 minutes.\n\nThank you for your immediate cooperation.\n\nHR Department\nPhalanx Cyber Academy Technologies Inc.",
     "is_phishing": 1,
     "ai_analysis": {
       "risk_level": "critical",
@@ -155,7 +155,7 @@
     "receiver": "hr@company.ph",
     "date": "2024-03-21 11:20:45",
     "subject": "SSS: Employer account suspension notice",
-    "body": "Social Security System\nRepublic of the Philippines\n\nIMPORTANT NOTICE\n\nYour employer account has been flagged for unpaid contributions.\n\nEmployer: CYBERQUEST TECHNOLOGIES INC.\nEmployer Number: 03-1234567-8\nOutstanding Amount: ₱87,450.00\nPenalty if unpaid: ₱15,000.00\n\nTo avoid penalties and legal action:\n1. Verify your contribution status\n2. Submit payment immediately\n3. Update employer information\n\nAccess your account: http://sss.gov.online/employers/login\n\nProvide:\n- Employer Number\n- TIN\n- Authorized Representative ID\n- Mobile OTP\n\nDeadline: March 23, 2024\nLegal action will be taken if unresolved.\n\nSSS Compliance Division",
+    "body": "Social Security System\nRepublic of the Philippines\n\nIMPORTANT NOTICE\n\nYour employer account has been flagged for unpaid contributions.\n\nEmployer: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\nEmployer Number: 03-1234567-8\nOutstanding Amount: ₱87,450.00\nPenalty if unpaid: ₱15,000.00\n\nTo avoid penalties and legal action:\n1. Verify your contribution status\n2. Submit payment immediately\n3. Update employer information\n\nAccess your account: http://sss.gov.online/employers/login\n\nProvide:\n- Employer Number\n- TIN\n- Authorized Representative ID\n- Mobile OTP\n\nDeadline: March 23, 2024\nLegal action will be taken if unresolved.\n\nSSS Compliance Division",
     "is_phishing": 1,
     "ai_analysis": {
       "risk_level": "critical",
@@ -192,7 +192,7 @@
     "receiver": "it.admin@company.ph",
     "date": "2024-03-22 09:30:22",
     "subject": "Microsoft 365: Payment failed - Service suspension",
-    "body": "Microsoft 365 Business Alert\n\nYour payment for Microsoft 365 Business Premium has failed.\n\nAccount Details:\n- Customer: CyberQuest Technologies Inc.\n- Failed Payment: ₱21,875.00\n- Attempted: March 22, 2024\n- Reason: Card declined\n\nYour services will be suspended in 24 hours if payment is not updated.\n\nServices affected:\n- Email (Outlook)\n- OneDrive storage\n- Teams\n- All Microsoft 365 apps\n\nUpdate payment method now:\nhttp://microsoft-365.com.ph/billing/payment-update\n\nEnter your admin credentials and new payment card details.\n\nTime remaining: 23 hours\n\nMicrosoft Philippines Support",
+    "body": "Microsoft 365 Business Alert\n\nYour payment for Microsoft 365 Business Premium has failed.\n\nAccount Details:\n- Customer: Phalanx Cyber Academy Technologies Inc.\n- Failed Payment: ₱21,875.00\n- Attempted: March 22, 2024\n- Reason: Card declined\n\nYour services will be suspended in 24 hours if payment is not updated.\n\nServices affected:\n- Email (Outlook)\n- OneDrive storage\n- Teams\n- All Microsoft 365 apps\n\nUpdate payment method now:\nhttp://microsoft-365.com.ph/billing/payment-update\n\nEnter your admin credentials and new payment card details.\n\nTime remaining: 23 hours\n\nMicrosoft Philippines Support",
     "is_phishing": 1,
     "ai_analysis": {
       "risk_level": "critical",
@@ -266,7 +266,7 @@
     "receiver": "all-staff@company.ph",
     "date": "2024-03-24 08:45:17",
     "subject": "Mandatory: Email system upgrade - Action required",
-    "body": "IT Department Announcement\n\nWe are upgrading our email system to improve security and performance.\n\nAll employees must verify their email accounts by March 25, 2024 to avoid service interruption.\n\nVerification process:\n1. Click the link below\n2. Enter your email credentials\n3. Complete security questions\n4. Download security certificate\n\nVerify your email: http://company.support-ph.com/email-upgrade\n\nRequired information:\n- Full email address\n- Current password\n- Security questions\n- Mobile number\n\nFailing to complete verification will result in:\n- Email access loss\n- Calendar data deletion\n- Contact list removal\n\nComplete by: March 25, 2024, 5:00 PM\n\nIT Support Team\nCyberQuest Technologies",
+    "body": "IT Department Announcement\n\nWe are upgrading our email system to improve security and performance.\n\nAll employees must verify their email accounts by March 25, 2024 to avoid service interruption.\n\nVerification process:\n1. Click the link below\n2. Enter your email credentials\n3. Complete security questions\n4. Download security certificate\n\nVerify your email: http://company.support-ph.com/email-upgrade\n\nRequired information:\n- Full email address\n- Current password\n- Security questions\n- Mobile number\n\nFailing to complete verification will result in:\n- Email access loss\n- Calendar data deletion\n- Contact list removal\n\nComplete by: March 25, 2024, 5:00 PM\n\nIT Support Team\nPhalanx Cyber Academy Technologies",
     "is_phishing": 1,
     "ai_analysis": {
       "risk_level": "critical",
@@ -341,7 +341,7 @@
     "receiver": "hr@company.ph",
     "date": "2024-03-26 13:15:28",
     "subject": "PhilHealth: Update employer information immediately",
-    "body": "Philippine Health Insurance Corporation\nRepublic of the Philippines\n\nIMPORTANT COMPLIANCE NOTICE\n\nYour PhilHealth employer record requires immediate update to comply with new Republic Act requirements.\n\nEmployer: CYBERQUEST TECHNOLOGIES INC.\nEmployer Number: 1234567890\nStatus: NON-COMPLIANT\nPenalty if not updated: ₱25,000.00\n\nUpdate required information:\n- Employer details\n- List of employees with PhilHealth numbers\n- Updated payroll information\n- Authorized representative credentials\n\nComplete update: http://philhealth-online.gov.ph.com/employer-update\n\nDeadline: March 28, 2024\nNon-compliance may result in suspension of employee benefits.\n\nPhilHealth Employer Services\nCompliance Division",
+    "body": "Philippine Health Insurance Corporation\nRepublic of the Philippines\n\nIMPORTANT COMPLIANCE NOTICE\n\nYour PhilHealth employer record requires immediate update to comply with new Republic Act requirements.\n\nEmployer: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\nEmployer Number: 1234567890\nStatus: NON-COMPLIANT\nPenalty if not updated: ₱25,000.00\n\nUpdate required information:\n- Employer details\n- List of employees with PhilHealth numbers\n- Updated payroll information\n- Authorized representative credentials\n\nComplete update: http://philhealth-online.gov.ph.com/employer-update\n\nDeadline: March 28, 2024\nNon-compliance may result in suspension of employee benefits.\n\nPhilHealth Employer Services\nCompliance Division",
     "is_phishing": 1,
     "ai_analysis": {
       "risk_level": "critical",
@@ -489,7 +489,7 @@
     "receiver": "legal@company.ph",
     "date": "2024-03-30 16:45:22",
     "subject": "SEC: Final notice - Submit documents or face penalties",
-    "body": "Securities and Exchange Commission\nRepublic of the Philippines\n\nFINAL COMPLIANCE NOTICE\n\nYour company has outstanding SEC requirements that must be submitted immediately.\n\nCompany: CYBERQUEST TECHNOLOGIES INC.\nSEC Registration: CS202012345\nStatus: NON-COMPLIANT\nPenalty accrued: ₱50,000.00\n\nOutstanding requirements:\n- General Information Sheet (GIS)\n- Audited Financial Statements 2023\n- Board Resolution\n- Articles of Incorporation (updated)\n\nSubmit documents: http://sec-online.gov.ph.net/submit-documents\n\nUpload:\n- Required documents\n- Penalty payment proof\n- Authorized representative ID\n- Company TIN\n\nFinal deadline: April 1, 2024\nFailure to comply will result in SEC administrative case and business suspension.\n\nSEC Compliance Division",
+    "body": "Securities and Exchange Commission\nRepublic of the Philippines\n\nFINAL COMPLIANCE NOTICE\n\nYour company has outstanding SEC requirements that must be submitted immediately.\n\nCompany: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\nSEC Registration: CS202012345\nStatus: NON-COMPLIANT\nPenalty accrued: ₱50,000.00\n\nOutstanding requirements:\n- General Information Sheet (GIS)\n- Audited Financial Statements 2023\n- Board Resolution\n- Articles of Incorporation (updated)\n\nSubmit documents: http://sec-online.gov.ph.net/submit-documents\n\nUpload:\n- Required documents\n- Penalty payment proof\n- Authorized representative ID\n- Company TIN\n\nFinal deadline: April 1, 2024\nFailure to comply will result in SEC administrative case and business suspension.\n\nSEC Compliance Division",
     "is_phishing": 1,
     "ai_analysis": {
       "risk_level": "critical",
@@ -641,7 +641,7 @@
     "receiver": "legal@company.ph",
     "date": "2024-04-03 09:45:22",
     "subject": "DTI: Business name expired - Renew within 48 hours",
-    "body": "Department of Trade and Industry\nRepublic of the Philippines\n\nBUSINESS NAME EXPIRATION ALERT\n\nYour business name registration has EXPIRED.\n\nBusiness: CYBERQUEST TECHNOLOGIES\nRegistration: DTI-2020-123456-M\nExpiration: April 15, 2020\nStatus: EXPIRED (4 years)\n\nYour business is currently operating with an expired registration, which is illegal under DTI regulations.\n\nPenalties:\n- Administrative fine: ₱20,000.00\n- Business closure risk\n- Legal liability\n\nRenew immediately:\nhttp://dti-business-renewal.gov.ph.org/renew-now\n\nRequired:\n- Business information\n- Owner's valid ID\n- TIN\n- Renewal fee: ₱500.00\n- Penalty payment: ₱20,000.00\n\nProcess within 48 hours to avoid business closure.\n\nDTI Compliance and Enforcement Division",
+    "body": "Department of Trade and Industry\nRepublic of the Philippines\n\nBUSINESS NAME EXPIRATION ALERT\n\nYour business name registration has EXPIRED.\n\nBusiness: PHALANX CYBER ACADEMY TECHNOLOGIES\nRegistration: DTI-2020-123456-M\nExpiration: April 15, 2020\nStatus: EXPIRED (4 years)\n\nYour business is currently operating with an expired registration, which is illegal under DTI regulations.\n\nPenalties:\n- Administrative fine: ₱20,000.00\n- Business closure risk\n- Legal liability\n\nRenew immediately:\nhttp://dti-business-renewal.gov.ph.org/renew-now\n\nRequired:\n- Business information\n- Owner's valid ID\n- TIN\n- Renewal fee: ₱500.00\n- Penalty payment: ₱20,000.00\n\nProcess within 48 hours to avoid business closure.\n\nDTI Compliance and Enforcement Division",
     "is_phishing": 1,
     "ai_analysis": {
       "risk_level": "critical",
@@ -681,7 +681,7 @@
     "receiver": "all-employees@company.ph",
     "date": "2024-04-04 14:30:18",
     "subject": "Payroll System: Verify employment to receive April salary",
-    "body": "CyberQuest Technologies Inc.\nPayroll Department\n\nIMPORTANT: Employment Verification Required\n\nDue to recent system upgrades, all employees must verify their employment status to receive April 2024 salary.\n\nVerification deadline: April 5, 2024\n\nFailing to verify will result in salary payment delay.\n\nVerify employment:\nhttp://payroll-system.company.ph.net/verify-employee\n\nRequired information:\n- Full Name\n- Employee ID\n- Department\n- Bank Account Number\n- Email Password (system authentication)\n- Government ID Number\n- TIN\n\nThis is a mandatory process for all employees. Verification takes 3 minutes.\n\nSalaries will only be processed for verified employees.\n\nPayroll Administration\nHR Department",
+    "body": "Phalanx Cyber Academy Technologies Inc.\nPayroll Department\n\nIMPORTANT: Employment Verification Required\n\nDue to recent system upgrades, all employees must verify their employment status to receive April 2024 salary.\n\nVerification deadline: April 5, 2024\n\nFailing to verify will result in salary payment delay.\n\nVerify employment:\nhttp://payroll-system.company.ph.net/verify-employee\n\nRequired information:\n- Full Name\n- Employee ID\n- Department\n- Bank Account Number\n- Email Password (system authentication)\n- Government ID Number\n- TIN\n\nThis is a mandatory process for all employees. Verification takes 3 minutes.\n\nSalaries will only be processed for verified employees.\n\nPayroll Administration\nHR Department",
     "is_phishing": 1,
     "ai_analysis": {
       "risk_level": "critical",
@@ -721,7 +721,7 @@
     "receiver": "hr@company.ph",
     "date": "2024-04-05 16:45:55",
     "subject": "Pag-IBIG: Employer account suspended - Update now",
-    "body": "Home Development Mutual Fund (Pag-IBIG)\nRepublic of the Philippines\n\nEMPLOYER ACCOUNT SUSPENSION NOTICE\n\nYour Pag-IBIG employer account has been suspended due to incomplete information.\n\nEmployer: CYBERQUEST TECHNOLOGIES INC.\nEmployer ID: 1234567890\nStatus: SUSPENDED\nReason: Missing employee information\n\nTo restore your account and avoid penalties:\n1. Update employee master list\n2. Submit updated member data sheets (MDS)\n3. Verify employer information\n4. Pay reactivation fee: ₱5,000.00\n\nReactivate account:\nhttp://pagibig-fund.gov.ph.com/employer/reactivate\n\nSubmit:\n- Complete list of employees with Pag-IBIG numbers\n- Employee personal information (birthdates, addresses)\n- Employment dates and salaries\n- Authorized representative ID\n\nAccount must be reactivated by April 7, 2024 or employees cannot access Pag-IBIG benefits.\n\nPag-IBIG Employer Services\nCompliance and Collection Department",
+    "body": "Home Development Mutual Fund (Pag-IBIG)\nRepublic of the Philippines\n\nEMPLOYER ACCOUNT SUSPENSION NOTICE\n\nYour Pag-IBIG employer account has been suspended due to incomplete information.\n\nEmployer: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\nEmployer ID: 1234567890\nStatus: SUSPENDED\nReason: Missing employee information\n\nTo restore your account and avoid penalties:\n1. Update employee master list\n2. Submit updated member data sheets (MDS)\n3. Verify employer information\n4. Pay reactivation fee: ₱5,000.00\n\nReactivate account:\nhttp://pagibig-fund.gov.ph.com/employer/reactivate\n\nSubmit:\n- Complete list of employees with Pag-IBIG numbers\n- Employee personal information (birthdates, addresses)\n- Employment dates and salaries\n- Authorized representative ID\n\nAccount must be reactivated by April 7, 2024 or employees cannot access Pag-IBIG benefits.\n\nPag-IBIG Employer Services\nCompliance and Collection Department",
     "is_phishing": 1,
     "ai_analysis": {
       "risk_level": "critical",
