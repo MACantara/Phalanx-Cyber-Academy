@@ -87,20 +87,6 @@
                            placeholder="Enter your email address" value="{{ request.form.email }}"
                            {% if locked_out %}disabled{% endif %}>
                 </div>
-                
-                <div class="opacity-0 animate-fade-in-up bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/30 rounded-xl p-4" style="animation-delay: 0.4s;">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <i class="bi bi-shield-check text-blue-600 dark:text-blue-400 text-xl"></i>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-blue-800 dark:text-blue-300">
-                                <strong>Passwordless Authentication</strong><br>
-                                We'll send a 6-digit verification code to your email. This code expires in 15 minutes.
-                            </p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
 
