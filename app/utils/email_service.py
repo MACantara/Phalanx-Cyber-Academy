@@ -256,31 +256,3 @@ class EmailService:
                 'Precedence': 'bulk'
             }
         )
-    
-    @staticmethod
-    def send_email_verification(user, verification) -> bool:
-        """Send email verification email."""
-        # Ensure URL configuration
-        EmailService._ensure_url_config()
-        
-        # Generate verification URL
-        verification_url = url_for('email_verification.verify_email', token=verification.token, _external=True)
-        
-        return EmailService.send_email(
-            email_type='email_verification',
-            template_name='email_verification.html',
-            subject='Verify Your Email Address - [Web Site Name]',
-            to_emails=[user.email],
-            template_context={
-                'user': user,
-                'verification': verification,
-                'verification_url': verification_url
-            },
-            headers={
-                'X-Mailer': '[Web Site Name] Application',
-                'X-Priority': '3',
-                'Message-ID': f'<verification-{verification.token}@example.com>',
-                'List-Unsubscribe': '<mailto:unsubscribe@example.com>',
-                'Precedence': 'bulk'
-            }
-        )
