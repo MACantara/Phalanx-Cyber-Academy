@@ -514,9 +514,7 @@ def _create_database_backup() -> Dict[str, Any]:
         response = supabase.table(Tables.CONTACT_SUBMISSIONS).select("*").execute()
         backup_data['contact_submissions'] = response.data if response.data else []
         
-        # Backup Password Reset Tokens table
-        response = supabase.table(Tables.PASSWORD_RESET_TOKENS).select("*").execute()
-        backup_data['password_reset_tokens'] = response.data if response.data else []
+        # Note: Password reset tokens table removed - using passwordless authentication
         
         return backup_data
         
@@ -553,8 +551,7 @@ def _restore_database_backup(backup_data: Dict[str, Any], restore_type: str = 'm
                 'users': Tables.USERS,
                 'login_attempts': Tables.LOGIN_ATTEMPTS,
                 'email_verifications': Tables.EMAIL_VERIFICATIONS,
-                'contact_submissions': Tables.CONTACT_SUBMISSIONS,
-                'password_reset_tokens': Tables.PASSWORD_RESET_TOKENS
+                'contact_submissions': Tables.CONTACT_SUBMISSIONS
             }
             
             if table_name in table_mapping:
