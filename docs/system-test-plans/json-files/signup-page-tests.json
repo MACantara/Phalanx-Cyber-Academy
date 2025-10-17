@@ -5,8 +5,8 @@
     "screen_design_ref": "Figure 8.1: Sign Up Page Layout",
     "description": "Verify that the Sign Up page loads correctly when accessing the /auth/signup URL",
     "scenario": "New user navigates to the signup page to create a Phalanx Cyber Academy account",
-    "expected_results": "Display the complete signup page with multi-step form, cybersecurity theme, and proper initialization",
-    "procedure": "1. Open web browser\n2. Navigate to http://localhost:5000/auth/signup\n3. Verify page loads completely\n4. Check page title displays 'Join Phalanx Cyber Academy'\n5. Verify multi-step signup form is visible and properly styled\n6. Check JavaScript components initialize correctly",
+    "expected_results": "Display the complete signup page with email-only form, cybersecurity theme, and proper initialization",
+    "procedure": "1. Open web browser\n2. Navigate to http://localhost:5000/auth/signup\n3. Verify page loads completely\n4. Check page title displays 'Join Phalanx Cyber Academy'\n5. Verify email input form is visible and properly styled\n6. Check timezone detection script initializes correctly\n7. Verify sign-up.js is loaded for potential validation enhancements\n8. Check animated background elements are present",
     "test_status": "pending",
     "priority": "critical",
     "category": "functional"
@@ -14,11 +14,11 @@
   {
     "test_plan_no": "STP-008-02",
     "module_name": "Sign-Up-Page",
-    "screen_design_ref": "Figure 8.5: Step 2 - Password Security",
-    "description": "Verify Step 2 password creation with strength checking and validation",
-    "scenario": "User creates secure password with real-time strength feedback",
-    "expected_results": "Display password fields with strength meter, validation feedback, and confirmation matching",
-    "procedure": "1. Navigate to Step 2 of signup form\n2. Verify 'Agent Password' field with key icon\n3. Check 'Confirm Password' field is present\n4. Verify password strength checker initializes with cybersecurity theme\n5. Test real-time password strength meter updates\n6. Check password validation rules (length, uppercase, lowercase, numbers, special chars)\n7. Verify password confirmation matching validation\n8. Test user input integration for strength checking\n9. Check custom styling classes for strength meter",
+    "screen_design_ref": "Figure 8.2: Email Verification Flow",
+    "description": "Verify email submission and validation for passwordless authentication",
+    "scenario": "User enters email address to initiate passwordless signup process",
+    "expected_results": "Email is validated, 6-digit verification code is sent, and user is redirected to verification page",
+    "procedure": "1. Navigate to /auth/signup page\n2. Verify 'Email Address' field is present with envelope icon\n3. Enter invalid email format and check HTML5 validation\n4. Enter valid email address\n5. Verify timezone is automatically detected and populated in hidden field\n6. Submit the form\n7. Check form submission processing\n8. Verify 6-digit verification code is generated and sent to email\n9. Confirm redirect to email verification page\n10. Verify email verification record is created in database with 10-minute expiration",
     "test_status": "pending",
     "priority": "critical",
     "category": "security"
@@ -26,11 +26,11 @@
   {
     "test_plan_no": "STP-008-03",
     "module_name": "Sign-Up-Page",
-    "screen_design_ref": "Figure 8.27: Responsive Design",
+    "screen_design_ref": "Figure 8.3: Responsive Design",
     "description": "Verify signup page is responsive across different screen sizes",
     "scenario": "User accesses signup page on mobile, tablet, and desktop devices",
-    "expected_results": "Page adapts properly to different screen sizes while maintaining multi-step functionality",
-    "procedure": "1. Navigate to /auth/signup page on desktop (1920x1080)\n2. Verify max-width constraint (max-w-2xl) works properly\n3. Resize browser to tablet size (768px width)\n4. Check form scaling and step indicator layout\n5. Resize to mobile size (375px width)\n6. Verify multi-step form remains usable on mobile\n7. Test touch interactions for step navigation\n8. Check button sizes meet touch target guidelines\n9. Verify password strength meter responsiveness\n10. Test landscape and portrait orientations on mobile",
+    "expected_results": "Page adapts properly to different screen sizes with email form remaining accessible",
+    "procedure": "1. Navigate to /auth/signup page on desktop (1920x1080)\n2. Verify max-width constraint (max-w-md) works properly\n3. Resize browser to tablet size (768px width)\n4. Check form scaling and button layout\n5. Resize to mobile size (375px width)\n6. Verify email form remains usable on mobile\n7. Test touch interactions for form submission\n8. Check button sizes meet touch target guidelines (min 44x44px)\n9. Verify animated background elements scale appropriately\n10. Test landscape and portrait orientations on mobile",
     "test_status": "pending",
     "priority": "high",
     "category": "ui"
@@ -38,11 +38,11 @@
   {
     "test_plan_no": "STP-008-04",
     "module_name": "Sign-Up-Page",
-    "screen_design_ref": "Figure 8.30: Performance and Integration",
-    "description": "Verify signup page performance and integration with system components",
+    "screen_design_ref": "Figure 8.4: Performance and Integration",
+    "description": "Verify signup page performance and integration with passwordless authentication system",
     "scenario": "User completes signup process with optimal performance and proper system integration",
     "expected_results": "Fast loading times, smooth interactions, and seamless integration with email verification system",
-    "procedure": "1. Clear browser cache and navigate to /auth/signup page\n2. Record page load time and performance metrics\n3. Verify total load time is under 3 seconds\n4. Test JavaScript component initialization time\n5. Check password strength calculations performance\n6. Verify form submission response time\n7. Test integration with email verification system\n8. Check database transaction performance\n9. Verify redirect to verification pending page\n10. Test overall user experience flow timing\n11. Check memory usage and cleanup\n12. Verify no memory leaks in step transitions",
+    "procedure": "1. Clear browser cache and navigate to /auth/signup page\n2. Record page load time and performance metrics\n3. Verify total load time is under 3 seconds\n4. Test JavaScript component initialization time\n5. Check timezone detection performance\n6. Verify form submission response time\n7. Test integration with email verification system (6-digit code generation)\n8. Check database transaction performance for email_verifications table\n9. Verify redirect to verification page is immediate\n10. Test overall passwordless flow timing (signup → verify → onboarding)\n11. Check memory usage and cleanup\n12. Verify no console errors or warnings",
     "test_status": "pending",
     "priority": "medium",
     "category": "performance"
@@ -50,13 +50,25 @@
   {
     "test_plan_no": "STP-008-05",
     "module_name": "Sign-Up-Page",
-    "screen_design_ref": "Figure 8.22: Notification System",
-    "description": "Verify cyber-themed notification system for user feedback",
-    "scenario": "User receives various notifications during signup process",
-    "expected_results": "Notifications display with proper styling, timing, and cyber theme",
-    "procedure": "1. Trigger validation error and observe error notification\n2. Verify notification appears in top-right with red styling\n3. Complete a step successfully and check success notification\n4. Test info notification for account creation process\n5. Verify notification auto-removal after 4 seconds\n6. Check notification icons match message type\n7. Test notification styling in dark mode\n8. Verify multiple notifications stack properly",
+    "screen_design_ref": "Figure 8.5: Dark Mode Support",
+    "description": "Verify signup page theme switching and dark mode compatibility",
+    "scenario": "User accesses signup page with different theme preferences",
+    "expected_results": "Page displays correctly in both light and dark modes with proper contrast and styling",
+    "procedure": "1. Navigate to /auth/signup in light mode\n2. Verify gradient backgrounds use light theme colors\n3. Check email input field has proper light theme styling\n4. Switch to dark mode using system preference or toggle\n5. Verify gradient backgrounds transition to dark theme colors\n6. Check email input field has dark theme styling with sufficient contrast\n7. Test animated background elements in dark mode\n8. Verify button hover states work in both themes\n9. Check text readability in both modes\n10. Test transition animations between themes",
+    "test_status": "pending",
+    "priority": "medium",
+    "category": "ui"
+  },
+  {
+    "test_plan_no": "STP-008-06",
+    "module_name": "Sign-Up-Page",
+    "screen_design_ref": "Figure 8.6: Timezone Detection",
+    "description": "Verify automatic timezone detection and submission",
+    "scenario": "User's timezone is automatically detected and included in signup data",
+    "expected_results": "Timezone is correctly detected using Intl.DateTimeFormat and submitted with form",
+    "procedure": "1. Navigate to /auth/signup page\n2. Open browser console\n3. Check timezone hidden input field is populated\n4. Verify timezone value matches system timezone (e.g., 'America/New_York')\n5. Test with different timezone settings\n6. Verify fallback to 'UTC' if detection fails\n7. Submit form and check timezone is sent to backend\n8. Verify timezone is stored with user account\n9. Test error handling for timezone detection failures",
     "test_status": "pending",
     "priority": "low",
-    "category": "ui"
+    "category": "functional"
   }
 ]
