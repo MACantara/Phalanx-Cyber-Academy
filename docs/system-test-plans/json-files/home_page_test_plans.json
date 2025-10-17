@@ -14,54 +14,6 @@
   {
     "test_plan_no": "STP-001-02",
     "module_name": "Home-Page",
-    "screen_design_ref": "Figure 2.2: Home Page CTA - Authenticated",
-    "description": "Verify authenticated user can navigate to levels overview from home page",
-    "scenario": "Authenticated user clicks on learning buttons to continue their progress",
-    "expected_results": "User is redirected to levels overview page when clicking 'Start Learning' or 'Continue Learning'",
-    "procedure": "1. Login as authenticated user\n2. Navigate to home page\n3. Click 'Start Learning' or 'Continue Learning' button\n4. Verify redirection to levels overview",
-    "test_status": "pending",
-    "priority": "high",
-    "category": "functional"
-  },
-  {
-    "test_plan_no": "STP-001-03",
-    "module_name": "Home-Page",
-    "screen_design_ref": "Figure 2.3: Home Page CTA - Unauthenticated",
-    "description": "Verify unauthenticated user is directed to signup from home page",
-    "scenario": "New user visits the site and wants to get started",
-    "expected_results": "User is redirected to signup page when clicking 'Get Started'",
-    "procedure": "1. Ensure user is not logged in\n2. Navigate to home page\n3. Click 'Get Started' button\n4. Verify redirection to signup page",
-    "test_status": "pending",
-    "priority": "high",
-    "category": "functional"
-  },
-  {
-    "test_plan_no": "STP-001-04",
-    "module_name": "Home-Page",
-    "screen_design_ref": "Figure 2.4: Home Page About Link",
-    "description": "Verify navigation to about page from home page",
-    "scenario": "User wants to learn more about the platform before signing up",
-    "expected_results": "User is redirected to about page when clicking 'Learn More'",
-    "procedure": "1. Navigate to home page\n2. Click 'Learn More' button in hero section\n3. Verify redirection to `/about` page\n4. Confirm about page content loads",
-    "test_status": "pending",
-    "priority": "medium",
-    "category": "functional"
-  },
-  {
-    "test_plan_no": "STP-001-05",
-    "module_name": "Home-Page",
-    "screen_design_ref": "Figure 2.5: Home Page Dark Mode",
-    "description": "Verify dark mode functionality on home page",
-    "scenario": "User toggles between light and dark themes",
-    "expected_results": "Page theme changes to dark mode with appropriate color scheme",
-    "procedure": "1. Navigate to home page\n2. Click dark mode toggle (if available)\n3. Verify background changes to dark theme\n4. Check text colors are readable in dark mode",
-    "test_status": "pending",
-    "priority": "low",
-    "category": "ui"
-  },
-  {
-    "test_plan_no": "STP-001-06",
-    "module_name": "Home-Page",
     "screen_design_ref": "Figure 2.6: Home Page Mobile",
     "description": "Verify home page displays correctly on mobile devices",
     "scenario": "User accesses the site from a mobile device",
@@ -72,67 +24,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-001-07",
-    "module_name": "Home-Page",
-    "screen_design_ref": "Figure 2.7: Learning Modules Section",
-    "description": "Verify all learning module cards are displayed correctly",
-    "scenario": "User scrolls down to explore available learning modules",
-    "expected_results": "Six learning module cards displayed with icons, titles, and descriptions",
-    "procedure": "1. Navigate to home page\n2. Scroll to 'Cybersecurity Game Scenarios' section\n3. Verify all 6 cards are visible: Email Detective, Truth Seeker, Privacy Guardian, Vault Keeper, Cyber Fortress, White Hat Academy\n4. Check icons and text are properly displayed",
-    "test_status": "pending",
-    "priority": "medium",
-    "category": "ui"
-  },
-  {
-    "test_plan_no": "STP-001-08",
-    "module_name": "Home-Page",
-    "screen_design_ref": "Figure 2.8: Features Section",
-    "description": "Verify features section displays correctly with animations",
-    "scenario": "User explores the key features of the platform",
-    "expected_results": "Three feature cards displayed with icons and hover effects",
-    "procedure": "1. Navigate to home page\n2. Scroll to 'Learning Features' section\n3. Verify three cards: Gamified Learning, AI Mentoring, Real Scenarios\n4. Test hover effects on cards",
-    "test_status": "pending",
-    "priority": "medium",
-    "category": "ui"
-  },
-  {
-    "test_plan_no": "STP-001-09",
-    "module_name": "Home-Page",
-    "screen_design_ref": "Figure 2.9: Hero Section",
-    "description": "Verify hero section loads with proper animations and floating elements",
-    "scenario": "User lands on the home page and sees the main hero section",
-    "expected_results": "Hero text fades in with staggered animation, floating cyber elements visible",
-    "procedure": "1. Navigate to home page\n2. Observe hero section load\n3. Verify 'Welcome to Phalanx Cyber Academy' text animates in\n4. Check floating colored circles are animated",
-    "test_status": "pending",
-    "priority": "low",
-    "category": "ui"
-  },
-  {
-    "test_plan_no": "STP-001-10",
-    "module_name": "Home-Page",
-    "screen_design_ref": "Figure 2.10: CTA Section Unauthenticated",
-    "description": "Verify CTA section shows signup and login options for unauthenticated users",
-    "scenario": "New user reaches the bottom of the page and wants to take action",
-    "expected_results": "'Get Started' and 'Sign In' buttons displayed in CTA section",
-    "procedure": "1. Ensure user is logged out\n2. Navigate to home page\n3. Scroll to bottom CTA section\n4. Verify 'Get Started' and 'Sign In' buttons are present\n5. Test both button links",
-    "test_status": "pending",
-    "priority": "high",
-    "category": "functional"
-  },
-  {
-    "test_plan_no": "STP-001-11",
-    "module_name": "Home-Page",
-    "screen_design_ref": "Figure 2.11: CTA Section Authenticated",
-    "description": "Verify CTA section shows continue learning option for authenticated users",
-    "scenario": "Returning user scrolls to the bottom and wants to continue their journey",
-    "expected_results": "'Continue Learning' button displayed in CTA section for logged-in users",
-    "procedure": "1. Login as authenticated user\n2. Navigate to home page\n3. Scroll to bottom CTA section\n4. Verify 'Continue Learning' button is present\n5. Test button redirects to levels overview",
-    "test_status": "pending",
-    "priority": "high",
-    "category": "functional"
-  },
-  {
-    "test_plan_no": "STP-001-12",
+    "test_plan_no": "STP-001-03",
     "module_name": "Home-Page",
     "screen_design_ref": "Figure 2.12: Home Page Performance",
     "description": "Verify home page loads within acceptable time and resources",
@@ -142,5 +34,29 @@
     "test_status": "pending",
     "priority": "medium",
     "category": "performance"
+  },
+  {
+    "test_plan_no": "STP-001-04",
+    "module_name": "Home-Page",
+    "screen_design_ref": "Figure 2.2: Home Page CTA - Authenticated",
+    "description": "Verify authenticated user can navigate to levels overview from home page",
+    "scenario": "Authenticated user clicks on learning buttons to continue their progress",
+    "expected_results": "User is redirected to levels overview page when clicking 'Start Learning' or 'Continue Learning'",
+    "procedure": "1. Login as authenticated user\n2. Navigate to home page\n3. Click 'Start Learning' or 'Continue Learning' button\n4. Verify redirection to levels overview",
+    "test_status": "pending",
+    "priority": "high",
+    "category": "functional"
+  },
+  {
+    "test_plan_no": "STP-001-05",
+    "module_name": "Home-Page",
+    "screen_design_ref": "Figure 2.3: Home Page CTA - Unauthenticated",
+    "description": "Verify unauthenticated user is directed to signup from home page",
+    "scenario": "New user visits the site and wants to get started",
+    "expected_results": "User is redirected to signup page when clicking 'Get Started'",
+    "procedure": "1. Ensure user is not logged in\n2. Navigate to home page\n3. Click 'Get Started' button\n4. Verify redirection to signup page",
+    "test_status": "pending",
+    "priority": "high",
+    "category": "functional"
   }
 ]
