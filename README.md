@@ -33,11 +33,11 @@ Phalanx Cyber Academy is a game-based learning platform designed to enhance digi
 ### 🔧 Technical Features
 - **🏗️ Modern Architecture**: Flask factory pattern with blueprints
 - **🎨 Responsive Design**: Tailwind CSS with Bootstrap Icons
-- **🔐 Complete Authentication**: Registration, login, password reset, email verification
+- **🔐 Complete Authentication**: Registration, passwordless login with email codes, email verification
 - **👥 Admin Panel**: User management, system monitoring, security logs
 - **🛡️ Advanced Security**: Account lockout, rate limiting, CSRF protection
 - **🌓 Theme System**: Light/Dark/System modes with persistent preferences
-- **📧 Email Integration**: Contact forms, password reset, verification emails
+- **📧 Email Integration**: Contact forms, login verification codes, verification emails
 - **📋 Legal Compliance**: Privacy policy, terms of service, cookie policy
 - **🚀 Deployment Ready**: Vercel serverless and traditional hosting support
 
@@ -54,7 +54,7 @@ Phalanx Cyber Academy is a game-based learning platform designed to enhance digi
 - Phone and text-based scam identification scenarios
 
 ### 🔒 Data Privacy & Digital Citizenship
-- Password creation and management best practices
+- Passwordless authentication best practices
 - Privacy settings optimization across platforms
 - Ethical social media behavior and digital footprint awareness
 
@@ -145,14 +145,13 @@ Visit `http://localhost:5000` to start your cybersecurity learning journey.
 
 #### 🔐 Authentication & Security
 - User registration with mandatory email verification
-- Secure login with username or email
-- Password reset functionality
+- Passwordless login with email verification codes
 - Account lockout protection (IP-based)
-- Argon2 password hashing
+- Time-limited verification codes (10 minutes)
 - Session management with security headers
 
 #### 👥 Admin Panel
-- **Default Login**: username: `admin`, password: `admin123` ⚠️ *Change in production!*
+- **Access**: Login via passwordless authentication with your admin email
 - User management (activate/deactivate, admin privileges)
 - Real-time dashboard with statistics
 - Security logs and monitoring
@@ -241,7 +240,7 @@ Phalanx Cyber Academy/
 │   │   │   ├── shared/           # Shared components
 │   │   │   ├── footer.html       # Footer component
 │   │   │   └── navbar.html       # Navbar component
-│   │   ├── password/             # Password reset templates
+│   │   ├── emails/               # Email templates for verification codes
 │   │   ├── policy-pages/         # Policy page templates
 │   │   ├── profile/              # Profile templates
 │   │   ├── about.html            # About page template
@@ -282,7 +281,7 @@ See the [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
 ## 🛡️ Security in Production
 
 ### Essential Steps
-1. **Change Default Credentials**: Update admin username/password
+1. **Verify Admin Access**: Ensure admin email is properly configured
 2. **Configure HTTPS**: Essential for secure cookies and authentication
 3. **Set Strong Secret Key**: Use a cryptographically secure secret
 4. **Configure Email**: Set up production email service

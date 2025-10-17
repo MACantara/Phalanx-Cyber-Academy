@@ -7,7 +7,7 @@ This directory contains SQL scripts for setting up automated data retention comp
 The Phalanx Cyber Academy application implements automated data cleanup to comply with the privacy policy retention periods:
 
 - **Security Logs (Login Attempts)**: 30 days
-- **Password Reset Tokens**: 7 days (expired tokens only)
+- **Email Verification Codes**: Cleaned up after verification or expiration (10 minutes)
 - **Contact Form Submissions**: 1 year (365 days)
 - **System Logs**: 30 days (cleanup audit logs kept longer)
 
@@ -16,7 +16,7 @@ The Phalanx Cyber Academy application implements automated data cleanup to compl
 ### 1. `supabase_cleanup_functions.sql`
 Contains PostgreSQL functions for data cleanup operations:
 - `cleanup_old_login_attempts()` - Removes login attempts older than 30 days
-- `cleanup_old_password_reset_tokens()` - Removes expired password reset tokens
+- `cleanup_expired_verification_codes()` - Removes expired email verification codes
 - `cleanup_old_contact_submissions()` - Removes contact submissions older than 1 year
 - `cleanup_old_system_logs()` - Removes system logs older than 30 days
 - `run_automated_cleanup()` - Master function that runs all cleanup operations
@@ -89,7 +89,7 @@ SELECT
 FROM system_logs 
 WHERE operation IN (
     'automated_cleanup_login_attempts',
-    'automated_cleanup_password_reset_tokens', 
+    'automated_cleanup_verification_codes', 
     'automated_cleanup_contact_submissions',
     'automated_cleanup_system_logs'
 )
@@ -191,7 +191,7 @@ This setup ensures compliance with:
 All cleanup operations are logged for audit purposes and compliance verification.
 
 **Important Notes:**
-- Email verification tokens are NOT automatically cleaned up to preserve verified account records
+- Email verification codes are automatically cleaned up after use or expiration (10 minutes)
 - Contact form submissions are retained for 1 year for customer support purposes
 - System logs are kept for 30 days with cleanup audit logs preserved longer
 

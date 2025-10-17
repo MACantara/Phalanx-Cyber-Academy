@@ -45,20 +45,18 @@ This document provides a comprehensive overview of all modules, features, and co
 - **Blueprint**: `auth_bp` (URL prefix: `/auth`)
 - **Features**:
   - User registration with email verification
-  - Login with username or email
-  - Password recovery and reset
+  - Passwordless login with email verification codes
   - Email verification system
   - Account lockout protection (5 failed attempts = 15-minute lockout)
   - Session management
 
 **Routes**:
 - `/auth/signup` - User registration
-- `/auth/login` - User login
+- `/auth/login` - Passwordless login (email code verification)
+- `/auth/verify-code` - Verify login code
 - `/auth/logout` - User logout
 - `/auth/verification-pending` - Email verification pending page
 - `/auth/verify-email/<token>` - Email verification endpoint
-- `/auth/password/forgot` - Password recovery request
-- `/auth/password/reset/<token>` - Password reset with token
 
 ### User Profile Management (`app/routes/profile.py`)
 - **Blueprint**: `profile_bp` (URL prefix: `/profile`)
@@ -319,7 +317,7 @@ This document provides a comprehensive overview of all modules, features, and co
 ### User Model (`app/models/user.py`)
 - **Table**: `users`
 - **Fields**:
-  - User credentials (username, email, hashed password)
+  - User credentials (username, email)
   - Profile information
   - Admin status
   - Email verification status
@@ -414,7 +412,7 @@ This document provides a comprehensive overview of all modules, features, and co
 - Email sending functionality
 - Template rendering for emails
 - Verification email sending
-- Password reset email sending
+- Login verification code email sending
 
 ### Timezone Utilities (`app/utils/timezone_utils.py`)
 - Timezone conversion
@@ -542,7 +540,7 @@ This document provides a comprehensive overview of all modules, features, and co
 ## Security Features
 
 1. **Authentication Security**
-   - Argon2 password hashing
+   - Passwordless authentication via email verification codes
    - Email verification required
    - Session management with secure cookies
    - CSRF protection on all forms
@@ -551,7 +549,7 @@ This document provides a comprehensive overview of all modules, features, and co
    - IP-based login attempt tracking
    - Account lockout after 5 failed attempts
    - 15-minute lockout duration
-   - Password strength requirements
+   - Time-limited verification codes (10 minutes)
 
 3. **Data Protection**
    - SQL injection prevention

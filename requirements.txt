@@ -9,7 +9,7 @@ python-dotenv
 Flask-WTF
 WTForms
 
-# Email support (for contact forms and password reset)
+# Email support (for contact forms and login verification codes)
 Flask-Mailman
 
 # Authentication and password hashing
