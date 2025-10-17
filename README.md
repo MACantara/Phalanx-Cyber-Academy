@@ -120,6 +120,42 @@ python run.py
 
 Visit `http://localhost:5000` to start your cybersecurity learning journey.
 
+## 🧪 Testing
+
+The project includes comprehensive automated testing using Playwright Python library.
+
+### Quick Test
+
+```bash
+# Install test dependencies
+pip install -r requirements.txt
+playwright install chromium
+
+# Run smoke tests
+pytest -m smoke -v
+
+# Run all tests
+pytest -v
+```
+
+### Testing Documentation
+
+- **[Quick Start Guide](TESTING_QUICKSTART.md)** - Get started with testing quickly
+- **[Comprehensive Testing Guide](tests/README.md)** - Complete testing documentation
+- **Test Runner**: Use `python run_tests.py --help` for testing options
+
+### Test Coverage
+
+- ✅ **45+ Automated Tests** covering all 37 modules
+- ✅ **Public Pages**: Home, About, Contact, Privacy, Terms, Cookie Policy
+- ✅ **Authentication**: Login, Signup, Email Verification
+- ✅ **User Management**: Profile, Dashboard, Edit Profile
+- ✅ **Admin Panel**: Dashboard, User Management, Analytics, System Logs
+- ✅ **Learning Levels**: All 5 cybersecurity levels
+- ✅ **CI/CD**: GitHub Actions workflow for automated testing
+
+See [TESTING_QUICKSTART.md](TESTING_QUICKSTART.md) for details.
+
 ## 🎮 How to Play
 
 1. **Register & Verify**: Create your account and verify your email
@@ -305,6 +341,7 @@ See the [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
 - **Security**: Argon2, Flask-WTF, CSRF Protection
 - **Email**: Flask-Mail with SMTP support
 - **Deployment**: Vercel, traditional hosting
+- **Testing**: Playwright Python, pytest, automated end-to-end testing
 
 ## 🎓 Educational Impact
 
