@@ -502,7 +502,7 @@ def export_test_plans_docx():
                 # Merge cells for procedure
                 merged_cell = row_cells[0].merge(row_cells[1])
                 
-                # Add procedure as numbered list
+                # Add procedure steps
                 if test_plan.procedure:
                     # Clear the merged cell
                     merged_cell.text = ''
@@ -515,7 +515,6 @@ def export_test_plans_docx():
                     steps = [step.strip() for step in test_plan.procedure.split('\n') if step.strip()]
                     for step in steps:
                         step_para = merged_cell.add_paragraph(step)
-                        step_para.style = 'List Number'
                 
                 # Row 5: Remarks
                 row_cells = table.rows[4].cells
