@@ -65,6 +65,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script type="module" src="{{ url_for('static', filename='js/sign-up.js') }}"></script>
 <script>
 // Detect and set timezone
 document.addEventListener('DOMContentLoaded', function() {
