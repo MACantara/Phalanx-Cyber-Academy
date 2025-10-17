@@ -133,14 +133,14 @@ export class BaseEmail {
 
     // Helper method to check if email is from a trusted domain
     isFromTrustedDomain() {
-        const trustedDomains = ['example.com', 'securebank.com'];
+        const trustedDomains = ['phalanx-cyber-academy.vercel.app', 'securebank.com'];
         return trustedDomains.includes(this.getSenderDomain());
     }
 
     // Helper method to get email server
     getEmailServer() {
         const domain = this.getSenderDomain();
-        return domain.includes('example.com') ? 'mail.example.com' : domain;
+        return domain.includes('phalanx-cyber-academy.vercel.app') ? 'mail.phalanx-cyber-academy.vercel.app' : domain;
     }
 
     // Static method to create timestamps

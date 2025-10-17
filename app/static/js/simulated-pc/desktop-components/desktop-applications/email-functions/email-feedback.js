@@ -213,7 +213,7 @@ export class EmailFeedback {
         
         // Check sender domain
         const senderDomain = email.sender.split('@')[1];
-        if (senderDomain && senderDomain.includes('example.com')) {
+        if (senderDomain && senderDomain.includes('phalanx-cyber-academy.vercel.app')) {
             goodSigns.push('Email from trusted organizational domain');
         }
 

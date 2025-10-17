@@ -14,6 +14,6 @@
     ],
     "env": {
         "FLASK_ENV": "production",
-        "CUSTOM_DOMAIN": "example.com"
+        "CUSTOM_DOMAIN": "phalanx-cyber-academy.vercel.app"
     }
 }

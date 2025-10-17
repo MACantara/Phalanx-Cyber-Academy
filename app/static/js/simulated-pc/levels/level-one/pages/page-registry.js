@@ -63,7 +63,7 @@ export class PageRegistry {
                         <p class="text-sm text-gray-500">This might be because the website doesn't exist in our simulation or the URL was mistyped.</p>
                         
                         <div class="mt-6">
-                            <button onclick="window.browserApp?.navigation.navigateToUrl('https://example.com')" 
+                            <button onclick="window.browserApp?.navigation.navigateToUrl('https://phalanx-cyber-academy.vercel.app')" 
                                     class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
                                 Go to Phalanx Cyber Academy Home
                             </button>

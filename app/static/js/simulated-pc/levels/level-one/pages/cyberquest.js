@@ -3,7 +3,7 @@ import { BasePage } from './base-page.js';
 class CyberQuestPageClass extends BasePage {
     constructor() {
         super({
-            url: 'https://example.com',
+            url: 'https://phalanx-cyber-academy.vercel.app',
             title: 'Phalanx Cyber Academy Training',
             ipAddress: '104.26.10.72',
             securityLevel: 'safe',
