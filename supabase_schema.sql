@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(80) UNIQUE,
     email VARCHAR(120) UNIQUE NOT NULL,
-    password_hash VARCHAR(255),  -- Made nullable for passwordless auth migration
+    password_hash VARCHAR(255),  -- Nullable field (deprecated, using passwordless auth)
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     last_login TIMESTAMPTZ,
@@ -87,7 +87,7 @@ CREATE INDEX IF NOT EXISTS idx_system_test_plans_execution_date ON system_test_p
 CREATE INDEX IF NOT EXISTS idx_system_test_plans_created_at ON system_test_plans(created_at);
 CREATE INDEX IF NOT EXISTS idx_system_test_plans_updated_at ON system_test_plans(updated_at);
 
--- Create email_verifications table (now used for passwordless login codes)
+-- Create email_verifications table (used for email verification and passwordless login codes)
 CREATE TABLE IF NOT EXISTS email_verifications (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,

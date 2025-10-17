@@ -147,6 +147,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script type="module" src="{{ url_for('static', filename='js/sign-up.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const usernameInput = document.getElementById('username');

@@ -19,16 +19,18 @@
             </div>
             
             <h1 class="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6 opacity-0 animate-fade-in-up" style="animation-delay: 0.4s;">
-                Welcome to
                 <span class="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-yellow-400 dark:to-pink-400 bg-clip-text text-transparent">
                     Phalanx Cyber Academy
                 </span>
             </h1>
-            <p class="text-xl md:text-2xl text-gray-700 dark:text-gray-100 mb-8 max-w-4xl mx-auto opacity-0 animate-fade-in-up leading-relaxed" style="animation-delay: 0.5s;">
+            <p class="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-gray-100 mb-4 opacity-0 animate-fade-in-up" style="animation-delay: 0.5s;">
+                Train. Coordinate. Defend.
+            </p>
+            <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-4xl mx-auto opacity-0 animate-fade-in-up leading-relaxed" style="animation-delay: 0.6s;">
                 Level up your digital literacy and cybersecurity skills through gamified learning. Defend virtual networks, 
                 detect phishing attacks, and master ethical hacking in a safe, interactive environment.
             </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4 opacity-0 animate-fade-in-up" style="animation-delay: 0.6s;">
+            <div class="flex flex-col sm:flex-row justify-center gap-4 opacity-0 animate-fade-in-up" style="animation-delay: 0.7s;">
                 <a href="{{ url_for('levels.levels_overview') if current_user.is_authenticated else url_for('auth.signup') }}" class="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold text-lg rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-500/25 shadow-xl hover:shadow-2xl hover:scale-105 transform cyber-glow">
                     <i class="bi bi-play-circle mr-2"></i>
                     <span>{{ "Start Learning" if current_user.is_authenticated else "Get Started" }}</span>

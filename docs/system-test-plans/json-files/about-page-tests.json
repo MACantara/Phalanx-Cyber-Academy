@@ -14,78 +14,6 @@
   {
     "test_plan_no": "STP-002-02",
     "module_name": "About-Page",
-    "screen_design_ref": "Figure 2.2: Page Header Section",
-    "description": "Verify the page header section displays correctly with title and subtitle",
-    "scenario": "User views the About page header with gradient background and animated elements",
-    "expected_results": "Display 'About Phalanx Cyber Academy' title, subtitle text, animated background elements, and proper styling",
-    "procedure": "1. Navigate to /about page\n2. Verify header title 'About Phalanx Cyber Academy' is visible\n3. Check subtitle 'Empowering digital citizens through gamified cybersecurity education' is displayed\n4. Verify gradient background is applied\n5. Check animated floating elements are present\n6. Verify fade-in animations work properly",
-    "test_status": "pending",
-    "priority": "medium",
-    "category": "ui"
-  },
-  {
-    "test_plan_no": "STP-002-03",
-    "module_name": "About-Page",
-    "screen_design_ref": "Figure 2.3: Mission Section",
-    "description": "Verify the Mission section displays content and Get Involved button functionality",
-    "scenario": "User reads the mission statement and clicks on Get Involved button",
-    "expected_results": "Display mission heading, descriptive text, and functional Get Involved button that links to contact page",
-    "procedure": "1. Navigate to /about page\n2. Scroll to Mission section\n3. Verify 'Our Mission' heading is displayed\n4. Check mission description text is visible and readable\n5. Verify 'Get Involved' button is present\n6. Click 'Get Involved' button\n7. Verify it redirects to contact page",
-    "test_status": "pending",
-    "priority": "high",
-    "category": "functional"
-  },
-  {
-    "test_plan_no": "STP-002-04",
-    "module_name": "About-Page",
-    "screen_design_ref": "Figure 2.4: Learning Philosophy Section",
-    "description": "Verify the Learning Philosophy section displays three methodology cards",
-    "scenario": "User views the learning approach cards showcasing gamification, AI mentoring, and community features",
-    "expected_results": "Display 'Learning Through Experience' heading and three cards: Gamification, AI Mentoring, and Community with proper icons and descriptions",
-    "procedure": "1. Navigate to /about page\n2. Scroll to Learning Philosophy section\n3. Verify 'Learning Through Experience' heading is displayed\n4. Check three cards are visible: Gamification, AI Mentoring, Community\n5. Verify each card has appropriate icon (controller, robot, people)\n6. Check card descriptions are readable\n7. Verify hover effects work on cards\n8. Test card animations and transformations",
-    "test_status": "pending",
-    "priority": "medium",
-    "category": "ui"
-  },
-  {
-    "test_plan_no": "STP-002-05",
-    "module_name": "About-Page",
-    "screen_design_ref": "Figure 2.5: Team Members Section",
-    "description": "Verify the team members section displays all four team members correctly",
-    "scenario": "User views the team section to learn about Phalanx Cyber Academy team members",
-    "expected_results": "Display 'Meet Our Team' heading and four team member cards with names and roles",
-    "procedure": "1. Navigate to /about page\n2. Scroll to Team Members section\n3. Verify 'Meet Our Team' heading is displayed\n4. Check four team member cards are visible\n5. Verify Jean Alexis L. Santos - Project Manager\n6. Verify Michael Angelo R. Cantara - Lead Developer\n7. Verify Hanneh Mae P. Baptista - Research Specialist and Documentation Lead\n8. Verify Chrissanta Joy Erica C. Puyat - Quality Assurance and Testing Lead\n9. Check hover effects work on team cards\n10. Verify proper card styling and animations",
-    "test_status": "pending",
-    "priority": "medium",
-    "category": "functional"
-  },
-  {
-    "test_plan_no": "STP-002-06",
-    "module_name": "About-Page",
-    "screen_design_ref": "Figure 2.6: Features Showcase Section",
-    "description": "Verify the features showcase section displays correctly",
-    "scenario": "User views the features section highlighting what makes Phalanx Cyber Academy different",
-    "expected_results": "Display 'What Makes Phalanx Cyber Academy Different' heading and call-to-action section",
-    "procedure": "1. Navigate to /about page\n2. Scroll to Features Showcase section\n3. Verify 'What Makes Phalanx Cyber Academy Different' heading is displayed\n4. Check left side content area is visible\n5. Verify right side call-to-action panel is present\n6. Check 'Start Your Cybersecurity Adventure' heading\n7. Verify any signup/action buttons function correctly\n8. Test responsive layout on different screen sizes",
-    "test_status": "pending",
-    "priority": "medium",
-    "category": "ui"
-  },
-  {
-    "test_plan_no": "STP-002-07",
-    "module_name": "About-Page",
-    "screen_design_ref": "Figure 2.7: Dark Mode Compatibility",
-    "description": "Verify the About page displays correctly in dark mode",
-    "scenario": "User toggles to dark mode and views the About page",
-    "expected_results": "All sections display properly with dark theme colors, readable text, and proper contrast",
-    "procedure": "1. Navigate to /about page\n2. Toggle dark mode using theme switcher\n3. Verify page header has dark background gradients\n4. Check all text is readable with proper contrast\n5. Verify card backgrounds change to dark theme\n6. Check team member cards have dark styling\n7. Verify all icons and elements are visible in dark mode\n8. Test hover effects maintain visibility in dark theme",
-    "test_status": "pending",
-    "priority": "medium",
-    "category": "ui"
-  },
-  {
-    "test_plan_no": "STP-002-08",
-    "module_name": "About-Page",
     "screen_design_ref": "Figure 2.8: Responsive Design",
     "description": "Verify the About page is responsive across different screen sizes",
     "scenario": "User views the About page on mobile, tablet, and desktop devices",
@@ -96,7 +24,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-002-09",
+    "test_plan_no": "STP-002-03",
     "module_name": "About-Page",
     "screen_design_ref": "Figure 2.9: CSS and JavaScript Loading",
     "description": "Verify that external CSS and JavaScript files load correctly",
@@ -108,7 +36,19 @@
     "category": "performance"
   },
   {
-    "test_plan_no": "STP-002-10",
+    "test_plan_no": "STP-002-04",
+    "module_name": "About-Page",
+    "screen_design_ref": "Figure 2.3: Mission Section",
+    "description": "Verify the Mission section displays content and Get Involved button functionality",
+    "scenario": "User reads the mission statement and clicks on Get Involved button",
+    "expected_results": "Display mission heading, descriptive text, and functional Get Involved button that links to contact page",
+    "procedure": "1. Navigate to /about page\n2. Scroll to Mission section\n3. Verify 'Our Mission' heading is displayed\n4. Check mission description text is visible and readable\n5. Verify 'Get Involved' button is present\n6. Click 'Get Involved' button\n7. Verify it redirects to contact page",
+    "test_status": "pending",
+    "priority": "high",
+    "category": "functional"
+  },
+  {
+    "test_plan_no": "STP-002-05",
     "module_name": "About-Page",
     "screen_design_ref": "Figure 2.10: Navigation Integration",
     "description": "Verify that navigation to and from the About page works correctly",
@@ -117,30 +57,6 @@
     "procedure": "1. Navigate to home page (/)\n2. Click About link in main navigation\n3. Verify About page loads correctly\n4. Check browser URL shows /about\n5. Use browser back button to return to previous page\n6. Navigate directly to /about URL\n7. Test navigation menu links from About page\n8. Verify breadcrumb navigation if present\n9. Test deep linking to /about page",
     "test_status": "pending",
     "priority": "high",
-    "category": "functional"
-  },
-  {
-    "test_plan_no": "STP-002-11",
-    "module_name": "About-Page",
-    "screen_design_ref": "Figure 2.11: Page Performance",
-    "description": "Verify the About page loads within acceptable time limits",
-    "scenario": "User accesses the About page and expects fast loading times",
-    "expected_results": "Page loads completely within 3 seconds with all images, CSS, and JavaScript",
-    "procedure": "1. Clear browser cache\n2. Open browser developer tools Performance tab\n3. Navigate to /about page\n4. Record page load time\n5. Verify total load time is under 3 seconds\n6. Check First Contentful Paint (FCP) metrics\n7. Verify Largest Contentful Paint (LCP) is acceptable\n8. Test page load on slower network connections\n9. Check for any render-blocking resources",
-    "test_status": "pending",
-    "priority": "medium",
-    "category": "performance"
-  },
-  {
-    "test_plan_no": "STP-002-12",
-    "module_name": "About-Page",
-    "screen_design_ref": "Figure 2.12: SEO and Accessibility",
-    "description": "Verify the About page meets SEO and accessibility standards",
-    "scenario": "User with screen reader accesses the About page and search engines can index content",
-    "expected_results": "Page has proper heading hierarchy, alt text, and semantic HTML structure",
-    "procedure": "1. Navigate to /about page\n2. View page source and verify proper HTML structure\n3. Check heading hierarchy (h1, h2, h3) is logical\n4. Verify images have appropriate alt text\n5. Test page with screen reader\n6. Check color contrast ratios meet WCAG guidelines\n7. Verify keyboard navigation works\n8. Test tab order is logical\n9. Check meta tags for SEO\n10. Verify semantic HTML elements are used",
-    "test_status": "pending",
-    "priority": "medium",
     "category": "functional"
   }
 ]

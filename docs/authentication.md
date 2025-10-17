@@ -1,18 +1,19 @@
 # Authentication System Documentation
 
-This template includes a complete user authentication system with advanced security features and email verification.
+This template includes a complete passwordless user authentication system with advanced security features and email verification.
 
 ## 🔐 Core Authentication Features
 
 ### User Registration
 - **Secure Signup**: Username and email-based registration
 - **Email Verification**: Mandatory email verification before account activation
-- **Password Security**: Argon2 password hashing for maximum security
+- **Passwordless Security**: No passwords to remember or store
 - **Input Validation**: Comprehensive form validation and sanitization
 - **Duplicate Prevention**: Prevents duplicate usernames and emails
 
 ### User Login
-- **Flexible Login**: Login with username or email address
+- **Passwordless Login**: Login via email verification codes
+- **6-Digit Codes**: Time-limited verification codes sent to email
 - **Remember Me**: Optional persistent login sessions
 - **Session Management**: Secure session handling with configurable timeouts
 - **Real-time Feedback**: Immediate feedback on login attempts
@@ -26,19 +27,19 @@ This template includes a complete user authentication system with advanced secur
 - **Auto-refresh Checking**: Automatic verification status checking
 - **Login Attempt Blocking**: Prevents login until email is verified
 
-## 🔑 Password Management
+## 🔑 Passwordless Authentication
 
-### Password Reset
-- **Email-based Reset**: Secure password reset via email
-- **Secure Tokens**: Time-limited reset tokens (1-hour expiration)
-- **Token Validation**: Comprehensive token validation and security checks
+### Login Verification Codes
+- **Email-based Authentication**: Secure login via email verification codes
+- **Time-Limited Codes**: 10-minute expiration on verification codes
+- **Code Validation**: Comprehensive code validation and security checks
 - **User Guidance**: Clear instructions and feedback throughout the process
 
-### Password Security
-- **Argon2 Hashing**: Industry-standard password hashing algorithm
-- **Salt Generation**: Automatic salt generation for each password
-- **Password Strength**: Configurable password complexity requirements
-- **Secure Storage**: No plain text password storage
+### Authentication Security
+- **No Password Storage**: Eliminates password-related vulnerabilities
+- **Code Generation**: Cryptographically secure 6-digit codes
+- **Single-Use Codes**: Codes invalidated after successful verification
+- **Rate Limiting**: Protection against brute force code attempts
 
 ## 🛡️ Advanced Security Features
 
@@ -91,14 +92,12 @@ This template includes a complete user authentication system with advanced secur
 
 ## 🔒 Security Implementation Details
 
-### Password Hashing
+### Verification Code Generation
 ```python
-# Argon2 configuration
-ARGON2_TIME_COST = 2
-ARGON2_MEMORY_COST = 65536
-ARGON2_PARALLELISM = 1
-ARGON2_HASH_LENGTH = 32
-ARGON2_SALT_LENGTH = 16
+# Secure 6-digit code generation
+import secrets
+verification_code = ''.join([str(secrets.randbelow(10)) for _ in range(6)])
+CODE_EXPIRATION_MINUTES = 10
 ```
 
 ### Session Configuration
@@ -133,8 +132,8 @@ MAIL_PASSWORD=your-app-password
 ### Email Templates Location
 - `app/templates/emails/verification_email.html`
 - `app/templates/emails/verification_email.txt`
-- `app/templates/emails/password_reset.html`
-- `app/templates/emails/password_reset.txt`
+- `app/templates/emails/login_code.html`
+- `app/templates/emails/login_code.txt`
 
 ## 🚀 Setup Instructions
 
@@ -167,7 +166,6 @@ from app.models.user import User
 app = create_app()
 with app.app_context():
     admin = User(username='admin', email='admin@example.com')
-    admin.set_password('admin123')
     admin.is_admin = True
     admin.email_verified = True
     db.session.add(admin)
