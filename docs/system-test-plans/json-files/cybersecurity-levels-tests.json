@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-033-01",
+    "test_plan_no": "STP-031-01",
     "module_name": "Cybersecurity-Levels",
     "screen_design_ref": "Figure 33.1: Levels Overview Page",
     "description": "Verify that the cybersecurity levels page loads correctly with proper authentication and displays all level information",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-033-02",
+    "test_plan_no": "STP-031-02",
     "module_name": "Cybersecurity-Levels",
     "screen_design_ref": "Figure 33.2: Authentication Required Check",
     "description": "Verify that unauthenticated users are redirected to login when accessing levels page",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-033-03",
+    "test_plan_no": "STP-031-03",
     "module_name": "Cybersecurity-Levels",
     "screen_design_ref": "Figure 33.30: Complete Levels Workflow",
     "description": "Verify complete cybersecurity levels workflow from initial access through full progression",
@@ -36,7 +36,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-033-04",
+    "test_plan_no": "STP-031-04",
     "module_name": "Cybersecurity-Levels",
     "screen_design_ref": "Figure 33.3: Page Header Display",
     "description": "Verify the page header displays correct title and description with proper styling",
@@ -48,7 +48,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-033-05",
+    "test_plan_no": "STP-031-05",
     "module_name": "Cybersecurity-Levels",
     "screen_design_ref": "Figure 33.5: Level Cards Grid Layout",
     "description": "Verify the levels are displayed in a responsive grid layout with proper card structure",

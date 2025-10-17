@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-039-01",
+    "test_plan_no": "STP-037-01",
     "module_name": "Blue-Team-vs-Red-Team-Mode",
     "screen_design_ref": "Figure 39.1: Introduction Page Load and Navigation",
     "description": "Verify that the Blue Team vs Red Team introduction page loads correctly with all content sections",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-039-02",
+    "test_plan_no": "STP-037-02",
     "module_name": "Blue-Team-vs-Red-Team-Mode",
     "screen_design_ref": "Figure 39.30: Complete Blue vs Red Team Workflow",
     "description": "Verify complete end-to-end workflow from introduction through simulation completion with comprehensive cybersecurity training",
@@ -24,7 +24,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-039-03",
+    "test_plan_no": "STP-037-03",
     "module_name": "Blue-Team-vs-Red-Team-Mode",
     "screen_design_ref": "Figure 39.27: Security Implementation",
     "description": "Verify security measures protect against client-side vulnerabilities and data exposure",
@@ -36,7 +36,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-039-04",
+    "test_plan_no": "STP-037-04",
     "module_name": "Blue-Team-vs-Red-Team-Mode",
     "screen_design_ref": "Figure 39.2: Introduction Page Interactive Elements",
     "description": "Verify interactive elements and animations work correctly on the introduction page",
@@ -48,7 +48,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-039-05",
+    "test_plan_no": "STP-037-05",
     "module_name": "Blue-Team-vs-Red-Team-Mode",
     "screen_design_ref": "Figure 39.8: AI Difficulty System",
     "description": "Verify AI system dynamically adjusts difficulty within a single session",

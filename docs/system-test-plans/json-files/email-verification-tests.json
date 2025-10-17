@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-011-01",
+    "test_plan_no": "STP-009-01",
     "module_name": "Email-Verification-System",
     "screen_design_ref": "Figure 11.1: Email Verification Pending Page Layout",
     "description": "Verify that the Email Verification Pending page loads correctly after successful user registration",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-011-02",
+    "test_plan_no": "STP-009-02",
     "module_name": "Email-Verification-System",
     "screen_design_ref": "Figure 11.18: User Account Association",
     "description": "Verify verification tokens are properly associated with correct user accounts",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-011-03",
+    "test_plan_no": "STP-009-03",
     "module_name": "Email-Verification-System",
     "screen_design_ref": "Figure 11.3: Email Information Display",
     "description": "Verify email address information is displayed correctly in verification pending page",
@@ -36,7 +36,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-011-04",
+    "test_plan_no": "STP-009-04",
     "module_name": "Email-Verification-System",
     "screen_design_ref": "Figure 11.25: Performance and Loading",
     "description": "Verify verification pending page loads efficiently with optimal performance",
@@ -48,7 +48,7 @@
     "category": "performance"
   },
   {
-    "test_plan_no": "STP-011-05",
+    "test_plan_no": "STP-009-05",
     "module_name": "Email-Verification-System",
     "screen_design_ref": "Figure 11.26: Accessibility Compliance",
     "description": "Verify verification pending page meets accessibility standards (WCAG)",

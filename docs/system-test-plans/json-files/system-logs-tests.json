@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-021-01",
+    "test_plan_no": "STP-019-01",
     "module_name": "System-Logs",
     "screen_design_ref": "Figure 21.1: System Logs Dashboard",
     "description": "Verify that the System Logs page loads correctly with admin authentication",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-021-02",
+    "test_plan_no": "STP-019-02",
     "module_name": "System-Logs",
     "screen_design_ref": "Figure 21.2: Admin Authentication Requirement",
     "description": "Verify that non-admin users cannot access the System Logs page",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-021-03",
+    "test_plan_no": "STP-019-03",
     "module_name": "System-Logs",
     "screen_design_ref": "Figure 21.19: Database Error Handling",
     "description": "Verify that the logs system handles database errors gracefully",
@@ -36,7 +36,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-021-04",
+    "test_plan_no": "STP-019-04",
     "module_name": "System-Logs",
     "screen_design_ref": "Figure 21.10: Empty State Handling",
     "description": "Verify that appropriate empty state messages display when no log data is available",
@@ -48,7 +48,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-021-05",
+    "test_plan_no": "STP-019-05",
     "module_name": "System-Logs",
     "screen_design_ref": "Figure 21.11: Responsive Design Layout",
     "description": "Verify that the System Logs page displays correctly on different screen sizes",

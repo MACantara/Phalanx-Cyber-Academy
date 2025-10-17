@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-035-01",
+    "test_plan_no": "STP-033-01",
     "module_name": "Shadow-in-the-Inbox-Level",
     "screen_design_ref": "Figure 35.1: Level Start and Authentication",
     "description": "Verify that Level 2 'Shadow in the Inbox' can be started correctly with proper authentication and prerequisite checking",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-035-02",
+    "test_plan_no": "STP-033-02",
     "module_name": "Shadow-in-the-Inbox-Level",
     "screen_design_ref": "Figure 35.30: Complete Email Security Workflow",
     "description": "Verify complete end-to-end workflow for Level 2 from start to completion with email security skill development",
@@ -24,7 +24,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-035-03",
+    "test_plan_no": "STP-033-03",
     "module_name": "Shadow-in-the-Inbox-Level",
     "screen_design_ref": "Figure 35.6: Email List Interface",
     "description": "Verify the email list interface displays emails correctly with proper metadata and status indicators",
@@ -36,7 +36,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-035-04",
+    "test_plan_no": "STP-033-04",
     "module_name": "Shadow-in-the-Inbox-Level",
     "screen_design_ref": "Figure 35.21: Email Content Rendering",
     "description": "Verify email content renders correctly with proper HTML formatting and security",
@@ -48,7 +48,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-035-05",
+    "test_plan_no": "STP-033-05",
     "module_name": "Shadow-in-the-Inbox-Level",
     "screen_design_ref": "Figure 35.22: Error Handling and Recovery",
     "description": "Verify proper error handling when Level 2 simulation encounters issues",

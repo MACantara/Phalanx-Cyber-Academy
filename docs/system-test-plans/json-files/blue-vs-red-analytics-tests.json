@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-018-01",
+    "test_plan_no": "STP-016-01",
     "module_name": "Blue-vs-Red-Team-Analytics",
     "screen_design_ref": "Figure 18.1: Blue vs Red Team Analytics Dashboard",
     "description": "Verify that the Blue vs Red Team Analytics page loads correctly with admin authentication",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-018-02",
+    "test_plan_no": "STP-016-02",
     "module_name": "Blue-vs-Red-Team-Analytics",
     "screen_design_ref": "Figure 18.2: Admin Authentication Requirement",
     "description": "Verify that non-admin users cannot access the Blue vs Red Team Analytics page",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-018-03",
+    "test_plan_no": "STP-016-03",
     "module_name": "Blue-vs-Red-Team-Analytics",
     "screen_design_ref": "Figure 18.6: Asset Protection Breakdown",
     "description": "Verify that the Asset Protection section displays circular progress indicators for all protected assets",
@@ -36,7 +36,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-018-04",
+    "test_plan_no": "STP-016-04",
     "module_name": "Blue-vs-Red-Team-Analytics",
     "screen_design_ref": "Figure 18.24: Database Integration",
     "description": "Verify that the analytics page handles database connectivity and displays appropriate messages if data is unavailable",
@@ -48,7 +48,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-018-05",
+    "test_plan_no": "STP-016-05",
     "module_name": "Blue-vs-Red-Team-Analytics",
     "screen_design_ref": "Figure 18.26: Session Management",
     "description": "Verify that admin session management works correctly when accessing the analytics page",

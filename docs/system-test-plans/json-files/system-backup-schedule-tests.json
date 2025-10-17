@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-023-01",
+    "test_plan_no": "STP-021-01",
     "module_name": "System-Backup-Schedule",
     "screen_design_ref": "Figure 23.1: Backup Schedule Configuration Page",
     "description": "Verify that the backup schedule configuration page loads correctly with proper authentication",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-023-02",
+    "test_plan_no": "STP-021-02",
     "module_name": "System-Backup-Schedule",
     "screen_design_ref": "Figure 23.2: Schedule Page Authentication",
     "description": "Verify that non-admin users cannot access the backup schedule configuration page",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-023-03",
+    "test_plan_no": "STP-021-03",
     "module_name": "System-Backup-Schedule",
     "screen_design_ref": "Figure 23.30: Integration with Main Backup",
     "description": "Verify schedule configuration integrates properly with main backup management functionality",
@@ -36,7 +36,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-023-04",
+    "test_plan_no": "STP-021-04",
     "module_name": "System-Backup-Schedule",
     "screen_design_ref": "Figure 23.4: Next Backup Display",
     "description": "Verify the next backup section shows correct scheduling information",
@@ -48,7 +48,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-023-05",
+    "test_plan_no": "STP-021-05",
     "module_name": "System-Backup-Schedule",
     "screen_design_ref": "Figure 23.6: Backup Frequency Selection",
     "description": "Verify the backup frequency dropdown provides correct options and selection",

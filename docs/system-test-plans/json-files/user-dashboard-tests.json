@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-014-01",
+    "test_plan_no": "STP-012-01",
     "module_name": "User-Dashboard-Page",
     "screen_design_ref": "Figure 14.1: User Dashboard Page Layout",
     "description": "Verify that the User Dashboard page loads correctly when accessing /profile/dashboard with authenticated user",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-014-02",
+    "test_plan_no": "STP-012-02",
     "module_name": "User-Dashboard-Page",
     "screen_design_ref": "Figure 14.9: Basic Progress Data Integration",
     "description": "Verify dashboard displays basic user progress metrics using simplified system",
@@ -24,7 +24,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-014-03",
+    "test_plan_no": "STP-012-03",
     "module_name": "User-Dashboard-Page",
     "screen_design_ref": "Figure 14.14: Authentication Required Access",
     "description": "Verify dashboard page requires user authentication and redirects unauthenticated users",
@@ -36,7 +36,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-014-04",
+    "test_plan_no": "STP-012-04",
     "module_name": "User-Dashboard-Page",
     "screen_design_ref": "Figure 14.3: Stats Overview Cards",
     "description": "Verify stats overview cards display user progress metrics correctly",
@@ -48,7 +48,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-014-05",
+    "test_plan_no": "STP-012-05",
     "module_name": "User-Dashboard-Page",
     "screen_design_ref": "Figure 14.4: Learning Progress Section",
     "description": "Verify learning progress section displays overall progress and level completion status",

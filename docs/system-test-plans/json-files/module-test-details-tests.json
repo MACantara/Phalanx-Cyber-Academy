@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-025-01",
+    "test_plan_no": "STP-023-01",
     "module_name": "Module-Test-Details",
     "screen_design_ref": "Figure 25.1: Module Test Details Page",
     "description": "Verify that the module test details page loads correctly with proper authentication",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-025-02",
+    "test_plan_no": "STP-023-02",
     "module_name": "Module-Test-Details",
     "screen_design_ref": "Figure 25.2: Module Authentication Check",
     "description": "Verify that non-admin users cannot access the module test details page",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-025-03",
+    "test_plan_no": "STP-023-03",
     "module_name": "Module-Test-Details",
     "screen_design_ref": "Figure 25.30: Integration with Test Management",
     "description": "Verify module page integrates properly with broader test management workflow",
@@ -36,7 +36,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-025-04",
+    "test_plan_no": "STP-023-04",
     "module_name": "Module-Test-Details",
     "screen_design_ref": "Figure 25.5: Module Progress Bar",
     "description": "Verify the module progress bar displays correct completion percentage and visual indicators",
@@ -48,7 +48,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-025-05",
+    "test_plan_no": "STP-023-05",
     "module_name": "Module-Test-Details",
     "screen_design_ref": "Figure 25.6: Test Plans List Header",
     "description": "Verify the test plans list header displays correct count and filter options",

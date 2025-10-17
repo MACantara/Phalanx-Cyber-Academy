@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-022-01",
+    "test_plan_no": "STP-020-01",
     "module_name": "System-Backup",
     "screen_design_ref": "Figure 22.1: System Backup Management Page",
     "description": "Verify that the System Backup page loads correctly with proper authentication",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-022-02",
+    "test_plan_no": "STP-020-02",
     "module_name": "System-Backup",
     "screen_design_ref": "Figure 22.2: Admin Authentication Check",
     "description": "Verify that non-admin users cannot access the system backup page",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-022-03",
+    "test_plan_no": "STP-020-03",
     "module_name": "System-Backup",
     "screen_design_ref": "Figure 22.7: Restore Backup Form",
     "description": "Verify the restore backup form displays with file upload and restore type options",
@@ -36,7 +36,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-022-04",
+    "test_plan_no": "STP-020-04",
     "module_name": "System-Backup",
     "screen_design_ref": "Figure 22.28: Concurrent Access Handling",
     "description": "Verify system handles multiple admin users accessing backup functionality simultaneously",
@@ -48,7 +48,7 @@
     "category": "performance"
   },
   {
-    "test_plan_no": "STP-022-05",
+    "test_plan_no": "STP-020-05",
     "module_name": "System-Backup",
     "screen_design_ref": "Figure 22.29: Large Database Backup",
     "description": "Verify backup functionality works correctly with large datasets and extended processing times",

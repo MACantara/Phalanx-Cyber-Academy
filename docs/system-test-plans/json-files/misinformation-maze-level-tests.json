@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-034-01",
+    "test_plan_no": "STP-032-01",
     "module_name": "The-Misinformation-Maze-Level",
     "screen_design_ref": "Figure 34.1: Level Start and Authentication",
     "description": "Verify that Level 1 'The Misinformation Maze' can be started correctly with proper authentication",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-034-02",
+    "test_plan_no": "STP-032-02",
     "module_name": "The-Misinformation-Maze-Level",
     "screen_design_ref": "Figure 34.30: Complete Misinformation Maze Workflow",
     "description": "Verify complete end-to-end workflow for Level 1 from start to completion with skill development",
@@ -24,7 +24,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-034-03",
+    "test_plan_no": "STP-032-03",
     "module_name": "The-Misinformation-Maze-Level",
     "screen_design_ref": "Figure 34.3: Simulation Boot Sequence",
     "description": "Verify the simulated PC boot sequence works correctly for Level 1",
@@ -36,7 +36,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-034-04",
+    "test_plan_no": "STP-032-04",
     "module_name": "The-Misinformation-Maze-Level",
     "screen_design_ref": "Figure 34.17: Browser Security Features",
     "description": "Verify browser application includes security monitoring and checker functionality",
@@ -48,7 +48,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-034-05",
+    "test_plan_no": "STP-032-05",
     "module_name": "The-Misinformation-Maze-Level",
     "screen_design_ref": "Figure 34.18: Simulation Exit and Shutdown",
     "description": "Verify proper simulation exit functionality with shutdown sequence",

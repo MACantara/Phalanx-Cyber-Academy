@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-017-01",
+    "test_plan_no": "STP-015-01",
     "module_name": "Level-Analytics-Page",
     "screen_design_ref": "Figure 17.1: Level Analytics Dashboard Layout",
     "description": "Verify that the Level Analytics page loads correctly when accessing /admin/player-analytics/levels with authenticated admin user",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-017-02",
+    "test_plan_no": "STP-015-02",
     "module_name": "Level-Analytics-Page",
     "screen_design_ref": "Figure 17.2: Admin Authentication Requirements",
     "description": "Verify level analytics page requires proper admin authentication and redirects non-admin users",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-017-03",
+    "test_plan_no": "STP-015-03",
     "module_name": "Level-Analytics-Page",
     "screen_design_ref": "Figure 17.10: Data Integration",
     "description": "Verify level analytics page integrates correctly with data_analytics.py backend",
@@ -36,7 +36,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-017-04",
+    "test_plan_no": "STP-015-04",
     "module_name": "Level-Analytics-Page",
     "screen_design_ref": "Figure 17.13: Responsive Design",
     "description": "Verify level analytics page is responsive across different screen sizes",
@@ -48,7 +48,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-017-05",
+    "test_plan_no": "STP-015-05",
     "module_name": "Level-Analytics-Page",
     "screen_design_ref": "Figure 17.15: Cybersecurity Education Metrics",
     "description": "Verify level analytics focus on cybersecurity education effectiveness",

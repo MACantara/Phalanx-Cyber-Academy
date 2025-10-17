@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-026-01",
+    "test_plan_no": "STP-024-01",
     "module_name": "System-Test-Plans-List",
     "screen_design_ref": "Figure 26.1: System Test Plans List Page",
     "description": "Verify that the test plans list page loads correctly with proper authentication",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-026-02",
+    "test_plan_no": "STP-024-02",
     "module_name": "System-Test-Plans-List",
     "screen_design_ref": "Figure 26.2: Test Plans Authentication Check",
     "description": "Verify that non-admin users cannot access the test plans list page",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-026-03",
+    "test_plan_no": "STP-024-03",
     "module_name": "System-Test-Plans-List",
     "screen_design_ref": "Figure 26.30: Integration with Test Management Workflow",
     "description": "Verify test plans list integrates properly with broader test management functionality",
@@ -36,7 +36,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-026-04",
+    "test_plan_no": "STP-024-04",
     "module_name": "System-Test-Plans-List",
     "screen_design_ref": "Figure 26.9: Test Plans Table Layout",
     "description": "Verify that the test plans table displays all required columns and information",
@@ -48,7 +48,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-026-05",
+    "test_plan_no": "STP-024-05",
     "module_name": "System-Test-Plans-List",
     "screen_design_ref": "Figure 26.10: Test Plan Links",
     "description": "Verify that test plan numbers are clickable links that navigate to test plan details",

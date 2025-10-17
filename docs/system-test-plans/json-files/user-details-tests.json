@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-020-01",
+    "test_plan_no": "STP-018-01",
     "module_name": "User-Details",
     "screen_design_ref": "Figure 20.1: User Details Page",
     "description": "Verify that the User Details page loads correctly with admin authentication for a valid user ID",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-020-02",
+    "test_plan_no": "STP-018-02",
     "module_name": "User-Details",
     "screen_design_ref": "Figure 20.2: Admin Authentication Requirement",
     "description": "Verify that non-admin users cannot access the User Details page",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-020-03",
+    "test_plan_no": "STP-018-03",
     "module_name": "User-Details",
     "screen_design_ref": "Figure 20.19: Database Error Handling",
     "description": "Verify that the user details system handles database errors gracefully",
@@ -36,7 +36,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-020-04",
+    "test_plan_no": "STP-018-04",
     "module_name": "User-Details",
     "screen_design_ref": "Figure 20.9: Activity Tabs Navigation",
     "description": "Verify that activity tabs function correctly for switching between different user activity views",
@@ -48,7 +48,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-020-05",
+    "test_plan_no": "STP-018-05",
     "module_name": "User-Details",
     "screen_design_ref": "Figure 20.12: Responsive Design Layout",
     "description": "Verify that the User Details page displays correctly on different screen sizes",

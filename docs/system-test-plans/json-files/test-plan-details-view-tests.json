@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-027-01",
+    "test_plan_no": "STP-025-01",
     "module_name": "Test-Plan-Details-View",
     "screen_design_ref": "Figure 27.1: Test Plan Details Page",
     "description": "Verify that the test plan details page loads correctly with proper authentication",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-027-02",
+    "test_plan_no": "STP-025-02",
     "module_name": "Test-Plan-Details-View",
     "screen_design_ref": "Figure 27.2: Test Plan Authentication Check",
     "description": "Verify that non-admin users cannot access the test plan details page",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-027-03",
+    "test_plan_no": "STP-025-03",
     "module_name": "Test-Plan-Details-View",
     "screen_design_ref": "Figure 27.30: Integration with Test Management Workflow",
     "description": "Verify test plan details page integrates properly with broader test management functionality",
@@ -36,7 +36,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-027-04",
+    "test_plan_no": "STP-025-04",
     "module_name": "Test-Plan-Details-View",
     "screen_design_ref": "Figure 27.4: Page Header Navigation",
     "description": "Verify the page header contains proper title, subtitle, and navigation buttons",
@@ -48,7 +48,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-027-05",
+    "test_plan_no": "STP-025-05",
     "module_name": "Test-Plan-Details-View",
     "screen_design_ref": "Figure 27.6: Screen Design Reference Display",
     "description": "Verify that screen design reference is shown only when available",

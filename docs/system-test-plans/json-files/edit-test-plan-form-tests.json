@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-029-01",
+    "test_plan_no": "STP-027-01",
     "module_name": "Edit-Test-Plan-Form",
     "screen_design_ref": "Figure 29.1: Edit Test Plan Page",
     "description": "Verify that the edit test plan page loads correctly with proper authentication and existing data",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-029-02",
+    "test_plan_no": "STP-027-02",
     "module_name": "Edit-Test-Plan-Form",
     "screen_design_ref": "Figure 29.2: Authentication Security Check",
     "description": "Verify that non-admin users cannot access the edit test plan functionality",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-029-03",
+    "test_plan_no": "STP-027-03",
     "module_name": "Edit-Test-Plan-Form",
     "screen_design_ref": "Figure 29.30: Complete Edit Workflow Integration",
     "description": "Verify complete edit workflow from test plan list through successful update",
@@ -36,7 +36,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-029-04",
+    "test_plan_no": "STP-027-04",
     "module_name": "Edit-Test-Plan-Form",
     "screen_design_ref": "Figure 29.4: Page Header Context",
     "description": "Verify the page header displays correct edit context with test plan number",
@@ -48,7 +48,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-029-05",
+    "test_plan_no": "STP-027-05",
     "module_name": "Edit-Test-Plan-Form",
     "screen_design_ref": "Figure 29.7: Execute Test Button",
     "description": "Verify that the Execute Test button is available when editing existing test plans",

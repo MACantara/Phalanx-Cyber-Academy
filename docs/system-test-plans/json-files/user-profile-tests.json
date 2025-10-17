@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-012-01",
+    "test_plan_no": "STP-010-01",
     "module_name": "User-Profile-Page",
     "screen_design_ref": "Figure 12.1: User Profile Page Layout",
     "description": "Verify that the User Profile page loads correctly when accessing /profile with authenticated user",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-012-02",
+    "test_plan_no": "STP-010-02",
     "module_name": "User-Profile-Page",
     "screen_design_ref": "Figure 12.9: Authentication Required Access",
     "description": "Verify profile page requires user authentication and redirects unauthenticated users",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-012-03",
+    "test_plan_no": "STP-010-03",
     "module_name": "User-Profile-Page",
     "screen_design_ref": "Figure 12.3: Account Status Badge",
     "description": "Verify account status badge displays correctly based on user.is_active status",
@@ -36,7 +36,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-012-04",
+    "test_plan_no": "STP-010-04",
     "module_name": "User-Profile-Page",
     "screen_design_ref": "Figure 12.18: Profile Page Performance",
     "description": "Verify profile page loads efficiently with optimal performance",
@@ -48,7 +48,7 @@
     "category": "performance"
   },
   {
-    "test_plan_no": "STP-012-05",
+    "test_plan_no": "STP-010-05",
     "module_name": "User-Profile-Page",
     "screen_design_ref": "Figure 12.20: Error Handling",
     "description": "Verify proper error handling when profile data cannot be loaded",

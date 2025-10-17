@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-032-01",
+    "test_plan_no": "STP-030-01",
     "module_name": "Test-Execution-Reports",
     "screen_design_ref": "Figure 32.1: Reports Dashboard Page",
     "description": "Verify that the test execution reports page loads correctly with proper authentication and comprehensive data display",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-032-02",
+    "test_plan_no": "STP-030-02",
     "module_name": "Test-Execution-Reports",
     "screen_design_ref": "Figure 32.2: Authentication Security Check",
     "description": "Verify that non-admin users cannot access the test execution reports functionality",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-032-03",
+    "test_plan_no": "STP-030-03",
     "module_name": "Test-Execution-Reports",
     "screen_design_ref": "Figure 32.30: Complete Reports Analytics Workflow",
     "description": "Verify complete test execution reports and analytics workflow from access through data export",
@@ -36,7 +36,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-032-04",
+    "test_plan_no": "STP-030-04",
     "module_name": "Test-Execution-Reports",
     "screen_design_ref": "Figure 32.3: Page Header and Navigation",
     "description": "Verify the page header displays correct title and provides proper navigation options",
@@ -48,7 +48,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-032-05",
+    "test_plan_no": "STP-030-05",
     "module_name": "Test-Execution-Reports",
     "screen_design_ref": "Figure 32.8: No Data States Handling",
     "description": "Verify proper display when no test data is available",

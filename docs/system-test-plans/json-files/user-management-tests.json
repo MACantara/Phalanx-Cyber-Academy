@@ -1,6 +1,6 @@
 [
   {
-    "test_plan_no": "STP-019-01",
+    "test_plan_no": "STP-017-01",
     "module_name": "User-Management",
     "screen_design_ref": "Figure 19.1: User Management Dashboard",
     "description": "Verify that the User Management page loads correctly with admin authentication",
@@ -12,7 +12,7 @@
     "category": "functional"
   },
   {
-    "test_plan_no": "STP-019-02",
+    "test_plan_no": "STP-017-02",
     "module_name": "User-Management",
     "screen_design_ref": "Figure 19.2: Admin Authentication Requirement",
     "description": "Verify that non-admin users cannot access the User Management page",
@@ -24,7 +24,7 @@
     "category": "security"
   },
   {
-    "test_plan_no": "STP-019-03",
+    "test_plan_no": "STP-017-03",
     "module_name": "User-Management",
     "screen_design_ref": "Figure 19.4: User Table Display",
     "description": "Verify that the user table displays all user information correctly with proper formatting",
@@ -36,7 +36,7 @@
     "category": "ui"
   },
   {
-    "test_plan_no": "STP-019-04",
+    "test_plan_no": "STP-017-04",
     "module_name": "User-Management",
     "screen_design_ref": "Figure 19.18: Database Error Handling",
     "description": "Verify that the user management system handles database errors gracefully",
@@ -48,7 +48,7 @@
     "category": "integration"
   },
   {
-    "test_plan_no": "STP-019-05",
+    "test_plan_no": "STP-017-05",
     "module_name": "User-Management",
     "screen_design_ref": "Figure 19.29: Session Management",
     "description": "Verify that admin session management works correctly when accessing user management",
