@@ -425,118 +425,112 @@ def export_test_plans_docx():
     """Export test plans to DOCX format."""
     try:
         from docx import Document
-        from docx.shared import Inches
-        from docx.enum.table import WD_TABLE_ALIGNMENT
+        from docx.shared import Inches, Pt, RGBColor
+        from docx.enum.table import WD_TABLE_ALIGNMENT, WD_ALIGN_VERTICAL
         from docx.enum.text import WD_ALIGN_PARAGRAPH
         from flask import send_file
         import io
         
-        # Get only passed test plans
-        test_plans = SystemTestPlan.get_all_paginated(filters={'test_status': 'passed'})
+        # Get all test plans, grouped by module
+        all_test_plans = SystemTestPlan.get_all_paginated(order_by='module_name, test_plan_no')
+        
+        # Group test plans by module
+        modules = {}
+        for test_plan in all_test_plans:
+            module_name = test_plan.module_name or 'Unknown'
+            if module_name not in modules:
+                modules[module_name] = []
+            modules[module_name].append(test_plan)
         
         # Create document
         doc = Document()
         
-        # Add title
-        title = doc.add_heading('Passed System Test Plans Report', 0)
-        title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        # Set title text color to black
-        for run in title.runs:
-            run.font.color.rgb = None  # Default black
-        
-        # Add generation info
-        gen_info = doc.add_paragraph(f'Generated on: {format_for_user_timezone(utc_now(), current_user.timezone, "%B %d, %Y at %I:%M %p")}')
-        # Set generation info text color to black
-        for run in gen_info.runs:
-            run.font.color.rgb = None  # Default black
-        doc.add_paragraph('')
-        
-        # Create one continuous table for all test plans
-        if test_plans:
-            # Create table with header row + number of test plans
-            table = doc.add_table(rows=1, cols=5)
-            table.style = 'Table Grid'
-            table.alignment = WD_TABLE_ALIGNMENT.CENTER
-            # table.autofit = False  # important to prevent Word from resizing columns
-
-            # Desired column widths - adjusted for 5 columns
-            col_widths = [Inches(0.9), Inches(1.1), Inches(2.8), Inches(1.4), Inches(2.0)]
-
-            # Apply widths to header row cells
-            for i, width in enumerate(col_widths):
-                table.columns[i].width = width
-                for cell in table.columns[i].cells:
-                    cell.width = width
-
-            # Add header row
-            header_cells = table.rows[0].cells
-            headers = ['Test Plan No.', 'Module', 'Description', 'Date & Time', 'Status & Reason']
-
-            for i, header in enumerate(headers):
-                header_cells[i].text = header
-                header_cells[i].paragraphs[0].runs[0].bold = True
-                # Set text color to black
-                header_cells[i].paragraphs[0].runs[0].font.color.rgb = None  # Default black
-
-            # Add data rows for each test plan
-            for test_plan in test_plans:
-                row_cells = table.add_row().cells
-
-                # Format module name by replacing hyphens and underscores with spaces, then capitalizing
-                formatted_module_name = 'N/A'
-                if test_plan.module_name:
-                    formatted_module_name = test_plan.module_name.replace('-', ' ').replace('_', ' ')
-                    formatted_module_name = ' '.join(word.capitalize() for word in formatted_module_name.split())
-
-                # Format execution date
-                formatted_date = 'N/A'
-                if test_plan.execution_date:
-                    try:
-                        # Handle both timezone-aware and naive datetime objects
-                        if test_plan.execution_date.tzinfo is None:
-                            # If naive, assume UTC
-                            date_obj = test_plan.execution_date
-                        else:
-                            # If timezone-aware, convert to local time for display
-                            date_obj = test_plan.execution_date.replace(tzinfo=None)
-                        
-                        formatted_date = date_obj.strftime("%m/%d/%Y %I:%M %p")
-                    except (AttributeError, ValueError):
-                        formatted_date = 'N/A'
-
-                # Format status
-                status_display = test_plan.test_status.capitalize() if test_plan.test_status else 'Pending'
-
-                # Combine status with reason
-                status_and_reason = status_display
-                if test_plan.failure_reason:
-                    status_and_reason = f"{status_display} - {test_plan.failure_reason}"
-                elif test_plan.test_status == 'passed':
-                    status_and_reason = status_display
-
-                # Populate row data
-                row_data = [
-                    test_plan.test_plan_no or 'N/A',
-                    formatted_module_name,
-                    test_plan.description or 'N/A',
-                    formatted_date,
-                    status_and_reason
-                ]
-
-                for i, value in enumerate(row_data):
-                    row_cells[i].text = str(value)
-                    # Force width for each new cell too
-                    row_cells[i].width = col_widths[i]
-                    # Set text color to black
-                    for paragraph in row_cells[i].paragraphs:
-                        for run in paragraph.runs:
-                            run.font.color.rgb = None  # Default black
-        else:
-            # Add message if no passed test plans found
-            doc.add_paragraph('No passed test plans found.')
-
-        # Add spacing at the end
-        doc.add_paragraph('')
+        # Process each module
+        for module_name in sorted(modules.keys()):
+            test_plans = modules[module_name]
+            
+            # Format module name for display
+            formatted_module_name = module_name.replace('-', ' ').replace('_', ' ')
+            formatted_module_name = ' '.join(word.capitalize() for word in formatted_module_name.split())
+            
+            # Add section heading for each test plan
+            for i, test_plan in enumerate(test_plans, 1):
+                # Add heading with test plan section number
+                heading = doc.add_heading(f'5.{i} Test Plan and Results', level=2)
+                heading_para = doc.add_paragraph(f'Test Plan No: {test_plan.test_plan_no or "N/A"}')
+                heading_para.runs[0].bold = True
+                
+                # Create table for this test plan (5 rows, 2 columns)
+                table = doc.add_table(rows=5, cols=2)
+                table.style = 'Table Grid'
+                
+                # Set column widths
+                table.columns[0].width = Inches(2.0)
+                table.columns[1].width = Inches(4.5)
+                
+                # Row 1: Screen Design Ref No
+                row_cells = table.rows[0].cells
+                row_cells[0].text = 'Screen Design Ref No'
+                row_cells[0].paragraphs[0].runs[0].bold = True
+                row_cells[1].text = test_plan.screen_design_ref or 'N/A'
+                
+                # Row 2: Description / Scenario
+                row_cells = table.rows[1].cells
+                row_cells[0].text = 'Description / Scenario'
+                row_cells[0].paragraphs[0].runs[0].bold = True
+                scenario_text = ''
+                if test_plan.description:
+                    scenario_text = test_plan.description
+                if test_plan.scenario:
+                    scenario_text += ('; ' if scenario_text else '') + test_plan.scenario
+                row_cells[1].text = scenario_text or 'N/A'
+                
+                # Row 3: Expected Results
+                row_cells = table.rows[2].cells
+                row_cells[0].text = 'Expected Results'
+                row_cells[0].paragraphs[0].runs[0].bold = True
+                row_cells[1].text = test_plan.expected_results or 'N/A'
+                
+                # Row 4: Procedure (spans both columns)
+                row_cells = table.rows[3].cells
+                row_cells[0].text = 'Procedure:'
+                row_cells[0].paragraphs[0].runs[0].bold = True
+                # Merge cells for procedure
+                merged_cell = row_cells[0].merge(row_cells[1])
+                
+                # Add procedure as numbered list
+                if test_plan.procedure:
+                    # Clear the merged cell
+                    merged_cell.text = ''
+                    # Add "Procedure:" as bold
+                    proc_para = merged_cell.paragraphs[0]
+                    proc_run = proc_para.add_run('Procedure:')
+                    proc_run.bold = True
+                    
+                    # Add procedure steps
+                    steps = [step.strip() for step in test_plan.procedure.split('\n') if step.strip()]
+                    for step in steps:
+                        step_para = merged_cell.add_paragraph(step)
+                        step_para.style = 'List Number'
+                
+                # Row 5: Remarks
+                row_cells = table.rows[4].cells
+                row_cells[0].text = 'Remarks'
+                row_cells[0].paragraphs[0].runs[0].bold = True
+                
+                # Set remarks based on test status
+                remarks = 'Pending'
+                if test_plan.test_status == 'passed':
+                    remarks = 'Passed'
+                elif test_plan.test_status == 'failed':
+                    remarks = f'Failed - {test_plan.failure_reason}' if test_plan.failure_reason else 'Failed'
+                elif test_plan.test_status == 'skipped':
+                    remarks = 'Skipped'
+                
+                row_cells[1].text = remarks
+                
+                # Add spacing between test plans
+                doc.add_paragraph('')
         
         # Save to BytesIO
         docx_buffer = io.BytesIO()
@@ -544,7 +538,7 @@ def export_test_plans_docx():
         docx_buffer.seek(0)
         
         # Generate filename with current date
-        filename = f'passed-system-test-plans-{utc_now().strftime("%Y-%m-%d")}.docx'
+        filename = f'system-test-plans-{utc_now().strftime("%Y-%m-%d")}.docx'
         
         return send_file(
             docx_buffer,
