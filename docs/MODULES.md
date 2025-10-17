@@ -477,42 +477,42 @@ This document provides a comprehensive overview of all modules, features, and co
 - **STP-007**: Login Page
 - **STP-008**: Sign Up Page
 
-### User Management & Profile (STP-011 to STP-014)
-- **STP-011**: Email Verification System
-- **STP-012**: User Profile Page
-- **STP-013**: Edit User Profile Page
-- **STP-014**: User Dashboard Page
+### User Management & Profile (STP-009 to STP-012)
+- **STP-009**: Email Verification System
+- **STP-010**: User Profile Page
+- **STP-011**: Edit User Profile Page
+- **STP-012**: User Dashboard Page
 
-### Admin Panel (STP-015 to STP-032)
-- **STP-015**: Admin Dashboard
-- **STP-016**: Player Data Analytics Page
-- **STP-017**: Level Analytics Page
-- **STP-018**: Blue vs Red Analytics Page
-- **STP-019**: User Management
-- **STP-020**: User Details
-- **STP-021**: System Logs
-- **STP-022**: System Backup
-- **STP-023**: System Backup Schedule
-- **STP-024**: System Test Dashboard
-- **STP-025**: Module Test Details
-- **STP-026**: System Test Plans List
-- **STP-027**: Test Plan Details View
-- **STP-028**: Test Plan Creation Form
-- **STP-029**: Edit Test Plan Form
-- **STP-030**: Bulk Import Test Plans
-- **STP-031**: Execute Test Plan
-- **STP-032**: Test Execution Reports
+### Admin Panel (STP-013 to STP-030)
+- **STP-013**: Admin Dashboard
+- **STP-014**: Player Data Analytics Page
+- **STP-015**: Level Analytics Page
+- **STP-016**: Blue vs Red Analytics Page
+- **STP-017**: User Management
+- **STP-018**: User Details
+- **STP-019**: System Logs
+- **STP-020**: System Backup
+- **STP-021**: System Backup Schedule
+- **STP-022**: System Test Dashboard
+- **STP-023**: Module Test Details
+- **STP-024**: System Test Plans List
+- **STP-025**: Test Plan Details View
+- **STP-026**: Test Plan Creation Form
+- **STP-027**: Edit Test Plan Form
+- **STP-028**: Bulk Import Test Plans
+- **STP-029**: Execute Test Plan
+- **STP-030**: Test Execution Reports
 
-### Learning Levels (STP-033 to STP-038)
-- **STP-033**: Cybersecurity Levels Overview
-- **STP-034**: The Misinformation Maze (Level 1)
-- **STP-035**: Shadow in the Inbox (Level 2)
-- **STP-036**: Malware Mayhem (Level 3)
-- **STP-037**: The White Hat Test (Level 4)
-- **STP-038**: The Hunt for The Null (Level 5)
+### Learning Levels (STP-031 to STP-036)
+- **STP-031**: Cybersecurity Levels Overview
+- **STP-032**: The Misinformation Maze (Level 1)
+- **STP-033**: Shadow in the Inbox (Level 2)
+- **STP-034**: Malware Mayhem (Level 3)
+- **STP-035**: The White Hat Test (Level 4)
+- **STP-036**: The Hunt for The Null (Level 5)
 
-### Game Modes (STP-039)
-- **STP-039**: Blue Team vs Red Team Mode
+### Game Modes (STP-037)
+- **STP-037**: Blue Team vs Red Team Mode
 
 ---
 
@@ -524,7 +524,7 @@ This document provides a comprehensive overview of all modules, features, and co
 - **ORM**: SQLAlchemy
 - **Authentication**: Flask-Login
 - **Email**: Flask-Mailman
-- **Security**: Argon2 password hashing, CSRF protection
+- **Security**: Passwordless Authentication through Email Verification Codes, CSRF protection
 
 ### Frontend
 - **CSS Framework**: Tailwind CSS
