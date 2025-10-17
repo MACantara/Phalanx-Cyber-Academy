@@ -5,7 +5,7 @@
 | **Screen Design Ref No** | Figure X.X: [Screen/Page Name] |
 | **Description / Scenario** | [Brief description of what is being tested and the scenario] |
 | **Expected Results** | [What should happen when the test is executed] |
-| **Procedure** | 1. [Step 1 - e.g., Open Google Chrome] <br> 2. [Step 2 - e.g., Type in URL on browser: http://example.com/page] <br> 3. [Step 3 - e.g., Display target page] <br> 4. [Step 4 - e.g., Enter specific data or perform actions] <br> 5. [Additional steps as needed] |
+| **Procedure** | 1. [Step 1 - e.g., Open Google Chrome] <br> 2. [Step 2 - e.g., Type in URL on browser: http://phalanx-cyber-academy.vercel.app/page] <br> 3. [Step 3 - e.g., Display target page] <br> 4. [Step 4 - e.g., Enter specific data or perform actions] <br> 5. [Additional steps as needed] |
 | **Remarks** | [Test result: Passed/Failed/Pending] |
 
 ## Instructions for Use:
