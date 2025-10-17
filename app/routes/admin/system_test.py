@@ -431,110 +431,93 @@ def export_test_plans_docx():
         from flask import send_file
         import io
         
-        # Get all test plans, grouped by module
-        all_test_plans = SystemTestPlan.get_all_paginated(order_by='module_name, test_plan_no')
-        
-        # Group test plans by module
-        modules = {}
-        for test_plan in all_test_plans:
-            module_name = test_plan.module_name or 'Unknown'
-            if module_name not in modules:
-                modules[module_name] = []
-            modules[module_name].append(test_plan)
+        # Get all test plans ordered by test plan number (STP-001-xx, STP-002-xx, etc.)
+        all_test_plans = SystemTestPlan.get_all_paginated(order_by='test_plan_no')
         
         # Create document
         doc = Document()
         
-        # Counter for all test plans across modules
+        # Counter for all test plans
         test_counter = 0
         
-        # Process each module
-        for module_name in sorted(modules.keys()):
-            test_plans = modules[module_name]
+        # Process each test plan in sequential order
+        for test_plan in all_test_plans:
+            test_counter += 1
             
-            # Format module name for display
-            formatted_module_name = module_name.replace('-', ' ').replace('_', ' ')
-            formatted_module_name = ' '.join(word.capitalize() for word in formatted_module_name.split())
+            # Add heading with test plan number
+            heading_para = doc.add_paragraph(f'Test Plan No: {test_plan.test_plan_no or "N/A"}')
+            heading_para.runs[0].bold = True
             
-            heading = doc.add_heading(f'Test Plan and Results', level=2)
+            # Create table for this test plan (5 rows, 2 columns)
+            table = doc.add_table(rows=5, cols=2)
+            table.style = 'Table Grid'
             
-            # Add section heading for each test plan
-            for test_plan in test_plans:
-                test_counter += 1
-                # Add heading with test plan section number
-                heading_para = doc.add_paragraph(f'Test Plan No: {test_plan.test_plan_no or "N/A"}')
-                heading_para.runs[0].bold = True
-                
-                # Create table for this test plan (5 rows, 2 columns)
-                table = doc.add_table(rows=5, cols=2)
-                table.style = 'Table Grid'
-                
-                # Set column widths
-                table.columns[0].width = Inches(2.0)
-                table.columns[1].width = Inches(4.5)
-                
-                # Row 1: Screen Design Ref No
-                row_cells = table.rows[0].cells
-                row_cells[0].text = 'Screen Design Ref No'
-                row_cells[0].paragraphs[0].runs[0].bold = True
-                row_cells[1].text = test_plan.screen_design_ref or 'N/A'
-                
-                # Row 2: Description / Scenario
-                row_cells = table.rows[1].cells
-                row_cells[0].text = 'Description / Scenario'
-                row_cells[0].paragraphs[0].runs[0].bold = True
-                scenario_text = ''
-                if test_plan.description:
-                    scenario_text = test_plan.description
-                if test_plan.scenario:
-                    scenario_text += ('; ' if scenario_text else '') + test_plan.scenario
-                row_cells[1].text = scenario_text or 'N/A'
-                
-                # Row 3: Expected Results
-                row_cells = table.rows[2].cells
-                row_cells[0].text = 'Expected Results'
-                row_cells[0].paragraphs[0].runs[0].bold = True
-                row_cells[1].text = test_plan.expected_results or 'N/A'
-                
-                # Row 4: Procedure (spans both columns)
-                row_cells = table.rows[3].cells
-                row_cells[0].text = 'Procedure:'
-                row_cells[0].paragraphs[0].runs[0].bold = True
-                # Merge cells for procedure
-                merged_cell = row_cells[0].merge(row_cells[1])
+            # Set column widths
+            table.columns[0].width = Inches(2.0)
+            table.columns[1].width = Inches(4.5)
+            
+            # Row 1: Screen Design Ref No
+            row_cells = table.rows[0].cells
+            row_cells[0].text = 'Screen Design Ref No'
+            row_cells[0].paragraphs[0].runs[0].bold = True
+            row_cells[1].text = test_plan.screen_design_ref or 'N/A'
+            
+            # Row 2: Description / Scenario
+            row_cells = table.rows[1].cells
+            row_cells[0].text = 'Description / Scenario'
+            row_cells[0].paragraphs[0].runs[0].bold = True
+            scenario_text = ''
+            if test_plan.description:
+                scenario_text = test_plan.description
+            if test_plan.scenario:
+                scenario_text += ('; ' if scenario_text else '') + test_plan.scenario
+            row_cells[1].text = scenario_text or 'N/A'
+            
+            # Row 3: Expected Results
+            row_cells = table.rows[2].cells
+            row_cells[0].text = 'Expected Results'
+            row_cells[0].paragraphs[0].runs[0].bold = True
+            row_cells[1].text = test_plan.expected_results or 'N/A'
+            
+            # Row 4: Procedure (spans both columns)
+            row_cells = table.rows[3].cells
+            row_cells[0].text = 'Procedure:'
+            row_cells[0].paragraphs[0].runs[0].bold = True
+            # Merge cells for procedure
+            merged_cell = row_cells[0].merge(row_cells[1])
+            
+            # Add procedure steps
+            if test_plan.procedure:
+                # Clear the merged cell
+                merged_cell.text = ''
+                # Add "Procedure:" as bold
+                proc_para = merged_cell.paragraphs[0]
+                proc_run = proc_para.add_run('Procedure:')
+                proc_run.bold = True
                 
                 # Add procedure steps
-                if test_plan.procedure:
-                    # Clear the merged cell
-                    merged_cell.text = ''
-                    # Add "Procedure:" as bold
-                    proc_para = merged_cell.paragraphs[0]
-                    proc_run = proc_para.add_run('Procedure:')
-                    proc_run.bold = True
-                    
-                    # Add procedure steps
-                    steps = [step.strip() for step in test_plan.procedure.split('\n') if step.strip()]
-                    for step in steps:
-                        step_para = merged_cell.add_paragraph(step)
-                
-                # Row 5: Remarks
-                row_cells = table.rows[4].cells
-                row_cells[0].text = 'Remarks'
-                row_cells[0].paragraphs[0].runs[0].bold = True
-                
-                # Set remarks based on test status
-                remarks = 'Pending'
-                if test_plan.test_status == 'passed':
-                    remarks = 'Passed'
-                elif test_plan.test_status == 'failed':
-                    remarks = f'Failed - {test_plan.failure_reason}' if test_plan.failure_reason else 'Failed'
-                elif test_plan.test_status == 'skipped':
-                    remarks = 'Skipped'
-                
-                row_cells[1].text = remarks
-                
-                # Add spacing between test plans
-                doc.add_paragraph('')
+                steps = [step.strip() for step in test_plan.procedure.split('\n') if step.strip()]
+                for step in steps:
+                    step_para = merged_cell.add_paragraph(step)
+            
+            # Row 5: Remarks
+            row_cells = table.rows[4].cells
+            row_cells[0].text = 'Remarks'
+            row_cells[0].paragraphs[0].runs[0].bold = True
+            
+            # Set remarks based on test status
+            remarks = 'Pending'
+            if test_plan.test_status == 'passed':
+                remarks = 'Passed'
+            elif test_plan.test_status == 'failed':
+                remarks = f'Failed - {test_plan.failure_reason}' if test_plan.failure_reason else 'Failed'
+            elif test_plan.test_status == 'skipped':
+                remarks = 'Skipped'
+            
+            row_cells[1].text = remarks
+            
+            # Add spacing between test plans
+            doc.add_paragraph('')
         
         # Save to BytesIO
         docx_buffer = io.BytesIO()
