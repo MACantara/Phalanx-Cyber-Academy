@@ -456,11 +456,12 @@ def export_test_plans_docx():
             formatted_module_name = module_name.replace('-', ' ').replace('_', ' ')
             formatted_module_name = ' '.join(word.capitalize() for word in formatted_module_name.split())
             
+            heading = doc.add_heading(f'Test Plan and Results', level=2)
+            
             # Add section heading for each test plan
             for test_plan in test_plans:
                 test_counter += 1
                 # Add heading with test plan section number
-                heading = doc.add_heading(f'5.{test_counter} Test Plan and Results', level=2)
                 heading_para = doc.add_paragraph(f'Test Plan No: {test_plan.test_plan_no or "N/A"}')
                 heading_para.runs[0].bold = True
                 
