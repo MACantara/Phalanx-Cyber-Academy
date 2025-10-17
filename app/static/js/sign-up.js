@@ -1,11 +1,7 @@
-import PasswordStrengthChecker from "./components/password-strength.js";
-import PasswordValidator from "./components/password-validator.js";
-import PasswordVisibility from "./utils/password-visibility.js";
-
 class CyberQuestSignup {
     constructor() {
         this.currentStep = 1;
-        this.totalSteps = 4;
+        this.totalSteps = 3; // Reduced from 4 (removed password step)
         this.formData = {};
         this.validationTimeouts = {}; // For debouncing validation
         this.validationCache = {}; // Cache validation results
@@ -16,42 +12,8 @@ class CyberQuestSignup {
     }
 
     initializeComponents() {
-        // Initialize password visibility utility first
-        this.passwordVisibility = new PasswordVisibility();
-        
         // Initialize timezone detection
         this.initializeTimezoneDetection();
-        
-        // Wait a bit for password visibility toggles to be inserted, then initialize other components
-        setTimeout(() => {
-            // Initialize password strength checker with cybersecurity theme
-            this.strengthChecker = new PasswordStrengthChecker("password", {
-                showMeter: true,
-                showFeedback: true,
-                userInputs: [],
-                customClasses: {
-                    container: 'mt-3 p-3 bg-gray-800/50 rounded-lg border border-purple-500/30',
-                    meter: 'h-2 rounded-full overflow-hidden bg-gray-700',
-                    feedback: 'text-sm text-gray-300 mt-2'
-                }
-            });
-
-            // Initialize password validator
-            this.passwordValidator = new PasswordValidator("password", "confirm_password", {
-                showValidation: true,
-                showMatching: true,
-                minLength: 8,
-                requireUppercase: true,
-                requireLowercase: true,
-                requireNumbers: true,
-                requireSpecialChars: true,
-                customClasses: {
-                    valid: 'text-green-400',
-                    invalid: 'text-red-400',
-                    container: 'mt-2 text-sm'
-                }
-            });
-        }, 100); // Small delay to ensure password visibility is fully initialized
 
         // Get form elements
         this.form = document.getElementById('cyberquest-signup');
@@ -99,11 +61,9 @@ class CyberQuestSignup {
         
         // Form inputs for live validation with debouncing
         this.usernameInput.addEventListener('input', () => {
-            this.updateUserInputs();
             this.debounceValidation('username');
         });
         this.emailInput.addEventListener('input', () => {
-            this.updateUserInputs();
             this.debounceValidation('email');
         });
         
@@ -177,13 +137,6 @@ class CyberQuestSignup {
         return true;
     }
 
-    updateUserInputs() {
-        const userInputs = [];
-        if (this.usernameInput.value) userInputs.push(this.usernameInput.value);
-        if (this.emailInput.value) userInputs.push(this.emailInput.value.split("@")[0]);
-        this.strengthChecker.setUserInputs(userInputs);
-    }
-
     updateSummary() {
         // Only update summary elements if they exist (we might be on an earlier step)
         const summaryUsername = document.getElementById('summary-username');
@@ -244,8 +197,6 @@ class CyberQuestSignup {
                 return this.validateStep2();
             case 3:
                 return this.validateStep3();
-            case 4:
-                return this.validateStep4();
             default:
                 return true;
         }
@@ -313,81 +264,7 @@ class CyberQuestSignup {
         return isValid;
     }
 
-    async validateStep2() {
-        // First check basic password requirements
-        if (!this.passwordValidator.isValid()) {
-            const errors = this.passwordValidator.getValidationErrors();
-            this.showNotification(errors[0] || 'Agent password requirements not met', 'error');
-            return false;
-        }
-        
-        // Get password value
-        const password = document.getElementById('password').value;
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
-        
-        // Check password strength with backend API
-        try {
-            const userInputs = [username, email ? email.split('@')[0] : ''].filter(Boolean);
-            
-            const response = await fetch('/api/check-password-strength', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    password: password,
-                    user_inputs: userInputs
-                })
-            });
-            
-            if (response.ok) {
-                const result = await response.json();
-                
-                // Block if password score is too low (less than 2 = fair)
-                if (result.score < 2) {
-                    let errorMessage = `Password is too weak (${result.strength}). Please create a stronger password.`;
-                    
-                    // Add specific feedback if available
-                    if (result.feedback && result.feedback.warning) {
-                        errorMessage += ` ${result.feedback.warning}`;
-                    }
-                    
-                    // Add first suggestion if available
-                    if (result.feedback && result.feedback.suggestions && result.feedback.suggestions.length > 0) {
-                        errorMessage += ` Suggestion: ${result.feedback.suggestions[0]}`;
-                    }
-                    
-                    this.showNotification(errorMessage, 'error');
-                    return false;
-                }
-                
-                // Check for common password patterns specifically
-                if (result.feedback && result.feedback.warning) {
-                    const warningLower = result.feedback.warning.toLowerCase();
-                    if (warningLower.includes('common') || 
-                        warningLower.includes('dictionary') || 
-                        warningLower.includes('keyboard') ||
-                        warningLower.includes('repeated') ||
-                        warningLower.includes('predictable')) {
-                        
-                        this.showNotification(`Password contains common patterns: ${result.feedback.warning}`, 'error');
-                        return false;
-                    }
-                }
-                
-            } else {
-                console.warn('Password strength check failed, falling back to basic validation');
-            }
-        } catch (error) {
-            console.warn('Password strength check error, falling back to basic validation:', error);
-        }
-        
-        this.showNotification('Agent password created successfully!', 'success');
-        return true;
-    }
-
-    validateStep3() {
+    validateStep2() {
         const selectedFocus = document.querySelector('input[name="focus"]:checked');
         if (!selectedFocus) {
             this.showNotification('Please select your experience level', 'error');
@@ -398,13 +275,12 @@ class CyberQuestSignup {
         return true;
     }
 
-    validateStep4() {
+    validateStep3() {
         const termsChecked = document.getElementById('terms-agreement').checked;
         if (!termsChecked) {
             this.showNotification('Please accept the terms and conditions', 'error');
             return false;
         }
-        
         
         return true;
     }
@@ -471,8 +347,8 @@ class CyberQuestSignup {
             }
         });
         
-        // Update summary when reaching the final step (step 4)
-        if (this.currentStep === 4) {
+        // Update summary when reaching the final step (step 3)
+        if (this.currentStep === 3) {
             this.updateSummary();
         }
     }
