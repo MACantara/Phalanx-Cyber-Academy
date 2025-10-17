@@ -1,0 +1,196 @@
+name: Playwright Automated Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  test:
+    name: Run Playwright Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12']
+        test-suite: ['smoke', 'public', 'auth']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Install Playwright browsers
+      run: |
+        playwright install chromium
+        playwright install-deps chromium
+    
+    - name: Start Flask application
+      run: |
+        # Create minimal .env for testing
+        echo "FLASK_ENV=testing" > .env
+        echo "SECRET_KEY=test-secret-key-for-ci" >> .env
+        echo "DISABLE_DATABASE=True" >> .env
+        
+        # Start Flask app in background
+        python run.py &
+        
+        # Wait for app to be ready
+        sleep 5
+        
+        # Check if app is running
+        curl -f http://localhost:5000/ || exit 1
+      env:
+        FLASK_ENV: testing
+    
+    - name: Run ${{ matrix.test-suite }} tests
+      run: |
+        if [ "${{ matrix.test-suite }}" = "smoke" ]; then
+          pytest -m smoke -v --tb=short
+        else
+          python run_tests.py --${{ matrix.test-suite }} -v
+        fi
+      env:
+        TEST_BASE_URL: http://localhost:5000
+    
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ matrix.test-suite }}-py${{ matrix.python-version }}
+        path: |
+          test-results/
+          tests/screenshots/
+        retention-days: 30
+    
+    - name: Upload Playwright traces
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-traces-${{ matrix.test-suite }}
+        path: test-results/
+        retention-days: 7
+
+  test-coverage:
+    name: Generate Test Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest-cov
+    
+    - name: Install Playwright browsers
+      run: |
+        playwright install chromium
+        playwright install-deps chromium
+    
+    - name: Start Flask application
+      run: |
+        echo "FLASK_ENV=testing" > .env
+        echo "SECRET_KEY=test-secret-key-for-ci" >> .env
+        echo "DISABLE_DATABASE=True" >> .env
+        python run.py &
+        sleep 5
+        curl -f http://localhost:5000/ || exit 1
+      env:
+        FLASK_ENV: testing
+    
+    - name: Run tests with coverage
+      run: |
+        pytest -m smoke --cov=app --cov-report=xml --cov-report=html -v
+      env:
+        TEST_BASE_URL: http://localhost:5000
+    
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-reports
+        path: |
+          coverage.xml
+          htmlcov/
+        retention-days: 30
+    
+    - name: Comment coverage on PR
+      if: github.event_name == 'pull_request'
+      uses: py-cov-action/python-coverage-comment-action@v3
+      with:
+        GITHUB_TOKEN: ${{ github.token }}
+
+  test-all:
+    name: Run All Tests (Full Suite)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
+    timeout-minutes: 60
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Install Playwright browsers
+      run: |
+        playwright install
+        playwright install-deps
+    
+    - name: Start Flask application
+      run: |
+        echo "FLASK_ENV=testing" > .env
+        echo "SECRET_KEY=test-secret-key-for-ci" >> .env
+        echo "DISABLE_DATABASE=True" >> .env
+        python run.py &
+        sleep 5
+        curl -f http://localhost:5000/ || exit 1
+      env:
+        FLASK_ENV: testing
+    
+    - name: Run all tests
+      run: |
+        pytest -v --tb=short
+      env:
+        TEST_BASE_URL: http://localhost:5000
+    
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-full-suite
+        path: |
+          test-results/
+          tests/screenshots/
+        retention-days: 30

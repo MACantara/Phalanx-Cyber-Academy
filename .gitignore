@@ -181,3 +181,11 @@ cython_debug/
 .cursorindexingignore
 
 migrations/
+
+# Testing artifacts
+tests/screenshots/
+test-results/
+playwright-report/
+.pytest_cache/
+*.pyc
+__pycache__/
