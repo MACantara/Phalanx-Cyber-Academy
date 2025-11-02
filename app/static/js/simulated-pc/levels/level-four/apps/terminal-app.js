@@ -314,14 +314,16 @@ export class TerminalApp extends WindowBase {
     scrollInputIntoView() {
         const inputArea = this.windowElement?.querySelector('#terminal-input-area');
         if (inputArea) {
-            // Use a timeout to ensure keyboard is visible before scrolling
+            // Wait 100ms for keyboard animation to start before scrolling
+            // This ensures the viewport has adjusted before we calculate scroll position
+            const KEYBOARD_ANIMATION_DELAY = 100;
             setTimeout(() => {
                 inputArea.scrollIntoView({ 
                     behavior: 'smooth', 
                     block: 'end',
                     inline: 'nearest'
                 });
-            }, 100);
+            }, KEYBOARD_ANIMATION_DELAY);
         }
     }
 
@@ -334,7 +336,9 @@ export class TerminalApp extends WindowBase {
         if (window.visualViewport) {
             const viewportHeight = window.visualViewport.height;
             const windowHeight = window.innerHeight;
-            const keyboardVisible = viewportHeight < windowHeight * 0.75;
+            // Threshold: keyboard is considered visible if viewport shrinks to less than 75% of window height
+            const KEYBOARD_VISIBILITY_THRESHOLD = 0.75;
+            const keyboardVisible = viewportHeight < windowHeight * KEYBOARD_VISIBILITY_THRESHOLD;
 
             if (keyboardVisible) {
                 // Add bottom padding when keyboard is visible to ensure input is visible

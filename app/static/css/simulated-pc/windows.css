@@ -313,7 +313,10 @@
         z-index: 10;
     }
     
-    /* Ensure terminal output has proper scrolling on mobile */
+    /* Ensure terminal output has proper scrolling on mobile 
+     * 12rem accounts for: header (3rem) + input area (3rem) + padding (6rem)
+     * This prevents terminal content from being hidden behind keyboard
+     */
     #terminal-output {
         max-height: calc(100vh - 12rem);
         overflow-y: auto;
