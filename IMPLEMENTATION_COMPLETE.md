@@ -26,12 +26,20 @@ Successfully implemented cookie-based authentication persistence for the Phalanx
 
 ## Key Implementation Details
 
-### Session Persistence
+### Persistent Sessions by Default (No "Remember Me" Button)
+The implementation provides persistent sessions for ALL users by default:
+
 ```python
 # After successful authentication:
-login_user(user, remember=True)
+login_user(user, remember=True)  # Always remember
 session.permanent = True  # Enables persistent cookie
 ```
+
+**Why no "Remember Me" checkbox?**
+- Better UX - users expect to stay logged in
+- Industry standard for modern web apps
+- Simplified login flow
+- Security maintained through proper timeouts and logout functionality
 
 ### Cookie Security Settings (Already Configured)
 - **HttpOnly**: `True` - Prevents XSS attacks

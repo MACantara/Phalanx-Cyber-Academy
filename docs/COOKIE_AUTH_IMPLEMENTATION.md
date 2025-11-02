@@ -6,10 +6,12 @@ This document describes the implementation of cookie-based authentication persis
 
 ## What Was Implemented
 
-### 1. Session Persistence
+### 1. Persistent Sessions by Default
+- All user sessions are persistent by default - no "Remember Me" checkbox needed
 - Modified `app/routes/auth.py` to set `session.permanent = True` after successful login
-- This ensures Flask sessions persist across browser restarts
-- Applied to both login flow (`verify_code`) and signup flow (`verify_signup_code`)
+- Set `remember=True` in `login_user()` for both login and signup flows
+- This ensures Flask sessions persist across browser restarts automatically
+- Users remain logged in until they explicitly log out or the session expires
 
 ### 2. Cookie Configuration
 Cookie settings are already properly configured in `config.py`:
@@ -147,13 +149,19 @@ The implementation uses standard HTTP cookies and Flask-Login, which are support
 - Safari
 - Mobile browsers
 
-## Future Enhancements
+## Design Decision: No "Remember Me" Checkbox
 
-Potential improvements for future iterations:
-1. **Remember Me Checkbox**: Add UI toggle to let users choose session duration
-2. **Activity-Based Renewal**: Extend session on user activity
-3. **Multi-Device Session Management**: Track and manage sessions across devices
-4. **Session Analytics**: Log session creation, duration, and termination
+This implementation provides persistent sessions by default for all users without requiring a "Remember Me" checkbox. This design decision was made for the following reasons:
+
+1. **Better User Experience**: Users expect to remain logged in when they return to a web application
+2. **Industry Standard**: Most modern web applications (Gmail, GitHub, banking apps) maintain sessions by default
+3. **Simplified UX**: Reduces friction in the login process
+4. **Secure Implementation**: Security is maintained through:
+   - Configurable session timeouts (7 days dev, 2 hours serverless)
+   - Explicit logout functionality
+   - Secure cookie flags (HttpOnly, SameSite, Secure)
+
+Users who want to ensure they're logged out can simply click the logout button, which properly clears all session data.
 
 ## References
 
