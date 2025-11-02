@@ -174,9 +174,10 @@ def verify_code():
             # Record successful login
             record_login_attempt(email, success=True)
             
-            # Log in user
-            remember_me = session.get('remember_me', False)
+            # Log in user with persistent session
+            remember_me = session.get('remember_me', True)  # Default to True for persistence
             login_user(user, remember=remember_me)
+            session.permanent = True  # Make session persistent across browser restarts
             user.update_last_login()
             
             # Clear session data
@@ -339,8 +340,9 @@ def verify_signup_code():
             session.pop('signup_email', None)
             session.pop('signup_user_id', None)
             
-            # Log in user
-            login_user(user)
+            # Log in user with persistent session
+            login_user(user, remember=True)
+            session.permanent = True  # Make session persistent across browser restarts
             user.update_last_login()
             
             # Redirect to onboarding
@@ -399,6 +401,7 @@ def onboarding():
 @login_required
 def logout():
     logout_user()
+    session.clear()  # Explicitly clear all session data
     flash('You have been logged out successfully.', 'success')
     return redirect(url_for('main.home'))
 
