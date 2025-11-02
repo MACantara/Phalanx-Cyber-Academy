@@ -21,10 +21,10 @@
                     <!-- Content -->
                     <tr>
                         <td style="padding: 40px;">
-                            <h2 style="margin: 0 0 20px 0; color: #1f2937; font-size: 24px;">Hello {{ contact.name }},</h2>
+                            <h2 style="margin: 0 0 20px 0; color: #1f2937; font-size: 24px;">Hello {{ contact.name or 'there' }},</h2>
                             
                             <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.6;">
-                                Thank you for contacting us! We have received your message regarding "<strong>{{ contact.subject }}</strong>" and will get back to you as soon as possible.
+                                Thank you for contacting us! We have received your message regarding "<strong>{{ contact.subject or 'your inquiry' }}</strong>" and will get back to you as soon as possible.
                             </p>
                             
                             <div style="background-color: #f8fafc; border-left: 4px solid #2563eb; padding: 20px; margin: 30px 0; border-radius: 4px;">

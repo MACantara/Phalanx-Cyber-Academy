@@ -31,7 +31,7 @@
                     </label>
                     <input type="text" id="username" name="username" required
                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:shadow-md"
-                           placeholder="Enter your username" value="{{ user.username }}">
+                           placeholder="Enter your username" value="{{ user.username or '' }}">
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">3-30 characters, letters, numbers and underscores only</p>
                 </div>
 
@@ -42,7 +42,7 @@
                     </label>
                     <input type="email" id="email" name="email" required
                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 hover:shadow-md"
-                           placeholder="Enter your email address" value="{{ user.email }}">
+                           placeholder="Enter your email address" value="{{ user.email or '' }}">
                 </div>
 
                 <!-- Timezone -->

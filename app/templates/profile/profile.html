@@ -53,7 +53,7 @@
                         <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-600 hover:shadow-md overflow-hidden">
                             <div class="flex items-center min-w-0">
                                 <i class="bi bi-person mr-2 text-gray-500 dark:text-gray-400 flex-shrink-0"></i>
-                                <span class="truncate">{{ user.username }}</span>
+                                <span class="truncate">{{ user.username or 'N/A' }}</span>
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                         <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-600 hover:shadow-md overflow-hidden">
                             <div class="flex items-center min-w-0">
                                 <i class="bi bi-envelope mr-2 text-gray-500 dark:text-gray-400 flex-shrink-0"></i>
-                                <span class="truncate">{{ user.email }}</span>
+                                <span class="truncate">{{ user.email or 'N/A' }}</span>
                             </div>
                         </div>
                     </div>

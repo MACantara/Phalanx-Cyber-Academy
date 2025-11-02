@@ -27,13 +27,13 @@
                                 <tr>
                                     <td style="padding: 15px 0; border-bottom: 1px solid #e5e7eb;">
                                         <strong style="color: #374151; font-size: 16px;">From:</strong>
-                                        <span style="margin-left: 10px; font-size: 16px;">{{ contact.name }} &lt;{{ contact.email }}&gt;</span>
+                                        <span style="margin-left: 10px; font-size: 16px;">{{ contact.name or 'Unknown' }} &lt;{{ contact.email or 'unknown@email.com' }}&gt;</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 15px 0; border-bottom: 1px solid #e5e7eb;">
                                         <strong style="color: #374151; font-size: 16px;">Subject:</strong>
-                                        <span style="margin-left: 10px; font-size: 16px;">{{ contact.subject }}</span>
+                                        <span style="margin-left: 10px; font-size: 16px;">{{ contact.subject or 'No Subject' }}</span>
                                     </td>
                                 </tr>
                             </table>
