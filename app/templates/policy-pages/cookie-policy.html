@@ -138,9 +138,9 @@
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             <tr>
                                 <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-300 font-mono">session</td>
-                                <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">User authentication and session management</td>
+                                <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">User authentication and session management (auto-extends with activity)</td>
                                 <td class="px-4 py-3 text-sm"><span class="px-2 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full text-xs">Essential</span></td>
-                                <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">7 days</td>
+                                <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">30 days*</td>
                             </tr>
                             <tr>
                                 <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-300 font-mono">theme</td>
@@ -152,10 +152,28 @@
                                 <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-300 font-mono">csrf_token</td>
                                 <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Cross-site request forgery protection</td>
                                 <td class="px-4 py-3 text-sm"><span class="px-2 py-1 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-full text-xs">Security</span></td>
-                                <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">Session</td>
+                                <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">1 hour</td>
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6 mb-6">
+                    <div class="flex items-start">
+                        <i class="bi bi-info-circle text-blue-600 dark:text-blue-400 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-2">Session Auto-Extension</h4>
+                            <p class="text-blue-800 dark:text-blue-200 text-sm mb-2">
+                                <strong>*</strong> Your session cookie automatically extends its lifetime each time you interact with our website. This means:
+                            </p>
+                            <ul class="text-blue-700 dark:text-blue-300 text-sm space-y-1 ml-4">
+                                <li>• If you remain active on the site, you'll stay logged in</li>
+                                <li>• The 30-day countdown resets with each page visit or action</li>
+                                <li>• You'll only be logged out after 30 days of complete inactivity</li>
+                                <li>• On serverless deployments (Vercel), the duration is 7 days for performance optimization</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">5. Third-Party Cookies</h2>

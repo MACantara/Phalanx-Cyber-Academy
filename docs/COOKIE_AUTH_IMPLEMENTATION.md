@@ -20,8 +20,8 @@ Cookie settings are already properly configured in `config.py`:
 - **SameSite**: `Lax` - Prevents CSRF attacks
 - **Secure**: Environment-dependent (True for Vercel/Production, False for local dev)
 - **Lifetime**: 
-  - Development: 7 days (configurable via `PERMANENT_SESSION_LIFETIME`)
-  - Vercel/Serverless: 2 hours (optimized for serverless)
+  - Development: 30 days (configurable via `PERMANENT_SESSION_LIFETIME`)
+  - Vercel/Serverless: 7 days (optimized for serverless)
 
 ### 3. Logout Behavior
 - Enhanced logout function to call `session.clear()` explicitly

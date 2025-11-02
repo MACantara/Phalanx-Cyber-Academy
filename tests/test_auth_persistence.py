@@ -40,7 +40,7 @@ def app():
     app = create_app('testing')
     app.config['TESTING'] = True
     app.config['WTF_CSRF_ENABLED'] = False
-    app.config['PERMANENT_SESSION_LIFETIME'] = 604800  # 7 days in seconds
+    app.config['PERMANENT_SESSION_LIFETIME'] = 2592000  # 30 days in seconds
     
     yield app
 
