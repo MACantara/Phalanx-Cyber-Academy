@@ -97,10 +97,13 @@ def browser_type_launch_args():
     """Configure browser launch arguments"""
     return {
         'headless': True,  # Set to False for debugging
+        'slow_mo': 100,  # Slow down operations by 100ms for stability
         'args': [
             '--disable-blink-features=AutomationControlled',
             '--disable-dev-shm-usage',
             '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-gpu',
         ]
     }
 

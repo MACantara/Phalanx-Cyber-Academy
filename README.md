@@ -304,7 +304,37 @@ See the [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
 - **Database**: SQLite (dev), PostgreSQL/MySQL (production)
 - **Security**: Argon2, Flask-WTF, CSRF Protection
 - **Email**: Flask-Mail with SMTP support
+- **Testing**: Pytest, Playwright (E2E testing for all 37 modules)
 - **Deployment**: Vercel, traditional hosting
+
+## 🧪 Testing
+
+The project includes comprehensive automated testing with Playwright covering all 37 system modules:
+
+- **Public Pages** (8 tests): Home, About, Contact, Privacy, Terms, Cookies, Login, Sign Up
+- **User Management** (4 tests): Email verification, Profile, Dashboard
+- **Admin Panel** (18 tests): Dashboard, Analytics, User management, Logs, Backups, System tests
+- **Learning Levels** (6 tests): All 5 cybersecurity levels plus overview
+- **Game Modes** (1 test): Blue Team vs Red Team mode
+
+### Running Tests
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+playwright install chromium
+
+# Run all tests
+pytest tests/ -v
+
+# Run specific test categories
+pytest tests/ -m public      # Public pages only
+pytest tests/ -m admin       # Admin panel only
+pytest tests/ -m levels      # Learning levels only
+pytest tests/ -m smoke       # Smoke tests only
+```
+
+See [tests/QUICK_START.md](tests/QUICK_START.md) for detailed testing guide.
 
 ## 🎓 Educational Impact
 
