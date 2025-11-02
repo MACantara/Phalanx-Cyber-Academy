@@ -37,8 +37,8 @@ login_user(user, remember=remember_me)
 user.update_last_login()
 
 # After
-remember_me = session.get('remember_me', True)  # Default to True
-login_user(user, remember=remember_me)
+# Always use persistent sessions for better UX
+login_user(user, remember=True)
 session.permanent = True  # Make session persistent
 user.update_last_login()
 ```
@@ -50,6 +50,7 @@ login_user(user)
 user.update_last_login()
 
 # After
+# Always use persistent sessions for better UX
 login_user(user, remember=True)
 session.permanent = True  # Make session persistent
 user.update_last_login()

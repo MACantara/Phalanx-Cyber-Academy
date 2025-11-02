@@ -175,15 +175,14 @@ def verify_code():
             record_login_attempt(email, success=True)
             
             # Log in user with persistent session
-            remember_me = session.get('remember_me', True)  # Default to True for persistence
-            login_user(user, remember=remember_me)
+            # Always use persistent sessions for better UX
+            login_user(user, remember=True)
             session.permanent = True  # Make session persistent across browser restarts
             user.update_last_login()
             
-            # Clear session data
+            # Clear temporary session data from verification process
             session.pop('login_email', None)
             session.pop('verification_id', None)
-            session.pop('remember_me', None)
             
             # Check if user needs onboarding
             if user.needs_onboarding():

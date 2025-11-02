@@ -9,13 +9,34 @@ from app.models.user import User
 from app.models.email_verification import EmailVerification
 
 
-@pytest.fixture
-def app():
-    """Create application for testing"""
-    # Set mock Supabase credentials for testing
+@pytest.fixture(scope='session', autouse=True)
+def setup_test_env():
+    """Set up test environment variables before tests run"""
+    # Store original values
+    original_supabase_url = os.environ.get('SUPABASE_URL')
+    original_supabase_key = os.environ.get('SUPABASE_SERVICE_ROLE_KEY')
+    
+    # Set test values
     os.environ['SUPABASE_URL'] = 'https://mock.supabase.co'
     os.environ['SUPABASE_SERVICE_ROLE_KEY'] = 'mock-key-for-testing-only'
     
+    yield
+    
+    # Restore original values after all tests complete
+    if original_supabase_url:
+        os.environ['SUPABASE_URL'] = original_supabase_url
+    else:
+        os.environ.pop('SUPABASE_URL', None)
+        
+    if original_supabase_key:
+        os.environ['SUPABASE_SERVICE_ROLE_KEY'] = original_supabase_key
+    else:
+        os.environ.pop('SUPABASE_SERVICE_ROLE_KEY', None)
+
+
+@pytest.fixture
+def app():
+    """Create application for testing"""
     app = create_app('testing')
     app.config['TESTING'] = True
     app.config['WTF_CSRF_ENABLED'] = False
