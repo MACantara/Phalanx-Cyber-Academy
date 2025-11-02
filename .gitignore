@@ -51,6 +51,13 @@ coverage.xml
 .pytest_cache/
 cover/
 
+# Playwright test artifacts
+test-results/
+playwright-report/
+screenshots/
+videos/
+traces/
+
 # Translations
 *.mo
 *.pot

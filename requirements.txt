@@ -24,6 +24,8 @@ gunicorn
 # Testing
 pytest
 pytest-flask
+pytest-playwright
+playwright
 
 # HTTP client for external API requests
 Requests
