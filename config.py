@@ -75,19 +75,20 @@ class Config:
     MAIL_DEBUG = os.environ.get('MAIL_DEBUG', 'false').lower() in ['true', 'on', '1']
     MAIL_SUPPRESS_SEND = os.environ.get('MAIL_SUPPRESS_SEND', 'false').lower() in ['true', 'on', '1']
     
-    # Session configuration for serverless compatibility
-    PERMANENT_SESSION_LIFETIME = timedelta(days=int(os.environ.get('PERMANENT_SESSION_LIFETIME', 7)))  # Shorter for serverless
+    # Session configuration - sessions auto-extend with activity
+    PERMANENT_SESSION_LIFETIME = timedelta(days=int(os.environ.get('PERMANENT_SESSION_LIFETIME', 30)))  # 30 days, extends with activity
     SESSION_COOKIE_SECURE = IS_VERCEL  # True for Vercel (HTTPS), False for local dev
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
     SESSION_COOKIE_NAME = 'cyberquest_session'
+    SESSION_REFRESH_EACH_REQUEST = True  # Session lifetime extends with each request
     
     # Serverless-specific session settings
     if IS_VERCEL:
         # More permissive CSRF settings for serverless
         WTF_CSRF_SSL_STRICT = False
-        # Shorter session lifetime for serverless
-        PERMANENT_SESSION_LIFETIME = timedelta(hours=2)
+        # Shorter session lifetime for serverless (but still reasonable)
+        PERMANENT_SESSION_LIFETIME = timedelta(days=7)  # 7 days for serverless, extends with activity
     
     # Application settings
     POSTS_PER_PAGE = int(os.environ.get('POSTS_PER_PAGE', 10))
@@ -160,7 +161,8 @@ class VercelConfig(ProductionConfig):
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
     SESSION_COOKIE_NAME = 'cyberquest_session'
-    PERMANENT_SESSION_LIFETIME = timedelta(hours=2)  # Shorter for serverless
+    SESSION_REFRESH_EACH_REQUEST = True  # Session lifetime extends with each request
+    PERMANENT_SESSION_LIFETIME = timedelta(days=7)  # 7 days for serverless, extends with activity
     
     # Enable database functionality with supabase credentials (for Vercel)
     DISABLE_DATABASE = False
@@ -186,7 +188,8 @@ class RenderConfig(ProductionConfig):
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
     SESSION_COOKIE_NAME = 'cyberquest_session'
-    PERMANENT_SESSION_LIFETIME = timedelta(days=7)  # Full server can handle longer sessions
+    SESSION_REFRESH_EACH_REQUEST = True  # Session lifetime extends with each request
+    PERMANENT_SESSION_LIFETIME = timedelta(days=30)  # 30 days, extends with activity
     
     # Enable database functionality with supabase credentials
     DISABLE_DATABASE = False

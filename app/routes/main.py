@@ -6,7 +6,7 @@ main_bp = Blueprint('main', __name__)
 
 def get_policy_dates():
     """Helper function to get consistent policy dates across all policy pages."""
-    date_updated = datetime(2025, 9, 18)   # Date format: (YYYY, MM, DD)
+    date_updated = datetime(2025, 11, 3)   # Date format: (YYYY, MM, DD)
     date_effective = date_updated + timedelta(days=14)  # 14 days after update
     return date_updated, date_effective
 
