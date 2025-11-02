@@ -9,6 +9,7 @@ export class TerminalApp extends WindowBase {
         });
         
         this.commandProcessor = null;
+        this.viewportResizeHandler = null;
     }
 
     createContent() {
@@ -83,6 +84,19 @@ export class TerminalApp extends WindowBase {
         this.windowElement?.addEventListener('click', () => {
             this.focusInput();
         });
+
+        // Scroll input into view when focused (mobile keyboard handling)
+        input.addEventListener('focus', () => {
+            this.scrollInputIntoView();
+        });
+
+        // Handle mobile keyboard visibility changes
+        if (window.visualViewport) {
+            this.viewportResizeHandler = () => {
+                this.handleViewportResize();
+            };
+            window.visualViewport.addEventListener('resize', this.viewportResizeHandler);
+        }
     }
 
     handleTabCompletion(input) {
@@ -296,6 +310,47 @@ export class TerminalApp extends WindowBase {
         }
     }
 
+    // Scroll the input area into view when focused (for mobile keyboard)
+    scrollInputIntoView() {
+        const inputArea = this.windowElement?.querySelector('#terminal-input-area');
+        if (inputArea) {
+            // Wait 100ms for keyboard animation to start before scrolling
+            // This ensures the viewport has adjusted before we calculate scroll position
+            const KEYBOARD_ANIMATION_DELAY = 100;
+            setTimeout(() => {
+                inputArea.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'end',
+                    inline: 'nearest'
+                });
+            }, KEYBOARD_ANIMATION_DELAY);
+        }
+    }
+
+    // Handle viewport resize events (mobile keyboard show/hide)
+    handleViewportResize() {
+        const container = this.windowElement?.querySelector('#terminal-container');
+        if (!container) return;
+
+        // Detect if keyboard is likely visible by checking visual viewport height
+        if (window.visualViewport) {
+            const viewportHeight = window.visualViewport.height;
+            const windowHeight = window.innerHeight;
+            // Threshold: keyboard is considered visible if viewport shrinks to less than 75% of window height
+            const KEYBOARD_VISIBILITY_THRESHOLD = 0.75;
+            const keyboardVisible = viewportHeight < windowHeight * KEYBOARD_VISIBILITY_THRESHOLD;
+
+            if (keyboardVisible) {
+                // Add bottom padding when keyboard is visible to ensure input is visible
+                container.style.paddingBottom = `${windowHeight - viewportHeight}px`;
+                this.scrollInputIntoView();
+            } else {
+                // Remove bottom padding when keyboard is hidden
+                container.style.paddingBottom = '';
+            }
+        }
+    }
+
     // Check for CTF flags in terminal output and notify challenge tracker
     checkForFlags(text) {
         // Look for WHT{...} flag pattern
@@ -324,5 +379,15 @@ export class TerminalApp extends WindowBase {
         }
     }
 
+    // Clean up event listeners when window is closed
+    cleanup() {
+        super.cleanup();
+        
+        // Remove viewport resize listener
+        if (this.viewportResizeHandler && window.visualViewport) {
+            window.visualViewport.removeEventListener('resize', this.viewportResizeHandler);
+            this.viewportResizeHandler = null;
+        }
+    }
 
 }
