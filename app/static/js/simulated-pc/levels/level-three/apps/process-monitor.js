@@ -61,7 +61,7 @@ export class ProcessMonitorApp extends WindowBase {
                     </div>
 
                     <!-- Controls -->
-                    <div class="bg-gray-800 px-3 sm:px-4 py-3 border-b border-gray-700">
+                    <div class="bg-gray-800 px-3 sm:px-4 py-3 border-b border-gray-700 relative z-20">
                         <div class="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:items-center sm:justify-between">
                             <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
                                 <button id="refresh-btn" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded transition-colors cursor-pointer touch-manipulation text-sm">
@@ -85,7 +85,7 @@ export class ProcessMonitorApp extends WindowBase {
                     <div class="flex-1 overflow-auto">
                         <div class="overflow-x-auto">
                             <table class="w-full min-w-[600px] text-xs sm:text-sm">
-                                <thead class="bg-gray-800 sticky top-0">
+                                <thead class="bg-gray-800 sticky top-0 z-10">
                                     <tr>
                                         <th class="px-2 sm:px-4 py-2 sm:py-3 text-left cursor-pointer hover:bg-gray-700 sortable touch-manipulation" data-column="name">
                                             <span class="hidden sm:inline">Process Name</span>
