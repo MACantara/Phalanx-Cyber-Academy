@@ -9,6 +9,7 @@ export class TerminalApp extends WindowBase {
         });
         
         this.commandProcessor = null;
+        this.viewportResizeHandler = null;
     }
 
     createContent() {
@@ -91,9 +92,10 @@ export class TerminalApp extends WindowBase {
 
         // Handle mobile keyboard visibility changes
         if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', () => {
+            this.viewportResizeHandler = () => {
                 this.handleViewportResize();
-            });
+            };
+            window.visualViewport.addEventListener('resize', this.viewportResizeHandler);
         }
     }
 
@@ -373,5 +375,15 @@ export class TerminalApp extends WindowBase {
         }
     }
 
+    // Clean up event listeners when window is closed
+    cleanup() {
+        super.cleanup();
+        
+        // Remove viewport resize listener
+        if (this.viewportResizeHandler && window.visualViewport) {
+            window.visualViewport.removeEventListener('resize', this.viewportResizeHandler);
+            this.viewportResizeHandler = null;
+        }
+    }
 
 }
