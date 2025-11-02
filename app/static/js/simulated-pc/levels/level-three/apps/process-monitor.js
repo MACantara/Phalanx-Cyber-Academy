@@ -61,7 +61,7 @@ export class ProcessMonitorApp extends WindowBase {
                     </div>
 
                     <!-- Controls -->
-                    <div class="bg-gray-800 px-3 sm:px-4 py-3 border-b border-gray-700">
+                    <div class="bg-gray-800 px-3 sm:px-4 py-3 border-b border-gray-700 relative z-10">
                         <div class="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:items-center sm:justify-between">
                             <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
                                 <button id="refresh-btn" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded transition-colors cursor-pointer touch-manipulation text-sm">
@@ -85,7 +85,7 @@ export class ProcessMonitorApp extends WindowBase {
                     <div class="flex-1 overflow-auto">
                         <div class="overflow-x-auto">
                             <table class="w-full min-w-[600px] text-xs sm:text-sm">
-                                <thead class="bg-gray-800 sticky top-0">
+                                <thead class="bg-gray-800 sticky top-0 z-[5]">
                                     <tr>
                                         <th class="px-2 sm:px-4 py-2 sm:py-3 text-left cursor-pointer hover:bg-gray-700 sortable touch-manipulation" data-column="name">
                                             <span class="hidden sm:inline">Process Name</span>
@@ -163,7 +163,7 @@ export class ProcessMonitorApp extends WindowBase {
         const riskFactors = process.riskFactors || [];
         
         return `
-            <div class="w-full lg:w-96 bg-gray-800 border-t lg:border-t-0 lg:border-l border-gray-700 flex flex-col">
+            <div class="w-full lg:w-96 bg-gray-800 border-t lg:border-t-0 lg:border-l border-gray-700 flex flex-col relative z-0">
                 <!-- Details Header -->
                 <div class="bg-gray-700 px-3 sm:px-4 py-3 border-b border-gray-600">
                     <h3 class="font-semibold flex items-center text-sm sm:text-base">
@@ -236,7 +236,7 @@ export class ProcessMonitorApp extends WindowBase {
                 </div>
 
                 <!-- Actions -->
-                <div class="p-3 sm:p-4 border-t border-gray-600">
+                <div class="p-3 sm:p-4 border-t border-gray-600 relative z-10">
                     <div class="space-y-2">
                         <button id="flag-btn" class="w-full px-3 py-2 bg-yellow-600 hover:bg-yellow-700 active:bg-yellow-800 rounded transition-colors cursor-pointer touch-manipulation text-sm">
                             <i class="bi bi-flag mr-1 sm:mr-2"></i>Flag as Suspicious
@@ -615,40 +615,69 @@ export class ProcessMonitorApp extends WindowBase {
     bindEvents() {
         if (!this.windowElement) return;
 
-        // Control buttons
-        const refreshBtn = this.windowElement.querySelector('#refresh-btn');
-        const flagBtn = this.windowElement.querySelector('#flag-suspicious-btn');
-        const killBtn = this.windowElement.querySelector('#kill-process-btn');
-
-        refreshBtn?.addEventListener('click', () => this.refreshProcesses());
-        flagBtn?.addEventListener('click', () => {
-            if (this.selectedProcess) this.flagProcess(this.selectedProcess.pid);
-        });
-        killBtn?.addEventListener('click', () => {
-            if (this.selectedProcess) this.killProcess(this.selectedProcess.pid);
-        });
-
-        // Process row selection
+        // Use event delegation for all buttons so they work after content updates
         this.windowElement.addEventListener('click', (e) => {
+            // Upper control buttons
+            if (e.target.matches('#refresh-btn, #refresh-btn *')) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.refreshProcesses();
+                return;
+            }
+            
+            if (e.target.matches('#flag-suspicious-btn, #flag-suspicious-btn *')) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (this.selectedProcess) {
+                    this.flagProcess(this.selectedProcess.pid);
+                }
+                return;
+            }
+            
+            if (e.target.matches('#kill-process-btn, #kill-process-btn *')) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (this.selectedProcess) {
+                    this.killProcess(this.selectedProcess.pid);
+                }
+                return;
+            }
+
+            // Process row selection
             const row = e.target.closest('.process-row');
             if (row) {
                 const pid = row.dataset.pid;
                 this.selectProcess(pid);
+                return;
             }
 
             // Sort headers
             if (e.target.matches('.sortable, .sortable *')) {
                 const header = e.target.closest('.sortable');
                 const column = header?.dataset.column;
-                if (column) this.sortBy(column);
+                if (column) {
+                    this.sortBy(column);
+                }
+                return;
             }
 
             // Details panel buttons
             if (e.target.matches('#flag-btn, #flag-btn *')) {
-                if (this.selectedProcess) this.flagProcess(this.selectedProcess.pid);
+                e.preventDefault();
+                e.stopPropagation();
+                if (this.selectedProcess) {
+                    this.flagProcess(this.selectedProcess.pid);
+                }
+                return;
             }
+            
             if (e.target.matches('#kill-btn, #kill-btn *')) {
-                if (this.selectedProcess) this.killProcess(this.selectedProcess.pid);
+                e.preventDefault();
+                e.stopPropagation();
+                if (this.selectedProcess) {
+                    this.killProcess(this.selectedProcess.pid);
+                }
+                return;
             }
         });
     }
