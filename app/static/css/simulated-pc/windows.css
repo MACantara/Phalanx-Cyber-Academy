@@ -296,3 +296,33 @@
     background-color: rgba(59, 130, 246, 0.2);
     transition: opacity 0.2s ease-in-out;
 }
+
+/* Mobile terminal input handling - prevent keyboard overlap */
+@media (max-width: 768px) {
+    #terminal-container {
+        position: relative;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #terminal-input-area {
+        position: sticky;
+        bottom: 0;
+        background-color: #000000;
+        padding-bottom: env(safe-area-inset-bottom);
+        z-index: 10;
+    }
+    
+    /* Ensure terminal output has proper scrolling on mobile */
+    #terminal-output {
+        max-height: calc(100vh - 12rem);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Ensure input is always visible on focus */
+#command-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.5);
+}

@@ -83,6 +83,18 @@ export class TerminalApp extends WindowBase {
         this.windowElement?.addEventListener('click', () => {
             this.focusInput();
         });
+
+        // Scroll input into view when focused (mobile keyboard handling)
+        input.addEventListener('focus', () => {
+            this.scrollInputIntoView();
+        });
+
+        // Handle mobile keyboard visibility changes
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => {
+                this.handleViewportResize();
+            });
+        }
     }
 
     handleTabCompletion(input) {
@@ -293,6 +305,43 @@ export class TerminalApp extends WindowBase {
         const output = this.windowElement?.querySelector('#terminal-output');
         if (output) {
             output.scrollTop = output.scrollHeight;
+        }
+    }
+
+    // Scroll the input area into view when focused (for mobile keyboard)
+    scrollInputIntoView() {
+        const inputArea = this.windowElement?.querySelector('#terminal-input-area');
+        if (inputArea) {
+            // Use a timeout to ensure keyboard is visible before scrolling
+            setTimeout(() => {
+                inputArea.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'end',
+                    inline: 'nearest'
+                });
+            }, 100);
+        }
+    }
+
+    // Handle viewport resize events (mobile keyboard show/hide)
+    handleViewportResize() {
+        const container = this.windowElement?.querySelector('#terminal-container');
+        if (!container) return;
+
+        // Detect if keyboard is likely visible by checking visual viewport height
+        if (window.visualViewport) {
+            const viewportHeight = window.visualViewport.height;
+            const windowHeight = window.innerHeight;
+            const keyboardVisible = viewportHeight < windowHeight * 0.75;
+
+            if (keyboardVisible) {
+                // Add bottom padding when keyboard is visible to ensure input is visible
+                container.style.paddingBottom = `${windowHeight - viewportHeight}px`;
+                this.scrollInputIntoView();
+            } else {
+                // Remove bottom padding when keyboard is hidden
+                container.style.paddingBottom = '';
+            }
         }
     }
 
