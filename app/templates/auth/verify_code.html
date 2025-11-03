@@ -10,6 +10,16 @@
         font-family: 'Courier New', monospace;
         font-weight: bold;
     }
+    
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+    
+    .animate-shake {
+        animation: shake 0.3s ease-in-out;
+    }
 </style>
 {% endblock %}
 
@@ -233,6 +243,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Show loading state
+    function showLoadingState() {
+        verifyBtn.disabled = true;
+        verifyIcon.classList.add('hidden');
+        verifySpinner.classList.remove('hidden');
+        verifyText.textContent = 'Verifying...';
+        
+        // Disable all inputs
+        digitInputs.forEach(input => {
+            input.disabled = true;
+            input.classList.add('opacity-50', 'cursor-not-allowed');
+        });
+    }
+    
+    // Auto-submit after delay for better UX
+    function autoSubmitWithDelay() {
+        setTimeout(() => {
+            showLoadingState();
+            form.submit();
+        }, 200);
+    }
+    
     // Handle input in each box
     digitInputs.forEach((input, index) => {
         input.addEventListener('input', function(e) {
@@ -251,11 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Auto-submit when all 6 digits entered
             const code = getCode();
             if (code.length === 6) {
-                // Add a small delay for better UX
-                setTimeout(() => {
-                    showLoadingState();
-                    form.submit();
-                }, 200);
+                autoSubmitWithDelay();
             }
         });
         
@@ -282,10 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateHiddenInput();
                 
                 // Auto-submit after paste
-                setTimeout(() => {
-                    showLoadingState();
-                    form.submit();
-                }, 200);
+                autoSubmitWithDelay();
             }
         });
         
@@ -329,23 +354,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         showLoadingState();
     });
-    
-    // Add shake animation CSS if not exists
-    if (!document.querySelector('#shake-animation')) {
-        const style = document.createElement('style');
-        style.id = 'shake-animation';
-        style.textContent = `
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-10px); }
-                75% { transform: translateX(10px); }
-            }
-            .animate-shake {
-                animation: shake 0.3s ease-in-out;
-            }
-        `;
-        document.head.appendChild(style);
-    }
 });
 </script>
 {% endblock %}
