@@ -397,12 +397,51 @@ def onboarding():
     return render_template('auth/onboarding.html')
 
 @auth_bp.route('/logout')
-@login_required
 def logout():
-    logout_user()
-    session.clear()  # Explicitly clear all session data
+    """
+    Logout route - does not require @login_required
+    This allows logout to work even if session is expired/invalid
+    """
+    if current_user.is_authenticated:
+        logout_user()
+    
+    # Always clear session data regardless of auth state
+    session.clear()
+    
+    # Set flash message
     flash('You have been logged out successfully.', 'success')
-    return redirect(url_for('main.home'))
+    
+    # Redirect to home
+    response = redirect(url_for('main.home'))
+    
+    # Explicitly clear all authentication-related cookies
+    # Clear the session cookie
+    response.set_cookie(
+        'cyberquest_session', 
+        '', 
+        expires=0,
+        max_age=0,
+        path='/',
+        domain=None,
+        secure=request.is_secure,
+        httponly=True, 
+        samesite='Lax'
+    )
+    
+    # Clear Flask-Login's remember me cookie
+    response.set_cookie(
+        'remember_token',
+        '',
+        expires=0,
+        max_age=0,
+        path='/',
+        domain=None,
+        secure=request.is_secure,
+        httponly=True,
+        samesite='Lax'
+    )
+    
+    return response
 
 @auth_bp.route('/check-availability', methods=['POST'])
 def check_availability():
