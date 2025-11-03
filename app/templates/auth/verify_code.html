@@ -5,11 +5,20 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 <style>
-    .code-input {
-        font-size: 2rem;
-        letter-spacing: 1rem;
-        text-align: center;
+    .digit-box {
+        font-size: 1.5rem;
         font-family: 'Courier New', monospace;
+        font-weight: bold;
+    }
+    
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+    
+    .animate-shake {
+        animation: shake 0.3s ease-in-out;
     }
 </style>
 {% endblock %}
@@ -54,25 +63,44 @@
             <div class="space-y-6">
                 <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
                     {% if code_type == 'signup' %}
-                    <label for="code" class="block text-sm font-semibold text-green-600 dark:text-green-400 mb-2 text-center">
+                    <label class="block text-sm font-semibold text-green-600 dark:text-green-400 mb-4 text-center">
                         <i class="bi bi-key mr-2"></i>Verification Code
                     </label>
-                    <input id="code" name="code" type="text" required maxlength="6" pattern="[0-9]{6}"
-                           class="code-input w-full px-4 py-4 bg-gray-50 dark:bg-gray-700/50 border border-green-300 dark:border-green-500/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                           placeholder="000000"
-                           autocomplete="off">
                     {% else %}
-                    <label for="code" class="block text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2 text-center">
+                    <label class="block text-sm font-semibold text-blue-600 dark:text-blue-400 mb-4 text-center">
                         <i class="bi bi-key mr-2"></i>Verification Code
                     </label>
-                    <input id="code" name="code" type="text" required maxlength="6" pattern="[0-9]{6}"
-                           class="code-input w-full px-4 py-4 bg-gray-50 dark:bg-gray-700/50 border border-blue-300 dark:border-blue-500/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                           placeholder="000000"
-                           autocomplete="off">
                     {% endif %}
+                    
+                    <!-- Hidden input for form submission -->
+                    <input id="code" name="code" type="hidden" required>
+                    
+                    <!-- Individual digit inputs -->
+                    <div class="flex justify-center gap-2 mb-4" id="digit-inputs">
+                        {% for i in range(6) %}
+                        <input 
+                            type="text" 
+                            maxlength="1" 
+                            pattern="[0-9]"
+                            class="digit-box w-12 h-14 text-center text-2xl font-bold bg-gray-50 dark:bg-gray-700/50 border-2 rounded-xl transition-all duration-300 focus:outline-none {% if code_type == 'signup' %}border-green-300 dark:border-green-500/30 focus:border-green-500 focus:ring-2 focus:ring-green-500/50{% else %}border-blue-300 dark:border-blue-500/30 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50{% endif %} text-gray-900 dark:text-white"
+                            data-index="{{ i }}"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            aria-label="Digit {{ i + 1 }}"
+                        >
+                        {% endfor %}
+                    </div>
+                    
                     <p class="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">
                         Enter the 6-digit code from your email
                     </p>
+                    
+                    <!-- Progress indicator -->
+                    <div class="flex justify-center gap-1 mt-3" id="progress-dots">
+                        {% for i in range(6) %}
+                        <div class="w-2 h-2 rounded-full {% if code_type == 'signup' %}bg-green-200 dark:bg-green-800{% else %}bg-blue-200 dark:bg-blue-800{% endif %} transition-all duration-300" data-dot="{{ i }}"></div>
+                        {% endfor %}
+                    </div>
                 </div>
                 
                 {% if code_type == 'signup' %}
@@ -109,15 +137,23 @@
             <div class="opacity-0 animate-fade-in-up" style="animation-delay: 0.5s;">
                 {% if code_type == 'signup' %}
                 <button type="submit" id="verify-btn"
-                        class="group w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold text-lg rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-500/25 shadow-xl hover:shadow-2xl hover:scale-105 transform cursor-pointer">
-                    <i class="bi bi-check-circle mr-3"></i>
-                    <span>Verify Email</span>
+                        class="group w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold text-lg rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-500/25 shadow-xl hover:shadow-2xl hover:scale-105 transform cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+                    <i class="bi bi-check-circle mr-3" id="verify-icon"></i>
+                    <span id="verify-text">Verify Email</span>
+                    <svg class="hidden animate-spin h-5 w-5 ml-3" id="verify-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                 </button>
                 {% else %}
                 <button type="submit" id="verify-btn"
-                        class="group w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white font-semibold text-lg rounded-xl hover:from-blue-600 hover:to-cyan-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/25 shadow-xl hover:shadow-2xl hover:scale-105 transform cursor-pointer">
-                    <i class="bi bi-check-circle mr-3"></i>
-                    <span>Verify & Login</span>
+                        class="group w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white font-semibold text-lg rounded-xl hover:from-blue-600 hover:to-cyan-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/25 shadow-xl hover:shadow-2xl hover:scale-105 transform cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+                    <i class="bi bi-check-circle mr-3" id="verify-icon"></i>
+                    <span id="verify-text">Verify & Login</span>
+                    <svg class="hidden animate-spin h-5 w-5 ml-3" id="verify-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                 </button>
                 {% endif %}
             </div>
@@ -145,21 +181,178 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const codeInput = document.getElementById('code');
+    const digitInputs = document.querySelectorAll('.digit-box');
+    const hiddenInput = document.getElementById('code');
+    const form = document.querySelector('form');
+    const verifyBtn = document.getElementById('verify-btn');
+    const verifyIcon = document.getElementById('verify-icon');
+    const verifyText = document.getElementById('verify-text');
+    const verifySpinner = document.getElementById('verify-spinner');
+    const progressDots = document.querySelectorAll('[data-dot]');
+    const codeType = '{{ code_type }}';
     
-    // Auto-focus on code input
-    codeInput.focus();
+    // Auto-focus on first input
+    digitInputs[0].focus();
     
-    // Only allow numbers
-    codeInput.addEventListener('input', function(e) {
-        this.value = this.value.replace(/[^0-9]/g, '');
+    // Update progress dots
+    function updateProgressDots() {
+        const code = getCode();
+        progressDots.forEach((dot, index) => {
+            if (index < code.length) {
+                if (codeType === 'signup') {
+                    dot.classList.remove('bg-green-200', 'dark:bg-green-800');
+                    dot.classList.add('bg-green-500', 'dark:bg-green-400', 'scale-125');
+                } else {
+                    dot.classList.remove('bg-blue-200', 'dark:bg-blue-800');
+                    dot.classList.add('bg-blue-500', 'dark:bg-blue-400', 'scale-125');
+                }
+            } else {
+                if (codeType === 'signup') {
+                    dot.classList.remove('bg-green-500', 'dark:bg-green-400', 'scale-125');
+                    dot.classList.add('bg-green-200', 'dark:bg-green-800');
+                } else {
+                    dot.classList.remove('bg-blue-500', 'dark:bg-blue-400', 'scale-125');
+                    dot.classList.add('bg-blue-200', 'dark:bg-blue-800');
+                }
+            }
+        });
+    }
+    
+    // Get current code from all inputs
+    function getCode() {
+        return Array.from(digitInputs).map(input => input.value).join('');
+    }
+    
+    // Update hidden input
+    function updateHiddenInput() {
+        hiddenInput.value = getCode();
+        updateProgressDots();
+    }
+    
+    // Add visual feedback for filled boxes
+    function updateBoxStyle(input) {
+        if (input.value) {
+            input.classList.add('ring-2', 'scale-105');
+            if (codeType === 'signup') {
+                input.classList.add('bg-green-50', 'dark:bg-green-900/30', 'border-green-500', 'ring-green-500/50');
+            } else {
+                input.classList.add('bg-blue-50', 'dark:bg-blue-900/30', 'border-blue-500', 'ring-blue-500/50');
+            }
+        } else {
+            input.classList.remove('ring-2', 'scale-105', 'bg-green-50', 'dark:bg-green-900/30', 'bg-blue-50', 'dark:bg-blue-900/30', 'border-green-500', 'border-blue-500', 'ring-green-500/50', 'ring-blue-500/50');
+        }
+    }
+    
+    // Show loading state
+    function showLoadingState() {
+        verifyBtn.disabled = true;
+        verifyIcon.classList.add('hidden');
+        verifySpinner.classList.remove('hidden');
+        verifyText.textContent = 'Verifying...';
+        
+        // Disable all inputs
+        digitInputs.forEach(input => {
+            input.disabled = true;
+            input.classList.add('opacity-50', 'cursor-not-allowed');
+        });
+    }
+    
+    // Auto-submit after delay for better UX
+    function autoSubmitWithDelay() {
+        setTimeout(() => {
+            showLoadingState();
+            form.submit();
+        }, 200);
+    }
+    
+    // Handle input in each box
+    digitInputs.forEach((input, index) => {
+        input.addEventListener('input', function(e) {
+            // Only allow numbers
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Update visual style
+            updateBoxStyle(this);
+            updateHiddenInput();
+            
+            // Move to next input if digit entered
+            if (this.value.length === 1 && index < digitInputs.length - 1) {
+                digitInputs[index + 1].focus();
+            }
+            
+            // Auto-submit when all 6 digits entered
+            const code = getCode();
+            if (code.length === 6) {
+                autoSubmitWithDelay();
+            }
+        });
+        
+        // Handle backspace
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && !this.value && index > 0) {
+                digitInputs[index - 1].focus();
+                digitInputs[index - 1].value = '';
+                updateBoxStyle(digitInputs[index - 1]);
+                updateHiddenInput();
+            }
+        });
+        
+        // Handle paste
+        input.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+            
+            if (pastedData.length === 6) {
+                digitInputs.forEach((inp, idx) => {
+                    inp.value = pastedData[idx] || '';
+                    updateBoxStyle(inp);
+                });
+                updateHiddenInput();
+                
+                // Auto-submit after paste
+                autoSubmitWithDelay();
+            }
+        });
+        
+        // Add focus effect
+        input.addEventListener('focus', function() {
+            this.select();
+        });
     });
     
-    // Auto-submit when 6 digits entered
-    codeInput.addEventListener('input', function(e) {
-        if (this.value.length === 6) {
-            document.querySelector('form').submit();
+    // Show loading state
+    function showLoadingState() {
+        verifyBtn.disabled = true;
+        verifyIcon.classList.add('hidden');
+        verifySpinner.classList.remove('hidden');
+        verifyText.textContent = 'Verifying...';
+        
+        // Disable all inputs
+        digitInputs.forEach(input => {
+            input.disabled = true;
+            input.classList.add('opacity-50', 'cursor-not-allowed');
+        });
+    }
+    
+    // Prevent form submission if code is not complete
+    form.addEventListener('submit', function(e) {
+        const code = getCode();
+        if (code.length !== 6) {
+            e.preventDefault();
+            
+            // Shake animation for incomplete code
+            const firstEmpty = Array.from(digitInputs).findIndex(input => !input.value);
+            if (firstEmpty !== -1) {
+                digitInputs[firstEmpty].focus();
+                digitInputs[firstEmpty].classList.add('animate-shake');
+                setTimeout(() => {
+                    digitInputs[firstEmpty].classList.remove('animate-shake');
+                }, 500);
+            }
+            return false;
         }
+        
+        showLoadingState();
     });
 });
 </script>
