@@ -90,10 +90,17 @@ export class DropdownManager {
             }
         });
 
-        // Prevent dropdown content clicks from closing
+        // Prevent dropdown content clicks from closing (but close on link clicks)
         this.dropdowns.forEach(({ dropdown }) => {
             dropdown.addEventListener('click', (event) => {
-                event.stopPropagation();
+                // If clicking a link, close the dropdown and let it navigate
+                if (event.target.tagName === 'A' || event.target.closest('a')) {
+                    // Close dropdown after a short delay to allow navigation
+                    setTimeout(() => this.closeAll(), 100);
+                } else {
+                    // For non-links, stop propagation to keep dropdown open
+                    event.stopPropagation();
+                }
             });
         });
     }
@@ -215,9 +222,16 @@ export class DropdownManager {
         button.removeEventListener('click', this.handleToggleClick.bind(this));
         button.addEventListener('click', this.handleToggleClick.bind(this));
 
-        // Setup dropdown click prevention
+        // Setup dropdown click prevention (but close on link clicks)
         dropdown.addEventListener('click', (event) => {
-            event.stopPropagation();
+            // If clicking a link, close the dropdown and let it navigate
+            if (event.target.tagName === 'A' || event.target.closest('a')) {
+                // Close dropdown after a short delay to allow navigation
+                setTimeout(() => this.closeAll(), 100);
+            } else {
+                // For non-links, stop propagation to keep dropdown open
+                event.stopPropagation();
+            }
         });
 
         console.log('Dynamically registered dropdown:', dropdownId);
