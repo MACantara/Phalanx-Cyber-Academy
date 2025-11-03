@@ -414,9 +414,32 @@ def logout():
     # Redirect to home
     response = redirect(url_for('main.home'))
     
-    # Explicitly clear the session cookie
-    response.set_cookie('cyberquest_session', '', expires=0, 
-                       httponly=True, samesite='Lax')
+    # Explicitly clear all authentication-related cookies
+    # Clear the session cookie
+    response.set_cookie(
+        'cyberquest_session', 
+        '', 
+        expires=0,
+        max_age=0,
+        path='/',
+        domain=None,
+        secure=request.is_secure,
+        httponly=True, 
+        samesite='Lax'
+    )
+    
+    # Clear Flask-Login's remember me cookie
+    response.set_cookie(
+        'remember_token',
+        '',
+        expires=0,
+        max_age=0,
+        path='/',
+        domain=None,
+        secure=request.is_secure,
+        httponly=True,
+        samesite='Lax'
+    )
     
     return response
 
