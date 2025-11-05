@@ -179,8 +179,9 @@ def start_game():
         session['blue_vs_red_game_state'] = initial_state
         session.permanent = True
         
-        # Log game start
+        # Log game start with session verification
         logger.info(f"User {current_user.username} started Blue vs Red Team simulation (Session ID: {session_id})")
+        logger.debug(f"Game state initialized with isRunning={initial_state['isRunning']}")
         
         return jsonify({
             'success': True,
@@ -362,12 +363,26 @@ def ai_action():
     try:
         data = request.get_json()
         
-        if not data or 'action' not in data:
+        if not data:
+            logger.error("No JSON data received in ai-action request")
             return jsonify({'error': 'Action data required'}), 400
+        
+        # Support both 'action' and 'type' field names for backwards compatibility
+        action_type = data.get('action') or data.get('type')
+        if not action_type:
+            logger.error(f"Missing action/type field in ai-action request: {data}")
+            return jsonify({'error': 'Action type required'}), 400
         
         game_state = session.get('blue_vs_red_game_state', {})
         
+        if not game_state:
+            logger.warning(f"AI action attempted but no game state found in session for user {current_user.username}")
+            return jsonify({'error': 'Game state not found. Please start a new game.'}), 400
+        
         if not game_state.get('isRunning'):
+            logger.warning(f"AI action attempted but game is not running. isRunning={game_state.get('isRunning', 'NOT_SET')} for user {current_user.username}")
+            # Log the entire game state for debugging (truncated)
+            logger.debug(f"Game state keys: {list(game_state.keys())}")
             return jsonify({'error': 'Game is not running'}), 400
         
         # Check if IP is blocked for this attack
@@ -378,7 +393,7 @@ def ai_action():
         # Record AI action
         action = {
             'timestamp': datetime.now().isoformat(),
-            'type': data['action'],
+            'type': action_type,
             'technique': data.get('technique'),
             'target': data.get('target'),
             'severity': data.get('severity', 'medium'),
@@ -418,6 +433,8 @@ def ai_action():
         # Update session
         session['blue_vs_red_game_state'] = game_state
         session.permanent = True
+        
+        logger.debug(f"AI action recorded: {action_type} on {action.get('target')} (severity: {action['severity']}, blocked: {ip_blocked})")
         
         return jsonify({
             'success': True,

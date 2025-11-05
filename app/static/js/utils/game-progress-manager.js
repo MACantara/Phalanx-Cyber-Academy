@@ -18,17 +18,30 @@ class GameProgressManager {
 
     /**
      * Start a new level session with integrated XP tracking
-     * @param {number} levelId - Level ID
-     * @param {string} levelName - Level name
-     * @param {string} difficulty - Level difficulty
+     * @param {number|Object} levelId - Level ID or options object
+     * @param {string} levelName - Level name (if levelId is not an object)
+     * @param {string} difficulty - Level difficulty (if levelId is not an object)
      * @returns {Promise<Object>} Session and level data
      */
     async startLevel(levelId, levelName, difficulty = 'medium') {
         try {
+            // Support both object-based and parameter-based calling conventions
+            let options = {};
+            if (typeof levelId === 'object' && levelId !== null) {
+                // Object-based call (e.g., from Blue Team vs Red Team mode)
+                options = levelId;
+                levelId = options.levelId;
+                levelName = options.sessionName || options.levelName || levelId;
+                difficulty = options.difficulty || 'medium';
+            }
+            
             console.log(`[GameProgressManager] Starting level ${levelId}: ${levelName} (${difficulty})`);
             
+            // For non-level modes (like Blue Team vs Red Team), pass null as level_id
+            const sessionLevelId = (typeof levelId === 'number') ? levelId : null;
+            
             // Start session
-            const session = await this.sessionManager.startSession(levelName, levelId);
+            const session = await this.sessionManager.startSession(levelName, sessionLevelId);
             
             // Store level data
             this.currentLevel = {
@@ -46,7 +59,9 @@ class GameProgressManager {
             
             console.log('[GameProgressManager] Level started successfully:', this.currentLevel);
             return {
+                success: true,
                 session: session,
+                session_id: session.id,
                 level: this.currentLevel
             };
             
@@ -111,17 +126,24 @@ class GameProgressManager {
             
             console.log(`[GameProgressManager] Completing level ${this.currentLevel.id}: Score ${score}, Time ${timeSpent}s`);
             
-            // Calculate XP preview
-            const xpPreview = await this.xpCalculator.calculateXPFromAPI(
-                this.currentLevel.id,
-                score,
-                timeSpent,
-                this.currentLevel.difficulty
-            );
+            // Calculate XP preview only for numeric level IDs (regular levels)
+            let xpPreview = null;
+            const isNumericLevel = typeof this.currentLevel.id === 'number' || !isNaN(parseInt(this.currentLevel.id));
+            
+            if (isNumericLevel) {
+                xpPreview = await this.xpCalculator.calculateXPFromAPI(
+                    this.currentLevel.id,
+                    score,
+                    timeSpent,
+                    this.currentLevel.difficulty
+                );
+            } else {
+                console.log(`[GameProgressManager] Skipping XP preview for non-numeric level ID: ${this.currentLevel.id}`);
+            }
             
             // End session (this will automatically award XP via backend with 'session_completion' reason)
             const sessionResult = await this.sessionManager.endSession(score, {
-                level_id: this.currentLevel.id,
+                level_id: isNumericLevel ? this.currentLevel.id : null,
                 difficulty: this.currentLevel.difficulty,
                 time_spent: timeSpent,
                 ...additionalData

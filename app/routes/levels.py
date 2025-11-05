@@ -514,11 +514,33 @@ def start_session():
         from app.models.session import Session
         
         data = request.get_json()
+        if not data:
+            logger.error("No JSON data received in session start request")
+            return jsonify({'success': False, 'error': 'No data provided'}), 400
+        
+        logger.info(f"Session start request data: {data}")
+        
         session_name = data.get('session_name', 'Unknown Session')
         level_id = data.get('level_id')
         
         if not session_name:
             return jsonify({'success': False, 'error': 'Session name is required'}), 400
+        
+        # Validate level_id - it should be an integer or None
+        if level_id is not None:
+            if isinstance(level_id, str):
+                # If it's a string, try to convert to int, or set to None for non-level modes
+                if level_id.isdigit():
+                    level_id = int(level_id)
+                else:
+                    # Non-numeric string (e.g., 'blue-team-vs-red-team') - set to None
+                    logger.info(f"Non-numeric level_id '{level_id}' for mode/session, setting to None")
+                    level_id = None
+            elif not isinstance(level_id, int):
+                logger.warning(f"Invalid level_id type: {type(level_id)}, setting to None")
+                level_id = None
+        
+        logger.info(f"Starting session: user_id={current_user.id}, session_name={session_name}, level_id={level_id}")
         
         # Start new session
         session = Session.start_session(
