@@ -126,17 +126,24 @@ class GameProgressManager {
             
             console.log(`[GameProgressManager] Completing level ${this.currentLevel.id}: Score ${score}, Time ${timeSpent}s`);
             
-            // Calculate XP preview
-            const xpPreview = await this.xpCalculator.calculateXPFromAPI(
-                this.currentLevel.id,
-                score,
-                timeSpent,
-                this.currentLevel.difficulty
-            );
+            // Calculate XP preview only for numeric level IDs (regular levels)
+            let xpPreview = null;
+            const isNumericLevel = typeof this.currentLevel.id === 'number' || !isNaN(parseInt(this.currentLevel.id));
+            
+            if (isNumericLevel) {
+                xpPreview = await this.xpCalculator.calculateXPFromAPI(
+                    this.currentLevel.id,
+                    score,
+                    timeSpent,
+                    this.currentLevel.difficulty
+                );
+            } else {
+                console.log(`[GameProgressManager] Skipping XP preview for non-numeric level ID: ${this.currentLevel.id}`);
+            }
             
             // End session (this will automatically award XP via backend with 'session_completion' reason)
             const sessionResult = await this.sessionManager.endSession(score, {
-                level_id: this.currentLevel.id,
+                level_id: isNumericLevel ? this.currentLevel.id : null,
                 difficulty: this.currentLevel.difficulty,
                 time_spent: timeSpent,
                 ...additionalData
