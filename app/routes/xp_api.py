@@ -32,6 +32,40 @@ def calculate_xp():
                 'error': 'level_id is required'
             }), 400
         
+        # Handle non-integer level IDs (game modes like Blue Team vs Red Team)
+        # For these, return a basic XP calculation structure
+        if not isinstance(level_id, int):
+            # Try to convert to int
+            try:
+                level_id = int(level_id)
+            except (ValueError, TypeError):
+                # Non-numeric level ID (e.g., 'blue-team-vs-red-team')
+                # Return a basic calculation for game modes
+                logger.info(f"Non-numeric level_id '{level_id}' - returning basic XP calculation for game mode")
+                
+                score = data.get('score', 100)
+                time_spent = data.get('time_spent', 300)
+                
+                # Basic XP calculation for game modes
+                basic_calculation = {
+                    'total_xp': int(score) if score else 50,  # Use score directly or default
+                    'base_xp': 50,
+                    'score_bonus': int(score) - 50 if score and score > 50 else 0,
+                    'time_bonus': 0,
+                    'first_time_bonus': 0,
+                    'breakdown': {
+                        'base': 50,
+                        'score': int(score) - 50 if score and score > 50 else 0,
+                        'time': 0,
+                        'first_time': 0
+                    }
+                }
+                
+                return jsonify({
+                    'success': True,
+                    'calculation': basic_calculation
+                })
+        
         # Optional parameters with defaults
         score = data.get('score')  # 0-100
         time_spent = data.get('time_spent')  # seconds
