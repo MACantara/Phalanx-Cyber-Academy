@@ -362,12 +362,20 @@ def ai_action():
     try:
         data = request.get_json()
         
-        if not data or 'action' not in data:
+        if not data:
+            logger.error("No JSON data received in ai-action request")
             return jsonify({'error': 'Action data required'}), 400
+        
+        # Support both 'action' and 'type' field names for backwards compatibility
+        action_type = data.get('action') or data.get('type')
+        if not action_type:
+            logger.error(f"Missing action/type field in ai-action request: {data}")
+            return jsonify({'error': 'Action type required'}), 400
         
         game_state = session.get('blue_vs_red_game_state', {})
         
         if not game_state.get('isRunning'):
+            logger.warning("AI action attempted but game is not running")
             return jsonify({'error': 'Game is not running'}), 400
         
         # Check if IP is blocked for this attack
@@ -378,7 +386,7 @@ def ai_action():
         # Record AI action
         action = {
             'timestamp': datetime.now().isoformat(),
-            'type': data['action'],
+            'type': action_type,
             'technique': data.get('technique'),
             'target': data.get('target'),
             'severity': data.get('severity', 'medium'),
@@ -418,6 +426,8 @@ def ai_action():
         # Update session
         session['blue_vs_red_game_state'] = game_state
         session.permanent = True
+        
+        logger.debug(f"AI action recorded: {action_type} on {action.get('target')} (severity: {action['severity']}, blocked: {ip_blocked})")
         
         return jsonify({
             'success': True,
