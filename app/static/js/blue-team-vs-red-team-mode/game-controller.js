@@ -150,36 +150,56 @@ class GameController {
         try {
             console.log('[BlueTeamVsRedTeam] Starting game with centralized session management');
 
-            // Import centralized utilities
-            const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
-            const progressManager = new GameProgressManager();
-
-            // Start Blue Team vs Red Team session using centralized system
-            const sessionResult = await progressManager.startLevel({
-                levelId: 'blue-team-vs-red-team',
-                sessionName: 'blue-team-vs-red-team',
-                resetProgress: false,
-                customEndpoint: '/blue-vs-red/api/start-game'
+            // First, call the Blue Team vs Red Team specific start-game endpoint
+            // This initializes the Flask session properly
+            const startGameResponse = await fetch('/blue-vs-red/api/start-game', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify({})
             });
 
-            if (sessionResult.success) {
-                console.log('[BlueTeamVsRedTeam] Game session started with centralized system:', sessionResult);
-                
-                // Update local game state with session data
-                this.gameState.session_id = sessionResult.session_id || sessionResult.gameState?.session_id;
-                if (sessionResult.gameState) {
-                    this.gameState = { ...this.gameState, ...sessionResult.gameState };
-                }
+            if (!startGameResponse.ok) {
+                throw new Error(`Failed to start game: ${startGameResponse.status}`);
+            }
+
+            const startGameResult = await startGameResponse.json();
+            console.log('[BlueTeamVsRedTeam] Game started on backend:', startGameResult);
+
+            if (startGameResult.success && startGameResult.gameState) {
+                // Update local game state with backend data
+                this.gameState = { ...this.gameState, ...startGameResult.gameState };
                 
                 // Store session ID
-                localStorage.setItem('blue_red_session_id', this.gameState.session_id);
-                window.currentSessionId = this.gameState.session_id;
-                
-            } else {
-                console.error('[BlueTeamVsRedTeam] Centralized session start failed:', sessionResult.error);
+                if (this.gameState.session_id) {
+                    localStorage.setItem('blue_red_session_id', this.gameState.session_id);
+                    window.currentSessionId = this.gameState.session_id;
+                }
             }
+
+            // Also try centralized session management for compatibility
+            try {
+                const { GameProgressManager } = await import('/static/js/utils/game-progress-manager.js');
+                const progressManager = new GameProgressManager();
+
+                const sessionResult = await progressManager.startLevel({
+                    levelId: 'blue-team-vs-red-team',
+                    sessionName: 'blue-team-vs-red-team',
+                    resetProgress: false
+                });
+
+                console.log('[BlueTeamVsRedTeam] Centralized session result:', sessionResult);
+            } catch (progressError) {
+                console.warn('[BlueTeamVsRedTeam] Centralized session management failed:', progressError);
+                // Continue anyway since we have the main game session
+            }
+            
         } catch (error) {
-            console.error('[BlueTeamVsRedTeam] Error starting game with centralized system:', error);
+            console.error('[BlueTeamVsRedTeam] Error starting game:', error);
+            alert('Failed to start game. Please try again.');
+            return;
         }
         
         this.gameState.isRunning = true;

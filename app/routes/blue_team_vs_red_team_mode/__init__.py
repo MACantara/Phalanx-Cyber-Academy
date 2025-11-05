@@ -179,8 +179,9 @@ def start_game():
         session['blue_vs_red_game_state'] = initial_state
         session.permanent = True
         
-        # Log game start
+        # Log game start with session verification
         logger.info(f"User {current_user.username} started Blue vs Red Team simulation (Session ID: {session_id})")
+        logger.debug(f"Game state initialized with isRunning={initial_state['isRunning']}")
         
         return jsonify({
             'success': True,
@@ -374,8 +375,14 @@ def ai_action():
         
         game_state = session.get('blue_vs_red_game_state', {})
         
+        if not game_state:
+            logger.warning(f"AI action attempted but no game state found in session for user {current_user.username}")
+            return jsonify({'error': 'Game state not found. Please start a new game.'}), 400
+        
         if not game_state.get('isRunning'):
-            logger.warning("AI action attempted but game is not running")
+            logger.warning(f"AI action attempted but game is not running. isRunning={game_state.get('isRunning', 'NOT_SET')} for user {current_user.username}")
+            # Log the entire game state for debugging (truncated)
+            logger.debug(f"Game state keys: {list(game_state.keys())}")
             return jsonify({'error': 'Game is not running'}), 400
         
         # Check if IP is blocked for this attack
