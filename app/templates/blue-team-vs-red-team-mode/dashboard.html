@@ -126,6 +126,36 @@
     .security-content {
         scroll-behavior: smooth;
     }
+    
+    /* Tab styling */
+    .tab-button {
+        border-bottom-width: 2px;
+        transition: all 0.3s ease;
+    }
+    
+    .tab-button.active {
+        border-bottom-color: #10b981;
+        color: #ffffff;
+        background-color: rgba(16, 185, 129, 0.1);
+    }
+    
+    .tab-button:not(.active):hover {
+        border-bottom-color: #6b7280;
+    }
+    
+    .tab-pane {
+        display: none;
+    }
+    
+    .tab-pane.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 </style>
 {% endblock %}
 
@@ -204,46 +234,65 @@
         </div>
 
         <!-- Main Game Area -->
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <!-- Left Panel - Network Map & Terminal -->
-            <div class="lg:col-span-3 space-y-6">
-                <!-- Network Map with Interactive Elements -->
-                <div class="bg-gray-800 border border-gray-600 p-6 window-content">
-                    <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-                        <i class="bi bi-diagram-3 me-2 text-green-400"></i>Network Defense Map
-                    </h3>
+        <div class="grid grid-cols-1 gap-6">
+            <!-- Tabbed Interface for Network Map, Alerts, and System Info -->
+            <div class="bg-gray-800 border border-gray-600">
+                <!-- Tab Headers -->
+                <div class="flex border-b border-gray-600">
+                    <button id="tab-network" class="tab-button active flex-1 px-4 py-3 text-white font-semibold hover:bg-gray-700 transition-colors border-b-2 border-green-400">
+                        <i class="bi bi-diagram-3 me-2"></i>Network Defense Map
+                    </button>
+                    <button id="tab-alerts" class="tab-button flex-1 px-4 py-3 text-gray-400 font-semibold hover:bg-gray-700 transition-colors border-b-2 border-transparent hover:border-gray-500">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Alert Center <span id="alerts-badge" class="hidden ms-2 px-2 py-0.5 bg-red-500 text-white text-xs rounded-full">0</span>
+                    </button>
+                    <button id="tab-incidents" class="tab-button flex-1 px-4 py-3 text-gray-400 font-semibold hover:bg-gray-700 transition-colors border-b-2 border-transparent hover:border-gray-500">
+                        <i class="bi bi-shield-exclamation me-2"></i>Incident Response
+                    </button>
+                </div>
+                
+                <!-- Tab Content -->
+                <div class="tab-content p-6">
+                    <!-- Network Map Tab -->
+                    <div id="content-network" class="tab-pane active">
+                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                            <i class="bi bi-diagram-3 me-2 text-green-400"></i>Network Defense Map
+                        </h3>
                     <div class="bg-black border border-gray-600 p-6">
                         <div id="network-map" class="space-y-4">
                             <!-- Interactive Network nodes -->
                             <div class="flex items-center justify-center space-x-8 flex-wrap mb-6">
                                 <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 transition-colors" data-asset="academy-server" onclick="window.gameController?.selectNetworkNode('academy-server')">
                                     <i class="bi bi-server text-green-400 text-xl"></i>
-                                    <div class="text-xs font-medium mt-1 text-white">Academy Server</div>
-                                    <div class="w-full bg-gray-600 h-1 mt-2 rounded">
+                                    <div class="text-xs font-mono font-bold mt-1 text-green-400">academy-server</div>
+                                    <div class="text-xs text-gray-400 mb-1">(Academy Server)</div>
+                                    <div class="w-full bg-gray-600 h-1 mt-1 rounded">
                                         <div class="bg-green-400 h-1 rounded" style="width: 100%"></div>
                                     </div>
                                     <div class="text-xs text-gray-300 mt-1 integrity-text">100% Integrity</div>
                                 </div>
                                 <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 transition-colors" data-asset="student-db" onclick="window.gameController?.selectNetworkNode('student-db')">
                                     <i class="bi bi-database text-green-400 text-xl"></i>
-                                    <div class="text-xs font-medium mt-1 text-white">Student DB</div>
-                                    <div class="w-full bg-gray-600 h-1 mt-2 rounded">
+                                    <div class="text-xs font-mono font-bold mt-1 text-green-400">student-db</div>
+                                    <div class="text-xs text-gray-400 mb-1">(Student DB)</div>
+                                    <div class="w-full bg-gray-600 h-1 mt-1 rounded">
                                         <div class="bg-green-400 h-1 rounded" style="width: 100%"></div>
                                     </div>
                                     <div class="text-xs text-gray-300 mt-1 integrity-text">100% Integrity</div>
                                 </div>
                                 <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 transition-colors" data-asset="research-files" onclick="window.gameController?.selectNetworkNode('research-files')">
                                     <i class="bi bi-file-earmark-text text-green-400 text-xl"></i>
-                                    <div class="text-xs font-medium mt-1 text-white">Research Files</div>
-                                    <div class="w-full bg-gray-600 h-1 mt-2 rounded">
+                                    <div class="text-xs font-mono font-bold mt-1 text-green-400">research-files</div>
+                                    <div class="text-xs text-gray-400 mb-1">(Research Files)</div>
+                                    <div class="w-full bg-gray-600 h-1 mt-1 rounded">
                                         <div class="bg-green-400 h-1 rounded" style="width: 100%"></div>
                                     </div>
                                     <div class="text-xs text-gray-300 mt-1 integrity-text">100% Integrity</div>
                                 </div>
                                 <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 transition-colors" data-asset="learning-platform" onclick="window.gameController?.selectNetworkNode('learning-platform')">
                                     <i class="bi bi-mortarboard text-green-400 text-xl"></i>
-                                    <div class="text-xs font-medium mt-1 text-white">Learning Platform</div>
-                                    <div class="w-full bg-gray-600 h-1 mt-2 rounded">
+                                    <div class="text-xs font-mono font-bold mt-1 text-green-400">learning-platform</div>
+                                    <div class="text-xs text-gray-400 mb-1">(Learning Platform)</div>
+                                    <div class="w-full bg-gray-600 h-1 mt-1 rounded">
                                         <div class="bg-green-400 h-1 rounded" style="width: 100%"></div>
                                     </div>
                                     <div class="text-xs text-gray-300 mt-1 integrity-text">100% Integrity</div>
@@ -266,53 +315,51 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Interactive Terminal -->
-                <div class="bg-gray-800 border border-gray-600 p-4">
-                    <h3 class="text-lg font-semibold text-green-400 mb-4 flex items-center">
-                        <i class="bi bi-terminal me-2"></i>Defense Command Terminal
-                    </h3>
-                    <div id="terminal-output" class="bg-black text-green-400 font-mono text-sm p-3 border border-gray-600 h-80 overflow-y-auto terminal-output">
-                        <!-- Terminal content will be populated by JavaScript -->
-                        <div id="response-actions" class="mt-2 hidden">
-                            <div class="text-yellow-400">╔══ THREAT RESPONSE ACTIONS ══╗</div>
-                            <div class="ms-2">
-                                <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('block-ip')">1. Block IP</button>
-                                <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('isolate-asset')">2. Isolate Asset</button>
-                                <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('increase-monitoring')">3. Increase Monitoring</button>
-                                <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('patch-vulnerability')">4. Patch Vulnerability</button>
-                                <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('reset-credentials')">5. Reset Credentials</button>
-                            </div>
-                            <div class="text-yellow-400">╚════════════════════════════╝</div>
+                    </div>
+                    
+                    <!-- Alert Center Tab -->
+                    <div id="content-alerts" class="tab-pane hidden">
+                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                            <i class="bi bi-exclamation-triangle me-2 text-orange-400"></i>Alert Center
+                        </h3>
+                        <div id="alert-center" class="space-y-3 security-content max-h-96 overflow-y-auto">
+                            <div class="text-sm text-gray-400 italic">No active alerts</div>
                         </div>
-                        <div class="flex items-center mt-2">
-                            <span>$ </span>
-                            <input type="text" id="terminal-input" class="bg-transparent border-none outline-none text-green-400 flex-1 ms-1" placeholder="Enter command...">
+                    </div>
+                    
+                    <!-- Incident Response Tab -->
+                    <div id="content-incidents" class="tab-pane hidden">
+                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                            <i class="bi bi-shield-exclamation me-2 text-yellow-400"></i>Incident Response
+                        </h3>
+                        <div id="incident-panel" class="space-y-3 security-content max-h-96 overflow-y-auto">
+                            <div class="text-sm text-gray-400 italic">No incidents detected. Monitoring for suspicious activity...</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Panel - System Info -->
-            <div class="space-y-6">
-                <!-- Alert Center -->
-                <div class="bg-gray-800 border border-gray-600 p-6 window-content">
-                    <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-                        <i class="bi bi-exclamation-triangle me-2 text-orange-400"></i>Alert Center
-                    </h3>
-                    <div id="alert-center" class="space-y-3 security-content max-h-64 overflow-y-auto">
-                        <div class="text-sm text-gray-400 italic">No active alerts</div>
+            <!-- Interactive Terminal (Full Width Below) -->
+            <div class="bg-gray-800 border border-gray-600 p-4">
+                <h3 class="text-lg font-semibold text-green-400 mb-4 flex items-center">
+                    <i class="bi bi-terminal me-2"></i>Defense Command Terminal
+                </h3>
+                <div id="terminal-output" class="bg-black text-green-400 font-mono text-sm p-3 border border-gray-600 h-80 overflow-y-auto terminal-output">
+                    <!-- Terminal content will be populated by JavaScript -->
+                    <div id="response-actions" class="mt-2 hidden">
+                        <div class="text-yellow-400">╔══ THREAT RESPONSE ACTIONS ══╗</div>
+                        <div class="ms-2">
+                            <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('block-ip')">1. Block IP</button>
+                            <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('isolate-asset')">2. Isolate Asset</button>
+                            <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('increase-monitoring')">3. Increase Monitoring</button>
+                            <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('patch-vulnerability')">4. Patch Vulnerability</button>
+                            <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('reset-credentials')">5. Reset Credentials</button>
+                        </div>
+                        <div class="text-yellow-400">╚════════════════════════════╝</div>
                     </div>
-                </div>
-
-                <!-- Incident Response Panel -->
-                <div class="bg-gray-800 border border-gray-600 p-6 window-content">
-                    <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-                        <i class="bi bi-exclamation-triangle me-2 text-yellow-400"></i>Incident Response
-                    </h3>
-                    <div id="incident-panel" class="space-y-3 security-content overflow-y-auto max-h-64">
-                        <div class="text-sm text-gray-400 italic">No incidents detected. Monitoring for suspicious activity...</div>
+                    <div class="flex items-center mt-2">
+                        <span>$ </span>
+                        <input type="text" id="terminal-input" class="bg-transparent border-none outline-none text-green-400 flex-1 ms-1" placeholder="Enter command...">
                     </div>
                 </div>
             </div>
@@ -345,6 +392,61 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+// Tab switching functionality
+document.addEventListener('DOMContentLoaded', () => {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tabId = button.id.replace('tab-', '');
+            
+            // Remove active class from all buttons and panes
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-gray-400');
+                btn.classList.remove('text-white');
+            });
+            tabPanes.forEach(pane => {
+                pane.classList.remove('active');
+                pane.classList.add('hidden');
+            });
+            
+            // Add active class to clicked button and corresponding pane
+            button.classList.add('active');
+            button.classList.remove('text-gray-400');
+            button.classList.add('text-white');
+            const targetPane = document.getElementById(`content-${tabId}`);
+            if (targetPane) {
+                targetPane.classList.remove('hidden');
+                targetPane.classList.add('active');
+            }
+        });
+    });
+    
+    // Update alert badge when alerts change
+    const updateAlertBadge = () => {
+        const alertsCount = document.querySelectorAll('#alert-center > div:not(.italic)').length;
+        const badge = document.getElementById('alerts-badge');
+        if (badge) {
+            if (alertsCount > 0) {
+                badge.textContent = alertsCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+    };
+    
+    // Monitor alert center for changes
+    const alertCenter = document.getElementById('alert-center');
+    if (alertCenter) {
+        const observer = new MutationObserver(updateAlertBadge);
+        observer.observe(alertCenter, { childList: true, subtree: true });
+    }
+});
+</script>
 <script type="module" src="{{ url_for('static', filename='js/blue-team-vs-red-team-mode/game-controller.js') }}"></script>
 <script type="module" src="{{ url_for('static', filename='js/blue-team-vs-red-team-mode/ai-engine.js') }}"></script>
 <script type="module" src="{{ url_for('static', filename='js/blue-team-vs-red-team-mode/ui-manager.js') }}"></script>
