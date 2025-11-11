@@ -191,7 +191,10 @@ class UIManager {
     }
     
     formatAssetName(name) {
-        return name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        // Return the asset name in terminal command format (e.g., 'academy-server')
+        // with a display-friendly version in parentheses
+        const displayName = name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        return `${name} (${displayName})`;
     }
     
     updateTimer() {
