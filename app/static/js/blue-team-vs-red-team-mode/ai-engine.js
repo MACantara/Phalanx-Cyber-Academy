@@ -38,13 +38,13 @@ class AIEngine {
             'impact'
         ];
         
-        // Attack techniques
+        // Attack techniques (including security control disruption)
         this.techniques = {
             'reconnaissance': ['Network Scanning', 'Port Scanning', 'Service Discovery'],
             'initial-access': ['Phishing', 'Exploit Public-Facing Application', 'Drive-by Compromise'],
             'persistence': ['Registry Modification', 'Scheduled Task', 'Service Creation'],
             'privilege-escalation': ['Process Injection', 'Access Token Manipulation', 'Exploitation for Privilege Escalation'],
-            'defense-evasion': ['File Deletion', 'Process Hollowing', 'Masquerading'],
+            'defense-evasion': ['File Deletion', 'Process Hollowing', 'Masquerading', 'Disable Firewall', 'Disable Endpoint Protection', 'Disable Access Control'],
             'credential-access': ['Credential Dumping', 'Brute Force', 'Keylogging'],
             'discovery': ['System Information Discovery', 'Account Discovery', 'Network Service Scanning'],
             'lateral-movement': ['Remote Services', 'Internal Spearphishing', 'Lateral Tool Transfer'],
@@ -346,10 +346,13 @@ class AIEngine {
             console.log(`🤖 AI proactively changed IP from ${oldIP} to ${this.currentIPAddress}`);
         }
 
+        // Check if this is a security control disable attack
+        const isSecurityControlAttack = ['Disable Firewall', 'Disable Endpoint Protection', 'Disable Access Control'].includes(action.technique);
+        
         return {
             type: action.type,
             technique: action.technique,
-            target: action.target,
+            target: action.target || (isSecurityControlAttack ? this.getSecurityControlTarget(action.technique) : null),
             severity: this.calculateSeverity(action.type),
             timestamp: new Date(),
             // IP address information
@@ -370,7 +373,9 @@ class AIEngine {
             contextualFit: action.contextualFit || null,
             attackVector: nlpAnalysis?.attackVector || 'unknown',
             predictedSuccess: nlpAnalysis?.successProbability || 0.5,
-            vulnerabilitiesExploited: nlpAnalysis?.vulnerabilities || []
+            vulnerabilitiesExploited: nlpAnalysis?.vulnerabilities || [],
+            // Security control attack flag
+            isSecurityControlAttack: isSecurityControlAttack
         };
     }
     
@@ -886,6 +891,15 @@ class AIEngine {
         return tactics[this.currentPhase] || 'Mixed Tactics';
     }
     
+    // Get security control target from technique name
+    getSecurityControlTarget(technique) {
+        const controlMap = {
+            'Disable Firewall': 'firewall',
+            'Disable Endpoint Protection': 'endpoint',
+            'Disable Access Control': 'access'
+        };
+        return controlMap[technique] || null;
+    }
     
     // Export Q-table for analysis (development/debugging)
     exportQTable() {
