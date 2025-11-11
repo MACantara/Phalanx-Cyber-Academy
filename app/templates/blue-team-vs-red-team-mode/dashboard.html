@@ -298,21 +298,19 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => {
             const tabId = button.id.replace('tab-', '');
             
-            // Remove active class from all buttons and panes
+            // Remove active state from all buttons and panes
             tabButtons.forEach(btn => {
-                btn.classList.remove('active');
-                btn.classList.add('text-gray-400');
-                btn.classList.remove('text-white');
+                btn.classList.remove('active', 'text-white', 'border-green-400', 'cursor-default', 'bg-green-500/10');
+                btn.classList.add('text-gray-400', 'border-transparent', 'cursor-pointer');
             });
             tabPanes.forEach(pane => {
                 pane.classList.remove('active');
                 pane.classList.add('hidden');
             });
             
-            // Add active class to clicked button and corresponding pane
-            button.classList.add('active');
-            button.classList.remove('text-gray-400');
-            button.classList.add('text-white');
+            // Add active state to clicked button and corresponding pane
+            button.classList.add('active', 'text-white', 'border-green-400', 'cursor-default', 'bg-green-500/10');
+            button.classList.remove('text-gray-400', 'border-transparent', 'cursor-pointer');
             const targetPane = document.getElementById(`content-${tabId}`);
             if (targetPane) {
                 targetPane.classList.remove('hidden');
