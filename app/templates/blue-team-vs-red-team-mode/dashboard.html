@@ -1,22 +1,3 @@
-<!-- TODO (guidance retained) - In the #file:dashboard.html
-     TODO 1: Move the AI Threat Analysis and Incident Response sections onto the same row as
-         the Network Defense Map and Alert Center (responsive layout for large screens).
-
-     TODO 2: Update element with id="alerts-count" to reflect the current number of alerts
-         in the #alert-center container (update dynamically when alerts are added/removed).
-
-     TODO 3: Make the Defense Command Terminal occupy the full available width of the
-         left panel (or full viewport width when desired) so terminal output is easier to read.
-
-     TODO 5: Update app/routes/blue_team_vs_red_team_mode/__init__.py (red team AI) so that
-         component integrity is decreased when AI actions classified as 'critical' or
-         'high' occur. Current behavior appears to only decrement integrity on some
-         critical alerts; ensure integrity changes run for every critical/high event.
--->
-
-<!-- prompt -->
-<!-- In the #file:dashboard.html 1. Move the ai threat analysis and incident response sections on the same row with the network defense map and alert center 2. Update the element with the id of alerts-count based on the number of alerts in the alert center 3. Make the terminal occupy the whole width of the screen 4. return the inputing of terminal commands in the Defense Command Terminal so that it can simulate for the player, blue team, on how to mitigate attacks of the red team 5. Update the #file:__init__.py red team AI to decrease the component integrity if the action taken is either critical or high. This is because I have a situation where I have 8 critical alerts and only a integrity decreasing event happen when another critical alert happens switch seems...not right -->
-
 {% extends "base.html" %}
 
 {% block title %}Blue vs Red Team - Dashboard{% endblock %}
