@@ -874,6 +874,12 @@ class UIManager {
 
     addTerminalOutput(text, type = 'normal') {
         const timestamp = new Date().toLocaleTimeString();
+        
+        // Check if text already starts with a prefix to avoid duplicates
+        const hasPrefix = text.trim().startsWith('$') || text.trim().startsWith('✓') || 
+                         text.trim().startsWith('✗') || text.trim().startsWith('ℹ') || 
+                         text.trim().startsWith('⚠');
+        
         const prefix = type === 'success' ? '✓' : type === 'error' ? '✗' : type === 'info' ? 'ℹ' : type === 'warning' ? '⚠' : '$';
         const colorClass = type === 'success' ? 'text-green-400' : 
                           type === 'error' ? 'text-red-400' : 
@@ -881,8 +887,11 @@ class UIManager {
                           type === 'warning' ? 'text-yellow-400' :
                           'text-gray-300';
         
+        // Only add prefix if text doesn't already have one
+        const formattedText = hasPrefix ? `[${timestamp}] ${text}` : `[${timestamp}] ${prefix} ${text}`;
+        
         this.terminalOutput.push({
-            text: `[${timestamp}] ${prefix} ${text}`,
+            text: formattedText,
             class: colorClass
         });
         
