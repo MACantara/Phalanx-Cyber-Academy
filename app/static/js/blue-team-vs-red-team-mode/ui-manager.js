@@ -902,8 +902,12 @@ class UIManager {
 
     addTerminalOutput(text, type = 'normal') {
         const timestamp = new Date().toLocaleTimeString();
-        const prefix = type === 'success' ? '✓' : type === 'error' ? '✗' : '$';
-        const colorClass = type === 'success' ? 'text-green-400' : type === 'error' ? 'text-red-400' : 'text-gray-300';
+        const prefix = type === 'success' ? '✓' : type === 'error' ? '✗' : type === 'info' ? 'ℹ' : type === 'warning' ? '⚠' : '$';
+        const colorClass = type === 'success' ? 'text-green-400' : 
+                          type === 'error' ? 'text-red-400' : 
+                          type === 'info' ? 'text-blue-400' :
+                          type === 'warning' ? 'text-yellow-400' :
+                          'text-gray-300';
         
         this.terminalOutput.push({
             text: `[${timestamp}] ${prefix} ${text}`,
@@ -911,6 +915,16 @@ class UIManager {
         });
         
         this.updateTerminal();
+    }
+    
+    clearTerminal() {
+        this.terminalOutput = [];
+        const terminalElement = document.getElementById('terminal-output');
+        if (terminalElement) {
+            terminalElement.innerHTML = '';
+            this.addTerminalOutput('Terminal cleared', 'info');
+            this.addTerminalOutput('Type "help" to see available commands', 'info');
+        }
     }
 }
 
