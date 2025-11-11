@@ -205,6 +205,24 @@ class GameController {
         this.gameState.isRunning = true;
         this.uiManager.updateGameControls();
         
+        // Display welcome/tutorial message
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('╔═══════════════════════════════════════════════════════════╗', 'info');
+        this.uiManager.addTerminalOutput('║  🛡️  BLUE TEAM DEFENSE SIMULATION - ACTIVE  🛡️            ║', 'info');
+        this.uiManager.addTerminalOutput('╚═══════════════════════════════════════════════════════════╝', 'info');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('⚡ MISSION: Defend Project Sentinel Academy from Red Team AI attacks', 'warning');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('📋 QUICK START GUIDE:', 'info');
+        this.uiManager.addTerminalOutput('  • Type "help" to see all available commands', 'info');
+        this.uiManager.addTerminalOutput('  • Monitor the Alert Center tab for incoming threats', 'info');
+        this.uiManager.addTerminalOutput('  • Use "scan [asset-name]" to investigate compromised systems', 'info');
+        this.uiManager.addTerminalOutput('  • Use "restore [asset-name]" to repair damaged assets', 'info');
+        this.uiManager.addTerminalOutput('  • Re-enable security controls if they get disabled!', 'info');
+        this.uiManager.addTerminalOutput('');
+        this.uiManager.addTerminalOutput('💡 TIP: Keep asset integrity above 50% to maintain defenses!', 'success');
+        this.uiManager.addTerminalOutput('');
+        
         // Start the game timer
         this.gameTimer = setInterval(() => {
             this.updateTimer();
@@ -1484,6 +1502,13 @@ class GameController {
         // Update UI to reflect control status
         this.uiManager.updateSecurityControls();
         console.log(`Toggled security control: ${controlName}`, control);
+    }
+    
+    markAllAlertsRead() {
+        if (this.uiManager) {
+            this.uiManager.markAllAlertsRead();
+            this.uiManager.addTerminalOutput('$ Marked all alerts as read', 'success');
+        }
     }
     
     executeResponse(action) {
