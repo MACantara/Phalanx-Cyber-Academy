@@ -66,9 +66,12 @@ class UIManager {
             if (assetsText) assetsText.className = 'text-green-400';
         }
         
-        // Alerts count
+        // Alerts count - count actual DOM elements in alert center for accuracy
         const alertsCount = document.getElementById('alerts-count');
-        const activeAlerts = gameState.alerts.filter(alert => alert.status === 'detected').length;
+        const alertCenter = document.getElementById('alert-center');
+        // Count actual alert items, excluding the "no alerts" message
+        const activeAlerts = alertCenter ? 
+            Array.from(alertCenter.children).filter(child => child.classList.contains('alert-item')).length : 0;
         
         if (alertsCount) {
             alertsCount.textContent = `${activeAlerts} Active`;
@@ -308,9 +311,9 @@ class UIManager {
         
         alertCenter.insertBefore(alertElement, alertCenter.firstChild);
         
-        // Keep only last 20 alerts
+        // Keep only last 50 alerts to prevent DOM bloat while showing more history
         const alerts = alertCenter.children;
-        if (alerts.length > 20) {
+        if (alerts.length > 50) {
             alertCenter.removeChild(alerts[alerts.length - 1]);
         }
     }
