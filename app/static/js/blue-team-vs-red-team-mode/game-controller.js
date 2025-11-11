@@ -220,7 +220,7 @@ class GameController {
         this.uiManager.addTerminalOutput('  • Use "restore [asset-name]" to repair damaged assets', 'info');
         this.uiManager.addTerminalOutput('  • Re-enable security controls if they get disabled!', 'info');
         this.uiManager.addTerminalOutput('');
-        this.uiManager.addTerminalOutput('💡 TIP: Keep asset integrity above 50% to maintain defenses!', 'success');
+        this.uiManager.addTerminalOutput('💡 TIP: Prevent assets from reaching 0% integrity or you lose!', 'success');
         this.uiManager.addTerminalOutput('');
         
         // Start the game timer
