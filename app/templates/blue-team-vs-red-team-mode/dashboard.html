@@ -131,16 +131,25 @@
     .tab-button {
         border-bottom-width: 2px;
         transition: all 0.3s ease;
+        cursor: pointer;
+        user-select: none;
     }
     
     .tab-button.active {
         border-bottom-color: #10b981;
         color: #ffffff;
         background-color: rgba(16, 185, 129, 0.1);
+        cursor: default;
     }
     
     .tab-button:not(.active):hover {
         border-bottom-color: #6b7280;
+        cursor: pointer;
+    }
+    
+    .tab-button:not(.active):active {
+        transform: translateY(1px);
+        background-color: rgba(75, 85, 99, 0.2);
     }
     
     .tab-pane {
@@ -155,6 +164,121 @@
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Network node and security control styling */
+    .network-node {
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.3s ease;
+    }
+    
+    .network-node:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    
+    .network-node:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+    }
+    
+    .security-control {
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s ease;
+    }
+    
+    .security-control:hover {
+        transform: scale(1.05);
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+    
+    .security-control:active {
+        transform: scale(0.98);
+    }
+    
+    /* Response button styling */
+    .response-btn {
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s ease;
+    }
+    
+    .response-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4);
+    }
+    
+    .response-btn:active {
+        transform: translateY(0);
+    }
+    
+    /* Terminal input styling */
+    #terminal-input {
+        cursor: text;
+    }
+    
+    #terminal-input:focus {
+        outline: none;
+        text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+    }
+    
+    /* Disabled states */
+    button:disabled,
+    .network-node.disabled,
+    .security-control.disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+        pointer-events: none;
+    }
+    
+    /* Alert badge pulse animation */
+    #alerts-badge {
+        animation: pulse-badge 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse-badge {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+    
+    /* Game menu dropdown animation */
+    #game-menu-dropdown {
+        animation: slideDown 0.2s ease-out;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Hover effects for dropdown items */
+    #game-menu-dropdown button {
+        transition: all 0.2s ease;
+    }
+    
+    #game-menu-dropdown button:hover {
+        padding-left: 1.25rem;
+    }
+    
+    /* Status indicators cursor */
+    .status-indicator {
+        cursor: help;
+    }
+    
+    /* Interactive elements subtle shadow */
+    .network-node,
+    .security-control,
+    .tab-button,
+    .response-btn {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     }
 </style>
 {% endblock %}
@@ -210,23 +334,23 @@
         <!-- Game Status Bar -->
         <div class="bg-gray-800 border border-gray-600 p-4 mb-6">
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 cursor-help status-indicator" title="Network security status">
                     <div class="w-4 h-4 rounded-full bg-green-400 pulse-green" id="network-status"></div>
                     <span class="text-sm font-medium text-white">Network: <span id="network-text" class="text-green-400">Secure</span></span>
                 </div>
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 cursor-help status-indicator" title="Asset integrity status">
                     <div class="w-4 h-4 rounded-full bg-green-400" id="assets-status"></div>
                     <span class="text-sm font-medium text-white">Assets: <span id="assets-text" class="text-green-400">Protected</span></span>
                 </div>
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 cursor-help status-indicator" title="Active security alerts">
                     <div class="w-4 h-4 rounded-full bg-gray-500" id="alerts-status"></div>
                     <span class="text-sm font-medium text-white">Alerts: <span id="alerts-count" class="text-gray-300">0 Active</span></span>
                 </div>
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 cursor-help status-indicator" title="Experience points earned this session">
                     <i class="bi bi-award text-blue-400"></i>
                     <span class="text-sm font-medium text-white">Session XP: <span id="session-xp" class="text-blue-400">0</span></span>
                 </div>
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 cursor-help status-indicator" title="Time remaining in simulation">
                     <i class="bi bi-clock text-green-400"></i>
                     <span class="text-sm font-medium text-white">Time: <span id="round-timer" class="text-green-400">15:00</span></span>
                 </div>
@@ -239,13 +363,13 @@
             <div class="bg-gray-800 border border-gray-600">
                 <!-- Tab Headers -->
                 <div class="flex border-b border-gray-600">
-                    <button id="tab-network" class="tab-button active flex-1 px-4 py-3 text-white font-semibold hover:bg-gray-700 transition-colors border-b-2 border-green-400">
+                    <button id="tab-network" class="tab-button active flex-1 px-4 py-3 text-white font-semibold hover:bg-gray-700 transition-colors border-b-2 border-green-400 cursor-pointer">
                         <i class="bi bi-diagram-3 me-2"></i>Network Defense Map
                     </button>
-                    <button id="tab-alerts" class="tab-button flex-1 px-4 py-3 text-gray-400 font-semibold hover:bg-gray-700 transition-colors border-b-2 border-transparent hover:border-gray-500">
+                    <button id="tab-alerts" class="tab-button flex-1 px-4 py-3 text-gray-400 font-semibold hover:bg-gray-700 transition-colors border-b-2 border-transparent hover:border-gray-500 cursor-pointer">
                         <i class="bi bi-exclamation-triangle me-2"></i>Alert Center <span id="alerts-badge" class="hidden ms-2 px-2 py-0.5 bg-red-500 text-white text-xs rounded-full">0</span>
                     </button>
-                    <button id="tab-incidents" class="tab-button flex-1 px-4 py-3 text-gray-400 font-semibold hover:bg-gray-700 transition-colors border-b-2 border-transparent hover:border-gray-500">
+                    <button id="tab-incidents" class="tab-button flex-1 px-4 py-3 text-gray-400 font-semibold hover:bg-gray-700 transition-colors border-b-2 border-transparent hover:border-gray-500 cursor-pointer">
                         <i class="bi bi-shield-exclamation me-2"></i>Incident Response
                     </button>
                 </div>
