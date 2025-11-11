@@ -104,42 +104,44 @@
         </div>
 
         <!-- Quick Guide Panel -->
-        <div id="quick-guide" class="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border-2 border-blue-500 rounded-lg p-4 mb-6">
-            <div class="flex items-start justify-between">
-                <div class="flex-1">
-                    <h3 class="text-lg font-bold text-blue-400 mb-2 flex items-center">
-                        <i class="bi bi-info-circle-fill me-2"></i>Quick Guide: How to Play
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-white">
-                        <div class="bg-black/30 p-3 rounded border border-blue-500/30">
-                            <div class="font-semibold text-blue-300 mb-1">
-                                <i class="bi bi-1-circle-fill me-1"></i>Monitor Network
-                            </div>
-                            <div class="text-gray-300 text-xs">
-                                Watch the <span class="text-green-400 font-mono">Network Defense Map</span> for attacks on your assets. Check <span class="text-orange-400">Alert Center</span> for new threats.
-                            </div>
+        <div id="quick-guide" class="bg-gray-800 border border-gray-600 mb-6">
+            <!-- Header -->
+            <div class="flex items-center justify-between border-b border-gray-600 px-4 py-3">
+                <h3 class="text-lg font-semibold text-white flex items-center">
+                    <i class="bi bi-info-circle-fill me-2 text-blue-400"></i>Quick Guide: How to Play
+                </h3>
+                <button id="close-guide" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded border border-gray-600 cursor-pointer transition-colors" onclick="document.getElementById('quick-guide').style.display='none'">
+                    <i class="bi bi-x-lg me-1"></i>Close
+                </button>
+            </div>
+            <!-- Content -->
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                        <div class="font-semibold text-white mb-2 flex items-center">
+                            <i class="bi bi-1-circle-fill me-2 text-green-400"></i>Monitor Network
                         </div>
-                        <div class="bg-black/30 p-3 rounded border border-blue-500/30">
-                            <div class="font-semibold text-blue-300 mb-1">
-                                <i class="bi bi-2-circle-fill me-1"></i>Use Terminal Commands
-                            </div>
-                            <div class="text-gray-300 text-xs">
-                                Type <span class="text-green-400 font-mono">help</span> in the terminal below to see all commands. Use <span class="text-green-400 font-mono">scan [asset]</span> to investigate and <span class="text-green-400 font-mono">restore [asset]</span> to fix damage.
-                            </div>
+                        <div class="text-gray-300 text-sm">
+                            Watch the <span class="text-green-400 font-mono">Network Defense Map</span> for attacks on your assets. Check <span class="text-orange-400">Alert Center</span> for new threats.
                         </div>
-                        <div class="bg-black/30 p-3 rounded border border-blue-500/30">
-                            <div class="font-semibold text-blue-300 mb-1">
-                                <i class="bi bi-3-circle-fill me-1"></i>Earn XP & Defend
-                            </div>
-                            <div class="text-gray-300 text-xs">
-                                Respond to incidents quickly to earn XP. Prevent assets from reaching 0% integrity. Re-enable disabled security controls immediately!
-                            </div>
+                    </div>
+                    <div class="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                        <div class="font-semibold text-white mb-2 flex items-center">
+                            <i class="bi bi-2-circle-fill me-2 text-blue-400"></i>Use Terminal Commands
+                        </div>
+                        <div class="text-gray-300 text-sm">
+                            Type <span class="text-green-400 font-mono">help</span> in the terminal below to see all commands. Use <span class="text-green-400 font-mono">scan [asset]</span> to investigate and <span class="text-green-400 font-mono">restore [asset]</span> to fix damage.
+                        </div>
+                    </div>
+                    <div class="bg-gray-700/50 p-4 rounded-lg border border-gray-600">
+                        <div class="font-semibold text-white mb-2 flex items-center">
+                            <i class="bi bi-3-circle-fill me-2 text-purple-400"></i>Earn XP & Defend
+                        </div>
+                        <div class="text-gray-300 text-sm">
+                            Respond to incidents quickly to earn XP. Prevent assets from reaching 0% integrity. Re-enable disabled security controls immediately!
                         </div>
                     </div>
                 </div>
-                <button id="close-guide" class="ms-3 text-gray-400 hover:text-white cursor-pointer transition-colors" onclick="document.getElementById('quick-guide').style.display='none'">
-                    <i class="bi bi-x-lg text-xl"></i>
-                </button>
             </div>
         </div>
 
@@ -293,21 +295,14 @@
             </div>
 
             <!-- Interactive Terminal (Full Width Below) -->
-            <div class="bg-gray-800 border-2 border-gray-600 rounded-lg shadow-lg">
+            <div class="bg-gray-800 border border-gray-600">
                 <!-- Terminal Header -->
-                <div class="flex items-center justify-between bg-gray-900 px-4 py-3 border-b-2 border-gray-600 rounded-t-lg">
+                <div class="flex items-center justify-between border-b border-gray-600 px-4 py-3">
+                    <h3 class="text-lg font-semibold text-white flex items-center">
+                        <i class="bi bi-terminal me-2 text-green-400"></i>Defense Command Terminal
+                    </h3>
                     <div class="flex items-center space-x-3">
-                        <div class="flex space-x-2">
-                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                        </div>
-                        <h3 class="text-base font-bold text-green-400 flex items-center">
-                            <i class="bi bi-terminal me-2"></i>Defense Command Terminal
-                        </h3>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <div class="text-xs text-gray-400 bg-gray-800 px-3 py-1.5 rounded border border-gray-700">
+                        <div class="text-xs text-gray-400">
                             <i class="bi bi-keyboard me-1"></i>Type <span class="text-green-400 font-mono font-semibold">help</span> for commands
                         </div>
                         <button id="clear-terminal" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded border border-gray-600 cursor-pointer transition-colors" onclick="window.gameController?.uiManager?.clearTerminal()">
@@ -333,24 +328,24 @@
                 </div>
                 
                 <!-- Terminal Input Area -->
-                <div class="bg-gray-900 px-4 py-3 border-t-2 border-gray-600 rounded-b-lg">
-                    <div class="flex items-center space-x-2">
+                <div class="bg-gray-700/50 px-4 py-3 border-t border-gray-600">
+                    <div class="flex items-center space-x-2 mb-2">
                         <span class="text-green-400 font-mono font-bold text-lg select-none">$</span>
                         <input 
                             type="text" 
                             id="terminal-input" 
-                            class="bg-gray-800 border border-gray-600 rounded px-3 py-2 text-green-400 font-mono flex-1 text-base outline-none cursor-text focus:border-green-500 focus:ring-2 focus:ring-green-500/30 transition-all duration-200" 
+                            class="bg-gray-900 border border-gray-600 rounded px-3 py-2 text-green-400 font-mono flex-1 text-base outline-none cursor-text focus:border-green-500 focus:ring-2 focus:ring-green-500/30 transition-all duration-200" 
                             placeholder="Type a command and press Enter..."
                             autocomplete="off"
                             spellcheck="false">
                     </div>
-                    <div class="mt-2 text-xs text-gray-500 flex items-center justify-between">
+                    <div class="text-xs text-gray-400 flex items-center justify-between">
                         <div>
-                            <i class="bi bi-lightbulb text-yellow-500 me-1"></i>
-                            <span>Quick commands: <span class="text-green-400 font-mono">scan academy-server</span>, <span class="text-green-400 font-mono">status</span>, <span class="text-green-400 font-mono">restore student-db</span></span>
+                            <i class="bi bi-lightbulb text-yellow-400 me-1"></i>
+                            <span>Quick: <span class="text-green-400 font-mono">scan academy-server</span>, <span class="text-green-400 font-mono">status</span>, <span class="text-green-400 font-mono">restore student-db</span></span>
                         </div>
                         <div>
-                            <i class="bi bi-arrow-return-left text-gray-600 me-1"></i>
+                            <i class="bi bi-arrow-return-left text-gray-500 me-1"></i>
                             <span>Press Enter to execute</span>
                         </div>
                     </div>
