@@ -323,7 +323,13 @@ class GameController {
     
     // Handle AI attack attempts
     processAttack(attackData) {
-        const { type, target, technique, severity, sourceIP } = attackData;
+        const { type, target, technique, severity, sourceIP, isSecurityControlAttack } = attackData;
+        
+        // Handle security control disable attacks specially
+        if (isSecurityControlAttack) {
+            this.handleSecurityControlAttack(attackData);
+            return;
+        }
         
         // Store attack in history
         if (!this.gameState.attackHistory) {
@@ -399,6 +405,50 @@ class GameController {
         
         // AI learns from the outcome
         this.aiEngine.updateQTable(attackData, detected);
+    }
+
+    handleSecurityControlAttack(attackData) {
+        const { target, technique, sourceIP, severity } = attackData;
+        
+        // Check if control is already disabled
+        if (!this.gameState.securityControls[target]?.active) {
+            this.uiManager.addTerminalOutput(`⚠️  AI attempted to disable ${target} but it's already disabled`);
+            return;
+        }
+        
+        // Calculate success chance (lower if other controls are active)
+        const activeControls = Object.values(this.gameState.securityControls).filter(c => c.active).length;
+        const successChance = 0.7 - (activeControls * 0.1); // 70% base, -10% per active control
+        const success = Math.random() < successChance;
+        
+        if (success) {
+            // Disable the security control
+            this.gameState.securityControls[target].active = false;
+            
+            // Create high-severity alert
+            const alert = {
+                id: Date.now(),
+                type: 'defense-evasion',
+                severity: 'critical',
+                message: `🚨 CRITICAL: ${technique} by AI from ${sourceIP}`,
+                timestamp: new Date(),
+                target: target,
+                status: 'detected',
+                sourceIP: sourceIP
+            };
+            
+            this.gameState.alerts.push(alert);
+            this.uiManager.addAlert(alert);
+            this.uiManager.addTerminalOutput(`🚨 CRITICAL: AI has disabled ${target}!`);
+            this.uiManager.addTerminalOutput(`   Use 'enable-${target}' to restore protection`);
+            
+            // Update XP tracking
+            this.handleAIAction({ ...attackData, success: true });
+        } else {
+            this.uiManager.addTerminalOutput(`🛡️  DEFENDED: Blocked attempt to disable ${target}`);
+        }
+        
+        this.uiManager.updateDisplay();
     }
 
     handleBlockedIPAttack(attackData) {
@@ -609,6 +659,15 @@ class GameController {
             case 'reset-credentials':
                 this.executeResetCredentials(args[1]);
                 break;
+            case 'enable-firewall':
+                this.enableSecurityControl('firewall');
+                break;
+            case 'enable-endpoint':
+                this.enableSecurityControl('endpoint');
+                break;
+            case 'enable-access-control':
+                this.enableSecurityControl('access');
+                break;
             case 'increase-monitoring':
                 this.executeIncreaseMonitoring();
                 break;
@@ -708,6 +767,9 @@ class GameController {
         this.uiManager.addTerminalOutput('  patch-vulnerability [cve] - Apply security patch');
         this.uiManager.addTerminalOutput('  reset-credentials [user]  - Reset user credentials');
         this.uiManager.addTerminalOutput('  increase-monitoring       - Enhance monitoring systems');
+        this.uiManager.addTerminalOutput('  enable-firewall           - Re-enable firewall protection');
+        this.uiManager.addTerminalOutput('  enable-endpoint           - Re-enable endpoint protection');
+        this.uiManager.addTerminalOutput('  enable-access-control     - Re-enable access control');
         this.uiManager.addTerminalOutput('');
         this.uiManager.addTerminalOutput('UTILITY COMMANDS:');
         this.uiManager.addTerminalOutput('  clear                     - Clear terminal screen');
@@ -1114,6 +1176,47 @@ class GameController {
         }
         
         this.uiManager.addTerminalOutput('✅ User credentials reset. Access controls strengthened.');
+        this.uiManager.updateDisplay();
+    }
+    
+    enableSecurityControl(controlName) {
+        if (!this.gameState.securityControls[controlName]) {
+            this.uiManager.addTerminalOutput(`❌ Invalid security control: ${controlName}`);
+            return;
+        }
+        
+        const control = this.gameState.securityControls[controlName];
+        
+        if (control.active) {
+            this.uiManager.addTerminalOutput(`⚠️  ${controlName} is already enabled`);
+            return;
+        }
+        
+        // Re-enable the security control
+        control.active = true;
+        control.effectiveness = 100; // Reset to full effectiveness
+        
+        // Award XP for defensive action
+        const xpReward = 15; // Base XP for re-enabling control
+        this.gameState.sessionXP += xpReward;
+        
+        const controlNames = {
+            'firewall': 'Firewall',
+            'endpoint': 'Endpoint Protection',
+            'access': 'Access Control'
+        };
+        
+        const displayName = controlNames[controlName] || controlName;
+        
+        this.uiManager.addTerminalOutput(`✅ ${displayName} re-enabled successfully`);
+        this.uiManager.addTerminalOutput(`   Defense systems restored to full capacity`);
+        this.uiManager.showXPReward(xpReward, `Re-enabled ${displayName}`);
+        
+        // Send action to server for XP tracking
+        if (typeof this.sendPlayerAction === 'function') {
+            this.sendPlayerAction('enable-security-control', controlName, 1.0);
+        }
+        
         this.uiManager.updateDisplay();
     }
     
