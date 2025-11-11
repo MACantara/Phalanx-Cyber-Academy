@@ -15,6 +15,7 @@ from .level4_api import level4_api_bp
 from .level5_api import level5_api_bp
 from .xp_api import xp_api_bp
 from .blue_team_vs_red_team_mode import blue_team_vs_red_team as blue_red_bp
+from .red_team_nlp_api import red_team_nlp_api
 
 def register_blueprints(app):
     """Register all blueprints with the Flask app."""
@@ -41,3 +42,4 @@ def register_blueprints(app):
     app.register_blueprint(level5_api_bp)
     app.register_blueprint(xp_api_bp)
     app.register_blueprint(blue_red_bp)
+    app.register_blueprint(red_team_nlp_api)  # NLP-enhanced Red Team AI API
