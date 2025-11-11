@@ -1,28 +1,10 @@
-<!-- TODO (guidance retained) - In the #file:dashboard.html
-     TODO 1: Move the AI Threat Analysis and Incident Response sections onto the same row as
-         the Network Defense Map and Alert Center (responsive layout for large screens).
-
-     TODO 2: Update element with id="alerts-count" to reflect the current number of alerts
-         in the #alert-center container (update dynamically when alerts are added/removed).
-
-     TODO 3: Make the Defense Command Terminal occupy the full available width of the
-         left panel (or full viewport width when desired) so terminal output is easier to read.
-
-     TODO 5: Update app/routes/blue_team_vs_red_team_mode/__init__.py (red team AI) so that
-         component integrity is decreased when AI actions classified as 'critical' or
-         'high' occur. Current behavior appears to only decrement integrity on some
-         critical alerts; ensure integrity changes run for every critical/high event.
--->
-
-<!-- prompt -->
-<!-- In the #file:dashboard.html 1. Move the ai threat analysis and incident response sections on the same row with the network defense map and alert center 2. Update the element with the id of alerts-count based on the number of alerts in the alert center 3. Make the terminal occupy the whole width of the screen 4. return the inputing of terminal commands in the Defense Command Terminal so that it can simulate for the player, blue team, on how to mitigate attacks of the red team 5. Update the #file:__init__.py red team AI to decrease the component integrity if the action taken is either critical or high. This is because I have a situation where I have 8 critical alerts and only a integrity decreasing event happen when another critical alert happens switch seems...not right -->
-
 {% extends "base.html" %}
 
 {% block title %}Blue vs Red Team - Dashboard{% endblock %}
 
 {% block extra_css %}
 <style>
+    /* Custom ring pulse animations for status indicators */
     @keyframes pulse-red {
         0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
         50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
@@ -31,120 +13,45 @@
         0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
         50% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
     }
-    @keyframes flash {
-        0% { background-color: rgba(16, 185, 129, 0.3); }
-        50% { background-color: rgba(16, 185, 129, 0.1); }
-        100% { background-color: transparent; }
-    }
     .pulse-red { animation: pulse-red 2s infinite; }
     .pulse-green { animation: pulse-green 2s infinite; }
-
-    /* Custom scrollbar styles for dashboard */
-    .window-content::-webkit-scrollbar {
-        width: 12px;
-        height: 12px;
+    
+    /* Custom scrollbars - Webkit */
+    .scrollbar-custom::-webkit-scrollbar { width: 12px; height: 12px; }
+    .scrollbar-custom::-webkit-scrollbar-track { background: #1f2937; border-radius: 6px; border: 1px solid #374151; }
+    .scrollbar-custom::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #4b5563, #374151); border-radius: 6px; border: 1px solid #6b7280; }
+    .scrollbar-custom::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #6b7280, #4b5563); border-color: #9ca3af; }
+    .scrollbar-custom::-webkit-scrollbar-thumb:active { background: linear-gradient(180deg, #10b981, #059669); border-color: #10b981; }
+    
+    .scrollbar-terminal::-webkit-scrollbar { width: 10px; height: 10px; }
+    .scrollbar-terminal::-webkit-scrollbar-track { background: #111827; border-radius: 5px; border: 1px solid #1f2937; }
+    .scrollbar-terminal::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #374151, #1f2937); border-radius: 5px; border: 1px solid #4b5563; }
+    .scrollbar-terminal::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #4b5563, #374151); border-color: #6b7280; }
+    .scrollbar-terminal::-webkit-scrollbar-thumb:active { background: linear-gradient(180deg, #10b981, #047857); border-color: #10b981; }
+    
+    .scrollbar-alerts::-webkit-scrollbar { width: 10px; height: 10px; }
+    .scrollbar-alerts::-webkit-scrollbar-track { background: #7f1d1d; border-radius: 5px; border: 1px solid #991b1b; }
+    .scrollbar-alerts::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #dc2626, #b91c1c); border-radius: 5px; border: 1px solid #ef4444; }
+    .scrollbar-alerts::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #ef4444, #dc2626); border-color: #f87171; }
+    .scrollbar-alerts::-webkit-scrollbar-thumb:active { background: linear-gradient(180deg, #10b981, #059669); border-color: #10b981; }
+    
+    /* Firefox scrollbar */
+    .scrollbar-custom { scrollbar-width: thin; scrollbar-color: #4b5563 #1f2937; }
+    .scrollbar-terminal { scrollbar-width: thin; scrollbar-color: #374151 #111827; }
+    .scrollbar-alerts { scrollbar-width: thin; scrollbar-color: #dc2626 #7f1d1d; }
+    
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-
-    .window-content::-webkit-scrollbar-track {
-        background: #1f2937;
-        border-radius: 6px;
-        border: 1px solid #374151;
+    .tab-pane.active { animation: fadeIn 0.3s ease; }
+    
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-
-    .window-content::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #4b5563 0%, #374151 100%);
-        border-radius: 6px;
-        border: 1px solid #6b7280;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-
-    .window-content::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #6b7280 0%, #4b5563 100%);
-        border-color: #9ca3af;
-    }
-
-    .window-content::-webkit-scrollbar-thumb:active {
-        background: linear-gradient(180deg, #10b981 0%, #059669 100%);
-        border-color: #10b981;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    }
-
-    .terminal-output::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-    }
-
-    .terminal-output::-webkit-scrollbar-track {
-        background: #111827;
-        border-radius: 5px;
-        border: 1px solid #1f2937;
-    }
-
-    .terminal-output::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
-        border-radius: 5px;
-        border: 1px solid #4b5563;
-        box-shadow: inset 0 1px 0 rgba(16, 185, 129, 0.1);
-    }
-
-    .terminal-output::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #4b5563 0%, #374151 100%);
-        border-color: #6b7280;
-        box-shadow: inset 0 1px 0 rgba(16, 185, 129, 0.2);
-    }
-
-    .terminal-output::-webkit-scrollbar-thumb:active {
-        background: linear-gradient(180deg, #10b981 0%, #047857 100%);
-        border-color: #10b981;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    }
-
-    .security-content::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-    }
-
-    .security-content::-webkit-scrollbar-track {
-        background: #7f1d1d;
-        border-radius: 5px;
-        border: 1px solid #991b1b;
-    }
-
-    .security-content::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
-        border-radius: 5px;
-        border: 1px solid #ef4444;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-
-    .security-content::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
-        border-color: #f87171;
-    }
-
-    .security-content::-webkit-scrollbar-thumb:active {
-        background: linear-gradient(180deg, #10b981 0%, #059669 100%);
-        border-color: #10b981;
-    }
-
-    /* Firefox scrollbar support */
-    .window-content {
-        scrollbar-width: thin;
-        scrollbar-color: #4b5563 #1f2937;
-    }
-
-    .terminal-output,
-    .security-content {
-        scrollbar-width: thin;
-        scrollbar-color: #374151 #111827;
-    }
-
-    /* Smooth scrolling behavior */
-    .window-content,
-    .terminal-output,
-    .security-content {
-        scroll-behavior: smooth;
-    }
+    #game-menu-dropdown:not(.hidden) { animation: slideDown 0.2s ease-out; }
 </style>
 {% endblock %}
 
@@ -164,12 +71,20 @@
                 <p class="text-gray-300 text-lg">Defend Project Sentinel Academy against adaptive AI attacks</p>
             </div>
             <!-- Game Controls Menu -->
-            <div class="relative">
-                <button id="game-menu-button" class="flex items-center px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg shadow-sm hover:bg-gray-600 transition-colors cursor-pointer">
-                    <i class="bi bi-gear mr-2 text-gray-300"></i>
-                    <span class="text-white">Controls</span>
-                    <i class="bi bi-chevron-down ml-2 text-gray-400"></i>
+            <div class="flex items-center space-x-3">
+                <!-- Quick Guide Button -->
+                <button id="show-guide-button" class="flex items-center px-4 py-2 bg-blue-600 border border-blue-500 rounded-lg shadow-sm hover:bg-blue-700 transition-colors cursor-pointer">
+                    <i class="bi bi-info-circle-fill mr-2 text-white"></i>
+                    <span class="text-white">Quick Guide</span>
                 </button>
+                
+                <!-- Game Controls Menu -->
+                <div class="relative">
+                    <button id="game-menu-button" class="flex items-center px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg shadow-sm hover:bg-gray-600 transition-colors cursor-pointer">
+                        <i class="bi bi-gear mr-2 text-gray-300"></i>
+                        <span class="text-white">Controls</span>
+                        <i class="bi bi-chevron-down ml-2 text-gray-400"></i>
+                    </button>
                 
                 <!-- Dropdown Menu -->
                 <div id="game-menu-dropdown" class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg border border-gray-600 z-50 hidden">
@@ -193,29 +108,32 @@
                         </button>
                     </div>
                 </div>
+                </div>
             </div>
         </div>
+
+
 
         <!-- Game Status Bar -->
         <div class="bg-gray-800 border border-gray-600 p-4 mb-6">
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 cursor-help status-indicator" title="Network security status">
                     <div class="w-4 h-4 rounded-full bg-green-400 pulse-green" id="network-status"></div>
                     <span class="text-sm font-medium text-white">Network: <span id="network-text" class="text-green-400">Secure</span></span>
                 </div>
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 cursor-help status-indicator" title="Asset integrity status">
                     <div class="w-4 h-4 rounded-full bg-green-400" id="assets-status"></div>
                     <span class="text-sm font-medium text-white">Assets: <span id="assets-text" class="text-green-400">Protected</span></span>
                 </div>
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 cursor-help status-indicator" title="Active security alerts">
                     <div class="w-4 h-4 rounded-full bg-gray-500" id="alerts-status"></div>
                     <span class="text-sm font-medium text-white">Alerts: <span id="alerts-count" class="text-gray-300">0 Active</span></span>
                 </div>
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 cursor-help status-indicator" title="Experience points earned this session">
                     <i class="bi bi-award text-blue-400"></i>
                     <span class="text-sm font-medium text-white">Session XP: <span id="session-xp" class="text-blue-400">0</span></span>
                 </div>
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 cursor-help status-indicator" title="Time remaining in simulation">
                     <i class="bi bi-clock text-green-400"></i>
                     <span class="text-sm font-medium text-white">Time: <span id="round-timer" class="text-green-400">15:00</span></span>
                 </div>
@@ -223,46 +141,65 @@
         </div>
 
         <!-- Main Game Area -->
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <!-- Left Panel - Network Map & Terminal -->
-            <div class="lg:col-span-3 space-y-6">
-                <!-- Network Map with Interactive Elements -->
-                <div class="bg-gray-800 border border-gray-600 p-6 window-content">
-                    <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-                        <i class="bi bi-diagram-3 me-2 text-green-400"></i>Network Defense Map
-                    </h3>
+        <div class="grid grid-cols-1 gap-6">
+            <!-- Tabbed Interface for Network Map, Alerts, and System Info -->
+            <div class="bg-gray-800 border border-gray-600">
+                <!-- Tab Headers -->
+                <div class="flex border-b border-gray-600">
+                    <button id="tab-network" class="tab-button active flex-1 px-4 py-3 text-white font-semibold hover:bg-gray-700 transition-all duration-300 border-b-2 border-green-400 cursor-default select-none bg-green-500/10 shadow-sm">
+                        <i class="bi bi-diagram-3 me-2"></i>Network Defense Map
+                    </button>
+                    <button id="tab-alerts" class="tab-button flex-1 px-4 py-3 text-gray-400 font-semibold hover:bg-gray-700 hover:border-gray-500 transition-all duration-300 border-b-2 border-transparent cursor-pointer select-none active:translate-y-px active:bg-gray-600/20 shadow-sm">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Alert Center <span id="alerts-badge" class="hidden ms-2 px-2 py-0.5 bg-red-500 text-white text-xs rounded-full animate-pulse">0</span>
+                    </button>
+                    <button id="tab-incidents" class="tab-button flex-1 px-4 py-3 text-gray-400 font-semibold hover:bg-gray-700 hover:border-gray-500 transition-all duration-300 border-b-2 border-transparent cursor-pointer select-none active:translate-y-px active:bg-gray-600/20 shadow-sm">
+                        <i class="bi bi-shield-exclamation me-2"></i>Incident Response <span id="incidents-badge" class="hidden ms-2 px-2 py-0.5 bg-yellow-500 text-black text-xs rounded-full animate-pulse">0</span>
+                    </button>
+                </div>
+                
+                <!-- Tab Content -->
+                <div class="tab-content p-6">
+                    <!-- Network Map Tab -->
+                    <div id="content-network" class="tab-pane active">
+                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                            <i class="bi bi-diagram-3 me-2 text-green-400"></i>Network Defense Map
+                        </h3>
                     <div class="bg-black border border-gray-600 p-6">
                         <div id="network-map" class="space-y-4">
                             <!-- Interactive Network nodes -->
                             <div class="flex items-center justify-center space-x-8 flex-wrap mb-6">
-                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 transition-colors" data-asset="academy-server" onclick="window.gameController?.selectNetworkNode('academy-server')">
+                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-500/30 active:translate-y-0 active:shadow-md active:shadow-green-500/20 transition-all duration-300 select-none shadow-sm shadow-black/30" data-asset="academy-server" onclick="window.gameController?.selectNetworkNode('academy-server')">
                                     <i class="bi bi-server text-green-400 text-xl"></i>
-                                    <div class="text-xs font-medium mt-1 text-white">Academy Server</div>
-                                    <div class="w-full bg-gray-600 h-1 mt-2 rounded">
+                                    <div class="text-xs font-mono font-bold mt-1 text-green-400">academy-server</div>
+                                    <div class="text-xs text-gray-400 mb-1">(Academy Server)</div>
+                                    <div class="w-full bg-gray-600 h-1 mt-1 rounded">
                                         <div class="bg-green-400 h-1 rounded" style="width: 100%"></div>
                                     </div>
                                     <div class="text-xs text-gray-300 mt-1 integrity-text">100% Integrity</div>
                                 </div>
-                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 transition-colors" data-asset="student-db" onclick="window.gameController?.selectNetworkNode('student-db')">
+                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-500/30 active:translate-y-0 active:shadow-md active:shadow-green-500/20 transition-all duration-300 select-none shadow-sm shadow-black/30" data-asset="student-db" onclick="window.gameController?.selectNetworkNode('student-db')">
                                     <i class="bi bi-database text-green-400 text-xl"></i>
-                                    <div class="text-xs font-medium mt-1 text-white">Student DB</div>
-                                    <div class="w-full bg-gray-600 h-1 mt-2 rounded">
+                                    <div class="text-xs font-mono font-bold mt-1 text-green-400">student-db</div>
+                                    <div class="text-xs text-gray-400 mb-1">(Student DB)</div>
+                                    <div class="w-full bg-gray-600 h-1 mt-1 rounded">
                                         <div class="bg-green-400 h-1 rounded" style="width: 100%"></div>
                                     </div>
                                     <div class="text-xs text-gray-300 mt-1 integrity-text">100% Integrity</div>
                                 </div>
-                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 transition-colors" data-asset="research-files" onclick="window.gameController?.selectNetworkNode('research-files')">
+                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-500/30 active:translate-y-0 active:shadow-md active:shadow-green-500/20 transition-all duration-300 select-none shadow-sm shadow-black/30" data-asset="research-files" onclick="window.gameController?.selectNetworkNode('research-files')">
                                     <i class="bi bi-file-earmark-text text-green-400 text-xl"></i>
-                                    <div class="text-xs font-medium mt-1 text-white">Research Files</div>
-                                    <div class="w-full bg-gray-600 h-1 mt-2 rounded">
+                                    <div class="text-xs font-mono font-bold mt-1 text-green-400">research-files</div>
+                                    <div class="text-xs text-gray-400 mb-1">(Research Files)</div>
+                                    <div class="w-full bg-gray-600 h-1 mt-1 rounded">
                                         <div class="bg-green-400 h-1 rounded" style="width: 100%"></div>
                                     </div>
                                     <div class="text-xs text-gray-300 mt-1 integrity-text">100% Integrity</div>
                                 </div>
-                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 transition-colors" data-asset="learning-platform" onclick="window.gameController?.selectNetworkNode('learning-platform')">
+                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-500/30 active:translate-y-0 active:shadow-md active:shadow-green-500/20 transition-all duration-300 select-none shadow-sm shadow-black/30" data-asset="learning-platform" onclick="window.gameController?.selectNetworkNode('learning-platform')">
                                     <i class="bi bi-mortarboard text-green-400 text-xl"></i>
-                                    <div class="text-xs font-medium mt-1 text-white">Learning Platform</div>
-                                    <div class="w-full bg-gray-600 h-1 mt-2 rounded">
+                                    <div class="text-xs font-mono font-bold mt-1 text-green-400">learning-platform</div>
+                                    <div class="text-xs text-gray-400 mb-1">(Learning Platform)</div>
+                                    <div class="w-full bg-gray-600 h-1 mt-1 rounded">
                                         <div class="bg-green-400 h-1 rounded" style="width: 100%"></div>
                                     </div>
                                     <div class="text-xs text-gray-300 mt-1 integrity-text">100% Integrity</div>
@@ -270,71 +207,202 @@
                             </div>
                             <!-- Interactive Security controls -->
                             <div class="flex items-center justify-center space-x-8 mt-6">
-                                <div class="security-control bg-gray-700 p-3 rounded border border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors" data-control="firewall" onclick="window.gameController?.toggleSecurityControl('firewall')">
+                                <div class="security-control bg-gray-700 p-3 rounded border border-gray-600 cursor-pointer hover:bg-gray-600 hover:scale-105 hover:shadow-md hover:shadow-green-500/30 active:scale-98 transition-all duration-200 select-none shadow-sm shadow-black/30" data-control="firewall" onclick="window.gameController?.toggleSecurityControl('firewall')">
                                     <i class="bi bi-shield-check text-green-400"></i>
                                     <span class="text-xs text-white ms-2">Firewall</span>
                                 </div>
-                                <div class="security-control bg-gray-700 p-3 rounded border border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors" data-control="endpoint" onclick="window.gameController?.toggleSecurityControl('endpoint')">
+                                <div class="security-control bg-gray-700 p-3 rounded border border-gray-600 cursor-pointer hover:bg-gray-600 hover:scale-105 hover:shadow-md hover:shadow-green-500/30 active:scale-98 transition-all duration-200 select-none shadow-sm shadow-black/30" data-control="endpoint" onclick="window.gameController?.toggleSecurityControl('endpoint')">
                                     <i class="bi bi-laptop text-green-400"></i>
                                     <span class="text-xs text-white ms-2">Endpoint Protection</span>
                                 </div>
-                                <div class="security-control bg-gray-700 p-3 rounded border border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors" data-control="access" onclick="window.gameController?.toggleSecurityControl('access')">
+                                <div class="security-control bg-gray-700 p-3 rounded border border-gray-600 cursor-pointer hover:bg-gray-600 hover:scale-105 hover:shadow-md hover:shadow-green-500/30 active:scale-98 transition-all duration-200 select-none shadow-sm shadow-black/30" data-control="access" onclick="window.gameController?.toggleSecurityControl('access')">
                                     <i class="bi bi-key text-green-400"></i>
                                     <span class="text-xs text-white ms-2">Access Control</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Interactive Terminal -->
-                <div class="bg-gray-800 border border-gray-600 p-4">
-                    <h3 class="text-lg font-semibold text-green-400 mb-4 flex items-center">
-                        <i class="bi bi-terminal me-2"></i>Defense Command Terminal
-                    </h3>
-                    <div id="terminal-output" class="bg-black text-green-400 font-mono text-sm p-3 border border-gray-600 h-80 overflow-y-auto terminal-output">
-                        <!-- Terminal content will be populated by JavaScript -->
-                        <div id="response-actions" class="mt-2 hidden">
-                            <div class="text-yellow-400">╔══ THREAT RESPONSE ACTIONS ══╗</div>
-                            <div class="ms-2">
-                                <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('block-ip')">1. Block IP</button>
-                                <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('isolate-asset')">2. Isolate Asset</button>
-                                <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('increase-monitoring')">3. Increase Monitoring</button>
-                                <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('patch-vulnerability')">4. Patch Vulnerability</button>
-                                <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('reset-credentials')">5. Reset Credentials</button>
-                            </div>
-                            <div class="text-yellow-400">╚════════════════════════════╝</div>
+                    </div>
+                    
+                    <!-- Alert Center Tab -->
+                    <div id="content-alerts" class="tab-pane hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-white flex items-center">
+                                <i class="bi bi-exclamation-triangle me-2 text-orange-400"></i>Alert Center
+                            </h3>
+                            <button id="mark-all-read" class="text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded cursor-pointer transition-colors" onclick="window.gameController?.markAllAlertsRead()">
+                                <i class="bi bi-check-all me-1"></i>Mark All Read
+                            </button>
                         </div>
-                        <div class="flex items-center mt-2">
-                            <span>$ </span>
-                            <input type="text" id="terminal-input" class="bg-transparent border-none outline-none text-green-400 flex-1 ms-1" placeholder="Enter command...">
+                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3 mb-4">
+                            <p class="text-xs text-blue-200">
+                                <i class="bi bi-lightbulb me-1 text-yellow-400"></i>
+                                <strong>Tip:</strong> New alerts appear here when the Red Team AI attacks. Click an alert to mark it as read. Use terminal commands to investigate and respond to threats.
+                            </p>
+                        </div>
+                        <div id="alert-center" class="space-y-3 security-content max-h-96 overflow-y-auto scrollbar-alerts">
+                            <div class="text-sm text-gray-400 italic">No active alerts. Your network is currently secure.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Incident Response Tab -->
+                    <div id="content-incidents" class="tab-pane hidden">
+                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+                            <i class="bi bi-shield-exclamation me-2 text-yellow-400"></i>Incident Response
+                        </h3>
+                        <div class="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-3 mb-4">
+                            <p class="text-xs text-yellow-200">
+                                <i class="bi bi-info-circle me-1 text-yellow-400"></i>
+                                <strong>About Incidents:</strong> Critical attacks that need immediate action appear here. These represent successful breaches or compromised assets that require terminal commands to resolve.
+                            </p>
+                        </div>
+                        <div id="incident-panel" class="space-y-3 security-content max-h-96 overflow-y-auto scrollbar-custom">
+                            <div class="text-sm text-gray-400 italic">No incidents detected. All systems operating normally.</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Panel - System Info -->
-            <div class="space-y-6">
-                <!-- Alert Center -->
-                <div class="bg-gray-800 border border-gray-600 p-6 window-content">
-                    <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-                        <i class="bi bi-exclamation-triangle me-2 text-orange-400"></i>Alert Center
+            <!-- Interactive Terminal (Full Width Below) -->
+            <div class="bg-gray-800 border border-gray-600">
+                <!-- Terminal Header -->
+                <div class="flex items-center justify-between border-b border-gray-600 px-4 py-3">
+                    <h3 class="text-lg font-semibold text-white flex items-center">
+                        <i class="bi bi-terminal me-2 text-green-400"></i>Defense Command Terminal
                     </h3>
-                    <div id="alert-center" class="space-y-3 security-content max-h-64 overflow-y-auto">
-                        <div class="text-sm text-gray-400 italic">No active alerts</div>
+                    <div class="flex items-center space-x-3">
+                        <div class="text-xs text-gray-400">
+                            <i class="bi bi-keyboard me-1"></i>Type <span class="text-green-400 font-mono font-semibold">help</span> for commands
+                        </div>
+                        <button id="clear-terminal" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded border border-gray-600 cursor-pointer transition-colors" onclick="window.gameController?.uiManager?.clearTerminal()">
+                            <i class="bi bi-trash me-1"></i>Clear
+                        </button>
                     </div>
                 </div>
-
-                <!-- Incident Response Panel -->
-                <div class="bg-gray-800 border border-gray-600 p-6 window-content">
-                    <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-                        <i class="bi bi-exclamation-triangle me-2 text-yellow-400"></i>Incident Response
-                    </h3>
-                    <div id="incident-panel" class="space-y-3 security-content overflow-y-auto max-h-64">
-                        <div class="text-sm text-gray-400 italic">No incidents detected. Monitoring for suspicious activity...</div>
+                
+                <!-- Terminal Output Area -->
+                <div id="terminal-output" class="bg-black text-green-400 font-mono p-4 overflow-y-auto scrollbar-terminal" style="min-height: 400px; max-height: 500px; font-size: 0.9rem; line-height: 1.6;">
+                    <!-- Terminal content will be populated by JavaScript -->
+                    <div id="response-actions" class="mt-2 hidden">
+                        <div class="text-yellow-400">╔══ THREAT RESPONSE ACTIONS ══╗</div>
+                        <div class="ms-2">
+                            <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('block-ip')">1. Block IP</button>
+                            <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('isolate-asset')">2. Isolate Asset</button>
+                            <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('increase-monitoring')">3. Increase Monitoring</button>
+                            <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('patch-vulnerability')">4. Patch Vulnerability</button>
+                            <button class="response-btn bg-gray-700 hover:bg-green-400 hover:text-black text-green-400 px-3 py-1 me-2 mt-1 rounded cursor-pointer" onclick="window.gameController?.executeResponse('reset-credentials')">5. Reset Credentials</button>
+                        </div>
+                        <div class="text-yellow-400">╚════════════════════════════╝</div>
+                    </div>
+                </div>
+                
+                <!-- Terminal Input Area -->
+                <div class="bg-gray-700/50 px-4 py-3 border-t border-gray-600">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <span class="text-green-400 font-mono font-bold text-lg select-none">$</span>
+                        <input 
+                            type="text" 
+                            id="terminal-input" 
+                            class="bg-gray-900 border border-gray-600 rounded px-3 py-2 text-green-400 font-mono flex-1 text-base outline-none cursor-text focus:border-green-500 focus:ring-2 focus:ring-green-500/30 transition-all duration-200" 
+                            placeholder="Type a command and press Enter..."
+                            autocomplete="off"
+                            spellcheck="false">
+                    </div>
+                    <div class="text-xs text-gray-400 flex items-center justify-between">
+                        <div>
+                            <i class="bi bi-lightbulb text-yellow-400 me-1"></i>
+                            <span>Quick: <span class="text-green-400 font-mono">scan academy-server</span>, <span class="text-green-400 font-mono">status</span>, <span class="text-green-400 font-mono">restore student-db</span></span>
+                        </div>
+                        <div>
+                            <i class="bi bi-arrow-return-left text-gray-500 me-1"></i>
+                            <span>Press Enter to execute</span>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Guide Modal -->
+<div id="quick-guide-modal" class="fixed inset-0 bg-black/75 hidden z-50 flex items-center justify-center">
+    <div class="bg-gray-800 border-2 border-gray-600 rounded-xl shadow-2xl max-w-4xl mx-4 w-full">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-gray-600 px-6 py-4 bg-gray-700/50">
+            <div class="flex items-center">
+                <i class="bi bi-info-circle-fill me-3 text-blue-400 text-3xl"></i>
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Quick Guide: How to Play</h2>
+                    <p class="text-sm text-yellow-400 flex items-center mt-1">
+                        <i class="bi bi-pause-circle-fill me-1"></i>Game Paused - Take your time!
+                    </p>
+                </div>
+            </div>
+            <button id="close-guide-modal" class="text-gray-400 hover:text-white transition-colors cursor-pointer p-2 hover:bg-gray-600 rounded-lg">
+                <i class="bi bi-x-lg text-2xl"></i>
+            </button>
+        </div>
+        
+        <!-- Modal Content -->
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-gray-700/50 p-5 rounded-lg border border-gray-600 hover:border-green-400 transition-all duration-300">
+                    <div class="font-semibold text-xl text-white mb-3 flex items-center">
+                        <i class="bi bi-1-circle-fill me-3 text-green-400 text-2xl"></i>Monitor Network
+                    </div>
+                    <div class="text-gray-300 text-base leading-relaxed">
+                        Watch the <span class="text-green-400 font-mono font-semibold">Network Defense Map</span> for attacks on your assets. Check <span class="text-orange-400 font-semibold">Alert Center</span> for new threats.
+                    </div>
+                </div>
+                <div class="bg-gray-700/50 p-5 rounded-lg border border-gray-600 hover:border-blue-400 transition-all duration-300">
+                    <div class="font-semibold text-xl text-white mb-3 flex items-center">
+                        <i class="bi bi-2-circle-fill me-3 text-blue-400 text-2xl"></i>Use Terminal Commands
+                    </div>
+                    <div class="text-gray-300 text-base leading-relaxed">
+                        Type <span class="text-green-400 font-mono font-semibold">help</span> in the terminal below to see all commands. Use <span class="text-green-400 font-mono font-semibold">scan [asset]</span> to investigate and <span class="text-green-400 font-mono font-semibold">restore [asset]</span> to fix damage.
+                    </div>
+                </div>
+                <div class="bg-gray-700/50 p-5 rounded-lg border border-gray-600 hover:border-purple-400 transition-all duration-300">
+                    <div class="font-semibold text-xl text-white mb-3 flex items-center">
+                        <i class="bi bi-3-circle-fill me-3 text-purple-400 text-2xl"></i>Earn XP & Defend
+                    </div>
+                    <div class="text-gray-300 text-base leading-relaxed">
+                        Respond to incidents quickly to earn XP. Prevent assets from reaching 0% integrity. Re-enable disabled security controls immediately!
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Tips Section -->
+            <div class="mt-6 bg-blue-900/30 border border-blue-500/50 rounded-lg p-4">
+                <h3 class="text-lg font-semibold text-white mb-3 flex items-center">
+                    <i class="bi bi-lightbulb-fill me-2 text-yellow-400"></i>Pro Tips
+                </h3>
+                <ul class="space-y-2 text-gray-300">
+                    <li class="flex items-start">
+                        <i class="bi bi-check-circle-fill me-2 text-green-400 mt-1"></i>
+                        <span>Use <span class="text-green-400 font-mono">status</span> to get a quick overview of all assets and security controls</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="bi bi-check-circle-fill me-2 text-green-400 mt-1"></i>
+                        <span>When a security control is disabled, use <span class="text-green-400 font-mono">enable-firewall</span>, <span class="text-green-400 font-mono">enable-endpoint</span>, or <span class="text-green-400 font-mono">enable-access-control</span> to restore it</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="bi bi-check-circle-fill me-2 text-green-400 mt-1"></i>
+                        <span>Click on network nodes or alerts to quickly see their details</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="bi bi-check-circle-fill me-2 text-green-400 mt-1"></i>
+                        <span>The Red Team AI adapts - it learns which attacks work and will try them more often!</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Modal Footer -->
+        <div class="border-t border-gray-600 px-6 py-4 bg-gray-700/50 flex justify-end">
+            <button id="close-guide-modal-btn" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors cursor-pointer font-semibold">
+                Got it! Let's Play
+            </button>
         </div>
     </div>
 </div>
@@ -364,6 +432,173 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+// Quick Guide Modal functionality
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('quick-guide-modal');
+    const showButton = document.getElementById('show-guide-button');
+    const closeButton = document.getElementById('close-guide-modal');
+    const closeButtonAlt = document.getElementById('close-guide-modal-btn');
+    
+    // Track if game was running before modal opened
+    let wasGameRunning = false;
+    let savedTimer = null;
+    
+    // Show modal on button click
+    if (showButton) {
+        showButton.addEventListener('click', () => {
+            // Pause the game if it's running
+            if (window.gameController && window.gameController.gameState.isRunning) {
+                wasGameRunning = true;
+                // Save timer state and pause
+                savedTimer = window.gameController.gameTimer;
+                window.gameController.pauseGame();
+            }
+            modal.classList.remove('hidden');
+        });
+    }
+    
+    // Close modal handlers
+    const closeModal = async () => {
+        modal.classList.add('hidden');
+        // Resume game if it was running before modal opened
+        if (wasGameRunning && window.gameController) {
+            // Manually resume without making new API calls
+            window.gameController.gameState.isRunning = true;
+            window.gameController.uiManager.updateGameControls();
+            
+            // Restart the game timer
+            if (!window.gameController.gameTimer) {
+                window.gameController.gameTimer = setInterval(() => {
+                    window.gameController.updateTimer();
+                }, 1000);
+            }
+            
+            // Restart AI engine
+            window.gameController.aiEngine.startAttackSequence();
+            
+            console.log('🎮 Game resumed from Quick Guide');
+            wasGameRunning = false;
+        }
+    };
+    
+    if (closeButton) closeButton.addEventListener('click', closeModal);
+    if (closeButtonAlt) closeButtonAlt.addEventListener('click', closeModal);
+    
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+    
+    // Show modal automatically on first load (before game starts)
+    const hasSeenGuide = sessionStorage.getItem('hasSeenGuide');
+    if (!hasSeenGuide) {
+        setTimeout(() => {
+            modal.classList.remove('hidden');
+            sessionStorage.setItem('hasSeenGuide', 'true');
+        }, 1000);
+    }
+});
+
+// Tab switching functionality
+document.addEventListener('DOMContentLoaded', () => {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tabId = button.id.replace('tab-', '');
+            
+            // Remove active state from all buttons and panes
+            tabButtons.forEach(btn => {
+                btn.classList.remove('active', 'text-white', 'border-green-400', 'cursor-default', 'bg-green-500/10');
+                btn.classList.add('text-gray-400', 'border-transparent', 'cursor-pointer');
+            });
+            tabPanes.forEach(pane => {
+                pane.classList.remove('active');
+                pane.classList.add('hidden');
+            });
+            
+            // Add active state to clicked button and corresponding pane
+            button.classList.add('active', 'text-white', 'border-green-400', 'cursor-default', 'bg-green-500/10');
+            button.classList.remove('text-gray-400', 'border-transparent', 'cursor-pointer');
+            const targetPane = document.getElementById(`content-${tabId}`);
+            if (targetPane) {
+                targetPane.classList.remove('hidden');
+                targetPane.classList.add('active');
+            }
+        });
+    });
+    
+    // Update alert badge when alerts change
+    const updateAlertBadge = () => {
+        const alertsCount = document.querySelectorAll('#alert-center > div:not(.italic)').length;
+        const badge = document.getElementById('alerts-badge');
+        if (badge) {
+            if (alertsCount > 0) {
+                badge.textContent = alertsCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+    };
+    
+    // Update incidents badge when incidents change
+    const updateIncidentsBadge = () => {
+        const incidentsCount = document.querySelectorAll('#incident-panel > div:not(.italic)').length;
+        const badge = document.getElementById('incidents-badge');
+        if (badge) {
+            if (incidentsCount > 0) {
+                badge.textContent = incidentsCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+    };
+    
+    // Monitor alert center for changes
+    const alertCenter = document.getElementById('alert-center');
+    if (alertCenter) {
+        const observer = new MutationObserver(updateAlertBadge);
+        observer.observe(alertCenter, { childList: true, subtree: true });
+    }
+    
+    // Monitor incident panel for changes
+    const incidentPanel = document.getElementById('incident-panel');
+    if (incidentPanel) {
+        const observer = new MutationObserver(updateIncidentsBadge);
+        observer.observe(incidentPanel, { childList: true, subtree: true });
+    }
+    
+    // Auto-focus terminal input for better UX
+    const terminalInput = document.getElementById('terminal-input');
+    if (terminalInput) {
+        // Focus after a short delay to ensure page is loaded
+        setTimeout(() => {
+            terminalInput.focus();
+        }, 500);
+        
+        // Keep terminal input accessible - click anywhere on output to focus input
+        const terminalOutput = document.getElementById('terminal-output');
+        if (terminalOutput) {
+            terminalOutput.addEventListener('click', () => {
+                terminalInput.focus();
+            });
+        }
+    }
+});
+</script>
 <script type="module" src="{{ url_for('static', filename='js/blue-team-vs-red-team-mode/game-controller.js') }}"></script>
 <script type="module" src="{{ url_for('static', filename='js/blue-team-vs-red-team-mode/ai-engine.js') }}"></script>
 <script type="module" src="{{ url_for('static', filename='js/blue-team-vs-red-team-mode/ui-manager.js') }}"></script>

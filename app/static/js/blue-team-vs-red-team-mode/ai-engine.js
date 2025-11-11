@@ -1,9 +1,14 @@
-// AI Engine - Implements Q-Learning for Red Team attacks
+// AI Engine - Implements Q-Learning for Red Team attacks with NLP-based pattern selection
+import { NLPAttackAnalyzer } from './nlp-attack-analyzer.js';
+
 class AIEngine {
     constructor(gameController) {
         this.gameController = gameController;
         this.isAttacking = false;
         this.attackInterval = null;
+        
+        // Initialize NLP analyzer for context-aware attack selection
+        this.nlpAnalyzer = new NLPAttackAnalyzer();
         
         // Q-Learning parameters
         this.learningRate = 0.1;
@@ -12,8 +17,11 @@ class AIEngine {
         this.explorationDecay = 0.995;
         this.minExplorationRate = 0.05;
         
-        // Q-Table: state-action values
+        // Q-Table: state-action values (enhanced with NLP features)
         this.qTable = new Map();
+        
+        // Track completed phases for prerequisite checking
+        this.completedPhases = [];
         
         // Attack types based on MITRE ATT&CK
         this.attackTypes = [
@@ -30,13 +38,13 @@ class AIEngine {
             'impact'
         ];
         
-        // Attack techniques
+        // Attack techniques (including security control disruption)
         this.techniques = {
             'reconnaissance': ['Network Scanning', 'Port Scanning', 'Service Discovery'],
             'initial-access': ['Phishing', 'Exploit Public-Facing Application', 'Drive-by Compromise'],
             'persistence': ['Registry Modification', 'Scheduled Task', 'Service Creation'],
             'privilege-escalation': ['Process Injection', 'Access Token Manipulation', 'Exploitation for Privilege Escalation'],
-            'defense-evasion': ['File Deletion', 'Process Hollowing', 'Masquerading'],
+            'defense-evasion': ['File Deletion', 'Process Hollowing', 'Masquerading', 'Disable Firewall', 'Disable Endpoint Protection', 'Disable Access Control'],
             'credential-access': ['Credential Dumping', 'Brute Force', 'Keylogging'],
             'discovery': ['System Information Discovery', 'Account Discovery', 'Network Service Scanning'],
             'lateral-movement': ['Remote Services', 'Internal Spearphishing', 'Lateral Tool Transfer'],
@@ -130,20 +138,34 @@ class AIEngine {
         // Get current game state for Q-Learning
         const state = this.getCurrentState();
         
-        // Select action using epsilon-greedy strategy
-        const action = this.selectAction(state);
+        // Use NLP analyzer to get contextual recommendations
+        const nlpAnalysis = this.nlpAnalyzer.analyzeGameState(
+            this.gameController.getGameState(),
+            this.attackPhases[this.currentPhase],
+            this.completedPhases
+        );
         
-        // Execute the attack
-        const attackData = this.createAttackData(action);
+        console.log(`🧠 NLP Analysis: ${nlpAnalysis.stateDescription}`);
+        console.log(`🎯 Recommended attack vector: ${nlpAnalysis.attackVector}`);
+        console.log(`📊 Success probability: ${(nlpAnalysis.successProbability * 100).toFixed(1)}%`);
         
-        console.log(`🤖 AI executing: ${attackData.technique} on ${attackData.target}`);
+        // Select action using enhanced epsilon-greedy strategy with NLP guidance
+        const action = this.selectAction(state, nlpAnalysis);
+        
+        // Execute the attack with NLP-enhanced data
+        const attackData = this.createAttackData(action, nlpAnalysis);
+        
+        // Log with proper formatting - show MITRE ID if available, otherwise show attack type
+        const attackIdentifier = attackData.mitreId ? `${attackData.mitreId}` : `${attackData.type}`;
+        console.log(`🤖 AI executing: ${attackData.technique} [${attackIdentifier}] on ${attackData.target}`);
         
         // Send attack to game controller
         this.gameController.processAttack(attackData);
         
-        // Store state-action pair for learning
+        // Store state-action pair and NLP analysis for learning
         this.lastState = state;
         this.lastAction = action;
+        this.lastNLPAnalysis = nlpAnalysis;
         
         // Progress through attack phases
         this.updateAttackPhase();
@@ -152,16 +174,38 @@ class AIEngine {
     getCurrentState() {
         const gameState = this.gameController.getGameState();
         
-        // Create state representation
+        // Get NLP-enhanced state features
+        const nlpAnalysis = this.nlpAnalyzer.analyzeGameState(
+            gameState,
+            this.attackPhases[this.currentPhase],
+            this.completedPhases
+        );
+        
+        // Create enhanced state representation with NLP features
         const state = {
             phase: this.currentPhase,
             timeRemaining: Math.floor(gameState.timeRemaining / 60), // Minutes
             assetIntegrity: this.getAverageAssetIntegrity(gameState.assets),
             alertLevel: Math.min(5, gameState.alerts.length),
-            securityControlsActive: this.getActiveSecurityControls(gameState.securityControls)
+            securityControlsActive: this.getActiveSecurityControls(gameState.securityControls),
+            // NLP-derived features
+            defensiveStrength: Math.floor(nlpAnalysis.defensiveStrength / 20), // 0-5 scale
+            vulnerabilityCount: Math.min(5, nlpAnalysis.vulnerabilities.length),
+            attackVectorType: this.vectorToInt(nlpAnalysis.attackVector)
         };
         
         return this.stateToString(state);
+    }
+    
+    vectorToInt(vectorType) {
+        const vectorMap = {
+            'multi-vector-exploit': 0,
+            'credential-based-attack': 1,
+            'stealth-infiltration': 2,
+            'advanced-persistent-threat': 3,
+            'opportunistic-attack': 4
+        };
+        return vectorMap[vectorType] || 4;
     }
     
     getAverageAssetIntegrity(assets) {
@@ -175,18 +219,62 @@ class AIEngine {
     }
     
     stateToString(state) {
-        return `${state.phase}-${state.timeRemaining}-${state.assetIntegrity}-${state.alertLevel}-${state.securityControlsActive}`;
+        return `${state.phase}-${state.timeRemaining}-${state.assetIntegrity}-${state.alertLevel}-${state.securityControlsActive}-${state.defensiveStrength}-${state.vulnerabilityCount}-${state.attackVectorType}`;
     }
     
-    selectAction(state) {
-        // Epsilon-greedy action selection
-        if (Math.random() < this.explorationRate) {
+    selectAction(state, nlpAnalysis = null) {
+        // Enhanced epsilon-greedy action selection with NLP guidance
+        
+        // If we have NLP recommendations and they have high confidence, use them more often
+        const nlpGuidanceThreshold = 0.7;
+        const useNLPGuidance = nlpAnalysis && 
+                               nlpAnalysis.successProbability > nlpGuidanceThreshold &&
+                               Math.random() < 0.5; // 50% chance to use NLP guidance when confident
+        
+        if (useNLPGuidance) {
+            // Use NLP-recommended technique (guided exploration)
+            return this.getActionFromNLPRecommendation(nlpAnalysis);
+        } else if (Math.random() < this.explorationRate) {
             // Explore: random action
             return this.getRandomAction();
         } else {
-            // Exploit: best known action for this state
+            // Exploit: best known action for this state from Q-table
             return this.getBestAction(state);
         }
+    }
+    
+    getActionFromNLPRecommendation(nlpAnalysis) {
+        // Select the best recommended technique from NLP analysis
+        const topTechniques = nlpAnalysis.recommendedTechniques;
+        
+        if (topTechniques.length === 0) {
+            return this.getRandomAction();
+        }
+        
+        // Weight by contextual fit score
+        const totalScore = topTechniques.reduce((sum, t) => sum + t.score, 0);
+        let random = Math.random() * totalScore;
+        
+        for (const technique of topTechniques) {
+            random -= technique.score;
+            if (random <= 0) {
+                // Select a random target for this technique
+                const target = this.targets[Math.floor(Math.random() * this.targets.length)];
+                
+                return {
+                    type: this.attackPhases[this.currentPhase],
+                    technique: technique.description,
+                    mitreId: technique.id,
+                    mitreName: technique.name,
+                    target: target,
+                    nlpGuided: true,
+                    contextualFit: technique.contextualFit
+                };
+            }
+        }
+        
+        // Fallback
+        return this.getRandomAction();
     }
     
     getRandomAction() {
@@ -198,7 +286,8 @@ class AIEngine {
         return {
             type: currentAttackType,
             technique: technique,
-            target: target
+            target: target,
+            nlpGuided: false
         };
     }
     
@@ -245,7 +334,7 @@ class AIEngine {
         return `${action.type}-${action.technique}-${action.target}`;
     }
     
-    createAttackData(action) {
+    createAttackData(action, nlpAnalysis = null) {
         // Sometimes change IP address proactively (5% chance)
         if (Math.random() < 0.05 && !this.blockedIPs.has(this.currentIPAddress)) {
             const oldIP = this.currentIPAddress;
@@ -259,10 +348,13 @@ class AIEngine {
             console.log(`🤖 AI proactively changed IP from ${oldIP} to ${this.currentIPAddress}`);
         }
 
+        // Check if this is a security control disable attack
+        const isSecurityControlAttack = ['Disable Firewall', 'Disable Endpoint Protection', 'Disable Access Control'].includes(action.technique);
+        
         return {
             type: action.type,
             technique: action.technique,
-            target: action.target,
+            target: action.target || (isSecurityControlAttack ? this.getSecurityControlTarget(action.technique) : null),
             severity: this.calculateSeverity(action.type),
             timestamp: new Date(),
             // IP address information
@@ -274,7 +366,18 @@ class AIEngine {
             userAgent: this.generateRandomUserAgent(),
             // Attack metadata
             attackId: this.generateAttackId(),
-            sessionId: this.generateSessionId()
+            sessionId: this.generateSessionId(),
+            // MITRE ATT&CK information (from NLP analysis)
+            mitreId: action.mitreId || null,
+            mitreName: action.mitreName || null,
+            // NLP-enhanced metadata
+            nlpGuided: action.nlpGuided || false,
+            contextualFit: action.contextualFit || null,
+            attackVector: nlpAnalysis?.attackVector || 'unknown',
+            predictedSuccess: nlpAnalysis?.successProbability || 0.5,
+            vulnerabilitiesExploited: nlpAnalysis?.vulnerabilities || [],
+            // Security control attack flag
+            isSecurityControlAttack: isSecurityControlAttack
         };
     }
     
@@ -301,16 +404,43 @@ class AIEngine {
         const progressProbability = 0.3; // 30% chance to advance phase
         
         if (Math.random() < progressProbability && this.currentPhase < this.attackPhases.length - 1) {
+            // Mark current phase as completed
+            const currentPhaseName = this.attackPhases[this.currentPhase];
+            if (!this.completedPhases.includes(currentPhaseName)) {
+                this.completedPhases.push(currentPhaseName);
+                console.log(`✅ Phase completed: ${currentPhaseName}`);
+            }
+            
             this.currentPhase++;
+            console.log(`🎯 Advancing to phase: ${this.attackPhases[this.currentPhase]}`);
         }
     }
     
-    // Q-Learning update method
+    // Enhanced Q-Learning update method with NLP feedback
     updateQTable(attackData, detected) {
         if (!this.lastState || !this.lastAction) return;
         
-        // Calculate reward
+        // Calculate reward with NLP-enhanced factors
         const reward = this.calculateReward(attackData, detected);
+        
+        // Additional reward adjustment based on NLP prediction accuracy
+        let nlpAccuracyBonus = 0;
+        if (this.lastNLPAnalysis && attackData.nlpGuided) {
+            const predicted = this.lastNLPAnalysis.successProbability > 0.5;
+            const actual = !detected;
+            
+            if (predicted === actual) {
+                // NLP prediction was accurate, bonus reward
+                nlpAccuracyBonus = 0.2;
+                console.log('🎯 NLP prediction was accurate! Bonus reward.');
+            } else {
+                // NLP prediction was inaccurate, slight penalty
+                nlpAccuracyBonus = -0.1;
+                console.log('❌ NLP prediction was inaccurate.');
+            }
+        }
+        
+        const adjustedReward = reward + nlpAccuracyBonus;
         
         // Get current state
         const currentState = this.getCurrentState();
@@ -324,7 +454,7 @@ class AIEngine {
         
         // Update Q-value
         const newQValue = currentQValue + this.learningRate * 
-            (reward + this.discountFactor * nextStateMaxQ - currentQValue);
+            (adjustedReward + this.discountFactor * nextStateMaxQ - currentQValue);
         
         this.qTable.set(stateActionKey, newQValue);
         
@@ -334,7 +464,7 @@ class AIEngine {
             this.explorationRate * this.explorationDecay
         );
         
-        console.log(`🧠 Q-Learning update: ${stateActionKey} -> ${newQValue.toFixed(3)} (reward: ${reward})`);
+        console.log(`🧠 Q-Learning update: ${stateActionKey.substring(0, 40)}... -> ${newQValue.toFixed(3)} (reward: ${adjustedReward.toFixed(2)})`);
     }
     
     calculateReward(attackData, detected) {
@@ -595,12 +725,15 @@ class AIEngine {
     reset() {
         this.stopAttackSequence();
         this.currentPhase = 0;
+        this.completedPhases = []; // Reset completed phases
         // Reset IP tracking
         this.currentIPAddress = this.generateRandomIP();
         this.blockedIPs.clear();
         this.ipChangeHistory = [];
+        // Reset NLP analysis tracking
+        this.lastNLPAnalysis = null;
         // Keep Q-table for continued learning
-        console.log('🤖 AI Engine reset');
+        console.log('🤖 AI Engine reset (NLP-enhanced)');
     }
 
     // IP Address Management Methods
@@ -760,10 +893,54 @@ class AIEngine {
         return tactics[this.currentPhase] || 'Mixed Tactics';
     }
     
+    // Get security control target from technique name
+    getSecurityControlTarget(technique) {
+        const controlMap = {
+            'Disable Firewall': 'firewall',
+            'Disable Endpoint Protection': 'endpoint',
+            'Disable Access Control': 'access'
+        };
+        return controlMap[technique] || null;
+    }
     
     // Export Q-table for analysis (development/debugging)
     exportQTable() {
         return Object.fromEntries(this.qTable);
+    }
+    
+    // Export NLP analysis statistics
+    exportNLPStats() {
+        const gameState = this.gameController.getGameState();
+        return this.nlpAnalyzer.exportAnalysis(
+            gameState,
+            this.attackPhases[this.currentPhase],
+            this.completedPhases
+        );
+    }
+    
+    // Get comprehensive AI state for monitoring/debugging
+    getAIState() {
+        return {
+            currentPhase: this.attackPhases[this.currentPhase],
+            completedPhases: this.completedPhases,
+            explorationRate: this.explorationRate,
+            qTableSize: this.qTable.size,
+            ipInfo: this.getCurrentIPInfo(),
+            difficulty: this.getDifficulty(),
+            nlpEnabled: true,
+            lastNLPAnalysis: this.lastNLPAnalysis ? {
+                stateDescription: this.lastNLPAnalysis.stateDescription,
+                defensiveStrength: this.lastNLPAnalysis.defensiveStrength,
+                vulnerabilities: this.lastNLPAnalysis.vulnerabilities,
+                attackVector: this.lastNLPAnalysis.attackVector,
+                successProbability: this.lastNLPAnalysis.successProbability,
+                topTechniques: this.lastNLPAnalysis.recommendedTechniques.slice(0, 3).map(t => ({
+                    id: t.id,
+                    name: t.name,
+                    score: t.score
+                }))
+            } : null
+        };
     }
 }
 

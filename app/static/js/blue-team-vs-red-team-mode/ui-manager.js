@@ -66,9 +66,12 @@ class UIManager {
             if (assetsText) assetsText.className = 'text-green-400';
         }
         
-        // Alerts count
+        // Alerts count - count actual DOM elements in alert center for accuracy
         const alertsCount = document.getElementById('alerts-count');
-        const activeAlerts = gameState.alerts.filter(alert => alert.status === 'detected').length;
+        const alertCenter = document.getElementById('alert-center');
+        // Count actual alert items, excluding the "no alerts" message
+        const activeAlerts = alertCenter ? 
+            Array.from(alertCenter.children).filter(child => child.classList.contains('alert-item')).length : 0;
         
         if (alertsCount) {
             alertsCount.textContent = `${activeAlerts} Active`;
@@ -191,7 +194,10 @@ class UIManager {
     }
     
     formatAssetName(name) {
-        return name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        // Return the asset name in terminal command format (e.g., 'academy-server')
+        // with a display-friendly version in parentheses
+        const displayName = name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        return `${name} (${displayName})`;
     }
     
     updateTimer() {
@@ -266,8 +272,10 @@ class UIManager {
         
         const severityClass = this.getSeverityClass(alert.severity);
         const alertElement = document.createElement('div');
-        alertElement.className = `p-3 rounded-lg border-l-4 ${severityClass.bg} ${severityClass.border} mb-2`;
+        // Add unread indicator with border and background
+        alertElement.className = `alert-item p-3 rounded-lg border-l-4 ${severityClass.bg} ${severityClass.border} mb-2 cursor-pointer hover:opacity-80 transition-opacity relative border-r-4 border-r-blue-400`;
         alertElement.dataset.alertId = alert.id || Date.now();
+        alertElement.dataset.read = 'false';
         
         // Format IP address information
         const ipInfo = alert.sourceIP ? 
@@ -277,8 +285,10 @@ class UIManager {
             </div>` : '';
         
         alertElement.innerHTML = `
-            <div class="flex items-center justify-between">
-                <div class="flex-1">
+            <div class="flex items-center">
+                <!-- Unread indicator dot -->
+                <div class="unread-indicator absolute -left-1 top-1/2 -translate-y-1/2 w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
+                <div class="flex-1 ms-2">
                     <div class="text-sm font-medium ${severityClass.text}">${alert.technique}</div>
                     <div class="text-xs text-white">${this.formatAssetName(alert.target)} • ${alert.timestamp.toLocaleTimeString()}</div>
                     ${ipInfo}
@@ -286,24 +296,60 @@ class UIManager {
                 </div>
                 <div class="flex items-center space-x-2">
                     <span class="text-xs px-2 py-1 ${severityClass.badge} rounded-full">${alert.severity.toUpperCase()}</span>
-                    ${alert.sourceIP ? `<button class="text-xs px-2 py-1 bg-red-600 hover:bg-red-700 rounded cursor-pointer" onclick="window.gameController?.executeBlockIP('${alert.sourceIP}')">Block IP</button>` : ''}
-                    <button class="text-xs text-gray-400 hover:text-white" onclick="this.parentElement.parentElement.parentElement.remove()">
-                        <i class="bi bi-x-lg cursor-pointer"></i>
-                    </button>
+                    <span class="read-status text-xs px-2 py-1 bg-blue-500 text-white rounded-full">NEW</span>
                 </div>
             </div>
         `;
+        
+        // Add click handler to mark as read
+        alertElement.addEventListener('click', () => {
+            this.markAlertAsRead(alertElement);
+        });
         
         // Add flash animation for new alerts
         alertElement.style.animation = 'flash 0.5s ease-in-out';
         
         alertCenter.insertBefore(alertElement, alertCenter.firstChild);
         
-        // Keep only last 15 alerts (increased from 10)
+        // Keep only last 50 alerts to prevent DOM bloat while showing more history
         const alerts = alertCenter.children;
-        if (alerts.length > 15) {
+        if (alerts.length > 50) {
             alertCenter.removeChild(alerts[alerts.length - 1]);
         }
+    }
+    
+    markAlertAsRead(alertElement) {
+        if (alertElement.dataset.read === 'true') return;
+        
+        alertElement.dataset.read = 'true';
+        
+        // Remove unread indicator
+        const unreadIndicator = alertElement.querySelector('.unread-indicator');
+        if (unreadIndicator) {
+            unreadIndicator.remove();
+        }
+        
+        // Remove right border
+        alertElement.classList.remove('border-r-4', 'border-r-blue-400');
+        
+        // Update status badge
+        const statusBadge = alertElement.querySelector('.read-status');
+        if (statusBadge) {
+            statusBadge.textContent = 'READ';
+            statusBadge.classList.remove('bg-blue-500');
+            statusBadge.classList.add('bg-gray-600');
+        }
+        
+        // Reduce opacity slightly
+        alertElement.style.opacity = '0.7';
+    }
+    
+    markAllAlertsRead() {
+        const alertCenter = document.getElementById('alert-center');
+        if (!alertCenter) return;
+        
+        const alerts = alertCenter.querySelectorAll('.alert-item[data-read="false"]');
+        alerts.forEach(alert => this.markAlertAsRead(alert));
     }
     
     getSeverityClass(severity) {
@@ -401,9 +447,6 @@ class UIManager {
         const terminalOutput = document.getElementById('terminal-output');
         if (!terminalOutput) return;
         
-        // Preserve the existing input container
-        const existingInput = terminalOutput.querySelector('.flex.items-center');
-        
         // Update output - support both new and old format
         terminalOutput.innerHTML = this.terminalOutput.map(entry => {
             if (typeof entry === 'object' && entry.text && entry.class) {
@@ -412,31 +455,6 @@ class UIManager {
                 return `<div class="text-gray-300">${entry}</div>`;
             }
         }).join('');
-        
-        // Add or restore input line
-        if (!terminalOutput.querySelector('.flex.items-center')) {
-            const inputDiv = document.createElement('div');
-            inputDiv.className = 'flex items-center mt-2';
-            inputDiv.innerHTML = `
-                <span>$ </span>
-                <input type="text" id="terminal-input" class="bg-transparent border-none outline-none text-green-400 flex-1 ms-1" placeholder="Enter command...">
-            `;
-            terminalOutput.appendChild(inputDiv);
-            
-            // Re-attach event listener for the new input
-            const input = document.getElementById('terminal-input');
-            if (input) {
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        const command = e.target.value.trim();
-                        if (command) {
-                            this.gameController.handleTerminalCommand(command);
-                            e.target.value = '';
-                        }
-                    }
-                });
-            }
-        }
         
         // Scroll to bottom
         terminalOutput.scrollTop = terminalOutput.scrollHeight;
@@ -859,15 +877,38 @@ class UIManager {
 
     addTerminalOutput(text, type = 'normal') {
         const timestamp = new Date().toLocaleTimeString();
-        const prefix = type === 'success' ? '✓' : type === 'error' ? '✗' : '$';
-        const colorClass = type === 'success' ? 'text-green-400' : type === 'error' ? 'text-red-400' : 'text-gray-300';
+        
+        // Check if text already starts with a prefix to avoid duplicates
+        const hasPrefix = text.trim().startsWith('$') || text.trim().startsWith('✓') || 
+                         text.trim().startsWith('✗') || text.trim().startsWith('ℹ') || 
+                         text.trim().startsWith('⚠');
+        
+        const prefix = type === 'success' ? '✓' : type === 'error' ? '✗' : type === 'info' ? 'ℹ' : type === 'warning' ? '⚠' : '$';
+        const colorClass = type === 'success' ? 'text-green-400' : 
+                          type === 'error' ? 'text-red-400' : 
+                          type === 'info' ? 'text-blue-400' :
+                          type === 'warning' ? 'text-yellow-400' :
+                          'text-gray-300';
+        
+        // Only add prefix if text doesn't already have one
+        const formattedText = hasPrefix ? `[${timestamp}] ${text}` : `[${timestamp}] ${prefix} ${text}`;
         
         this.terminalOutput.push({
-            text: `[${timestamp}] ${prefix} ${text}`,
+            text: formattedText,
             class: colorClass
         });
         
         this.updateTerminal();
+    }
+    
+    clearTerminal() {
+        this.terminalOutput = [];
+        const terminalElement = document.getElementById('terminal-output');
+        if (terminalElement) {
+            terminalElement.innerHTML = '';
+            this.addTerminalOutput('Terminal cleared', 'info');
+            this.addTerminalOutput('Type "help" to see available commands', 'info');
+        }
     }
 }
 
