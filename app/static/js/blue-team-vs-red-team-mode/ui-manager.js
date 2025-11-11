@@ -269,8 +269,10 @@ class UIManager {
         
         const severityClass = this.getSeverityClass(alert.severity);
         const alertElement = document.createElement('div');
-        alertElement.className = `p-3 rounded-lg border-l-4 ${severityClass.bg} ${severityClass.border} mb-2`;
+        // Add unread indicator with border and background
+        alertElement.className = `alert-item p-3 rounded-lg border-l-4 ${severityClass.bg} ${severityClass.border} mb-2 cursor-pointer hover:opacity-80 transition-opacity relative border-r-4 border-r-blue-400`;
         alertElement.dataset.alertId = alert.id || Date.now();
+        alertElement.dataset.read = 'false';
         
         // Format IP address information
         const ipInfo = alert.sourceIP ? 
@@ -280,8 +282,10 @@ class UIManager {
             </div>` : '';
         
         alertElement.innerHTML = `
-            <div class="flex items-center justify-between">
-                <div class="flex-1">
+            <div class="flex items-center">
+                <!-- Unread indicator dot -->
+                <div class="unread-indicator absolute -left-1 top-1/2 -translate-y-1/2 w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
+                <div class="flex-1 ms-2">
                     <div class="text-sm font-medium ${severityClass.text}">${alert.technique}</div>
                     <div class="text-xs text-white">${this.formatAssetName(alert.target)} • ${alert.timestamp.toLocaleTimeString()}</div>
                     ${ipInfo}
@@ -289,24 +293,60 @@ class UIManager {
                 </div>
                 <div class="flex items-center space-x-2">
                     <span class="text-xs px-2 py-1 ${severityClass.badge} rounded-full">${alert.severity.toUpperCase()}</span>
-                    ${alert.sourceIP ? `<button class="text-xs px-2 py-1 bg-red-600 hover:bg-red-700 rounded cursor-pointer" onclick="window.gameController?.executeBlockIP('${alert.sourceIP}')">Block IP</button>` : ''}
-                    <button class="text-xs text-gray-400 hover:text-white" onclick="this.parentElement.parentElement.parentElement.remove()">
-                        <i class="bi bi-x-lg cursor-pointer"></i>
-                    </button>
+                    <span class="read-status text-xs px-2 py-1 bg-blue-500 text-white rounded-full">NEW</span>
                 </div>
             </div>
         `;
+        
+        // Add click handler to mark as read
+        alertElement.addEventListener('click', () => {
+            this.markAlertAsRead(alertElement);
+        });
         
         // Add flash animation for new alerts
         alertElement.style.animation = 'flash 0.5s ease-in-out';
         
         alertCenter.insertBefore(alertElement, alertCenter.firstChild);
         
-        // Keep only last 15 alerts (increased from 10)
+        // Keep only last 20 alerts
         const alerts = alertCenter.children;
-        if (alerts.length > 15) {
+        if (alerts.length > 20) {
             alertCenter.removeChild(alerts[alerts.length - 1]);
         }
+    }
+    
+    markAlertAsRead(alertElement) {
+        if (alertElement.dataset.read === 'true') return;
+        
+        alertElement.dataset.read = 'true';
+        
+        // Remove unread indicator
+        const unreadIndicator = alertElement.querySelector('.unread-indicator');
+        if (unreadIndicator) {
+            unreadIndicator.remove();
+        }
+        
+        // Remove right border
+        alertElement.classList.remove('border-r-4', 'border-r-blue-400');
+        
+        // Update status badge
+        const statusBadge = alertElement.querySelector('.read-status');
+        if (statusBadge) {
+            statusBadge.textContent = 'READ';
+            statusBadge.classList.remove('bg-blue-500');
+            statusBadge.classList.add('bg-gray-600');
+        }
+        
+        // Reduce opacity slightly
+        alertElement.style.opacity = '0.7';
+    }
+    
+    markAllAlertsRead() {
+        const alertCenter = document.getElementById('alert-center');
+        if (!alertCenter) return;
+        
+        const alerts = alertCenter.querySelectorAll('.alert-item[data-read="false"]');
+        alerts.forEach(alert => this.markAlertAsRead(alert));
     }
     
     getSeverityClass(severity) {
