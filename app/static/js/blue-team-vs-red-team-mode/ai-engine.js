@@ -155,7 +155,9 @@ class AIEngine {
         // Execute the attack with NLP-enhanced data
         const attackData = this.createAttackData(action, nlpAnalysis);
         
-        console.log(`🤖 AI executing: ${attackData.technique} (${attackData.mitreId}) on ${attackData.target}`);
+        // Log with proper formatting - show MITRE ID if available, otherwise show attack type
+        const attackIdentifier = attackData.mitreId ? `${attackData.mitreId}` : `${attackData.type}`;
+        console.log(`🤖 AI executing: ${attackData.technique} [${attackIdentifier}] on ${attackData.target}`);
         
         // Send attack to game controller
         this.gameController.processAttack(attackData);
