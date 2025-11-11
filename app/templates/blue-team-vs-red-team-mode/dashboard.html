@@ -293,16 +293,31 @@
             </div>
 
             <!-- Interactive Terminal (Full Width Below) -->
-            <div class="bg-gray-800 border border-gray-600 p-4">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-green-400 flex items-center">
-                        <i class="bi bi-terminal me-2"></i>Defense Command Terminal
-                    </h3>
-                    <div class="text-xs text-gray-400 bg-gray-700 px-3 py-1 rounded border border-gray-600">
-                        <i class="bi bi-keyboard me-1"></i>Type <span class="text-green-400 font-mono">help</span> to see all commands
+            <div class="bg-gray-800 border-2 border-gray-600 rounded-lg shadow-lg">
+                <!-- Terminal Header -->
+                <div class="flex items-center justify-between bg-gray-900 px-4 py-3 border-b-2 border-gray-600 rounded-t-lg">
+                    <div class="flex items-center space-x-3">
+                        <div class="flex space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <h3 class="text-base font-bold text-green-400 flex items-center">
+                            <i class="bi bi-terminal me-2"></i>Defense Command Terminal
+                        </h3>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="text-xs text-gray-400 bg-gray-800 px-3 py-1.5 rounded border border-gray-700">
+                            <i class="bi bi-keyboard me-1"></i>Type <span class="text-green-400 font-mono font-semibold">help</span> for commands
+                        </div>
+                        <button id="clear-terminal" class="text-xs px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white rounded border border-gray-600 cursor-pointer transition-colors" onclick="window.gameController?.uiManager?.clearTerminal()">
+                            <i class="bi bi-trash me-1"></i>Clear
+                        </button>
                     </div>
                 </div>
-                <div id="terminal-output" class="bg-black text-green-400 font-mono text-sm p-3 border border-gray-600 h-80 overflow-y-auto scrollbar-terminal">
+                
+                <!-- Terminal Output Area -->
+                <div id="terminal-output" class="bg-black text-green-400 font-mono p-4 overflow-y-auto scrollbar-terminal" style="min-height: 400px; max-height: 500px; font-size: 0.9rem; line-height: 1.6;">
                     <!-- Terminal content will be populated by JavaScript -->
                     <div id="response-actions" class="mt-2 hidden">
                         <div class="text-yellow-400">╔══ THREAT RESPONSE ACTIONS ══╗</div>
@@ -315,9 +330,29 @@
                         </div>
                         <div class="text-yellow-400">╚════════════════════════════╝</div>
                     </div>
-                    <div class="flex items-center mt-2">
-                        <span>$ </span>
-                        <input type="text" id="terminal-input" class="bg-transparent border-none outline-none text-green-400 flex-1 ms-1 cursor-text focus:drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] transition-all duration-200" placeholder="Enter command...">
+                </div>
+                
+                <!-- Terminal Input Area -->
+                <div class="bg-gray-900 px-4 py-3 border-t-2 border-gray-600 rounded-b-lg">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-green-400 font-mono font-bold text-lg select-none">$</span>
+                        <input 
+                            type="text" 
+                            id="terminal-input" 
+                            class="bg-gray-800 border border-gray-600 rounded px-3 py-2 text-green-400 font-mono flex-1 text-base outline-none cursor-text focus:border-green-500 focus:ring-2 focus:ring-green-500/30 transition-all duration-200" 
+                            placeholder="Type a command and press Enter..."
+                            autocomplete="off"
+                            spellcheck="false">
+                    </div>
+                    <div class="mt-2 text-xs text-gray-500 flex items-center justify-between">
+                        <div>
+                            <i class="bi bi-lightbulb text-yellow-500 me-1"></i>
+                            <span>Quick commands: <span class="text-green-400 font-mono">scan academy-server</span>, <span class="text-green-400 font-mono">status</span>, <span class="text-green-400 font-mono">restore student-db</span></span>
+                        </div>
+                        <div>
+                            <i class="bi bi-arrow-return-left text-gray-600 me-1"></i>
+                            <span>Press Enter to execute</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -421,6 +456,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (incidentPanel) {
         const observer = new MutationObserver(updateIncidentsBadge);
         observer.observe(incidentPanel, { childList: true, subtree: true });
+    }
+    
+    // Auto-focus terminal input for better UX
+    const terminalInput = document.getElementById('terminal-input');
+    if (terminalInput) {
+        // Focus after a short delay to ensure page is loaded
+        setTimeout(() => {
+            terminalInput.focus();
+        }, 500);
+        
+        // Keep terminal input accessible - click anywhere on output to focus input
+        const terminalOutput = document.getElementById('terminal-output');
+        if (terminalOutput) {
+            terminalOutput.addEventListener('click', () => {
+                terminalInput.focus();
+            });
+        }
     }
 });
 </script>
