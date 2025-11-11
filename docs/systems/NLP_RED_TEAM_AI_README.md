@@ -1,25 +1,28 @@
-# NLP-Enhanced Red Team AI
+# Intelligent Red Team AI (Q-Learning)
 
 ## 🎯 Overview
 
-An intelligent Red Team AI opponent for the Blue Team vs Red Team mode that uses **Natural Language Processing (NLP)** and **Q-Learning Reinforcement Learning** to select appropriate attack patterns based on the **MITRE ATT&CK framework**.
+An intelligent Red Team AI opponent for the Blue Team vs Red Team mode that uses **Rule-Based Context Analysis** and **Q-Learning Reinforcement Learning** to select appropriate attack patterns based on the **MITRE ATT&CK framework**.
+
+**Note:** This implementation uses simplified heuristics instead of heavy NLP processing, achieving similar intelligent behavior while remaining lightweight and fast. Perfect for Q-learning integration!
 
 ## ✨ Key Features
 
-- 🧠 **NLP-Based Context Analysis** - Understands defensive posture semantically
+- 🧠 **Rule-Based Context Analysis** - Fast heuristic evaluation of defensive posture
 - 🎓 **MITRE ATT&CK Framework** - 33 real-world attack techniques across 11 tactics
 - 🤖 **Q-Learning AI** - Adaptive learning from player strategies
 - 📊 **Intelligent Attack Selection** - Context-aware technique selection
 - 🔄 **Phase Progression** - Realistic attack chain with prerequisites
 - 📈 **Success Prediction** - Probability-based attack planning
 - 🎮 **Educational** - Teaches real cybersecurity concepts
+- ⚡ **Lightweight** - No heavy ML dependencies, fast and deployable
 
 ## 🚀 Quick Start
 
 ### Installation
 
 ```bash
-# Install dependencies
+# Install dependencies (no heavy NLP libraries needed!)
 pip install -r requirements.txt
 
 # Run the application
@@ -28,6 +31,8 @@ python run.py
 # Navigate to Blue vs Red Team mode
 # http://localhost:5000/blue-vs-red/
 ```
+
+**Note:** This system uses rule-based logic instead of NLP libraries (nltk, scikit-learn), making it faster and easier to deploy while achieving the same intelligent behavior.
 
 ### Testing
 
@@ -49,19 +54,23 @@ python tests/test_nlp_red_team_api.py
 ## 🎮 How It Works
 
 ### 1. Context Analysis
-The AI analyzes the current game state using NLP:
+The AI analyzes the current game state using rule-based heuristics:
 
 ```javascript
-🧠 NLP Analysis: all assets secure, full security controls active, low alert level
+🧠 State Analysis: all assets secure, full security controls active, low alert level
 🎯 Recommended attack vector: stealth-infiltration
 📊 Success probability: 45.2%
 ```
 
+**How it works:** Simple threshold checks and pattern matching mimic NLP behavior without heavy processing.
+
 ### 2. Attack Selection
 Combines three strategies:
-- **50% NLP-Guided** - Uses contextual recommendations
+- **50% Context-Guided** - Uses rule-based recommendations
 - **30% Exploration** - Random attacks to learn
 - **20% Exploitation** - Best known Q-values
+
+**Q-Learning Integration:** The rule-based analyzer provides attack suggestions that the Q-learning system uses to guide exploration, achieving intelligent behavior without NLP overhead.
 
 ### 3. Learning
 Updates Q-table with rewards:

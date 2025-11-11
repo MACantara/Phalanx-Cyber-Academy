@@ -45,8 +45,6 @@ supabase
 # Additional production dependencies
 psycopg2-binary
 
-# Natural Language Processing (for Red Team AI)
-# Using lightweight text processing instead of heavy ML libraries
-# to keep deployment simple and fast
-nltk
-scikit-learn
+# Red Team AI - Rule-based Q-Learning (no heavy NLP dependencies needed)
+# The AI uses simple pattern matching and heuristics instead of ML
+# This keeps the system lightweight while achieving similar intelligent behavior

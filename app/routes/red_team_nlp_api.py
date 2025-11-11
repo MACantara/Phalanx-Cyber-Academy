@@ -1,6 +1,7 @@
 """
-NLP-Enhanced Red Team AI Backend
-Provides advanced natural language processing for attack pattern analysis
+Simplified Red Team AI Backend (Q-Learning Compatible)
+Provides rule-based attack pattern analysis without heavy NLP processing
+This mimics NLP behavior using simple heuristics for Q-learning integration
 """
 
 from flask import Blueprint, jsonify, request

@@ -1,10 +1,10 @@
-// NLP-based Attack Pattern Analyzer
-// Analyzes game state using natural language processing to determine optimal attack patterns
-// based on MITRE ATT&CK framework
+// Simplified Attack Pattern Analyzer for Q-Learning
+// Analyzes game state using rule-based logic to determine optimal attack patterns
+// based on MITRE ATT&CK framework (NLP-lite for Q-learning integration)
 
 class NLPAttackAnalyzer {
     constructor() {
-        // Initialize NLP keyword mappings for contextual understanding
+        // Simplified context keywords for quick pattern matching
         this.defenseKeywords = {
             'strong': ['firewall', 'active', 'monitoring', 'isolated', 'patched', 'protected'],
             'weak': ['inactive', 'vulnerable', 'compromised', 'exposed', 'unpatched'],
@@ -305,23 +305,24 @@ class NLPAttackAnalyzer {
     }
 
     /**
-     * Analyze game state using NLP techniques to determine optimal attack patterns
+     * Analyze game state using rule-based logic (Q-Learning compatible)
+     * This mimics NLP behavior without heavy processing - perfect for Q-learning integration
      * @param {Object} gameState - Current game state
      * @param {String} currentPhase - Current attack phase
      * @param {Array} completedPhases - List of completed attack phases
      * @returns {Object} Analysis results with recommended techniques
      */
     analyzeGameState(gameState, currentPhase, completedPhases = []) {
-        // Extract features from game state
+        // Extract features from game state (simple rule-based)
         const stateDescription = this.generateStateDescription(gameState);
         
-        // Analyze defensive posture using NLP
+        // Analyze defensive posture (rule-based scoring)
         const defensiveAnalysis = this.analyzeDefensivePosture(stateDescription, gameState);
         
-        // Identify vulnerabilities
+        // Identify vulnerabilities (threshold-based detection)
         const vulnerabilities = this.identifyVulnerabilities(gameState, defensiveAnalysis);
         
-        // Get context-appropriate techniques
+        // Get context-appropriate techniques (pattern matching)
         const recommendedTechniques = this.selectOptimalTechniques(
             currentPhase,
             vulnerabilities,
@@ -340,12 +341,12 @@ class NLPAttackAnalyzer {
     }
 
     /**
-     * Generate natural language description of current game state
+     * Generate simplified state description (rule-based, no heavy NLP)
      */
     generateStateDescription(gameState) {
         const parts = [];
         
-        // Analyze assets
+        // Analyze assets (simple threshold check)
         const assets = gameState.assets || {};
         const compromisedAssets = Object.entries(assets)
             .filter(([_, asset]) => asset.integrity < 80)
@@ -357,7 +358,7 @@ class NLPAttackAnalyzer {
             parts.push('all assets secure');
         }
         
-        // Analyze security controls
+        // Analyze security controls (simple count)
         const controls = gameState.securityControls || {};
         const activeControls = Object.entries(controls)
             .filter(([_, control]) => control.active)
@@ -369,7 +370,7 @@ class NLPAttackAnalyzer {
             parts.push(`${activeControls.length}/${Object.keys(controls).length} security controls active`);
         }
         
-        // Alert level
+        // Alert level (simple count)
         const alertCount = (gameState.alerts || []).length;
         if (alertCount > 5) {
             parts.push('high alert level');
@@ -383,12 +384,13 @@ class NLPAttackAnalyzer {
     }
 
     /**
-     * Analyze defensive posture using keyword matching
+     * Analyze defensive posture using simple rule-based logic
+     * (Mimics NLP behavior without heavy processing)
      */
     analyzeDefensivePosture(stateDescription, gameState) {
         const description = stateDescription.toLowerCase();
         
-        // Calculate strength scores
+        // Simple keyword counting (mimics NLP sentiment analysis)
         let strongScore = 0;
         let weakScore = 0;
         
