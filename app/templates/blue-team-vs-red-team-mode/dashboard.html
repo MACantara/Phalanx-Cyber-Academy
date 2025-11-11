@@ -4,6 +4,7 @@
 
 {% block extra_css %}
 <style>
+    /* Custom ring pulse animations for status indicators */
     @keyframes pulse-red {
         0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
         50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
@@ -12,274 +13,45 @@
         0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
         50% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
     }
-    @keyframes flash {
-        0% { background-color: rgba(16, 185, 129, 0.3); }
-        50% { background-color: rgba(16, 185, 129, 0.1); }
-        100% { background-color: transparent; }
-    }
     .pulse-red { animation: pulse-red 2s infinite; }
     .pulse-green { animation: pulse-green 2s infinite; }
-
-    /* Custom scrollbar styles for dashboard */
-    .window-content::-webkit-scrollbar {
-        width: 12px;
-        height: 12px;
-    }
-
-    .window-content::-webkit-scrollbar-track {
-        background: #1f2937;
-        border-radius: 6px;
-        border: 1px solid #374151;
-    }
-
-    .window-content::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #4b5563 0%, #374151 100%);
-        border-radius: 6px;
-        border: 1px solid #6b7280;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-
-    .window-content::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #6b7280 0%, #4b5563 100%);
-        border-color: #9ca3af;
-    }
-
-    .window-content::-webkit-scrollbar-thumb:active {
-        background: linear-gradient(180deg, #10b981 0%, #059669 100%);
-        border-color: #10b981;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    }
-
-    .terminal-output::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-    }
-
-    .terminal-output::-webkit-scrollbar-track {
-        background: #111827;
-        border-radius: 5px;
-        border: 1px solid #1f2937;
-    }
-
-    .terminal-output::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
-        border-radius: 5px;
-        border: 1px solid #4b5563;
-        box-shadow: inset 0 1px 0 rgba(16, 185, 129, 0.1);
-    }
-
-    .terminal-output::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #4b5563 0%, #374151 100%);
-        border-color: #6b7280;
-        box-shadow: inset 0 1px 0 rgba(16, 185, 129, 0.2);
-    }
-
-    .terminal-output::-webkit-scrollbar-thumb:active {
-        background: linear-gradient(180deg, #10b981 0%, #047857 100%);
-        border-color: #10b981;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    }
-
-    .security-content::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-    }
-
-    .security-content::-webkit-scrollbar-track {
-        background: #7f1d1d;
-        border-radius: 5px;
-        border: 1px solid #991b1b;
-    }
-
-    .security-content::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
-        border-radius: 5px;
-        border: 1px solid #ef4444;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-
-    .security-content::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
-        border-color: #f87171;
-    }
-
-    .security-content::-webkit-scrollbar-thumb:active {
-        background: linear-gradient(180deg, #10b981 0%, #059669 100%);
-        border-color: #10b981;
-    }
-
-    /* Firefox scrollbar support */
-    .window-content {
-        scrollbar-width: thin;
-        scrollbar-color: #4b5563 #1f2937;
-    }
-
-    .terminal-output,
-    .security-content {
-        scrollbar-width: thin;
-        scrollbar-color: #374151 #111827;
-    }
-
-    /* Smooth scrolling behavior */
-    .window-content,
-    .terminal-output,
-    .security-content {
-        scroll-behavior: smooth;
-    }
     
-    /* Tab styling */
-    .tab-button {
-        border-bottom-width: 2px;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        user-select: none;
-    }
+    /* Custom scrollbars - Webkit */
+    .scrollbar-custom::-webkit-scrollbar { width: 12px; height: 12px; }
+    .scrollbar-custom::-webkit-scrollbar-track { background: #1f2937; border-radius: 6px; border: 1px solid #374151; }
+    .scrollbar-custom::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #4b5563, #374151); border-radius: 6px; border: 1px solid #6b7280; }
+    .scrollbar-custom::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #6b7280, #4b5563); border-color: #9ca3af; }
+    .scrollbar-custom::-webkit-scrollbar-thumb:active { background: linear-gradient(180deg, #10b981, #059669); border-color: #10b981; }
     
-    .tab-button.active {
-        border-bottom-color: #10b981;
-        color: #ffffff;
-        background-color: rgba(16, 185, 129, 0.1);
-        cursor: default;
-    }
+    .scrollbar-terminal::-webkit-scrollbar { width: 10px; height: 10px; }
+    .scrollbar-terminal::-webkit-scrollbar-track { background: #111827; border-radius: 5px; border: 1px solid #1f2937; }
+    .scrollbar-terminal::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #374151, #1f2937); border-radius: 5px; border: 1px solid #4b5563; }
+    .scrollbar-terminal::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #4b5563, #374151); border-color: #6b7280; }
+    .scrollbar-terminal::-webkit-scrollbar-thumb:active { background: linear-gradient(180deg, #10b981, #047857); border-color: #10b981; }
     
-    .tab-button:not(.active):hover {
-        border-bottom-color: #6b7280;
-        cursor: pointer;
-    }
+    .scrollbar-alerts::-webkit-scrollbar { width: 10px; height: 10px; }
+    .scrollbar-alerts::-webkit-scrollbar-track { background: #7f1d1d; border-radius: 5px; border: 1px solid #991b1b; }
+    .scrollbar-alerts::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #dc2626, #b91c1c); border-radius: 5px; border: 1px solid #ef4444; }
+    .scrollbar-alerts::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #ef4444, #dc2626); border-color: #f87171; }
+    .scrollbar-alerts::-webkit-scrollbar-thumb:active { background: linear-gradient(180deg, #10b981, #059669); border-color: #10b981; }
     
-    .tab-button:not(.active):active {
-        transform: translateY(1px);
-        background-color: rgba(75, 85, 99, 0.2);
-    }
+    /* Firefox scrollbar */
+    .scrollbar-custom { scrollbar-width: thin; scrollbar-color: #4b5563 #1f2937; }
+    .scrollbar-terminal { scrollbar-width: thin; scrollbar-color: #374151 #111827; }
+    .scrollbar-alerts { scrollbar-width: thin; scrollbar-color: #dc2626 #7f1d1d; }
     
-    .tab-pane {
-        display: none;
-    }
-    
-    .tab-pane.active {
-        display: block;
-        animation: fadeIn 0.3s ease;
-    }
-    
+    /* Animations */
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
-    
-    /* Network node and security control styling */
-    .network-node {
-        cursor: pointer;
-        user-select: none;
-        transition: all 0.3s ease;
-    }
-    
-    .network-node:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-    
-    .network-node:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
-    }
-    
-    .security-control {
-        cursor: pointer;
-        user-select: none;
-        transition: all 0.2s ease;
-    }
-    
-    .security-control:hover {
-        transform: scale(1.05);
-        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-    }
-    
-    .security-control:active {
-        transform: scale(0.98);
-    }
-    
-    /* Response button styling */
-    .response-btn {
-        cursor: pointer;
-        user-select: none;
-        transition: all 0.2s ease;
-    }
-    
-    .response-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4);
-    }
-    
-    .response-btn:active {
-        transform: translateY(0);
-    }
-    
-    /* Terminal input styling */
-    #terminal-input {
-        cursor: text;
-    }
-    
-    #terminal-input:focus {
-        outline: none;
-        text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-    }
-    
-    /* Disabled states */
-    button:disabled,
-    .network-node.disabled,
-    .security-control.disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
-        pointer-events: none;
-    }
-    
-    /* Alert badge pulse animation */
-    #alerts-badge {
-        animation: pulse-badge 2s ease-in-out infinite;
-    }
-    
-    @keyframes pulse-badge {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-    }
-    
-    /* Game menu dropdown animation */
-    #game-menu-dropdown {
-        animation: slideDown 0.2s ease-out;
-    }
+    .tab-pane.active { animation: fadeIn 0.3s ease; }
     
     @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-    
-    /* Hover effects for dropdown items */
-    #game-menu-dropdown button {
-        transition: all 0.2s ease;
-    }
-    
-    #game-menu-dropdown button:hover {
-        padding-left: 1.25rem;
-    }
-    
-    /* Status indicators cursor */
-    .status-indicator {
-        cursor: help;
-    }
-    
-    /* Interactive elements subtle shadow */
-    .network-node,
-    .security-control,
-    .tab-button,
-    .response-btn {
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    }
+    #game-menu-dropdown:not(.hidden) { animation: slideDown 0.2s ease-out; }
 </style>
 {% endblock %}
 
@@ -363,14 +135,14 @@
             <div class="bg-gray-800 border border-gray-600">
                 <!-- Tab Headers -->
                 <div class="flex border-b border-gray-600">
-                    <button id="tab-network" class="tab-button active flex-1 px-4 py-3 text-white font-semibold hover:bg-gray-700 transition-colors border-b-2 border-green-400 cursor-pointer">
+                    <button id="tab-network" class="tab-button active flex-1 px-4 py-3 text-white font-semibold hover:bg-gray-700 transition-all duration-300 border-b-2 border-green-400 cursor-default select-none bg-green-500/10 shadow-sm">
                         <i class="bi bi-diagram-3 me-2"></i>Network Defense Map
                     </button>
-                    <button id="tab-alerts" class="tab-button flex-1 px-4 py-3 text-gray-400 font-semibold hover:bg-gray-700 transition-colors border-b-2 border-transparent hover:border-gray-500 cursor-pointer">
-                        <i class="bi bi-exclamation-triangle me-2"></i>Alert Center <span id="alerts-badge" class="hidden ms-2 px-2 py-0.5 bg-red-500 text-white text-xs rounded-full">0</span>
+                    <button id="tab-alerts" class="tab-button flex-1 px-4 py-3 text-gray-400 font-semibold hover:bg-gray-700 hover:border-gray-500 transition-all duration-300 border-b-2 border-transparent cursor-pointer select-none active:translate-y-px active:bg-gray-600/20 shadow-sm">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Alert Center <span id="alerts-badge" class="hidden ms-2 px-2 py-0.5 bg-red-500 text-white text-xs rounded-full animate-pulse">0</span>
                     </button>
-                    <button id="tab-incidents" class="tab-button flex-1 px-4 py-3 text-gray-400 font-semibold hover:bg-gray-700 transition-colors border-b-2 border-transparent hover:border-gray-500 cursor-pointer">
-                        <i class="bi bi-shield-exclamation me-2"></i>Incident Response
+                    <button id="tab-incidents" class="tab-button flex-1 px-4 py-3 text-gray-400 font-semibold hover:bg-gray-700 hover:border-gray-500 transition-all duration-300 border-b-2 border-transparent cursor-pointer select-none active:translate-y-px active:bg-gray-600/20 shadow-sm">
+                        <i class="bi bi-shield-exclamation me-2"></i>Incident Response <span id="incidents-badge" class="hidden ms-2 px-2 py-0.5 bg-yellow-500 text-black text-xs rounded-full animate-pulse">0</span>
                     </button>
                 </div>
                 
@@ -385,7 +157,7 @@
                         <div id="network-map" class="space-y-4">
                             <!-- Interactive Network nodes -->
                             <div class="flex items-center justify-center space-x-8 flex-wrap mb-6">
-                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 transition-colors" data-asset="academy-server" onclick="window.gameController?.selectNetworkNode('academy-server')">
+                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-500/30 active:translate-y-0 active:shadow-md active:shadow-green-500/20 transition-all duration-300 select-none shadow-sm shadow-black/30" data-asset="academy-server" onclick="window.gameController?.selectNetworkNode('academy-server')">
                                     <i class="bi bi-server text-green-400 text-xl"></i>
                                     <div class="text-xs font-mono font-bold mt-1 text-green-400">academy-server</div>
                                     <div class="text-xs text-gray-400 mb-1">(Academy Server)</div>
@@ -394,7 +166,7 @@
                                     </div>
                                     <div class="text-xs text-gray-300 mt-1 integrity-text">100% Integrity</div>
                                 </div>
-                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 transition-colors" data-asset="student-db" onclick="window.gameController?.selectNetworkNode('student-db')">
+                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-500/30 active:translate-y-0 active:shadow-md active:shadow-green-500/20 transition-all duration-300 select-none shadow-sm shadow-black/30" data-asset="student-db" onclick="window.gameController?.selectNetworkNode('student-db')">
                                     <i class="bi bi-database text-green-400 text-xl"></i>
                                     <div class="text-xs font-mono font-bold mt-1 text-green-400">student-db</div>
                                     <div class="text-xs text-gray-400 mb-1">(Student DB)</div>
@@ -403,7 +175,7 @@
                                     </div>
                                     <div class="text-xs text-gray-300 mt-1 integrity-text">100% Integrity</div>
                                 </div>
-                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 transition-colors" data-asset="research-files" onclick="window.gameController?.selectNetworkNode('research-files')">
+                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-500/30 active:translate-y-0 active:shadow-md active:shadow-green-500/20 transition-all duration-300 select-none shadow-sm shadow-black/30" data-asset="research-files" onclick="window.gameController?.selectNetworkNode('research-files')">
                                     <i class="bi bi-file-earmark-text text-green-400 text-xl"></i>
                                     <div class="text-xs font-mono font-bold mt-1 text-green-400">research-files</div>
                                     <div class="text-xs text-gray-400 mb-1">(Research Files)</div>
@@ -412,7 +184,7 @@
                                     </div>
                                     <div class="text-xs text-gray-300 mt-1 integrity-text">100% Integrity</div>
                                 </div>
-                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 transition-colors" data-asset="learning-platform" onclick="window.gameController?.selectNetworkNode('learning-platform')">
+                                <div class="network-node bg-gray-700 p-4 rounded-lg border-2 border-green-400 cursor-pointer hover:bg-gray-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-500/30 active:translate-y-0 active:shadow-md active:shadow-green-500/20 transition-all duration-300 select-none shadow-sm shadow-black/30" data-asset="learning-platform" onclick="window.gameController?.selectNetworkNode('learning-platform')">
                                     <i class="bi bi-mortarboard text-green-400 text-xl"></i>
                                     <div class="text-xs font-mono font-bold mt-1 text-green-400">learning-platform</div>
                                     <div class="text-xs text-gray-400 mb-1">(Learning Platform)</div>
@@ -424,15 +196,15 @@
                             </div>
                             <!-- Interactive Security controls -->
                             <div class="flex items-center justify-center space-x-8 mt-6">
-                                <div class="security-control bg-gray-700 p-3 rounded border border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors" data-control="firewall" onclick="window.gameController?.toggleSecurityControl('firewall')">
+                                <div class="security-control bg-gray-700 p-3 rounded border border-gray-600 cursor-pointer hover:bg-gray-600 hover:scale-105 hover:shadow-md hover:shadow-green-500/30 active:scale-98 transition-all duration-200 select-none shadow-sm shadow-black/30" data-control="firewall" onclick="window.gameController?.toggleSecurityControl('firewall')">
                                     <i class="bi bi-shield-check text-green-400"></i>
                                     <span class="text-xs text-white ms-2">Firewall</span>
                                 </div>
-                                <div class="security-control bg-gray-700 p-3 rounded border border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors" data-control="endpoint" onclick="window.gameController?.toggleSecurityControl('endpoint')">
+                                <div class="security-control bg-gray-700 p-3 rounded border border-gray-600 cursor-pointer hover:bg-gray-600 hover:scale-105 hover:shadow-md hover:shadow-green-500/30 active:scale-98 transition-all duration-200 select-none shadow-sm shadow-black/30" data-control="endpoint" onclick="window.gameController?.toggleSecurityControl('endpoint')">
                                     <i class="bi bi-laptop text-green-400"></i>
                                     <span class="text-xs text-white ms-2">Endpoint Protection</span>
                                 </div>
-                                <div class="security-control bg-gray-700 p-3 rounded border border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors" data-control="access" onclick="window.gameController?.toggleSecurityControl('access')">
+                                <div class="security-control bg-gray-700 p-3 rounded border border-gray-600 cursor-pointer hover:bg-gray-600 hover:scale-105 hover:shadow-md hover:shadow-green-500/30 active:scale-98 transition-all duration-200 select-none shadow-sm shadow-black/30" data-control="access" onclick="window.gameController?.toggleSecurityControl('access')">
                                     <i class="bi bi-key text-green-400"></i>
                                     <span class="text-xs text-white ms-2">Access Control</span>
                                 </div>
@@ -483,7 +255,7 @@
                     </div>
                     <div class="flex items-center mt-2">
                         <span>$ </span>
-                        <input type="text" id="terminal-input" class="bg-transparent border-none outline-none text-green-400 flex-1 ms-1" placeholder="Enter command...">
+                        <input type="text" id="terminal-input" class="bg-transparent border-none outline-none text-green-400 flex-1 ms-1 cursor-text focus:drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] transition-all duration-200" placeholder="Enter command...">
                     </div>
                 </div>
             </div>
@@ -563,11 +335,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
+    // Update incidents badge when incidents change
+    const updateIncidentsBadge = () => {
+        const incidentsCount = document.querySelectorAll('#incident-panel > div:not(.italic)').length;
+        const badge = document.getElementById('incidents-badge');
+        if (badge) {
+            if (incidentsCount > 0) {
+                badge.textContent = incidentsCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+    };
+    
     // Monitor alert center for changes
     const alertCenter = document.getElementById('alert-center');
     if (alertCenter) {
         const observer = new MutationObserver(updateAlertBadge);
         observer.observe(alertCenter, { childList: true, subtree: true });
+    }
+    
+    // Monitor incident panel for changes
+    const incidentPanel = document.getElementById('incident-panel');
+    if (incidentPanel) {
+        const observer = new MutationObserver(updateIncidentsBadge);
+        observer.observe(incidentPanel, { childList: true, subtree: true });
     }
 });
 </script>
