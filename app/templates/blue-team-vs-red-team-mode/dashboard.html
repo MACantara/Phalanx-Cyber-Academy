@@ -103,6 +103,46 @@
             </div>
         </div>
 
+        <!-- Quick Guide Panel -->
+        <div id="quick-guide" class="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border-2 border-blue-500 rounded-lg p-4 mb-6">
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <h3 class="text-lg font-bold text-blue-400 mb-2 flex items-center">
+                        <i class="bi bi-info-circle-fill me-2"></i>Quick Guide: How to Play
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-white">
+                        <div class="bg-black/30 p-3 rounded border border-blue-500/30">
+                            <div class="font-semibold text-blue-300 mb-1">
+                                <i class="bi bi-1-circle-fill me-1"></i>Monitor Network
+                            </div>
+                            <div class="text-gray-300 text-xs">
+                                Watch the <span class="text-green-400 font-mono">Network Defense Map</span> for attacks on your assets. Check <span class="text-orange-400">Alert Center</span> for new threats.
+                            </div>
+                        </div>
+                        <div class="bg-black/30 p-3 rounded border border-blue-500/30">
+                            <div class="font-semibold text-blue-300 mb-1">
+                                <i class="bi bi-2-circle-fill me-1"></i>Use Terminal Commands
+                            </div>
+                            <div class="text-gray-300 text-xs">
+                                Type <span class="text-green-400 font-mono">help</span> in the terminal below to see all commands. Use <span class="text-green-400 font-mono">scan [asset]</span> to investigate and <span class="text-green-400 font-mono">restore [asset]</span> to fix damage.
+                            </div>
+                        </div>
+                        <div class="bg-black/30 p-3 rounded border border-blue-500/30">
+                            <div class="font-semibold text-blue-300 mb-1">
+                                <i class="bi bi-3-circle-fill me-1"></i>Earn XP & Defend
+                            </div>
+                            <div class="text-gray-300 text-xs">
+                                Respond to incidents quickly to earn XP. Keep assets above 50% integrity. Re-enable disabled security controls immediately!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="close-guide" class="ms-3 text-gray-400 hover:text-white cursor-pointer transition-colors" onclick="document.getElementById('quick-guide').style.display='none'">
+                    <i class="bi bi-x-lg text-xl"></i>
+                </button>
+            </div>
+        </div>
+
         <!-- Game Status Bar -->
         <div class="bg-gray-800 border border-gray-600 p-4 mb-6">
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -215,11 +255,22 @@
                     
                     <!-- Alert Center Tab -->
                     <div id="content-alerts" class="tab-pane hidden">
-                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-                            <i class="bi bi-exclamation-triangle me-2 text-orange-400"></i>Alert Center
-                        </h3>
-                        <div id="alert-center" class="space-y-3 security-content max-h-96 overflow-y-auto">
-                            <div class="text-sm text-gray-400 italic">No active alerts</div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-white flex items-center">
+                                <i class="bi bi-exclamation-triangle me-2 text-orange-400"></i>Alert Center
+                            </h3>
+                            <button id="mark-all-read" class="text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded cursor-pointer transition-colors" onclick="window.gameController?.markAllAlertsRead()">
+                                <i class="bi bi-check-all me-1"></i>Mark All Read
+                            </button>
+                        </div>
+                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3 mb-4">
+                            <p class="text-xs text-blue-200">
+                                <i class="bi bi-lightbulb me-1 text-yellow-400"></i>
+                                <strong>Tip:</strong> New alerts appear here when the Red Team AI attacks. Click an alert to mark it as read. Use terminal commands to investigate and respond to threats.
+                            </p>
+                        </div>
+                        <div id="alert-center" class="space-y-3 security-content max-h-96 overflow-y-auto scrollbar-alerts">
+                            <div class="text-sm text-gray-400 italic">No active alerts. Your network is currently secure.</div>
                         </div>
                     </div>
                     
@@ -228,8 +279,14 @@
                         <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
                             <i class="bi bi-shield-exclamation me-2 text-yellow-400"></i>Incident Response
                         </h3>
-                        <div id="incident-panel" class="space-y-3 security-content max-h-96 overflow-y-auto">
-                            <div class="text-sm text-gray-400 italic">No incidents detected. Monitoring for suspicious activity...</div>
+                        <div class="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-3 mb-4">
+                            <p class="text-xs text-yellow-200">
+                                <i class="bi bi-info-circle me-1 text-yellow-400"></i>
+                                <strong>About Incidents:</strong> Critical attacks that need immediate action appear here. These represent successful breaches or compromised assets that require terminal commands to resolve.
+                            </p>
+                        </div>
+                        <div id="incident-panel" class="space-y-3 security-content max-h-96 overflow-y-auto scrollbar-custom">
+                            <div class="text-sm text-gray-400 italic">No incidents detected. All systems operating normally.</div>
                         </div>
                     </div>
                 </div>
@@ -237,10 +294,15 @@
 
             <!-- Interactive Terminal (Full Width Below) -->
             <div class="bg-gray-800 border border-gray-600 p-4">
-                <h3 class="text-lg font-semibold text-green-400 mb-4 flex items-center">
-                    <i class="bi bi-terminal me-2"></i>Defense Command Terminal
-                </h3>
-                <div id="terminal-output" class="bg-black text-green-400 font-mono text-sm p-3 border border-gray-600 h-80 overflow-y-auto terminal-output">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-green-400 flex items-center">
+                        <i class="bi bi-terminal me-2"></i>Defense Command Terminal
+                    </h3>
+                    <div class="text-xs text-gray-400 bg-gray-700 px-3 py-1 rounded border border-gray-600">
+                        <i class="bi bi-keyboard me-1"></i>Type <span class="text-green-400 font-mono">help</span> to see all commands
+                    </div>
+                </div>
+                <div id="terminal-output" class="bg-black text-green-400 font-mono text-sm p-3 border border-gray-600 h-80 overflow-y-auto scrollbar-terminal">
                     <!-- Terminal content will be populated by JavaScript -->
                     <div id="response-actions" class="mt-2 hidden">
                         <div class="text-yellow-400">╔══ THREAT RESPONSE ACTIONS ══╗</div>
