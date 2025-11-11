@@ -444,9 +444,6 @@ class UIManager {
         const terminalOutput = document.getElementById('terminal-output');
         if (!terminalOutput) return;
         
-        // Preserve the existing input container
-        const existingInput = terminalOutput.querySelector('.flex.items-center');
-        
         // Update output - support both new and old format
         terminalOutput.innerHTML = this.terminalOutput.map(entry => {
             if (typeof entry === 'object' && entry.text && entry.class) {
@@ -455,31 +452,6 @@ class UIManager {
                 return `<div class="text-gray-300">${entry}</div>`;
             }
         }).join('');
-        
-        // Add or restore input line
-        if (!terminalOutput.querySelector('.flex.items-center')) {
-            const inputDiv = document.createElement('div');
-            inputDiv.className = 'flex items-center mt-2';
-            inputDiv.innerHTML = `
-                <span>$ </span>
-                <input type="text" id="terminal-input" class="bg-transparent border-none outline-none text-green-400 flex-1 ms-1" placeholder="Enter command...">
-            `;
-            terminalOutput.appendChild(inputDiv);
-            
-            // Re-attach event listener for the new input
-            const input = document.getElementById('terminal-input');
-            if (input) {
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        const command = e.target.value.trim();
-                        if (command) {
-                            this.gameController.handleTerminalCommand(command);
-                            e.target.value = '';
-                        }
-                    }
-                });
-            }
-        }
         
         // Scroll to bottom
         terminalOutput.scrollTop = terminalOutput.scrollHeight;
