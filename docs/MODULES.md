@@ -538,7 +538,6 @@ This document provides a comprehensive overview of all modules, features, and co
 
 ### Deployment
 - **Serverless**: Vercel
-- **PaaS**: Render
 - **Traditional**: VPS/dedicated server support
 - **Database**: Supabase cloud
 

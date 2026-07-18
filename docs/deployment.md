@@ -67,9 +67,6 @@ import os
 if os.environ.get('VERCEL') == '1':
     from config import VercelConfig
     config = VercelConfig
-elif os.environ.get('RENDER') == '1':
-    from config import RenderConfig
-    config = RenderConfig
 else:
     from config import get_config
     config = get_config()

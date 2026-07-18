@@ -16,7 +16,6 @@ This index maps the available documentation to the current implementation.
 
 ## Deployment & Infrastructure
 - **[Deployment](deployment.md)** - Vercel, VPS, and traditional hosting.
-- **[Render Deployment](render-deployment.md)** - Render.com specific instructions.
 - **[Supabase Migration](supabase-migration.md)** - Migration to Supabase/PostgreSQL.
 - **[Flask-Mailman Migration](flask-mailman-migration.md)** - Email library migration notes.
 

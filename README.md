@@ -28,7 +28,7 @@ Phalanx Cyber Academy is a game-based learning platform designed to enhance digi
 - **🌓 Theme System**: Light/Dark/System modes with persistent preferences
 - **📧 Email Integration**: Contact forms, login verification codes, verification emails
 - **📋 Legal Compliance**: Privacy policy, terms of service, cookie policy
-- **🚀 Deployment Ready**: Vercel, Render, and traditional hosting support
+- **🚀 Deployment Ready**: Vercel and traditional hosting support
 
 ## 🎯 Learning Modules
 
@@ -123,7 +123,7 @@ Visit `http://localhost:5000` to start your cybersecurity learning journey.
 ### Core Documentation
 - **[Authentication System](docs/authentication.md)** - Passwordless authentication with email verification
 - **[Admin Panel](docs/admin-panel.md)** - User management and system monitoring
-- **[Deployment Guide](docs/deployment.md)** - Vercel, Render, and production deployment
+- **[Deployment Guide](docs/deployment.md)** - Vercel and production deployment
 
 ### Technical Features Overview
 
@@ -170,7 +170,7 @@ Visit `http://localhost:5000` to start your cybersecurity learning journey.
 FLASK_ENV=development
 SECRET_KEY=your-secret-key
 
-# Database (SQLite for local dev; Supabase for Vercel/Render)
+# Database (SQLite for local dev; Supabase for Vercel)
 DATABASE_URL=sqlite:///cyberquest.db
 SUPABASE_URL=your-supabase-project-url
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key

@@ -54,8 +54,6 @@ def get_config():
     """Get the appropriate configuration based on environment."""
     if os.environ.get('VERCEL') == '1':
         return VercelConfig
-    elif os.environ.get('RENDER') == '1':
-        return RenderConfig
     elif os.environ.get('FLASK_ENV') == 'production':
         return ProductionConfig
     elif os.environ.get('FLASK_ENV') == 'testing':

@@ -76,14 +76,3 @@ msg.send()
 4. **Modern features**: Better support for modern email features
 5. **Active maintenance**: Flask-Mailman is more actively maintained
 
-## Render.com Deployment
-
-No changes needed for Render.com deployment - Flask-Mailman works with the same SMTP configuration:
-
-- `MAIL_SERVER`
-- `MAIL_PORT`
-- `MAIL_USE_TLS`
-- `MAIL_USERNAME`
-- `MAIL_PASSWORD`
-
-All existing email functionality will work identically on Render.com.
