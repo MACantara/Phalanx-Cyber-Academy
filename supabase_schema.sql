@@ -262,3 +262,57 @@ CREATE POLICY "Admins can manage XP history" ON xp_history
     FOR ALL USING (EXISTS (
         SELECT 1 FROM users WHERE id = auth.uid()::integer AND is_admin = true
     ));
+
+-- Profiles table for Supabase Auth metadata (game data store for auth.users)
+CREATE TABLE IF NOT EXISTS public.profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    username VARCHAR(80) UNIQUE,
+    email VARCHAR(120) UNIQUE NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    is_admin BOOLEAN NOT NULL DEFAULT false,
+    timezone VARCHAR(50) NOT NULL DEFAULT 'UTC',
+    cybersecurity_experience VARCHAR(20),
+    onboarding_completed BOOLEAN NOT NULL DEFAULT false,
+    total_xp INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    last_login TIMESTAMPTZ
+);
+
+-- Indexes for profiles table
+CREATE INDEX IF NOT EXISTS idx_profiles_id ON public.profiles(id);
+CREATE INDEX IF NOT EXISTS idx_profiles_email ON public.profiles(email);
+CREATE INDEX IF NOT EXISTS idx_profiles_username ON public.profiles(username);
+
+-- Auto-create a public.profiles row when a new auth.users row is created
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = ''
+AS $$
+BEGIN
+    INSERT INTO public.profiles (id, email, username, timezone)
+    VALUES (
+        NEW.id,
+        NEW.email,
+        NEW.raw_user_meta_data ->> 'username',
+        COALESCE(NEW.raw_user_meta_data ->> 'timezone', 'UTC')
+    )
+    ON CONFLICT (id) DO NOTHING;
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Row Level Security for profiles
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own profile" ON public.profiles
+    FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Users can update their own profile" ON public.profiles
+    FOR UPDATE USING (auth.uid() = id);
+
+-- Service role / admin bypass handled by auth checks in backend
