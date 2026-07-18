@@ -7,16 +7,9 @@ python-dotenv
 
 # Form handling and security
 Flask-WTF
-WTForms
 
 # Email support (for contact forms and login verification codes)
 Flask-Mailman
-
-# Authentication and password hashing
-argon2-cffi
-
-# Development and debugging
-Flask-DebugToolbar
 
 # Production server
 gunicorn
@@ -25,26 +18,14 @@ gunicorn
 pytest
 pytest-flask
 
-# HTTP client for external API requests
-Requests
-
-# Google Gemini AI
-google-genai
+# HTTP client for preprocessing scripts
+requests
 
 # Data processing (for preprocessing scripts)
 pandas
-numpy
-requests
 
 # Document generation
 python-docx
 
 # Supabase (PostgreSQL database)
 supabase
-
-# Additional production dependencies
-psycopg2-binary
-
-# Red Team AI - Rule-based Q-Learning (no heavy NLP dependencies needed)
-# The AI uses simple pattern matching and heuristics instead of ML
-# This keeps the system lightweight while achieving similar intelligent behavior
