@@ -6,9 +6,6 @@ import pytest
 from app import create_app
 
 
-collect_ignore = ["test_nlp_red_team_api.py"]
-
-
 @pytest.fixture(scope='session')
 def app():
     """Create a Flask application instance configured for testing."""

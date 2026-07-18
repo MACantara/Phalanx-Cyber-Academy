@@ -18,12 +18,6 @@ gunicorn
 pytest
 pytest-flask
 
-# HTTP client for preprocessing scripts
-requests
-
-# Data processing (for preprocessing scripts)
-pandas
-
 # Document generation
 python-docx
 
