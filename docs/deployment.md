@@ -16,7 +16,7 @@ This guide covers deployment options for the Phalanx Cyber Academy platform, inc
 1. **Prepare Repository**
    ```bash
    git clone <your-repository-url>
-   cd flask-website-template
+   cd Phalanx-Cyber-Academy
    ```
 
 2. **Connect to Vercel**
@@ -58,18 +58,21 @@ The project includes `vercel.json` for proper configuration:
 ```
 
 ### Environment Detection
-The application automatically detects Vercel environment:
+The application automatically detects the deployment environment in `config.py`:
 
 ```python
-# Automatic Vercel detection
-VERCEL_ENV = os.environ.get('VERCEL_ENV')
-IS_VERCEL = VERCEL_ENV is not None
+# Automatic environment detection
+import os
 
-if IS_VERCEL:
-    # Disable database features
-    SQLALCHEMY_DATABASE_URI = None
-    # Adapt authentication system
-    # Log contact submissions instead of storing
+if os.environ.get('VERCEL') == '1':
+    from config import VercelConfig
+    config = VercelConfig
+elif os.environ.get('RENDER') == '1':
+    from config import RenderConfig
+    config = RenderConfig
+else:
+    from config import get_config
+    config = get_config()
 ```
 
 ## 🖥️ Traditional Hosting
@@ -92,7 +95,7 @@ sudo apt install postgresql postgresql-contrib -y
 ```bash
 # Clone repository
 git clone <your-repository-url>
-cd flask-website-template
+cd Phalanx-Cyber-Academy
 
 # Create virtual environment
 python3 -m venv venv
@@ -169,8 +172,8 @@ Create `/etc/supervisor/conf.d/flask-website.conf`:
 
 ```ini
 [program:flask-website]
-directory=/path/to/flask-website-template
-command=/path/to/flask-website-template/venv/bin/gunicorn -c gunicorn.conf.py run:app
+directory=/path/to/Phalanx-Cyber-Academy
+command=/path/to/Phalanx-Cyber-Academy/venv/bin/gunicorn -c gunicorn.conf.py run:app
 user=www-data
 autostart=true
 autorestart=true
@@ -195,7 +198,7 @@ server {
     }
 
     location /static {
-        alias /path/to/flask-website-template/app/static;
+        alias /path/to/Phalanx-Cyber-Academy/app/static;
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
@@ -345,7 +348,7 @@ find $BACKUP_DIR -name "backup_*.sql" -mtime +30 -delete
 #!/bin/bash
 BACKUP_DIR="/backups/application"
 DATE=$(date +%Y%m%d_%H%M%S)
-tar -czf "$BACKUP_DIR/app_backup_$DATE.tar.gz" /path/to/flask-website-template
+tar -czf "$BACKUP_DIR/app_backup_$DATE.tar.gz" /path/to/Phalanx-Cyber-Academy
 
 # Keep only last 7 days
 find $BACKUP_DIR -name "app_backup_*.tar.gz" -mtime +7 -delete

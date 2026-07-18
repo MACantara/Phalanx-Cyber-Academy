@@ -306,6 +306,12 @@ This document provides a comprehensive overview of all modules, features, and co
 - `/api/award-xp` - Award XP to user
 - `/api/user/xp` - Get user XP and level info
 
+### Red Team NLP API (`app/routes/red_team_nlp_api.py`)
+- **Blueprint**: `red_team_nlp_bp` (URL prefix: `/api`)
+- **Features**:
+  - Natural-language processing for red team dialogue
+  - AI-driven red team interactions
+
 ### Blue Team vs Red Team Mode (`app/routes/blue_team_vs_red_team_mode/`)
 - **Blueprint**: `blue_red_bp`
 - Competitive multiplayer cybersecurity mode
@@ -532,6 +538,7 @@ This document provides a comprehensive overview of all modules, features, and co
 
 ### Deployment
 - **Serverless**: Vercel
+- **PaaS**: Render
 - **Traditional**: VPS/dedicated server support
 - **Database**: Supabase cloud
 
@@ -650,27 +657,6 @@ Phalanx-Cyber-Academy/
 
 ---
 
-## Future Enhancements
-
-### Planned Features
-- AI-powered adaptive difficulty
-- Virtual mentors and guides
-- Community forums and discussions
-- Competitive tournaments
-- User-generated scenarios
-- Mobile application
-- Advanced analytics dashboard
-- Integration with learning management systems
-
-### Roadmap
-1. **Phase 1**: Core platform and 5 levels ✅
-2. **Phase 2**: Admin panel and analytics ✅
-3. **Phase 3**: Blue Team vs Red Team mode (In Progress)
-4. **Phase 4**: AI mentoring system
-5. **Phase 5**: Community features
-6. **Phase 6**: Mobile platform
-
----
 
 ## Support and Resources
 

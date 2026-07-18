@@ -78,8 +78,8 @@
 |-------------------|------------|
 | **Screen Design Ref No** | Figure 2.7: Learning Modules Section |
 | **Description / Scenario** | Verify all learning module cards are displayed correctly |
-| **Expected Results** | Six learning module cards displayed with icons, titles, and descriptions |
-| **Procedure** | 1. Navigate to home page <br> 2. Scroll to "Cybersecurity Game Scenarios" section <br> 3. Verify all 6 cards are visible: Email Detective, Truth Seeker, Privacy Guardian, Vault Keeper, Cyber Fortress, White Hat Academy <br> 4. Check icons and text are properly displayed |
+| **Expected Results** | Five learning module cards displayed with icons, titles, and descriptions |
+| **Procedure** | 1. Navigate to home page <br> 2. Scroll to "Cybersecurity Game Scenarios" section <br> 3. Verify all 5 cards are visible: The Misinformation Maze, Shadow in the Inbox, Malware Mayhem, The White Hat Test, The Hunt for The Null <br> 4. Check icons and text are properly displayed |
 | **Remarks** | Pending |
 
 ---
@@ -91,7 +91,7 @@
 | **Screen Design Ref No** | Figure 2.8: Features Section |
 | **Description / Scenario** | Verify features section displays correctly with animations |
 | **Expected Results** | Three feature cards displayed with icons and hover effects |
-| **Procedure** | 1. Navigate to home page <br> 2. Scroll to "Learning Features" section <br> 3. Verify three cards: Gamified Learning, AI Mentoring, Real Scenarios <br> 4. Test hover effects on cards |
+| **Procedure** | 1. Navigate to home page <br> 2. Scroll to "Learning Features" section <br> 3. Verify three cards: Gamified Learning, Real-Time Feedback, Real Scenarios <br> 4. Test hover effects on cards |
 | **Remarks** | Pending |
 
 ---

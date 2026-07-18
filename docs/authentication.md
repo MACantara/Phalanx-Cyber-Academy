@@ -160,25 +160,29 @@ flask db upgrade
 
 ### 3. Create Admin User
 ```python
-from app import create_app, db
+from app import create_app
 from app.models.user import User
 
 app = create_app()
 with app.app_context():
-    admin = User(username='admin', email='admin@example.com')
+    admin = User.create(
+        username='admin',
+        email='admin@example.com',
+        timezone='UTC'
+    )
     admin.is_admin = True
-    admin.email_verified = True
-    db.session.add(admin)
-    db.session.commit()
+    admin.is_verified = True
+    admin.onboarding_completed = True
+    admin.save()
 ```
 
 ## 🔧 Usage Examples
 
 ### Check Authentication in Templates
 ```html
-{% if session.user_id %}
+{% if current_user.is_authenticated %}
     <!-- Authenticated user content -->
-    <p>Welcome, {{ session.username }}!</p>
+    <p>Welcome, {{ current_user.username }}!</p>
 {% else %}
     <!-- Anonymous user content -->
     <a href="{{ url_for('auth.login') }}">Login</a>
@@ -187,7 +191,7 @@ with app.app_context():
 
 ### Protect Routes
 ```python
-from app.routes.auth import login_required
+from flask_login import login_required
 
 @app.route('/protected')
 @login_required
@@ -202,7 +206,7 @@ from app.models.login_attempt import LoginAttempt
 # Check if IP is locked
 is_locked = LoginAttempt.is_ip_locked('192.168.1.1')
 
-# Get failed attempt count
+# Get recent failed attempts
 failed_count = LoginAttempt.get_failed_attempts_count('192.168.1.1')
 ```
 

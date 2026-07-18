@@ -44,7 +44,7 @@ The reduction algorithm successfully:
 #### Example 1: Login Page Tests (login-page-tests.json)
 Selected tests cover:
 1. STP-007-01: **Critical/Functional** - Basic page load
-2. STP-007-02: **Critical/Security** - Invalid credentials handling
+2. STP-007-02: **Critical/Security** - Invalid or unverified username/email handling
 3. STP-007-03: **High/UI** - Form input fields display
 4. STP-007-04: **High/Integration** - System integration
 5. STP-007-05: **Medium/UI** - Header design
@@ -72,14 +72,14 @@ This selection provides:
 #### Example 3: Signup Page Tests (signup-page-tests.json)
 Selected tests cover:
 1. STP-008-01: **Critical/Functional** - Basic page load
-2. STP-008-02: **Critical/Security** - Password validation
+2. STP-008-02: **Critical/Security** - Email verification and validation for passwordless signup
 3. STP-008-03: **High/UI** - Responsive design
 4. STP-008-04: **Medium/Performance** - Performance testing
 5. STP-008-05: **Low/UI** - Notification system
 
 This selection provides:
 - ✓ Core functionality (page load)
-- ✓ Security (password strength)
+- ✓ Security (email validation for passwordless authentication)
 - ✓ Responsive design
 - ✓ Performance
 - ✓ User feedback (notifications)

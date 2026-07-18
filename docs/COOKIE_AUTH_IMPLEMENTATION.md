@@ -114,7 +114,7 @@ python verify_auth_persistence.py
   
 - [x] **User session persists after closing and reopening the browser**
   - Persistent cookies are saved to disk with configured lifetime
-  - Default: 7 days in development, 2 hours in serverless
+  - Default: 30 days in development, 7 days in serverless
   
 - [x] **Logging out clears the authentication cookie**
   - `session.clear()` removes all session data
@@ -133,12 +133,12 @@ python verify_auth_persistence.py
 
 ### Development (localhost)
 - Secure flag: False (allows HTTP)
-- Session lifetime: 7 days
+- Session lifetime: 30 days
 - Cookie domain: localhost:5000
 
 ### Production (Vercel/HTTPS)
 - Secure flag: True (requires HTTPS)
-- Session lifetime: 2 hours (serverless optimization)
+- Session lifetime: 7 days (serverless optimization)
 - Cookie domain: Auto-configured
 
 ## Browser Compatibility
@@ -157,7 +157,7 @@ This implementation provides persistent sessions by default for all users withou
 2. **Industry Standard**: Most modern web applications (Gmail, GitHub, banking apps) maintain sessions by default
 3. **Simplified UX**: Reduces friction in the login process
 4. **Secure Implementation**: Security is maintained through:
-   - Configurable session timeouts (7 days dev, 2 hours serverless)
+   - Configurable session timeouts (30 days dev, 7 days serverless)
    - Explicit logout functionality
    - Secure cookie flags (HttpOnly, SameSite, Secure)
 

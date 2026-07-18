@@ -156,11 +156,3 @@ To test the timezone feature:
 - `migrations/add_timezone_to_users.sql` - Migration SQL
 - `scripts/migrate_timezone.py` - Migration script
 
-## Future Enhancements
-
-Potential improvements for the timezone feature:
-- Automatic timezone detection based on browser
-- More granular timezone handling (e.g., DST transitions)
-- Timezone-aware date pickers in forms
-- Bulk timezone updates for admin users
-- Export/import functionality with timezone preservation

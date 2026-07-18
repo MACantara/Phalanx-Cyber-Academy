@@ -71,5 +71,5 @@ Navigate to `/admin/system-test/dashboard` (requires admin privileges) to access
 | **Screen Design Ref No** | Figure 4.1: Login Page |
 | **Description / Scenario** | First Page seen by User by typing in the URL and logging in |
 | **Expected Results** | Display the Login page and logging in |
-| **Procedure** | 1. Open Google Chrome <br> 2. Type in URL on browser: `http://bmis.000.pe/login` <br> 3. Display login page <br> 4. Enter Username `admin1@test.com` and password `Testing123` |
+| **Procedure** | 1. Open Google Chrome <br> 2. Type in URL on browser: `http://localhost:5000/auth/login` <br> 3. Display login page <br> 4. Enter username or email and request a 6-digit verification code |
 | **Remarks** | Passed |

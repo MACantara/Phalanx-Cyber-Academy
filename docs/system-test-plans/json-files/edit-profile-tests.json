@@ -6,7 +6,7 @@
     "description": "Verify that the Edit Profile page loads correctly when accessing /profile/edit with authenticated user",
     "scenario": "Logged-in user navigates to edit profile page to modify their account information",
     "expected_results": "Display the complete edit profile page with form fields pre-populated with current user data",
-    "procedure": "1. Login with valid user credentials\n2. Navigate to profile page\n3. Click 'Edit Profile' button\n4. Verify navigation to http://localhost:5000/profile/edit\n5. Check page title displays 'Edit Profile'\n6. Verify form fields are pre-populated with current user data\n7. Check all form sections are visible and properly styled",
+    "procedure": "1. Login with a valid user email verification code\n2. Navigate to profile page\n3. Click 'Edit Profile' button\n4. Verify navigation to http://localhost:5000/profile/edit\n5. Check page title displays 'Edit Profile'\n6. Verify form fields are pre-populated with current user data\n7. Check all form sections are visible and properly styled",
     "test_status": "pending",
     "priority": "critical",
     "category": "functional"
@@ -14,11 +14,11 @@
   {
     "test_plan_no": "STP-011-02",
     "module_name": "Edit-User-Profile-Page",
-    "screen_design_ref": "Figure 13.8: Current Password Confirmation Field",
-    "description": "Verify current password field displays correctly as required security measure",
-    "scenario": "User must enter current password to confirm identity before making changes",
-    "expected_results": "Display current password field with required indicator and security explanation",
-    "procedure": "1. Navigate to edit profile page\n2. Verify 'Current Password' label with red asterisk (*)\n3. Check field has type='password' and required attributes\n4. Verify placeholder text 'Enter your current password to confirm changes'\n5. Check help text 'Required to verify your identity before making any changes'\n6. Verify field is visually distinct as required\n7. Test field styling and focus effects\n8. Check divider separator above field (border-t border-gray-200)",
+    "screen_design_ref": "Figure 13.8: Email Field",
+    "description": "Verify email field displays correctly and can be updated",
+    "scenario": "User views and updates their email address in the edit profile form",
+    "expected_results": "Email field is pre-populated, properly styled, and accepts a valid email address",
+    "procedure": "1. Navigate to edit profile page\n2. Verify 'Email' label is present\n3. Check email field is pre-populated with current email\n4. Verify placeholder and validation attributes\n5. Test field styling and focus effects\n6. Check help text for email update instructions\n7. Verify email change triggers re-verification flow",
     "test_status": "pending",
     "priority": "critical",
     "category": "ui"
@@ -26,11 +26,11 @@
   {
     "test_plan_no": "STP-011-03",
     "module_name": "Edit-User-Profile-Page",
-    "screen_design_ref": "Figure 13.15: Current Password Verification",
-    "description": "Verify current password verification prevents unauthorized changes",
-    "scenario": "User must provide correct current password to make any profile changes",
-    "expected_results": "Changes are blocked if current password is incorrect",
-    "procedure": "1. Navigate to edit profile page\n2. Make valid changes to username or email\n3. Enter incorrect current password\n4. Click 'Update Profile' button\n5. Verify error 'Current password is incorrect.'\n6. Check user remains on edit profile page\n7. Enter correct current password\n8. Verify changes are accepted and processed\n9. Test current password verification for all change scenarios",
+    "screen_design_ref": "Figure 13.15: Timezone Field",
+    "description": "Verify timezone selection and profile update flow",
+    "scenario": "User updates their timezone preference in the edit profile form",
+    "expected_results": "Timezone dropdown is populated, updates are saved, and confirmation is shown",
+    "procedure": "1. Navigate to edit profile page\n2. Make valid changes to username or email\n3. Select a different timezone from the dropdown\n4. Click 'Update Profile' button\n5. Verify success message is displayed\n6. Check user remains on edit profile page\n7. Verify updated timezone is persisted on reload\n8. Test email/username validation errors are displayed for invalid input",
     "test_status": "pending",
     "priority": "critical",
     "category": "security"
@@ -54,7 +54,7 @@
     "description": "Verify edit profile page meets accessibility standards (WCAG)",
     "scenario": "User with disabilities accesses edit profile page using assistive technologies",
     "expected_results": "Page is fully accessible with proper labels, ARIA attributes, and keyboard navigation",
-    "procedure": "1. Navigate to edit profile page\n2. Test keyboard navigation through all form elements\n3. Verify tab order is logical (username → email → new password → confirm → current → submit)\n4. Check all form fields have proper labels\n5. Test form with screen reader software\n6. Verify focus indicators are visible and clear\n7. Check color contrast ratios meet WCAG AA standards\n8. Test error messages are announced by screen readers\n9. Verify form validation errors are accessible\n10. Check required field indicators are properly marked\n11. Test help text associations with form fields",
+    "procedure": "1. Navigate to edit profile page\n2. Test keyboard navigation through all form elements\n3. Verify tab order is logical (username → email → timezone → submit)\n4. Check all form fields have proper labels\n5. Test form with screen reader software\n6. Verify focus indicators are visible and clear\n7. Check color contrast ratios meet WCAG AA standards\n8. Test error messages are announced by screen readers\n9. Verify form validation errors are accessible\n10. Check required field indicators are properly marked\n11. Test help text associations with form fields",
     "test_status": "pending",
     "priority": "medium",
     "category": "functional"

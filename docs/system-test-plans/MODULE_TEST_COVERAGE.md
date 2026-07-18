@@ -87,8 +87,8 @@ This document lists all 37 modules with their 5 high-quality test plans each.
 **File**: `edit-profile-tests.json`
 
 - **STP-013-01**: [CRITICAL] FUNCTIONAL - Verify that the Edit Profile page loads correctly when accessing /profile/edit with authenticated user
-- **STP-013-02**: [CRITICAL] UI - Verify current password field displays correctly as required security measure
-- **STP-013-03**: [CRITICAL] SECURITY - Verify current password verification prevents unauthorized changes
+- **STP-013-02**: [CRITICAL] UI - Verify email field displays correctly and can be updated
+- **STP-013-03**: [CRITICAL] SECURITY - Verify timezone selection and profile update flow
 - **STP-013-04**: [MEDIUM] PERFORMANCE - Verify edit profile page loads efficiently with optimal performance
 - **STP-013-05**: [MEDIUM] FUNCTIONAL - Verify edit profile page meets accessibility standards (WCAG)
 
@@ -213,7 +213,7 @@ This document lists all 37 modules with their 5 high-quality test plans each.
 **File**: `signup-page-tests.json`
 
 - **STP-008-01**: [CRITICAL] FUNCTIONAL - Verify that the Sign Up page loads correctly when accessing the /auth/signup URL
-- **STP-008-02**: [CRITICAL] SECURITY - Verify Step 2 password creation with strength checking and validation
+- **STP-008-02**: [CRITICAL] SECURITY - Verify email submission and validation for passwordless authentication
 - **STP-008-03**: [HIGH] UI - Verify signup page is responsive across different screen sizes
 - **STP-008-04**: [MEDIUM] PERFORMANCE - Verify signup page performance and integration with system components
 - **STP-008-05**: [LOW] UI - Verify cyber-themed notification system for user feedback

@@ -2,7 +2,7 @@
 
 **Train. Coordinate. Defend.**
 
-Phalanx Cyber Academy is a game-based learning platform designed to enhance digital literacy, cybersecurity awareness, and ethical online behavior through interactive gamification. Players engage in realistic scenarios, earn XP, unlock achievements, and receive AI-powered personalized guidance to master essential digital safety skills.
+Phalanx Cyber Academy is a game-based learning platform designed to enhance digital literacy, cybersecurity awareness, and ethical online behavior through interactive gamification. Players engage in realistic scenarios, earn XP, and unlock achievements to master essential digital safety skills.
 
 ## ✨ Key Features
 
@@ -12,11 +12,6 @@ Phalanx Cyber Academy is a game-based learning platform designed to enhance digi
 - **📈 Progress Tracking**: Comprehensive dashboards showing learning advancement
 - **🎪 Role-Playing**: Immersive scenarios for practical skill application
 
-### 🤖 AI-Powered Personalized Learning
-- **🧠 Adaptive Difficulty**: Dynamic challenge scaling based on user performance
-- **👨‍🏫 Virtual Mentors**: AI-driven guides providing real-time feedback and tips
-- **🎯 Custom Learning Paths**: Personalized recommendations based on knowledge gaps
-- **📊 Performance Analytics**: AI tracking to identify areas for improvement
 
 ### 🛡️ Cybersecurity Awareness Simulations
 - **🌐 Network Defense**: Virtual network protection from simulated cyber-attacks
@@ -24,13 +19,7 @@ Phalanx Cyber Academy is a game-based learning platform designed to enhance digi
 - **🔍 Digital Forensics**: Team-based investigation of online scams and fraud
 - **💳 Safe Practice Training**: Secure online banking, email, and social media habits
 
-### 👥 Community & Collaborative Learning
-- **🏆 Competitive Tournaments**: Cybersecurity awareness competitions
-- **🤝 Team Challenges**: Collaborative problem-solving and investigation scenarios
-- **💬 Moderated Forums**: AI-supervised discussions for sharing best practices
-- **📚 User-Generated Content**: Custom scenario creation and sharing
-
-### 🔧 Technical Features
+###  Technical Features
 - **🏗️ Modern Architecture**: Flask factory pattern with blueprints
 - **🎨 Responsive Design**: Tailwind CSS with Bootstrap Icons
 - **🔐 Complete Authentication**: Registration, passwordless login with email codes, email verification
@@ -39,7 +28,7 @@ Phalanx Cyber Academy is a game-based learning platform designed to enhance digi
 - **🌓 Theme System**: Light/Dark/System modes with persistent preferences
 - **📧 Email Integration**: Contact forms, login verification codes, verification emails
 - **📋 Legal Compliance**: Privacy policy, terms of service, cookie policy
-- **🚀 Deployment Ready**: Vercel serverless and traditional hosting support
+- **🚀 Deployment Ready**: Vercel, Render, and traditional hosting support
 
 ## 🎯 Learning Modules
 
@@ -127,19 +116,14 @@ Visit `http://localhost:5000` to start your cybersecurity learning journey.
 3. **Choose Your Path**: Select from beginner, intermediate, or advanced cybersecurity tracks
 4. **Engage with Scenarios**: Complete interactive challenges and simulations
 5. **Earn Rewards**: Gain XP, unlock achievements, and level up your cybersecurity skills
-6. **Join the Community**: Participate in tournaments, team challenges, and forums
-7. **Track Progress**: Monitor your advancement through comprehensive dashboards
+6. **Track Progress**: Monitor your advancement through comprehensive dashboards
 
 ## 📚 Documentation
 
 ### Core Documentation
-- **[Gameplay Mechanics](docs/GAMEPLAY.md)** - Understanding XP, achievements, and progression (WIP)
-- **[AI Mentoring System](docs/AI_MENTORS.md)** - How AI provides personalized guidance (WIP)
-- **[Scenario Library](docs/SCENARIOS.md)** - Available learning modules and challenges (WIP)
-- **[Community Features](docs/COMMUNITY.md)** - Forums, tournaments, and collaboration (WIP)
-- **[Authentication System](docs/AUTHENTICATION.md)** - Complete authentication with email verification
-- **[Admin Panel](docs/ADMIN_PANEL.md)** - User management and system monitoring
-- **[Deployment Guide](docs/DEPLOYMENT.md)** - Vercel, VPS, and production deployment
+- **[Authentication System](docs/authentication.md)** - Passwordless authentication with email verification
+- **[Admin Panel](docs/admin-panel.md)** - User management and system monitoring
+- **[Deployment Guide](docs/deployment.md)** - Vercel, Render, and production deployment
 
 ### Technical Features Overview
 
@@ -184,16 +168,12 @@ Visit `http://localhost:5000` to start your cybersecurity learning journey.
 ```bash
 # Core Settings
 FLASK_ENV=development
-DEBUG=True
 SECRET_KEY=your-secret-key
 
-# Database
+# Database (SQLite for local dev; Supabase for Vercel/Render)
 DATABASE_URL=sqlite:///cyberquest.db
-
-# AI & Gamification
-AI_MENTOR_API_KEY=your-ai-api-key
-ADAPTIVE_DIFFICULTY_ENABLED=true
-XP_MULTIPLIER=1.0
+SUPABASE_URL=your-supabase-project-url
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
 
 # Email Configuration
 MAIL_SERVER=smtp.gmail.com
@@ -205,11 +185,7 @@ MAIL_PASSWORD=your-app-password
 # Security Settings
 MAX_LOGIN_ATTEMPTS=5
 LOGIN_LOCKOUT_MINUTES=15
-
-# Community Features
-FORUMS_ENABLED=true
-TOURNAMENTS_ENABLED=true
-LEADERBOARDS_PUBLIC=true
+PERMANENT_SESSION_LIFETIME=30
 ```
 
 ## 📁 Project Structure
@@ -303,7 +279,7 @@ See the [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
 - **Frontend**: Tailwind CSS, Bootstrap Icons, Vanilla JavaScript
 - **Database**: SQLite (dev), PostgreSQL/MySQL (production)
 - **Security**: Argon2, Flask-WTF, CSRF Protection
-- **Email**: Flask-Mail with SMTP support
+- **Email**: Flask-Mailman with SMTP support
 - **Deployment**: Vercel, traditional hosting
 
 ## 🎓 Educational Impact

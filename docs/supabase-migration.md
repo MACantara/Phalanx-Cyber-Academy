@@ -52,7 +52,7 @@ Add these environment variables to your `.env` file:
 
 ```bash
 SUPABASE_URL=your_supabase_project_url
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 ```
 
 ### 3. Install Dependencies
@@ -73,7 +73,7 @@ The Supabase database includes the following tables:
 
 ### users
 - Primary user account information
-- Includes username, email, password hash, admin status
+- Includes username, email, admin status, email verification status (passwordless)
 
 ### contact_submissions
 - Contact form submissions from the website
@@ -155,13 +155,6 @@ import logging
 logging.getLogger('supabase').setLevel(logging.DEBUG)
 ```
 
-## Future Enhancements
-
-1. **Real-time Features**: Implement real-time notifications using Supabase subscriptions
-2. **File Storage**: Use Supabase Storage for user uploads
-3. **Advanced Analytics**: Leverage PostgreSQL's analytical capabilities
-4. **Caching**: Implement Redis caching for frequently accessed data
-5. **Supabase Auth**: Consider migrating to Supabase Auth for enhanced security
 
 ## Support
 

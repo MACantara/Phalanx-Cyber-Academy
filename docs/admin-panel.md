@@ -37,10 +37,11 @@ This template includes a powerful admin panel for comprehensive site management.
 
 ## 🔐 Admin Access
 
-### Default Credentials
+### Default Admin Account
 - **Username**: `admin`
-- **Password**: `admin123`
-- **⚠️ Security Warning**: Change these credentials immediately in production!
+- **Email**: `admin@example.com`
+- **Authentication**: Passwordless — the first login uses an email verification code
+- **⚠️ Security Warning**: Change the default admin email to a real, verified address in production!
 
 ### Security Features
 - **Role-based Access**: Admin-only routes with decorator protection
@@ -125,8 +126,8 @@ ADMIN_CACHE_TIMEOUT = 300  # 5 minutes
 ## 🚀 Best Practices
 
 ### Security
-1. **Change Default Credentials**: Immediately update admin credentials
-2. **Use Strong Passwords**: Implement complex password requirements
+1. **Set a Real Admin Email**: Update the default `admin@example.com` account to a verified, monitored email
+2. **Restrict Admin Access**: Consider IP whitelisting or VPN requirements for the admin panel
 3. **Monitor Access**: Regularly review admin access logs
 4. **IP Restrictions**: Consider IP whitelisting for admin access
 5. **Regular Audits**: Perform regular security audits

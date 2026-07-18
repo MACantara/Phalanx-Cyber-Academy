@@ -22,19 +22,25 @@ The original implementation was experiencing CSRF token validation failures when
 Added a `VercelConfig` class with serverless-optimized settings:
 
 ```python
-class VercelConfig(Config):
-    WTF_CSRF_ENABLED = True
-    WTF_CSRF_TIME_LIMIT = 3600  # Shorter time limit for serverless
+class VercelConfig(ProductionConfig):
+    DEBUG = False
+    TESTING = False
+    
+    # Ensure consistent SECRET_KEY for Vercel - this is critical for CSRF
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'vercel-csrf-fallback-key-please-set-env-var-123456789')
+    
+    # Vercel-optimized CSRF settings
     WTF_CSRF_SSL_STRICT = False  # Vercel handles SSL termination
-    SESSION_COOKIE_SECURE = True
+    WTF_CSRF_TIME_LIMIT = 3600  # 1 hour for serverless
+    WTF_CSRF_METHODS = ['POST', 'PUT', 'PATCH', 'DELETE']
+    
+    # Serverless-optimized session settings
+    SESSION_COOKIE_SECURE = True  # Vercel uses HTTPS
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
-    
-    def __init__(self):
-        super().__init__()
-        # Ensure consistent SECRET_KEY in serverless environment
-        if not self.SECRET_KEY:
-            self.SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
+    SESSION_COOKIE_NAME = 'cyberquest_session'
+    SESSION_REFRESH_EACH_REQUEST = True
+    PERMANENT_SESSION_LIFETIME = timedelta(days=7)  # 7 days for serverless
 ```
 
 ### 2. Automatic Environment Detection
@@ -45,13 +51,17 @@ Added automatic environment detection:
 
 ```python
 def get_config():
-    """Get configuration class based on environment"""
-    if os.environ.get('VERCEL'):
-        return VercelConfig()
-    elif os.environ.get('FLASK_ENV') == 'development':
-        return DevelopmentConfig()
+    """Get the appropriate configuration based on environment."""
+    if os.environ.get('VERCEL') == '1':
+        return VercelConfig
+    elif os.environ.get('RENDER') == '1':
+        return RenderConfig
+    elif os.environ.get('FLASK_ENV') == 'production':
+        return ProductionConfig
+    elif os.environ.get('FLASK_ENV') == 'testing':
+        return TestingConfig
     else:
-        return ProductionConfig()
+        return DevelopmentConfig
 ```
 
 ### 3. Enhanced Error Handling
@@ -228,8 +238,3 @@ CSRF errors in Vercel include debug information in logs:
 6. `app/static/js/main.js` - Import and initialize CSRF utilities
 7. `app/templates/base.html` - Added CSRF token meta tag
 
-## Future Enhancements
-
-1. **Token rotation**: Implement automatic token rotation for long-running sessions
-2. **Rate limiting**: Add rate limiting to CSRF token generation endpoint
-3. **Monitoring**: Add metrics for CSRF validation success/failure rates

@@ -231,10 +231,3 @@ python test_app.py       # Basic integration test
 python test_game_data.py # Game data endpoint test
 ```
 
-## Future Enhancements
-
-1. **Database Integration** - Move from JSON files to database storage
-2. **Dynamic Difficulty** - Adjust randomization based on user performance
-3. **Session Tracking** - Track which data sets were used per session
-4. **A/B Testing** - Multiple randomization strategies
-5. **Real-time Updates** - WebSocket support for live data updates

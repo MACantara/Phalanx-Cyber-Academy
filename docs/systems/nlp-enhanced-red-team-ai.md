@@ -300,27 +300,6 @@ Players can monitor AI decision-making in the browser console:
 - Optional backend API for advanced features
 - Minimal impact on game performance
 
-## Future Enhancements
-
-### 1. Advanced NLP
-- Integrate spaCy for entity recognition
-- Use transformers for semantic similarity
-- Implement word embeddings
-
-### 2. Deep Q-Learning
-- Neural network Q-function approximation
-- Experience replay buffer
-- Double Q-learning
-
-### 3. Adversarial Training
-- Train against human player strategies
-- Competitive self-play
-- Meta-learning for quick adaptation
-
-### 4. Multi-Agent Systems
-- Coordinate multiple AI attackers
-- Simulate insider threats
-- Model attacker-defender dynamics
 
 ## Testing
 
