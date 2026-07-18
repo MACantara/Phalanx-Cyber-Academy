@@ -175,7 +175,8 @@ class TestingConfig(Config):
     DEBUG = True
     TESTING = True
     WTF_CSRF_ENABLED = False
-    DISABLE_DATABASE = False
+    DISABLE_DATABASE = True  # Do not connect to real Supabase during tests
+    MAIL_SUPPRESS_SEND = True  # Do not send real emails during tests
     
     # Override feature flags for testing
     FEATURES = {
