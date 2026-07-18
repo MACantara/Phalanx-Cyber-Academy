@@ -39,28 +39,6 @@ class Config:
     WTF_CSRF_TIME_LIMIT = 3600  # 1 hour token validity
     WTF_CSRF_SSL_STRICT = False  # Allow CSRF over HTTP for development
     
-    # Centralized URL generation config for Flask
-    # Use custom domain setting, ignoring Vercel's auto-generated URLs
-    if IS_VERCEL:
-        # Always use the custom domain from environment, ignoring Vercel's auto-generated VERCEL_URL
-        custom_domain_env = os.environ.get('CUSTOM_DOMAIN')
-        vercel_url_env = os.environ.get('VERCEL_URL')
-        
-        # Debug logging (will appear in Vercel function logs)
-        print(f"[CONFIG DEBUG] CUSTOM_DOMAIN: {custom_domain_env}")
-        print(f"[CONFIG DEBUG] VERCEL_URL: {vercel_url_env}")
-        
-        SERVER_NAME = custom_domain_env or vercel_url_env or 'phalanx-cyber-academy.vercel.app'
-        
-        # Double-check: if we still get a Vercel auto URL, force our domain
-        if SERVER_NAME and ('.vercel.app' in SERVER_NAME or SERVER_NAME.startswith('https://')):
-            print(f"[CONFIG DEBUG] Detected Vercel auto URL ({SERVER_NAME}), forcing custom domain")
-            SERVER_NAME = 'phalanx-cyber-academy.vercel.app'
-            
-        print(f"[CONFIG DEBUG] Final SERVER_NAME: {SERVER_NAME}")
-    else:
-        SERVER_NAME = os.environ.get('SERVER_NAME', 'localhost:5000')
-    
     APPLICATION_ROOT = '/'
     PREFERRED_URL_SCHEME = 'https' if IS_VERCEL else 'http'
     

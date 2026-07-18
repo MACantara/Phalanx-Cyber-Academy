@@ -79,13 +79,6 @@ class EmailService:
         return render_template_string(template_content, **context)
     
     @staticmethod
-    def _ensure_url_config() -> None:
-        """Ensure URL generation configuration is set."""
-        current_app.config['SERVER_NAME'] = current_app.config.get('SERVER_NAME')
-        current_app.config['APPLICATION_ROOT'] = current_app.config.get('APPLICATION_ROOT')
-        current_app.config['PREFERRED_URL_SCHEME'] = current_app.config.get('PREFERRED_URL_SCHEME')
-    
-    @staticmethod
     def _create_email_message(
         subject: str,
         body: str,
@@ -170,9 +163,6 @@ class EmailService:
         EmailService._log_email_attempt(email_type, recipients_str)
 
         try:
-            # Ensure URL configuration
-            EmailService._ensure_url_config()
-
             # Render template
             body = EmailService._render_template(template_name, **template_context)
 
