@@ -11,7 +11,6 @@ class User(UserMixin):
         self.id = data.get('id')
         self.username = data.get('username')
         self.email = data.get('email')
-        self.password_hash = data.get('password_hash')  # Legacy field, kept for migration
         self._is_active = data.get('is_active', True)
         self.created_at = data.get('created_at')
         self.last_login = data.get('last_login')
@@ -45,7 +44,6 @@ class User(UserMixin):
             user_data = {
                 'username': self.username,
                 'email': self.email,
-                'password_hash': self.password_hash,  # Keep for migration compatibility
                 'is_active': self.is_active,
                 'is_admin': self.is_admin,
                 'is_verified': self.is_verified,
@@ -106,7 +104,6 @@ class User(UserMixin):
         user_data = {
             'username': username,  # Can be None initially, set during onboarding
             'email': email,
-            'password_hash': None,  # No password for passwordless auth
             'is_active': True,
             'is_admin': False,
             'is_verified': False,  # New users start unverified

@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(80) UNIQUE,
     email VARCHAR(120) UNIQUE NOT NULL,
-    password_hash VARCHAR(255),  -- Nullable field (deprecated, using passwordless auth)
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     last_login TIMESTAMPTZ,
@@ -14,7 +13,8 @@ CREATE TABLE IF NOT EXISTS users (
     timezone VARCHAR(50) NOT NULL DEFAULT 'UTC',
     is_verified BOOLEAN NOT NULL DEFAULT false,
     cybersecurity_experience VARCHAR(20),  -- 'beginner', 'intermediate', 'advanced'
-    onboarding_completed BOOLEAN NOT NULL DEFAULT false
+    onboarding_completed BOOLEAN NOT NULL DEFAULT false,
+    total_xp INTEGER DEFAULT 0
 );
 
 -- Create indexes for users table
@@ -53,40 +53,6 @@ CREATE INDEX IF NOT EXISTS idx_login_attempts_ip_attempted_at ON login_attempts(
 CREATE INDEX IF NOT EXISTS idx_login_attempts_ip_success ON login_attempts(ip_address, success);
 CREATE INDEX IF NOT EXISTS idx_login_attempts_attempted_at ON login_attempts(attempted_at);
 
--- Create system_test_plans table
-CREATE TABLE IF NOT EXISTS system_test_plans (
-    id SERIAL PRIMARY KEY,
-    test_plan_no VARCHAR(50) UNIQUE NOT NULL,
-    module_name VARCHAR(100) NOT NULL,
-    screen_design_ref VARCHAR(200),
-    description TEXT NOT NULL,
-    scenario TEXT,
-    expected_results TEXT NOT NULL,
-    procedure TEXT NOT NULL,
-    test_status VARCHAR(20) NOT NULL DEFAULT 'pending',
-    execution_date TIMESTAMPTZ,
-    executed_by VARCHAR(80),
-    failure_reason TEXT,
-    priority VARCHAR(20) NOT NULL DEFAULT 'medium',
-    category VARCHAR(30) NOT NULL DEFAULT 'functional',
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT chk_test_status CHECK (test_status IN ('pending', 'passed', 'failed', 'skipped')),
-    CONSTRAINT chk_priority CHECK (priority IN ('low', 'medium', 'high', 'critical')),
-    CONSTRAINT chk_category CHECK (category IN ('functional', 'ui', 'performance', 'security', 'integration'))
-);
-
--- Create indexes for system_test_plans table
-CREATE INDEX IF NOT EXISTS idx_system_test_plans_test_plan_no ON system_test_plans(test_plan_no);
-CREATE INDEX IF NOT EXISTS idx_system_test_plans_module_name ON system_test_plans(module_name);
-CREATE INDEX IF NOT EXISTS idx_system_test_plans_test_status ON system_test_plans(test_status);
-CREATE INDEX IF NOT EXISTS idx_system_test_plans_priority ON system_test_plans(priority);
-CREATE INDEX IF NOT EXISTS idx_system_test_plans_category ON system_test_plans(category);
-CREATE INDEX IF NOT EXISTS idx_system_test_plans_executed_by ON system_test_plans(executed_by);
-CREATE INDEX IF NOT EXISTS idx_system_test_plans_execution_date ON system_test_plans(execution_date);
-CREATE INDEX IF NOT EXISTS idx_system_test_plans_created_at ON system_test_plans(created_at);
-CREATE INDEX IF NOT EXISTS idx_system_test_plans_updated_at ON system_test_plans(updated_at);
-
 -- Create email_verifications table (used for email verification and passwordless login codes)
 CREATE TABLE IF NOT EXISTS email_verifications (
     id SERIAL PRIMARY KEY,
@@ -108,9 +74,6 @@ CREATE INDEX IF NOT EXISTS idx_email_verifications_email ON email_verifications(
 CREATE INDEX IF NOT EXISTS idx_email_verifications_expires_at ON email_verifications(expires_at);
 CREATE INDEX IF NOT EXISTS idx_email_verifications_code ON email_verifications(verification_code);
 
--- Add total_xp to users table for tracking XP
-ALTER TABLE users ADD COLUMN IF NOT EXISTS total_xp INTEGER DEFAULT 0;
-
 -- Create levels table
 CREATE TABLE IF NOT EXISTS levels (
     id SERIAL PRIMARY KEY,
@@ -120,15 +83,14 @@ CREATE TABLE IF NOT EXISTS levels (
     category VARCHAR(100),
     icon VARCHAR(50),
     estimated_time VARCHAR(50),
-    expected_time_seconds INTEGER,
     xp_reward INTEGER DEFAULT 0,
     skills JSONB,
     difficulty VARCHAR(20),
     unlocked BOOLEAN DEFAULT true,
     coming_soon BOOLEAN DEFAULT false,
-    requirements JSONB,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT chk_difficulty CHECK (difficulty IN ('easy', 'medium', 'intermediate', 'hard', 'expert'))
 );
 
 -- Create indexes for levels table
@@ -177,25 +139,23 @@ CREATE INDEX IF NOT EXISTS idx_xp_history_session_id ON xp_history(session_id);
 
 -- Populate levels table with initial data from app/routes/levels.py
 -- Difficulty levels must match XPCalculator.BASE_XP keys: easy, medium, intermediate, hard, expert
-INSERT INTO levels (level_id, name, description, category, icon, estimated_time, expected_time_seconds, xp_reward, skills, difficulty, unlocked, coming_soon, requirements, updated_at) VALUES
-(1, 'The-Misinformation-Maze', 'Debunk fake news and stop misinformation from influencing an election.', 'Information Literacy', 'bi-newspaper', '15 minutes', 900, 100, '["Critical Thinking", "Source Verification", "Fact Checking"]'::jsonb, 'easy', true, false, null, NOW()),
-(2, 'Shadow-in-the-Inbox', 'Spot phishing attempts and practice safe email protocols.', 'Email Security', 'bi-envelope-exclamation', '20 minutes', 1200, 150, '["Phishing Detection", "Email Analysis", "Social Engineering"]'::jsonb, 'medium', true, false, null, NOW()),
-(3, 'Malware-Mayhem', 'Isolate infections and perform digital cleanup during a gaming tournament.', 'Threat Detection', 'bi-bug', '25 minutes', 1500, 200, '["Malware Recognition", "System Security", "Threat Analysis"]'::jsonb, 'intermediate', true, false, null, NOW()),
-(4, 'The-White-Hat-Test', 'Practice ethical hacking and responsible vulnerability disclosure.', 'Ethical Hacking', 'bi-terminal', '30 minutes', 1800, 350, '["Penetration Testing", "Vulnerability Assessment", "Ethical Hacking"]'::jsonb, 'hard', true, false, null, NOW()),
-(5, 'The-Hunt-for-The-Null', 'Final mission: Use advanced digital forensics to expose The Null''s identity.', 'Digital Forensics', 'bi-trophy', '40 minutes', 2400, 500, '["Digital Forensics", "Evidence Analysis", "Advanced Investigation"]'::jsonb, 'expert', true, false, null, NOW())
+INSERT INTO levels (level_id, name, description, category, icon, estimated_time, xp_reward, skills, difficulty, unlocked, coming_soon, updated_at) VALUES
+(1, 'The-Misinformation-Maze', 'Debunk fake news and stop misinformation from influencing an election.', 'Information Literacy', 'bi-newspaper', '15 minutes', 100, '["Critical Thinking", "Source Verification", "Fact Checking"]'::jsonb, 'easy', true, false, NOW()),
+(2, 'Shadow-in-the-Inbox', 'Spot phishing attempts and practice safe email protocols.', 'Email Security', 'bi-envelope-exclamation', '20 minutes', 150, '["Phishing Detection", "Email Analysis", "Social Engineering"]'::jsonb, 'medium', true, false, NOW()),
+(3, 'Malware-Mayhem', 'Isolate infections and perform digital cleanup during a gaming tournament.', 'Threat Detection', 'bi-bug', '25 minutes', 200, '["Malware Recognition", "System Security", "Threat Analysis"]'::jsonb, 'intermediate', true, false, NOW()),
+(4, 'The-White-Hat-Test', 'Practice ethical hacking and responsible vulnerability disclosure.', 'Ethical Hacking', 'bi-terminal', '30 minutes', 350, '["Penetration Testing", "Vulnerability Assessment", "Ethical Hacking"]'::jsonb, 'hard', true, false, NOW()),
+(5, 'The-Hunt-for-The-Null', 'Final mission: Use advanced digital forensics to expose The Null''s identity.', 'Digital Forensics', 'bi-trophy', '40 minutes', 500, '["Digital Forensics", "Evidence Analysis", "Advanced Investigation"]'::jsonb, 'expert', true, false, NOW())
 ON CONFLICT (level_id) DO UPDATE SET
     name = EXCLUDED.name,
     description = EXCLUDED.description,
     category = EXCLUDED.category,
     icon = EXCLUDED.icon,
     estimated_time = EXCLUDED.estimated_time,
-    expected_time_seconds = EXCLUDED.expected_time_seconds,
     xp_reward = EXCLUDED.xp_reward,
     skills = EXCLUDED.skills,
     difficulty = EXCLUDED.difficulty,
     unlocked = EXCLUDED.unlocked,
     coming_soon = EXCLUDED.coming_soon,
-    requirements = EXCLUDED.requirements,
     updated_at = EXCLUDED.updated_at;
 
 -- Create function to automatically update updated_at timestamp

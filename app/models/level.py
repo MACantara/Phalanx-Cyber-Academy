@@ -20,13 +20,11 @@ class Level:
         self.category = data.get('category')
         self.icon = data.get('icon')
         self.estimated_time = data.get('estimated_time')
-        self.expected_time_seconds = data.get('expected_time_seconds')
         self.xp_reward = data.get('xp_reward', 0)
         self.skills = data.get('skills')
         self.difficulty = data.get('difficulty', 'medium')
         self.unlocked = data.get('unlocked', True)
         self.coming_soon = data.get('coming_soon', False)
-        self.requirements = data.get('requirements')
         self.created_at = data.get('created_at')
         self.updated_at = data.get('updated_at')
         
@@ -49,13 +47,11 @@ class Level:
             'category': self.category,
             'icon': self.icon,
             'estimated_time': self.estimated_time,
-            'expected_time_seconds': self.expected_time_seconds,
             'xp_reward': self.xp_reward,
             'skills': self.skills,
             'difficulty': self.difficulty,
             'unlocked': self.unlocked,
             'coming_soon': self.coming_soon,
-            'requirements': self.requirements,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
@@ -118,7 +114,6 @@ class Level:
     def create_level(cls, level_id: int, name: str, description: str = None, 
                     category: str = None, difficulty: str = 'medium', 
                     unlocked: bool = True, coming_soon: bool = False,
-                    requirements: Dict[str, Any] = None, 
                     metadata: Dict[str, Any] = None) -> 'Level':
         """Create a new level"""
         try:
@@ -131,7 +126,6 @@ class Level:
                 'difficulty': difficulty,
                 'unlocked': unlocked,
                 'coming_soon': coming_soon,
-                'requirements': requirements,
                 'metadata': metadata,
                 'created_at': utc_now().isoformat(),
                 'updated_at': utc_now().isoformat()
@@ -156,13 +150,11 @@ class Level:
                 'category': self.category,
                 'icon': self.icon,
                 'estimated_time': self.estimated_time,
-                'expected_time_seconds': self.expected_time_seconds,
                 'xp_reward': self.xp_reward,
                 'skills': self.skills,
                 'difficulty': self.difficulty,
                 'unlocked': self.unlocked,
                 'coming_soon': self.coming_soon,
-                'requirements': self.requirements,
                 'updated_at': utc_now().isoformat()
             }
             
@@ -247,7 +239,6 @@ class Level:
                         difficulty=level_data.get('difficulty', 'medium'),
                         unlocked=level_data.get('unlocked', True),
                         coming_soon=level_data.get('comingSoon', False),
-                        requirements=level_data.get('requirements'),
                         metadata={
                             'original_data': level_data,
                             'auto_populated': True,
