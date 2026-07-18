@@ -8,8 +8,8 @@ python-dotenv
 # Form handling and security
 Flask-WTF
 
-# Email support (for contact forms and login verification codes)
-Flask-Mailman
+# Email support (Brevo transactional email API)
+brevo-python
 
 # Production server
 gunicorn

@@ -9,8 +9,12 @@ and logging.
 import os
 import traceback
 from typing import List, Dict, Any, Optional, Union
-from flask import current_app, url_for, render_template_string
-from flask_mailman import EmailMessage
+from flask import current_app, render_template_string
+from brevo import Brevo
+from brevo.transactional_emails import (
+    SendTransacEmailRequestSender,
+    SendTransacEmailRequestToItem,
+)
 
 
 class EmailService:
@@ -28,14 +32,13 @@ class EmailService:
     @staticmethod
     def is_email_configured() -> bool:
         """Check if email is properly configured."""
-        return bool(current_app.config.get('MAIL_SERVER'))
+        return bool(current_app.config.get('BREVO_API_KEY') and current_app.config.get('BREVO_DEFAULT_SENDER_EMAIL'))
     
     @staticmethod
     def _log_email_attempt(email_type: str, recipient: str) -> None:
         """Log email sending attempt."""
         current_app.logger.info(f"Attempting to send {email_type} email to: {recipient}")
-        current_app.logger.info(f"Using MAIL_SERVER: {current_app.config.get('MAIL_SERVER')}")
-        current_app.logger.info(f"Using MAIL_DEFAULT_SENDER: {current_app.config.get('MAIL_DEFAULT_SENDER')}")
+        current_app.logger.info(f"Using BREVO_DEFAULT_SENDER_EMAIL: {current_app.config.get('BREVO_DEFAULT_SENDER_EMAIL')}")
     
     @staticmethod
     def _log_email_success(email_type: str, recipient: str) -> None:
@@ -48,12 +51,6 @@ class EmailService:
         current_app.logger.error(f"Failed to send {email_type} email to {recipient}: {error}")
         current_app.logger.error(f"Exception type: {type(error).__name__}")
         current_app.logger.error(f"Full traceback: {traceback.format_exc()}")
-        
-        # Check if it's an SMTP-related error
-        if hasattr(error, 'smtp_code'):
-            current_app.logger.error(f"SMTP error code: {error.smtp_code}")
-        if hasattr(error, 'smtp_error'):
-            current_app.logger.error(f"SMTP error message: {error.smtp_error}")
     
     @staticmethod
     def _load_template(template_name: str) -> str:
@@ -96,31 +93,31 @@ class EmailService:
         from_email: Optional[str] = None,
         reply_to: Optional[List[str]] = None,
         headers: Optional[Dict[str, str]] = None
-    ) -> EmailMessage:
-        """Create EmailMessage instance with common configuration."""
-        
+    ) -> Dict[str, Any]:
+        """Build the payload for a Brevo transactional email."""
         # Use default sender if not specified
         if from_email is None:
-            from_email = current_app.config.get('MAIL_DEFAULT_SENDER')
-        
-        # Create base message
-        msg = EmailMessage(
-            subject=subject,
-            body=body,
-            from_email=from_email,
-            to=to_emails,
-            reply_to=reply_to
-        )
-        
-        # Set HTML content type
-        msg.content_subtype = 'html'
-        
-        # Add headers if provided
+            from_email = current_app.config.get('BREVO_DEFAULT_SENDER_EMAIL')
+        sender_name = current_app.config.get('BREVO_DEFAULT_SENDER_NAME', 'Phalanx Cyber Academy')
+
+        to = [SendTransacEmailRequestToItem(email=e) for e in to_emails]
+        sender = SendTransacEmailRequestSender(email=from_email, name=sender_name)
+
+        payload: Dict[str, Any] = {
+            'subject': subject,
+            'html_content': body,
+            'sender': sender,
+            'to': to,
+        }
+
         if headers:
-            for key, value in headers.items():
-                msg.extra_headers[key] = value
-        
-        return msg
+            payload['headers'] = headers
+
+        if reply_to:
+            reply_email = reply_to[0] if isinstance(reply_to, list) else reply_to
+            payload['reply_to'] = {'email': reply_email}
+
+        return payload
     
     @staticmethod
     def send_email(
@@ -149,33 +146,38 @@ class EmailService:
         Returns:
             bool: True if email was sent successfully, False otherwise
         """
-        
+
+        # Suppress sending during tests or when explicitly disabled
+        if current_app.config.get('BREVO_SUPPRESS_SEND'):
+            current_app.logger.info(f"Suppressed {email_type} email to {to_emails}")
+            return True
+
         # Check if email is configured
         if not EmailService.is_email_configured():
             current_app.logger.warning("Email server not configured")
             return False
-        
+
         # Normalize to_emails to list
         if isinstance(to_emails, str):
             to_emails = [to_emails]
-        
+
         # Normalize reply_to to list
         if isinstance(reply_to, str):
             reply_to = [reply_to]
-        
+
         # Log attempt
         recipients_str = ', '.join(to_emails)
         EmailService._log_email_attempt(email_type, recipients_str)
-        
+
         try:
             # Ensure URL configuration
             EmailService._ensure_url_config()
-            
+
             # Render template
             body = EmailService._render_template(template_name, **template_context)
-            
-            # Create and send email
-            msg = EmailService._create_email_message(
+
+            # Build payload and send via Brevo
+            payload = EmailService._create_email_message(
                 subject=subject,
                 body=body,
                 to_emails=to_emails,
@@ -183,13 +185,14 @@ class EmailService:
                 reply_to=reply_to,
                 headers=headers
             )
-            
-            msg.send()
-            
+
+            client = Brevo(api_key=current_app.config.get('BREVO_API_KEY'))
+            client.transactional_emails.send_transac_email(**payload)
+
             # Log success
             EmailService._log_email_success(email_type, recipients_str)
             return True
-            
+
         except Exception as e:
             # Log error
             EmailService._log_email_error(email_type, recipients_str, e)
@@ -202,7 +205,7 @@ class EmailService:
             email_type='contact_notification',
             template_name='contact_notification.html',
             subject=f'[Contact Form Submission] {contact_submission.subject}',
-            to_emails=[current_app.config.get('MAIL_DEFAULT_SENDER')],
+            to_emails=[current_app.config.get('BREVO_DEFAULT_SENDER_EMAIL')],
             template_context={
                 'contact': contact_submission
             },

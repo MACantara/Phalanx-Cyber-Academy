@@ -1,12 +1,10 @@
 from flask import Flask, session, request, jsonify, render_template
-from flask_mailman import Mail
 from config import config, get_config
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 import os
 
 # Initialize extensions
-mail = Mail()
 login_manager = LoginManager()
 csrf = CSRFProtect()
 
@@ -38,9 +36,6 @@ def create_app(config_name=None):
         if not app.config.get('DISABLE_DATABASE', False):
             raise  # Re-raise if database is not explicitly disabled
     
-    # Initialize Flask-Mail
-    mail.init_app(app)
-
     # Initialize Flask-Login
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'

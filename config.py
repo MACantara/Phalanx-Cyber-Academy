@@ -64,16 +64,11 @@ class Config:
     APPLICATION_ROOT = '/'
     PREFERRED_URL_SCHEME = 'https' if IS_VERCEL else 'http'
     
-    # Email configuration (required for password reset)
-    MAIL_SERVER = os.environ.get('MAIL_SERVER')
-    MAIL_PORT = int(os.environ.get('MAIL_PORT') or 587)
-    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'true').lower() in ['true', 'on', '1']
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
-    MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', 'false').lower() in ['true', 'on', '1']
-    MAIL_DEBUG = os.environ.get('MAIL_DEBUG', 'false').lower() in ['true', 'on', '1']
-    MAIL_SUPPRESS_SEND = os.environ.get('MAIL_SUPPRESS_SEND', 'false').lower() in ['true', 'on', '1']
+    # Email configuration (Brevo transactional email API)
+    BREVO_API_KEY = os.environ.get('BREVO_API_KEY')
+    BREVO_DEFAULT_SENDER_EMAIL = os.environ.get('BREVO_DEFAULT_SENDER_EMAIL')
+    BREVO_DEFAULT_SENDER_NAME = os.environ.get('BREVO_DEFAULT_SENDER_NAME', 'Phalanx Cyber Academy')
+    BREVO_SUPPRESS_SEND = os.environ.get('BREVO_SUPPRESS_SEND', 'false').lower() in ['true', 'on', '1']
     
     # Session configuration - sessions auto-extend with activity
     PERMANENT_SESSION_LIFETIME = timedelta(days=int(os.environ.get('PERMANENT_SESSION_LIFETIME', 30)))  # 30 days, extends with activity
@@ -176,7 +171,7 @@ class TestingConfig(Config):
     TESTING = True
     WTF_CSRF_ENABLED = False
     DISABLE_DATABASE = True  # Do not connect to real Supabase during tests
-    MAIL_SUPPRESS_SEND = True  # Do not send real emails during tests
+    BREVO_SUPPRESS_SEND = True  # Do not send real emails during tests
     
     # Override feature flags for testing
     FEATURES = {
