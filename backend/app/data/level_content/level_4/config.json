@@ -1,0 +1,29 @@
+{
+  "id": 4,
+  "name": "The White Hat Test",
+  "description": "Practice ethical hacking and responsible vulnerability disclosure",
+  "requiredApps": [
+    "terminal-app"
+  ],
+  "tutorials": [
+    "terminal-tutorial"
+  ],
+  "dialogues": [
+    "level4-white-hat-test"
+  ],
+  "objectives": [
+    "Use nmap for network reconnaissance",
+    "Practice responsible disclosure"
+  ],
+  "scoring": {
+    "maxScore": 1000,
+    "penalties": {
+      "unauthorizedAccess": -300,
+      "missedVulnerability": -100
+    },
+    "bonuses": {
+      "ethicalConduct": 400,
+      "documentationBonus": 200
+    }
+  }
+}

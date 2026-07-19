@@ -1,0 +1,34 @@
+{
+  "id": 3,
+  "name": "Malware Mayhem",
+  "description": "Isolate infections and perform digital cleanup during a gaming tournament",
+  "requiredApps": [
+    "malware-scanner-app",
+    "process-monitor-app"
+  ],
+  "tutorials": [
+    "malware-scanner-tutorial",
+    "process-monitor-tutorial",
+    "system-logs-tutorial"
+  ],
+  "dialogues": [
+    "level3-malware-mayhem"
+  ],
+  "objectives": [
+    "Detect malware infections",
+    "Quarantine malicious files",
+    "Monitor system processes",
+    "Clean infected systems"
+  ],
+  "scoring": {
+    "maxScore": 1000,
+    "penalties": {
+      "missedMalware": -150,
+      "falsePositive": -75
+    },
+    "bonuses": {
+      "speedBonus": 200,
+      "thoroughnessBonus": 300
+    }
+  }
+}

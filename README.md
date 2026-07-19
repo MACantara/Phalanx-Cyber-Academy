@@ -109,6 +109,61 @@ python run.py
 
 Visit `http://localhost:5000` to start your cybersecurity learning journey.
 
+## 🚀 Run the New Stack (React + FastAPI)
+
+The project now has a FastAPI backend in `backend/` and a React + Vite frontend in `frontend/`. You can run them together with Docker Compose or manually.
+
+### Option 1: Docker Compose (recommended)
+
+```bash
+docker compose up --build
+```
+
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:8000
+
+### Option 2: Manual commands
+
+#### Backend
+
+```bash
+cd backend
+
+# create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate    # On Windows: venv\Scripts\activate
+
+# create an .env from the template
+cp .env.template .env       # On Windows: copy .env.template .env
+# Edit .env and set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
+
+# install the package and its dependencies
+pip install -e .
+
+# start the FastAPI server
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+#### Frontend
+
+Open a second terminal:
+
+```bash
+cd frontend
+
+# create an .env from the template (optional; Vite proxy already points to localhost:8000)
+cp .env.template .env       # On Windows: copy .env.template .env
+
+# install dependencies
+npm install
+
+# start the dev server
+npm run dev
+```
+
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:8000 (proxied through Vite)
+
 ## 🎮 How to Play
 
 1. **Register & Verify**: Create your account and verify your email

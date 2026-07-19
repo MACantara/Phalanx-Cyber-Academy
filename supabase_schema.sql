@@ -140,11 +140,11 @@ CREATE INDEX IF NOT EXISTS idx_xp_history_session_id ON xp_history(session_id);
 -- Populate levels table with initial data from app/routes/levels.py
 -- Difficulty levels must match XPCalculator.BASE_XP keys: easy, medium, intermediate, hard, expert
 INSERT INTO levels (level_id, name, description, category, icon, estimated_time, xp_reward, skills, difficulty, unlocked, coming_soon, updated_at) VALUES
-(1, 'The-Misinformation-Maze', 'Debunk fake news and stop misinformation from influencing an election.', 'Information Literacy', 'bi-newspaper', '15 minutes', 100, '["Critical Thinking", "Source Verification", "Fact Checking"]'::jsonb, 'easy', true, false, NOW()),
-(2, 'Shadow-in-the-Inbox', 'Spot phishing attempts and practice safe email protocols.', 'Email Security', 'bi-envelope-exclamation', '20 minutes', 150, '["Phishing Detection", "Email Analysis", "Social Engineering"]'::jsonb, 'medium', true, false, NOW()),
-(3, 'Malware-Mayhem', 'Isolate infections and perform digital cleanup during a gaming tournament.', 'Threat Detection', 'bi-bug', '25 minutes', 200, '["Malware Recognition", "System Security", "Threat Analysis"]'::jsonb, 'intermediate', true, false, NOW()),
-(4, 'The-White-Hat-Test', 'Practice ethical hacking and responsible vulnerability disclosure.', 'Ethical Hacking', 'bi-terminal', '30 minutes', 350, '["Penetration Testing", "Vulnerability Assessment", "Ethical Hacking"]'::jsonb, 'hard', true, false, NOW()),
-(5, 'The-Hunt-for-The-Null', 'Final mission: Use advanced digital forensics to expose The Null''s identity.', 'Digital Forensics', 'bi-trophy', '40 minutes', 500, '["Digital Forensics", "Evidence Analysis", "Advanced Investigation"]'::jsonb, 'expert', true, false, NOW())
+(1, 'The Misinformation Maze', 'Navigate through fake news and stop misinformation from influencing an election.', 'Information Literacy', 'bi-newspaper', '15 minutes', 100, '["Critical Thinking", "Source Verification", "Fact Checking"]'::jsonb, 'easy', true, false, NOW()),
+(2, 'Shadow in the Inbox', 'Spot phishing attempts and practice safe email protocols while defending against social engineering.', 'Email Security', 'bi-envelope-exclamation', '20 minutes', 150, '["Phishing Detection", "Email Analysis", "Social Engineering"]'::jsonb, 'medium', true, false, NOW()),
+(3, 'Malware Mayhem', 'Isolate infections and perform digital cleanup during a gaming tournament under pressure.', 'Threat Detection', 'bi-bug', '25 minutes', 200, '["Malware Recognition", "System Security", "Threat Analysis"]'::jsonb, 'intermediate', true, false, NOW()),
+(4, 'The White Hat Test', 'Practice ethical hacking and responsible vulnerability disclosure in controlled scenarios.', 'Ethical Hacking', 'bi-terminal', '30 minutes', 350, '["Penetration Testing", "Vulnerability Assessment", "Ethical Hacking"]'::jsonb, 'hard', true, false, NOW()),
+(5, 'The Hunt for The Null', 'Use advanced digital forensics to expose The Null''s identity in the ultimate cybersecurity challenge.', 'Digital Forensics', 'bi-trophy', '40 minutes', 500, '["Digital Forensics", "Evidence Analysis", "Advanced Investigation"]'::jsonb, 'expert', true, false, NOW())
 ON CONFLICT (level_id) DO UPDATE SET
     name = EXCLUDED.name,
     description = EXCLUDED.description,
@@ -316,3 +316,158 @@ CREATE POLICY "Users can update their own profile" ON public.profiles
     FOR UPDATE USING (auth.uid() = id);
 
 -- Service role / admin bypass handled by auth checks in backend
+
+-- ============================================================
+-- Extended tables for parity with legacy Flask model surface area
+-- ============================================================
+
+-- Badges / achievements catalog
+CREATE TABLE IF NOT EXISTS badges (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT,
+    icon VARCHAR(50),
+    xp_threshold INTEGER DEFAULT 0,
+    category VARCHAR(50),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_badges_name ON badges(name);
+CREATE INDEX IF NOT EXISTS idx_badges_category ON badges(category);
+
+-- User-earned badges / achievements
+CREATE TABLE IF NOT EXISTS user_badges (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    badge_id INTEGER NOT NULL REFERENCES badges(id) ON DELETE CASCADE,
+    earned_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (user_id, badge_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_badges_user_id ON user_badges(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_badges_badge_id ON user_badges(badge_id);
+
+-- Daily streak tracking
+CREATE TABLE IF NOT EXISTS user_streaks (
+    user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    current_streak INTEGER NOT NULL DEFAULT 0,
+    longest_streak INTEGER NOT NULL DEFAULT 0,
+    last_login_date DATE,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_streaks_user_id ON user_streaks(user_id);
+
+-- Detailed Blue-vs-Red game state persistence
+CREATE TABLE IF NOT EXISTS bvr_game_states (
+    user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    state JSONB NOT NULL DEFAULT '{}',
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_bvr_game_states_user_id ON bvr_game_states(user_id);
+
+-- Admin audit log
+CREATE TABLE IF NOT EXISTS admin_audit_logs (
+    id SERIAL PRIMARY KEY,
+    admin_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    action VARCHAR(100) NOT NULL,
+    target_type VARCHAR(50),
+    target_id INTEGER,
+    details JSONB,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_admin_audit_logs_admin_id ON admin_audit_logs(admin_id);
+CREATE INDEX IF NOT EXISTS idx_admin_audit_logs_created_at ON admin_audit_logs(created_at);
+CREATE INDEX IF NOT EXISTS idx_admin_audit_logs_action ON admin_audit_logs(action);
+
+-- Scheduled backup/maintenance jobs
+CREATE TABLE IF NOT EXISTS scheduled_jobs (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL,
+    job_type VARCHAR(50) NOT NULL,
+    cron_expression VARCHAR(100),
+    config JSONB,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    last_run TIMESTAMPTZ,
+    next_run TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_scheduled_jobs_name ON scheduled_jobs(name);
+CREATE INDEX IF NOT EXISTS idx_scheduled_jobs_is_active ON scheduled_jobs(is_active);
+
+-- Auto-update updated_at for scheduled_jobs
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+DROP TRIGGER IF EXISTS update_scheduled_jobs_updated_at ON scheduled_jobs;
+CREATE TRIGGER update_scheduled_jobs_updated_at
+    BEFORE UPDATE ON scheduled_jobs
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Enable RLS on the new tables
+ALTER TABLE badges ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_badges ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_streaks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bvr_game_states ENABLE ROW LEVEL SECURITY;
+ALTER TABLE admin_audit_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE scheduled_jobs ENABLE ROW LEVEL SECURITY;
+
+-- Seed default XP threshold badges
+INSERT INTO badges (name, description, icon, xp_threshold, category) VALUES
+    ('First Steps', 'Earned your first XP.', 'target', 1, 'progress'),
+    ('Novice Defender', 'Reached 100 XP.', 'shield', 100, 'progress'),
+    ('Cyber Scout', 'Reached 500 XP.', 'search', 500, 'progress'),
+    ('Guardian', 'Reached 1,000 XP.', 'award', 1000, 'progress'),
+    ('Elite Operator', 'Reached 5,000 XP.', 'star', 5000, 'progress'),
+    ('Phalanx Legend', 'Reached 10,000 XP.', 'crown', 10000, 'progress')
+ON CONFLICT (name) DO NOTHING;
+
+-- RLS policies for new tables
+CREATE POLICY "Anyone can view badges" ON badges FOR SELECT USING (true);
+CREATE POLICY "Admins can manage badges" ON badges
+    FOR ALL USING (EXISTS (
+        SELECT 1 FROM users WHERE id = auth.uid()::integer AND is_admin = true
+    ));
+
+CREATE POLICY "Users can view own badges" ON user_badges
+    FOR SELECT USING (user_id = auth.uid()::integer OR EXISTS (
+        SELECT 1 FROM users WHERE id = auth.uid()::integer AND is_admin = true
+    ));
+CREATE POLICY "System can manage user badges" ON user_badges
+    FOR ALL WITH CHECK (true);
+
+CREATE POLICY "Users can view own streak" ON user_streaks
+    FOR SELECT USING (user_id = auth.uid()::integer OR EXISTS (
+        SELECT 1 FROM users WHERE id = auth.uid()::integer AND is_admin = true
+    ));
+CREATE POLICY "System can manage streaks" ON user_streaks
+    FOR ALL WITH CHECK (true);
+
+CREATE POLICY "Users can view own BvR state" ON bvr_game_states
+    FOR SELECT USING (user_id = auth.uid()::integer OR EXISTS (
+        SELECT 1 FROM users WHERE id = auth.uid()::integer AND is_admin = true
+    ));
+CREATE POLICY "System can manage BvR state" ON bvr_game_states
+    FOR ALL WITH CHECK (true);
+
+CREATE POLICY "Admins can view audit logs" ON admin_audit_logs
+    FOR SELECT USING (EXISTS (
+        SELECT 1 FROM users WHERE id = auth.uid()::integer AND is_admin = true
+    ));
+CREATE POLICY "System can create audit logs" ON admin_audit_logs
+    FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Admins can manage scheduled jobs" ON scheduled_jobs
+    FOR ALL USING (EXISTS (
+        SELECT 1 FROM users WHERE id = auth.uid()::integer AND is_admin = true
+    ));
