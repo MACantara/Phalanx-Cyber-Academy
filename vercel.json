@@ -1,19 +1,31 @@
 {
-    "version": 2,
-    "builds": [
-        {
-            "src": "run.py",
-            "use": "@vercel/python"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "run.py"
-        }
-    ],
-    "env": {
-        "FLASK_ENV": "production",
-        "CUSTOM_DOMAIN": "phalanx-cyber-academy.vercel.app"
+  "services": {
+    "frontend": {
+      "root": "frontend/",
+      "runtime": "container",
+      "entrypoint": "Dockerfile"
+    },
+    "backend": {
+      "root": "backend/",
+      "runtime": "container",
+      "entrypoint": "Dockerfile"
     }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "backend"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "frontend"
+      }
+    }
+  ],
+  "env": {
+    "PORT": "80"
+  }
 }
