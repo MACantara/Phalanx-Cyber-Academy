@@ -7,6 +7,8 @@ RUN npm install
 
 COPY . .
 
+RUN npm run build
+
 EXPOSE 80
 
-CMD ["sh", "-c", "npm run build && npm run preview -- --host --port ${PORT:-4173}"]
+CMD ["sh", "-c", "npx vite preview --host --port ${PORT:-4173}"]
