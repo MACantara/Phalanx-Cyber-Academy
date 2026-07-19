@@ -1,0 +1,1341 @@
+{
+  "emails": [
+    {
+      "id": "legit_001",
+      "sender": "security@globe.com.ph",
+      "receiver": "it.admin@company.ph",
+      "date": "2024-03-17 09:18:42",
+      "subject": "Globe Business - New device login detected",
+      "body": "Good day,\n\nWe detected a sign-in to your Globe Business account from a new device.\n\nSign-in details:\n- Device: Samsung Galaxy S23 (Android 14)\n- Location: Makati City, Metro Manila\n- Date and time: March 17, 2024, 9:15 AM PHT\n- App: Globe One Business App\n\nIf this was you, no action is needed. If this wasn't you, please secure your account immediately.\n\nReview recent activity: https://business.globe.com.ph/security\n\nBest regards,\nGlobe Business Security Team",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official globe.com.ph domain",
+          "Specific device and location details (Makati)",
+          "Professional Globe Business branding",
+          "Links to official Globe Business portal",
+          "No urgent threats or pressure tactics",
+          "Uses Philippine timezone (PHT)"
+        ],
+        "educational_focus": "Legitimate security notification from a major Philippine telecommunications provider - uses official domain, specific local details, and professional tone.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify the sign-in actually occurred in your Globe Business account",
+          "Check if you recognize the device and Makati location",
+          "Official Globe emails always use globe.com.ph domain",
+          "Look for specific technical details rather than vague warnings"
+        ]
+      }
+    },
+    {
+      "id": "legit_002",
+      "sender": "noreply@lazada.com.ph",
+      "receiver": "procurement@company.ph",
+      "date": "2024-03-16 11:45:17",
+      "subject": "Your LazMall order #LZ789456123PH has shipped",
+      "body": "Hello Procurement Team,\n\nYour corporate order has shipped and is on the way.\n\nOrder Details:\n- Order #: LZ789456123PH\n- Shipped: March 16, 2024\n- Carrier: J&T Express\n- Tracking: JT0234567890PH\n- Estimated Delivery: March 18, 2024\n\nItems in this shipment:\n- HP LaserJet Pro Printer (3 units) - ₱45,999.00\n- Office supplies bundle - ₱2,850.00\n\nYou can track your package in your Lazada Business account.\n\nTrack your package: https://www.lazada.com.ph/my-orders\n\nSalamat for shopping with LazMall!\nLazada Philippines Customer Service",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Legitimate lazada.com.ph domain",
+          "Proper Lazada order number format with PH suffix",
+          "Specific shipping and item details",
+          "Uses Philippine peso (₱) currency",
+          "Links to official Lazada Philippines pages",
+          "Professional business communication in English and Filipino"
+        ],
+        "educational_focus": "Legitimate e-commerce business order notification from major Philippine marketplace - includes local currency, carriers, and proper order tracking.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify order number exists in your Lazada Business account",
+          "Check that procurement actually made this purchase",
+          "Confirm tracking number with J&T Express directly",
+          "Lazada Philippines always uses lazada.com.ph domain"
+        ]
+      }
+    },
+    {
+      "id": "legit_003",
+      "sender": "notifications@bdo.com.ph",
+      "receiver": "finance@company.ph",
+      "date": "2024-03-18 16:33:28",
+      "subject": "BDO Corporate Banking: March statement available",
+      "body": "Good day,\n\nYour BDO Corporate Account statement for March 2024 is now available.\n\nAccount Summary:\n- Account Number: **** 4892\n- Statement Period: March 1-31, 2024\n- Opening Balance: ₱2,547,830.50\n- Closing Balance: ₱3,125,456.75\n- Total Deposits: ₱1,897,450.00\n- Total Withdrawals: ₱1,319,823.75\n\nView your statement securely:\nhttps://online.bdo.com.ph/corporate-banking/statements\n\nFor assistance, contact your Relationship Manager or visit your home branch in BGC, Taguig.\n\nThank you for banking with BDO.\nBDO Corporate Banking Team",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official bdo.com.ph domain",
+          "Specific account details with partial masking",
+          "Philippine peso (₱) amounts",
+          "Professional BDO Corporate Banking language",
+          "Links to official BDO online banking portal",
+          "References specific BGC, Taguig location"
+        ],
+        "educational_focus": "Legitimate banking statement from largest Philippine bank - proper security practices with partial account numbers and realistic transaction amounts.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify account details match your BDO corporate account",
+          "Check statement in BDO online banking portal",
+          "Confirm transaction amounts align with records",
+          "BDO always uses bdo.com.ph for official communications"
+        ]
+      }
+    },
+    {
+      "id": "legit_004",
+      "sender": "support@meralco.com.ph",
+      "receiver": "facilities@company.ph",
+      "date": "2024-03-19 12:15:55",
+      "subject": "MERALCO Bill Ready - Account #1234-5678-90",
+      "body": "Good day,\n\nYour MERALCO bill for March 2024 is now available.\n\nBilling Summary:\n- Account Number: 1234-5678-90\n- Service Address: 123 Ayala Avenue, Makati City\n- Billing Period: February 20 - March 19, 2024\n- Total Amount Due: ₱45,673.25\n- Due Date: April 5, 2024\n- Consumption: 3,245 kWh\n\nPay online via Meralco Online or authorized payment channels:\nhttps://app.meralco.com.ph/pay-bill\n\nFor billing inquiries, call our Business Hotline: (02) 16211 or visit your District Office.\n\nMaraming salamat,\nMERALCO Customer Service",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official meralco.com.ph domain",
+          "Specific account and consumption details",
+          "Philippine peso amounts",
+          "Legitimate MERALCO billing format",
+          "Links to official MERALCO payment portal",
+          "Professional utility company communication with Filipino closing"
+        ],
+        "educational_focus": "Legitimate utility billing from MERALCO (Manila Electric Company) - includes verifiable account details and local payment options.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify account number matches your MERALCO business account",
+          "Check consumption aligns with typical usage",
+          "Confirm service address is correct",
+          "MERALCO always uses meralco.com.ph domain"
+        ]
+      }
+    },
+    {
+      "id": "legit_005",
+      "sender": "business@gcash.com",
+      "receiver": "accounting@company.ph",
+      "date": "2024-03-20 14:28:33",
+      "subject": "GCash for Business: Payment received - ₱12,500.00",
+      "body": "Good day,\n\nYou've received a payment to your GCash for Business account.\n\nTransaction Details:\n- Amount: ₱12,500.00\n- From: Juan dela Cruz (09171234567)\n- Transaction ID: GCB20240320142830PH\n- Date: March 20, 2024\n- Time: 2:25 PM PHT\n- Note: \"Payment for March consulting services\"\n\nThis payment has been added to your GCash Business wallet. You can transfer it to your linked BDO account or use it for business payments.\n\nView transaction: https://business.gcash.com/transactions\n\nFor support, chat with GHelp or call GCash Business Hotline: 2882.\n\nSalamat for using GCash for Business!\nGCash Philippines",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official gcash.com domain",
+          "Specific transaction ID with PH identifier",
+          "Philippine peso amount and mobile number format",
+          "Professional GCash Business branding",
+          "Links to official GCash Business portal",
+          "Local support options (GHelp, 2882 hotline)"
+        ],
+        "educational_focus": "Legitimate mobile wallet payment notification from leading Philippine fintech - includes local payment methods and proper transaction tracking.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify transaction appears in your GCash Business account",
+          "Check sender mobile number format is valid (09XX-XXX-XXXX)",
+          "Confirm transaction ID exists in payment history",
+          "GCash always uses gcash.com domain for official emails"
+        ]
+      }
+    },
+    {
+      "id": "legit_006",
+      "sender": "no-reply@sss.gov.ph",
+      "receiver": "hr@company.ph",
+      "date": "2024-03-21 10:15:22",
+      "subject": "SSS Employer Contribution Posted - March 2024",
+      "body": "Good day,\n\nYour employer contribution for March 2024 has been successfully posted.\n\nContribution Details:\n- Employer: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\n- Employer Number: 03-1234567-8\n- Period: March 2024\n- Total Contribution: ₱87,450.00\n- Number of Employees: 25\n- Payment Reference: SSS20240321-PH-789456\n- Date Posted: March 21, 2024\n\nView contribution details: https://www.sss.gov.ph/employers/\n\nFor inquiries, contact SSS Helpline: 1455 or visit your nearest SSS branch.\n\nSocial Security System\nRepublic of the Philippines",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official sss.gov.ph government domain",
+          "Specific employer and contribution details",
+          "Philippine peso amounts",
+          "Proper SSS employer number format",
+          "Links to official SSS employer portal",
+          "Government agency professional communication"
+        ],
+        "educational_focus": "Legitimate government agency notification for mandatory employer contributions - uses official .gov.ph domain and includes verifiable reference numbers.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify employer number matches your SSS registration",
+          "Check contribution amount aligns with payroll",
+          "Confirm payment reference in SSS online portal",
+          "SSS always uses sss.gov.ph for official communications"
+        ]
+      }
+    },
+    {
+      "id": "legit_007",
+      "sender": "notifications@philhealth.gov.ph",
+      "receiver": "hr@company.ph",
+      "date": "2024-03-22 14:30:18",
+      "subject": "PhilHealth Premium Payment Confirmation",
+      "body": "Good day,\n\nYour PhilHealth premium payment for March 2024 has been received and posted.\n\nPayment Details:\n- Employer: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\n- Employer Number: 1234567890\n- Payment Period: March 2024\n- Total Premium: ₱65,280.00\n- Coverage: 25 employees\n- OR Number: 2024-03-22-789456\n- Date Posted: March 22, 2024\n\nView your employer account: https://www.philhealth.gov.ph/partners/employers/\n\nFor assistance, visit your nearest PhilHealth office or call the Action Center: (02) 8441-7442.\n\nPhilHealth - Philippine Health Insurance Corporation\nRepublic of the Philippines",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official philhealth.gov.ph government domain",
+          "Specific employer and premium details",
+          "Official Receipt (OR) number",
+          "Philippine peso amounts",
+          "Links to official PhilHealth employer portal",
+          "Government agency professional format"
+        ],
+        "educational_focus": "Legitimate health insurance agency notification - uses .gov.ph domain and includes official receipt numbers for government transactions.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify employer number matches PhilHealth records",
+          "Check OR number in PhilHealth online system",
+          "Confirm premium amount aligns with employee coverage",
+          "PhilHealth always uses philhealth.gov.ph domain"
+        ]
+      }
+    },
+    {
+      "id": "legit_008",
+      "sender": "support@pldt.com.ph",
+      "receiver": "it.admin@company.ph",
+      "date": "2024-03-23 19:45:33",
+      "subject": "PLDT Enterprise - Fiber connection maintenance notice",
+      "body": "Good day,\n\nThis is to inform you of scheduled maintenance on your PLDT Enterprise Fiber connection.\n\nMaintenance Details:\n- Account: PLDT-ENT-789456\n- Service Address: 123 Ayala Avenue, Makati City\n- Date: March 26, 2024\n- Time: 2:00 AM - 5:00 AM PHT\n- Duration: Up to 3 hours\n- Affected Service: Internet connectivity\n- Speed: 500 Mbps Fiber\n\nThis maintenance is necessary to upgrade network equipment and improve service quality.\n\nFor urgent concerns, contact PLDT Enterprise Hotline: (02) 8888-0-101\nCheck status: https://business.pldthome.com/service-status\n\nWe apologize for any inconvenience.\nPLDT Enterprise Support Team",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official pldt.com.ph domain",
+          "Specific account and service details",
+          "Reasonable maintenance window (late night)",
+          "Professional PLDT Enterprise branding",
+          "Links to official PLDT business portal",
+          "Provides customer service contact information"
+        ],
+        "educational_focus": "Legitimate ISP maintenance notification from major Philippine telecommunications provider - includes specific service details and advance notice.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify account number matches your PLDT Enterprise account",
+          "Check service address is correct",
+          "Confirm maintenance window with PLDT Enterprise hotline",
+          "PLDT always uses pldt.com.ph or pldthome.com domains"
+        ]
+      }
+    },
+    {
+      "id": "legit_009",
+      "sender": "invoices@shopee.ph",
+      "receiver": "procurement@company.ph",
+      "date": "2024-03-24 08:00:15",
+      "subject": "Shopee Business: Invoice for order #240324ABCD1234",
+      "body": "Magandang araw,\n\nYour Shopee Business invoice is ready for order #240324ABCD1234.\n\nOrder Summary:\n- Order Date: March 23, 2024\n- Seller: TechHub Philippines Official Store\n- Items: 5 units\n- Subtotal: ₱24,500.00\n- Shipping: ₱150.00\n- Total: ₱24,650.00\n- Payment Method: Corporate Card (••••4567)\n\nItems Ordered:\n- Wireless Mouse (5 units) - ₱1,200 each\n- USB Hub (5 units) - ₱850 each\n- HDMI Cable (5 units) - ₱450 each\n\nDownload Invoice: https://seller.shopee.ph/portal/purchase/invoice/240324ABCD1234\n\nNeed help? Chat with Shopee Business Support or call: 02-8820-8800\n\nThank you for shopping on Shopee!\nShopee Philippines",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official shopee.ph domain",
+          "Proper Shopee order number format",
+          "Itemized invoice details",
+          "Philippine peso amounts",
+          "Links to official Shopee seller portal",
+          "Filipino greeting (Magandang araw)"
+        ],
+        "educational_focus": "Legitimate business marketplace invoice - includes detailed order breakdown and official payment confirmation.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify order number in your Shopee Business account",
+          "Check items match your procurement request",
+          "Confirm total amount with payment records",
+          "Shopee Philippines always uses shopee.ph domain"
+        ]
+      }
+    },
+    {
+      "id": "legit_010",
+      "sender": "billing@microsoft.com",
+      "receiver": "it.admin@company.ph",
+      "date": "2024-03-25 11:20:44",
+      "subject": "Microsoft 365 Business - Invoice March 2024",
+      "body": "Hello,\n\nYour Microsoft 365 Business invoice for March 2024 is now available.\n\nSubscription Details:\n- Customer: PHALANX CYBER ACADEMY Technologies Inc.\n- Invoice: INV-2024-03-25-789456\n- Billing Period: March 1-31, 2024\n- Plan: Microsoft 365 Business Premium (25 licenses)\n- Amount: ₱21,875.00 (25 × ₱875/user/month)\n- Payment Method: Corporate Card (••••4567)\n- Due Date: April 8, 2024\n\nView invoice: https://admin.microsoft.com/billing/invoices\n\nQuestions? Contact Microsoft Philippines Support: (02) 7793-5500\n\nThank you for choosing Microsoft 365.\nMicrosoft Philippines",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official microsoft.com domain",
+          "Detailed subscription and invoice information",
+          "Philippine peso pricing",
+          "Realistic per-user licensing costs",
+          "Links to official Microsoft admin portal",
+          "Local Microsoft Philippines contact"
+        ],
+        "educational_focus": "Legitimate SaaS subscription billing from global provider with Philippine localization - includes proper invoice format and support contacts.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify invoice in Microsoft 365 admin center",
+          "Check license count matches your organization",
+          "Confirm payment method with accounting",
+          "Microsoft always uses microsoft.com for billing"
+        ]
+      }
+    },
+    {
+      "id": "legit_011",
+      "sender": "notifications@bir.gov.ph",
+      "receiver": "finance@company.ph",
+      "date": "2024-03-26 16:18:29",
+      "subject": "BIR eFPS: 2307 Filing Confirmation - March 2024",
+      "body": "Good day,\n\nYour BIR Form 2307 (Certificate of Creditable Tax Withheld at Source) has been successfully filed.\n\nFiling Details:\n- TIN: 123-456-789-000\n- Registered Name: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\n- Tax Type: Income Tax\n- Period: March 2024\n- Amount Withheld: ₱45,600.00\n- Reference Number: BIR-2307-20240326-789456\n- Date Filed: March 26, 2024\n- Status: Accepted\n\nView filing details: https://efps.bir.gov.ph/dashboard\n\nFor assistance, contact BIR Customer Assistance Division: 8538-3200\n\nBureau of Internal Revenue\nRepublic of the Philippines",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official bir.gov.ph government domain",
+          "Specific TIN and filing details",
+          "Proper BIR form number (2307)",
+          "Philippine peso tax amounts",
+          "Links to official BIR eFPS portal",
+          "Government agency professional format"
+        ],
+        "educational_focus": "Legitimate tax filing confirmation from Philippine revenue agency - uses .gov.ph domain and includes official reference numbers.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify TIN matches your business registration",
+          "Check filing in BIR eFPS online portal",
+          "Confirm amount withheld with accounting records",
+          "BIR always uses bir.gov.ph for official communications"
+        ]
+      }
+    },
+    {
+      "id": "legit_012",
+      "sender": "support@zoom.us",
+      "receiver": "it.admin@company.ph",
+      "date": "2024-03-27 13:45:17",
+      "subject": "Zoom Business: Meeting recording ready",
+      "body": "Hi IT Admin,\n\nYour cloud recording is now available.\n\nMeeting Details:\n- Topic: Q1 Business Review - Manila Office\n- Date: March 27, 2024\n- Duration: 1 hour 23 minutes\n- Host: maria.santos@company.ph\n- Participants: 15 attendees\n- Recording Size: 847 MB\n\nThe recording is available for 30 days in your Zoom cloud storage.\n\nView recording: https://zoom.us/rec/share/xyz789abc123ph\nManage recordings: https://zoom.us/recording/management\n\nQuestions? Contact Zoom Support Philippines.\n\nZoom Video Communications",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official zoom.us domain",
+          "Specific meeting details",
+          "Realistic recording size and duration",
+          "Links to official Zoom recording portal",
+          "Professional video conferencing context",
+          "References Philippine office location"
+        ],
+        "educational_focus": "Legitimate video conferencing service notification - includes verifiable meeting details and proper recording management links.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify meeting was actually held on this date",
+          "Check recording in Zoom account",
+          "Confirm host email matches organization",
+          "Zoom always uses zoom.us domain for notifications"
+        ]
+      }
+    },
+    {
+      "id": "legit_013",
+      "sender": "noreply@grab.com",
+      "receiver": "admin@company.ph",
+      "date": "2024-03-28 09:32:51",
+      "subject": "GrabBiz: Monthly usage report - March 2024",
+      "body": "Good day,\n\nYour GrabBiz usage report for March 2024 is now available.\n\nUsage Summary:\n- Company: PHALANX CYBER ACADEMY Technologies Inc.\n- Total Rides: 47\n- Total Spent: ₱8,450.00\n- Most Active Route: Makati to BGC\n- Top 3 Users: m.santos, j.reyes, l.cruz\n\nBreakdown by Service:\n- GrabCar: 35 rides (₱6,200.00)\n- GrabFood: 12 orders (₱2,250.00)\n\nView detailed report: https://business.grab.com/ph/reports\nManage company account: https://business.grab.com/ph/dashboard\n\nFor GrabBiz support: (02) 8888-7272\n\nSalamat for choosing GrabBiz!\nGrab Philippines",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official grab.com domain",
+          "Detailed usage statistics",
+          "Philippine peso amounts",
+          "Realistic Manila routes (Makati-BGC)",
+          "Links to official Grab business portal",
+          "Local Grab Philippines support"
+        ],
+        "educational_focus": "Legitimate ride-hailing business account report - includes verifiable usage data and official business portal access.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify company name matches GrabBiz account",
+          "Check usage aligns with employee transportation",
+          "Confirm amounts with expense reports",
+          "Grab always uses grab.com for official communications"
+        ]
+      }
+    },
+    {
+      "id": "legit_014",
+      "sender": "security@paymaya.com",
+      "receiver": "finance@company.ph",
+      "date": "2024-03-29 07:30:15",
+      "subject": "PayMaya Business: Transaction alert - ₱25,000",
+      "body": "Good day,\n\nA large transaction was processed on your PayMaya Business account.\n\nTransaction Details:\n- Amount: ₱25,000.00\n- Type: Online Payment\n- Merchant: AWS Philippines\n- Date: March 29, 2024\n- Time: 7:25 AM PHT\n- Transaction ID: PM20240329072530PH\n- Status: Successful\n- Description: Monthly cloud services subscription\n\nIf you authorized this transaction, no action is needed.\n\nView transaction: https://business.paymaya.com/transactions\n\nFor concerns, contact PayMaya Business Support: (02) 8-845-7788\n\nPayMaya Philippines",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official paymaya.com domain",
+          "Specific transaction details",
+          "Philippine peso amount",
+          "Legitimate merchant (AWS Philippines)",
+          "Links to official PayMaya business portal",
+          "Clear transaction description"
+        ],
+        "educational_focus": "Legitimate fintech transaction alert - provides detailed transaction information for business verification without creating panic.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify transaction in PayMaya Business account",
+          "Check if AWS payment was scheduled",
+          "Confirm transaction ID in payment history",
+          "PayMaya always uses paymaya.com domain"
+        ]
+      }
+    },
+    {
+      "id": "legit_015",
+      "sender": "notifications@sec.gov.ph",
+      "receiver": "legal@company.ph",
+      "date": "2024-03-30 15:22:38",
+      "subject": "SEC: Annual Financial Statement filing reminder",
+      "body": "Good day,\n\nThis is a reminder to file your company's Annual Financial Statements (AFS) with the Securities and Exchange Commission.\n\nCompany Information:\n- Company: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\n- SEC Registration: CS202012345\n- Fiscal Year End: December 31, 2023\n- Filing Deadline: April 15, 2024\n- Status: Pending Submission\n\nFile online via SEC i-Register: https://www.sec.gov.ph/i-register/\n\nRequired documents:\n- Audited Financial Statements\n- General Information Sheet (GIS)\n- Board Resolution\n\nFor assistance, visit SEC Head Office in Mandaluyong or call: (02) 8818-0921\n\nSecurities and Exchange Commission\nRepublic of the Philippines",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official sec.gov.ph government domain",
+          "Specific company registration details",
+          "Proper SEC registration format",
+          "Reasonable filing deadline",
+          "Links to official SEC online portal",
+          "Government agency professional communication"
+        ],
+        "educational_focus": "Legitimate government compliance reminder - uses .gov.ph domain and includes official filing requirements and deadlines.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify SEC registration number matches company records",
+          "Check filing deadline with SEC calendar",
+          "Confirm reminder in SEC i-Register portal",
+          "SEC always uses sec.gov.ph for official communications"
+        ]
+      }
+    },
+    {
+      "id": "legit_016",
+      "sender": "support@unionbank.ph",
+      "receiver": "finance@company.ph",
+      "date": "2024-03-31 12:45:22",
+      "subject": "UnionBank Corporate: Payroll processing completed",
+      "body": "Good day,\n\nYour March 2024 payroll has been successfully processed.\n\nPayroll Summary:\n- Company: PHALANX CYBER ACADEMY Technologies Inc.\n- Account: UnionBank Corporate Account ****7890\n- Processing Date: March 31, 2024\n- Number of Employees: 25\n- Total Payroll: ₱875,000.00\n- Status: Completed\n- Reference: UB-PAYROLL-20240331-789456\n\nAll employee accounts have been credited. Employees can check their UnionBank accounts.\n\nView payroll details: https://online.unionbankph.com/corporate/payroll\n\nFor payroll concerns: Corporate Banking Hotline (02) 8841-8600\n\nMaraming salamat,\nUnionBank of the Philippines",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official unionbank.ph domain",
+          "Specific payroll processing details",
+          "Philippine peso amounts",
+          "Realistic employee count and amounts",
+          "Links to official UnionBank corporate portal",
+          "Filipino closing phrase"
+        ],
+        "educational_focus": "Legitimate banking payroll notification - includes proper transaction reference and verifiable processing details.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify payroll amount matches accounting records",
+          "Check reference number in UnionBank portal",
+          "Confirm all 25 employees received payment",
+          "UnionBank always uses unionbank.ph domain"
+        ]
+      }
+    },
+    {
+      "id": "legit_017",
+      "sender": "noreply@pagibig.gov.ph",
+      "receiver": "hr@company.ph",
+      "date": "2024-04-01 16:18:44",
+      "subject": "Pag-IBIG Fund: March 2024 contribution posted",
+      "body": "Magandang araw,\n\nYour employer contribution to Pag-IBIG Fund for March 2024 has been posted successfully.\n\nContribution Details:\n- Employer: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\n- Employer ID: 1234567890\n- Period: March 2024\n- Total Contribution: ₱32,500.00\n- Number of Members: 25 employees\n- Payment Date: March 31, 2024\n- Reference: HDMF-2024-03-789456\n\nView employer account: https://www.pagibigfundservices.com/VirtualPagibig/\n\nFor inquiries, contact Pag-IBIG Hotline: 8-724-4244 or visit your nearest branch.\n\nHome Development Mutual Fund (Pag-IBIG)\nRepublic of the Philippines",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official pagibig.gov.ph government domain",
+          "Specific employer and contribution details",
+          "Philippine peso amounts",
+          "Proper Pag-IBIG employer ID format",
+          "Links to official Pag-IBIG online portal",
+          "Filipino greeting"
+        ],
+        "educational_focus": "Legitimate housing fund contribution notification - uses .gov.ph domain and includes official HDMF reference number.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify employer ID matches Pag-IBIG records",
+          "Check contribution amount aligns with payroll",
+          "Confirm reference in Virtual Pag-IBIG portal",
+          "Pag-IBIG always uses pagibig.gov.ph domain"
+        ]
+      }
+    },
+    {
+      "id": "legit_018",
+      "sender": "alerts@bpi.com.ph",
+      "receiver": "finance@company.ph",
+      "date": "2024-04-02 11:35:17",
+      "subject": "BPI Corporate: Large transaction alert - ₱500,000",
+      "body": "Good day,\n\nA large transaction was processed on your BPI Corporate Account.\n\nTransaction Details:\n- Account: BPI Corporate ****5678\n- Type: Online Transfer\n- Amount: ₱500,000.00\n- Recipient: Office Equipment Supplier Inc.\n- Date: April 2, 2024\n- Time: 11:30 AM PHT\n- Reference: BPI-OLT-20240402113045\n- Description: Equipment purchase payment\n\nIf you did not authorize this transaction, please contact us immediately.\n\nCall BPI Corporate Banking: (02) 889-10000\nVisit: https://online.bpi.com.ph/corporate\n\nBank of the Philippine Islands\nSecurity Team",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official bpi.com.ph domain",
+          "Specific transaction details",
+          "Philippine peso amount",
+          "Legitimate business recipient",
+          "Links to official BPI corporate portal",
+          "Clear description of transaction purpose"
+        ],
+        "educational_focus": "Legitimate large transaction security alert from major Philippine bank - provides verification without creating undue alarm.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify transaction was authorized by finance team",
+          "Check recipient matches approved supplier",
+          "Confirm reference number in BPI online banking",
+          "BPI always uses bpi.com.ph domain"
+        ]
+      }
+    },
+    {
+      "id": "legit_019",
+      "sender": "notifications@dti.gov.ph",
+      "receiver": "legal@company.ph",
+      "date": "2024-04-03 14:22:15",
+      "subject": "DTI: Business Name Renewal reminder",
+      "body": "Good day,\n\nThis is a reminder to renew your business name registration with the Department of Trade and Industry.\n\nBusiness Information:\n- Business Name: PHALANX CYBER ACADEMY TECHNOLOGIES\n- Registration Number: DTI-2020-123456-M\n- Original Registration: April 15, 2020\n- Expiration Date: April 15, 2024\n- Status: Due for Renewal\n\nRenew online: https://bnrs.dti.gov.ph/\n\nRequired:\n- DTI application form\n- Renewal fee: ₱500.00\n- Valid ID\n\nFor assistance, visit DTI Makati Office or call DTI Hotline: 751-3330\n\nDepartment of Trade and Industry\nRepublic of the Philippines",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official dti.gov.ph government domain",
+          "Specific business registration details",
+          "Reasonable renewal fee (₱500)",
+          "Links to official DTI online portal",
+          "Government agency professional communication",
+          "Advance renewal reminder"
+        ],
+        "educational_focus": "Legitimate government business renewal reminder - uses .gov.ph domain and includes proper registration details.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify DTI registration number matches records",
+          "Check expiration date with business documents",
+          "Confirm renewal in DTI BNRS portal",
+          "DTI always uses dti.gov.ph for official communications"
+        ]
+      }
+    },
+    {
+      "id": "legit_020",
+      "sender": "support@salesforce.com",
+      "receiver": "sales@company.ph",
+      "date": "2024-04-04 09:15:33",
+      "subject": "Salesforce: Q1 2024 usage report available",
+      "body": "Hello Sales Team,\n\nYour Salesforce quarterly usage report for Q1 2024 is now available.\n\nUsage Summary:\n- Organization: PHALANX CYBER ACADEMY Technologies Inc.\n- License Type: Salesforce Professional Edition\n- Active Users: 15 out of 20 licenses\n- Storage Used: 8.4 GB / 20 GB\n- API Calls: 847,230 / 5,000,000\n- Leads Created: 234\n- Opportunities Won: 45\n\nView detailed analytics: https://login.salesforce.com/reports\n\nQuestions? Contact Salesforce Philippines Support: (02) 8255-9191\n\nThank you for using Salesforce.\nSalesforce Philippines Team",
+      "is_phishing": 0,
+      "ai_analysis": {
+        "risk_level": "low",
+        "phishing_indicators": [],
+        "safety_factors": [
+          "Official salesforce.com domain",
+          "Detailed usage statistics",
+          "Realistic CRM metrics",
+          "Links to official Salesforce portal",
+          "Professional SaaS reporting format",
+          "Local Philippines support contact"
+        ],
+        "educational_focus": "Legitimate CRM platform usage report - includes verifiable business metrics and proper license information.",
+        "red_flags": [],
+        "verification_tips": [
+          "Verify organization name matches Salesforce account",
+          "Check usage metrics in Salesforce dashboard",
+          "Confirm license count with IT department",
+          "Salesforce always uses salesforce.com domain"
+        ]
+      }
+    },
+    {
+      "id": "phish_001",
+      "sender": "security-alert@globe-com-ph.verify.online",
+      "receiver": "it.admin@company.ph",
+      "date": "2024-03-17 22:45:33",
+      "subject": "URGENT: Globe Account Suspended - Verify Now",
+      "body": "URGENT SECURITY ALERT\n\nYour Globe Business account has been temporarily suspended due to suspicious activity.\n\nWe detected multiple failed login attempts from China. Your account will be PERMANENTLY DELETED in 24 hours if you don't verify your identity immediately.\n\nCLICK HERE TO VERIFY: http://globe-com-ph-verify.online/secure-login\n\nEnter your Globe credentials and OTP to restore access.\n\nFailure to verify will result in:\n- Account termination\n- Loss of all data\n- Service disconnection\n\nGlobe Security Team (URGENT)\nDO NOT IGNORE THIS MESSAGE",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: globe-com-ph.verify.online (not globe.com.ph)",
+          "Extreme urgency and threats (24 hours, PERMANENT DELETION)",
+          "Suspicious login attempts from China (fear tactic)",
+          "Requests credentials and OTP directly",
+          "Threatening consequences for not complying",
+          "ALL CAPS excessive urgency",
+          "Generic 'DO NOT IGNORE' pressure",
+          "Links to non-Globe domain"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Classic urgency-based phishing targeting Globe customers - uses fear tactics and fake domain to steal credentials. Real Globe never asks for OTP via email.",
+        "red_flags": [
+          "Domain is NOT globe.com.ph - it's a spoofed lookalike",
+          "Legitimate companies never request OTP codes",
+          "Unrealistic threat of 24-hour account deletion",
+          "Poor grammar and excessive capitalization",
+          "Creates panic to bypass critical thinking"
+        ],
+        "verification_tips": [
+          "Check sender domain carefully - 'verify.online' is NOT Globe",
+          "Globe never asks for OTP codes via email",
+          "Login directly to business.globe.com.ph to check account status",
+          "Contact Globe Business Hotline: (02) 16211 to verify",
+          "Hover over links before clicking to see real destination"
+        ]
+      }
+    },
+    {
+      "id": "phish_002",
+      "sender": "no-reply@bir.gov-ph.online",
+      "receiver": "finance@company.ph",
+      "date": "2024-03-18 08:15:22",
+      "subject": "BIR: Tax Refund Approval - ₱125,000.00",
+      "body": "Bureau of Internal Revenue\nRepublic of the Philippines\n\nGood news! Your company's tax refund has been approved.\n\nRefund Details:\n- TIN: 123-456-789-000\n- Company: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\n- Refund Amount: ₱125,000.00\n- Tax Year: 2023\n- Status: APPROVED FOR RELEASE\n\nTo process your refund, complete the verification form:\nhttp://bir.gov-ph.online/refund/verify.php\n\nRequired information:\n- Company TIN\n- Authorized Representative Details\n- Bank Account Number for deposit\n- Mobile number for OTP\n\nRefund will be released within 3 business days after verification.\n\nClick here to claim: http://bir.gov-ph.online/refund\n\nBIR Refund Processing Center",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: bir.gov-ph.online (not bir.gov.ph)",
+          "Unsolicited tax refund offer (too good to be true)",
+          "Requests sensitive information (TIN, bank account, OTP)",
+          "Suspicious PHP file in URL (verify.php)",
+          "BIR doesn't process refunds this way",
+          "Asks for bank account number via form",
+          "Creates excitement to lower guard"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Government impersonation phishing - exploits desire for tax refunds. Real BIR uses bir.gov.ph and never requests bank details via email links.",
+        "red_flags": [
+          "Domain is bir.gov-ph.online, NOT bir.gov.ph (fake)",
+          "BIR never notifies refunds via unsolicited email",
+          "Requesting bank account details is huge red flag",
+          "Real BIR refunds go through official eFPS portal",
+          "No legitimate BIR reference number provided"
+        ],
+        "verification_tips": [
+          "Verify domain is exactly bir.gov.ph (no hyphens or extensions)",
+          "Check BIR eFPS portal directly for refund status",
+          "BIR never requests bank details via email forms",
+          "Call BIR hotline: 8538-3200 to verify any refund claims",
+          "Real refunds require extensive documentation, not just a form"
+        ]
+      }
+    },
+    {
+      "id": "phish_003",
+      "sender": "support@bdoonline-banking.com",
+      "receiver": "finance@company.ph",
+      "date": "2024-03-19 14:30:18",
+      "subject": "BDO Security: Unusual activity detected",
+      "body": "Dear Valued Customer,\n\nWe detected unusual transactions on your BDO Corporate Account ****4892.\n\nSuspicious Activity:\n- Large withdrawal attempt: ₱450,000.00\n- Location: Cebu City\n- Device: Unknown smartphone\n- Time: March 19, 2024, 2:15 PM\n\nThis transaction has been TEMPORARILY BLOCKED for your security.\n\nVerify if this was you: http://bdoonline-banking.com/verify-transaction\n\nIf you don't recognize this activity:\n1. Login immediately to confirm\n2. Update your security settings\n3. Verify recent transactions\n\nAccount will be locked after 6 hours if no response.\n\nBDO Corporate Security\n24/7 Protection Monitoring",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: bdoonline-banking.com (not bdo.com.ph)",
+          "Creates urgency with 6-hour deadline",
+          "Suspicious transaction from Cebu (fear tactic)",
+          "Requests immediate login via provided link",
+          "Account lockout threat",
+          "Generic 'Dear Valued Customer' greeting",
+          "Links to non-BDO domain"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Banking credential theft phishing - uses realistic transaction details and security concern to trick users into entering credentials on fake site.",
+        "red_flags": [
+          "Domain is bdoonline-banking.com, NOT bdo.com.ph",
+          "BDO uses online.bdo.com.ph for online banking, not separate domains",
+          "Real security alerts come through official BDO app",
+          "Suspicious transaction details designed to create panic",
+          "Time pressure tactic (6 hours)"
+        ],
+        "verification_tips": [
+          "Never click links in suspicious bank emails",
+          "Type online.bdo.com.ph directly in browser",
+          "Check account activity in official BDO app",
+          "Call BDO Corporate Banking: (02) 8631-8000 to verify",
+          "BDO never threatens account lockout via email"
+        ]
+      }
+    },
+    {
+      "id": "phish_004",
+      "sender": "payroll@hr-dept.company-ph.com",
+      "receiver": "employees@company.ph",
+      "date": "2024-03-20 16:45:11",
+      "subject": "URGENT: Update payroll information for March salary",
+      "body": "Dear Team Member,\n\nOur payroll system is undergoing maintenance. We need all employees to update their bank account information to ensure March salaries are processed correctly.\n\nIMPORTANT: Failure to update by March 22 will delay your salary payment.\n\nUpdate your information here:\nhttp://company-ph.com/hr-portal/payroll-update\n\nRequired details:\n- Full Name\n- Employee ID\n- Current Bank Account Number\n- New Bank Account Number (if changed)\n- Contact Number\n- Email Password (for verification)\n\nThis is mandatory for all employees. Process takes only 2 minutes.\n\nThank you for your immediate cooperation.\n\nHR Department\nPhalanx Cyber Academy Technologies Inc.",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Requests email password (MAJOR RED FLAG)",
+          "Fake HR domain: company-ph.com (not company.ph)",
+          "Urgent deadline to create pressure",
+          "Threatens salary delay",
+          "Requests sensitive banking information",
+          "Generic greeting ('Dear Team Member')",
+          "Unsolicited information update request",
+          "No official HR contact information"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Internal impersonation phishing - pretends to be from HR to steal banking and email credentials. Real HR never asks for passwords.",
+        "red_flags": [
+          "NEVER provide email password to anyone, including HR",
+          "Domain is company-ph.com, not your actual company.ph",
+          "Legitimate HR uses internal systems, not external links",
+          "Real payroll updates don't require email passwords",
+          "Creates artificial urgency about salary payment"
+        ],
+        "verification_tips": [
+          "Contact HR department directly via phone or in person",
+          "Check if HR sent official memo through proper channels",
+          "Never provide passwords to anyone, ever",
+          "Real payroll updates handled through internal HR system",
+          "Verify sender email is from actual company.ph domain"
+        ]
+      }
+    },
+    {
+      "id": "phish_005",
+      "sender": "no-reply@sss.gov.online",
+      "receiver": "hr@company.ph",
+      "date": "2024-03-21 11:20:45",
+      "subject": "SSS: Employer account suspension notice",
+      "body": "Social Security System\nRepublic of the Philippines\n\nIMPORTANT NOTICE\n\nYour employer account has been flagged for unpaid contributions.\n\nEmployer: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\nEmployer Number: 03-1234567-8\nOutstanding Amount: ₱87,450.00\nPenalty if unpaid: ₱15,000.00\n\nTo avoid penalties and legal action:\n1. Verify your contribution status\n2. Submit payment immediately\n3. Update employer information\n\nAccess your account: http://sss.gov.online/employers/login\n\nProvide:\n- Employer Number\n- TIN\n- Authorized Representative ID\n- Mobile OTP\n\nDeadline: March 23, 2024\nLegal action will be taken if unresolved.\n\nSSS Compliance Division",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: sss.gov.online (not sss.gov.ph)",
+          "Threatens legal action to create fear",
+          "Requests TIN and representative ID",
+          "Asks for mobile OTP",
+          "Short deadline (2 days)",
+          "Claims unpaid contributions without proof",
+          "Suspicious .online TLD instead of .gov.ph"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Government agency impersonation - uses fear of legal action and penalties. Real SSS uses sss.gov.ph and proper notification procedures.",
+        "red_flags": [
+          "Domain is sss.gov.online, NOT sss.gov.ph (fake government site)",
+          "Real SSS sends official letters for compliance issues",
+          "SSS never requests OTP via email",
+          "Legitimate government sites use .gov.ph extension",
+          "Legal action threats without proper documentation"
+        ],
+        "verification_tips": [
+          "Verify domain is exactly sss.gov.ph",
+          "Check contribution status directly at www.sss.gov.ph",
+          "Call SSS Hotline: 1455 to verify any compliance issues",
+          "Real SSS sends official correspondence via mail",
+          "Never provide OTP codes to anyone"
+        ]
+      }
+    },
+    {
+      "id": "phish_006",
+      "sender": "billing@microsoft-365.com.ph",
+      "receiver": "it.admin@company.ph",
+      "date": "2024-03-22 09:30:22",
+      "subject": "Microsoft 365: Payment failed - Service suspension",
+      "body": "Microsoft 365 Business Alert\n\nYour payment for Microsoft 365 Business Premium has failed.\n\nAccount Details:\n- Customer: Phalanx Cyber Academy Technologies Inc.\n- Failed Payment: ₱21,875.00\n- Attempted: March 22, 2024\n- Reason: Card declined\n\nYour services will be suspended in 24 hours if payment is not updated.\n\nServices affected:\n- Email (Outlook)\n- OneDrive storage\n- Teams\n- All Microsoft 365 apps\n\nUpdate payment method now:\nhttp://microsoft-365.com.ph/billing/payment-update\n\nEnter your admin credentials and new payment card details.\n\nTime remaining: 23 hours\n\nMicrosoft Philippines Support",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: microsoft-365.com.ph (not microsoft.com)",
+          "Creates urgency with 24-hour suspension threat",
+          "Requests admin credentials",
+          "Asks for payment card details via email link",
+          "Microsoft never uses country-specific TLDs for billing",
+          "Time pressure countdown tactic",
+          "Links to non-Microsoft domain"
+        ],
+        "safety_factors": [],
+        "educational_focus": "SaaS credential theft - impersonates Microsoft to steal admin access and payment information. Microsoft uses admin.microsoft.com for billing.",
+        "red_flags": [
+          "Domain is microsoft-365.com.ph, NOT microsoft.com",
+          "Microsoft billing always through admin.microsoft.com",
+          "Real payment failures show in Microsoft 365 admin center",
+          "Microsoft never requests credentials via email",
+          "Country-specific domain is suspicious for global service"
+        ],
+        "verification_tips": [
+          "Login directly to admin.microsoft.com to check billing",
+          "Microsoft sends billing alerts through admin portal",
+          "Call Microsoft Philippines: (02) 7793-5500 to verify",
+          "Never click payment update links in emails",
+          "Check credit card statement for actual charges"
+        ]
+      }
+    },
+    {
+      "id": "phish_007",
+      "sender": "security@lazada-ph.online",
+      "receiver": "procurement@company.ph",
+      "date": "2024-03-23 15:18:44",
+      "subject": "Lazada: Your account has been compromised",
+      "body": "SECURITY ALERT\n\nWe detected unauthorized access to your Lazada Business account.\n\nSuspicious Activity:\n- Login from: Indonesia\n- Attempted orders: ₱45,000.00\n- Payment method: Changed\n- Shipping address: Modified\n\nWe have BLOCKED these transactions and locked your account.\n\nTo unlock and secure your account:\n1. Verify your identity\n2. Review suspicious activities\n3. Reset your password\n\nSecure your account now:\nhttp://lazada-ph.online/security/account-recovery\n\nProvide:\n- Email address\n- Current password\n- Mobile number\n- OTP code\n\nAccount will remain locked until verification complete.\n\nLazada Security Team (Philippines)",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: lazada-ph.online (not lazada.com.ph)",
+          "Claims account compromise to create panic",
+          "Requests current password (NEVER legitimate)",
+          "Asks for OTP code",
+          "Suspicious activity from Indonesia (fear tactic)",
+          "Account lockout pressure",
+          "Links to non-Lazada domain"
+        ],
+        "safety_factors": [],
+        "educational_focus": "E-commerce account takeover attempt - uses security scare to trick users into revealing credentials. Real Lazada never asks for current passwords.",
+        "red_flags": [
+          "Domain is lazada-ph.online, NOT lazada.com.ph",
+          "NEVER provide current password to anyone",
+          "Legitimate password resets don't ask for old password",
+          "Real Lazada security alerts show in app/account",
+          "OTP codes should never be shared"
+        ],
+        "verification_tips": [
+          "Login directly to www.lazada.com.ph to check account",
+          "Check for security alerts in Lazada app",
+          "Lazada never asks for current password via email",
+          "Contact Lazada Customer Service: 02-8820-8800",
+          "Real account recovery uses secure in-app process"
+        ]
+      }
+    },
+    {
+      "id": "phish_008",
+      "sender": "it-support@company.support-ph.com",
+      "receiver": "all-staff@company.ph",
+      "date": "2024-03-24 08:45:17",
+      "subject": "Mandatory: Email system upgrade - Action required",
+      "body": "IT Department Announcement\n\nWe are upgrading our email system to improve security and performance.\n\nAll employees must verify their email accounts by March 25, 2024 to avoid service interruption.\n\nVerification process:\n1. Click the link below\n2. Enter your email credentials\n3. Complete security questions\n4. Download security certificate\n\nVerify your email: http://company.support-ph.com/email-upgrade\n\nRequired information:\n- Full email address\n- Current password\n- Security questions\n- Mobile number\n\nFailing to complete verification will result in:\n- Email access loss\n- Calendar data deletion\n- Contact list removal\n\nComplete by: March 25, 2024, 5:00 PM\n\nIT Support Team\nPhalanx Cyber Academy Technologies",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake IT support domain: company.support-ph.com",
+          "Requests email passwords (NEVER legitimate)",
+          "Mandatory compliance language",
+          "Threatens data loss",
+          "Short deadline (1 day)",
+          "Links to external, non-company domain",
+          "Asks for security questions",
+          "Generic 'IT Department' sender"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Internal IT impersonation - pretends to be from IT department to harvest email credentials. Real IT never requests passwords.",
+        "red_flags": [
+          "Domain is company.support-ph.com, not company.ph",
+          "IT NEVER asks for email passwords",
+          "Real system upgrades done by IT without user passwords",
+          "Threatening data deletion is scare tactic",
+          "Legitimate IT uses internal ticketing system"
+        ],
+        "verification_tips": [
+          "Contact IT department directly via phone or helpdesk",
+          "Verify if upgrade announcement was sent officially",
+          "Real IT system upgrades don't require user passwords",
+          "Check with colleagues if they received same email",
+          "Report suspicious IT emails to actual IT security team"
+        ]
+      }
+    },
+    {
+      "id": "phish_009",
+      "sender": "notifications@gcash-secure.com.ph",
+      "receiver": "accounting@company.ph",
+      "date": "2024-03-25 19:30:55",
+      "subject": "GCash: Suspicious transaction detected - ₱50,000",
+      "body": "GCash Security Alert\n\nWe detected a suspicious transaction on your GCash Business account.\n\nTransaction Details:\n- Amount: ₱50,000.00\n- Recipient: Unknown (09XX-XXX-XXXX)\n- Status: Pending approval\n- Time: March 25, 2024, 7:15 PM\n\nThis transaction is unusual for your account pattern.\n\nIf you did NOT authorize this:\n1. Cancel transaction immediately\n2. Verify your account security\n3. Update your MPIN\n\nCancel transaction: http://gcash-secure.com.ph/cancel-transaction\n\nLogin with:\n- Mobile number\n- MPIN\n- OTP code\n\nTransaction will process in 2 hours if not cancelled.\n\nGCash Security Team\nProtecting your funds 24/7",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: gcash-secure.com.ph (not gcash.com)",
+          "Requests MPIN (mobile PIN)",
+          "Asks for OTP code",
+          "Creates urgency with 2-hour window",
+          "Suspicious transaction scare tactic",
+          "Links to non-GCash domain",
+          "Late evening timing (less alert)"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Mobile wallet credential theft - exploits fear of unauthorized transactions. Real GCash never asks for MPIN or OTP via email.",
+        "red_flags": [
+          "Domain is gcash-secure.com.ph, NOT gcash.com",
+          "GCash NEVER asks for MPIN via email",
+          "Never share OTP codes with anyone",
+          "Real transaction alerts show in GCash app",
+          "Time pressure to bypass critical thinking"
+        ],
+        "verification_tips": [
+          "Open GCash app directly to check transactions",
+          "GCash security alerts appear in-app, not just email",
+          "Never provide MPIN or OTP via any link",
+          "Contact GCash Hotline: 2882 to verify",
+          "Real GCash always uses gcash.com domain"
+        ]
+      }
+    },
+    {
+      "id": "phish_010",
+      "sender": "support@philhealth-online.gov.ph.com",
+      "receiver": "hr@company.ph",
+      "date": "2024-03-26 13:15:28",
+      "subject": "PhilHealth: Update employer information immediately",
+      "body": "Philippine Health Insurance Corporation\nRepublic of the Philippines\n\nIMPORTANT COMPLIANCE NOTICE\n\nYour PhilHealth employer record requires immediate update to comply with new Republic Act requirements.\n\nEmployer: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\nEmployer Number: 1234567890\nStatus: NON-COMPLIANT\nPenalty if not updated: ₱25,000.00\n\nUpdate required information:\n- Employer details\n- List of employees with PhilHealth numbers\n- Updated payroll information\n- Authorized representative credentials\n\nComplete update: http://philhealth-online.gov.ph.com/employer-update\n\nDeadline: March 28, 2024\nNon-compliance may result in suspension of employee benefits.\n\nPhilHealth Employer Services\nCompliance Division",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: philhealth-online.gov.ph.com (not philhealth.gov.ph)",
+          "Suspicious .com after .gov.ph (double extension)",
+          "Threatens penalties and benefit suspension",
+          "Requests employee PhilHealth numbers (sensitive data)",
+          "Asks for payroll information",
+          "Short deadline (2 days)",
+          "Claims new RA requirements without specifics"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Government impersonation with data harvesting - tries to collect employee personal information. Real PhilHealth uses philhealth.gov.ph only.",
+        "red_flags": [
+          "Domain has suspicious .com after .gov.ph",
+          "Real government sites only use .gov.ph",
+          "PhilHealth sends official letters for compliance",
+          "Requesting all employee PhilHealth numbers is suspicious",
+          "Vague 'Republic Act requirements' without specifics"
+        ],
+        "verification_tips": [
+          "Verify domain is exactly philhealth.gov.ph (no .com)",
+          "Check PhilHealth employer portal directly",
+          "Call PhilHealth Action Center: (02) 8441-7442",
+          "Real compliance notices come via official mail",
+          "Government agencies don't threaten via email"
+        ]
+      }
+    },
+    {
+      "id": "phish_011",
+      "sender": "noreply@zoom-philippines.com",
+      "receiver": "it.admin@company.ph",
+      "date": "2024-03-27 10:20:44",
+      "subject": "Zoom: Your recording will be deleted - Download now",
+      "body": "Zoom Video Communications\n\nIMPORTANT: Your cloud recording will be automatically deleted in 48 hours.\n\nRecording Details:\n- Meeting: Q1 Business Review - Manila Office\n- Date: March 27, 2024\n- Size: 847 MB\n- Expires: March 29, 2024\n\nDue to storage limits, this recording must be downloaded before expiration.\n\nDownload recording: http://zoom-philippines.com/recording/download/xyz789\n\nTo download:\n1. Click the link above\n2. Login with Zoom credentials\n3. Verify account with OTP\n4. Download file\n\nAfter deletion, recordings cannot be recovered.\n\nZoom Support Philippines",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "high",
+        "phishing_indicators": [
+          "Fake domain: zoom-philippines.com (not zoom.us)",
+          "Creates urgency with 48-hour deletion threat",
+          "Requests Zoom credentials via email link",
+          "Asks for OTP verification",
+          "Zoom doesn't use country-specific domains",
+          "Suspicious download link structure",
+          "Threatens permanent loss of data"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Video platform credential theft - uses fake recording deletion to steal Zoom account access. Real Zoom uses zoom.us only.",
+        "red_flags": [
+          "Domain is zoom-philippines.com, NOT zoom.us",
+          "Zoom uses zoom.us globally, not country domains",
+          "Real recordings accessed through zoom.us/recording",
+          "Zoom doesn't auto-delete after 48 hours",
+          "Requesting OTP via email link is suspicious"
+        ],
+        "verification_tips": [
+          "Login directly to zoom.us to check recordings",
+          "Zoom cloud recordings have longer retention (days/months)",
+          "Never enter Zoom credentials via email links",
+          "Check recording management in official Zoom portal",
+          "Zoom always uses zoom.us domain for services"
+        ]
+      }
+    },
+    {
+      "id": "phish_012",
+      "sender": "admin@unionbank-corporate.ph.com",
+      "receiver": "finance@company.ph",
+      "date": "2024-03-28 14:45:33",
+      "subject": "UnionBank: Confirm wire transfer - ₱875,000",
+      "body": "UnionBank Corporate Banking\n\nWire Transfer Authorization Required\n\nA wire transfer request has been initiated from your account:\n\nTransfer Details:\n- From: UnionBank Corporate ****7890\n- To: International Account (Singapore)\n- Amount: ₱875,000.00\n- Reference: WIRE-2024-03-28-789\n- Initiated by: Unknown user\n\nThis transaction requires your authorization.\n\nIf you did NOT initiate this transfer:\n1. Cancel immediately\n2. Verify account security\n3. Report unauthorized access\n\nAuthorize or cancel:\nhttp://unionbank-corporate.ph.com/wire-transfer/confirm\n\nLogin required:\n- Corporate account credentials\n- Transaction PIN\n- SMS OTP\n\nTransfer will process in 1 hour if not cancelled.\n\nUnionBank Security Team",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: unionbank-corporate.ph.com (not unionbank.ph)",
+          "Large amount wire transfer to create alarm",
+          "International transfer to Singapore (suspicious)",
+          "Requests transaction PIN and OTP",
+          "Unknown initiator to create fear",
+          "1-hour urgency window",
+          "Links to non-UnionBank domain"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Banking wire transfer scam - uses fear of large unauthorized transfer to steal banking credentials and OTP codes.",
+        "red_flags": [
+          "Domain is unionbank-corporate.ph.com, NOT unionbank.ph",
+          "UnionBank uses online.unionbankph.com for transactions",
+          "Real wire transfers show in online banking portal",
+          "Never provide transaction PIN or OTP via email links",
+          "International transfers require multiple authorizations"
+        ],
+        "verification_tips": [
+          "Login directly to online.unionbankph.com",
+          "Check for pending transactions in official portal",
+          "Call UnionBank Corporate: (02) 8841-8600 immediately",
+          "Never share OTP or transaction PIN",
+          "Real wire transfers require in-app authorization"
+        ]
+      }
+    },
+    {
+      "id": "phish_013",
+      "sender": "security@bpi-online.com.ph",
+      "receiver": "finance@company.ph",
+      "date": "2024-03-29 07:30:18",
+      "subject": "BPI: New security token required for online banking",
+      "body": "Bank of the Philippine Islands\nSecurity Enhancement Notice\n\nBPI is implementing enhanced security measures for all corporate accounts.\n\nNEW REQUIREMENT: Security Token Installation\n\nAll corporate account holders must install a new security token to continue using BPI online banking.\n\nInstallation deadline: March 31, 2024\n\nInstall security token:\nhttp://bpi-online.com.ph/security/token-install\n\nInstallation process:\n1. Download security certificate\n2. Enter corporate account credentials\n3. Verify identity with OTP\n4. Install token on device\n\nAccounts without security token will be suspended after March 31.\n\nThis is mandatory for all BPI Corporate Banking users.\n\nBPI Corporate Security Team\nEnhanced Protection Initiative",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: bpi-online.com.ph (not bpi.com.ph)",
+          "Requests account credentials for 'token installation'",
+          "Threatens account suspension",
+          "Asks to download security certificate (likely malware)",
+          "Requests OTP codes",
+          "Short deadline (2 days)",
+          "BPI doesn't use separate domains for security"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Banking malware distribution - disguises malware as security token while stealing credentials. Real BPI security updates through official channels.",
+        "red_flags": [
+          "Domain is bpi-online.com.ph, NOT bpi.com.ph or online.bpi.com.ph",
+          "Downloading 'security certificates' via email is dangerous",
+          "Real security tokens distributed through bank branches",
+          "BPI never requests credentials for security updates",
+          "Mandatory installation threats are pressure tactics"
+        ],
+        "verification_tips": [
+          "Visit BPI branch to verify security requirements",
+          "Call BPI Corporate: (02) 889-10000 to confirm",
+          "Never download security software from email links",
+          "Real BPI security uses official app and branch procedures",
+          "Check online.bpi.com.ph for legitimate security announcements"
+        ]
+      }
+    },
+    {
+      "id": "phish_014",
+      "sender": "notifications@sec-online.gov.ph.net",
+      "receiver": "legal@company.ph",
+      "date": "2024-03-30 16:45:22",
+      "subject": "SEC: Final notice - Submit documents or face penalties",
+      "body": "Securities and Exchange Commission\nRepublic of the Philippines\n\nFINAL COMPLIANCE NOTICE\n\nYour company has outstanding SEC requirements that must be submitted immediately.\n\nCompany: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\nSEC Registration: CS202012345\nStatus: NON-COMPLIANT\nPenalty accrued: ₱50,000.00\n\nOutstanding requirements:\n- General Information Sheet (GIS)\n- Audited Financial Statements 2023\n- Board Resolution\n- Articles of Incorporation (updated)\n\nSubmit documents: http://sec-online.gov.ph.net/submit-documents\n\nUpload:\n- Required documents\n- Penalty payment proof\n- Authorized representative ID\n- Company TIN\n\nFinal deadline: April 1, 2024\nFailure to comply will result in SEC administrative case and business suspension.\n\nSEC Compliance Division",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: sec-online.gov.ph.net (not sec.gov.ph)",
+          "Suspicious .net after .gov.ph (double extension)",
+          "Threatens penalties and business suspension",
+          "Requests company TIN and ID documents",
+          "Asks for payment proof upload (credit card info)",
+          "Short final deadline (2 days)",
+          "Creates fear of administrative case"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Government impersonation for document/identity theft - harvests sensitive business documents and IDs. Real SEC uses sec.gov.ph only.",
+        "red_flags": [
+          "Domain has .net after .gov.ph (fake government site)",
+          "Real government sites ONLY use .gov.ph",
+          "SEC sends official letters for compliance",
+          "Uploading representative ID to website is dangerous",
+          "Vague 'administrative case' threat without specifics"
+        ],
+        "verification_tips": [
+          "Verify domain is exactly sec.gov.ph (no extensions)",
+          "Check SEC i-Register portal directly",
+          "Call SEC: (02) 8818-0921 to verify compliance status",
+          "Real SEC notices come via registered mail",
+          "Never upload IDs or TINs via email links"
+        ]
+      }
+    },
+    {
+      "id": "phish_015",
+      "sender": "support@meralco-billing.com.ph",
+      "receiver": "facilities@company.ph",
+      "date": "2024-03-31 18:30:44",
+      "subject": "MERALCO: Final disconnection notice - Pay now",
+      "body": "Manila Electric Company\n\nFINAL DISCONNECTION NOTICE\n\nYour MERALCO account has an overdue balance. Service will be disconnected in 24 hours.\n\nAccount Number: 1234-5678-90\nService Address: 123 Ayala Avenue, Makati City\nOverdue Amount: ₱45,673.25\nPenalty: ₱5,000.00\nTotal Due: ₱50,673.25\n\nDisconnection Date: April 1, 2024, 9:00 AM\n\nPay immediately to avoid disconnection:\nhttp://meralco-billing.com.ph/pay-now\n\nPayment options:\n- Credit Card\n- Debit Card\n- Online Banking\n\nProvide:\n- Account number\n- Payment amount\n- Card details\n\nDisconnection cannot be reversed once executed.\n\nMERALCO Collection Department\nURGENT ACTION REQUIRED",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: meralco-billing.com.ph (not meralco.com.ph)",
+          "Extreme urgency (24 hours to disconnection)",
+          "Requests credit card details via email link",
+          "Adds penalty to create larger amount",
+          "Disconnection threat to create panic",
+          "MERALCO doesn't use separate billing domains",
+          "Late evening timing (less alert)"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Utility billing scam - uses fear of service disconnection to steal payment card information. Real MERALCO has proper procedures.",
+        "red_flags": [
+          "Domain is meralco-billing.com.ph, NOT meralco.com.ph",
+          "Real MERALCO uses app.meralco.com.ph for payments",
+          "MERALCO sends physical disconnection notices",
+          "Never provide card details via email links",
+          "24-hour disconnection is unrealistic"
+        ],
+        "verification_tips": [
+          "Login to app.meralco.com.ph to check actual bill",
+          "Call MERALCO Hotline: (02) 16211 to verify",
+          "Real disconnection notices come via registered mail",
+          "Pay only through official MERALCO channels",
+          "Check MERALCO app for real account status"
+        ]
+      }
+    },
+    {
+      "id": "phish_016",
+      "sender": "ceo@company-urgent.ph",
+      "receiver": "finance@company.ph",
+      "date": "2024-04-01 17:15:33",
+      "subject": "URGENT: Wire transfer needed for client payment",
+      "body": "Hi Finance Team,\n\nI need you to process an urgent wire transfer immediately. I'm in a meeting with our biggest client in Singapore and can't access my computer.\n\nTransfer Details:\n- Amount: ₱500,000.00\n- Recipient: TechSupply Solutions Pte Ltd\n- Bank: DBS Bank Singapore\n- Account: 1234567890\n- Swift: DBSSSGSG\n- Reference: Invoice #SG-2024-789\n\nThis is for equipment we need by tomorrow. The client is waiting for payment confirmation.\n\nPlease process this immediately and send me confirmation at this email.\n\nDon't call my regular number - I'm using a client phone. Will explain later.\n\nThanks,\nCEO Name\nSent from my iPhone",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "CEO impersonation (Business Email Compromise)",
+          "Fake domain: company-urgent.ph (not company.ph)",
+          "Creates urgency (client waiting, needed tomorrow)",
+          "Large amount (₱500,000)",
+          "International transfer to Singapore",
+          "Discourages verification (don't call)",
+          "Suspicious reason for alternate email",
+          "Generic 'Sent from iPhone' signature"
+        ],
+        "safety_factors": [],
+        "educational_focus": "CEO fraud/Business Email Compromise - impersonates executive to authorize fraudulent wire transfer. Classic BEC attack targeting finance departments.",
+        "red_flags": [
+          "Sender domain is company-urgent.ph, NOT company.ph",
+          "Real CEO wouldn't use alternate email for wire transfers",
+          "Discouraging phone verification is major red flag",
+          "Urgent international transfers without proper process",
+          "No standard wire transfer documentation",
+          "Convenient excuse for being unreachable"
+        ],
+        "verification_tips": [
+          "ALWAYS verify wire transfers via phone or in-person",
+          "Call CEO's known number regardless of email instructions",
+          "Check sender email domain carefully",
+          "Follow company wire transfer approval procedures",
+          "Verify recipient company with Singapore registry",
+          "BEC attacks rely on bypassing verification"
+        ]
+      }
+    },
+    {
+      "id": "phish_017",
+      "sender": "support@pldt-fiber.com.ph",
+      "receiver": "it.admin@company.ph",
+      "date": "2024-04-02 11:20:55",
+      "subject": "PLDT: Upgrade to 1Gbps Fiber - Limited time offer",
+      "body": "PLDT Enterprise Fiber Promotion\n\nExclusive offer for valued corporate customers!\n\nUpgrade your 500 Mbps connection to 1 Gbps Fiber at NO ADDITIONAL COST for 6 months.\n\nCurrent Plan: 500 Mbps - ₱8,999/month\nUpgrade Plan: 1 Gbps - ₱8,999/month (50% discount)\n\nThis limited-time promotion expires April 5, 2024.\n\nAccept upgrade offer:\nhttp://pldt-fiber.com.ph/enterprise/upgrade\n\nTo process upgrade:\n1. Verify account details\n2. Confirm current plan\n3. Provide payment information\n4. Sign digital contract\n\nOffer available only to accounts in good standing. Installation within 5 business days.\n\nPLDT Enterprise Sales Team\nMakati Business District Office",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "high",
+        "phishing_indicators": [
+          "Fake domain: pldt-fiber.com.ph (not pldt.com.ph)",
+          "Too good to be true offer (free upgrade)",
+          "Short deadline to create urgency",
+          "Requests account and payment information",
+          "Asks to sign 'digital contract' via link",
+          "PLDT doesn't use separate fiber domains",
+          "Unsolicited promotional offer"
+        ],
+        "safety_factors": [],
+        "educational_focus": "ISP promotional scam - uses attractive upgrade offer to harvest account information and payment details. Real PLDT promotions through official channels.",
+        "red_flags": [
+          "Domain is pldt-fiber.com.ph, NOT pldt.com.ph",
+          "Free double speed upgrade is suspiciously generous",
+          "Real PLDT promotions announced through official channels",
+          "Requesting payment info for 'upgrade' is suspicious",
+          "Limited-time pressure tactic",
+          "Digital contract signing via email link is unsafe"
+        ],
+        "verification_tips": [
+          "Contact PLDT Enterprise Hotline: (02) 8888-0-101",
+          "Check official PLDT website for promotions",
+          "Visit PLDT business center to verify offer",
+          "Real upgrades processed through account manager",
+          "PLDT uses pldt.com.ph or pldthome.com only"
+        ]
+      }
+    },
+    {
+      "id": "phish_018",
+      "sender": "noreply@dti-business-renewal.gov.ph.org",
+      "receiver": "legal@company.ph",
+      "date": "2024-04-03 09:45:22",
+      "subject": "DTI: Business name expired - Renew within 48 hours",
+      "body": "Department of Trade and Industry\nRepublic of the Philippines\n\nBUSINESS NAME EXPIRATION ALERT\n\nYour business name registration has EXPIRED.\n\nBusiness: PHALANX CYBER ACADEMY TECHNOLOGIES\nRegistration: DTI-2020-123456-M\nExpiration: April 15, 2020\nStatus: EXPIRED (4 years)\n\nYour business is currently operating with an expired registration, which is illegal under DTI regulations.\n\nPenalties:\n- Administrative fine: ₱20,000.00\n- Business closure risk\n- Legal liability\n\nRenew immediately:\nhttp://dti-business-renewal.gov.ph.org/renew-now\n\nRequired:\n- Business information\n- Owner's valid ID\n- TIN\n- Renewal fee: ₱500.00\n- Penalty payment: ₱20,000.00\n\nProcess within 48 hours to avoid business closure.\n\nDTI Compliance and Enforcement Division",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: dti-business-renewal.gov.ph.org (not dti.gov.ph)",
+          "Suspicious .org after .gov.ph (triple extension)",
+          "Creates panic with expired registration claim",
+          "Requests owner's ID and TIN",
+          "Inflated penalty amount (₱20,000)",
+          "48-hour pressure tactic",
+          "Threatens business closure",
+          "Claims 4-year expiration (unrealistic)"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Government impersonation with extortion - uses fear of business closure and fines to steal personal information and payments. Real DTI uses dti.gov.ph only.",
+        "red_flags": [
+          "Domain has .org after .gov.ph (fake government site)",
+          "Real government sites ONLY use .gov.ph extension",
+          "DTI renewal deadline is expiration date, not 4 years after",
+          "₱20,000 penalty for renewal is inflated/fake",
+          "DTI sends official notices via mail, not email threats",
+          "48-hour business closure is unrealistic"
+        ],
+        "verification_tips": [
+          "Verify domain is exactly dti.gov.ph",
+          "Check renewal status at bnrs.dti.gov.ph directly",
+          "Call DTI Hotline: 751-3330 to verify",
+          "Real DTI renewal fee is ₱500, not ₱20,500",
+          "Visit DTI office to verify business status",
+          "Government agencies don't threaten via email"
+        ]
+      }
+    },
+    {
+      "id": "phish_019",
+      "sender": "admin@payroll-system.company.ph.net",
+      "receiver": "all-employees@company.ph",
+      "date": "2024-04-04 14:30:18",
+      "subject": "Payroll System: Verify employment to receive April salary",
+      "body": "Phalanx Cyber Academy Technologies Inc.\nPayroll Department\n\nIMPORTANT: Employment Verification Required\n\nDue to recent system upgrades, all employees must verify their employment status to receive April 2024 salary.\n\nVerification deadline: April 5, 2024\n\nFailing to verify will result in salary payment delay.\n\nVerify employment:\nhttp://payroll-system.company.ph.net/verify-employee\n\nRequired information:\n- Full Name\n- Employee ID\n- Department\n- Bank Account Number\n- Email Password (system authentication)\n- Government ID Number\n- TIN\n\nThis is a mandatory process for all employees. Verification takes 3 minutes.\n\nSalaries will only be processed for verified employees.\n\nPayroll Administration\nHR Department",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: payroll-system.company.ph.net (not company.ph)",
+          "Requests email password (CRITICAL RED FLAG)",
+          "Asks for government ID and TIN numbers",
+          "Requests bank account number",
+          "Threatens salary delay",
+          "Short deadline (1 day)",
+          "Generic HR/Payroll sender",
+          "Suspicious .net extension"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Internal payroll scam - harvests comprehensive employee PII including passwords, IDs, and banking information. NEVER share passwords with anyone.",
+        "red_flags": [
+          "Domain is payroll-system.company.ph.net, NOT company.ph",
+          "NEVER EVER provide email password to anyone, including HR",
+          "Real HR already has your employment information",
+          "Requesting government ID and TIN via email is suspicious",
+          "Salary threat is pressure tactic",
+          "Legitimate payroll doesn't require 'verification' links"
+        ],
+        "verification_tips": [
+          "Contact HR department directly via phone or in-person",
+          "NEVER provide passwords under any circumstances",
+          "Real HR uses internal HRIS, not external links",
+          "Check with colleagues if this is legitimate",
+          "Report suspicious HR emails to IT security immediately",
+          "Verify sender domain is exactly company.ph"
+        ]
+      }
+    },
+    {
+      "id": "phish_020",
+      "sender": "security@pagibig-fund.gov.ph.com",
+      "receiver": "hr@company.ph",
+      "date": "2024-04-05 16:45:55",
+      "subject": "Pag-IBIG: Employer account suspended - Update now",
+      "body": "Home Development Mutual Fund (Pag-IBIG)\nRepublic of the Philippines\n\nEMPLOYER ACCOUNT SUSPENSION NOTICE\n\nYour Pag-IBIG employer account has been suspended due to incomplete information.\n\nEmployer: PHALANX CYBER ACADEMY TECHNOLOGIES INC.\nEmployer ID: 1234567890\nStatus: SUSPENDED\nReason: Missing employee information\n\nTo restore your account and avoid penalties:\n1. Update employee master list\n2. Submit updated member data sheets (MDS)\n3. Verify employer information\n4. Pay reactivation fee: ₱5,000.00\n\nReactivate account:\nhttp://pagibig-fund.gov.ph.com/employer/reactivate\n\nSubmit:\n- Complete list of employees with Pag-IBIG numbers\n- Employee personal information (birthdates, addresses)\n- Employment dates and salaries\n- Authorized representative ID\n\nAccount must be reactivated by April 7, 2024 or employees cannot access Pag-IBIG benefits.\n\nPag-IBIG Employer Services\nCompliance and Collection Department",
+      "is_phishing": 1,
+      "ai_analysis": {
+        "risk_level": "critical",
+        "phishing_indicators": [
+          "Fake domain: pagibig-fund.gov.ph.com (not pagibig.gov.ph)",
+          "Suspicious .com after .gov.ph (double extension)",
+          "Requests comprehensive employee PII",
+          "Asks for employee salaries and personal data",
+          "Fake 'reactivation fee' (₱5,000)",
+          "Threatens employee benefit suspension",
+          "Requests representative ID upload",
+          "Short deadline (2 days)"
+        ],
+        "safety_factors": [],
+        "educational_focus": "Government impersonation for mass PII theft - attempts to harvest complete employee database including sensitive personal information. Real Pag-IBIG uses pagibig.gov.ph only.",
+        "red_flags": [
+          "Domain has .com after .gov.ph (fake government site)",
+          "Real government sites ONLY use .gov.ph",
+          "Pag-IBIG doesn't charge 'reactivation fees'",
+          "Requesting all employee salaries and personal data is suspicious",
+          "Real compliance issues handled through official letters",
+          "Uploading representative ID to website is dangerous",
+          "Threatens employee benefits to create urgency"
+        ],
+        "verification_tips": [
+          "Verify domain is exactly pagibig.gov.ph",
+          "Check employer account at Virtual Pag-IBIG directly",
+          "Call Pag-IBIG Hotline: 8-724-4244 to verify",
+          "Real Pag-IBIG sends official correspondence via mail",
+          "Never submit employee PII via email links",
+          "Visit nearest Pag-IBIG branch to verify account status"
+        ]
+      }
+    }
+  ]
+}

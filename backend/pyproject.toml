@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phalanx-backend"
+version = "0.1.0"
+description = "FastAPI backend for Phalanx Cyber Academy"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic[email]",
+    "pydantic-settings",
+    "python-dotenv",
+    "supabase",
+    "httpx",
+    "requests",
+    "python-docx",
+    "brevo-python",
+    "jinja2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "httpx"]

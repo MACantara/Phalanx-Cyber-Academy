@@ -1,0 +1,51 @@
+{
+  "completion": {
+    "character": "instructor",
+    "messages": [
+      {
+        "text": "Congratulations, Digital Forensics Investigator! You've successfully completed \"The Hunt for The Null\" investigation."
+      },
+      {
+        "text": "Your forensic analysis has yielded crucial evidence in this cyber crime case. Let me review your investigation results..."
+      },
+      {
+        "text": "**INVESTIGATION SUMMARY**\n\n📊 **Final Score:** [value]/[value] points\n🎯 **Objectives Completed:** [value]/5\n🔍 **Evidence Analyzed:** [value]/4\n📋 **Compliance Score:** [value]%"
+      },
+      {
+        "text": "[value]\n\nYour investigation has provided valuable insights into The Null's activities and methodology."
+      },
+      {
+        "text": "The digital evidence you've collected and analyzed will be crucial for the prosecution of this case. Your forensic report documents the timeline, identifies the perpetrator, and establishes a clear chain of custody."
+      },
+      {
+        "text": "Now, let's review the detailed workflow analysis of your investigation to identify what went well and areas for improvement in your forensic methodology."
+      }
+    ]
+  },
+  "briefing": {
+    "character": "instructor",
+    "messages": [
+      {
+        "text": "🕵️ MISSION: A cybercriminal called 'The Null' has been exposed. You have their seized devices. Your job is simple: find out who they really are."
+      },
+      {
+        "text": "🎯 ONE CLEAR GOAL: Discover The Null's Real Identity\n\n✅ Real Name: ?\n✅ Email Address: ?\n✅ Phone Number: ?\n\nThat's it. Find these 3 pieces of information and you win."
+      },
+      {
+        "text": "📱 YOUR EVIDENCE (What you'll search through):\n\n💻 Laptop Hard Drive - Contains browser data and personal files\n🧠 Memory Dump - Shows what was running when seized\n🌐 Network Logs - Shows communications and data transfers\n\n⚡ You must investigate ALL 5 evidence pieces before building your report!"
+      },
+      {
+        "text": "🔍 HOW IT WORKS (Super Simple):\n\n1️⃣ Evidence Viewer → Investigate ALL 5 pieces of evidence\n2️⃣ Extract clues from each device (laptop, memory, network)\n3️⃣ Forensic Report Builder → Organize your findings\n4️⃣ Submit when you have all identity pieces"
+      },
+      {
+        "text": "🎮 STREAMLINED WORKFLOW:\n\n• Evidence Viewer: Investigate all 5 evidence pieces\n• Extract clues from each device thoroughly\n• Forensic Report Builder: Drag clues into report sections\n• Submit Report → WIN!\n\nComplete investigation required before report building!"
+      },
+      {
+        "text": "🏆 SUCCESS = Finding These 3 Things:\n\n👤 Real Name: Alex Morrison\n📧 Email: a.morrison@securemail.com\n📞 Phone: +1-555-0142\n\nFind all 3, submit your report, case closed!"
+      },
+      {
+        "text": "Ready to be a digital detective and unmask The Null?"
+      }
+    ]
+  }
+}

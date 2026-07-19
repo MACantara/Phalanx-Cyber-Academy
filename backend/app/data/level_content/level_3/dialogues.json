@@ -1,0 +1,101 @@
+{
+  "completion": {
+    "character": "instructor",
+    "messages": [
+      {
+        "text": "Outstanding work, Agent! You've successfully completed Level 3: Malware Mayhem under intense time pressure. Your rapid cybersecurity response saved the gaming championship!"
+      },
+      {
+        "text": "You demonstrated exceptional skills in the two critical phases: eliminating malicious processes and performing comprehensive malware scans while avoiding false positives."
+      },
+      {
+        "text": "Your swift action prevented catastrophic damage to the organization's reputation and avoided financial ruin. The tournament can continue thanks to your expertise!"
+      },
+      {
+        "text": "Your performance-based XP reward reflects your speed, accuracy, and efficiency during this high-pressure crisis response. The faster and more accurate you were, the more XP you earned!"
+      },
+      {
+        "text": "Remember: In real cybersecurity incidents, time is everything. Every minute of delay allows attackers to cause more damage, steal more data, and spread further through networks."
+      },
+      {
+        "text": "You're now ready for the most challenging cybersecurity scenarios. Your proven ability to handle high-stakes, time-critical incidents makes you invaluable to any security team!"
+      }
+    ]
+  },
+  "briefing": {
+    "character": "instructor",
+    "messages": [
+      {
+        "text": "A sophisticated malware campaign is hitting the Phalanx Cyber Academy Gaming Championship."
+      },
+      {
+        "text": "Multiple team systems are compromised by malware disguised as 'ProGamer Boost v2.1' - a fake performance enhancement tool."
+      },
+      {
+        "text": "🔍 Threat Analysis:\nAttack Vector: ProGamer Boost v2.1 trojan deploying 5 malware components\nTarget: 5 malicious processes + 5 false positives to confuse analysts:"
+      },
+      {
+        "text": "Current Status: 5 critical malware threats active, 5 legitimate programs creating confusion. The ProGamer Boost v2.1 campaign is spreading rapidly through tournament systems."
+      },
+      {
+        "text": "You're the lead incident responder. The tournament broadcast is in 2 minutes, and we cannot afford system failures on live television."
+      },
+      {
+        "text": "Every second of delay causes:\n• Reputation Damage: -2% per 10 seconds\n• Financial Impact: +$5,000 per 10 seconds\n• Data Loss Risk: Increases exponentially with each passing moment"
+      },
+      {
+        "text": "🎯 Two-Stage Response Protocol:\nStage 1: Process Termination (1 minute)\nIdentify and terminate exactly 5 malicious processes using Process Monitor."
+      },
+      {
+        "text": "Target the 5 malicious processes deployed by the attack:\n• Main trojan executable (primary infection vector)\n• Cryptocurrency mining process (resource theft)\n• Credential harvesting tool (data theft)\n• Fake system optimization utility (disguised threat)\n• Network worm component (lateral movement)",
+        "example": "AVOID killing legitimate processes like:\n• Gaming platform clients\n• Communication software\n• Streaming applications\n• Official tournament software\n• Web browsers and system utilities"
+      },
+      {
+        "text": "Stage 2: Malware Elimination (1 minute)\nScan and quarantine exactly 5 malware files while avoiding 5 false positives."
+      },
+      {
+        "text": "CRITICAL: Distinguish real threats from false positives!"
+      },
+      {
+        "text": "⚠️ CRITICAL WARNING - 5 False Positives Present:\n• Graphics driver control panel (system utility)\n• Tournament streaming software (broadcasting tool)\n• Official tournament updater (legitimate software)\n• System performance monitor (hardware utility)\n• Built-in antivirus software (security component)",
+        "example": "Quarantining ANY legitimate file = Major reputation damage!\nOnly target the 5 actual malware threats from the attack campaign"
+      },
+      {
+        "text": "• Speed vs. Accuracy: 2 minutes total - every decision counts\n• Analyze Before Acting: False positives cost precious time and reputation"
+      },
+      {
+        "text": "• Prioritize Real Threats: Focus on confirmed malware, not suspicious-looking legitimate files\n• Learn from Mistakes: Each false positive teaches pattern recognition"
+      },
+      {
+        "text": "⚠️ Mission Critical Targets:\n• Eliminate exactly 5 malicious processes and 5 malware files\n• Reputation: Must stay above 50% (false positives cost 10-15% each!)\n• Budget: Cannot exceed $100K in damages"
+      },
+      {
+        "text": "• Time: All systems operational in 2 minutes\n• Zero Tolerance: No infected systems can remain active, no legitimate systems damaged"
+      },
+      {
+        "text": "🏆 Perfect Score Requirements:\n• Kill exactly 5 malicious processes (avoid 5 legitimate ones)\n• Quarantine exactly 5 malware files (avoid 5 false positives)\n• Complete both stages within 2 minutes"
+      },
+      {
+        "text": "• Precision Score: Minimize false positives (every mistake costs time and reputation)"
+      },
+      {
+        "text": "🏆 Scoring System:\nBase XP Award: 150 XP for completing Level 3 (Intermediate Difficulty)\nAccuracy Multiplier: Up to 2x bonus for perfect malware detection (100%)"
+      },
+      {
+        "text": "Speed Bonus: Additional XP for completing both stages within 2 minutes\nPrecision Bonus: Extra XP for avoiding false positives\nMaximum Possible: ~375 XP for flawless malware response!"
+      },
+      {
+        "text": "This is the ultimate test - a 2-minute cyber crisis with global visibility. The gaming community, tournament sponsors, and your team are counting on your analytical skills under extreme pressure."
+      },
+      {
+        "text": "System Status: Active monitoring enabled\nTools Ready: Process Monitor, Malware Scanner with False Positive Detection"
+      },
+      {
+        "text": "Timer: 2 minutes starting on your command"
+      },
+      {
+        "text": "Remember: Think fast, analyze carefully, act precisely. Are you ready to save the championship?"
+      }
+    ]
+  }
+}

@@ -1,0 +1,496 @@
+{
+  "malware": {
+    "malware": {
+      "progamer_boost_v21.exe": {
+        "id": "progamer_boost_v21",
+        "name": "ProGamer Boost v2.1",
+        "filename": "progamer_boost_v21.exe",
+        "type": "Malicious Trojan",
+        "riskLevel": "Critical",
+        "size": "3.2 MB",
+        "path": "C:\\Users\\Public\\Downloads\\progamer_boost_v21.exe",
+        "description": "DANGEROUS: Fake gaming tool that installs multiple malware components",
+        "signatures": [
+          "Known trojan malware signature",
+          "Suspicious executable behavior patterns",
+          "Connects to malicious command servers"
+        ],
+        "behavior": [
+          "Steals personal information and passwords",
+          "Uses computer for cryptocurrency mining",
+          "Installs additional malware programs",
+          "Spreads to other computers on network",
+          "Downloads more threats from internet"
+        ],
+        "origin": "Downloaded from suspicious gaming forum - NOT from official source",
+        "reputationDamage": 30,
+        "financialDamage": 60000,
+        "scanTime": 2500,
+        "removalTime": 3500
+      },
+      "crypto_miner.exe": {
+        "id": "crypto_miner",
+        "name": "Hidden Cryptocurrency Miner",
+        "filename": "crypto_miner.exe",
+        "type": "Cryptocurrency Miner Malware",
+        "riskLevel": "Critical",
+        "size": "2.8 MB",
+        "path": "C:\\Temp\\crypto_miner.exe",
+        "description": "MALWARE: Secretly uses your computer to mine cryptocurrency",
+        "signatures": [
+          "Unauthorized cryptocurrency mining detected",
+          "Hidden resource consumption patterns",
+          "Suspicious network communication to mining pools"
+        ],
+        "behavior": [
+          "Uses CPU and GPU power without permission",
+          "Slows down computer and games significantly",
+          "Runs in background consuming electricity",
+          "Generates money for cybercriminals",
+          "May overheat computer components"
+        ],
+        "origin": "Installed by ProGamer Boost malware",
+        "reputationDamage": 25,
+        "financialDamage": 45000,
+        "scanTime": 2000,
+        "removalTime": 3000
+      },
+      "account_harvester.exe": {
+        "id": "account_harvester",
+        "name": "Gaming Account Harvester",
+        "filename": "account_harvester.exe",
+        "type": "Data Harvester",
+        "riskLevel": "High",
+        "size": "1.9 MB",
+        "path": "C:\\Program Files\\Common Files\\account_harvester.exe",
+        "description": "Collects personal information and gaming accounts for theft",
+        "signatures": [
+          "Gaming credential theft patterns",
+          "Personal data harvesting modules",
+          "Account database exfiltration"
+        ],
+        "behavior": [
+          "Steals gaming platform credentials (Steam, Epic, etc)",
+          "Harvests tournament player personal information",
+          "Collects banking details for prize money theft",
+          "Monitors championship communications",
+          "Exfiltrates valuable gaming inventories"
+        ],
+        "origin": "Deployed by ProGamer Boost v2.1 malware campaign",
+        "reputationDamage": 20,
+        "financialDamage": 35000,
+        "scanTime": 1800,
+        "removalTime": 2500
+      },
+      "system_optimizer.exe": {
+        "id": "system_optimizer",
+        "name": "Malicious System Optimizer",
+        "filename": "system_optimizer.exe",
+        "type": "Trojan Disguised as Utility",
+        "riskLevel": "High",
+        "size": "1.4 MB",
+        "path": "C:\\Windows\\System32\\system_optimizer.exe",
+        "description": "Malware disguised as system optimization tool, actually steals data",
+        "signatures": [
+          "Fake optimization tool signature",
+          "Data exfiltration patterns detected",
+          "Suspicious registry modifications"
+        ],
+        "behavior": [
+          "Pretends to optimize system performance",
+          "Steals passwords from web browsers",
+          "Accesses user documents and photos",
+          "Sends stolen data to remote servers",
+          "Installs additional malware components"
+        ],
+        "origin": "Part of ProGamer Boost v2.1 multi-stage attack strategy",
+        "reputationDamage": 15,
+        "financialDamage": 20000,
+        "scanTime": 1200,
+        "removalTime": 1800
+      },
+      "network_worm.exe": {
+        "id": "network_worm",
+        "name": "Network Spreading Worm",
+        "filename": "network_worm.exe",
+        "type": "Network Worm Malware",
+        "riskLevel": "Critical",
+        "size": "2.7 MB",
+        "path": "C:\\Users\\Public\\Documents\\network_worm.exe",
+        "description": "DANGEROUS: Spreads copies of itself to other computers on network",
+        "signatures": [
+          "Self-replicating worm behavior detected",
+          "Unauthorized network scanning activity",
+          "Suspicious file copying to network drives"
+        ],
+        "behavior": [
+          "Scans network for other vulnerable computers",
+          "Copies itself to shared folders and drives",
+          "Infects USB drives and removable media",
+          "Works with other malware for coordinated attacks",
+          "Can spread to hundreds of computers quickly"
+        ],
+        "origin": "Part of ProGamer Boost malware family",
+        "reputationDamage": 35,
+        "financialDamage": 50000,
+        "scanTime": 2200,
+        "removalTime": 3200
+      }
+    },
+    "false_positives": {
+      "nvidia_control_panel.exe": {
+        "id": "nvidia_control_panel",
+        "name": "NVIDIA Control Panel",
+        "filename": "nvidia_control_panel.exe",
+        "type": "Legitimate Software",
+        "riskLevel": "Safe",
+        "size": "4.1 MB",
+        "path": "C:\\Program Files\\NVIDIA\\nvidia_control_panel.exe",
+        "description": "Official NVIDIA graphics driver control panel - completely safe",
+        "signatures": [
+          "Verified NVIDIA Corporation signature",
+          "Official graphics driver component",
+          "Digitally signed by NVIDIA"
+        ],
+        "behavior": [
+          "Manages graphics card settings",
+          "Adjusts display properties and resolution",
+          "Controls 3D graphics performance settings",
+          "Updates graphics drivers when needed",
+          "Provides system information about GPU"
+        ],
+        "origin": "Official NVIDIA Corporation software",
+        "reputationDamage": 0,
+        "financialDamage": 0,
+        "scanTime": 1000,
+        "removalTime": 0,
+        "isFalsePositive": true,
+        "falsePositiveReason": "Sometimes flagged due to deep system access for hardware control"
+      },
+      "stream_assistant.exe": {
+        "id": "stream_assistant",
+        "name": "Tournament Stream Assistant",
+        "filename": "stream_assistant.exe",
+        "type": "False Positive",
+        "riskLevel": "Safe",
+        "size": "2.3 MB",
+        "path": "C:\\Program Files\\StreamLabs\\stream_assistant.exe",
+        "description": "Legitimate streaming utility for tournament broadcasting",
+        "signatures": [
+          "Legitimate StreamLabs utility signature",
+          "Video streaming optimization patterns",
+          "Broadcasting software components"
+        ],
+        "behavior": [
+          "Captures screen and audio for streaming",
+          "Optimizes streaming performance during tournaments",
+          "Manages overlay graphics and alerts",
+          "Handles viewer interaction features",
+          "Processes real-time video encoding"
+        ],
+        "origin": "Legitimate software from StreamLabs Inc.",
+        "reputationDamage": 0,
+        "financialDamage": 0,
+        "scanTime": 800,
+        "removalTime": 0,
+        "isFalsePositive": true,
+        "falsePositiveReason": "Screen capture and network activity may appear suspicious"
+      },
+      "tournament_updater.exe": {
+        "id": "tournament_updater",
+        "name": "Phalanx Cyber Academy Tournament Updater",
+        "filename": "tournament_updater.exe",
+        "type": "False Positive",
+        "riskLevel": "Safe",
+        "size": "1.8 MB",
+        "path": "C:\\Program Files\\Phalanx Cyber Academy\\tournament_updater.exe",
+        "description": "Official tournament software update utility",
+        "signatures": [
+          "Phalanx Cyber Academy official software signature",
+          "Tournament client update patterns",
+          "Authenticated software distribution"
+        ],
+        "behavior": [
+          "Downloads tournament client updates",
+          "Verifies software integrity and authenticity",
+          "Manages tournament participant databases",
+          "Synchronizes match schedules and results",
+          "Handles secure communication with tournament servers"
+        ],
+        "origin": "Official Phalanx Cyber Academy tournament software",
+        "reputationDamage": 0,
+        "financialDamage": 0,
+        "scanTime": 600,
+        "removalTime": 0,
+        "isFalsePositive": true,
+        "falsePositiveReason": "Network communication and system modifications during updates"
+      },
+      "performance_monitor.exe": {
+        "id": "performance_monitor",
+        "name": "System Performance Monitor",
+        "filename": "performance_monitor.exe",
+        "type": "False Positive",
+        "riskLevel": "Safe",
+        "size": "1.5 MB",
+        "path": "C:\\Program Files\\MSI\\performance_monitor.exe",
+        "description": "Legitimate system monitoring utility from MSI",
+        "signatures": [
+          "MSI afterburner component signature",
+          "Hardware monitoring patterns",
+          "Performance optimization algorithms"
+        ],
+        "behavior": [
+          "Monitors CPU, GPU, and memory performance",
+          "Tracks system temperatures and voltages",
+          "Provides performance analytics and alerts",
+          "Manages hardware overclocking settings",
+          "Logs performance data for analysis"
+        ],
+        "origin": "Legitimate MSI hardware monitoring software",
+        "reputationDamage": 0,
+        "financialDamage": 0,
+        "scanTime": 700,
+        "removalTime": 0,
+        "isFalsePositive": true,
+        "falsePositiveReason": "Deep hardware access and continuous monitoring may trigger alerts"
+      },
+      "windows_defender.exe": {
+        "id": "windows_defender",
+        "name": "Windows Defender Antivirus",
+        "filename": "windows_defender.exe",
+        "type": "Legitimate Software",
+        "riskLevel": "Safe",
+        "size": "2.9 MB",
+        "path": "C:\\Program Files\\Windows Defender\\windows_defender.exe",
+        "description": "Microsoft's built-in antivirus software - completely legitimate",
+        "signatures": [
+          "Microsoft Corporation verified signature",
+          "Windows system component",
+          "Official antivirus software patterns"
+        ],
+        "behavior": [
+          "Scans files for malware and viruses",
+          "Provides real-time protection against threats",
+          "Updates virus definitions automatically",
+          "Quarantines suspicious files safely",
+          "Integrates with Windows security features"
+        ],
+        "origin": "Microsoft Corporation - built into Windows",
+        "reputationDamage": 0,
+        "financialDamage": 0,
+        "scanTime": 900,
+        "removalTime": 0,
+        "isFalsePositive": true,
+        "falsePositiveReason": "May be flagged by other security tools due to deep system access"
+      }
+    }
+  },
+  "processes": {
+    "system": [
+      {
+        "name": "System",
+        "executable": "System",
+        "cpu": 0.2,
+        "memory": 135,
+        "priority": "System",
+        "category": "system",
+        "description": "Core Windows system process",
+        "trusted": true
+      },
+      {
+        "name": "explorer.exe",
+        "executable": "explorer.exe",
+        "cpu": 3.3,
+        "memory": 52.2,
+        "priority": "Normal",
+        "category": "system",
+        "description": "Windows Explorer shell process",
+        "trusted": true
+      },
+      {
+        "name": "winlogon.exe",
+        "executable": "winlogon.exe",
+        "cpu": 0.1,
+        "memory": 12.8,
+        "priority": "High",
+        "category": "system",
+        "description": "Windows logon process",
+        "trusted": true
+      },
+      {
+        "name": "csrss.exe",
+        "executable": "csrss.exe",
+        "cpu": 0.3,
+        "memory": 18.4,
+        "priority": "High",
+        "category": "system",
+        "description": "Client Server Runtime Process",
+        "trusted": true
+      },
+      {
+        "name": "lsass.exe",
+        "executable": "lsass.exe",
+        "cpu": 0.5,
+        "memory": 22.1,
+        "priority": "High",
+        "category": "system",
+        "description": "Local Security Authority Subsystem",
+        "trusted": true
+      }
+    ],
+    "legitimate": [
+      {
+        "name": "steam.exe",
+        "executable": "program files (x86)\\steam\\steam.exe",
+        "cpu": 4.4,
+        "memory": 102.2,
+        "priority": "Normal",
+        "category": "gaming",
+        "description": "Steam gaming platform client",
+        "trusted": true
+      },
+      {
+        "name": "discord.exe",
+        "executable": "users\\appdata\\local\\discord\\discord.exe",
+        "cpu": 3.1,
+        "memory": 78.3,
+        "priority": "Normal",
+        "category": "gaming",
+        "description": "Discord communication platform",
+        "trusted": true
+      },
+      {
+        "name": "obs64.exe",
+        "executable": "program files\\obs studio\\bin\\64bit\\obs64.exe",
+        "cpu": 11.7,
+        "memory": 189.4,
+        "priority": "High",
+        "category": "gaming",
+        "description": "OBS Studio streaming software",
+        "trusted": true
+      },
+      {
+        "name": "tournament_client.exe",
+        "executable": "program files\\Phalanx Cyber Academy\\tournament_client.exe",
+        "cpu": 5.2,
+        "memory": 95.9,
+        "priority": "High",
+        "category": "gaming",
+        "description": "Phalanx Cyber Academy tournament client",
+        "trusted": true
+      },
+      {
+        "name": "chrome.exe",
+        "executable": "program files\\google\\chrome\\application\\chrome.exe",
+        "cpu": 12.7,
+        "memory": 198.8,
+        "priority": "Normal",
+        "category": "application",
+        "description": "Google Chrome web browser",
+        "trusted": true
+      }
+    ],
+    "malware": [
+      {
+        "name": "progamer_boost_v21.exe",
+        "executable": "users\\public\\downloads\\progamer_boost_v21.exe",
+        "cpu": 35.2,
+        "memory": 298.4,
+        "priority": "High",
+        "category": "application",
+        "description": "DANGEROUS: Fake gaming tool that installs multiple malware components",
+        "trusted": false,
+        "malwareType": "Malicious Trojan",
+        "riskFactors": [
+          "Extremely high resource usage for a 'performance' tool",
+          "Running from public downloads folder",
+          "Steals personal information and passwords",
+          "Installs additional malware programs",
+          "No legitimate software publisher information"
+        ],
+        "reputationDamage": 30,
+        "financialDamage": 60000
+      },
+      {
+        "name": "crypto_miner.exe",
+        "executable": "temp\\crypto_miner.exe",
+        "cpu": 89.7,
+        "memory": 267.3,
+        "priority": "High",
+        "category": "gaming",
+        "description": "MALWARE: Secretly uses your computer to mine cryptocurrency",
+        "trusted": false,
+        "malwareType": "Cryptocurrency Miner Malware",
+        "riskFactors": [
+          "Massive CPU usage indicating cryptomining activity",
+          "Running from temporary directory",
+          "Uses CPU and GPU power without permission",
+          "Slows down computer and games significantly",
+          "Connects to cryptocurrency mining pools"
+        ],
+        "reputationDamage": 25,
+        "financialDamage": 45000
+      },
+      {
+        "name": "account_harvester.exe",
+        "executable": "program files\\common files\\account_harvester.exe",
+        "cpu": 12.4,
+        "memory": 156.8,
+        "priority": "Normal",
+        "category": "application",
+        "description": "Gaming account and personal data harvester",
+        "trusted": false,
+        "malwareType": "Data Harvester",
+        "riskFactors": [
+          "Accessing gaming platform credential stores",
+          "Scanning for tournament player personal data",
+          "Monitoring banking information for prize theft",
+          "Suspicious network traffic to data collection servers",
+          "No legitimate software publisher signature"
+        ],
+        "reputationDamage": 20,
+        "financialDamage": 35000
+      },
+      {
+        "name": "system_optimizer.exe",
+        "executable": "windows\\system32\\system_optimizer.exe",
+        "cpu": 6.8,
+        "memory": 78.2,
+        "priority": "Normal",
+        "category": "system",
+        "description": "Malware disguised as system optimization tool, actually steals data",
+        "trusted": false,
+        "malwareType": "Trojan Disguised as Utility",
+        "riskFactors": [
+          "Masquerading as system component in System32",
+          "Pretends to optimize system performance",
+          "Steals passwords from web browsers",
+          "Sends stolen data to remote servers",
+          "Installs additional malware components"
+        ],
+        "reputationDamage": 15,
+        "financialDamage": 20000
+      },
+      {
+        "name": "network_worm.exe",
+        "executable": "users\\public\\documents\\network_worm.exe",
+        "cpu": 28.1,
+        "memory": 189.5,
+        "priority": "High",
+        "category": "gaming",
+        "description": "DANGEROUS: Spreads copies of itself to other computers on network",
+        "trusted": false,
+        "malwareType": "Network Worm Malware",
+        "riskFactors": [
+          "Rapid replication across tournament network",
+          "Scans network for other vulnerable computers",
+          "Copies itself to shared folders and drives",
+          "High resource usage during network propagation",
+          "Can spread to hundreds of computers quickly"
+        ],
+        "reputationDamage": 35,
+        "financialDamage": 50000
+      }
+    ]
+  }
+}
