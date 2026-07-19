@@ -123,4 +123,3 @@ docker compose up --build
 - [Design System](DESIGN.md)
 - [README](README.md)
 - [Supabase Schema](supabase_schema.sql)
-- [Migration Plan](.windsurf/plans/phalanx-rewrite-a74812.md)
