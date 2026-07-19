@@ -13,4 +13,7 @@ export default defineConfig({
       },
     },
   },
+  preview: {
+    allowedHosts: ['.vercel.app'],
+  },
 });
