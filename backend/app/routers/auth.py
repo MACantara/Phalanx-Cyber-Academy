@@ -18,11 +18,6 @@ class AvailabilityPayload(BaseModel):
         return v.strip().lower()
 
 
-@router.post('/logout')
-def logout():
-    return {'status': 'logged_out'}
-
-
 @router.post('/check-availability')
 def check_availability(payload: AvailabilityPayload):
     '''Check if a username or email is already registered.'''

@@ -76,28 +76,6 @@ class User:
         except Exception as e:
             raise DatabaseError(f"Failed to save user: {e}")
 
-    def update_last_login(self):
-        self.last_login = utc_now()
-        self.save()
-
-    @classmethod
-    def create(cls, email: str, timezone: str = "UTC", username: str = None, is_admin: bool = False) -> "User":
-        user_data = {
-            "username": username,
-            "email": email,
-            "is_active": True,
-            "is_admin": is_admin,
-            "total_xp": 0,
-            "timezone": timezone,
-            "cybersecurity_experience": None,
-            "onboarding_completed": bool(username),
-            "created_at": utc_now(),
-            "last_login": None,
-        }
-        user = cls(user_data)
-        user.save()
-        return user
-
     @classmethod
     def find_by_id(cls, user_id: str) -> Optional["User"]:
         supabase = get_supabase()
