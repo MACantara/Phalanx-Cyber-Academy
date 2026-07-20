@@ -83,3 +83,5 @@ The following pages still use `AsyncSection` (or `useData`) but do not have dedi
 - [ ] The shimmer blocks visually map to the final content (no single big rectangle where the real UI has multiple sections)
 - [ ] `FadeIn`/`Stagger` entrance animations do not play *inside* the `AsyncSection` after data loads
 - [ ] Pages with dark admin themes use `bg-slate-500/30` style placeholders so they are visible under the shimmer overlay
+
+Yes
