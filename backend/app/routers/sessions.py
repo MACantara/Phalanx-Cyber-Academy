@@ -50,5 +50,5 @@ def get_user_sessions(
 def get_progress(user: Dict[str, Any] = Depends(get_current_user)):
     progress = Session.get_user_progress_summary(user_id=user["id"])
     progress["total_xp"] = user.get("total_xp", 0)
-    progress["user_id"] = user["id"]
+    progress["profile_id"] = user["id"]
     return progress

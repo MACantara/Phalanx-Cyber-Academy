@@ -16,7 +16,7 @@ class XPManager:
     @classmethod
     def award_xp(
         cls,
-        user_id: int,
+        user_id: str,
         level_id: int,
         score: Optional[int] = None,
         time_spent: Optional[int] = None,
@@ -64,7 +64,7 @@ class XPManager:
     @classmethod
     def award_session_xp(
         cls,
-        user_id: int,
+        user_id: str,
         session_name: str,
         score: Optional[int] = None,
         time_spent: Optional[int] = None,
@@ -137,7 +137,7 @@ class XPManager:
             raise DatabaseError(f"Failed to award session XP: {str(e)}")
 
     @classmethod
-    def recalculate_user_total_xp(cls, user_id: int) -> Dict[str, Any]:
+    def recalculate_user_total_xp(cls, user_id: str) -> Dict[str, Any]:
         try:
             total_xp = XPHistory.calculate_user_total_xp(user_id)
             user = User.find_by_id(user_id)
@@ -151,7 +151,7 @@ class XPManager:
             awarded_badges = cls._sync_badges(user_id, total_xp)
 
             return {
-                "user_id": user_id,
+                "profile_id": user_id,
                 "old_total": old_total,
                 "new_total": total_xp,
                 "difference": total_xp - old_total,
@@ -166,12 +166,12 @@ class XPManager:
             leaderboard_data = XPHistory.get_xp_leaderboard_data(limit)
             leaderboard = []
             for entry in leaderboard_data:
-                user = User.find_by_id(entry["user_id"])
+                user = User.find_by_id(entry["profile_id"])
                 if user:
                     level_info = XPCalculator.get_user_level(entry["total_xp"])
                     leaderboard.append({
                         "rank": entry["rank"],
-                        "user_id": entry["user_id"],
+                        "profile_id": entry["profile_id"],
                         "username": user.username,
                         "total_xp": entry["total_xp"],
                         "level": level_info["level"],
@@ -181,7 +181,7 @@ class XPManager:
             raise DatabaseError(f"Failed to get leaderboard: {str(e)}")
 
     @classmethod
-    def _sync_badges(cls, user_id: int, total_xp: int) -> List[int]:
+    def _sync_badges(cls, user_id: str, total_xp: int) -> List[int]:
         """Award any badges whose xp_threshold the user has now crossed."""
         try:
             supabase = get_supabase()
@@ -193,7 +193,7 @@ class XPManager:
             user_badges_response = (
                 supabase.table("user_badges")
                 .select("badge_id")
-                .eq("user_id", user_id)
+                .eq("profile_id", user_id)
                 .execute()
             )
             earned = {ub["badge_id"] for ub in handle_supabase_error(user_badges_response) or []}
@@ -204,7 +204,7 @@ class XPManager:
                 if badge_id in earned:
                     continue
                 insert_response = supabase.table("user_badges").insert({
-                    "user_id": user_id,
+                    "profile_id": user_id,
                     "badge_id": badge_id,
                 }).execute()
                 if handle_supabase_error(insert_response):
@@ -229,7 +229,7 @@ class XPManager:
 
 
 def award_user_xp(
-    user_id: int,
+    user_id: str,
     level_id: int,
     score: Optional[int] = None,
     time_spent: Optional[int] = None,

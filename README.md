@@ -176,7 +176,8 @@ npm run dev
 ## 📚 Documentation
 
 ### Core Documentation
-- **[Authentication System](docs/authentication.md)** - Passwordless authentication with email verification
+- **[Supabase Auth Setup](docs/supabase-auth-setup.md)** - Configure Supabase Auth email OTP for the React + FastAPI stack
+- **[Authentication System](docs/authentication.md)** - Legacy passwordless authentication details
 - **[Admin Panel](docs/admin-panel.md)** - User management and system monitoring
 - **[Deployment Guide](docs/deployment.md)** - Vercel and production deployment
 

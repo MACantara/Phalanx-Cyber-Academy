@@ -8,11 +8,10 @@ import { FadeIn } from '../components/Animated';
 import { UserCircle, CheckCircle, XCircle, Mail, Globe, Clock, Calendar, Award, Pencil, type LucideIcon } from 'lucide-react';
 
 interface UserProfile {
-  id: number;
+  id: string;
   username: string | null;
   email: string;
   is_admin: boolean;
-  is_verified: boolean;
   is_active: boolean;
   total_xp: number;
   timezone: string;
@@ -24,7 +23,7 @@ interface UserProfile {
 export default function Profile() {
   const { setUser: setContextUser } = useAuth();
   const profile = useData<UserProfile | null>(async () => {
-    const res = await api.get('/auth/me');
+    const res = await api.get('/users/me');
     return res.data.user;
   }, [], { initial: null });
 

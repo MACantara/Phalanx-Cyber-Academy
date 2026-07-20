@@ -10,6 +10,8 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Onboarding from './pages/Onboarding';
 import Verify from './pages/Verify';
+import EmailSent from './pages/EmailSent';
+import ConfirmEmail from './pages/ConfirmEmail';
 import Leaderboard from './pages/Leaderboard';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
@@ -48,6 +50,8 @@ function App() {
             <Route path="levels/:levelId" element={<Level />} />
             <Route path="login" element={<Login />} />
             <Route path="verify" element={<Verify />} />
+            <Route path="email-sent" element={<EmailSent />} />
+            <Route path="confirm-email" element={<ConfirmEmail />} />
             <Route path="onboarding" element={<Onboarding />} />
             <Route path="server-error" element={<ServerError />} />
             <Route path="leaderboard" element={<Leaderboard />} />

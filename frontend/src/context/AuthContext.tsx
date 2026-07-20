@@ -1,12 +1,20 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import type { Session } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 
 export interface AuthUser {
-  id: number;
+  id: string;
   username: string | null;
   email: string;
   is_admin?: boolean;
+  is_active?: boolean;
   onboarding_completed?: boolean;
+  total_xp?: number;
+  timezone?: string;
+  cybersecurity_experience?: string | null;
   created_at?: string;
+  last_login?: string;
 }
 
 interface AuthContextValue {
@@ -25,21 +33,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUserState] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setUserState(JSON.parse(raw));
-    } catch {
-      // ignore
+  const loadProfile = async (session: Session | null) => {
+    if (!session) {
+      setUserState(null);
+      setLoading(false);
+      return;
     }
-    setLoading(false);
-  }, []);
+    try {
+      const res = await api.get('/users/me');
+      setUserState(res.data.user);
+    } catch {
+      setUserState(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (user && user.onboarding_completed === false && window.location.pathname !== '/onboarding') {
-      window.location.href = '/onboarding';
-    }
-  }, [user]);
+    let mounted = true;
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (mounted) loadProfile(session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (mounted) loadProfile(session);
+    });
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const setUser = (u: AuthUser | null) => {
     if (u) localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
@@ -47,9 +69,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUserState(u);
   };
 
-  const logout = () => {
-    localStorage.removeItem(STORAGE_KEY);
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUserState(null);
+    localStorage.removeItem(STORAGE_KEY);
   };
 
   const value = useMemo(

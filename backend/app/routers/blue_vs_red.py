@@ -52,10 +52,10 @@ def _default_state() -> Dict[str, Any]:
     }
 
 
-def _load_state(user_id: int) -> Dict[str, Any]:
+def _load_state(user_id: str) -> Dict[str, Any]:
     try:
         supabase = get_supabase()
-        response = supabase.table("bvr_game_states").select("*").eq("user_id", user_id).execute()
+        response = supabase.table("bvr_game_states").select("*").eq("profile_id", user_id).execute()
         data = handle_supabase_error(response)
         if data:
             stored = data[0].get("state", {})
@@ -67,18 +67,18 @@ def _load_state(user_id: int) -> Dict[str, Any]:
     return _default_state()
 
 
-def _get_state(user_id: int) -> Dict[str, Any]:
+def _get_state(user_id: str) -> Dict[str, Any]:
     if user_id not in _game_states:
         _game_states[user_id] = _load_state(user_id)
     return _game_states[user_id]
 
 
-def _save_state(user_id: int) -> None:
+def _save_state(user_id: str) -> None:
     state = _game_states.get(user_id, _default_state())
     try:
         supabase = get_supabase()
         supabase.table("bvr_game_states").upsert({
-            "user_id": user_id,
+            "profile_id": user_id,
             "state": state,
             "updated_at": utc_now().isoformat(),
         }).execute()

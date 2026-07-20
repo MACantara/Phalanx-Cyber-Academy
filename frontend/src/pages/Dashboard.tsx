@@ -24,7 +24,7 @@ interface ProgressData {
   best_scores: Record<string, { score: number; time: number }>;
   completed_level_ids: number[];
   total_xp: number;
-  user_id: number;
+  user_id: string;
 }
 
 interface LevelData {
@@ -52,7 +52,7 @@ interface XPEntry {
 
 interface LeaderboardEntry {
   rank: number;
-  user_id: number;
+  user_id: string;
 }
 
 const initialProgress: ProgressData = {
@@ -62,7 +62,7 @@ const initialProgress: ProgressData = {
   best_scores: {},
   completed_level_ids: [],
   total_xp: 0,
-  user_id: 0,
+  user_id: '',
 };
 
 const placeholderLevels: LevelData[] = Array.from({ length: 10 }, (_, i) => ({

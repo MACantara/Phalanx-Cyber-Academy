@@ -110,11 +110,11 @@ def xp_badges(user: Dict[str, Any] = Depends(get_current_user)):
         supabase = get_supabase()
         badges_data = handle_supabase_error(supabase.table("badges").select("*").execute()) or []
         user_badges_data = handle_supabase_error(
-            supabase.table("user_badges").select("*").eq("user_id", user["id"]).execute()
+            supabase.table("user_badges").select("*").eq("profile_id", user["id"]).execute()
         ) or []
         earned_ids = {ub["badge_id"] for ub in user_badges_data}
         return {
-            "user_id": user["id"],
+            "profile_id": user["id"],
             "badges": [
                 {"id": b["id"], "name": b["name"], "description": b["description"], "icon": b.get("icon"), "category": b.get("category"), "earned": b["id"] in earned_ids}
                 for b in badges_data
@@ -129,17 +129,17 @@ def xp_streak(user: Dict[str, Any] = Depends(get_current_user)):
     """Return the current user's daily login streak."""
     try:
         supabase = get_supabase()
-        response = supabase.table("user_streaks").select("*").eq("user_id", user["id"]).execute()
+        response = supabase.table("user_streaks").select("*").eq("profile_id", user["id"]).execute()
         data = handle_supabase_error(response)
         if data:
             streak = data[0]
         else:
             streak = {
-                "user_id": user["id"],
+                "profile_id": user["id"],
                 "current_streak": 0,
                 "longest_streak": 0,
                 "last_login_date": None,
             }
-        return {"user_id": user["id"], "streak": streak}
+        return {"profile_id": user["id"], "streak": streak}
     except Exception as e:
         raise DatabaseError(f"Failed to load streak: {e}")

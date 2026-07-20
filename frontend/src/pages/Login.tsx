@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowLeft } from 'lucide-react';
 import { FadeIn } from '../components/Animated';
-import { api } from '../lib/api';
+import { supabase } from '../lib/supabase';
 import { useToast } from '../context/ToastContext';
 
 export default function Login() {
@@ -10,22 +10,28 @@ export default function Login() {
   const { showToast } = useToast();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [lockoutMessage, setLockoutMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleRequestCode = async (e: React.FormEvent) => {
+  const handleRequestLink = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setLockoutMessage(null);
+    setErrorMessage(null);
     try {
-      await api.post('/auth/login', { email });
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: false,
+        },
+      });
+      if (error) throw error;
       showToast('Verification code sent to your email.', 'success');
       navigate('/verify', { state: { type: 'login', email } });
     } catch (err: any) {
-      const detail = err.response?.data?.detail || 'Failed to send login code';
-      if (err.response?.status === 429) {
-        setLockoutMessage(detail);
+      const msg = err.message || 'Failed to send verification code';
+      if (msg.toLowerCase().includes('signups not allowed')) {
+        setErrorMessage('No account found for that email. Please sign up first.');
       } else {
-        showToast(detail, 'error');
+        setErrorMessage(msg);
       }
       setLoading(false);
     }
@@ -47,7 +53,7 @@ export default function Login() {
           <p className="mt-2 text-gray-600 dark:text-gray-300">Passwordless access to your training dashboard</p>
         </div>
 
-        <form onSubmit={handleRequestCode} className="space-y-5">
+        <form onSubmit={handleRequestLink} className="space-y-5">
           <Field
             label="Email Address"
             id="email"
@@ -63,11 +69,11 @@ export default function Login() {
             disabled={loading}
             className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? 'Sending...' : 'Send Login Code'}
+            {loading ? 'Sending...' : 'Send Verification Code'}
           </button>
-          {lockoutMessage && (
+          {errorMessage && (
             <div className="rounded-lg border border-red-400 bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-300">
-              {lockoutMessage}
+              {errorMessage}
             </div>
           )}
           <p className="text-center text-sm text-gray-600 dark:text-gray-400">
@@ -93,9 +99,6 @@ function Field({
   value,
   onChange,
   placeholder,
-  inputMode,
-  hint,
-  code,
   required,
 }: {
   label: string;
@@ -105,26 +108,21 @@ function Field({
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
-  inputMode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search';
-  hint?: string;
-  code?: boolean;
   required?: boolean;
 }) {
   return (
     <div>
       <label htmlFor={id} className="block text-sm font-semibold text-gray-700 dark:text-gray-300">{label}</label>
-      {hint && <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{hint}</p>}
       <div className="relative mt-2">
         <Icon className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
         <input
           id={id}
           type={type}
-          inputMode={inputMode}
           value={value}
           onChange={onChange}
           required={required}
           placeholder={placeholder}
-          className={`w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 text-gray-900 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-500 ${code ? 'pr-4 text-center text-2xl tracking-[0.5em]' : 'pr-4'}`}
+          className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-4 text-gray-900 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-500"
         />
       </div>
     </div>

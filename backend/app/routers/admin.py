@@ -25,7 +25,7 @@ async def require_admin(user: Dict[str, Any] = Depends(get_current_user)):
 
 
 def _log_admin_action(
-    admin_id: int,
+    admin_id: str,
     action: str,
     target_type: str | None = None,
     target_id: int | None = None,
@@ -78,7 +78,7 @@ def _get_logs(supabase, limit: int = 100) -> List[Dict[str, Any]]:
     verifications = _safe(supabase.table("email_verifications").select("*").order("created_at", desc=True).limit(limit), [])
     contacts = _safe(supabase.table("contact_submissions").select("*").order("created_at", desc=True).limit(limit), [])
     sessions = _safe(supabase.table("sessions").select("*").order("start_time", desc=True).limit(limit), [])
-    users = _safe(supabase.table("users").select("*").order("created_at", desc=True).limit(limit), [])
+    users = _safe(supabase.table("profiles").select("*").order("created_at", desc=True).limit(limit), [])
 
     logs = []
     for a in attempts:
@@ -115,7 +115,7 @@ def _get_logs(supabase, limit: int = 100) -> List[Dict[str, Any]]:
             "timestamp": s.get("start_time"),
             "message": f"Session '{s.get('session_name')}' started for level {s.get('level_id')}",
             "status": "completed" if s.get("end_time") else "active",
-            "details": f"score={s.get('score')} user_id={s.get('user_id')}",
+            "details": f"score={s.get('score')} user_id={s.get('profile_id')}",
         })
     for u in users:
         logs.append({
@@ -186,7 +186,7 @@ def get_analytics_dashboard(user: Dict[str, Any] = Depends(require_admin)):
     total_users = UserService.count_all()
     cutoff = (datetime.utcnow() - timedelta(days=30)).isoformat()
     try:
-        recent_signups = handle_supabase_error(supabase.table("users").select("created_at", count="exact").gte("created_at", cutoff).execute())
+        recent_signups = handle_supabase_error(supabase.table("profiles").select("created_at", count="exact").gte("created_at", cutoff).execute())
         recent_signups_count = recent_signups[0].get("count") if isinstance(recent_signups, list) and recent_signups else 0
     except Exception:
         recent_signups_count = 0
@@ -282,7 +282,7 @@ def create_user(payload: CreateUserPayload, user: Dict[str, Any] = Depends(requi
 
 @router.post("/users/{user_id}/xp")
 def grant_xp(
-    user_id: int,
+    user_id: str,
     payload: XPGrantPayload,
     user: Dict[str, Any] = Depends(require_admin),
 ):
@@ -306,7 +306,7 @@ def grant_xp(
 
 @router.put("/users/{user_id}/actions")
 def perform_user_action(
-    user_id: int,
+    user_id: str,
     payload: UserActionPayload,
     user: Dict[str, Any] = Depends(require_admin),
 ):
@@ -344,7 +344,7 @@ def perform_user_action(
         )
         supabase = get_supabase()
         try:
-            handle_supabase_error(supabase.table("users").delete().eq("id", user_id).execute())
+            handle_supabase_error(supabase.table("profiles").delete().eq("id", user_id).execute())
         except Exception as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Delete failed: {e}")
         return {"success": True, "message": "User deleted"}
@@ -356,7 +356,7 @@ def perform_user_action(
 
 @router.get("/users/{user_id}/activity")
 def get_user_activity(
-    user_id: int,
+    user_id: str,
     user: Dict[str, Any] = Depends(require_admin),
 ):
     supabase = get_supabase()
@@ -371,7 +371,7 @@ def get_user_activity(
             return []
 
     return {
-        "sessions": safe(supabase.table("sessions").select("*").eq("user_id", user_id).order("start_time", desc=True)),
+        "sessions": safe(supabase.table("sessions").select("*").eq("profile_id", user_id).order("start_time", desc=True)),
         "login_attempts": safe(supabase.table("login_attempts").select("*").ilike("username_or_email", f"%{target.email}%").order("attempted_at", desc=True).limit(20)),
-        "email_verifications": safe(supabase.table("email_verifications").select("*").eq("user_id", user_id).order("created_at", desc=True).limit(20)),
+        "email_verifications": safe(supabase.table("email_verifications").select("*").eq("profile_id", user_id).order("created_at", desc=True).limit(20)),
     }

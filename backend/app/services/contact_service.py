@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 from app.supabase_client import get_supabase
 from app.errors import DatabaseError, handle_supabase_error
-from app.services import email_service
 from app.utils.timezone_utils import parse_datetime_aware, utc_now
 
 
@@ -81,8 +80,6 @@ class Contact:
             }
         )
         contact.save()
-        email_service.send_contact_notification(contact)
-        email_service.send_contact_auto_reply(contact)
         return contact
 
     @classmethod
