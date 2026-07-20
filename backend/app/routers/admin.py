@@ -1,5 +1,6 @@
 import csv
 import io
+import secrets
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
@@ -53,7 +54,6 @@ def get_stats(user: Dict[str, Any] = Depends(require_admin)):
             "total": UserService.count_all(),
             "active": UserService.count_active(),
             "recent_30d": UserService.count_recent_registrations(days=30),
-            "verified": UserService.count_verified_emails(),
         },
         "contacts": {
             "unread": Contact.get_unread_count(),
@@ -74,31 +74,11 @@ def _safe(query, default=None):
 
 
 def _get_logs(supabase, limit: int = 100) -> List[Dict[str, Any]]:
-    attempts = _safe(supabase.table("login_attempts").select("*").order("attempted_at", desc=True).limit(limit), [])
-    verifications = _safe(supabase.table("email_verifications").select("*").order("created_at", desc=True).limit(limit), [])
     contacts = _safe(supabase.table("contact_submissions").select("*").order("created_at", desc=True).limit(limit), [])
     sessions = _safe(supabase.table("sessions").select("*").order("start_time", desc=True).limit(limit), [])
     users = _safe(supabase.table("profiles").select("*").order("created_at", desc=True).limit(limit), [])
 
     logs = []
-    for a in attempts:
-        logs.append({
-            "id": f"login_{a.get('id')}",
-            "type": "login",
-            "timestamp": a.get("attempted_at"),
-            "message": f"Login attempt from {a.get('ip_address')} as {a.get('username_or_email') or 'unknown'}",
-            "status": "success" if a.get("success") else "failed",
-            "details": a.get("user_agent"),
-        })
-    for v in verifications:
-        logs.append({
-            "id": f"verification_{v.get('id')}",
-            "type": "verification",
-            "timestamp": v.get("created_at"),
-            "message": f"Verification code sent to {v.get('email')}",
-            "status": "verified" if v.get("verified_at") else "pending",
-            "details": v.get("code_type"),
-        })
     for c in contacts:
         logs.append({
             "id": f"contact_{c.get('id')}",
@@ -115,7 +95,7 @@ def _get_logs(supabase, limit: int = 100) -> List[Dict[str, Any]]:
             "timestamp": s.get("start_time"),
             "message": f"Session '{s.get('session_name')}' started for level {s.get('level_id')}",
             "status": "completed" if s.get("end_time") else "active",
-            "details": f"score={s.get('score')} user_id={s.get('profile_id')}",
+            "details": f"score={s.get('score')} profile_id={s.get('profile_id')}",
         })
     for u in users:
         logs.append({
@@ -124,7 +104,7 @@ def _get_logs(supabase, limit: int = 100) -> List[Dict[str, Any]]:
             "timestamp": u.get("created_at"),
             "message": f"New user registered: {u.get('email')}",
             "status": "active" if u.get("is_active") else "inactive",
-            "details": f"admin={u.get('is_admin')} verified={u.get('is_verified')}",
+            "details": f"admin={u.get('is_admin')} onboarding_completed={u.get('onboarding_completed')}",
         })
 
     logs.sort(key=lambda x: x.get("timestamp") or "", reverse=True)
@@ -264,20 +244,40 @@ def create_user(payload: CreateUserPayload, user: Dict[str, Any] = Depends(requi
     if existing:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists")
 
-    new_user = UserService.create(
-        email=payload.email,
-        username=payload.username,
-        timezone=payload.timezone,
-        is_admin=payload.is_admin,
-    )
+    supabase = get_supabase()
+    temp_password = secrets.token_urlsafe(16)
+    try:
+        auth_response = supabase.auth.admin.create_user({
+            "email": payload.email,
+            "password": temp_password,
+            "email_confirm": True,
+            "user_metadata": {
+                "username": payload.username,
+                "timezone": payload.timezone,
+            },
+        })
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to create auth user: {exc}",
+        ) from exc
+
+    new_id = str(auth_response.user.id)
+    try:
+        supabase.table("profiles").update({"is_admin": payload.is_admin}).eq("id", new_id).execute()
+    except Exception:
+        pass
+
     _log_admin_action(
         admin_id=user["id"],
         action="create_user",
         target_type="user",
-        target_id=new_user.id,
-        details={"email": payload.email, "username": payload.username, "is_admin": payload.is_admin},
+        target_id=None,
+        details={"email": payload.email, "username": payload.username, "is_admin": payload.is_admin, "user_id": new_id},
     )
-    return {"success": True, "user": new_user.to_dict()}
+
+    new_profile = UserService.find_by_id(new_id)
+    return {"success": True, "user": new_profile.to_dict() if new_profile else {"id": new_id}}
 
 
 @router.post("/users/{user_id}/xp")
@@ -298,8 +298,8 @@ def grant_xp(
         admin_id=user["id"],
         action="grant_xp",
         target_type="user",
-        target_id=user_id,
-        details={"amount": payload.amount, "total_xp": target.total_xp},
+        target_id=None,
+        details={"amount": payload.amount, "total_xp": target.total_xp, "user_id": user_id},
     )
     return {"success": True, "user": target.to_dict()}
 
@@ -321,8 +321,8 @@ def perform_user_action(
             admin_id=user["id"],
             action="toggle_active",
             target_type="user",
-            target_id=user_id,
-            details={"is_active": target.is_active},
+            target_id=None,
+            details={"is_active": target.is_active, "user_id": user_id},
         )
     elif payload.action == "toggle_admin":
         target.is_admin = not target.is_admin
@@ -331,22 +331,22 @@ def perform_user_action(
             admin_id=user["id"],
             action="toggle_admin",
             target_type="user",
-            target_id=user_id,
-            details={"is_admin": target.is_admin},
+            target_id=None,
+            details={"is_admin": target.is_admin, "user_id": user_id},
         )
     elif payload.action == "delete":
+        supabase = get_supabase()
+        try:
+            supabase.auth.admin.delete_user(user_id)
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Delete failed: {e}")
         _log_admin_action(
             admin_id=user["id"],
             action="delete_user",
             target_type="user",
-            target_id=user_id,
-            details={"email": target.email},
+            target_id=None,
+            details={"email": target.email, "user_id": user_id},
         )
-        supabase = get_supabase()
-        try:
-            handle_supabase_error(supabase.table("profiles").delete().eq("id", user_id).execute())
-        except Exception as e:
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Delete failed: {e}")
         return {"success": True, "message": "User deleted"}
     else:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unknown action")
@@ -372,6 +372,4 @@ def get_user_activity(
 
     return {
         "sessions": safe(supabase.table("sessions").select("*").eq("profile_id", user_id).order("start_time", desc=True)),
-        "login_attempts": safe(supabase.table("login_attempts").select("*").ilike("username_or_email", f"%{target.email}%").order("attempted_at", desc=True).limit(20)),
-        "email_verifications": safe(supabase.table("email_verifications").select("*").eq("profile_id", user_id).order("created_at", desc=True).limit(20)),
     }

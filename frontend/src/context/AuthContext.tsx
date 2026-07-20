@@ -25,8 +25,6 @@ interface AuthContextValue {
   isAdmin: boolean;
 }
 
-const STORAGE_KEY = 'cyberquest_user';
-
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -64,15 +62,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const setUser = (u: AuthUser | null) => {
-    if (u) localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
-    else localStorage.removeItem(STORAGE_KEY);
     setUserState(u);
   };
 
   const logout = async () => {
     await supabase.auth.signOut();
     setUserState(null);
-    localStorage.removeItem(STORAGE_KEY);
   };
 
   const value = useMemo(
