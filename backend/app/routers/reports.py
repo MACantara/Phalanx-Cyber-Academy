@@ -19,7 +19,7 @@ async def require_admin(user: Dict[str, Any] = Depends(get_current_user)):
 
 
 @router.get("/certificate/{user_id}")
-def generate_certificate(user_id: int, user: Dict[str, Any] = Depends(require_admin)):
+def generate_certificate(user_id: str, user: Dict[str, Any] = Depends(require_admin)):
     target = UserService.find_by_id(user_id)
     if not target:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")

@@ -2,40 +2,36 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, ArrowLeft } from 'lucide-react';
 import { FadeIn } from '../components/Animated';
-import { api } from '../lib/api';
+import { supabase } from '../lib/supabase';
 import { useToast } from '../context/ToastContext';
-
-const EXPERIENCE_OPTIONS = [
-  { value: '', label: 'Select experience level' },
-  { value: 'beginner', label: 'Beginner' },
-  { value: 'intermediate', label: 'Intermediate' },
-  { value: 'advanced', label: 'Advanced' },
-];
 
 export default function Signup() {
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const [form, setForm] = useState({
-    email: '',
-    username: '',
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
-    cybersecurity_experience: '',
-  });
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleRequestCode = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.post('/auth/signup', form);
-      showToast('Verification code sent to your email.', 'success');
-      navigate('/verify', { state: { type: 'signup', email: form.email, signupData: form } });
+      const tempPassword = generateTempPassword();
+      const { error } = await supabase.auth.signUp({
+        email,
+        password: tempPassword,
+        options: {
+          emailRedirectTo: `${window.location.origin}/confirm-email`,
+        },
+      });
+      if (error) throw error;
+      navigate('/email-sent', { state: { email } });
     } catch (err: any) {
-      showToast(err.response?.data?.detail || 'Failed to create account', 'error');
+      const msg = err.message || 'Failed to create account';
+      if (msg.toLowerCase().includes('already registered') || msg.toLowerCase().includes('already exists')) {
+        showToast('An account with this email already exists. Please log in.', 'error');
+      } else {
+        showToast(msg, 'error');
+      }
       setLoading(false);
     }
   };
@@ -56,36 +52,17 @@ export default function Signup() {
           <p className="mt-2 text-gray-600 dark:text-gray-300">Create a free account and start training</p>
         </div>
 
-        <form onSubmit={handleRequestCode} className="space-y-4">
-            <Field
-              label="Username"
-              id="username"
-              name="username"
-              type="text"
-              icon={User}
-              value={form.username}
-              onChange={handleChange}
-              placeholder="cyber_recruit"
-            />
+        <form onSubmit={handleSignUp} className="space-y-4">
             <Field
               label="Email Address"
               id="email"
-              name="email"
               type="email"
               icon={Mail}
-              value={form.email}
-              onChange={handleChange}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
             />
-            <SelectField
-              label="Experience Level"
-              id="cybersecurity_experience"
-              name="cybersecurity_experience"
-              value={form.cybersecurity_experience}
-              onChange={handleChange}
-            />
-            <input type="hidden" name="timezone" value={form.timezone} />
             <button
               type="submit"
               disabled={loading}
@@ -108,82 +85,49 @@ export default function Signup() {
   );
 }
 
+function generateTempPassword() {
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    const bytes = new Uint8Array(24);
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes, (b) => b.toString(36)).join('').slice(0, 24);
+  }
+  return Math.random().toString(36).slice(2, 26);
+}
+
 function Field({
   label,
   id,
-  name,
   type,
   icon: Icon,
   value,
   onChange,
   placeholder,
-  inputMode,
-  hint,
-  code,
   required,
 }: {
   label: string;
   id: string;
-  name: string;
   type: string;
   icon: React.ComponentType<{ className?: string }>;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
-  inputMode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search';
-  hint?: string;
-  code?: boolean;
   required?: boolean;
 }) {
   return (
     <div>
       <label htmlFor={id} className="block text-sm font-semibold text-gray-700 dark:text-gray-300">{label}</label>
-      {hint && <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{hint}</p>}
       <div className="relative mt-2">
         <Icon className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
         <input
           id={id}
-          name={name}
           type={type}
-          inputMode={inputMode}
           value={value}
           onChange={onChange}
           required={required}
           placeholder={placeholder}
-          className={`w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 text-gray-900 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-500 ${code ? 'pr-4 text-center text-2xl tracking-[0.5em]' : 'pr-4'}`}
+          className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-4 text-gray-900 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-500"
         />
       </div>
-    </div>
-  );
-}
-
-function SelectField({
-  label,
-  id,
-  name,
-  value,
-  onChange,
-}: {
-  label: string;
-  id: string;
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-}) {
-  return (
-    <div>
-      <label htmlFor={id} className="block text-sm font-semibold text-gray-700 dark:text-gray-300">{label}</label>
-      <select
-        id={id}
-        name={name}
-        value={value}
-        onChange={onChange}
-        className="mt-2 w-full cursor-pointer appearance-none rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white"
-      >
-        {EXPERIENCE_OPTIONS.map((o) => (
-          <option key={o.value} value={o.value}>{o.label}</option>
-        ))}
-      </select>
     </div>
   );
 }

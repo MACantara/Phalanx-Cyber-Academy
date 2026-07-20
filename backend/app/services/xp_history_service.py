@@ -90,7 +90,7 @@ class XPHistory:
     @classmethod
     def create_manual_adjustment(
         cls,
-        user_id: int,
+        user_id: str,
         xp_change: int,
         reason: str = "manual_adjustment",
         balance_before: Optional[int] = None,
@@ -121,7 +121,7 @@ class XPHistory:
 
             if data and len(data) > 0:
                 from app.services.user_service import User
-                supabase.table("users").update({"total_xp": balance_after}).eq("id", user_id).execute()
+                supabase.table("profiles").update({"total_xp": balance_after}).eq("id", user_id).execute()
                 return cls(data[0])
             raise DatabaseError("No data returned from XP history creation")
         except Exception as e:
@@ -157,11 +157,11 @@ class XPHistory:
             raise DatabaseError(f"Failed to get XP history for session {session_id}: {str(e)}")
 
     @classmethod
-    def get_by_user_id(cls, user_id: int, limit: int = 20) -> List["XPHistory"]:
+    def get_by_user_id(cls, user_id: str, limit: int = 20) -> List["XPHistory"]:
         try:
             supabase = get_supabase()
             sessions_response = (
-                supabase.table("sessions").select("id").eq("user_id", user_id).execute()
+                supabase.table("sessions").select("id").eq("profile_id", user_id).execute()
             )
             sessions_data = handle_supabase_error(sessions_response)
             session_ids = [s["id"] for s in sessions_data] if sessions_data else []
@@ -196,10 +196,10 @@ class XPHistory:
             raise DatabaseError(f"Failed to get recent XP activity: {str(e)}")
 
     @classmethod
-    def calculate_user_total_xp(cls, user_id: int) -> int:
+    def calculate_user_total_xp(cls, user_id: str) -> int:
         try:
             supabase = get_supabase()
-            sessions_response = supabase.table("sessions").select("id").eq("user_id", user_id).execute()
+            sessions_response = supabase.table("sessions").select("id").eq("profile_id", user_id).execute()
             sessions_data = handle_supabase_error(sessions_response)
             session_ids = [s["id"] for s in sessions_data] if sessions_data else []
 
@@ -226,7 +226,7 @@ class XPHistory:
             supabase = get_supabase()
             sessions_response = supabase.table("sessions").select("id, user_id").execute()
             sessions_data = handle_supabase_error(sessions_response)
-            session_to_user = {s["id"]: s["user_id"] for s in sessions_data} if sessions_data else {}
+            session_to_user = {s["id"]: s["profile_id"] for s in sessions_data} if sessions_data else {}
 
             response = supabase.table("xp_history").select("xp_change, session_id, reason").execute()
             data = handle_supabase_error(response)
@@ -246,7 +246,7 @@ class XPHistory:
 
             sorted_users = sorted(user_totals.items(), key=lambda x: x[1], reverse=True)[:limit]
             return [
-                {"rank": rank, "user_id": user_id, "total_xp": total_xp}
+                {"rank": rank, "profile_id": user_id, "total_xp": total_xp}
                 for rank, (user_id, total_xp) in enumerate(sorted_users, 1)
             ]
         except Exception as e:

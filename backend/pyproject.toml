@@ -17,7 +17,6 @@ dependencies = [
     "httpx",
     "requests",
     "python-docx",
-    "brevo-python",
     "jinja2",
 ]
 

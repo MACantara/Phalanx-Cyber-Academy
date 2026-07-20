@@ -15,7 +15,6 @@ class User:
         self.created_at = data.get("created_at")
         self.last_login = data.get("last_login")
         self.is_admin = data.get("is_admin", False)
-        self.is_verified = data.get("is_verified", False)
         self.total_xp = data.get("total_xp", 0)
         self.timezone = data.get("timezone", "UTC")
         self.cybersecurity_experience = data.get("cybersecurity_experience")
@@ -41,7 +40,6 @@ class User:
             "email": self.email,
             "is_active": self.is_active,
             "is_admin": self.is_admin,
-            "is_verified": self.is_verified,
             "total_xp": self.total_xp,
             "timezone": self.timezone,
             "cybersecurity_experience": self.cybersecurity_experience,
@@ -58,7 +56,6 @@ class User:
                 "email": self.email,
                 "is_active": self.is_active,
                 "is_admin": self.is_admin,
-                "is_verified": self.is_verified,
                 "total_xp": self.total_xp,
                 "timezone": self.timezone,
                 "cybersecurity_experience": self.cybersecurity_experience,
@@ -67,11 +64,11 @@ class User:
             }
 
             if self.id:
-                response = supabase.table("users").update(user_data).eq("id", self.id).execute()
+                response = supabase.table("profiles").update(user_data).eq("id", self.id).execute()
                 handle_supabase_error(response)
             else:
                 user_data["created_at"] = utc_now().isoformat()
-                response = supabase.table("users").insert(user_data).execute()
+                response = supabase.table("profiles").insert(user_data).execute()
                 data = handle_supabase_error(response)
                 if data and len(data) > 0:
                     self.id = data[0]["id"]
@@ -83,10 +80,6 @@ class User:
         self.last_login = utc_now()
         self.save()
 
-    def verify_email(self):
-        self.is_verified = True
-        self.save()
-
     @classmethod
     def create(cls, email: str, timezone: str = "UTC", username: str = None, is_admin: bool = False) -> "User":
         user_data = {
@@ -94,7 +87,6 @@ class User:
             "email": email,
             "is_active": True,
             "is_admin": is_admin,
-            "is_verified": False,
             "total_xp": 0,
             "timezone": timezone,
             "cybersecurity_experience": None,
@@ -107,10 +99,10 @@ class User:
         return user
 
     @classmethod
-    def find_by_id(cls, user_id: int) -> Optional["User"]:
+    def find_by_id(cls, user_id: str) -> Optional["User"]:
         supabase = get_supabase()
         try:
-            response = supabase.table("users").select("*").eq("id", user_id).execute()
+            response = supabase.table("profiles").select("*").eq("id", user_id).execute()
             data = handle_supabase_error(response)
             if data and len(data) > 0:
                 return cls(data[0])
@@ -122,7 +114,7 @@ class User:
     def find_by_username(cls, username: str) -> Optional["User"]:
         supabase = get_supabase()
         try:
-            response = supabase.table("users").select("*").eq("username", username).execute()
+            response = supabase.table("profiles").select("*").eq("username", username).execute()
             data = handle_supabase_error(response)
             if data and len(data) > 0:
                 return cls(data[0])
@@ -134,7 +126,7 @@ class User:
     def find_by_email(cls, email: str) -> Optional["User"]:
         supabase = get_supabase()
         try:
-            response = supabase.table("users").select("*").eq("email", email).execute()
+            response = supabase.table("profiles").select("*").eq("email", email).execute()
             data = handle_supabase_error(response)
             if data and len(data) > 0:
                 return cls(data[0])
@@ -147,7 +139,7 @@ class User:
         supabase = get_supabase()
         try:
             response = (
-                supabase.table("users")
+                supabase.table("profiles")
                 .select("*")
                 .or_(f"username.eq.{identifier},email.eq.{identifier}")
                 .execute()
@@ -169,7 +161,7 @@ class User:
     ) -> Tuple[List["User"], int]:
         supabase = get_supabase()
         try:
-            query = supabase.table("users").select("*", count="exact")
+            query = supabase.table("profiles").select("*", count="exact")
 
             if search:
                 query = query.or_(f"username.ilike.%{search}%,email.ilike.%{search}%")
@@ -197,7 +189,7 @@ class User:
     def count_all(cls) -> int:
         supabase = get_supabase()
         try:
-            response = supabase.table("users").select("*", count="exact").execute()
+            response = supabase.table("profiles").select("*", count="exact").execute()
             return response.count if hasattr(response, "count") else 0
         except Exception as e:
             raise DatabaseError(f"Failed to count users: {e}")
@@ -207,7 +199,7 @@ class User:
         supabase = get_supabase()
         try:
             response = (
-                supabase.table("users")
+                supabase.table("profiles")
                 .select("*", count="exact")
                 .eq("is_active", True)
                 .execute()
@@ -222,7 +214,7 @@ class User:
         try:
             cutoff_date = (utc_now() - timedelta(days=days)).isoformat()
             response = (
-                supabase.table("users")
+                supabase.table("profiles")
                 .select("*", count="exact")
                 .gte("created_at", cutoff_date)
                 .execute()
@@ -230,20 +222,6 @@ class User:
             return response.count if hasattr(response, "count") else 0
         except Exception as e:
             raise DatabaseError(f"Failed to count recent registrations: {e}")
-
-    @classmethod
-    def count_verified_emails(cls) -> int:
-        supabase = get_supabase()
-        try:
-            response = (
-                supabase.table("users")
-                .select("*", count="exact")
-                .eq("is_verified", True)
-                .execute()
-            )
-            return response.count if hasattr(response, "count") else 0
-        except Exception as e:
-            raise DatabaseError(f"Failed to count verified emails: {e}")
 
     def __repr__(self):
         return f"<User {self.username}>"

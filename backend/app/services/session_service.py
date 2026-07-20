@@ -13,7 +13,7 @@ class Session:
 
     def __init__(self, data: Dict[str, Any]):
         self.id = data.get("id")
-        self.user_id = data.get("user_id")
+        self.user_id = data.get("profile_id")
         self.session_name = data.get("session_name")
         self.level_id = data.get("level_id")
         self.score = data.get("score")
@@ -41,7 +41,7 @@ class Session:
     def to_dict(self) -> Dict[str, Any]:
         return {
             "id": self.id,
-            "user_id": self.user_id,
+            "profile_id": self.user_id,
             "session_name": self.session_name,
             "level_id": self.level_id,
             "score": self.score,
@@ -52,11 +52,11 @@ class Session:
         }
 
     @classmethod
-    def start_session(cls, user_id: int, session_name: str, level_id: Optional[int] = None) -> "Session":
+    def start_session(cls, user_id: str, session_name: str, level_id: Optional[int] = None) -> "Session":
         try:
             supabase = get_supabase()
             session_data = {
-                "user_id": user_id,
+                "profile_id": user_id,
                 "session_name": session_name,
                 "level_id": level_id,
                 "start_time": utc_now().isoformat(),
@@ -116,13 +116,13 @@ class Session:
             raise DatabaseError(f"Failed to end session: {str(e)}")
 
     @classmethod
-    def get_user_sessions(cls, user_id: int, limit: int = 50, offset: int = 0) -> List["Session"]:
+    def get_user_sessions(cls, user_id: str, limit: int = 50, offset: int = 0) -> List["Session"]:
         try:
             supabase = get_supabase()
             response = (
                 supabase.table("sessions")
                 .select("*")
-                .eq("user_id", user_id)
+                .eq("profile_id", user_id)
                 .order("created_at", desc=True)
                 .range(offset, offset + limit - 1)
                 .execute()
@@ -133,7 +133,7 @@ class Session:
             raise DatabaseError(f"Failed to get user sessions: {str(e)}")
 
     @classmethod
-    def get_user_progress_summary(cls, user_id: int) -> Dict[str, Any]:
+    def get_user_progress_summary(cls, user_id: str) -> Dict[str, Any]:
         try:
             from app.services.level_service import Level
 
@@ -143,7 +143,7 @@ class Session:
             response = (
                 supabase.table("sessions")
                 .select("level_id, session_name, score")
-                .eq("user_id", user_id)
+                .eq("profile_id", user_id)
                 .not_.is_("end_time", "null")
                 .execute()
             )
@@ -164,7 +164,7 @@ class Session:
                     session_response = (
                         supabase.table("sessions")
                         .select("score, start_time, end_time")
-                        .eq("user_id", user_id)
+                        .eq("profile_id", user_id)
                         .eq("session_name", session_name)
                         .not_.is_("end_time", "null")
                         .order("score", desc=True)
@@ -241,7 +241,7 @@ class Session:
         try:
             supabase = get_supabase()
             session_data = {
-                "user_id": self.user_id,
+                "profile_id": self.user_id,
                 "session_name": self.session_name,
                 "level_id": self.level_id,
                 "score": self.score,
@@ -286,13 +286,13 @@ class Session:
             raise DatabaseError(f"Failed to get session {session_id}: {str(e)}")
 
     @classmethod
-    def get_active_session(cls, user_id: int) -> Optional["Session"]:
+    def get_active_session(cls, user_id: str) -> Optional["Session"]:
         try:
             supabase = get_supabase()
             response = (
                 supabase.table("sessions")
                 .select("*")
-                .eq("user_id", user_id)
+                .eq("profile_id", user_id)
                 .is_("end_time", "null")
                 .order("created_at", desc=True)
                 .limit(1)
@@ -306,13 +306,13 @@ class Session:
             raise DatabaseError(f"Failed to get active session: {str(e)}")
 
     @classmethod
-    def get_latest_completed_sessions_per_level(cls, user_id: int) -> Dict[int, "Session"]:
+    def get_latest_completed_sessions_per_level(cls, user_id: str) -> Dict[int, "Session"]:
         try:
             supabase = get_supabase()
             response = (
                 supabase.table("sessions")
                 .select("*")
-                .eq("user_id", user_id)
+                .eq("profile_id", user_id)
                 .not_.is_("end_time", "null")
                 .not_.is_("level_id", "null")
                 .order("created_at", desc=True)

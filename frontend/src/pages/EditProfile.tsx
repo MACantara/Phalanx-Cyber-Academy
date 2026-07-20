@@ -33,7 +33,7 @@ export default function EditProfile() {
   };
 
   const remote = useData<UserProfile>(async () => {
-    const res = await api.get('/auth/me');
+    const res = await api.get('/users/me');
     return res.data.user;
   }, [], { initial });
 

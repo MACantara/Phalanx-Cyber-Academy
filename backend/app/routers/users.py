@@ -80,7 +80,7 @@ def list_users(
 
 @router.get("/{user_id}")
 def get_user(
-    user_id: int,
+    user_id: str,
     user: Dict[str, Any] = Depends(get_current_user),
 ):
     if not user.get("is_admin"):
