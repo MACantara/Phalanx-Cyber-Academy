@@ -2,10 +2,14 @@
 Session service
 Tracks user learning sessions for levels and other game modes
 """
+import logging
 from typing import Any, Dict, List, Optional
 from app.supabase_client import get_supabase
 from app.errors import DatabaseError, handle_supabase_error
 from app.utils.timezone_utils import utc_now, parse_datetime_aware
+
+
+logger = logging.getLogger(__name__)
 
 
 class Session:
@@ -71,10 +75,20 @@ class Session:
             raise DatabaseError(f"Failed to start session: {str(e)}")
 
     @classmethod
-    def end_session(cls, session_id: int, score: Optional[int] = None) -> "Session":
+    def end_session(
+        cls,
+        session_id: int,
+        score: Optional[int] = None,
+        user_id: Optional[str] = None,
+    ) -> "Session":
+        if score is not None and not (0 <= score <= 100):
+            raise ValueError("Score must be between 0 and 100")
         try:
             supabase = get_supabase()
-            response = supabase.table("sessions").select("*").eq("id", session_id).execute()
+            query = supabase.table("sessions").select("*").eq("id", session_id)
+            if user_id is not None:
+                query = query.eq("profile_id", user_id)
+            response = query.execute()
             data = handle_supabase_error(response)
             if not data or len(data) == 0:
                 raise ValueError(f"Session {session_id} not found")
@@ -83,7 +97,12 @@ class Session:
                 "end_time": utc_now().isoformat(),
                 "score": score,
             }
-            response = supabase.table("sessions").update(update_data).eq("id", session_id).execute()
+            update_query = (
+                supabase.table("sessions").update(update_data).eq("id", session_id)
+            )
+            if user_id is not None:
+                update_query = update_query.eq("profile_id", user_id)
+            response = update_query.execute()
             updated_data = handle_supabase_error(response)
 
             if updated_data and len(updated_data) > 0:
@@ -105,10 +124,10 @@ class Session:
                         updated_session._xp_calculation = xp_result.get("calculation_details", {})
                         updated_session._new_total_xp = xp_result.get("new_total", 0)
                     except Exception as xp_error:
+                        logger.warning("Failed to award session XP: %s", xp_error)
                         updated_session._xp_awarded = 0
                         updated_session._xp_calculation = {}
                         updated_session._new_total_xp = 0
-                        print(f"Warning: failed to award session XP: {xp_error}")
 
                 return updated_session
             raise DatabaseError("No data returned from session update")

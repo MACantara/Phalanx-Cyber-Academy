@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import type { DialogueMessage } from '../types';
 import { ChevronLeft, ChevronRight, Lightbulb, SkipForward } from 'lucide-react';
 
@@ -12,18 +13,57 @@ const CHARACTER_NAMES: Record<string, string> = {
   default: 'System',
 };
 
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+function parseInline(text: string, keyPrefix: string): ReactNode[] {
+  const nodes: ReactNode[] = [];
+  const regex = /(?<!\*)\*([^*]+)\*(?!\*)|`([^`]+)`/g;
+  let match: RegExpExecArray | null;
+  let lastIndex = 0;
+  let key = 0;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      nodes.push(
+        <span key={`${keyPrefix}-${key++}`}>{text.slice(lastIndex, match.index)}</span>
+      );
+    }
+    if (match[1] !== undefined) {
+      nodes.push(
+        <em key={`${keyPrefix}-${key++}`} className="italic text-green-300">
+          {match[1]}
+        </em>
+      );
+    } else if (match[2] !== undefined) {
+      nodes.push(
+        <code
+          key={`${keyPrefix}-${key++}`}
+          className="rounded bg-gray-700 px-1 font-mono text-sm text-yellow-300"
+        >
+          {match[2]}
+        </code>
+      );
+    }
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    nodes.push(<span key={`${keyPrefix}-${key++}`}>{text.slice(lastIndex)}</span>);
+  }
+
+  return nodes;
 }
 
-function formatText(text: string): string {
-  return escapeHtml(text)
-    .replace(/\n/g, '<br />')
-    .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="italic text-green-300">$1</em>')
-    .replace(/`([^`]+)`/g, '<code class="rounded bg-gray-700 px-1 font-mono text-sm text-yellow-300">$1</code>');
+function FormattedText({ text }: { text: string }): ReactNode {
+  const lines = text.split('\n');
+  return (
+    <>
+      {lines.map((line, i) => (
+        <span key={i}>
+          {parseInline(line, `line-${i}`)}
+          {i < lines.length - 1 && <br />}
+        </span>
+      ))}
+    </>
+  );
 }
 
 interface DialogueOverlayProps {
@@ -126,7 +166,7 @@ export function DialogueOverlay({ character, messages, onComplete, storageKey }:
               {name}
             </div>
             <div className="mb-4 flex-grow overflow-y-auto text-sm leading-relaxed text-green-400 sm:text-base md:text-lg">
-              <div dangerouslySetInnerHTML={{ __html: formatText(current.text) }} />
+              <FormattedText text={current.text} />
             </div>
 
             {current.example && (
@@ -137,10 +177,9 @@ export function DialogueOverlay({ character, messages, onComplete, storageKey }:
                 <div className="mb-2 flex items-center justify-center text-sm font-semibold text-yellow-400 sm:text-base">
                   <Lightbulb className="mr-2 h-4 w-4" /> Example
                 </div>
-                <div
-                  className="whitespace-pre-wrap text-xs text-gray-200 sm:text-sm md:text-base"
-                  dangerouslySetInnerHTML={{ __html: formatText(current.example) }}
-                />
+                <div className="whitespace-pre-wrap text-xs text-gray-200 sm:text-sm md:text-base">
+                  <FormattedText text={current.example} />
+                </div>
               </div>
             )}
 

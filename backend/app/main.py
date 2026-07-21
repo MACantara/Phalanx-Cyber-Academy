@@ -3,16 +3,30 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .routers import admin, auth, backup, blue_vs_red, contact, content, levels, reports, sessions, users, xp
+from .utils.security import RateLimitMiddleware, SecurityHeadersMiddleware
 
 app = FastAPI(title=settings.app_name, debug=settings.debug)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[o.strip() for o in settings.cors_allowed_origins.split(",") if o.strip()],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=[m.strip() for m in settings.cors_allowed_methods.split(",") if m.strip()],
+    allow_headers=[h.strip() for h in settings.cors_allowed_headers.split(",") if h.strip()],
 )
+
+app.add_middleware(
+    RateLimitMiddleware,
+    max_requests=100,
+    window_seconds=60,
+    strict_paths={
+        "/api/auth/": (10, 60),
+        "/api/contact": (5, 60),
+        "/api/admin/": (50, 60),
+    },
+)
+
+app.add_middleware(SecurityHeadersMiddleware)
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(admin.router, prefix="/api/admin", tags=["admin"])

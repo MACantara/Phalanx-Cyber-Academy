@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 from app.services.contact_service import Contact
 
@@ -7,10 +7,10 @@ router = APIRouter()
 
 
 class ContactPayload(BaseModel):
-    name: str
+    name: str = Field(..., min_length=1, max_length=200)
     email: EmailStr
-    subject: str
-    message: str
+    subject: str = Field(..., min_length=1, max_length=200)
+    message: str = Field(..., min_length=1, max_length=5000)
 
 
 @router.post("/")

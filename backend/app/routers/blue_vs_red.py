@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.dependencies import get_current_user
 from app.errors import DatabaseError, handle_supabase_error
@@ -11,7 +11,10 @@ from app.services.session_service import Session
 from app.services.xp_award import XPManager
 from app.services.xp_history_service import XPHistory
 from app.supabase_client import get_supabase
-from app.utils.timezone_utils import utc_now
+from app.utils.timezone_utils import utc_now, parse_datetime_aware
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/blue-vs-red", tags=["blue-vs-red"])
 
@@ -86,6 +89,41 @@ def _save_state(user_id: str) -> None:
         raise DatabaseError(f"Failed to save BvR game state: {e}")
 
 
+ALLOWED_ACTIONS = {
+    "block-ip",
+    "isolate-asset",
+    "increase-monitoring",
+    "patch-vulnerability",
+    "reset-credentials",
+    "firewall-rule",
+    "endpoint-quarantine",
+    "access-revoke",
+}
+
+ALLOWED_SEVERITIES = {"low", "medium", "high", "critical"}
+
+
+def _elapsed_seconds(state: Dict[str, Any]) -> int:
+    start = state.get("startTime")
+    end = state.get("endTime") or utc_now().isoformat()
+    if not start or not end:
+        return 0
+    try:
+        start_dt = parse_datetime_aware(start)
+        end_dt = parse_datetime_aware(end)
+        return max(0, int((end_dt - start_dt).total_seconds()))
+    except Exception:
+        return 0
+
+
+def _time_remaining(state: Dict[str, Any]) -> int:
+    return max(0, INITIAL_TIME - _elapsed_seconds(state))
+
+
+def _refresh_time(state: Dict[str, Any]) -> None:
+    state["timeRemaining"] = _time_remaining(state)
+
+
 def _calc_asset_integrity(assets: Dict[str, Any]) -> float:
     if not assets:
         return 100.0
@@ -103,7 +141,7 @@ def _calc_detection_rate(ai_actions: list) -> float:
 def _calc_final_score(state: Dict[str, Any]) -> int:
     assets = state.get("assets", {})
     integrity = _calc_asset_integrity(assets)
-    time_remaining = state.get("timeRemaining", 0)
+    time_remaining = _time_remaining(state)
     ai_actions = state.get("aiActions", [])
     detection = _calc_detection_rate(ai_actions)
     score = (integrity * 0.4) + (min(time_remaining / 9, 100) * 0.3) + (detection * 0.3)
@@ -113,7 +151,7 @@ def _calc_final_score(state: Dict[str, Any]) -> int:
 def _calc_completion_bonus(state: Dict[str, Any]) -> int:
     base_bonus = 25
     integrity = _calc_asset_integrity(state.get("assets", {}))
-    time_remaining = state.get("timeRemaining", 0)
+    time_remaining = _time_remaining(state)
     attacks_mitigated = state.get("attacksMitigated", 0)
     attacks_successful = state.get("attacksSuccessful", 0)
 
@@ -146,28 +184,31 @@ class GameStateUpdate(BaseModel):
 
 
 class ActionPayload(BaseModel):
-    action: str
-    target: Optional[str] = None
-    parameters: Dict[str, Any] = {}
-    effectiveness: float = 0
+    action: str = Field(..., min_length=1, max_length=50)
+    target: Optional[str] = Field(None, max_length=100)
+    parameters: Dict[str, Any] = Field(default_factory=dict)
+    effectiveness: float = Field(0, ge=0, le=100)
     successful: bool = False
 
 
 class AIActionPayload(BaseModel):
-    action: Optional[str] = None
-    type: Optional[str] = None
-    technique: Optional[str] = None
-    target: Optional[str] = None
-    severity: str = "medium"
+    action: Optional[str] = Field(None, max_length=50)
+    type: Optional[str] = Field(None, max_length=50)
+    technique: Optional[str] = Field(None, max_length=100)
+    target: Optional[str] = Field(None, max_length=100)
+    severity: str = Field("medium", pattern=r"^(low|medium|high|critical)$")
     detected: bool = False
     successful: bool = False
-    sourceIP: Optional[str] = None
+    sourceIP: Optional[str] = Field(None, max_length=45)
 
 
 @router.get("/game-state")
 def get_game_state(user: dict = Depends(get_current_user)):
     """Get the current BvR game state for the authenticated user."""
-    return _get_state(user["id"])
+    state = _get_state(user["id"])
+    if state.get("isRunning"):
+        _refresh_time(state)
+    return state
 
 
 @router.post("/game-state")
@@ -176,7 +217,6 @@ def update_game_state(payload: GameStateUpdate, user: dict = Depends(get_current
     state = _get_state(user["id"])
     allowed = {
         "securityControls",
-        "timeRemaining",
         "alerts",
         "incidents",
         "aiDifficulty",
@@ -201,7 +241,7 @@ def start_game(user: dict = Depends(get_current_user)):
 
     state = _default_state()
     state["isRunning"] = True
-    state["startTime"] = datetime.now().isoformat()
+    state["startTime"] = utc_now().isoformat()
     state["session_id"] = game_session.id
     _game_states[user["id"]] = state
     _save_state(user["id"])
@@ -220,22 +260,27 @@ def player_action(data: ActionPayload, user: dict = Depends(get_current_user)):
     if not state.get("isRunning"):
         raise HTTPException(status_code=400, detail="Game is not running")
 
+    if data.action not in ALLOWED_ACTIONS:
+        raise HTTPException(status_code=400, detail="Invalid action")
+    effectiveness = max(0.0, min(100.0, data.effectiveness))
+    successful = data.successful and effectiveness >= 50
+
     action = {
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": utc_now().isoformat(),
         "type": data.action,
         "target": data.target,
         "parameters": data.parameters,
-        "effectiveness": data.effectiveness,
-        "successful": data.successful,
+        "effectiveness": effectiveness,
+        "successful": successful,
     }
     state["playerActions"].append(action)
 
-    if data.action == "block-ip" and data.successful and data.target:
+    if data.action == "block-ip" and successful and data.target:
         if data.target not in state["blockedIPs"]:
             state["blockedIPs"].append(data.target)
 
     xp_awarded = 0
-    if data.successful:
+    if successful:
         xp_awarded = _calc_action_xp(action)
         state["accumulatedXP"] = state.get("accumulatedXP", 0) + xp_awarded
         state["sessionXP"] = state.get("sessionXP", 0) + xp_awarded
@@ -261,19 +306,21 @@ def ai_action(data: AIActionPayload, user: dict = Depends(get_current_user)):
     action_type = data.action or data.type
     if not action_type:
         raise HTTPException(status_code=400, detail="Action type required")
+    if data.severity not in ALLOWED_SEVERITIES:
+        raise HTTPException(status_code=400, detail="Invalid severity")
 
     source_ip = data.sourceIP
     blocked_ips = state.get("blockedIPs", [])
     ip_blocked = source_ip in blocked_ips if source_ip else False
 
     action = {
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": utc_now().isoformat(),
         "type": action_type,
         "technique": data.technique,
         "target": data.target,
         "severity": data.severity,
         "detected": data.detected,
-        "successful": data.successful and not ip_blocked,
+        "successful": not ip_blocked,
         "sourceIP": source_ip,
         "blocked": ip_blocked,
     }
@@ -352,7 +399,7 @@ def stop_game(user: dict = Depends(get_current_user)):
     session_id = state.get("session_id")
     if session_id and total_xp > 0:
         try:
-            Session.end_session(session_id, score=final_score)
+            Session.end_session(session_id, score=final_score, user_id=user["id"])
             XPManager.award_session_xp(
                 user_id=user["id"],
                 session_name="Blue-Team-vs-Red-Team-Mode",
@@ -360,8 +407,8 @@ def stop_game(user: dict = Depends(get_current_user)):
                 session_id=session_id,
                 reason="Blue Team vs Red Team Mode",
             )
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning("Failed to finalize BvR stop-game session %s: %s", session_id, exc)
 
     state["session_completed"] = True
     state["xp_awarded"] = total_xp
@@ -386,9 +433,9 @@ def reset_game(user: dict = Depends(get_current_user)):
     session_id = state.get("session_id")
     if session_id and state.get("isRunning"):
         try:
-            Session.end_session(session_id, score=0)
-        except Exception:
-            pass
+            Session.end_session(session_id, score=0, user_id=user["id"])
+        except Exception as exc:
+            logger.warning("Failed to finalize BvR reset session %s: %s", session_id, exc)
 
     _game_states[user["id"]] = _default_state()
     _save_state(user["id"])
@@ -409,7 +456,7 @@ def exit_game(user: dict = Depends(get_current_user)):
         session_id = state.get("session_id")
         if session_id:
             try:
-                Session.end_session(session_id, score=final_score)
+                Session.end_session(session_id, score=final_score, user_id=user["id"])
                 if total_xp > 0:
                     XPManager.award_session_xp(
                         user_id=user["id"],
@@ -418,8 +465,8 @@ def exit_game(user: dict = Depends(get_current_user)):
                         session_id=session_id,
                         reason="Early Exit",
                     )
-            except Exception:
-                pass
+            except Exception as exc:
+                logger.warning("Failed to finalize BvR exit session %s: %s", session_id, exc)
 
         state["session_completed"] = True
         state["xp_awarded"] = total_xp
