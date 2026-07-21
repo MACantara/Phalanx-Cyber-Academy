@@ -1,7 +1,7 @@
 import json
 import os
 from typing import Any, Dict
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.dependencies import get_current_user
 
