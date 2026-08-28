@@ -1,12 +1,11 @@
 import { createContext, useContext } from 'react';
-import type { LevelData, OpenWindow } from '../types';
+import type { LevelData, OpenWindow, ScoringEvent } from '../types';
 
 export interface SimulatedPCContextValue {
   level: LevelData;
   content?: LevelData['content'];
   sessionId: string | null;
   score: number;
-  setScore: (score: number) => void;
   windows: OpenWindow[];
   activeWindow: string | null;
   openWindow: (id: string, title: string, icon: string, appId: string) => void;
@@ -14,8 +13,10 @@ export interface SimulatedPCContextValue {
   focusWindow: (id: string) => void;
   minimizeWindow: (id: string) => void;
   restoreWindow: (id: string) => void;
-  completeSession: (finalScore: number) => void;
+  addScoringEvent: (event: ScoringEvent) => void;
+  completeSession: (finalScore?: number) => void;
   startShutdown: () => void;
+  startReplay: () => void;
   completed: boolean;
 }
 
