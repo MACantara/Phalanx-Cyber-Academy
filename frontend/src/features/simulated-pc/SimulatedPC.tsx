@@ -86,7 +86,7 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
 
   const startReplay = useCallback(() => {
     if (!activeContent) return;
-    const mutated = applyAdaptive(activeContent) as SimulationContent | undefined;
+    const mutated = applyAdaptive(activeContent);
     if (!mutated) return;
     setActiveContent(mutated);
     setScoringEvents([]);
