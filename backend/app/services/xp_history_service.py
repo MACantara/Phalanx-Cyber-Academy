@@ -224,7 +224,7 @@ class XPHistory:
     def get_xp_leaderboard_data(cls, limit: int = 10) -> List[Dict[str, Any]]:
         try:
             supabase = get_supabase()
-            sessions_response = supabase.table("sessions").select("id, user_id").execute()
+            sessions_response = supabase.table("sessions").select("id, profile_id").execute()
             sessions_data = handle_supabase_error(sessions_response)
             session_to_user = {s["id"]: s["profile_id"] for s in sessions_data} if sessions_data else {}
 
@@ -233,7 +233,7 @@ class XPHistory:
             if not data:
                 return []
 
-            user_totals: Dict[int, int] = {}
+            user_totals: Dict[str, int] = {}
             for entry in data:
                 user_id = None
                 if entry.get("session_id"):
@@ -246,7 +246,7 @@ class XPHistory:
 
             sorted_users = sorted(user_totals.items(), key=lambda x: x[1], reverse=True)[:limit]
             return [
-                {"rank": rank, "profile_id": user_id, "total_xp": total_xp}
+                {"rank": rank, "user_id": user_id, "total_xp": total_xp}
                 for rank, (user_id, total_xp) in enumerate(sorted_users, 1)
             ]
         except Exception as e:
