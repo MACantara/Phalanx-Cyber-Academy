@@ -15,6 +15,8 @@ export function applyAdaptive(content: SimulationContent): SimulationContent | u
 
 function setValue(obj: unknown, path: string, value: string): void {
   const keys = path.split('.');
+  if (!keys.length || keys.some((key) => !isSafePathKey(key))) return;
+
   let current: unknown = obj;
 
   for (let i = 0; i < keys.length - 1; i++) {
@@ -24,4 +26,8 @@ function setValue(obj: unknown, path: string, value: string): void {
 
   if (current == null) return;
   (current as Record<string, unknown>)[keys[keys.length - 1]] = value;
+}
+
+function isSafePathKey(key: string): boolean {
+  return key !== '__proto__' && key !== 'constructor' && key !== 'prototype';
 }
