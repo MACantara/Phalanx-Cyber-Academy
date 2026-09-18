@@ -15,13 +15,27 @@ export function applyAdaptive(content: SimulationContent): SimulationContent | u
 
 function setValue(obj: unknown, path: string, value: string): void {
   const keys = path.split('.');
+  if (!keys.length) return;
+
   let current: unknown = obj;
 
   for (let i = 0; i < keys.length - 1; i++) {
-    if (current == null) return;
-    current = (current as Record<string, unknown>)[keys[i]];
+    if (current == null || typeof current !== 'object') return;
+
+    const key = keys[i];
+    if (key === '__proto__' || key === 'constructor' || key === 'prototype') return;
+
+    const record = current as Record<string, unknown>;
+    if (!Object.prototype.hasOwnProperty.call(record, key)) return;
+    current = record[key];
   }
 
-  if (current == null) return;
-  (current as Record<string, unknown>)[keys[keys.length - 1]] = value;
+  if (current == null || typeof current !== 'object') return;
+
+  const finalKey = keys[keys.length - 1];
+  if (finalKey === '__proto__' || finalKey === 'constructor' || finalKey === 'prototype') return;
+
+  const record = current as Record<string, unknown>;
+  if (!Object.prototype.hasOwnProperty.call(record, finalKey)) return;
+  record[finalKey] = value;
 }
