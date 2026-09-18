@@ -11,7 +11,7 @@ Phalanx Cyber Academy is a game-based learning platform for digital literacy and
 ## Stack
 
 - **Backend**: Python 3.12, FastAPI, Uvicorn, Supabase (PostgREST), Pydantic Settings.
-- **Frontend**: React 18, TypeScript, Vite, React Router v6, Tailwind CSS, `lucide-react`, `axios`.
+- **Frontend**: React 18, TypeScript, Vite, React Router v7, Tailwind CSS, `lucide-react`, `axios`.
 - **Database**: Supabase with schema in `supabase_schema.sql`.
 - **Styling**: Tailwind CSS with `dark:` class-mode theme. See `DESIGN.md` for the design system.
 
