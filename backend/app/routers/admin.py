@@ -6,9 +6,12 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, Field
 
 from app.dependencies import get_current_user
+import logging
+
+logger = logging.getLogger(__name__)
 from app.errors import DatabaseError, handle_supabase_error
 from app.supabase_client import get_supabase
 from app.services.user_service import User as UserService
@@ -43,8 +46,8 @@ def _log_admin_action(
             "details": details or {},
             "created_at": utc_now().isoformat(),
         }).execute()
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.warning("Failed to log admin action %s: %s", action, exc)
 
 
 @router.get("/stats")
@@ -69,7 +72,8 @@ def get_stats(user: Dict[str, Any] = Depends(require_admin)):
 def _safe(query, default=None):
     try:
         return handle_supabase_error(query.execute()) or default
-    except Exception:
+    except Exception as exc:
+        logger.warning("Supabase query failed in _safe: %s", exc)
         return default
 
 
@@ -221,18 +225,18 @@ def get_analytics_blue_vs_red(user: Dict[str, Any] = Depends(require_admin)):
 
 
 class UserActionPayload(BaseModel):
-    action: str  # toggle_active, toggle_admin, delete
+    action: str = Field(..., pattern=r"^(toggle_active|toggle_admin|delete)$")  # toggle_active, toggle_admin, delete
 
 
 class CreateUserPayload(BaseModel):
-    email: str
-    username: str | None = None
-    timezone: str = "UTC"
+    email: EmailStr
+    username: str | None = Field(None, max_length=30)
+    timezone: str = Field("UTC", max_length=50)
     is_admin: bool = False
 
 
 class XPGrantPayload(BaseModel):
-    amount: int
+    amount: int = Field(..., gt=0)
 
 
 @router.post("/users")

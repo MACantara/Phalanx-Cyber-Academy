@@ -19,13 +19,8 @@ def _compute_unlocked(levels: List[Level], completed_level_ids: set) -> List[Dic
     completed = set(completed_level_ids)
     result = []
     for level in levels:
-        is_first = level.level_id == 1
-        previous_completed = level.level_id is not None and (level.level_id - 1) in completed
-        is_unlocked = bool(
-            level.unlocked and not level.coming_soon and (is_first or previous_completed or level.level_id in completed)
-        )
         data = level.to_dict()
-        data["unlocked"] = is_unlocked
+        data["unlocked"] = bool(not level.coming_soon)
         data["completed"] = level.level_id in completed
         result.append(data)
     return result
@@ -33,7 +28,7 @@ def _compute_unlocked(levels: List[Level], completed_level_ids: set) -> List[Dic
 
 @router.get("/")
 def list_levels(x_user_id: Optional[int] = Header(None)):
-    """List all levels. If X-User-Id is provided, levels are unlocked sequentially based on completed sessions."""
+    """List all levels. Levels that are not coming soon are marked as unlocked."""
     levels = Level.get_all_levels()
     completed_level_ids = set()
     if x_user_id is not None:

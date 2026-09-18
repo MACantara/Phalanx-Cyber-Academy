@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BootSequence } from './components/BootSequence';
-import { Desktop } from './components/Desktop';
 import { ShutdownSequence } from './components/ShutdownSequence';
 import { SimulatedPCContext, type SimulatedPCContextValue } from './context/SimulatedPCContext';
-import type { LevelData, OpenWindow } from './types';
+import { getRenderer } from './renderers';
+import { applyAdaptive } from './lib/adaptive';
+import type { LevelData, OpenWindow, ScoringEvent, SimulationContent } from './types';
 
 export interface SimulatedPCProps {
   level: LevelData;
@@ -21,6 +22,9 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
   const [windows, setWindows] = useState<OpenWindow[]>([]);
   const [activeWindow, setActiveWindow] = useState<string | null>(null);
   const [zCounter, setZCounter] = useState(1000);
+  const [scoringEvents, setScoringEvents] = useState<ScoringEvent[]>([]);
+  const [activeContent, setActiveContent] = useState<SimulationContent | undefined>(level.content);
+  const [replayId, setReplayId] = useState(0);
 
   const openWindow = useCallback((id: string, title: string, icon: string, appId: string) => {
     setWindows((prev) => {
@@ -69,10 +73,28 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
     setPhase('shutdown');
   }, []);
 
-  const completeSession = useCallback((finalScore: number) => {
-    setScore(finalScore);
+  const addScoringEvent = useCallback((event: ScoringEvent) => {
+    setScoringEvents((prev) => [...prev, event]);
+  }, []);
+
+  const completeSession = useCallback((finalScore?: number) => {
+    if (finalScore !== undefined) {
+      setScore(finalScore);
+    }
     setCompleted(true);
   }, []);
+
+  const startReplay = useCallback(() => {
+    if (!activeContent) return;
+    const mutated = applyAdaptive(activeContent);
+    if (!mutated) return;
+    setActiveContent(mutated);
+    setScoringEvents([]);
+    setCompleted(false);
+    setScore(0);
+    setPhase('desktop');
+    setReplayId((id) => id + 1);
+  }, [activeContent]);
 
   const onShutdownFinished = useCallback(() => {
     const timeSpent = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
@@ -89,13 +111,29 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
     return () => document.removeEventListener('keydown', handler);
   }, []);
 
+  useEffect(() => {
+    if (completed) return;
+    if (!activeContent || !('scoring' in activeContent)) return;
+    const scoring = activeContent.scoring;
+    const raw = scoringEvents.reduce((sum, e) => sum + e.points, 0);
+    setScore(Math.max(0, Math.min(scoring.maxScore, raw)));
+  }, [activeContent, scoringEvents, completed]);
+
+  useEffect(() => {
+    setActiveContent(level.content);
+    setScoringEvents([]);
+    setCompleted(false);
+    setScore(0);
+    setPhase('boot');
+    setReplayId((id) => id + 1);
+  }, [level]);
+
   const context = useMemo<SimulatedPCContextValue>(
     () => ({
       level,
-      content: level.content,
+      content: activeContent,
       sessionId: sessionId ?? null,
       score,
-      setScore,
       windows,
       activeWindow,
       openWindow,
@@ -103,18 +141,23 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
       focusWindow,
       minimizeWindow,
       restoreWindow,
+      addScoringEvent,
       completeSession,
       startShutdown,
+      startReplay,
       completed,
     }),
-    [level, sessionId, score, windows, activeWindow, openWindow, closeWindow, focusWindow, minimizeWindow, restoreWindow, completeSession, startShutdown, completed]
+    [level, activeContent, sessionId, score, windows, activeWindow, openWindow, closeWindow, focusWindow, minimizeWindow, restoreWindow, addScoringEvent, completeSession, startShutdown, startReplay, completed]
   );
+
+  const contentType = activeContent?.type;
+  const Renderer = getRenderer(contentType);
 
   return (
     <SimulatedPCContext.Provider value={context}>
       <div className="fixed inset-0 z-50 overflow-hidden bg-black">
         {phase === 'boot' && <BootSequence onComplete={() => setPhase('desktop')} />}
-        {phase === 'desktop' && <Desktop />}
+        {phase === 'desktop' && <Renderer key={replayId} />}
         {phase === 'shutdown' && (
           <ShutdownSequence
             onComplete={onShutdownFinished}

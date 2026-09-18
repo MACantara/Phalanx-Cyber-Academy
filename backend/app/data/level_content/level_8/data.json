@@ -1,0 +1,74 @@
+{
+  "type": "case-story",
+  "version": "1.0.0",
+  "title": "Forensic Report & Identify The Null",
+  "instructions": "Write the final forensic report and identify the operator behind the tournament incident.",
+  "scoring": {
+    "maxScore": 500,
+    "passingScore": 350,
+    "rubric": [
+      { "id": "correct_suspect", "label": "Identify the correct operator", "maxPoints": 250 },
+      { "id": "complete_report", "label": "Write a complete forensic report", "maxPoints": 250 }
+    ]
+  },
+  "adaptive": {
+    "enabled": false
+  },
+  "initialSceneId": "briefing",
+  "scenes": {
+    "briefing": {
+      "id": "briefing",
+      "narrative": "All analysis is complete. The final step is to identify the operator behind the attack and produce a compliant forensic report. Review the suspect profiles and the report template before making your conclusions.",
+      "speaker": "instructor",
+      "choices": [
+        { "id": "start_report", "text": "Review the suspect profiles and report template", "score": 0, "next": "identify" }
+      ]
+    },
+    "identify": {
+      "id": "identify",
+      "narrative": "The evidence points to a specific operator. Review the suspect profiles and select the individual whose handle was embedded in the malware memory.",
+      "speaker": "instructor",
+      "requiredEvidence": ["suspect-profiles"],
+      "choices": [
+        { "id": "aberration", "text": "Aberr4ti0n (Amorsolo de la Cruz) — the handle was found in the memory dump", "score": 250, "feedback": "Correct. The handle 'Aberr4ti0n' was embedded in the C2 client process memory.", "next": "report" },
+        { "id": "du11ahan", "text": "Du11ahan (Carrie Ashworth) — the meticulous English operative", "score": 0, "feedback": "No evidence links Du11ahan to this endpoint. The handle in memory is Aberr4ti0n.", "next": "report" }
+      ]
+    },
+    "report": {
+      "id": "report",
+      "narrative": "Now produce the report. Review the NIST SP 800-86 template and choose the correct set of sections for a compliant forensic report.",
+      "speaker": "instructor",
+      "requiredEvidence": ["report-template"],
+      "choices": [
+        { "id": "full_report", "text": "Include case summary, evidence acquisition, analysis, findings, and recommendations", "score": 250, "feedback": "Correct. A complete forensic report covers all of these sections.", "next": "complete" },
+        { "id": "minimal_report", "text": "Include only the suspect name and the conclusion", "score": 0, "feedback": "A name and conclusion alone do not satisfy forensic reporting standards.", "next": "complete" }
+      ]
+    },
+    "complete": {
+      "id": "complete",
+      "narrative": "The forensic report has been submitted. The operator is identified as Aberr4ti0n. The case is now ready for law enforcement and the tournament incident response team.",
+      "speaker": "instructor",
+      "choices": [
+        { "id": "finish", "text": "Finish & Exit", "score": 0, "next": "__end" }
+      ]
+    }
+  },
+  "evidence": {
+    "items": [
+      {
+        "id": "suspect-profiles",
+        "kind": "text",
+        "title": "Suspect profiles",
+        "description": "Known members of the Null collective.",
+        "content": "Null Collective — Suspect Profiles\n\nAberr4ti0n\nReal name: Amorsolo de la Cruz\nRole: Aggressive Infiltration Specialist\nNationality: Filipino\nKnown traits: Impulsive, vindictive, leaves handles in malware\n\nDu11ahan\nReal name: Carrie Ashworth\nRole: Meticulous Cyber Operations Specialist\nNationality: English\nKnown traits: Calculated, avoids leaving artifacts\n\nGem1n1\nReal name: Kaito and Kaori Ishikawa\nRole: Twin Challenge-Seeking Cyber Specialists\nNationality: Japanese\nKnown traits: Work in sync, target high-score systems\n\nO2ymandi4s\nReal name: Dr. Clarice \"Cipher\" Kim\nRole: Mysterious Leader & Architect of Chaos\nNationality: Unknown\nKnown traits: Strategic, rarely touches endpoints directly\n\nIncident correlation:\n- Malware memory dump contains handle 'Aberr4ti0n'\n- Network traffic originates from 192.168.1.105\n- No other suspect artifacts found on this endpoint"
+      },
+      {
+        "id": "report-template",
+        "kind": "text",
+        "title": "NIST SP 800-86 report template",
+        "description": "Sections required for a compliant forensic report.",
+        "content": "Forensic Report Template (NIST SP 800-86)\n\n1. Case Summary\n   - Incident reference number, date/time, and scope\n\n2. Evidence Acquisition\n   - Items collected, collection method, hash values, chain of custody\n\n3. Analysis\n   - Tools and techniques used\n   - Evidence processed (laptop, memory, network)\n   - Timeline of activity\n\n4. Findings\n   - Observable facts and their significance\n   - Identified suspect or root cause\n   - Indicators of compromise\n\n5. Conclusions and Recommendations\n   - Summary of impact\n   - Remediation steps\n   - Suggested controls to prevent recurrence\n\n6. Appendices\n   - Raw evidence references, hash logs, tool outputs"
+      }
+    ]
+  }
+}

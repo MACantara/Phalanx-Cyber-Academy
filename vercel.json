@@ -2,8 +2,8 @@
   "services": {
     "frontend": {
       "root": "frontend/",
-      "runtime": "container",
-      "entrypoint": "Dockerfile"
+      "buildCommand": "npm run build",
+      "outputDirectory": "dist"
     },
     "backend": {
       "root": "backend/",

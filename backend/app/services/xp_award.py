@@ -166,12 +166,12 @@ class XPManager:
             leaderboard_data = XPHistory.get_xp_leaderboard_data(limit)
             leaderboard = []
             for entry in leaderboard_data:
-                user = User.find_by_id(entry["profile_id"])
+                user = User.find_by_id(entry["user_id"])
                 if user:
                     level_info = XPCalculator.get_user_level(entry["total_xp"])
                     leaderboard.append({
                         "rank": entry["rank"],
-                        "profile_id": entry["profile_id"],
+                        "user_id": entry["user_id"],
                         "username": user.username,
                         "total_xp": entry["total_xp"],
                         "level": level_info["level"],

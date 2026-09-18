@@ -1,0 +1,92 @@
+{
+  "type": "case-story",
+  "version": "1.0.0",
+  "title": "Evidence Analysis",
+  "instructions": "Analyze the laptop image, memory dump, and network logs. Each artifact points to the same suspect.",
+  "scoring": {
+    "maxScore": 750,
+    "passingScore": 550,
+    "rubric": [
+      { "id": "laptop_analysis", "label": "Identify suspicious files on the laptop", "maxPoints": 250 },
+      { "id": "memory_analysis", "label": "Extract the hidden string from the memory dump", "maxPoints": 250 },
+      { "id": "network_analysis", "label": "Identify the exfiltration destination", "maxPoints": 250 }
+    ]
+  },
+  "adaptive": {
+    "enabled": false
+  },
+  "initialSceneId": "briefing",
+  "scenes": {
+    "briefing": {
+      "id": "briefing",
+      "narrative": "The forensic image, memory dump, and network logs from the rogue laptop are now available. Analyze the three artifacts in the Evidence panel to find the malware, the hidden handle, and the exfiltration target.",
+      "speaker": "instructor",
+      "choices": [
+        { "id": "start_analysis", "text": "Open the evidence and begin analysis", "score": 0, "next": "laptop_analysis" }
+      ]
+    },
+    "laptop_analysis": {
+      "id": "laptop_analysis",
+      "narrative": "The laptop inventory lists the files on the imaged C: drive. Look for the file that does not belong on a standard system.",
+      "speaker": "instructor",
+      "requiredEvidence": ["laptop-inventory"],
+      "choices": [
+        { "id": "flag_c2", "text": "C2_client.exe in Downloads is the suspicious file", "score": 250, "feedback": "Correct. The executable and a temp exfil log were added outside normal system files.", "next": "memory_analysis" },
+        { "id": "flag_notepad", "text": "notepad.exe is the suspicious file", "score": 0, "feedback": "notepad.exe is a normal Windows binary. The custom C2_client.exe is the anomaly.", "next": "memory_analysis" }
+      ]
+    },
+    "memory_analysis": {
+      "id": "memory_analysis",
+      "narrative": "The memory dump contains running process data. Examine the hex and find the hidden string that identifies the operator behind the malware.",
+      "speaker": "instructor",
+      "requiredEvidence": ["memory-dump"],
+      "choices": [
+        { "id": "string_aberration", "text": "The hidden handle is 'Aberr4ti0n'", "score": 250, "feedback": "Correct. The ASCII/hex for 'Aberr4ti0n' is embedded in the process memory.", "next": "network_analysis" },
+        { "id": "string_none", "text": "No usable strings are present in the dump", "score": 0, "feedback": "The dump does contain a string. Look at the right-hand ASCII panel in the hex view.", "next": "network_analysis" }
+      ]
+    },
+    "network_analysis": {
+      "id": "network_analysis",
+      "narrative": "The packet logs capture network activity around the time of the incident. Identify the external destination receiving data from the rogue host.",
+      "speaker": "instructor",
+      "requiredEvidence": ["network-logs"],
+      "choices": [
+        { "id": "exfil_203", "text": "192.168.1.105 is exfiltrating to 203.0.113.55 over HTTPS", "score": 250, "feedback": "Correct. Multiple TLS connections from the rogue host uploaded several megabytes to 203.0.113.55.", "next": "complete" },
+        { "id": "internal_only", "text": "All traffic is internal and benign", "score": 0, "feedback": "There are large outbound TLS uploads to an external IP.", "next": "complete" }
+      ]
+    },
+    "complete": {
+      "id": "complete",
+      "narrative": "The analysis is complete. The laptop contained C2 malware, the operator handle is Aberr4ti0n, and the exfiltration target is 203.0.113.55. You are ready to write the forensic report.",
+      "speaker": "instructor",
+      "choices": [
+        { "id": "finish", "text": "Finish & Exit", "score": 0, "next": "__end" }
+      ]
+    }
+  },
+  "evidence": {
+    "items": [
+      {
+        "id": "laptop-inventory",
+        "kind": "text",
+        "title": "Laptop file inventory",
+        "description": "Selected files and hashes from the LT-447 forensic image.",
+        "content": "LT-447 C: drive forensic image — selected files\n================================================================\nPATH                                                    SIZE    MTIME (UTC)         SHA-256\nC:\\Windows\\System32\\notepad.exe                       256 KB  2021-09-15 08:00    1a2b...3c4d\nC:\\Users\\Aberr4ti0n\\Documents\\suspect_letter.docx    47 KB   2024-03-20 22:14    5e6f...7a8b\nC:\\Users\\Aberr4ti0n\\Downloads\\C2_client.exe          312 KB  2024-03-20 22:47    9c0d...1e2f\nC:\\Users\\Aberr4ti0n\\AppData\\Local\\Temp\\exfil_log.txt 12 KB  2024-03-21 00:03    3a4b...5c6d\nC:\\Windows\\explorer.exe                               4.2 MB  2021-09-15 08:00    7d8e...9f0a\n\nNotes:\n- C2_client.exe is not a standard Windows binary.\n- exfil_log.txt was created after the tournament scoring server went down."
+      },
+      {
+        "id": "memory-dump",
+        "kind": "hex",
+        "title": "Memory dump excerpt",
+        "description": "16 bytes per row. The right column shows printable ASCII.",
+        "content": "00000000  4D 5A 90 00 03 00 00 00 04 00 00 00 FF FF 00 00  |MZ..............|\n00000010  B8 00 00 00 00 00 00 00 40 00 00 00 00 00 00 00  |........@.......|\n00000020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  |................|\n00000030  00 00 00 00 00 00 00 00 00 00 00 00 80 00 00 00  |................|\n00000040  0E 1F BA 0E 00 B4 09 CD 21 B8 01 4C CD 21 54 68  |........!..L.!Th|\n00000050  69 73 20 70 72 6F 67 72 61 6D 20 63 61 6E 6E 6F  |is program canno|\n00000060  74 20 62 65 20 72 75 6E 20 69 6E 20 44 4F 53 20  |t be run in DOS |\n00000070  6D 6F 64 65 2E 0D 0D 0A 24 00 00 00 00 00 00 00  |mode....$.......|\n00000080  50 45 00 00 4C 01 03 00 AB 12 CD 34 00 00 00 00  |PE..L......4....|\n00000090  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  |................|\n000000A0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  |................|\n000000B0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  |................|\n000000C0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  |................|\n000000D0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  |................|\n000000E0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  |................|\n000000F0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  |................|\n00000100  63 6F 6E 66 69 67 3D 7B 22 68 6F 73 74 22 3A 22  |config={\"host\":\"|\n00000110  32 30 33 2E 30 2E 31 31 33 2E 35 35 22 2C 22 70  |203.0.113.55\",\"p|\n00000120  6F 72 74 22 3A 34 34 33 7D 00 00 00 00 00 00 00  |ort\":443}.......|\n00000130  68 61 6E 64 6C 65 3D 22 41 62 65 72 72 34 74 69  |handle=\"Aberr4ti|\n00000140  30 6E 22 00 00 00 00 00 00 00 00 00 00 00 00 00  |0n\"...........|\n00000150  65 78 66 69 6C 5F 64 69 72 3D 22 2F 74 6D 70 2F  |exfil_dir=\"/tmp/|\n00000160  6C 65 61 6B 73 22 00 00 00 00 00 00 00 00 00 00  |leaks\"...........|\n00000170  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  |................|"
+      },
+      {
+        "id": "network-logs",
+        "kind": "packets",
+        "title": "Filtered network logs",
+        "description": "Connections from the rogue host during the incident window.",
+        "content": "2024-03-21 00:12:15  192.168.1.105:49134  ->  192.168.1.1:53     [DNS]  resolve beacon.tournamentvendor.example\n2024-03-21 00:12:16  192.168.1.105:49134  ->  198.51.100.10:53   [DNS]  resolved 203.0.113.55\n2024-03-21 00:15:22  192.168.1.105:54321  ->  203.0.113.55:443   [TLS]  SYN (mss 1460)\n2024-03-21 00:15:22  203.0.113.55:443     ->  192.168.1.105:54321 [TLS]  SYN-ACK\n2024-03-21 00:15:23  192.168.1.105:54321  ->  203.0.113.55:443   [TLS]  Client Hello\n2024-03-21 00:15:25  192.168.1.105:54321  ->  203.0.113.55:443   [TLS]  upload 4.2 MB\n2024-03-21 00:15:48  192.168.1.105:54322  ->  203.0.113.55:443   [TLS]  upload 1.1 MB\n2024-03-21 00:16:02  192.168.1.105:54323  ->  203.0.113.55:443   [TLS]  upload 0.8 MB\n2024-03-21 00:16:30  192.168.1.2:49152    ->  192.168.1.1:80     [HTTP] GET /admin/dashboard status 200\n2024-03-21 00:17:01  192.168.1.105:54324  ->  203.0.113.55:443   [TLS]  FIN-ACK (session closed)\n\nSummary:\n- Total outbound to 203.0.113.55: ~6.1 MB in 40 seconds\n- Protocol: TLS over TCP/443\n- No comparable traffic to other external hosts"
+      }
+    ]
+  }
+}

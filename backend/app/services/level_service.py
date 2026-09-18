@@ -83,7 +83,6 @@ class Level:
             response = (
                 supabase.table("levels")
                 .select("*")
-                .eq("unlocked", True)
                 .eq("coming_soon", False)
                 .execute()
             )

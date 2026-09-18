@@ -1,0 +1,81 @@
+{
+  "type": "case-story",
+  "version": "1.0.0",
+  "title": "Evidence Acquisition & Chain of Custody",
+  "instructions": "The tournament's incident response team needs you to collect digital evidence correctly. Follow chain-of-custody and evidence-integrity principles to avoid contamination.",
+  "scoring": {
+    "maxScore": 500,
+    "passingScore": 350,
+    "rubric": [
+      { "id": "proper_acquisition", "label": "Use proper acquisition methods", "maxPoints": 250 },
+      { "id": "chain_of_custody", "label": "Document chain of custody", "maxPoints": 250 }
+    ]
+  },
+  "adaptive": {
+    "enabled": false
+  },
+  "initialSceneId": "briefing",
+  "scenes": {
+    "briefing": {
+      "id": "briefing",
+      "narrative": "A suspicious outage hit the tournament scoring server. The lead administrator has asked you to preserve evidence from the suspect laptop and the network switch. Before you touch anything, review the evidence list and the chain-of-custody form.",
+      "speaker": "instructor",
+      "choices": [
+        { "id": "start_acquisition", "text": "Review the evidence kit and begin", "score": 0, "next": "acquisition" }
+      ]
+    },
+    "acquisition": {
+      "id": "acquisition",
+      "narrative": "You have the evidence inventory. Select the correct first step to preserve the laptop drive without changing its contents.",
+      "speaker": "instructor",
+      "requiredEvidence": ["evidence-list"],
+      "choices": [
+        { "id": "forensic_image", "text": "Create a forensic image and verify its hash before analysis", "score": 250, "feedback": "Correct. A forensic image preserves the original and a hash proves integrity.", "next": "chain" },
+        { "id": "browse_laptop", "text": "Browse the laptop directly to look for suspicious files", "score": 0, "feedback": "Browsing the live system can modify files and destroy evidence integrity.", "next": "chain" }
+      ]
+    },
+    "chain": {
+      "id": "chain",
+      "narrative": "The forensic image is created. Now the evidence must be handed off for analysis. Review the chain-of-custody form and choose the correct way to transfer the drive.",
+      "speaker": "instructor",
+      "requiredEvidence": ["chain-form"],
+      "choices": [
+        { "id": "document_transfer", "text": "Fill out the chain-of-custody form and seal the evidence bag with collector, time, and hash values", "score": 250, "feedback": "Correct. Documentation and tamper-evident storage maintain admissibility.", "next": "complete" },
+        { "id": "informal_transfer", "text": "Hand the drive to the next analyst with a verbal explanation", "score": 0, "feedback": "Verbal handoffs create gaps in the audit trail and can break chain of custody.", "next": "complete" }
+      ]
+    },
+    "complete": {
+      "id": "complete",
+      "narrative": "The evidence has been acquired and documented. The drive is ready for the analysis phase with a verified hash and an unbroken chain of custody.",
+      "speaker": "instructor",
+      "choices": [
+        { "id": "finish", "text": "Finish & Exit", "score": 0, "next": "__end" }
+      ]
+    }
+  },
+  "evidence": {
+    "items": [
+      {
+        "id": "evidence-list",
+        "kind": "text",
+        "title": "Evidence Inventory",
+        "description": "Approved evidence items and their initial states.",
+        "content": "Incident: TNG-2024-037\nCollector: You\nDate: 2024-03-21 10:15 PHT\n\nItems to acquire:\n1. Dell laptop (asset tag LT-447) — powered off, screen locked\n2. USB thumb drive (blue, 32 GB) — found in the laptop bag\n3. Network switch logs from 2024-03-20 18:00 to 2024-03-21 02:00\n\nPre-collection hashes (to be verified after imaging):\n- LT-447 SSD: SHA-256 pending\n- USB drive: SHA-256 pending\n- Switch logs: SHA-256 pending\n\nAll items must be sealed and labeled before transfer."
+      },
+      {
+        "id": "chain-form",
+        "kind": "text",
+        "title": "Chain of Custody Form",
+        "description": "Required fields for every handoff of digital evidence.",
+        "content": "Chain of Custody Form — TNG-2024-037\n\nRequired fields:\n- Item description and serial/asset number\n- Collector name, badge, and signature\n- Date and time of collection\n- Storage location and method\n- Hash algorithm and value (MD5 or SHA-256)\n- Each subsequent handler: name, reason for access, date/time, signature\n- Condition of packaging on receipt\n\nBest practices:\n- Use tamper-evident bags\n- Keep a photo log of sealed items\n- Never leave evidence unattended\n- Maintain a single, unbroken log from collection to disposition"
+      },
+      {
+        "id": "hash-guide",
+        "kind": "text",
+        "title": "Hash Verification Guide",
+        "description": "Why and how to verify hashes before and after imaging.",
+        "content": "Hash Verification Guide\n\nA cryptographic hash (SHA-256 recommended) is a fingerprint of a file or drive. If even one bit changes, the hash changes.\n\nProcedure:\n1. Calculate the hash of the original media before imaging.\n2. Create a bit-for-bit forensic image using a write blocker.\n3. Calculate the hash of the image.\n4. Compare the two hashes. They must match.\n5. Document both hashes on the chain-of-custody form.\n\nIf the hashes do not match, stop and determine whether the media was modified."
+      }
+    ]
+  }
+}

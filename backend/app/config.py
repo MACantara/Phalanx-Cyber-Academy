@@ -23,5 +23,10 @@ class Settings(BaseSettings):
     max_login_attempts: int = 5
     login_lockout_minutes: int = 15
 
+    # CORS
+    cors_allowed_origins: str = "http://localhost:5173"
+    cors_allowed_methods: str = "GET,POST,PUT,DELETE,OPTIONS"
+    cors_allowed_headers: str = "Authorization,Content-Type,X-User-Id,X-Requested-With"
+
 
 settings = Settings()

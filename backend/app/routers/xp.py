@@ -17,7 +17,7 @@ class XPCalculatePayload(BaseModel):
     level_id: int = Field(..., ge=1)
     score: int | None = Field(None, ge=0, le=100)
     time_spent: int | None = Field(None, ge=0)
-    difficulty: str = "medium"
+    difficulty: str = Field("medium", pattern=r"^(easy|medium|hard)$")
 
 
 @router.post("/calculate")
@@ -45,9 +45,9 @@ class XPAwardPayload(BaseModel):
     level_id: int = Field(..., ge=1)
     score: int | None = Field(None, ge=0, le=100)
     time_spent: int | None = Field(None, ge=0)
-    difficulty: str = "medium"
-    session_id: int | None = None
-    reason: str = "level_completion"
+    difficulty: str = Field("medium", pattern=r"^(easy|medium|hard)$")
+    session_id: int | None = Field(None, ge=1)
+    reason: str = Field("level_completion", max_length=200)
 
 
 @router.post("/award")

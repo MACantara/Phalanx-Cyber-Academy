@@ -2,6 +2,7 @@ from typing import Any, Dict
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.dependencies import get_current_user
+from app.errors import DatabaseError
 from app.services.session_service import Session
 
 router = APIRouter()
@@ -32,7 +33,25 @@ def end_session(
     user: Dict[str, Any] = Depends(get_current_user),
 ):
     score = payload.get("score")
-    session = Session.end_session(session_id=session_id, score=score)
+    if score is not None:
+        try:
+            score = int(score)
+        except (ValueError, TypeError):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Score must be an integer",
+            )
+    try:
+        session = Session.end_session(
+            session_id=session_id, score=score, user_id=user["id"]
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    except DatabaseError:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to end session",
+        )
     return {"success": True, "session": session.to_dict()}
 
 

@@ -1,12 +1,10 @@
-version: "3.8"
-
 services:
   backend:
     build: ./backend
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - backend/.env
     environment:
       - PYTHONUNBUFFERED=1
     volumes:
@@ -18,7 +16,7 @@ services:
     ports:
       - "5173:5173"
     env_file:
-      - .env
+      - frontend/.env
     environment:
       - VITE_API_URL=http://localhost:8000/api
     volumes:
