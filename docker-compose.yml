@@ -18,7 +18,7 @@ services:
     env_file:
       - frontend/.env.local
     environment:
-      - VITE_API_URL=http://localhost:8000/api
+      - VITE_PROXY_TARGET=http://backend:8000
     volumes:
       - ./frontend:/app
       - /app/node_modules
