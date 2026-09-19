@@ -1,6 +1,8 @@
-import type { SimulationContent } from '../types';
+import type { LevelEnvironment, SimulationContent } from '../types';
 
-export function applyAdaptive(content: SimulationContent): SimulationContent | undefined {
+export function applyAdaptive(
+  content: SimulationContent | LevelEnvironment
+): SimulationContent | LevelEnvironment | undefined {
   if (!content.adaptive?.enabled || !content.adaptive.variants?.length) {
     return undefined;
   }

@@ -2,9 +2,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BootSequence } from './components/BootSequence';
 import { ShutdownSequence } from './components/ShutdownSequence';
 import { SimulatedPCContext, type SimulatedPCContextValue } from './context/SimulatedPCContext';
-import { getRenderer } from './renderers';
+import { getAppComponent } from './apps';
 import { applyAdaptive } from './lib/adaptive';
-import type { LevelData, OpenWindow, ScoringEvent, SimulationContent } from './types';
+import { toEnvironment } from './lib/environment';
+import type { LevelData, OpenWindow, ScoringEvent, SimulationContent, LevelEnvironment } from './types';
 
 export interface SimulatedPCProps {
   level: LevelData;
@@ -23,7 +24,7 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
   const [activeWindow, setActiveWindow] = useState<string | null>(null);
   const [zCounter, setZCounter] = useState(1000);
   const [scoringEvents, setScoringEvents] = useState<ScoringEvent[]>([]);
-  const [activeContent, setActiveContent] = useState<SimulationContent | undefined>(level.content);
+  const [activeContent, setActiveContent] = useState<SimulationContent | LevelEnvironment | undefined>(level.content);
   const [replayId, setReplayId] = useState(0);
 
   const openWindow = useCallback((id: string, title: string, icon: string, appId: string) => {
@@ -128,10 +129,13 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
     setReplayId((id) => id + 1);
   }, [level]);
 
+  const environment = useMemo(() => toEnvironment(activeContent), [activeContent]);
+
   const context = useMemo<SimulatedPCContextValue>(
     () => ({
       level,
       content: activeContent,
+      environment,
       sessionId: sessionId ?? null,
       score,
       windows,
@@ -147,18 +151,18 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
       startReplay,
       completed,
     }),
-    [level, activeContent, sessionId, score, windows, activeWindow, openWindow, closeWindow, focusWindow, minimizeWindow, restoreWindow, addScoringEvent, completeSession, startShutdown, startReplay, completed]
+    [level, activeContent, environment, sessionId, score, windows, activeWindow, openWindow, closeWindow, focusWindow, minimizeWindow, restoreWindow, addScoringEvent, completeSession, startShutdown, startReplay, completed]
   );
 
-  const contentType = activeContent?.type;
-  const Renderer = getRenderer(contentType);
+  // Phase A: environments carry an app list; multi-app windowing lands in Phase B.
+  const ActiveApp = getAppComponent(environment?.apps[0]?.appId);
 
   return (
     <SimulatedPCContext.Provider value={context}>
       <div className="fixed inset-0 z-50 overflow-hidden bg-[#0c0c0e] p-0 sm:p-3">
         <div className="relative h-full w-full overflow-hidden bg-stock sm:border sm:border-ink">
         {phase === 'boot' && <BootSequence onComplete={() => setPhase('desktop')} />}
-        {phase === 'desktop' && <Renderer key={replayId} />}
+        {phase === 'desktop' && <ActiveApp key={replayId} />}
         {phase === 'shutdown' && (
           <ShutdownSequence
             onComplete={onShutdownFinished}

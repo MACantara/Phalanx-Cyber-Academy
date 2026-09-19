@@ -1,9 +1,10 @@
 import { createContext, useContext } from 'react';
-import type { LevelData, OpenWindow, ScoringEvent } from '../types';
+import type { LevelData, LevelEnvironment, OpenWindow, ScoringEvent } from '../types';
 
 export interface SimulatedPCContextValue {
   level: LevelData;
   content?: LevelData['content'];
+  environment?: LevelEnvironment;
   sessionId: string | null;
   score: number;
   windows: OpenWindow[];
