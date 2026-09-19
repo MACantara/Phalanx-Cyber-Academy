@@ -4,10 +4,10 @@ import { FadeIn, Stagger } from '../components/Animated';
 import { ArrowRight, CheckCircle, Cpu, Layers, Trophy, ShieldCheck, Gamepad2, Zap, Shield, type LucideIcon } from 'lucide-react';
 
 const team = [
-  { name: 'Jean Alexis L. Santos', role: 'Project Manager', image: '/team/santos.png', color: 'from-green-500 to-emerald-600' },
-  { name: 'Michael Angelo R. Cantara', role: 'Lead Developer', image: '/team/cantara.png', color: 'from-blue-500 to-cyan-600' },
-  { name: 'Hanneh Mae P. Baptista', role: 'Research Specialist and Documentation Lead', image: '/team/baptista.png', color: 'from-purple-500 to-pink-600' },
-  { name: 'Chrissanta Joy Erica C. Puyat', role: 'Quality Assurance and Testing Lead', image: '/team/puyat.png', color: 'from-orange-500 to-red-600' },
+  { name: 'Jean Alexis L. Santos', role: 'Project Manager', image: '/team/santos.png' },
+  { name: 'Michael Angelo R. Cantara', role: 'Lead Developer', image: '/team/cantara.png' },
+  { name: 'Hanneh Mae P. Baptista', role: 'Research Specialist and Documentation Lead', image: '/team/baptista.png' },
+  { name: 'Chrissanta Joy Erica C. Puyat', role: 'Quality Assurance and Testing Lead', image: '/team/puyat.png' },
 ];
 
 export default function About() {
@@ -15,46 +15,48 @@ export default function About() {
 
   return (
     <>
-      {/* Header */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 py-20 transition-colors duration-300 dark:from-blue-950 dark:via-purple-950 dark:to-indigo-950">
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+      {/* Header — registered mark on stock */}
+      <section className="relative flex items-center overflow-hidden bg-stock py-16 transition-colors duration-300 sm:py-20">
+        <div className="dotfield absolute inset-0" aria-hidden="true" />
+        <span className="absolute left-4 top-4 font-mono text-ink opacity-50 sm:left-6 sm:top-6" aria-hidden="true">+</span>
+        <span className="absolute right-4 top-4 font-mono text-ink opacity-50 sm:right-6 sm:top-6" aria-hidden="true">+</span>
+        <span className="absolute bottom-4 left-4 font-mono text-ink opacity-50 sm:bottom-6 sm:left-6" aria-hidden="true">+</span>
+        <span className="absolute bottom-4 right-4 font-mono text-ink opacity-50 sm:bottom-6 sm:right-6" aria-hidden="true">+</span>
+
+        <div className="relative z-10 mx-auto max-w-6xl px-5 text-center sm:px-8">
           <div className="mb-8 opacity-0 animate-fade-in-up" style={{ animationFillMode: 'forwards' }}>
-            <img src="/logo-bg.png" alt="Phalanx Cyber Academy Logo" className="mx-auto h-24 w-auto drop-shadow-2xl md:h-32" />
+            <img src="/logo-bg.png" alt="Phalanx Cyber Academy Logo" className="mx-auto h-24 w-auto sm:h-32" />
           </div>
-          <h1 className="mb-6 text-5xl font-bold text-white md:text-6xl opacity-0 animate-fade-in-up" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>About Phalanx Cyber Academy</h1>
-          <p className="mx-auto mb-3 max-w-3xl text-2xl font-semibold text-white opacity-0 animate-fade-in-up" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>Train. Coordinate. Defend.</p>
-          <p className="mx-auto max-w-3xl text-xl text-gray-200 opacity-0 animate-fade-in-up" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>Empowering digital citizens through gamified cybersecurity education</p>
+          <h1 className="mb-5 text-4xl font-extrabold tracking-tight text-ink opacity-0 animate-fade-in-up sm:text-6xl" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>About Phalanx Cyber Academy</h1>
+          <p className="mx-auto mb-3 max-w-3xl text-xl font-semibold text-ink opacity-0 animate-fade-in-up sm:text-2xl" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>Train. Coordinate. Defend.</p>
+          <p className="mx-auto max-w-3xl text-base text-ink-soft opacity-0 animate-fade-in-up sm:text-lg" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>Empowering digital citizens through gamified cybersecurity education</p>
         </div>
-        <div className="absolute right-20 top-20 h-40 w-40 animate-bounce rounded-full bg-green-400/10 cyber-glow" style={{ animationDuration: '4s' }} />
-        <div className="absolute bottom-20 left-20 h-32 w-32 animate-bounce rounded-full bg-blue-400/10" style={{ animationDelay: '2s', animationDuration: '5s' }} />
       </section>
 
       {/* Mission */}
-      <section className="bg-gradient-to-br from-white to-gray-50 py-20 transition-colors duration-300 dark:from-gray-900 dark:to-gray-800">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center gap-16 lg:grid-cols-2">
+      <section className="border-t border-hairline py-14 sm:py-20">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <FadeIn direction="left">
-              <h2 className="mb-8 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">Our Mission</h2>
-              <div className="space-y-6 text-lg leading-relaxed text-gray-600 dark:text-gray-300">
+              <span className="register">Plate 02 — Mission</span>
+              <h2 className="mb-6 mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">Our Mission</h2>
+              <div className="space-y-6 text-base leading-relaxed text-ink-soft sm:text-lg">
                 <p>Phalanx Cyber Academy was born from a critical need: making cybersecurity education accessible, engaging, and effective for everyone. In an era where digital threats evolve daily, we believe that learning to protect yourself online shouldn't be boring or overwhelming.</p>
                 <p>Through gamification, real-time feedback systems, and realistic simulations, we transform complex cybersecurity concepts into interactive adventures. Every scenario you complete, every challenge you overcome, and every achievement you unlock makes the digital world safer for everyone.</p>
                 <p>Our platform addresses critical digital literacy gaps by combining the engagement of gaming with the rigor of professional cybersecurity training, creating an environment where learning is both fun and profoundly practical.</p>
               </div>
-              <Link to="/contact" className="cyber-glow mt-8 inline-flex transform items-center rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 px-8 py-4 text-lg font-semibold text-white shadow-xl transition-all duration-300 hover:scale-105 hover:from-green-700 hover:to-emerald-700">
-                Get Involved <ArrowRight className="ml-2 h-5 w-5" />
+              <Link to="/contact" className="mt-8 inline-flex min-h-[44px] items-center justify-center bg-ink px-8 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink hover:text-stock dark:hover:bg-seal dark:hover:text-seal-ink">
+                Get Involved <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </FadeIn>
             <FadeIn delay="0.3s">
-              <div className="group relative">
-                <div className="flex h-96 w-full items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 p-8 text-center text-white shadow-2xl transition-transform duration-500 group-hover:scale-105">
-                  <div>
-                    <ShieldCheck className="mx-auto mb-4 h-24 w-24 opacity-80" />
-                    <h3 className="mb-2 text-2xl font-bold">Cybersecurity Education</h3>
-                    <p className="text-lg opacity-90">Reimagined for the Digital Age</p>
-                  </div>
+              <div className="plate plate-strong reg-corners flex h-72 w-full items-center justify-center p-8 text-center sm:h-96">
+                <span className="plate-id absolute left-3 top-3">EXH-01</span>
+                <div>
+                  <ShieldCheck className="mx-auto mb-4 h-20 w-20 text-seal-ink sm:h-24 sm:w-24" />
+                  <h3 className="mb-2 text-2xl font-bold text-ink">Cybersecurity Education</h3>
+                  <p className="register">Reimagined for the Digital Age</p>
                 </div>
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-green-400/20 to-blue-400/20 transition-opacity duration-500 group-hover:opacity-0" />
               </div>
             </FadeIn>
           </div>
@@ -62,35 +64,36 @@ export default function About() {
       </section>
 
       {/* Learning Philosophy */}
-      <section className="bg-gradient-to-br from-gray-50 to-gray-100 py-20 transition-colors duration-300 dark:from-gray-800 dark:to-gray-900">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <FadeIn className="mb-16 text-center">
-            <h2 className="mb-6 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">Learning Through Experience</h2>
-            <p className="mx-auto max-w-4xl text-xl leading-relaxed text-gray-600 dark:text-gray-300">Our educational approach combines proven learning methodologies with cutting-edge technology to create meaningful, lasting cybersecurity knowledge.</p>
+      <section className="border-t border-hairline py-14 sm:py-20">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <FadeIn className="mb-12 text-center sm:mb-16">
+            <span className="register">Plate 03 — Doctrine</span>
+            <h2 className="mb-4 mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">Learning Through Experience</h2>
+            <p className="mx-auto max-w-3xl text-ink-soft sm:text-lg">Our educational approach combines proven learning methodologies with cutting-edge technology to create meaningful, lasting cybersecurity knowledge.</p>
           </FadeIn>
-          <Stagger className="grid gap-8 md:grid-cols-3" baseDelay={0.1} increment={0.2}>
-            <PhilosophyCard icon={Gamepad2} title="Gamification" text="Transform learning into adventure. Earn XP, unlock achievements, and progress through levels while mastering essential cybersecurity skills through interactive challenges and real-world scenarios." color="green" />
-            <PhilosophyCard icon={Zap} title="Real-Time Feedback" text="Receive instant performance analysis and adaptive corrections as you learn. Our system identifies mistakes immediately and provides contextual tips to accelerate your cybersecurity mastery." color="blue" />
-            <PhilosophyCard icon={Shield} title="Real Scenarios" text="Practice with realistic cybersecurity simulations including phishing detection and network defense." color="purple" />
+          <Stagger className="grid gap-6 md:grid-cols-3" baseDelay={0.1} increment={0.2}>
+            <PhilosophyCard code="DOC-01" icon={Gamepad2} title="Gamification" text="Transform learning into adventure. Earn XP, unlock achievements, and progress through levels while mastering essential cybersecurity skills through interactive challenges and real-world scenarios." />
+            <PhilosophyCard code="DOC-02" icon={Zap} title="Real-Time Feedback" text="Receive instant performance analysis and adaptive corrections as you learn. Our system identifies mistakes immediately and provides contextual tips to accelerate your cybersecurity mastery." />
+            <PhilosophyCard code="DOC-03" icon={Shield} title="Real Scenarios" text="Practice with realistic cybersecurity simulations including phishing detection and network defense." />
           </Stagger>
         </div>
       </section>
 
-      {/* Team */}
-      <section className="bg-gradient-to-br from-white to-gray-50 py-20 transition-colors duration-300 dark:from-gray-900 dark:to-gray-800">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <FadeIn className="mb-16 text-center">
-            <h2 className="mb-6 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">Meet Our Team</h2>
-            <p className="mx-auto max-w-3xl text-xl text-gray-600 dark:text-gray-300">Dedicated professionals working together to make cybersecurity education accessible and engaging for everyone</p>
+      {/* Team — personnel register */}
+      <section className="border-t border-hairline py-14 sm:py-20">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <FadeIn className="mb-12 text-center sm:mb-16">
+            <span className="register">Plate 04 — Personnel</span>
+            <h2 className="mb-4 mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">Meet Our Team</h2>
+            <p className="mx-auto max-w-3xl text-ink-soft sm:text-lg">Dedicated professionals working together to make cybersecurity education accessible and engaging for everyone</p>
           </FadeIn>
-          <Stagger className="grid gap-8 md:grid-cols-2 lg:grid-cols-4" baseDelay={0.1} increment={0.15}>
-            {team.map((member) => (
-              <div key={member.name} className="group h-full rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl dark:border-gray-700 dark:bg-gray-800">
-                <div className={`mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-2xl bg-gradient-to-br ${member.color} p-1 shadow-lg transition-all duration-300 group-hover:rotate-6 group-hover:scale-110`}>
-                  <img src={member.image} alt={member.name} className="h-20 w-20 rounded-xl object-cover" />
-                </div>
-                <h3 className="mb-2 text-xl font-bold text-gray-800 dark:text-white">{member.name}</h3>
-                <p className="font-medium text-gray-600 dark:text-gray-300">{member.role}</p>
+          <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" baseDelay={0.1} increment={0.15}>
+            {team.map((member, i) => (
+              <div key={member.name} className="plate reg-corners p-5 text-center transition-colors hover:border-ink sm:p-6">
+                <span className="plate-id absolute left-3 top-3">{`TM-0${i + 1}`}</span>
+                <img src={member.image} alt={member.name} className="mx-auto mb-4 mt-6 h-24 w-24 rounded-full border border-hairline object-cover" />
+                <h3 className="mb-2 text-lg font-bold text-ink">{member.name}</h3>
+                <p className="register">{member.role}</p>
               </div>
             ))}
           </Stagger>
@@ -98,26 +101,28 @@ export default function About() {
       </section>
 
       {/* Features Showcase */}
-      <section className="bg-gradient-to-br from-gray-50 to-gray-100 py-20 transition-colors duration-300 dark:from-gray-800 dark:to-gray-900">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <FadeIn className="mb-16 text-center">
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">What Makes Phalanx Cyber Academy Different</h2>
+      <section className="border-t border-hairline py-14 sm:py-20">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <FadeIn className="mb-12 text-center sm:mb-16">
+            <span className="register">Plate 05 — Capability</span>
+            <h2 className="mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">What Makes Phalanx Cyber Academy Different</h2>
           </FadeIn>
           <Stagger className="grid items-center gap-12 lg:grid-cols-2" baseDelay={0.1} increment={0.15}>
             <div className="space-y-8">
-              <ShowcaseItem icon={Cpu} title="Adaptive Game Engine" text="Our AI game master adapts cybersecurity scenarios to your skill level, creating personalized gaming experiences that evolve with your expertise." color="green" />
-              <ShowcaseItem icon={Layers} title="Immersive Cyber Adventures" text="Dive into realistic cybersecurity missions and interactive storylines that make learning feel like playing your favorite video game." color="blue" />
-              <ShowcaseItem icon={Trophy} title="Epic Achievement System" text="Unlock legendary badges and compete in cybersecurity tournaments while building real-world digital defense skills." color="purple" />
+              <ShowcaseItem icon={Cpu} title="Adaptive Game Engine" text="Our AI game master adapts cybersecurity scenarios to your skill level, creating personalized gaming experiences that evolve with your expertise." />
+              <ShowcaseItem icon={Layers} title="Immersive Cyber Adventures" text="Dive into realistic cybersecurity missions and interactive storylines that make learning feel like playing your favorite video game." />
+              <ShowcaseItem icon={Trophy} title="Epic Achievement System" text="Unlock legendary badges and compete in cybersecurity tournaments while building real-world digital defense skills." />
             </div>
-            <div className="rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600 p-8 text-white shadow-2xl">
-              <h3 className="mb-6 text-2xl font-bold">{user ? 'Continue' : 'Start'} Your Cybersecurity Adventure</h3>
-              <div className="space-y-4">
+            <div className="plate plate-strong reg-corners p-6 sm:p-8">
+              <span className="plate-id absolute left-3 top-3">ENR-01</span>
+              <h3 className="mb-6 mt-4 text-2xl font-bold tracking-tight text-ink">{user ? 'Continue' : 'Start'} Your Cybersecurity Adventure</h3>
+              <div className="space-y-4 text-ink-soft">
                 <ListItem>Epic phishing detection missions</ListItem>
                 <ListItem>AI-powered quest customization</ListItem>
                 <ListItem>Multiplayer cybersecurity battles</ListItem>
                 <ListItem>Real-time skill progression tracking</ListItem>
               </div>
-              <Link to={user ? '/levels' : '/signup'} className="mt-6 inline-flex items-center rounded-lg bg-white px-6 py-3 font-semibold text-indigo-600 transition-all duration-300 hover:bg-gray-100">
+              <Link to={user ? '/levels' : '/signup'} className="mt-6 inline-flex min-h-[44px] items-center justify-center bg-ink px-8 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink hover:text-stock dark:hover:bg-seal dark:hover:text-seal-ink">
                 {user ? 'Continue Adventure' : 'Begin Quest'}
               </Link>
             </div>
@@ -130,30 +135,28 @@ export default function About() {
 
 
 
-function PhilosophyCard({ icon: Icon, title, text, color }: { icon: LucideIcon; title: string; text: string; color: 'green' | 'blue' | 'purple' }) {
-  const gradients = { green: 'from-green-500 to-emerald-600', blue: 'from-blue-500 to-cyan-600', purple: 'from-purple-500 to-pink-600' };
-  const borders = { green: 'hover:border-green-200 dark:hover:border-green-600', blue: 'hover:border-blue-200 dark:hover:border-blue-600', purple: 'hover:border-purple-200 dark:hover:border-purple-600' };
+function PhilosophyCard({ code, icon: Icon, title, text }: { code: string; icon: LucideIcon; title: string; text: string }) {
   return (
-    <div className={`group rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl dark:border-gray-700 dark:bg-gray-800 ${borders[color]}`}>
-      <div className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br ${gradients[color]} text-3xl text-white shadow-lg transition-all duration-300 group-hover:rotate-6 group-hover:scale-110`}>
-        <Icon className="h-8 w-8" />
+    <div className="plate reg-corners p-6 text-center transition-colors hover:border-ink sm:p-8">
+      <span className="plate-id absolute left-3 top-3">{code}</span>
+      <div className="mx-auto mb-6 mt-4 flex h-16 w-16 items-center justify-center bg-seal text-seal-ink">
+        <Icon className="h-7 w-7" />
       </div>
-      <h3 className="mb-4 text-2xl font-bold text-gray-800 dark:text-white">{title}</h3>
-      <p className="leading-relaxed text-gray-600 dark:text-gray-300">{text}</p>
+      <h3 className="mb-3 text-xl font-bold text-ink">{title}</h3>
+      <p className="leading-relaxed text-ink-soft">{text}</p>
     </div>
   );
 }
 
-function ShowcaseItem({ icon: Icon, title, text, color }: { icon: LucideIcon; title: string; text: string; color: 'green' | 'blue' | 'purple' }) {
-  const gradients = { green: 'from-green-500 to-emerald-600', blue: 'from-blue-500 to-cyan-600', purple: 'from-purple-500 to-pink-600' };
+function ShowcaseItem({ icon: Icon, title, text }: { icon: LucideIcon; title: string; text: string }) {
   return (
-    <div className="flex items-start space-x-4">
-      <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${gradients[color]} text-white`}>
-        <Icon className="h-6 w-6" />
+    <div className="flex items-start gap-4">
+      <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center border border-hairline text-ink">
+        <Icon className="h-5 w-5" />
       </div>
       <div>
-        <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">{title}</h3>
-        <p className="text-gray-600 dark:text-gray-300">{text}</p>
+        <h3 className="mb-2 text-xl font-bold text-ink">{title}</h3>
+        <p className="text-ink-soft">{text}</p>
       </div>
     </div>
   );
@@ -161,8 +164,8 @@ function ShowcaseItem({ icon: Icon, title, text, color }: { icon: LucideIcon; ti
 
 function ListItem({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center space-x-3">
-      <CheckCircle className="h-6 w-6 flex-shrink-0 text-green-300" />
+    <div className="flex items-center gap-3">
+      <CheckCircle className="h-5 w-5 flex-shrink-0 text-confirm" />
       <span>{children}</span>
     </div>
   );

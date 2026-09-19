@@ -136,11 +136,11 @@ export default function Terms() {
       </Section>
 
       <Section title="13. Contact Information">
-        <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl mb-6">
+        <div className="mb-6 border border-hairline bg-stock p-6">
           <P className="mb-4">
             If you have any questions about these Terms of Service, please contact us:
           </P>
-          <div className="space-y-2 text-gray-700 dark:text-gray-300">
+          <div className="space-y-2 text-ink-soft">
             <p><strong>Email:</strong> legal@example.com</p>
             <p><strong>Address:</strong> [Your Company Address]</p>
             <p><strong>Phone:</strong> [Your Contact Number]</p>
