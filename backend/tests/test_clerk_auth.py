@@ -83,3 +83,28 @@ def test_tampered_token_rejected(jwks_setup):
     parts[1] = parts[1][:-2] + "xx"
     with pytest.raises(jwt.InvalidSignatureError):
         clerk_auth.verify_clerk_token(".".join(parts))
+
+
+def _clerk_user(email, verified=True):
+    return {
+        "primary_email_address_id": "e1",
+        "email_addresses": [
+            {
+                "id": "e1",
+                "email_address": email,
+                "verification": {"status": "verified" if verified else "unverified"},
+            }
+        ],
+    }
+
+
+def test_primary_email_verified():
+    from app.dependencies import _primary_email
+
+    assert _primary_email(_clerk_user("a@b.c"), require_verified=True) == "a@b.c"
+
+
+def test_primary_email_unverified_rejected():
+    from app.dependencies import _primary_email
+
+    assert _primary_email(_clerk_user("a@b.c", verified=False), require_verified=True) is None

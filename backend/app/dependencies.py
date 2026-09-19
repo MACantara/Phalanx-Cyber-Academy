@@ -43,18 +43,20 @@ def _fetch_clerk_user(clerk_user_id: str) -> dict:
         ) from exc
 
 
-def _primary_email(clerk_user: dict) -> str | None:
+def _primary_email(clerk_user: dict, require_verified: bool = False) -> str | None:
     primary_id = clerk_user.get("primary_email_address_id")
     addresses = clerk_user.get("email_addresses") or []
-    for entry in addresses:
-        if entry.get("id") == primary_id:
-            return entry.get("email_address")
-    return addresses[0].get("email_address") if addresses else None
+    candidates = [a for a in addresses if a.get("id") == primary_id] or addresses[:1]
+    for entry in candidates:
+        if require_verified and (entry.get("verification") or {}).get("status") != "verified":
+            continue
+        return entry.get("email_address")
+    return None
 
 
 def _provision_profile(clerk_user_id: str) -> UserService:
     clerk_user = _fetch_clerk_user(clerk_user_id)
-    email = _primary_email(clerk_user)
+    email = _primary_email(clerk_user, require_verified=True)
     if not email:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
@@ -106,6 +108,13 @@ async def get_current_user(request: Request):
     if not user:
         user = _provision_profile(clerk_user_id)
 
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Account is deactivated",
+        )
+
+    user.touch_last_login()
     return user.to_dict()
 
 
