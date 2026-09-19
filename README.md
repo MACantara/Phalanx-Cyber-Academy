@@ -176,7 +176,6 @@ npm run dev
 ## 📚 Documentation
 
 ### Core Documentation
-- **[Supabase Auth Setup](docs/supabase-auth-setup.md)** - Configure Supabase Auth email OTP for the React + FastAPI stack
 - **[Authentication System](docs/authentication.md)** - Legacy passwordless authentication details
 - **[Admin Panel](docs/admin-panel.md)** - User management and system monitoring
 - **[Deployment Guide](docs/deployment.md)** - Vercel and production deployment
@@ -226,10 +225,16 @@ npm run dev
 FLASK_ENV=development
 SECRET_KEY=your-secret-key
 
-# Database (SQLite for local dev; Supabase for Vercel)
-DATABASE_URL=sqlite:///cyberquest.db
-SUPABASE_URL=your-supabase-project-url
-SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+# Database — Neon Postgres (pooled for app, direct for Alembic)
+DATABASE_URL=postgresql+psycopg://user:pass@host-pooler.region.aws.neon.tech/db?sslmode=require
+DATABASE_URL_UNPOOLED=postgresql+psycopg://user:pass@host.region.aws.neon.tech/db?sslmode=require
+
+# Auth — Clerk (backend verification + frontend publishable key)
+CLERK_SECRET_KEY=sk_test_...
+CLERK_ISSUER=https://<app>.clerk.accounts.dev
+CLERK_JWKS_URL=https://<app>.clerk.accounts.dev/.well-known/jwks.json
+# frontend/.env.local (written by `clerk env pull`):
+VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
 
 # Email Configuration
 MAIL_SERVER=smtp.gmail.com
