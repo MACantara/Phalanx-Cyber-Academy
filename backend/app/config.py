@@ -20,12 +20,6 @@ class Settings(BaseSettings):
     clerk_jwks_url: str | None = None
     clerk_issuer: str | None = None
 
-    # Brevo transactional email
-    brevo_api_key: str | None = None
-    brevo_default_sender_email: str | None = None
-    brevo_default_sender_name: str = "Phalanx Cyber Academy"
-    brevo_suppress_send: bool = False
-
     # Login security
     max_login_attempts: int = 5
     login_lockout_minutes: int = 15
