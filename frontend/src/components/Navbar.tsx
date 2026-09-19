@@ -18,12 +18,12 @@ export function Navbar() {
         <div className="flex h-16 justify-between">
           <Link to="/" className="flex items-center gap-3">
             <img src="/logo-bg.png" alt="Phalanx Cyber Academy Logo" className="h-9 w-auto" />
-            <span className="text-sm font-extrabold uppercase tracking-tight text-ink">
+            <span className="whitespace-nowrap text-sm font-extrabold uppercase tracking-tight text-ink">
               Phalanx Cyber Academy
             </span>
           </Link>
 
-          <div className="hidden items-center gap-8 md:flex">
+          <div className="hidden items-center gap-8 lg:flex">
             <NavLink to="/">Home</NavLink>
             <NavLink to="/about">About</NavLink>
             <NavLink to="/contact">Contact</NavLink>
@@ -114,7 +114,7 @@ export function Navbar() {
             <ThemeToggle />
           </div>
 
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             <ThemeToggle />
             <button onClick={() => setMobileOpen((v) => !v)} className="p-2 text-ink" aria-label="Menu">
               <Menu className="h-6 w-6" />
@@ -124,7 +124,7 @@ export function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="space-y-1 border-t border-hairline bg-stock px-2 pb-3 pt-2 md:hidden">
+        <div className="space-y-1 border-t border-hairline bg-stock px-2 pb-3 pt-2 lg:hidden">
           <MobileLink to="/" onClick={() => setMobileOpen(false)}>Home</MobileLink>
           <MobileLink to="/about" onClick={() => setMobileOpen(false)}>About</MobileLink>
           <MobileLink to="/contact" onClick={() => setMobileOpen(false)}>Contact</MobileLink>
