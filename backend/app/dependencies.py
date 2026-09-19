@@ -43,6 +43,34 @@ def _fetch_clerk_user(clerk_user_id: str) -> dict:
         ) from exc
 
 
+def _clerk_user_exists(clerk_user_id: str) -> bool:
+    """False only when Clerk confirms the user is gone (404). Other failures → 502."""
+    if not settings.clerk_secret_key:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="CLERK_SECRET_KEY is required to provision new profiles",
+        )
+    try:
+        response = httpx.get(
+            f"https://api.clerk.com/v1/users/{clerk_user_id}",
+            headers={"Authorization": f"Bearer {settings.clerk_secret_key}"},
+            timeout=10,
+        )
+    except httpx.HTTPError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Failed to fetch user from Clerk",
+        ) from exc
+    if response.status_code == status.HTTP_404_NOT_FOUND:
+        return False
+    if response.status_code != status.HTTP_200_OK:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="Failed to verify account status with Clerk",
+        )
+    return True
+
+
 def _primary_email(clerk_user: dict, require_verified: bool = False) -> str | None:
     primary_id = clerk_user.get("primary_email_address_id")
     addresses = clerk_user.get("email_addresses") or []
@@ -68,10 +96,13 @@ def _provision_profile(clerk_user_id: str) -> UserService:
     existing = UserService.find_by_email(email)
     if existing:
         if existing.clerk_user_id and existing.clerk_user_id != clerk_user_id:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="This email is already linked to a different account",
-            )
+            if _clerk_user_exists(existing.clerk_user_id):
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="This email is already linked to a different account",
+                )
+            # Stale binding: the linked Clerk user was deleted/recreated.
+            # Verified-email match above proves same person — rebind.
         existing.clerk_user_id = clerk_user_id
         existing.save()
         return existing
