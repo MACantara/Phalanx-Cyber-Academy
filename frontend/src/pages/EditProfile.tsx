@@ -71,40 +71,41 @@ export default function EditProfile() {
   };
 
   return (
-    <section className="relative flex min-h-[80vh] items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 py-12 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900">
-      <FadeIn className="relative z-10 w-full max-w-xl rounded-2xl border border-gray-200 bg-white p-8 shadow-2xl dark:border-gray-700 dark:bg-gray-800" delay="0.1s">
-        <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">Edit Profile</h1>
-        <p className="mb-6 text-gray-600 dark:text-gray-300">Update your account details</p>
+    <section className="relative flex min-h-[80vh] items-center justify-center bg-stock px-5 py-12 transition-colors duration-300">
+      <FadeIn className="plate w-full max-w-xl p-6 sm:p-8" delay="0.1s">
+        <span className="register">Record Amendment</span>
+        <h1 className="mb-2 mt-3 text-3xl font-extrabold tracking-tight text-ink">Edit Profile</h1>
+        <p className="mb-6 text-ink-soft">Update your account details</p>
 
         <AsyncSection state={remote} onRetry={remote.reload} skeleton={<EditProfileSkeleton />}>
           <form onSubmit={handleSubmit} className="space-y-5">
             <Field label="Username" name="username" type="text" value={form.username} onChange={handleChange} />
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-300">Email</label>
-              <input id="email" name="email" type="email" value={form.email} readOnly disabled className="mt-2 w-full cursor-not-allowed rounded-xl border border-gray-300 bg-gray-100 px-4 py-3 text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400" />
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Managed by your sign-in provider</p>
+              <label htmlFor="email" className="register block">Email</label>
+              <input id="email" name="email" type="email" value={form.email} readOnly disabled className="mt-2 w-full cursor-not-allowed border border-hairline bg-stock-drift px-4 py-3 text-ink-soft" />
+              <p className="mt-1 text-xs text-ink-soft">Managed by your sign-in provider</p>
             </div>
             <Field label="Timezone" name="timezone" type="text" value={form.timezone} onChange={handleChange} />
             <div>
-              <label htmlFor="cybersecurity_experience" className="block text-sm font-semibold text-gray-700 dark:text-gray-300">Experience Level</label>
-              <select id="cybersecurity_experience" name="cybersecurity_experience" value={form.cybersecurity_experience} onChange={handleChange} className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white">
+              <label htmlFor="cybersecurity_experience" className="register block">Experience Level</label>
+              <select id="cybersecurity_experience" name="cybersecurity_experience" value={form.cybersecurity_experience} onChange={handleChange} className="mt-2 w-full border border-hairline bg-stock px-4 py-3 text-ink transition-colors focus:outline-none focus:ring-2 focus:ring-seal-ink">
                 {EXPERIENCE_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>{o.label}</option>
                 ))}
               </select>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-[44px] flex-1 bg-ink px-6 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
               <button
                 type="button"
                 onClick={() => navigate('/profile')}
-                className="rounded-xl border border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-all hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                className="min-h-[44px] border border-ink px-6 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:bg-stock-green"
               >
                 Cancel
               </button>
@@ -120,24 +121,24 @@ function EditProfileSkeleton() {
   return (
     <div className="space-y-5">
       <div>
-        <div className="h-4 w-20 rounded bg-slate-200 dark:bg-slate-700" />
-        <div className="mt-2 h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-700" />
+        <div className="h-4 w-20 bg-hairline-soft" />
+        <div className="mt-2 h-12 w-full border border-hairline bg-hairline-soft" />
       </div>
       <div>
-        <div className="h-4 w-20 rounded bg-slate-200 dark:bg-slate-700" />
-        <div className="mt-2 h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-700" />
+        <div className="h-4 w-20 bg-hairline-soft" />
+        <div className="mt-2 h-12 w-full border border-hairline bg-hairline-soft" />
       </div>
       <div>
-        <div className="h-4 w-20 rounded bg-slate-200 dark:bg-slate-700" />
-        <div className="mt-2 h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-700" />
+        <div className="h-4 w-20 bg-hairline-soft" />
+        <div className="mt-2 h-12 w-full border border-hairline bg-hairline-soft" />
       </div>
       <div>
-        <div className="h-4 w-32 rounded bg-slate-200 dark:bg-slate-700" />
-        <div className="mt-2 h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-700" />
+        <div className="h-4 w-32 bg-hairline-soft" />
+        <div className="mt-2 h-12 w-full border border-hairline bg-hairline-soft" />
       </div>
-      <div className="flex gap-3">
-        <div className="h-12 flex-1 rounded-xl bg-slate-200 dark:bg-slate-700" />
-        <div className="h-12 w-24 rounded-xl bg-slate-200 dark:bg-slate-700" />
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="h-12 flex-1 bg-hairline-soft" />
+        <div className="h-12 w-full bg-hairline-soft sm:w-24" />
       </div>
     </div>
   );
@@ -146,8 +147,8 @@ function EditProfileSkeleton() {
 function Field({ label, name, type, value, onChange }: { label: string; name: string; type: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void }) {
   return (
     <div>
-      <label htmlFor={name} className="block text-sm font-semibold text-gray-700 dark:text-gray-300">{label}</label>
-      <input id={name} name={name} type={type} value={value} onChange={onChange} className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-900 dark:text-white" />
+      <label htmlFor={name} className="register block">{label}</label>
+      <input id={name} name={name} type={type} value={value} onChange={onChange} className="mt-2 w-full border border-hairline bg-stock px-4 py-3 text-ink transition-colors focus:outline-none focus:ring-2 focus:ring-seal-ink" />
     </div>
   );
 }

@@ -43,33 +43,39 @@ export default function Contact() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-br from-green-600 via-teal-600 to-blue-600 py-20 transition-colors duration-300 dark:from-green-800 dark:via-teal-800 dark:to-blue-800">
-        <div className="absolute inset-0 bg-black/10" />
-        <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h1 className="mb-6 text-5xl font-bold text-white opacity-0 animate-fade-in-up md:text-6xl" style={{ animationFillMode: 'forwards' }}>Contact Us</h1>
-          <p className="mx-auto max-w-3xl text-xl text-gray-100 opacity-0 animate-fade-in-up md:text-2xl" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>We'd love to hear from you and discuss your next project</p>
+      {/* Header — transmission register on stock */}
+      <section className="relative overflow-hidden bg-stock py-16 transition-colors duration-300 sm:py-20">
+        <div className="dotfield absolute inset-0" aria-hidden="true" />
+        <span className="absolute left-4 top-4 font-mono text-ink opacity-50 sm:left-6 sm:top-6" aria-hidden="true">+</span>
+        <span className="absolute right-4 top-4 font-mono text-ink opacity-50 sm:right-6 sm:top-6" aria-hidden="true">+</span>
+        <span className="absolute bottom-4 left-4 font-mono text-ink opacity-50 sm:bottom-6 sm:left-6" aria-hidden="true">+</span>
+        <span className="absolute bottom-4 right-4 font-mono text-ink opacity-50 sm:bottom-6 sm:right-6" aria-hidden="true">+</span>
+
+        <div className="relative z-10 mx-auto max-w-6xl px-5 text-center sm:px-8">
+          <span className="register">Plate 01 — Communications</span>
+          <h1 className="mb-5 mt-3 text-4xl font-extrabold tracking-tight text-ink opacity-0 animate-fade-in-up sm:text-6xl" style={{ animationFillMode: 'forwards' }}>Contact Us</h1>
+          <p className="mx-auto max-w-3xl text-base text-ink-soft opacity-0 animate-fade-in-up sm:text-lg" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>We'd love to hear from you and discuss your next project</p>
         </div>
-        <div className="absolute left-20 top-20 h-32 w-32 animate-pulse rounded-full bg-white/10" />
-        <div className="absolute bottom-20 right-20 h-40 w-40 animate-pulse rounded-full bg-yellow-400/10" style={{ animationDelay: '1s' }} />
       </section>
 
-      <section className="bg-gradient-to-br from-white to-gray-50 py-20 transition-colors duration-300 dark:from-gray-900 dark:to-gray-800">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-start gap-16 lg:grid-cols-2">
+      <section className="border-t border-hairline py-14 sm:py-20">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
             <FadeIn delay="0.2s">
-              <h2 className="mb-8 text-4xl font-bold text-gray-900 dark:text-white">Send us a Message</h2>
+              <span className="register">Plate 02 — Transmission</span>
+              <h2 className="mb-6 mt-3 text-3xl tracking-tight text-ink sm:text-4xl">Send us a Message</h2>
 
               {status === 'success' && (
-                <div className="mb-6 flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 p-4 text-green-800 dark:border-green-900 dark:bg-green-900/20 dark:text-green-200">
-                  <CheckCircle className="h-5 w-5" />
-                  <p>{statusMessage}</p>
+                <div className="mb-6 flex items-center gap-3 border border-hairline border-l-2 border-l-confirm bg-stock p-4">
+                  <CheckCircle className="h-5 w-5 flex-shrink-0 text-confirm" />
+                  <p className="text-sm text-ink">{statusMessage}</p>
                 </div>
               )}
 
               {status === 'error' && (
-                <div className="mb-6 flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-red-800 dark:border-red-900 dark:bg-red-900/20 dark:text-red-200">
-                  <AlertCircle className="h-5 w-5" />
-                  <p>{statusMessage}</p>
+                <div className="mb-6 flex items-center gap-3 border border-hairline border-l-2 border-l-strike bg-stock p-4">
+                  <AlertCircle className="h-5 w-5 flex-shrink-0 text-strike" />
+                  <p className="text-sm text-ink">{statusMessage}</p>
                 </div>
               )}
 
@@ -78,20 +84,20 @@ export default function Contact() {
                 <Field label="Email Address" name="email" type="email" value={form.email} onChange={handleChange} />
                 <Field label="Subject" name="subject" type="text" value={form.subject} onChange={handleChange} />
                 <div className="space-y-2">
-                  <label htmlFor="message" className="block text-sm font-semibold text-gray-700 dark:text-gray-300">Message</label>
+                  <label htmlFor="message" className="register block">Message</label>
                   <textarea id="message" name="message" rows={6} value={form.message} onChange={handleChange} required placeholder="Enter your message"
-                    className="w-full resize-y rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 transition-all hover:shadow-md focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400" />
+                    className="w-full resize-y border border-hairline bg-stock px-4 py-3 text-ink transition-colors placeholder:text-ink-soft/60 focus:border-seal-ink focus:outline-none focus:ring-2 focus:ring-seal-ink" />
                 </div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex w-full transform items-center justify-center rounded-xl bg-gradient-to-r from-green-600 to-teal-600 px-8 py-4 text-lg font-semibold text-white shadow-xl transition-all duration-300 hover:scale-105 hover:from-green-700 hover:to-teal-700 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-green-500/25 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex min-h-[44px] w-full items-center justify-center bg-ink px-8 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink hover:text-stock focus:outline-none focus:ring-2 focus:ring-seal-ink disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-seal dark:hover:text-seal-ink"
                 >
                   {loading ? (
                     'Sending Message...'
                   ) : (
                     <>
-                      <Send className="mr-3 h-5 w-5" /> Send Message
+                      <Send className="mr-3 h-4 w-4" /> Send Message
                     </>
                   )}
                 </button>
@@ -99,27 +105,30 @@ export default function Contact() {
             </FadeIn>
 
             <FadeIn delay="0.3s">
-              <h2 className="mb-8 text-4xl font-bold text-gray-900 dark:text-white">Get in Touch</h2>
+              <span className="register">Plate 03 — Channels</span>
+              <h2 className="mb-6 mt-3 text-3xl tracking-tight text-ink sm:text-4xl">Get in Touch</h2>
               <div className="space-y-6">
-                <div className="flex items-start gap-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl hover:border-blue-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg">
-                    <MapPin className="h-6 w-6" />
+                <div className="plate reg-corners flex items-start gap-4 p-5 pt-9 transition-colors hover:border-ink sm:p-6 sm:pt-9">
+                  <span className="plate-id absolute left-3 top-3">LOC-01</span>
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center bg-seal text-seal-ink">
+                    <MapPin className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">Address</h3>
-                    <address className="mt-1 text-gray-600 dark:text-gray-300 not-italic">
+                    <h3 className="text-lg font-bold text-ink">Address</h3>
+                    <address className="mt-1 text-ink-soft not-italic">
                       Phalanx Cyber Academy HQ, Makati City, Metro Manila, Philippines
                     </address>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl hover:border-orange-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-orange-600">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-red-600 text-white shadow-lg">
-                    <Mail className="h-6 w-6" />
+                <div className="plate reg-corners flex items-start gap-4 p-5 pt-9 transition-colors hover:border-ink sm:p-6 sm:pt-9">
+                  <span className="plate-id absolute left-3 top-3">COM-01</span>
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center bg-seal text-seal-ink">
+                    <Mail className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">Email</h3>
-                    <a href="mailto:contact@example.com" className="mt-1 block text-gray-600 transition-colors hover:text-orange-500 dark:text-gray-300">
+                    <h3 className="text-lg font-bold text-ink">Email</h3>
+                    <a href="mailto:contact@example.com" className="mt-1 block text-seal-ink underline underline-offset-[3px] transition-colors">
                       contact@example.com
                     </a>
                   </div>
@@ -136,9 +145,9 @@ export default function Contact() {
 function Field({ label, name, type, value, onChange }: { label: string; name: string; type: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void }) {
   return (
     <div className="space-y-2">
-      <label htmlFor={name} className="block text-sm font-semibold text-gray-700 dark:text-gray-300">{label}</label>
+      <label htmlFor={name} className="register block">{label}</label>
       <input id={name} name={name} type={type} value={value} onChange={onChange} required
-        className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 transition-all hover:shadow-md focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400" />
+        className="w-full border border-hairline bg-stock px-4 py-3 text-ink transition-colors placeholder:text-ink-soft/60 focus:border-seal-ink focus:outline-none focus:ring-2 focus:ring-seal-ink" />
     </div>
   );
 }

@@ -8,11 +8,11 @@ const icons = {
   info: Info,
 };
 
-const styles = {
-  success: 'border-green-200 bg-green-50 text-green-800 dark:border-green-700 dark:bg-green-900/90 dark:text-green-200',
-  error: 'border-red-200 bg-red-50 text-red-800 dark:border-red-700 dark:bg-red-900/90 dark:text-red-200',
-  warning: 'border-yellow-200 bg-yellow-50 text-yellow-800 dark:border-yellow-700 dark:bg-yellow-900/90 dark:text-yellow-200',
-  info: 'border-blue-200 bg-blue-50 text-blue-800 dark:border-blue-700 dark:bg-blue-900/90 dark:text-blue-200',
+const edge = {
+  success: 'border-l-confirm text-confirm',
+  error: 'border-l-strike text-strike',
+  warning: 'border-l-strike text-strike',
+  info: 'border-l-seal-ink text-seal-ink',
 };
 
 export function ToastContainer() {
@@ -27,11 +27,11 @@ export function ToastContainer() {
         return (
           <div
             key={toast.id}
-            className={`flex items-center justify-between rounded-xl p-4 text-sm shadow-lg ${styles[toast.type]} animate-slide-in-right`}
+            className={`flex items-center justify-between border border-hairline border-l-2 bg-stock p-4 text-sm ${edge[toast.type]} animate-slide-in-right`}
           >
             <div className="flex items-center gap-2">
               <Icon className="h-5 w-5 flex-shrink-0" />
-              <span className="font-medium">{toast.message}</span>
+              <span className="font-medium text-ink">{toast.message}</span>
             </div>
             <button
               onClick={() => removeToast(toast.id)}

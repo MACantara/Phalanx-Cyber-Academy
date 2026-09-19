@@ -11,11 +11,6 @@ export default function Cookies() {
       title="Cookie Policy"
       subtitle="How we use cookies and similar technologies"
       icon={Cookie}
-      headerGradient="from-orange-600 to-amber-600"
-      subtitleColor="text-orange-100"
-      dateBarBg="bg-orange-50 dark:bg-orange-900/20"
-      dateBarBorder="border-b border-orange-200 dark:border-orange-800"
-      dateText="text-orange-800 dark:text-orange-200"
       updated={updated}
       effective={effective}
     >
@@ -109,21 +104,21 @@ export default function Cookies() {
           </P>
         </SubSection>
         <Grid cols={2}>
-          <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl">
-            <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Chrome</h4>
-            <p className="text-blue-800 dark:text-blue-200 text-sm">Settings → Privacy and Security → Cookies</p>
+          <div className="border border-hairline bg-stock p-4">
+            <h4 className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.16em] text-ink">Chrome</h4>
+            <p className="text-sm text-ink-soft">Settings → Privacy and Security → Cookies</p>
           </div>
-          <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-xl">
-            <h4 className="font-semibold text-orange-900 dark:text-orange-100 mb-2">Firefox</h4>
-            <p className="text-orange-800 dark:text-orange-200 text-sm">Options → Privacy &amp; Security → Cookies</p>
+          <div className="border border-hairline bg-stock p-4">
+            <h4 className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.16em] text-ink">Firefox</h4>
+            <p className="text-sm text-ink-soft">Options → Privacy &amp; Security → Cookies</p>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl">
-            <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Safari</h4>
-            <p className="text-gray-800 dark:text-gray-200 text-sm">Preferences → Privacy → Cookies</p>
+          <div className="border border-hairline bg-stock p-4">
+            <h4 className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.16em] text-ink">Safari</h4>
+            <p className="text-sm text-ink-soft">Preferences → Privacy → Cookies</p>
           </div>
-          <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl">
-            <h4 className="font-semibold text-purple-900 dark:text-purple-100 mb-2">Edge</h4>
-            <p className="text-purple-800 dark:text-purple-200 text-sm">Settings → Cookies and Site Permissions</p>
+          <div className="border border-hairline bg-stock p-4">
+            <h4 className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.16em] text-ink">Edge</h4>
+            <p className="text-sm text-ink-soft">Settings → Cookies and Site Permissions</p>
           </div>
         </Grid>
         <Callout color="yellow" title="Important Note" icon={<AlertTriangle className="h-5 w-5" />}>
@@ -147,11 +142,11 @@ export default function Cookies() {
       </Section>
 
       <Section title="9. Contact Us">
-        <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl mb-6">
+        <div className="mb-6 border border-hairline bg-stock p-6">
           <P className="mb-4">
             If you have any questions about our use of cookies, please contact us:
           </P>
-          <div className="space-y-2 text-gray-700 dark:text-gray-300">
+          <div className="space-y-2 text-ink-soft">
             <p><strong>Email:</strong> privacy@example.com</p>
             <p><strong>Address:</strong> [Your Company Address]</p>
             <p><strong>Phone:</strong> [Your Contact Number]</p>

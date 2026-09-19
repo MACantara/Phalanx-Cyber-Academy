@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useData } from '../hooks/useData';
 import AsyncSection from '../components/AsyncSection';
 import { FadeIn } from '../components/Animated';
-import { UserCircle, CheckCircle, XCircle, Mail, Globe, Clock, Calendar, Award, Pencil, type LucideIcon } from 'lucide-react';
+import { UserCircle, CheckCircle, XCircle, Mail, Globe, Clock, Calendar, Award, Trophy, Pencil, type LucideIcon } from 'lucide-react';
 
 interface UserProfile {
   id: string;
@@ -32,27 +32,30 @@ export default function Profile() {
   }, [profile.data, setContextUser]);
 
   return (
-    <section className="min-h-screen bg-gray-50 py-12 transition-colors dark:bg-gray-900">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <section className="min-h-screen bg-stock py-12 transition-colors duration-300">
+      <div className="mx-auto max-w-4xl px-5 sm:px-8">
         <AsyncSection state={profile} onRetry={profile.reload} skeleton={<ProfileSkeleton />}>
           {profile.data && (
             <FadeIn>
-              <div className="overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-gray-800">
-                <div className="px-6 py-8">
-                  <div className="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between">
-                    <div className="mb-4 flex items-center space-x-4 lg:mb-0">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
-                        <UserCircle className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              <div className="plate reg-corners">
+                <div className="px-5 py-8 sm:px-8">
+                  <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-seal text-seal-ink">
+                        <UserCircle className="h-7 w-7" />
                       </div>
-                      <h1 className="text-3xl font-bold text-gray-900 dark:text-white">User Profile</h1>
+                      <div>
+                        <span className="plate-id">USR-{profile.data.id.slice(0, 6).toUpperCase()}</span>
+                        <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-ink">User Profile</h1>
+                      </div>
                     </div>
 
-                    <div className="flex flex-col gap-3 md:flex-row">
+                    <div className="flex flex-col gap-3 sm:flex-row">
                       <span
-                        className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold shadow-md transition-all hover:scale-105 ${
+                        className={`inline-flex min-h-[44px] items-center border px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] ${
                           profile.data.is_active
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                            ? 'border-confirm text-confirm'
+                            : 'border-strike text-strike'
                         }`}
                       >
                         {profile.data.is_active ? (
@@ -65,7 +68,7 @@ export default function Profile() {
                           </>
                         )}
                       </span>
-                      <span className="inline-flex items-center rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-800 shadow-md transition-all hover:scale-105 dark:bg-blue-900 dark:text-blue-200">
+                      <span className="inline-flex min-h-[44px] items-center border border-hairline px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-soft">
                         <Calendar className="mr-2 h-4 w-4" /> Member since {formatDate(profile.data.created_at)}
                       </span>
                     </div>
@@ -77,22 +80,23 @@ export default function Profile() {
                     <ProfileField label="Timezone" icon={Globe} value={profile.data.timezone || 'UTC'} />
                     <ProfileField label="Member Since" icon={Calendar} value={formatDate(profile.data.created_at)} />
                     <ProfileField label="Experience Level" icon={Award} value={profile.data.cybersecurity_experience || 'Not set'} />
+                    <ProfileField label="Marks Record" icon={Trophy} value={`MARKS ${profile.data.total_xp}`} />
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-700 dark:bg-gray-900/50 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex flex-col gap-3 border-t border-hairline bg-stock-drift px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0 sm:px-8">
+                  <div className="flex items-center text-sm text-ink-soft">
                     <Clock className="mr-1 h-4 w-4" />
-                    <span>
+                    <span className="register">
                       Last login:{' '}
                       {profile.data.last_login ? formatDateTime(profile.data.last_login) : 'First time login'}
                     </span>
                   </div>
                   <Link
                     to="/profile/edit"
-                    className="inline-flex items-center rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-md transition-all hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg hover:scale-105"
+                    className="inline-flex min-h-[44px] items-center bg-ink px-6 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink"
                   >
-                    <Pencil className="mr-1 h-4 w-4" /> Edit Profile
+                    <Pencil className="mr-2 h-4 w-4" /> Edit Profile
                   </Link>
                 </div>
               </div>
@@ -106,30 +110,33 @@ export default function Profile() {
 
 function ProfileSkeleton() {
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-xl dark:bg-gray-800">
-      <div className="px-6 py-8">
-        <div className="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between">
-          <div className="mb-4 flex items-center space-x-4 lg:mb-0">
-            <div className="h-12 w-12 rounded-full bg-slate-200 dark:bg-slate-700" />
-            <div className="h-8 w-48 rounded bg-slate-200 dark:bg-slate-700" />
+    <div className="plate">
+      <div className="px-5 py-8 sm:px-8">
+        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="h-14 w-14 rounded-full bg-hairline-soft" />
+            <div className="space-y-2">
+              <div className="h-4 w-20 bg-hairline-soft" />
+              <div className="h-8 w-48 bg-hairline-soft" />
+            </div>
           </div>
-          <div className="flex flex-col gap-3 md:flex-row">
-            <div className="h-8 w-32 rounded-full bg-slate-200 dark:bg-slate-700" />
-            <div className="h-8 w-36 rounded-full bg-slate-200 dark:bg-slate-700" />
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="h-11 w-36 border border-hairline bg-hairline-soft" />
+            <div className="h-11 w-44 border border-hairline bg-hairline-soft" />
           </div>
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {[...Array(5)].map((_, i) => (
+          {[...Array(6)].map((_, i) => (
             <div key={i} className="space-y-2">
-              <div className="h-4 w-24 rounded bg-slate-200 dark:bg-slate-700" />
-              <div className="h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-700" />
+              <div className="h-4 w-24 bg-hairline-soft" />
+              <div className="h-12 w-full border border-hairline bg-hairline-soft" />
             </div>
           ))}
         </div>
       </div>
-      <div className="flex flex-col gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-700 dark:bg-gray-900/50 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
-        <div className="h-4 w-48 rounded bg-slate-200 dark:bg-slate-700" />
-        <div className="h-10 w-32 rounded-lg bg-slate-200 dark:bg-slate-700" />
+      <div className="flex flex-col gap-3 border-t border-hairline bg-stock-drift px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0 sm:px-8">
+        <div className="h-4 w-48 bg-hairline-soft" />
+        <div className="h-11 w-32 bg-hairline-soft" />
       </div>
     </div>
   );
@@ -138,9 +145,9 @@ function ProfileSkeleton() {
 function ProfileField({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300">{label}</label>
-      <div className="flex items-center overflow-hidden rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-gray-900 transition-all hover:bg-gray-100 hover:shadow-md dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
-        <Icon className="mr-2 h-5 w-5 flex-shrink-0 text-gray-500 dark:text-gray-400" />
+      <label className="register mb-2 block">{label}</label>
+      <div className="flex items-center overflow-hidden border border-hairline bg-stock px-4 py-3 text-ink transition-colors hover:bg-stock-green">
+        <Icon className="mr-2 h-5 w-5 flex-shrink-0 text-ink-soft" />
         <span className="truncate">{value}</span>
       </div>
     </div>

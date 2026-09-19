@@ -21,7 +21,7 @@ function renderImage(content: string, title: string) {
       <img
         src={src}
         alt={title}
-        className="max-h-96 max-w-full rounded-lg border border-slate-600 object-contain"
+        className="max-h-96 max-w-full border border-hairline object-contain"
       />
     </div>
   );
@@ -29,7 +29,7 @@ function renderImage(content: string, title: string) {
 
 function renderHex(content: string) {
   return (
-    <pre className="overflow-auto rounded bg-slate-950 p-4 font-mono text-xs text-green-400">
+    <pre className="overflow-auto border border-hairline bg-stock-drift p-4 font-mono text-xs text-confirm">
       {content}
     </pre>
   );
@@ -37,7 +37,7 @@ function renderHex(content: string) {
 
 function renderPackets(content: string) {
   return (
-    <pre className="overflow-auto rounded bg-slate-950 p-4 font-mono text-xs text-blue-300">
+    <pre className="overflow-auto border border-hairline bg-stock-drift p-4 font-mono text-xs text-seal-ink">
       {content}
     </pre>
   );
@@ -45,7 +45,7 @@ function renderPackets(content: string) {
 
 function renderText(content: string) {
   return (
-    <pre className="overflow-auto whitespace-pre-wrap rounded bg-slate-950 p-4 font-mono text-xs text-slate-300">
+    <pre className="overflow-auto whitespace-pre-wrap border border-hairline bg-stock-drift p-4 font-mono text-xs text-ink-soft">
       {content}
     </pre>
   );
@@ -54,8 +54,8 @@ function renderText(content: string) {
 export function EvidenceViewer({ item }: EvidenceViewerProps) {
   if (!item) {
     return (
-      <div className="flex h-full items-center justify-center rounded-lg border border-slate-600 bg-slate-900 p-6 text-slate-400">
-        Select an evidence item to view
+      <div className="plate flex h-full items-center justify-center p-6">
+        <span className="register">Select an exhibit to view</span>
       </div>
     );
   }
@@ -63,16 +63,14 @@ export function EvidenceViewer({ item }: EvidenceViewerProps) {
   const Icon = kindIcons[item.kind] ?? FileText;
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-lg border border-slate-600 bg-slate-900 p-4">
-      <div className="mb-3 flex items-center gap-2 border-b border-slate-700 pb-2">
-        <Icon className="h-5 w-5 text-blue-400" />
-        <h4 className="font-semibold text-white">{item.title}</h4>
-        <span className="ml-auto rounded bg-slate-700 px-2 py-0.5 text-xs text-slate-300">
-          {item.kind}
-        </span>
+    <div className="plate flex h-full flex-col overflow-hidden p-4">
+      <div className="mb-3 flex items-center gap-2 border-b border-hairline pb-2">
+        <Icon className="h-5 w-5 text-seal-ink" />
+        <h4 className="font-semibold text-ink">{item.title}</h4>
+        <span className="plate-id ml-auto">{item.kind}</span>
       </div>
       {item.description && (
-        <p className="mb-3 text-sm text-slate-400">{item.description}</p>
+        <p className="mb-3 text-sm text-ink-soft">{item.description}</p>
       )}
       <div className="flex-1 overflow-auto">
         {item.kind === 'image' && renderImage(item.content, item.title)}

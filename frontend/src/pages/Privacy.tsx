@@ -11,11 +11,6 @@ export default function Privacy() {
       title="Privacy Policy"
       subtitle="Your privacy and data protection rights under RA 10173"
       icon={Shield}
-      headerGradient="from-blue-600 to-indigo-600"
-      subtitleColor="text-blue-100"
-      dateBarBg="bg-blue-50 dark:bg-blue-900/20"
-      dateBarBorder="border-b border-blue-200 dark:border-blue-800"
-      dateText="text-blue-800 dark:text-blue-200"
       updated={updated}
       effective={effective}
     >
@@ -29,7 +24,7 @@ export default function Privacy() {
       </Section>
 
       <Section title="2. Data Controller Information">
-        <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl mb-6">
+        <div className="mb-6 border border-hairline bg-stock p-6">
           <P className="mb-2"><strong>Personal Information Controller:</strong> Phalanx Cyber Academy</P>
           <P className="mb-2"><strong>Address:</strong> [Your Company Address]</P>
           <P className="mb-2"><strong>Email:</strong> privacy@example.com</P>
@@ -40,21 +35,21 @@ export default function Privacy() {
 
       <Section title="3. Definitions (Per RA 10173)">
         <div className="space-y-4 mb-6">
-          <div className="border-l-4 border-blue-500 pl-4">
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Personal Information</h4>
-            <p className="text-gray-700 dark:text-gray-300 text-sm">
+          <div className="border-l-2 border-l-seal-ink pl-4">
+            <h4 className="mb-2 font-semibold text-ink">Personal Information</h4>
+            <p className="text-sm text-ink-soft">
               Any information, whether recorded in material form or not, from which your identity is apparent or can be reasonably and directly ascertained, or when put together with other information would directly and certainly identify you as an individual.
             </p>
           </div>
-          <div className="border-l-4 border-orange-500 pl-4">
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Sensitive Personal Information</h4>
-            <p className="text-gray-700 dark:text-gray-300 text-sm">
+          <div className="border-l-2 border-l-strike pl-4">
+            <h4 className="mb-2 font-semibold text-ink">Sensitive Personal Information</h4>
+            <p className="text-sm text-ink-soft">
               Personal information about your race, ethnic origin, marital status, age, color, religious, philosophical or political affiliations, health, education, genetic or sexual life, or information about criminal proceedings.
             </p>
           </div>
-          <div className="border-l-4 border-green-500 pl-4">
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Processing</h4>
-            <p className="text-gray-700 dark:text-gray-300 text-sm">
+          <div className="border-l-2 border-l-confirm pl-4">
+            <h4 className="mb-2 font-semibold text-ink">Processing</h4>
+            <p className="text-sm text-ink-soft">
               Any operation performed upon personal information including collection, recording, organization, storage, updating, retrieval, consultation, use, consolidation, blocking, erasure or destruction of data.
             </p>
           </div>
@@ -211,8 +206,8 @@ export default function Privacy() {
         <P className="mb-4">
           In accordance with Section 11(e) of RA 10173, we retain personal information only for as long as necessary for the fulfillment of the purposes for which the data was obtained, for the establishment, exercise or defense of legal claims, or for legitimate business purposes.
         </P>
-        <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl mb-6">
-          <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">Retention Periods by Data Type</h4>
+        <div className="mb-6 border border-hairline bg-stock p-4">
+          <h4 className="mb-3 font-semibold text-ink">Retention Periods by Data Type</h4>
           <Ul className="text-sm mb-0">
             <Li><strong>Account data:</strong> Retained until you request deletion</Li>
             <Li><strong>Security logs:</strong> Automatically deleted after 30 days</Li>
@@ -247,11 +242,11 @@ export default function Privacy() {
       </Section>
 
       <Section title="14. Contact Us">
-        <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-xl mb-6">
+        <div className="mb-6 border border-hairline bg-stock p-6">
           <P className="mb-4">
             If you have any questions about this Privacy Policy or wish to exercise your rights under RA 10173, please contact us:
           </P>
-          <div className="space-y-2 text-gray-700 dark:text-gray-300">
+          <div className="space-y-2 text-ink-soft">
             <p><strong>Data Protection Officer:</strong> [DPO Name]</p>
             <p><strong>Email:</strong> privacy@example.com</p>
             <p><strong>Address:</strong> [Your Company Address]</p>

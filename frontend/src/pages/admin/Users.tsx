@@ -4,7 +4,8 @@ import { api } from '../../lib/api';
 import { useData } from '../../hooks/useData';
 import AsyncSection from '../../components/AsyncSection';
 import { FadeIn } from '../../components/Animated';
-import { Search, ChevronLeft, ChevronRight, Power, UserCog } from 'lucide-react';
+import { Pagination } from '../../components/Pagination';
+import { Search, Power, UserCog } from 'lucide-react';
 
 interface UserRecord {
   id: number;
@@ -71,22 +72,23 @@ export default function Users() {
   };
 
   return (
-    <section className="relative min-h-[80vh] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 py-12">
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <FadeIn className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-center">
+    <section className="min-h-[80vh] bg-stock py-12">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <FadeIn className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1 className="text-4xl font-bold text-white md:text-5xl">Manage Users</h1>
-            <p className="mt-2 text-lg text-slate-300">Search, filter, and review user accounts</p>
+            <span className="register">Admin — User Register</span>
+            <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">Manage Users</h1>
+            <p className="mt-2 text-sm text-ink-soft sm:text-base">Search, filter, and review user accounts</p>
           </div>
-          <Link to="/admin" className="rounded-xl bg-slate-700 px-5 py-2 font-semibold text-white transition-all hover:bg-slate-600">
+          <Link to="/admin" className="inline-flex min-h-[44px] items-center justify-center border border-hairline bg-stock px-5 py-2 font-mono text-xs uppercase tracking-[0.14em] text-ink transition-colors hover:border-ink hover:bg-stock-green">
             Back to Dashboard
           </Link>
         </FadeIn>
 
         <FadeIn delay="0.1s">
-          <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-slate-700 bg-slate-800/70 p-4 shadow-lg backdrop-blur-md md:flex-row md:items-end">
+          <div className="plate mb-6 flex flex-col gap-4 p-4 sm:flex-row sm:items-end">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" />
               <input
                 type="text"
                 value={search}
@@ -95,7 +97,7 @@ export default function Users() {
                   setPage(1);
                 }}
                 placeholder="Search by username or email"
-                className="w-full rounded-xl border border-slate-600 bg-slate-900 py-2 pl-10 pr-4 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+                className="w-full border border-hairline bg-stock py-2.5 pl-10 pr-4 text-sm text-ink placeholder:text-ink-soft/60 focus:border-seal-ink focus:outline-none focus:ring-2 focus:ring-seal-ink/40"
               />
             </div>
             <select
@@ -104,7 +106,7 @@ export default function Users() {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="cursor-pointer rounded-xl border border-slate-600 bg-slate-900 px-4 py-2 text-white focus:border-blue-500 focus:outline-none"
+              className="cursor-pointer border border-hairline bg-stock px-4 py-2.5 text-sm text-ink focus:border-seal-ink focus:outline-none focus:ring-2 focus:ring-seal-ink/40"
             >
               <option value="all">All</option>
               <option value="active">Active</option>
@@ -113,7 +115,7 @@ export default function Users() {
             </select>
             <button
               onClick={() => setShowCreate((s) => !s)}
-              className="rounded-xl bg-blue-600 px-5 py-2 font-semibold text-white transition-all hover:bg-blue-500"
+              className="inline-flex min-h-[44px] items-center justify-center bg-ink px-5 py-2.5 font-mono text-xs uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink hover:text-stock dark:hover:bg-seal dark:hover:text-seal-ink"
             >
               {showCreate ? 'Cancel' : 'Create User'}
             </button>
@@ -121,100 +123,102 @@ export default function Users() {
           {showCreate && (
             <form
               onSubmit={handleCreate}
-              className="mb-6 flex flex-col gap-4 rounded-2xl border border-slate-700 bg-slate-800/70 p-4 shadow-lg backdrop-blur-md md:flex-row md:items-start"
+              className="plate mb-6 flex flex-col gap-4 p-4 sm:flex-row sm:items-end"
             >
               <div className="flex-1">
-                <label className="mb-1 block text-xs text-slate-400">Email</label>
+                <label className="register mb-2 block">Email</label>
                 <input
                   type="email"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   required
-                  className="w-full rounded-xl border border-slate-600 bg-slate-900 px-4 py-2 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+                  className="w-full border border-hairline bg-stock px-4 py-2.5 text-sm text-ink placeholder:text-ink-soft/60 focus:border-seal-ink focus:outline-none focus:ring-2 focus:ring-seal-ink/40"
                   placeholder="user@example.com"
                 />
               </div>
               <div className="flex-1">
-                <label className="mb-1 block text-xs text-slate-400">Username (optional)</label>
+                <label className="register mb-2 block">Username (optional)</label>
                 <input
                   type="text"
                   value={newUsername}
                   onChange={(e) => setNewUsername(e.target.value)}
-                  className="w-full rounded-xl border border-slate-600 bg-slate-900 px-4 py-2 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+                  className="w-full border border-hairline bg-stock px-4 py-2.5 text-sm text-ink placeholder:text-ink-soft/60 focus:border-seal-ink focus:outline-none focus:ring-2 focus:ring-seal-ink/40"
                   placeholder="username"
                 />
               </div>
-              <div className="flex items-center gap-2 py-3 md:py-0">
+              <div className="flex items-center gap-2 py-2.5">
                 <input
                   id="new-is-admin"
                   type="checkbox"
                   checked={newIsAdmin}
                   onChange={(e) => setNewIsAdmin(e.target.checked)}
-                  className="h-4 w-4 rounded border-slate-600 bg-slate-900 text-blue-600 focus:ring-blue-500"
+                  className="h-4 w-4 border-hairline bg-stock accent-seal-ink"
                 />
-                <label htmlFor="new-is-admin" className="text-sm text-slate-300">Admin</label>
+                <label htmlFor="new-is-admin" className="font-mono text-xs uppercase tracking-[0.14em] text-ink">Admin</label>
               </div>
               <button
                 type="submit"
-                className="rounded-xl bg-green-600 px-5 py-2 font-semibold text-white transition-all hover:bg-green-500"
+                className="inline-flex min-h-[44px] items-center justify-center bg-ink px-5 py-2.5 font-mono text-xs uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink hover:text-stock dark:hover:bg-seal dark:hover:text-seal-ink"
               >
                 Add User
               </button>
             </form>
           )}
           {createError && (
-            <p className="mb-6 rounded-lg bg-red-100 p-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-200">
+            <p className="mb-6 border border-strike/60 bg-stock px-4 py-3 font-mono text-sm text-strike">
               {createError}
             </p>
           )}
         </FadeIn>
 
         <FadeIn delay="0.2s">
-          <div className="overflow-hidden rounded-2xl border border-slate-700 bg-slate-800/70 shadow-lg backdrop-blur-md">
-            <table className="w-full text-left text-sm text-slate-300">
-              <thead className="border-b border-slate-600 bg-slate-700/50 text-slate-200">
+          <div className="overflow-x-auto">
+            <table className="min-w-full border border-ink bg-stock text-left text-sm text-ink">
+              <thead className="bg-stock-drift font-mono text-[10px] uppercase tracking-[0.16em] text-ink-soft">
                 <tr>
-                  <th className="px-4 py-3">Username</th>
-                  <th className="px-4 py-3">Email</th>
-                  <th className="px-4 py-3">XP</th>
-                  <th className="px-4 py-3">Verified</th>
-                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3 font-normal">Username</th>
+                  <th className="px-4 py-3 font-normal">Email</th>
+                  <th className="px-4 py-3 font-normal">XP</th>
+                  <th className="px-4 py-3 font-normal">Verified</th>
+                  <th className="px-4 py-3 font-normal">Status</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-hairline">
                 <AsyncSection state={usersData} onRetry={usersData.reload} skeleton={<UsersTableSkeleton />}>
                   {usersData.data.users.length === 0 ? (
-                    <tr><td colSpan={6} className="px-4 py-6 text-center">No users found.</td></tr>
+                    <tr><td colSpan={6} className="px-4 py-6 text-center text-ink-soft">No users found.</td></tr>
                   ) : (
                     usersData.data.users.map((u) => (
-                      <tr key={u.id} className="border-b border-slate-700/50 hover:bg-slate-700/30">
+                      <tr key={u.id} className="transition-colors hover:bg-stock-green">
                         <td className="px-4 py-3">{u.username || '—'}</td>
                         <td className="px-4 py-3">{u.email}</td>
-                        <td className="px-4 py-3">{u.total_xp}</td>
-                        <td className="px-4 py-3">{u.is_verified ? 'Yes' : 'No'}</td>
+                        <td className="px-4 py-3 font-mono text-xs">{u.total_xp}</td>
                         <td className="px-4 py-3">
-                          <span className={`rounded-full px-2 py-1 text-xs font-medium ${u.is_active ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'}`}>
-                            {u.is_active ? 'Active' : 'Inactive'}
+                          <span className={`font-mono text-[10px] uppercase tracking-[0.16em] ${u.is_verified ? 'text-confirm' : 'text-ink-soft'}`}>
+                            {u.is_verified ? '✓ Yes' : '✗ No'}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className={`font-mono text-[10px] uppercase tracking-[0.16em] ${u.is_active ? 'text-confirm' : 'text-strike'}`}>
+                            {u.is_active ? '✓ Active' : '✗ Inactive'}
                           </span>
                         </td>
                         <td className="px-4 py-3 text-right">
                           <div className="flex items-center justify-end gap-2">
                             <button
                               onClick={() => handleAction(u.id, 'toggle_active')}
-                              title={u.is_active ? 'Deactivate' : 'Activate'}
-                              className="rounded bg-slate-700 p-1.5 text-slate-200 transition-colors hover:bg-slate-600"
+                              className={`inline-flex items-center border px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] transition-colors ${u.is_active ? 'border-strike text-strike hover:bg-strike/10' : 'border-confirm text-confirm hover:bg-confirm/10'}`}
                             >
-                              <Power className="h-4 w-4" />
+                              <Power className="mr-1.5 h-3.5 w-3.5" /> {u.is_active ? 'Deactivate' : 'Activate'}
                             </button>
                             <button
                               onClick={() => handleAction(u.id, 'toggle_admin')}
-                              title={u.is_admin ? 'Revoke admin' : 'Make admin'}
-                              className="rounded bg-slate-700 p-1.5 text-slate-200 transition-colors hover:bg-slate-600"
+                              className="inline-flex items-center border border-hairline px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-soft transition-colors hover:border-ink hover:text-ink"
                             >
-                              <UserCog className="h-4 w-4" />
+                              <UserCog className="mr-1.5 h-3.5 w-3.5" /> {u.is_admin ? 'Revoke Admin' : 'Make Admin'}
                             </button>
-                            <Link to={`/admin/users/${u.id}`} className="ml-2 text-blue-400 hover:underline">View</Link>
+                            <Link to={`/admin/users/${u.id}`} className="ml-1 font-mono text-xs uppercase tracking-[0.14em] text-seal-ink underline-offset-[3px] hover:underline">View</Link>
                           </div>
                         </td>
                       </tr>
@@ -227,22 +231,8 @@ export default function Users() {
         </FadeIn>
 
         {totalPages > 1 && (
-          <FadeIn className="mt-6 flex items-center justify-between text-slate-300" delay="0.3s">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1}
-              className="flex items-center rounded-xl bg-slate-800 px-4 py-2 text-white transition-all hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-            </button>
-            <span>Page {page} of {totalPages}</span>
-            <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page >= totalPages}
-              className="flex items-center rounded-xl bg-slate-800 px-4 py-2 text-white transition-all hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Next <ChevronRight className="ml-2 h-4 w-4" />
-            </button>
+          <FadeIn className="mt-6" delay="0.3s">
+            <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
           </FadeIn>
         )}
       </div>
@@ -253,22 +243,14 @@ export default function Users() {
 function UsersTableSkeleton() {
   return (
     <>
-      <tr className="border-b border-slate-600">
-        <td className="px-4 py-3"><div className="h-4 w-28 rounded bg-slate-500/30" /></td>
-        <td className="px-4 py-3"><div className="h-4 w-48 rounded bg-slate-500/30" /></td>
-        <td className="px-4 py-3"><div className="h-4 w-12 rounded bg-slate-500/30" /></td>
-        <td className="px-4 py-3"><div className="h-4 w-14 rounded bg-slate-500/30" /></td>
-        <td className="px-4 py-3"><div className="h-6 w-16 rounded-full bg-slate-500/30" /></td>
-        <td className="px-4 py-3"><div className="h-4 w-8 rounded bg-slate-500/30" /></td>
-      </tr>
-      {[...Array(4)].map((_, i) => (
-        <tr key={i} className="border-b border-slate-700/50">
-          <td className="px-4 py-3"><div className="h-4 w-24 rounded bg-slate-500/30" /></td>
-          <td className="px-4 py-3"><div className="h-4 w-48 rounded bg-slate-500/30" /></td>
-          <td className="px-4 py-3"><div className="h-4 w-12 rounded bg-slate-500/30" /></td>
-          <td className="px-4 py-3"><div className="h-4 w-10 rounded bg-slate-500/30" /></td>
-          <td className="px-4 py-3"><div className="h-6 w-16 rounded-full bg-slate-500/30" /></td>
-          <td className="px-4 py-3"><div className="h-4 w-8 rounded bg-slate-500/30" /></td>
+      {[...Array(5)].map((_, i) => (
+        <tr key={i}>
+          <td className="px-4 py-3"><div className="h-4 w-24 bg-ink-soft/20" /></td>
+          <td className="px-4 py-3"><div className="h-4 w-48 bg-ink-soft/20" /></td>
+          <td className="px-4 py-3"><div className="h-4 w-12 bg-ink-soft/20" /></td>
+          <td className="px-4 py-3"><div className="h-4 w-14 bg-ink-soft/20" /></td>
+          <td className="px-4 py-3"><div className="h-4 w-16 bg-ink-soft/20" /></td>
+          <td className="px-4 py-3"><div className="ml-auto h-6 w-40 bg-ink-soft/20" /></td>
         </tr>
       ))}
     </>

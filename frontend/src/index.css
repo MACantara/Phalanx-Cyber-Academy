@@ -4,49 +4,65 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Design Annual tokens — paper stock (light) / carbon plate (dark) */
+@theme {
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Chivo Mono', ui-monospace, monospace;
+
+  --color-stock: #f5f4f6;
+  --color-stock-drift: #faf6f5;
+  --color-stock-green: #eef3ef;
+  --color-ink: #16181a;
+  --color-ink-soft: #5a5c5e;
+  --color-hairline: #c9c7c4;
+  --color-hairline-soft: #dddcda;
+  --color-seal: #dcddf3;
+  --color-seal-ink: #3c3d63;
+  --color-strike: #b03a2e;
+  --color-confirm: #2e7d4f;
+
+  --radius: 0rem;
+}
+
+.dark {
+  --color-stock: #141518;
+  --color-stock-drift: #1b1c20;
+  --color-stock-green: #15201a;
+  --color-ink: #ebe9e4;
+  --color-ink-soft: #9b9c97;
+  --color-hairline: #33353a;
+  --color-hairline-soft: #26272c;
+  --color-seal: #2e2f45;
+  --color-seal-ink: #c9cbef;
+  --color-strike: #d0674f;
+  --color-confirm: #5fa878;
+}
+
+/* shadcn/ui + Clerk bridge onto the Design Annual tokens */
 :root {
   color-scheme: light;
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.546 0.245 262.881);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.546 0.245 262.881);
+  --background: var(--color-stock);
+  --foreground: var(--color-ink);
+  --card: var(--color-stock);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-stock);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-ink);
+  --primary-foreground: var(--color-stock);
+  --secondary: var(--color-stock-green);
+  --secondary-foreground: var(--color-ink);
+  --muted: var(--color-stock-drift);
+  --muted-foreground: var(--color-ink-soft);
+  --accent: var(--color-seal);
+  --accent-foreground: var(--color-seal-ink);
+  --destructive: var(--color-strike);
+  --border: var(--color-hairline);
+  --input: var(--color-hairline);
+  --ring: var(--color-seal-ink);
 }
 
 .dark {
   color-scheme: dark;
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.623 0.214 259.815);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.623 0.214 259.815);
 }
 
 @layer base {
@@ -54,7 +70,112 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-gray-50 text-gray-900 antialiased transition-colors duration-300 dark:bg-gray-900 dark:text-white;
+    @apply bg-stock text-ink antialiased transition-colors duration-300;
+  }
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-stock);
+  }
+}
+
+/* ---------- primitives ---------- */
+
+/* plate: bordered surface with registration corners */
+@utility plate {
+  position: relative;
+  border: 1px solid var(--color-hairline);
+  background: var(--color-stock);
+}
+@utility plate-strong {
+  border-color: var(--color-ink);
+}
+@utility reg-corners {
+  &::before,
+  &::after {
+    content: '+';
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-ink);
+    opacity: 0.5;
+    line-height: 1;
+  }
+  &::before {
+    top: 0.35rem;
+    left: 0.45rem;
+  }
+  &::after {
+    bottom: 0.35rem;
+    right: 0.45rem;
+  }
+}
+
+/* plate id chip: PLT-03, EXH-01, MSN-07 */
+@utility plate-id {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  padding: 2px 7px;
+  background: var(--color-seal);
+  color: var(--color-seal-ink);
+}
+
+/* mono register label */
+@utility register {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+
+/* dotfield: registration dot matrix, masked to periphery */
+@utility dotfield {
+  pointer-events: none;
+  background-image: radial-gradient(var(--color-hairline-soft) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  opacity: 0.5;
+  mask-image: radial-gradient(90% 90% at 50% 50%, transparent 30%, black 78%);
+  -webkit-mask-image: radial-gradient(90% 90% at 50% 50%, transparent 30%, black 78%);
+}
+.dark .dotfield,
+.dark [class~='dotfield'] {
+  opacity: 0.35;
+}
+
+/* stamp: verdict ring that lands */
+@utility stamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid currentColor;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transform: rotate(-8deg);
+  position: relative;
+}
+@utility stamp-in {
+  animation: stampIn 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+@keyframes stampIn {
+  0% {
+    transform: rotate(-14deg) scale(1.6);
+    opacity: 0;
+  }
+  60% {
+    transform: rotate(-8deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-8deg);
+  }
+}
+@keyframes stamp-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 

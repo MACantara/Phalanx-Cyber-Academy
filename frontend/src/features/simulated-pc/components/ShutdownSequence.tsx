@@ -66,22 +66,26 @@ export function ShutdownSequence({ onComplete }: { onComplete: () => void }) {
   const colorClass = (type: string) => {
     switch (type) {
       case 'success':
-        return 'text-green-400';
+        return 'text-confirm';
       case 'warning':
-        return 'text-yellow-400';
+        return 'text-strike';
       case 'error':
-        return 'text-red-400';
+        return 'text-strike';
       default:
-        return 'text-green-400';
+        return 'text-ink-soft';
     }
   };
 
   return (
-    <div className={`fixed inset-0 overflow-y-auto bg-black p-6 font-mono text-sm leading-relaxed transition-opacity duration-1000 sm:p-10 ${fade ? 'opacity-0' : 'opacity-100'}`}>
+    <div className={`fixed inset-0 overflow-y-auto bg-stock p-6 font-mono text-[13px] leading-relaxed transition-opacity duration-1000 sm:p-10 ${fade ? 'opacity-0' : 'opacity-100'}`}>
+      <div className="mb-6 border-b border-ink pb-3">
+        <div className="text-[10px] uppercase tracking-[0.2em] text-ink">PHALANX-OS 4.1 · Plate Register</div>
+        <div className="text-[10px] uppercase tracking-[0.2em] text-ink-soft">Session · Eject sequence</div>
+      </div>
       {lines.map((line, i) => (
         <div key={i} className={`mb-0.5 whitespace-pre-wrap ${colorClass(line.type)}`}>
           {line.text}
-          {line.status && <span className="ml-4 font-bold">{line.status}</span>}
+          {line.status && <span className="ml-4 font-bold text-confirm">{line.status}</span>}
         </div>
       ))}
     </div>

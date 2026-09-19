@@ -69,59 +69,63 @@ export function ArticleSandboxRenderer() {
   };
 
   const renderArticle = (article: Article) => (
-    <div className="flex h-full flex-col overflow-hidden bg-white text-gray-900">
-      <div className="border-b border-gray-200 bg-gray-50 p-6">
-        <div className="mb-2 flex items-center gap-2 text-sm text-gray-500">
-          <Newspaper className="h-4 w-4" />
-          <span className="truncate">{article.website}</span>
-          <span className="mx-1">·</span>
-          <span className="truncate">{new Date(article.date).toLocaleDateString()}</span>
+    <div className="flex h-full flex-col overflow-hidden">
+      {/* document body keeps light "printed" stock — the exhibit is the paper */}
+      <div className="flex flex-1 flex-col overflow-hidden bg-[#FCFBF9] text-[#191B1D]">
+        <div className="border-b border-[#DDDCDA] bg-[#F4F3F1] p-4 sm:p-6">
+          <div className="mb-2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-[#5A5C5E]">
+            <Newspaper className="h-4 w-4" />
+            <span className="truncate">{article.website}</span>
+            <span className="mx-1">·</span>
+            <span className="truncate">{new Date(article.date).toLocaleDateString()}</span>
+          </div>
+          <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">{article.title}</h2>
+          <p className="mt-1 text-sm text-[#5A5C5E]">
+            By {article.author} — {article.author_credentials}
+          </p>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900">{article.title}</h2>
-        <p className="mt-1 text-sm text-gray-600">
-          By {article.author} — {article.author_credentials}
-        </p>
+
+        <div className="flex-1 overflow-auto whitespace-pre-wrap p-4 text-base leading-relaxed sm:p-6 sm:text-lg">
+          {article.content}
+        </div>
       </div>
 
-      <div className="flex-1 overflow-auto p-6 text-lg leading-relaxed whitespace-pre-wrap">
-        {article.content}
-      </div>
-
-      <div className="border-t border-gray-200 p-6">
+      <div className="border-t border-ink bg-stock p-4 sm:p-6">
         {!answered ? (
-          <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="flex items-center gap-3">
+            <span className="register mr-auto hidden sm:inline">Render verdict</span>
             <button
               onClick={() => classify(0)}
-              className="flex-1 rounded-lg border-2 border-green-500 bg-green-50 py-3 font-bold text-green-800 transition-colors hover:bg-green-100"
+              className="min-h-[44px] flex-1 border-2 border-confirm px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-confirm transition-transform hover:-rotate-1 sm:flex-none sm:px-8"
             >
               Credible
             </button>
             <button
               onClick={() => classify(1)}
-              className="flex-1 rounded-lg border-2 border-red-500 bg-red-50 py-3 font-bold text-red-800 transition-colors hover:bg-red-100"
+              className="min-h-[44px] flex-1 border-2 border-strike px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-strike transition-transform hover:-rotate-1 sm:flex-none sm:px-8"
             >
               Misinformation
             </button>
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="flex items-center justify-center gap-2 text-lg font-semibold">
+            <div className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.14em]">
               {answers[current.id] === current.label ? (
-                <span className="flex items-center text-green-700">
-                  <CheckCircle className="mr-1 h-5 w-5" /> Correct — this is {current.label === 1 ? 'misinformation' : 'credible'}
+                <span className="flex items-center text-confirm">
+                  <CheckCircle className="mr-1 h-5 w-5" /> Correct — {current.label === 1 ? 'misinformation' : 'credible'}
                 </span>
               ) : (
-                <span className="flex items-center text-red-700">
-                  <XCircle className="mr-1 h-5 w-5" /> Incorrect — this is {current.label === 1 ? 'misinformation' : 'credible'}
+                <span className="flex items-center text-strike">
+                  <XCircle className="mr-1 h-5 w-5" /> Incorrect — {current.label === 1 ? 'misinformation' : 'credible'}
                 </span>
               )}
             </div>
             {index + 1 < total ? (
               <button
                 onClick={next}
-                className="flex w-full items-center justify-center rounded-lg bg-blue-600 py-3 font-bold text-white transition-colors hover:bg-blue-700"
+                className="flex min-h-[44px] w-full items-center justify-center bg-ink py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal hover:text-seal-ink"
               >
-                Next Article <ArrowRight className="ml-2 h-5 w-5" />
+                Next Exhibit <ArrowRight className="ml-2 h-5 w-5" />
               </button>
             ) : null}
           </div>
@@ -134,21 +138,25 @@ export function ArticleSandboxRenderer() {
     return (
       <FocusedSandboxLayout title={title} instructions={instructions}>
         <div className="flex h-full flex-col items-center justify-center p-6 text-center">
-          <h2 className="mb-2 text-2xl font-bold text-white">Analysis Complete</h2>
-          <p className="mb-6 text-lg text-slate-300">
-            You correctly classified {correctCount} of {total} articles.
+          <span className="register mb-3">Session Report</span>
+          <h2 className="mb-2 text-2xl font-extrabold tracking-tight text-ink">Analysis Complete</h2>
+          <p className="mb-6 text-ink-soft">
+            You correctly classified {correctCount} of {total} exhibits.
           </p>
-          <p className="mb-6 text-5xl font-bold text-blue-400">{score}</p>
-          <div className="flex gap-4">
+          <div className="stamp stamp-in mb-6 h-28 w-28 flex-col text-confirm">
+            <span className="text-xl">{score}</span>
+            <span className="text-[8px] tracking-[0.3em]">Marks</span>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row">
             <button
               onClick={() => startShutdown()}
-              className="flex items-center rounded-lg bg-green-500 px-6 py-3 font-bold text-black transition-colors hover:bg-green-400"
+              className="flex min-h-[44px] items-center bg-ink px-6 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal hover:text-seal-ink"
             >
               <LogOut className="mr-2 h-5 w-5" /> Finish & Exit
             </button>
             <button
               onClick={() => startReplay()}
-              className="flex items-center rounded-lg bg-blue-500 px-6 py-3 font-bold text-white transition-colors hover:bg-blue-600"
+              className="flex min-h-[44px] items-center border border-ink px-6 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:bg-stock-green"
             >
               <RefreshCcw className="mr-2 h-5 w-5" /> Replay
             </button>
@@ -164,8 +172,8 @@ export function ArticleSandboxRenderer() {
       instructions={instructions}
     >
       <div className="flex h-full flex-col">
-        <div className="border-b border-slate-700 bg-slate-800 px-6 py-3 text-sm text-slate-300">
-          Article {index + 1} of {total}
+        <div className="register border-b border-hairline bg-stock-drift px-4 py-2 sm:px-6">
+          Exhibit {index + 1} of {total}
         </div>
         {current ? renderArticle(current) : null}
       </div>

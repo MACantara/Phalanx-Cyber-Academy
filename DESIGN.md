@@ -1,155 +1,162 @@
 ---
-version: alpha
-name: Phalanx Cyber Academy
-description: Design system for the Phalanx Cyber Academy gamified cybersecurity learning platform.
+version: 2.0
+name: Phalanx Cyber Academy — Design Annual
+description: Print-plate design system for the Phalanx Cyber Academy gamified cybersecurity learning platform.
 ---
 
-# Phalanx Cyber Academy — Design System
+# Phalanx Cyber Academy — Design Annual
 
 ## Overview
 
-Phalanx Cyber Academy is a game-based learning platform that teaches digital literacy, cybersecurity awareness, and ethical online behavior. The interface should feel energetic, trustworthy, and educational — not dark or intimidating. Visual language is clean, high-contrast, and modern, with a security-first personality.
+Phalanx Cyber Academy is a game-based learning platform for digital literacy and cybersecurity awareness. Its visual identity is **Design Annual**: the product is presented as a printed credential — plates, hairline rules, registration marks, mono labels, and rubber-stamp verdicts. The website is the prospectus; the simulated PC is the evidence dossier. One grammar, two surfaces.
 
-- **Target audience:** Students, professionals, and general learners interested in cybersecurity.
-- **Mood:** Confident, engaging, professional, safe.
-- **Density:** Medium; readable spacing for learning content, but dashboards can be information-dense.
-- **Core metaphor:** A training academy / mission control. Cards, badges, levels, and progress tracking are primary UI patterns.
+- **Target audience:** Students, career-switchers, and general learners, plus educators/institutions evaluating the platform.
+- **Mood:** Composed, precise, credential-bearing. Austere chroma; energy comes from composition confidence and ritual interactions (stamps, plate numbering), not decoration.
+- **Density:** Medium. Editorial whitespace on marketing surfaces; hairline-ruled density on Operate surfaces (dashboards, admin, simulated PC).
+- **Core metaphor:** A print artifact — every surface is a plate in a bound volume. Scenarios are exhibits; verdicts are stamps; progress is a register of marks.
 
-## Colors
+### Principles
 
-### Brand
+1. **Ink and stock, not glow.** Flat surfaces, hairline rules, zero gradients, zero drop-shadow effects (a single functional window shadow in the simulated PC is permitted).
+2. **Mono is the label voice.** Metadata, IDs, captions, and verdicts are always Chivo Mono, uppercase, letterspaced.
+3. **Stamps are the ritual.** Confirmations, verdicts, and achievements are rubber-stamp moments — rotated, double-ringed, ink-colored.
+4. **The logo is a registered mark.** The shield appears as a printed emblem, occasionally with the rotating certification stamp half off its edge. Never glowed, never gradiented.
+5. **Mobile-first.** Every surface is composed at 390px first and scaled up; desktop structure is additive, not assumed.
 
-- **Primary (`blue-600`)**: `#2563EB` — CTAs, primary buttons, links, active states, focus rings.
-- **Primary Dark (`indigo-900`)**: `#312E81` — hero gradients, dark-mode hero sections.
-- **Secondary (`teal-500`)**: `#14B8A6` — secondary accents, success states, clean tech feel.
-- **Tertiary (`purple-600`)**: `#9333EA` — achievements, special calls-to-action, gradients.
+## Tokens
+
+### Material
+
+| Token | Light | Dark | Role |
+|---|---|---|---|
+| `stock` | `#F5F4F6` | `#141518` | Page/field background — paper / carbon plate |
+| `stock-drift` | `#FAF6F5` | `#1B1C20` | Subtle tonal wash, hero/desktop fields |
+| `stock-green` | `#EEF3EF` | `#15201A` | Secondary tonal wash, hover tint |
+| `ink` | `#16181A` | `#EBE9E4` | Primary text, hairline-strong rules, solid fills |
+| `ink-soft` | `#5A5C5E` | `#9B9C97` | Secondary text, captions, metadata |
+| `hairline` | `#C9C7C4` | `#33353A` | Rules, plate borders, dividers |
+| `hairline-soft` | `#DDDCDA` | `#26272C` | Inner dividers, dotfield marks |
 
 ### Semantic
 
-- **Success (`green-500`)**: `#22C55E` — completed levels, success toasts, positive actions.
-- **Warning (`amber-500`)**: `#F59E0B` — coming soon, caution notes, medium difficulty.
-- **Danger (`red-500`)**: `#EF4444` — errors, failed attempts, hard/advanced difficulty.
-- **Info (`blue-500`)**: `#3B82F6` — informational callouts, neutral primary.
+| Token | Light | Dark | Role |
+|---|---|---|---|
+| `seal` | `#DCDDF3` | `#2E2F45` | Accent plate fill — active states, badges, marks of record |
+| `seal-ink` | `#3C3D63` | `#C9CBEF` | Text/icons on `seal`; link color |
+| `strike` | `#B03A2E` | `#D0674F` | Danger, phishing verdicts, destructive actions, flag marks |
+| `confirm` | `#2E7D4F` | `#5FA878` | Success, legitimate verdicts, completion |
 
-### Neutrals
+Difficulty/severity mapping: Beginner → `confirm`; Intermediate → `ink` (neutral plate); Advanced → `strike`. "Coming soon" → `ink-soft` outline stamp.
 
-- **Background light**: `#F9FAFB` (`gray-50`) and `#FFFFFF` (`white`).
-- **Surface light**: `#FFFFFF` (`white`).
-- **Background dark**: `#111827` (`gray-900`) and `#1F2937` (`gray-800`).
-- **Surface dark**: `#1F2937` (`gray-800`).
-- **Text primary light**: `#111827` (`gray-900`).
-- **Text secondary light**: `#4B5563` (`gray-600`).
-- **Text primary dark**: `#F9FAFB` (`gray-50`).
-- **Text secondary dark**: `#D1D5DB` (`gray-300`).
-- **Borders**: `#E5E7EB` (`gray-200`) in light, `#374151` (`gray-700`) in dark.
+### Typography
 
-### Gradients
+| Token | Value | Role |
+|---|---|---|
+| `sans` | `'Archivo', sans-serif` | Display and body — one grotesque carries everything |
+| `mono` | `'Chivo Mono', monospace` | Labels, IDs, metadata, verdicts, terminal/log text |
 
-Hero and header sections use vivid diagonal gradients:
+- **Display (H1):** Archivo 800, `clamp(2.4rem, 6vw, 4.5rem)`, `letter-spacing:-0.03em`, `line-height:1.05`. Sentence case, not all-caps — the grotesque carries authority.
+- **H2:** Archivo 400–600, `clamp(1.9rem, 4vw, 3rem)`, `letter-spacing:-0.02em`.
+- **H3:** Archivo 700, 1.25rem.
+- **Body:** Archivo 400, 16px, `line-height:1.65`, `ink` for primary, `ink-soft` for supporting.
+- **Label/Mono:** Chivo Mono, 9–11px, `text-transform:uppercase`, `letter-spacing:.14em–.22em`, `ink-soft` default, `ink` for emphasis. Never smaller than 8px.
+- **Links:** `seal-ink`, underline with `text-underline-offset:3px`.
 
-- **Cyber blue**: `bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700`.
-- **Success/Teal**: `bg-gradient-to-br from-green-600 via-teal-600 to-blue-600`.
-- **Warning/Orange**: `bg-gradient-to-br from-orange-600 to-amber-600`.
-- **Dark hero**: `bg-gradient-to-br from-blue-950 via-indigo-950 to-purple-950`.
+### Space and structure
 
-Use `bg-black/20` overlays on hero images/gradients to keep text accessible.
+- Mobile-first breakpoints: base = 390px, then `sm:` 768, `lg:` 1024, `xl:` 1440.
+- Page padding: `px-5 sm:px-8`; max content `max-w-6xl` (marketing) / `max-w-4xl` (legal) / `max-w-md` (forms).
+- Section rhythm: `py-14 sm:py-20`, sections separated by a hairline rule (`border-t border-hairline`), not whitespace alone.
+- Touch targets ≥44px on interactive elements.
 
-## Typography
+## Primitives
 
-- **Font family**: System font stack / `ui-sans-serif, system-ui, sans-serif`. No custom webfont required.
-- **H1**: 48px (mobile) / 60px (desktop), `font-bold`, `line-height: 1.1`.
-- **H2**: 30px / 36px, `font-bold`, `line-height: 1.2`.
-- **H3**: 24px, `font-semibold`, `line-height: 1.3`.
-- **H4**: 20px, `font-semibold`, `line-height: 1.4`.
-- **Body**: 16px, `font-normal`, `line-height: 1.6`.
-- **Small / Caption**: 14px or 12px, `font-medium`.
-- **Code/Mono**: `font-mono` for cookie names, tokens, IDs.
+### Plate
+The container. `border:1px solid ink` (strong plate) or `hairline` (quiet plate), `border-radius:0`, `background:stock`. Registration corners: two `+` marks (mono, `opacity:.5`) at top-left and bottom-right inside the plate. Strong plates carry windows/CTA cards; quiet plates carry list items and fields.
 
-Headings use `text-gray-900 dark:text-white`. Body text uses `text-gray-700 dark:text-gray-300`.
+### Hairline
+`1px` rules are the primary divider and structural device. Full-bleed hairlines separate page sections; inset hairlines divide index lists and table rows.
 
-## Spacing
+### Registration marks
+`+` crosses and small dots placed in page margins/corners — furniture that implies the plate was registered on a press. Sparingly: 2–4 per viewport on desktop, hidden or reduced on mobile (`opacity:.55`, mono glyphs).
 
-- Use Tailwind scale. Base unit: `4px` (`1`).
-- Page padding: `px-4 sm:px-6 lg:px-8`.
-- Max content width: `max-w-7xl` for marketing, `max-w-4xl` for legal, `max-w-2xl` for forms.
-- Section vertical padding: `py-12` to `py-20`.
-- Card padding: `p-6` default, `p-8` for feature cards.
-- Gap scale for grids: `gap-6` standard, `gap-8` for spacious marketing grids.
+### Stamp
+Verdict/achievement ring: circular, `border:2px solid currentColor` + inner ring `inset:3px`, mono uppercase text, rotated `-8deg`. Interaction: stamps **land** — `scale(1.6)→1` with rotate, `cubic-bezier(.19,1,.22,1)`, ~0.5s. Colors: `strike` (phishing/danger), `confirm` (legit/success), `ink` (neutral certification).
 
-## Shapes
+### Plate ID
+Mono chip: `font-mono text-[9px] tracking-[.2em] px-1.5 py-0.5 bg-seal text-seal-ink`, e.g. `PLT-03`, `EXH-01`, `MSN-07`. Numbers every scenario, level, window, and exhibit.
 
-- **Border radius**: `rounded-xl` (16px) for cards and buttons, `rounded-2xl` (24px) for larger panels, `rounded-full` for avatars/badges.
-- **Buttons**: `rounded-xl`, `px-6 py-3` (standard), `px-8 py-4` (hero/CTA).
-- **Inputs**: `rounded-xl`, `px-4 py-3`, `border-gray-300 dark:border-gray-600`.
-
-## Elevation & Depth
-
-- **Cards**: `shadow-lg` or `shadow-xl` plus subtle borders.
-- **Hero overlays**: `bg-black/20` / `bg-white/10` over gradient.
-- **Backdrops**: `backdrop-blur-md` for glass cards on dark hero sections.
-- **Hover lift**: `hover:-translate-y-1` and `hover:shadow-2xl` for cards.
-
-## Motion
-
-- **Transition default**: `transition-all duration-300`.
-- **Hover scale**: `hover:scale-105` for CTAs only; avoid on small controls.
-- **Page entrance**: `opacity-0 animate-fade-in-up` with `animation-fill-mode: forwards`.
-- **Pulse accents**: `animate-pulse` for background decorative orbs.
-- Avoid bouncy easings. Prefer `ease-out` for hover and `cubic-bezier(0.4, 0, 0.2, 1)` where custom.
+### Dotfield
+Registration dot matrix — `radial-gradient` 1px dots at 22px pitch, masked to the periphery (`opacity:.5` light / `.35` dark). Desktop/hero furniture only; never behind reading content.
 
 ## Components
 
 ### Buttons
 
-- **Primary**: `bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl px-6 py-3 shadow-lg hover:from-blue-700 hover:to-purple-700`.
-- **Success**: `bg-gradient-to-r from-green-500 to-emerald-600 text-white` for play/start actions.
-- **Secondary/Ghost**: `border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700`.
-- **Disabled**: `disabled:opacity-60 disabled:cursor-not-allowed`.
+- **Primary (Enlist/Start):** `bg-ink text-stock`, square, mono uppercase `.78rem/.12em`, `px-6 py-3`. Hover: `bg-accent-hover` (lighten/darken step). No radius, no shadow.
+- **Stamp buttons (verdicts):** transparent, `border:2px solid currentColor`, inner hairline ring, mono uppercase, `strike`/`confirm` color. Hover rotates `-1.2deg`.
+- **Ghost:** `border:1px solid ink`, transparent bg, mono uppercase. Hover: `stock-green` fill.
+- **Disabled:** `opacity-50`, keep borders visible — never fade into the stock.
 
 ### Cards
 
-- Standard card: `rounded-2xl border border-gray-100 bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-800`.
-- Glass card on hero: `bg-white/10 border-white/10 backdrop-blur-md`.
-- Feature card: `p-6 rounded-2xl bg-white/70 dark:bg-gray-800/70 hover:-translate-y-1`.
+Plates. `border border-hairline bg-stock p-5 sm:p-6`, registration corners on feature/scenario cards, plate-ID chip top-left. Hover: border strengthens to `ink` — no lift, no shadow.
 
-### Badges
+### Badges & status
 
-- Use `rounded-full px-3 py-1 text-xs font-semibold`.
-- Beginner: `bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300`.
-- Intermediate/Medium: `bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300`.
-- Advanced/Hard: `bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300`.
-- Coming soon: `bg-gray-500/20 text-gray-200`.
+- Status reads as stamps/verdict text, not pill fills: `✓ VERIFIED LEGIT` (confirm), `✗ PHISHING` (strike), `PENDING`/`AWAITING VERDICT` (ink-soft). Mono, uppercase, letterspaced.
+- Progress = **marks**: `MARKS 200/500` mono register; bars are hairline-ruled tracks with an `ink` fill.
 
 ### Forms
 
-- Labels: `block text-sm font-semibold text-gray-700 dark:text-gray-300`.
-- Inputs: `w-full rounded-xl border px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none`.
-- Error states: `border-red-500` with `text-red-700` helper text.
+- Labels: mono uppercase, `ink-soft`.
+- Inputs: square, `border border-hairline bg-stock px-4 py-3`, focus ring = `2px seal-ink` outline (visible, not color-only).
+- Errors: `strike` border + mono helper text.
 
 ### Tables
 
-- `min-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg`.
-- Header: `bg-gray-50 dark:bg-gray-700 text-xs uppercase tracking-wider`.
-- Rows: `divide-y divide-gray-200 dark:divide-gray-700`.
+- Outer `border border-ink`; header row mono uppercase `ink-soft` over `stock-drift`; `divide-y divide-hairline`; row hover `stock-green`. No rounded corners, no zebra striping.
+
+### Navigation
+
+- Top bar: hairline bottom border, logo + `PHALANX CYBER ACADEMY` (Archivo 800, tight), nav links Archivo, active link underlined with `ink`. Mobile: hamburger → full-screen plate menu.
+- Footer: hairline top, mono label columns, `ink` wordmark strip.
 
 ### Toasts
 
-- Position: top-right fixed.
-- Success: `bg-green-600 text-white`.
-- Error: `bg-red-600 text-white`.
-- Info: `bg-blue-600 text-white`.
+Top-right plate: `border border-ink bg-stock`, mono label + Archivo message, left edge 2px `confirm`/`strike`/`ink` per type. Never solid colored fills.
+
+## Motion
+
+- Default: `transition-colors duration-150` for hovers; structure changes `duration-200`.
+- Signature motion: **stamp landing** (`cubic-bezier(.19,1,.22,1)`, ~0.5s) and **certification ring spin** (`linear infinite`, 25s, decorative only on hero/achievement marks).
+- Allowed: fade/slide entrances ≤0.4s, mono log line-by-line reveals (boot/register sequences).
+- Banned: gradients animating, bouncing orbs, parallax, scale-on-hover for cards, marquee loops, autoplaying backgrounds.
+
+## The simulated PC — dossier grammar
+
+The simulated machine is **a forensic dossier on a light table** — the same system translated, not reskinned:
+
+- **Desktop** = plate field: `stock` background, dotfield + registration crosses, boot log as `PLATE REGISTER` mono block.
+- **Windows** = numbered plates: `border-ink` strong plate, title bar carries `PLT-0N` chip + Archivo 700 title + mono exhibit subtitle; controls are outlined squares (no traffic lights).
+- **Taskbar** = plate rail: bottom bar, logo + `PHALANX-OS` mark, open windows as mono plate tokens (`PLT-03 · MAIL`), tray carries `MARKS n/n`, UTC clock, `ESC · EJECT`.
+- **Desktop icons** = plate thumbnails: 52px square plates with registration corners, mono label + `APP-0N` number beneath.
+- **Verdicts** = stamp buttons + landed stamp overlay on the exhibit.
+- **Document bodies** (email/article content) may keep light "printed document" stock in dark mode — the exhibit is the paper; the machine is carbon. Verify per-renderer before applying globally.
+- **Small screens (<768px):** the desktop metaphor collapses — rail becomes a bottom plate-switcher bar, one window fills the screen, icons and furniture hidden, verdict stamps become full-width buttons. Boot/shutdown keep the mono register at reduced density.
 
 ## Voice
 
-- Address the user as "you". Avoid "we" overuse except in legal/policy text.
-- Use encouraging, mission-oriented language: "Train. Coordinate. Defend.", "Start Level", "Welcome back, recruit."
-- Avoid fear-mongering. Phrase security advice as empowering actions.
-- Keep error messages helpful and specific.
+- Mission register stays binding: "Train. Coordinate. Defend.", "recruit", "ENLIST", "Mission Not Found", "Return to Base" — now delivered in terse plate-register style.
+- Labels are registers, not sentences: `EXHIBIT 3 OF 5`, `RENDER VERDICT`, `PLATE REGISTER — SCENARIO LOADED`.
+- Encouraging, never fear-mongering; error messages helpful and specific, mono for IDs/codes.
 
 ## Anti-patterns
 
-- Do not introduce new color values outside the approved palette; use Tailwind default scale for consistency.
-- Do not use Bootstrap classes in new React components. Use Tailwind and `lucide-react` for icons.
-- Do not hardcode colors in components; rely on theme tokens and `dark:` variants.
-- Avoid animated auto-playing backgrounds, scrolling marquees, or bouncy transitions.
-- Do not modify the legacy Flask `app/` directory for the rewrite; keep it untouched for reference.
+- No gradients anywhere — including text gradients, hero washes, and button fills.
+- No drop shadows except the single simulated-PC window elevation.
+- No border radius on plates, buttons, inputs, or badges (avatars may stay circular; stamps are circular by nature).
+- No glass/blur effects, no glow, no animated decorative backgrounds.
+- No color-only state — every status also carries a mono verdict label or glyph.
+- No un-numbered plates — every scenario/level/window/exhibit carries a plate ID.
+- Do not modify legacy `app/`; do not hardcode hex values in components — use tokens (`bg-stock`, `text-ink`, `border-hairline`, `bg-seal`, `text-seal-ink`, `text-strike`, `text-confirm`).

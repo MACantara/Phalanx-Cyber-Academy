@@ -8,141 +8,147 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative flex min-h-screen items-center bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 transition-colors duration-500 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900">
-        <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="mb-8 opacity-0 animate-fade-in-up" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>
-              <img src="/logo-bg.png" alt="Phalanx Cyber Academy Logo" className="mx-auto h-32 w-auto drop-shadow-2xl md:h-40 lg:h-48" />
-            </div>
-            <h1 className="mb-6 text-5xl font-bold text-gray-900 opacity-0 animate-fade-in-up dark:text-white md:text-7xl" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-yellow-400 dark:to-pink-400">
-                Phalanx Cyber Academy
-              </span>
-            </h1>
-            <p className="mb-4 text-2xl font-semibold text-gray-800 opacity-0 animate-fade-in-up dark:text-gray-100 md:text-3xl" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
-              Train. Coordinate. Defend.
-            </p>
-            <p className="mx-auto mb-8 max-w-4xl text-lg leading-relaxed text-gray-600 opacity-0 animate-fade-in-up dark:text-gray-300 md:text-xl" style={{ animationDelay: '0.6s', animationFillMode: 'forwards' }}>
-              Level up your digital literacy and cybersecurity skills through gamified learning. Defend virtual networks, detect phishing attacks, and master ethical hacking in a safe, interactive environment.
-            </p>
-            <div className="flex flex-col justify-center gap-4 opacity-0 animate-fade-in-up sm:flex-row" style={{ animationDelay: '0.7s', animationFillMode: 'forwards' }}>
-              <Link
-                to={user ? '/levels' : '/signup'}
-                className="cyber-glow inline-flex transform items-center justify-center rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 px-8 py-4 text-lg font-semibold text-white shadow-xl transition-all duration-300 hover:scale-105 hover:from-green-600 hover:to-emerald-700 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-green-500/25"
-              >
-                {user ? 'Start Learning' : 'Get Started'}
-              </Link>
-              <Link
-                to="/about"
-                className="inline-flex transform items-center justify-center rounded-xl border-2 border-gray-300 bg-white/80 px-8 py-4 text-lg font-semibold text-gray-700 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-gray-400 hover:bg-gray-100 dark:border-white/30 dark:bg-transparent dark:text-white dark:hover:border-white/50 dark:hover:bg-white/20"
-              >
-                Learn More
-              </Link>
-            </div>
+      {/* Hero — registered mark + certification stamp on stock */}
+      <section className="relative flex min-h-[85vh] items-center overflow-hidden bg-stock transition-colors duration-300">
+        <div className="dotfield absolute inset-0" aria-hidden="true" />
+        <span className="absolute left-4 top-4 font-mono text-ink opacity-50 sm:left-6 sm:top-6" aria-hidden="true">+</span>
+        <span className="absolute right-4 top-4 font-mono text-ink opacity-50 sm:right-6 sm:top-6" aria-hidden="true">+</span>
+        <span className="absolute bottom-4 left-4 font-mono text-ink opacity-50 sm:bottom-6 sm:left-6" aria-hidden="true">+</span>
+        <span className="absolute bottom-4 right-4 font-mono text-ink opacity-50 sm:bottom-6 sm:right-6" aria-hidden="true">+</span>
+
+        <div className="relative z-10 mx-auto max-w-6xl px-5 py-16 text-center sm:px-8 sm:py-20">
+          <div className="relative mx-auto mb-8 w-fit opacity-0 animate-fade-in-up" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>
+            <img src="/logo-bg.png" alt="Phalanx Cyber Academy shield logo" className="h-28 w-auto sm:h-36 lg:h-44" />
+            <svg
+              className="absolute -bottom-5 -right-8 h-20 w-20 animate-[stamp-spin_25s_linear_infinite] sm:h-24 sm:w-24"
+              viewBox="0 0 100 100"
+              aria-hidden="true"
+            >
+              <defs>
+                <path id="stampRing" d="M50,50 m-36,0 a36,36 0 1,1 72,0 a36,36 0 1,1 -72,0" />
+              </defs>
+              <circle cx="50" cy="50" r="47" className="fill-ink opacity-90" />
+              <text className="fill-stock font-mono" fontSize="8.4" letterSpacing="1.6">
+                <textPath href="#stampRing">PHALANX · CYBER · ACADEMY · EST · MMXXVI ·</textPath>
+              </text>
+            </svg>
+          </div>
+
+          <h1 className="mb-5 text-4xl font-extrabold tracking-tight text-ink opacity-0 animate-fade-in-up sm:text-6xl lg:text-7xl" style={{ animationDelay: '0.35s', animationFillMode: 'forwards' }}>
+            Phalanx Cyber Academy
+          </h1>
+          <p className="mb-4 text-xl font-semibold text-ink opacity-0 animate-fade-in-up sm:text-2xl" style={{ animationDelay: '0.45s', animationFillMode: 'forwards' }}>
+            Train. Coordinate. Defend.
+          </p>
+          <p className="mx-auto mb-9 max-w-3xl text-base leading-relaxed text-ink-soft opacity-0 animate-fade-in-up sm:text-lg" style={{ animationDelay: '0.55s', animationFillMode: 'forwards' }}>
+            Level up your digital literacy and cybersecurity skills through gamified learning. Defend virtual networks, detect phishing attacks, and master ethical hacking in a safe, interactive environment.
+          </p>
+          <div className="flex flex-col justify-center gap-4 opacity-0 animate-fade-in-up sm:flex-row" style={{ animationDelay: '0.65s', animationFillMode: 'forwards' }}>
+            <Link
+              to={user ? '/levels' : '/signup'}
+              className="inline-flex min-h-[44px] items-center justify-center bg-ink px-8 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink hover:text-stock dark:hover:bg-seal dark:hover:text-seal-ink"
+            >
+              {user ? 'Start Learning' : 'Get Started'}
+            </Link>
+            <Link
+              to="/about"
+              className="inline-flex min-h-[44px] items-center justify-center border border-ink px-8 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:bg-stock-green"
+            >
+              Learn More
+            </Link>
           </div>
         </div>
-        <div className="absolute top-20 left-10 h-20 w-20 animate-bounce rounded-full bg-green-500/40 shadow-lg dark:bg-green-400/20" style={{ animationDuration: '3s', animationDelay: '1s' }} />
-        <div className="absolute bottom-20 right-10 h-16 w-16 animate-bounce rounded-full bg-blue-500/40 shadow-lg" style={{ animationDuration: '4s', animationDelay: '2s' }} />
-        <div className="absolute right-1/4 top-1/3 h-12 w-12 animate-pulse rounded-full bg-purple-500/40 shadow-lg" />
       </section>
 
-      {/* Features */}
-      <section className="bg-gradient-to-br from-gray-50 to-white py-20 transition-colors duration-300 dark:from-gray-900 dark:to-gray-800">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <FadeIn className="mb-16 text-center">
-            <h2 className="mb-6 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">Learning Features</h2>
-            <p className="mx-auto max-w-3xl text-xl text-gray-600 dark:text-gray-300">Experience cybersecurity education through interactive gaming, real-time feedback, and realistic simulations</p>
+      {/* Features — plate cards */}
+      <section className="border-t border-hairline py-14 sm:py-20">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <FadeIn className="mb-12 text-center">
+            <span className="register">Plate 02 — Field Training</span>
+            <h2 className="mb-4 mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">Learning Features</h2>
+            <p className="mx-auto max-w-3xl text-ink-soft sm:text-lg">Interactive gaming, real-time feedback, and realistic simulations — structured as field training.</p>
           </FadeIn>
-          <Stagger className="grid gap-8 md:grid-cols-3" baseDelay={0.1} increment={0.2}>
-            <FeatureCard icon={Gamepad2} title="Gamified Learning" text="Earn XP, unlock achievements, and level up through interactive cybersecurity challenges and mini-games." color="green" />
-            <FeatureCard icon={Zap} title="Real-Time Feedback" text="Receive instant feedback and adaptive guidance as you learn, with immediate corrections and personalized tips." color="blue" />
-            <FeatureCard icon={Shield} title="Real Scenarios" text="Practice with realistic cybersecurity simulations including phishing detection and network defense." color="purple" />
+          <Stagger className="grid gap-6 md:grid-cols-3" baseDelay={0.1} increment={0.15}>
+            <FeatureCard code="FTR-01" icon={Gamepad2} title="Gamified Learning" text="Earn XP, unlock achievements, and level up through interactive cybersecurity challenges and mini-games." />
+            <FeatureCard code="FTR-02" icon={Zap} title="Real-Time Feedback" text="Instant feedback and adaptive guidance as you learn, with immediate corrections and personalized tips." />
+            <FeatureCard code="FTR-03" icon={Shield} title="Real Scenarios" text="Practice with realistic simulations — phishing detection, network defense, digital forensics." />
           </Stagger>
         </div>
       </section>
 
-      {/* Scenarios */}
-      <section className="bg-gradient-to-br from-white to-gray-50 py-20 transition-colors duration-300 dark:from-gray-800 dark:to-gray-900">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <FadeIn className="mb-16 text-center">
-            <h2 className="mb-6 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">Cybersecurity Game Scenarios</h2>
-            <p className="mx-auto max-w-3xl text-xl text-gray-600 dark:text-gray-300">Level up your digital defense skills through immersive gamified cybersecurity challenges</p>
+      {/* Scenarios — mission register */}
+      <section className="border-t border-hairline py-14 sm:py-20">
+        <div className="mx-auto max-w-6xl px-5 sm:px-8">
+          <FadeIn className="mb-12 text-center">
+            <span className="register">Plate 03 — Scenario Register</span>
+            <h2 className="mb-4 mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">Cybersecurity Game Scenarios</h2>
+            <p className="mx-auto max-w-3xl text-ink-soft sm:text-lg">Level up your digital defense skills through immersive gamified challenges.</p>
           </FadeIn>
-          <Stagger className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" baseDelay={0.1} increment={0.1}>
-            <ScenarioCard icon={Newspaper} title="The Misinformation Maze" description="Navigate through fake news and stop misinformation from influencing an election." color="yellow" />
-            <ScenarioCard icon={MailWarning} title="Shadow in the Inbox" description="Spot phishing attempts and practice safe email protocols while defending against social engineering." color="red" />
-            <ScenarioCard icon={Bug} title="Malware Mayhem" description="Isolate infections and perform digital cleanup during a gaming tournament under pressure." color="purple" />
-            <ScenarioCard icon={Terminal} title="The White Hat Test" description="Practice ethical hacking and responsible vulnerability disclosure in controlled scenarios." color="gray" />
-            <ScenarioCard icon={Trophy} title="The Hunt for The Null" description="Use advanced digital forensics to expose The Null's identity in the ultimate cybersecurity challenge." color="blue" />
+          <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" baseDelay={0.1} increment={0.1}>
+            <ScenarioCard code="MSN-01" icon={Newspaper} title="The Misinformation Maze" description="Navigate fake news and stop misinformation from influencing an election." diff="Intermediate" />
+            <ScenarioCard code="MSN-02" icon={MailWarning} title="Shadow in the Inbox" description="Spot phishing attempts and practice safe email protocols against social engineering." diff="Beginner" />
+            <ScenarioCard code="MSN-03" icon={Bug} title="Malware Mayhem" description="Isolate infections and perform digital cleanup during a gaming tournament under pressure." diff="Intermediate" />
+            <ScenarioCard code="MSN-04" icon={Terminal} title="The White Hat Test" description="Practice ethical hacking and responsible vulnerability disclosure in controlled scenarios." diff="Advanced" />
+            <ScenarioCard code="MSN-05" icon={Trophy} title="The Hunt for The Null" description="Use advanced digital forensics to expose The Null's identity in the ultimate challenge." diff="Advanced" />
           </Stagger>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 py-20 transition-colors duration-300 dark:from-blue-800 dark:via-purple-800 dark:to-indigo-900">
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+      {/* CTA — inverted plate */}
+      <section className="border-t border-hairline bg-ink py-14 text-stock sm:py-20">
+        <div className="mx-auto max-w-6xl px-5 text-center sm:px-8">
           <FadeIn>
-            <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">Ready to Become a Cyber Champion?</h2>
-            <p className="mx-auto mb-10 max-w-3xl text-xl text-gray-100">Join thousands of learners mastering cybersecurity through gamified experiences. Start your journey to digital safety today.</p>
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-stock/70">Final Plate — Enlistment</span>
+            <h2 className="mb-4 mt-3 text-3xl tracking-tight sm:text-4xl lg:text-5xl">Ready to Become a Cyber Champion?</h2>
+            <p className="mx-auto mb-10 max-w-3xl text-stock/80 sm:text-lg">Join thousands of learners mastering cybersecurity through gamified experiences. Start your journey to digital safety today.</p>
           </FadeIn>
-          <div className="flex flex-col justify-center gap-4 opacity-0 animate-fade-in-up sm:flex-row" style={{ animationDelay: '0.4s', animationFillMode: 'forwards' }}>
+          <div className="flex flex-col justify-center gap-4 opacity-0 animate-fade-in-up sm:flex-row" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>
             {user ? (
-              <Link to="/levels" className="inline-flex transform items-center justify-center rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 px-10 py-4 text-lg font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:from-green-600 hover:to-emerald-700">Start Learning</Link>
+              <Link to="/levels" className="inline-flex min-h-[44px] items-center justify-center bg-stock px-10 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:bg-seal">
+                Start Learning
+              </Link>
             ) : (
               <>
-                <Link to="/signup" className="inline-flex transform items-center justify-center rounded-xl bg-white px-10 py-4 text-lg font-bold text-blue-600 shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-gray-100">Get Started</Link>
-                <Link to="/login" className="inline-flex transform items-center justify-center rounded-xl border-2 border-white/30 bg-transparent px-10 py-4 text-lg font-bold text-white shadow-2xl backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-white/50 hover:bg-white/20">Log in</Link>
+                <Link to="/signup" className="inline-flex min-h-[44px] items-center justify-center bg-stock px-10 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:bg-seal">
+                  Get Started
+                </Link>
+                <Link to="/login" className="inline-flex min-h-[44px] items-center justify-center border border-stock/50 px-10 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:border-stock hover:bg-stock/10">
+                  Log In
+                </Link>
               </>
             )}
           </div>
         </div>
-        <div className="absolute left-1/4 top-10 h-32 w-32 animate-pulse rounded-full bg-green-400/10 cyber-glow" />
-        <div className="absolute bottom-10 right-1/4 h-24 w-24 animate-pulse rounded-full bg-blue-400/20" style={{ animationDelay: '1s' }} />
       </section>
     </>
   );
 }
 
-function FeatureCard({ icon: Icon, title, text, color }: { icon: typeof Gamepad2; title: string; text: string; color: 'green' | 'blue' | 'purple' }) {
-  const gradients = { green: 'from-green-500 to-emerald-600', blue: 'from-blue-500 to-cyan-600', purple: 'from-purple-500 to-pink-600' };
-  const borders = { green: 'hover:border-green-200 dark:hover:border-green-600', blue: 'hover:border-blue-200 dark:hover:border-blue-600', purple: 'hover:border-purple-200 dark:hover:border-purple-600' };
+function FeatureCard({ code, icon: Icon, title, text }: { code: string; icon: typeof Gamepad2; title: string; text: string }) {
   return (
-    <div className={`group rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl dark:border-gray-700 dark:bg-gray-800 ${borders[color]}`}>
-      <div className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br ${gradients[color]} text-3xl text-white shadow-lg transition-all duration-300 group-hover:rotate-3 group-hover:scale-110`}>
-        <Icon className="h-8 w-8" />
+    <div className="plate reg-corners group p-6 text-center transition-colors hover:border-ink sm:p-8">
+      <span className="plate-id absolute left-3 top-3">{code}</span>
+      <div className="mx-auto mb-6 mt-4 flex h-16 w-16 items-center justify-center bg-seal text-seal-ink">
+        <Icon className="h-7 w-7" />
       </div>
-      <h3 className="mb-4 text-2xl font-bold text-gray-800 dark:text-white">{title}</h3>
-      <p className="leading-relaxed text-gray-600 dark:text-gray-300">{text}</p>
+      <h3 className="mb-3 text-xl font-bold text-ink">{title}</h3>
+      <p className="leading-relaxed text-ink-soft">{text}</p>
     </div>
   );
 }
 
-function ScenarioCard({ icon: Icon, title, description, color }: { icon: typeof Gamepad2; title: string; description: string; color: string }) {
-  const borderColors: Record<string, string> = {
-    yellow: 'hover:border-yellow-200 dark:hover:border-yellow-600',
-    red: 'hover:border-red-200 dark:hover:border-red-600',
-    purple: 'hover:border-purple-200 dark:hover:border-purple-600',
-    gray: 'hover:border-gray-200 dark:hover:border-gray-600',
-    blue: 'hover:border-blue-200 dark:hover:border-blue-600',
-  };
-  const gradients: Record<string, string> = {
-    yellow: 'from-yellow-500 to-orange-600',
-    red: 'from-red-500 to-orange-600',
-    purple: 'from-purple-500 to-pink-600',
-    gray: 'from-gray-700 to-gray-900',
-    blue: 'from-blue-500 to-indigo-600',
-  };
+function ScenarioCard({ code, icon: Icon, title, description, diff }: { code: string; icon: typeof Gamepad2; title: string; description: string; diff: string }) {
   return (
-    <div className={`group rounded-xl border border-gray-100 bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 ${borderColors[color]}`}>
-      <div className="mb-4 flex items-center">
-        <div className={`mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${gradients[color]} text-white`}>
-          <Icon className="h-6 w-6" />
+    <div className="plate reg-corners group p-5 transition-colors hover:border-ink sm:p-6">
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex h-11 w-11 items-center justify-center border border-hairline text-ink">
+          <Icon className="h-5 w-5" />
         </div>
-        <h3 className="text-xl font-bold text-gray-800 dark:text-white">{title}</h3>
+        <span className="plate-id">{code}</span>
       </div>
-      <p className="text-sm text-gray-600 dark:text-gray-300">{description}</p>
+      <h3 className="mb-2 text-lg font-bold text-ink">{title}</h3>
+      <p className="mb-4 text-sm text-ink-soft">{description}</p>
+      <span className="register">{diff}</span>
     </div>
   );
 }

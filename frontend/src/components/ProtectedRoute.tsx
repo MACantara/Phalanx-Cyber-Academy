@@ -10,8 +10,8 @@ export default function ProtectedRoute() {
 
   if (!isLoaded || (isSignedIn && loading)) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
+      <div className="flex min-h-screen items-center justify-center bg-stock">
+        <Loader2 className="h-8 w-8 animate-spin text-seal-ink" />
       </div>
     );
   }

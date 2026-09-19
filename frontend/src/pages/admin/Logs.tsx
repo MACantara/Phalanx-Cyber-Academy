@@ -4,7 +4,8 @@ import { api } from '../../lib/api';
 import { useData } from '../../hooks/useData';
 import AsyncSection from '../../components/AsyncSection';
 import { FadeIn } from '../../components/Animated';
-import { Search, ChevronLeft, ChevronRight, ArrowLeft, Download } from 'lucide-react';
+import { Pagination } from '../../components/Pagination';
+import { Search, ArrowLeft, Download } from 'lucide-react';
 
 interface LogEntry {
   id: string;
@@ -56,26 +57,27 @@ export default function Logs() {
 
   const statusClass = (status: string) => {
     const s = status.toLowerCase();
-    if (s.includes('success') || s.includes('verified')) return 'text-green-300';
-    if (s.includes('fail') || s.includes('error')) return 'text-red-300';
-    return 'text-yellow-300';
+    if (s.includes('success') || s.includes('verified')) return 'text-confirm';
+    if (s.includes('fail') || s.includes('error')) return 'text-strike';
+    return 'text-ink-soft';
   };
 
   return (
-    <section className="relative min-h-[80vh] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 py-12">
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="min-h-[80vh] bg-stock py-12">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <FadeIn className="mb-8">
-          <Link to="/admin" className="mb-4 inline-flex items-center text-slate-300 hover:text-white">
+          <Link to="/admin" className="mb-4 inline-flex items-center font-mono text-xs uppercase tracking-[0.14em] text-seal-ink underline-offset-[3px] hover:underline">
             <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
           </Link>
-          <h1 className="text-4xl font-bold text-white md:text-5xl">System Logs</h1>
-          <p className="mt-2 text-lg text-slate-300">Security events, login attempts, and email verifications</p>
+          <span className="register block">Admin — Event Register</span>
+          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">System Logs</h1>
+          <p className="mt-2 text-sm text-ink-soft sm:text-base">Security events, login attempts, and email verifications</p>
         </FadeIn>
 
         <FadeIn className="mb-6" delay="0.1s">
-          <div className="flex flex-col gap-4 md:flex-row">
+          <div className="plate flex flex-col gap-4 p-4 sm:flex-row">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" />
               <input
                 type="text"
                 value={search}
@@ -84,7 +86,7 @@ export default function Logs() {
                   setPage(1);
                 }}
                 placeholder="Search logs..."
-                className="w-full rounded-xl border border-slate-600 bg-slate-800 py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+                className="w-full border border-hairline bg-stock py-2.5 pl-10 pr-4 text-sm text-ink placeholder:text-ink-soft/60 focus:border-seal-ink focus:outline-none focus:ring-2 focus:ring-seal-ink/40"
               />
             </div>
             <select
@@ -93,7 +95,7 @@ export default function Logs() {
                 setEventType(e.target.value);
                 setPage(1);
               }}
-              className="cursor-pointer rounded-xl border border-slate-600 bg-slate-800 px-4 py-3 text-white focus:border-blue-500 focus:outline-none"
+              className="cursor-pointer border border-hairline bg-stock px-4 py-2.5 text-sm text-ink focus:border-seal-ink focus:outline-none focus:ring-2 focus:ring-seal-ink/40"
             >
               {EVENT_TYPES.map((t) => (
                 <option key={t} value={t}>{t === 'all' ? 'All Event Types' : t.charAt(0).toUpperCase() + t.slice(1)}</option>
@@ -101,34 +103,34 @@ export default function Logs() {
             </select>
             <button
               onClick={exportLogs}
-              className="inline-flex items-center justify-center rounded-xl bg-slate-700 px-4 py-3 font-semibold text-white transition-all hover:bg-slate-600"
+              className="inline-flex min-h-[44px] items-center justify-center border border-hairline bg-stock px-4 py-2.5 font-mono text-xs uppercase tracking-[0.14em] text-ink transition-colors hover:border-ink hover:bg-stock-green"
             >
               <Download className="mr-2 h-4 w-4" /> Export CSV
             </button>
           </div>
         </FadeIn>
 
-        <FadeIn className="overflow-hidden rounded-2xl border border-slate-700 bg-slate-800/70 shadow-lg backdrop-blur-md" delay="0.2s">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="border-b border-slate-600 bg-slate-700/50 text-slate-200">
+        <FadeIn className="overflow-x-auto" delay="0.2s">
+          <table className="min-w-full border border-ink bg-stock text-left text-sm text-ink">
+            <thead className="bg-stock-drift font-mono text-[10px] uppercase tracking-[0.16em] text-ink-soft">
               <tr>
-                <th className="px-4 py-3">Type</th>
-                <th className="px-4 py-3">Message</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Timestamp</th>
+                <th className="px-4 py-3 font-normal">Type</th>
+                <th className="px-4 py-3 font-normal">Message</th>
+                <th className="px-4 py-3 font-normal">Status</th>
+                <th className="px-4 py-3 font-normal">Timestamp</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-hairline">
               <AsyncSection state={logsData} onRetry={logsData.reload} skeleton={<LogsTableSkeleton />}>
                 {logsData.data.logs.length === 0 ? (
-                  <tr><td colSpan={4} className="px-4 py-6 text-center">No logs found.</td></tr>
+                  <tr><td colSpan={4} className="px-4 py-6 text-center text-ink-soft">No logs found.</td></tr>
                 ) : (
                   logsData.data.logs.map((log) => (
-                    <tr key={log.id} className="border-b border-slate-700/50 hover:bg-slate-700/30">
-                      <td className="px-4 py-3 capitalize">{log.type}</td>
+                    <tr key={log.id} className="transition-colors hover:bg-stock-green">
+                      <td className="px-4 py-3 font-mono text-xs uppercase">{log.type}</td>
                       <td className="px-4 py-3">{log.message}</td>
-                      <td className={`px-4 py-3 font-medium ${statusClass(log.status)}`}>{log.status}</td>
-                      <td className="px-4 py-3 text-slate-400">{log.timestamp ? new Date(log.timestamp).toLocaleString() : '—'}</td>
+                      <td className={`px-4 py-3 font-mono text-[10px] uppercase tracking-[0.16em] ${statusClass(log.status)}`}>{log.status}</td>
+                      <td className="px-4 py-3 font-mono text-xs text-ink-soft">{log.timestamp ? new Date(log.timestamp).toLocaleString() : '—'}</td>
                     </tr>
                   ))
                 )}
@@ -138,22 +140,8 @@ export default function Logs() {
         </FadeIn>
 
         {totalPages > 1 && (
-          <FadeIn className="mt-6 flex items-center justify-between text-slate-300" delay="0.3s">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1}
-              className="flex items-center rounded-xl bg-slate-800 px-4 py-2 text-white transition-all hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-            </button>
-            <span>Page {page} of {totalPages}</span>
-            <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page >= totalPages}
-              className="flex items-center rounded-xl bg-slate-800 px-4 py-2 text-white transition-all hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Next <ChevronRight className="ml-2 h-4 w-4" />
-            </button>
+          <FadeIn className="mt-6" delay="0.3s">
+            <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
           </FadeIn>
         )}
       </div>
@@ -164,18 +152,12 @@ export default function Logs() {
 function LogsTableSkeleton() {
   return (
     <>
-      <tr className="border-b border-slate-600">
-        <td className="px-4 py-3"><div className="h-4 w-20 rounded bg-slate-500/30" /></td>
-        <td className="px-4 py-3"><div className="h-4 w-96 rounded bg-slate-500/30" /></td>
-        <td className="px-4 py-3"><div className="h-4 w-16 rounded bg-slate-500/30" /></td>
-        <td className="px-4 py-3"><div className="h-4 w-32 rounded bg-slate-500/30" /></td>
-      </tr>
-      {[...Array(4)].map((_, i) => (
-        <tr key={i} className="border-b border-slate-700/50">
-          <td className="px-4 py-3"><div className="h-4 w-16 rounded bg-slate-500/30" /></td>
-          <td className="px-4 py-3"><div className="h-4 w-80 rounded bg-slate-500/30" /></td>
-          <td className="px-4 py-3"><div className="h-4 w-16 rounded bg-slate-500/30" /></td>
-          <td className="px-4 py-3"><div className="h-4 w-28 rounded bg-slate-500/30" /></td>
+      {[...Array(5)].map((_, i) => (
+        <tr key={i}>
+          <td className="px-4 py-3"><div className="h-4 w-16 bg-ink-soft/20" /></td>
+          <td className="px-4 py-3"><div className="h-4 w-80 max-w-full bg-ink-soft/20" /></td>
+          <td className="px-4 py-3"><div className="h-4 w-16 bg-ink-soft/20" /></td>
+          <td className="px-4 py-3"><div className="h-4 w-28 bg-ink-soft/20" /></td>
         </tr>
       ))}
     </>
