@@ -185,3 +185,5 @@ cython_debug/
 .cursorindexingignore
 
 migrations/.env
+.vercel
+.env*

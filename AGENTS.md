@@ -102,7 +102,7 @@ npm run build         # production build
 
 ```bash
 cd backend
-# Root .env provides DATABASE_URL, DATABASE_URL_UNPOOLED, CLERK_* — see backend/.env.example
+# backend/.env provides DATABASE_URL, DATABASE_URL_UNPOOLED, CLERK_* — see backend/.env.example
 pip install -e .
 alembic upgrade head
 python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
@@ -117,10 +117,10 @@ docker compose up --build
 
 ## Environment
 
-- Backend reads `.env` at repo root (and `backend/.env`) through `app/config.py`.
+- Backend reads `backend/.env` (canonical; falls back to repo-root `.env`) through `app/config.py`. Repo-root `.env` holds legacy Flask keys only.
 - Frontend Vite proxy forwards `/api` to `http://localhost:8000`.
 - Neon: pooled `DATABASE_URL` for the app, `DATABASE_URL_UNPOOLED` for Alembic/dumps. Manage branches via the Neon CLI.
-- Clerk: `clerk env pull` writes `frontend/.env.local`; copy `CLERK_SECRET_KEY`/`CLERK_ISSUER`/`CLERK_JWKS_URL` to the backend env.
+- Clerk: `clerk env pull` writes `frontend/.env.local`; `CLERK_SECRET_KEY`/`CLERK_ISSUER`/`CLERK_JWKS_URL` belong in `backend/.env` only.
 - For Brevo email, set `BREVO_API_KEY`; otherwise messages are suppressed/logged in development.
 
 ## Gotchas
