@@ -20,15 +20,14 @@ Phalanx Cyber Academy is a game-based learning platform designed to enhance digi
 - **💳 Safe Practice Training**: Secure online banking, email, and social media habits
 
 ###  Technical Features
-- **🏗️ Modern Architecture**: Flask factory pattern with blueprints
-- **🎨 Responsive Design**: Tailwind CSS with Bootstrap Icons
-- **🔐 Complete Authentication**: Registration, passwordless login with email codes, email verification
+- **🏗️ Modern Architecture**: FastAPI + SQLAlchemy 2 backend, React 18 + TypeScript frontend
+- **🎨 Responsive Design**: Tailwind CSS 4 with shadcn/ui components and Lucide icons
+- **🔐 Complete Authentication**: Clerk-hosted sign-in/sign-up with email verification
 - **👥 Admin Panel**: User management, system monitoring, security logs
-- **🛡️ Advanced Security**: Account lockout, rate limiting, CSRF protection
+- **🛡️ Advanced Security**: JWT/JWKS-verified API access, admin role checks
 - **🌓 Theme System**: Light/Dark/System modes with persistent preferences
-- **📧 Email Integration**: Contact forms, login verification codes, verification emails
 - **📋 Legal Compliance**: Privacy policy, terms of service, cookie policy
-- **🚀 Deployment Ready**: Vercel and traditional hosting support
+- **🚀 Deployment Ready**: Vercel with Dockerized backend
 
 ## 🎯 Learning Modules
 
@@ -65,66 +64,7 @@ git clone <repository-url>
 cd Phalanx-Cyber-Academy
 ```
 
-### 2. Create Virtual Environment
-```bash
-python -m venv venv
-```
-
-### 3. Activate Virtual Environment
-```bash
-# On Windows
-venv\Scripts\activate
-
-# On macOS/Linux
-source venv/bin/activate
-```
-
-### 4. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 5. Configuration
-```bash
-# On Windows
-copy .env.template .env
-
-# On MacOS/Linux
-cp .env.template .env
-```
-
-Edit .env with your settings
-
-### 6. Initialize Database
-```bash
-flask db init
-flask db migrate -m "Initial migration"
-flask db upgrade
-```
-
-### 7. Run Application
-```bash
-python run.py
-```
-
-Visit `http://localhost:5000` to start your cybersecurity learning journey.
-
-## 🚀 Run the New Stack (React + FastAPI)
-
-The project now has a FastAPI backend in `backend/` and a React + Vite frontend in `frontend/`. You can run them together with Docker Compose or manually.
-
-### Option 1: Docker Compose (recommended)
-
-```bash
-docker compose up --build
-```
-
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8000
-
-### Option 2: Manual commands
-
-#### Backend
+### 2. Backend
 
 ```bash
 cd backend
@@ -133,36 +73,40 @@ cd backend
 python -m venv venv
 source venv/bin/activate    # On Windows: venv\Scripts\activate
 
-# create an .env from the template
-cp .env.template .env       # On Windows: copy .env.template .env
-# Edit .env and set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
+# create backend/.env from the example (Neon + Clerk values)
+cp .env.example .env        # On Windows: copy .env.example .env
 
-# install the package and its dependencies
+# install the package and apply migrations
 pip install -e .
+alembic upgrade head
 
 # start the FastAPI server
 python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-#### Frontend
+### 3. Frontend
 
 Open a second terminal:
 
 ```bash
 cd frontend
 
-# create an .env from the template (optional; Vite proxy already points to localhost:8000)
-cp .env.template .env       # On Windows: copy .env.template .env
+# pull the Clerk publishable key (writes .env.local)
+clerk env pull
 
-# install dependencies
+# install dependencies and start the dev server
 npm install
-
-# start the dev server
 npm run dev
 ```
 
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:8000 (proxied through Vite)
+
+### Docker Compose (alternative)
+
+```bash
+docker compose up --build
+```
 
 ## 🎮 How to Play
 
@@ -176,21 +120,19 @@ npm run dev
 ## 📚 Documentation
 
 ### Core Documentation
-- **[Authentication System](docs/authentication.md)** - Legacy passwordless authentication details
 - **[Admin Panel](docs/admin-panel.md)** - User management and system monitoring
 - **[Deployment Guide](docs/deployment.md)** - Vercel and production deployment
 
 ### Technical Features Overview
 
 #### 🔐 Authentication & Security
-- User registration with mandatory email verification
-- Passwordless login with email verification codes
-- Account lockout protection (IP-based)
-- Time-limited verification codes (10 minutes)
-- Session management with security headers
+- Clerk-hosted sign-in/sign-up with mandatory email verification
+- Backend JWT verification via Clerk JWKS on every protected route
+- Local profiles linked by `clerk_user_id`, provisioned on first login
+- Bearer-token API access — no cookies, no client-supplied identity headers
 
 #### 👥 Admin Panel
-- **Access**: Login via passwordless authentication with your admin email
+- **Access**: Sign in with an admin-flagged account
 - User management (activate/deactivate, admin privileges)
 - Real-time dashboard with statistics
 - Security logs and monitoring
@@ -198,17 +140,9 @@ npm run dev
 - Contact form management
 
 #### 🛡️ Security Features
-- **Account Lockout**: 5 failed attempts = 15-minute lockout (configurable)
-- **Rate Limiting**: IP-based request limiting
-- **CSRF Protection**: Built-in CSRF protection
+- **Token Verification**: RS256 signature, issuer, and expiry checks on every request
+- **Role Checks**: `is_admin`/`is_active` enforced server-side per request
 - **Secure Headers**: Security headers for production
-
-#### 📧 Email Verification System
-- **Verification Pending Page**: Clear instructions and status
-- **Auto-refresh**: Automatic verification status checking
-- **Resend Functionality**: Easy verification email resending
-- **Login Blocking**: Prevents login until email verified
-- **24-hour Expiration**: Secure, time-limited tokens
 
 #### 🌓 Theme System
 - **Light Mode**: Clean, bright interface
@@ -220,11 +154,8 @@ npm run dev
 ## 🔧 Environment Configuration
 
 ### Required Variables
+`backend/.env` (see `backend/.env.example`):
 ```bash
-# Core Settings
-FLASK_ENV=development
-SECRET_KEY=your-secret-key
-
 # Database — Neon Postgres (pooled for app, direct for Alembic)
 DATABASE_URL=postgresql+psycopg://user:pass@host-pooler.region.aws.neon.tech/db?sslmode=require
 DATABASE_URL_UNPOOLED=postgresql+psycopg://user:pass@host.region.aws.neon.tech/db?sslmode=require
@@ -233,115 +164,74 @@ DATABASE_URL_UNPOOLED=postgresql+psycopg://user:pass@host.region.aws.neon.tech/d
 CLERK_SECRET_KEY=sk_test_...
 CLERK_ISSUER=https://<app>.clerk.accounts.dev
 CLERK_JWKS_URL=https://<app>.clerk.accounts.dev/.well-known/jwks.json
-# frontend/.env.local (written by `clerk env pull`):
+```
+
+`frontend/.env.local` (written by `clerk env pull`):
+```bash
 VITE_CLERK_PUBLISHABLE_KEY=pk_test_...
-
-# Email Configuration
-MAIL_SERVER=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USE_TLS=true
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
-
-# Security Settings
-MAX_LOGIN_ATTEMPTS=5
-LOGIN_LOCKOUT_MINUTES=15
-PERMANENT_SESSION_LIFETIME=30
 ```
 
 ## 📁 Project Structure
 
 ```
 Phalanx Cyber Academy/
-├── app/                          # Main application package
-│   ├── models/                   # Database models
-│   ├── routes/                   # Application routes
-│   ├── static/                   # Static files (CSS, JS, images)
-│   │   ├── css/                  # CSS files
-│   │   ├── images/               # Image files
-│   │   └── js/                   # JavaScript files
-│   │       ├── components/       # Reusable JavaScript components
-│   │       ├── utils/            # Utility JavaScript files
-│   │       │   ├── pagination/   # Pagination utilities
-│   │       │   └── theme/        # Theme utilities
-│   │       └── main.js           # Main JavaScript file
-│   ├── templates/                # HTML templates
-│   │   ├── admin/                # Admin panel templates
-│   │   ├── auth/                 # Authentication templates
-│   │   ├── partials/             # Reusable template components
-│   │   │   ├── admin/            # Admin panel components
-│   │   │   │   ├── dashboard/    # Admin dashboard components
-│   │   │   │   ├── logs/         # Admin logs components
-│   │   │   │   ├── user-details/ # User details components
-│   │   │   │   └── users/        # User management components
-│   │   │   ├── shared/           # Shared components
-│   │   │   ├── footer.html       # Footer component
-│   │   │   └── navbar.html       # Navbar component
-│   │   ├── emails/               # Email templates for verification codes
-│   │   ├── policy-pages/         # Policy page templates
-│   │   ├── profile/              # Profile templates
-│   │   ├── about.html            # About page template
-│   │   ├── base.html             # Base template
-│   │   ├── contact.html          # Contact page template
-│   │   └── home.html             # Home page template
-│   ├── utils/                    # Utility modules
-│   └── __init__.py               # Application factory
+├── backend/                      # FastAPI backend
+│   ├── app/
+│   │   ├── models/               # SQLAlchemy models
+│   │   ├── routers/              # API route modules
+│   │   ├── services/             # Business logic
+│   │   ├── clerk_auth.py         # Clerk JWKS/JWT verification
+│   │   ├── dependencies.py       # get_current_user / optional_current_user
+│   │   └── utils/                # Timezone, formatting helpers
+│   ├── alembic/                  # Database migrations
+│   ├── tests/                    # pytest suite
+│   └── .env.example              # Backend env template
+├── frontend/                     # React + Vite frontend
+│   ├── src/
+│   │   ├── components/           # Shared UI, ProtectedRoute, AuthBridge
+│   │   ├── context/              # AuthContext (Clerk-backed), ToastContext
+│   │   ├── lib/                  # api.ts, utils.ts, generated/
+│   │   ├── pages/                # Route pages
+│   │   └── features/             # Simulated PC game components
+│   └── .env.example              # Frontend env template
 ├── docs/                         # Documentation files
-├── instance/                     # Instance-specific files
-├── migrations/                   # Database migrations
-├── .env.template                 # Environment variables template
-├── .gitignore                    # Git ignore file
-├── .vercelignore                 # Vercel ignore file
-├── config.py                     # Configuration
+├── docker-compose.yml            # Full-stack dev compose
 ├── LICENSE                       # MIT License file
 ├── README.md                     # Project README
-├── requirements.txt              # Dependencies
-├── run.py                        # Application entry point
 └── vercel.json                   # Vercel deployment config
 ```
 
-## 🚀 Deployment Options
+## 🚀 Deployment
 
-### Vercel (Serverless)
-- **One-click Deploy**: Automatic detection and deployment
-- **Environment Adaptation**: Auto-disables database features
-- **Contact Form**: Logs submissions instead of database storage
-- **Zero Configuration**: Works out of the box
+- **Vercel**: static frontend + containerized backend (`backend/Dockerfile`), orchestrated by `vercel.json`
+- **Env vars**: set the backend (`DATABASE_URL`, `CLERK_*`) and frontend (`VITE_CLERK_PUBLISHABLE_KEY`) variables in the Vercel dashboard
 
-### Traditional Hosting
-- **Full Features**: Complete database and authentication
-- **VPS/Dedicated**: Full control and customization
-- **Shared Hosting**: Basic hosting compatibility
-
-See the [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
+See the [Deployment Guide](docs/deployment.md) for detailed instructions.
 
 ## 🛡️ Security in Production
 
 ### Essential Steps
-1. **Verify Admin Access**: Ensure admin email is properly configured
-2. **Configure HTTPS**: Essential for secure cookies and authentication
-3. **Set Strong Secret Key**: Use a cryptographically secure secret
-4. **Configure Email**: Set up production email service
-5. **Monitor Logs**: Regular review of security and access logs
+1. **Verify Admin Access**: Ensure an admin-flagged account exists
+2. **Configure HTTPS**: Essential for secure authentication
+3. **Protect Secrets**: `CLERK_SECRET_KEY` and `DATABASE_URL` stay server-side only
+4. **Monitor Logs**: Regular review of security and access logs
 
 ### Production Checklist
 - [ ] HTTPS configured with valid SSL certificate
 - [ ] Environment variables secured
-- [ ] Default admin credentials changed
+- [ ] Admin access verified
 - [ ] Database credentials secured
-- [ ] Email service configured
 - [ ] Security headers configured
 - [ ] Backup strategy implemented
 - [ ] Monitoring and alerting set up
 
 ## 🔨 Technologies
 
-- **Backend**: Python Flask, SQLAlchemy, Flask-Migrate
-- **Frontend**: Tailwind CSS, Bootstrap Icons, Vanilla JavaScript
-- **Database**: SQLite (dev), PostgreSQL/MySQL (production)
-- **Security**: Argon2, Flask-WTF, CSRF Protection
-- **Email**: Flask-Mailman with SMTP support
-- **Deployment**: Vercel, traditional hosting
+- **Backend**: Python FastAPI, SQLAlchemy 2, Alembic
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS 4, shadcn/ui, React Router 7
+- **Database**: Neon Postgres
+- **Auth**: Clerk (`@clerk/react` + backend JWKS verification)
+- **Deployment**: Vercel, Docker
 
 ## 🎓 Educational Impact
 

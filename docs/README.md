@@ -4,20 +4,14 @@ This index maps the available documentation to the current implementation.
 
 ## Core Platform Docs
 - **[README](../README.md)** - Project overview, features, quick start, and environment variables.
-- **[MODULES](MODULES.md)** - Complete module, route, model, and component inventory.
+- **[MODULES](MODULES.md)** - Module/route/model inventory (legacy Flask app — historical reference).
 
 ## Authentication & Security
-- **[Authentication](authentication.md)** - Passwordless login, email verification, account lockout, and session security.
 - **[Admin Panel](admin-panel.md)** - Admin dashboard, user management, and system monitoring.
-- **[CSRF Implementation](csrf-implementation.md)** - Vercel/serverless CSRF handling.
-- **[CSRF Debugging on Vercel](csrf-debugging-vercel.md)** - CSRF troubleshooting.
-- **[Cookie Authentication Persistence](COOKIE_AUTH_IMPLEMENTATION.md)** - Session/cookie behavior.
 - **[Centralized XP & Session Management](centralized-xp-session-management.md)** - XP and session architecture.
 
 ## Deployment & Infrastructure
 - **[Deployment](deployment.md)** - Vercel, VPS, and traditional hosting.
-- **[Supabase Migration](supabase-migration.md)** - Migration to Supabase/PostgreSQL.
-- **[Flask-Mailman Migration](flask-mailman-migration.md)** - Email library migration notes.
 
 ## Game Systems
 - **[Characters](characters.md)** - Characters and personas.

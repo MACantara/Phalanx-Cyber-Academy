@@ -2,17 +2,16 @@
 
 ## Project
 
-Phalanx Cyber Academy is a game-based learning platform for digital literacy and cybersecurity awareness. The project is currently being migrated from a legacy Flask/Vanilla JS stack to a new **FastAPI + React + TypeScript** stack while keeping the legacy application runnable for reference.
+Phalanx Cyber Academy is a game-based learning platform for digital literacy and cybersecurity awareness, built on a **FastAPI + React + TypeScript** stack.
 
-- **Public-facing rewrite**: React/TypeScript frontend in `frontend/`.
-- **New backend**: FastAPI in `backend/app/`.
-- **Legacy reference**: Flask in `app/` — do not modify except for critical bug fixes.
+- **Frontend**: React/TypeScript in `frontend/`.
+- **Backend**: FastAPI in `backend/app/`.
 
 ## Stack
 
 - **Backend**: Python 3.12, FastAPI, Uvicorn, SQLAlchemy 2 (sync, `psycopg3`), Alembic, Pydantic Settings.
 - **Frontend**: React 18, TypeScript, Vite, React Router v7, Tailwind CSS 4 (`@tailwindcss/vite`), shadcn/ui (`components.json`, `cn()` in `src/lib/utils.ts`), `lucide-react`, `axios`.
-- **Database**: Neon Postgres — schema in `backend/alembic/versions/` (baseline `0001_baseline.py`); `supabase_schema.sql` kept as historical reference.
+- **Database**: Neon Postgres — schema owned by Alembic in `backend/alembic/versions/` (baseline `0001_baseline.py`).
 - **Auth**: Clerk — `@clerk/react` on the frontend, JWT/JWKS verification on the backend.
 - **Styling**: Tailwind CSS 4 with `dark:` class-mode theme (`@custom-variant dark` in `index.css`). See `DESIGN.md` for the design system.
 
@@ -20,11 +19,10 @@ Phalanx Cyber Academy is a game-based learning platform for digital literacy and
 
 ```
 c:\Projects\Phalanx-Cyber-Academy
-├── app/                          # Legacy Flask application (reference only)
 ├── backend/
 │   ├── app/
 │   │   ├── main.py               # FastAPI app + router registration
-│   │   ├── config.py             # Pydantic settings (Neon, Clerk, Brevo, CORS)
+│   │   ├── config.py             # Pydantic settings (Neon, Clerk, CORS)
 │   │   ├── db.py                 # SQLAlchemy engine + session_scope()
 │   │   ├── clerk_auth.py         # Clerk JWKS/JWT verification
 │   │   ├── models/               # SQLAlchemy declarative models (all tables)
@@ -44,9 +42,7 @@ c:\Projects\Phalanx-Cyber-Academy
 │   │   ├── features/simulated-pc/# Simulated PC game components
 │   │   └── App.tsx               # Routes + providers (ClerkProvider lives in main.tsx)
 │   └── components.json           # shadcn/ui config
-├── docs/                         # Legacy and migration docs
-├── supabase_schema.sql           # Historical schema reference
-└── .windsurf/plans/              # Migration plan files
+└── docs/                         # Design and migration docs
 ```
 
 ### Auth flow
@@ -67,14 +63,12 @@ Clerk-hosted authentication (email OTP, OAuth, etc. configured in the Clerk dash
 - Use `session_scope()` from `app/db.py` for all database access; never instantiate engine/session per call.
 - Use Tailwind CSS for styling; avoid custom CSS except for keyframe animations in `index.css`.
 - Use `lucide-react` icons; never add Bootstrap Icons in new components.
-- Keep the legacy `app/` directory unchanged. Do not delete, rename, or edit legacy files for the rewrite.
 - Add all imports at the top of a file; never insert imports mid-file.
 
 ### Ask first
 
 - Adding or removing npm/Python dependencies.
-- Changing the database schema — Alembic migrations are the only path (`alembic revision --autogenerate`, then `alembic upgrade head`); do not hand-edit `supabase_schema.sql`.
-- Modifying legacy `app/` files.
+- Changing the database schema — Alembic migrations are the only path (`alembic revision --autogenerate`, then `alembic upgrade head`).
 - Creating new top-level files or directories outside `frontend/` or `backend/`.
 
 ### Never
@@ -82,7 +76,7 @@ Clerk-hosted authentication (email OTP, OAuth, etc. configured in the Clerk dash
 - Commit `.env`, `.env.local`, or real API keys (`CLERK_SECRET_KEY` is backend-only; only `VITE_CLERK_PUBLISHABLE_KEY` belongs in frontend env).
 - Trust client-supplied identity headers — `X-User-Id` is retired; identity comes only from the verified Clerk JWT.
 - Use `console.log` in production code; use toast notifications or proper logging.
-- Leave stub UI on public pages; match legacy content and design where parity is requested.
+- Leave stub UI on public pages; match established content and design where parity is requested.
 - Use `any` types in new TypeScript code unless absolutely unavoidable.
 
 ## Build & Test
@@ -121,7 +115,6 @@ docker compose up --build
 - Frontend Vite proxy forwards `/api` to `http://localhost:8000`.
 - Neon: pooled `DATABASE_URL` for the app, `DATABASE_URL_UNPOOLED` for Alembic/dumps. Manage branches via the Neon CLI.
 - Clerk: `clerk env pull` writes `frontend/.env.local`; `CLERK_SECRET_KEY`/`CLERK_ISSUER`/`CLERK_JWKS_URL` belong in `backend/.env` only.
-- For Brevo email, set `BREVO_API_KEY`; otherwise messages are suppressed/logged in development.
 
 ## Gotchas
 
@@ -136,4 +129,3 @@ docker compose up --build
 
 - [Design System](DESIGN.md)
 - [README](README.md)
-- [Supabase Schema](supabase_schema.sql) (historical reference)
