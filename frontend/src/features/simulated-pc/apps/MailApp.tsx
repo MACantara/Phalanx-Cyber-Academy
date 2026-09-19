@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { useSimulatedPC } from '../context/SimulatedPCContext';
-import { FocusedSandboxLayout } from '../components/FocusedSandboxLayout';
+import { AppFrame } from '../components/AppFrame';
 import { Inbox, Mail, ShieldCheck, ShieldAlert, CheckCircle, XCircle } from 'lucide-react';
-import type { EmailSandboxContent, ScoringEvent } from '../types';
+import type { MailContent, ScoringEvent } from '../types';
 
-export function EmailSandboxRenderer() {
-  const { content, completeSession, startShutdown, startReplay, addScoringEvent, score } = useSimulatedPC();
-  if (!content || content.type !== 'email-sandbox') return null;
-  const emailContent = content as EmailSandboxContent;
+export function MailApp() {
+  const { environment, completeSession, startShutdown, startReplay, addScoringEvent, score } = useSimulatedPC();
+  if (!environment) return null;
+  const mail = environment.content.mail as MailContent | undefined;
 
-  const emails = emailContent.emails;
+  const emails = mail?.emails ?? [];
   const [selectedId, setSelectedId] = useState<string>(emails[0]?.id ?? '');
   const [answers, setAnswers] = useState<Record<string, 'phishing' | 'legitimate'>>({});
   const [finished, setFinished] = useState(false);
@@ -28,9 +28,16 @@ export function EmailSandboxRenderer() {
     if (!selected) return;
     const e = selected;
     const expected = e.isPhishing ? 'phishing' : 'legitimate';
-    const correctItem = emailContent.scoring.rubric.find((r) => r.id === 'correct');
+    const correctItem = environment.scoring.rubric.find((r) => r.id === 'correct');
     const points = label === expected ? (correctItem?.maxPoints ?? 100) : 0;
-    const event: ScoringEvent = { type: 'email-classified', id: e.id, points };
+    const event: ScoringEvent = {
+      type: 'email-classified',
+      id: e.id,
+      points,
+      app: 'mail',
+      action: 'classify',
+      target: e.id,
+    };
     addScoringEvent(event);
     setAnswers((prev) => ({ ...prev, [e.id]: label }));
     const nextIndex = emails.findIndex((item) => item.id === e.id) + 1;
@@ -44,7 +51,7 @@ export function EmailSandboxRenderer() {
 
   if (finished) {
     return (
-      <FocusedSandboxLayout title={emailContent.title} instructions={emailContent.instructions}>
+      <AppFrame title={environment.title} instructions={environment.briefing}>
         <div className="flex h-full flex-col items-center justify-center p-6 text-center">
           <span className="register mb-3">Session Report</span>
           <h2 className="mb-2 text-2xl font-extrabold tracking-tight">Email Security Complete</h2>
@@ -68,12 +75,12 @@ export function EmailSandboxRenderer() {
             </button>
           </div>
         </div>
-      </FocusedSandboxLayout>
+      </AppFrame>
     );
   }
 
   return (
-    <FocusedSandboxLayout title={emailContent.title} instructions={emailContent.instructions}>
+    <AppFrame title={environment.title} instructions={environment.briefing}>
       <div className="flex h-full flex-col bg-stock text-ink">
         <div className="register flex items-center border-b border-hairline bg-stock-drift px-3 py-2">
           <Inbox className="mr-2 h-4 w-4" /> Exhibits ({emails.length})
@@ -180,6 +187,6 @@ export function EmailSandboxRenderer() {
           </div>
         </div>
       </div>
-    </FocusedSandboxLayout>
+    </AppFrame>
   );
 }

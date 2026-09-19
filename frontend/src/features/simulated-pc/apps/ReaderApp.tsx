@@ -1,15 +1,16 @@
 import { useMemo, useState } from 'react';
 import { useSimulatedPC } from '../context/SimulatedPCContext';
-import { FocusedSandboxLayout } from '../components/FocusedSandboxLayout';
+import { AppFrame } from '../components/AppFrame';
 import { Newspaper, ArrowRight, CheckCircle, XCircle, RefreshCcw, LogOut } from 'lucide-react';
-import type { ArticleSandboxContent, Article } from '../types';
+import type { Article, ReaderContent } from '../types';
 
-export function ArticleSandboxRenderer() {
-  const { content, completeSession, startShutdown, startReplay, score } = useSimulatedPC();
-  if (!content || content.type !== 'article-sandbox') return null;
-  const articleContent = content as ArticleSandboxContent;
+export function ReaderApp() {
+  const { environment, completeSession, startShutdown, startReplay, score } = useSimulatedPC();
+  if (!environment) return null;
+  const reader = environment.content.reader as ReaderContent | undefined;
 
-  const { title, instructions, articles, scoring } = articleContent;
+  const articles = reader?.articles ?? [];
+  const scoring = environment.scoring;
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [finished, setFinished] = useState(false);
@@ -136,7 +137,7 @@ export function ArticleSandboxRenderer() {
 
   if (finished) {
     return (
-      <FocusedSandboxLayout title={title} instructions={instructions}>
+      <AppFrame title={environment.title} instructions={environment.briefing}>
         <div className="flex h-full flex-col items-center justify-center p-6 text-center">
           <span className="register mb-3">Session Report</span>
           <h2 className="mb-2 text-2xl font-extrabold tracking-tight text-ink">Analysis Complete</h2>
@@ -162,14 +163,14 @@ export function ArticleSandboxRenderer() {
             </button>
           </div>
         </div>
-      </FocusedSandboxLayout>
+      </AppFrame>
     );
   }
 
   return (
-    <FocusedSandboxLayout
-      title={title}
-      instructions={instructions}
+    <AppFrame
+      title={environment.title}
+      instructions={environment.briefing}
     >
       <div className="flex h-full flex-col">
         <div className="register border-b border-hairline bg-stock-drift px-4 py-2 sm:px-6">
@@ -177,6 +178,6 @@ export function ArticleSandboxRenderer() {
         </div>
         {current ? renderArticle(current) : null}
       </div>
-    </FocusedSandboxLayout>
+    </AppFrame>
   );
 }

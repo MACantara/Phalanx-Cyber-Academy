@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useSimulatedPC } from '../context/SimulatedPCContext';
-import { FocusedSandboxLayout } from '../components/FocusedSandboxLayout';
+import { AppFrame } from '../components/AppFrame';
 import { EvidenceViewer } from '../components/EvidenceViewer';
 import { FileText, Lock, AlertCircle, FileImage, Hexagon, Activity } from 'lucide-react';
-import type { CaseStoryContent, CaseChoice, FileItem, EvidenceItem, ScoringEvent } from '../types';
+import type { CaseChoice, CaseContent, FileItem, EvidenceItem, ScoringEvent } from '../types';
 
 const kindIcons = {
   text: FileText,
@@ -12,19 +12,20 @@ const kindIcons = {
   image: FileImage,
 } as const;
 
-export function CaseStoryRenderer() {
-  const { content, addScoringEvent, completeSession, startShutdown } = useSimulatedPC();
-  if (!content || content.type !== 'case-story') return null;
-  const caseContent = content as CaseStoryContent;
+export function CaseApp() {
+  const { environment, addScoringEvent, completeSession, startShutdown } = useSimulatedPC();
+  if (!environment) return null;
+  const caseData = environment.content.case as CaseContent | undefined;
+  if (!caseData) return null;
 
-  const [currentSceneId, setCurrentSceneId] = useState(caseContent.initialSceneId);
+  const [currentSceneId, setCurrentSceneId] = useState(caseData.initialSceneId);
   const [viewedEvidence, setViewedEvidence] = useState<Set<string>>(new Set());
   const [openFileId, setOpenFileId] = useState<string | null>(null);
   const [openItemId, setOpenItemId] = useState<string | null>(null);
 
-  const scene = caseContent.scenes[currentSceneId];
-  const evidenceFiles = caseContent.evidence.files ?? [];
-  const evidenceItems = caseContent.evidence.items ?? [];
+  const scene = caseData.scenes[currentSceneId];
+  const evidenceFiles = caseData.evidence.files ?? [];
+  const evidenceItems = caseData.evidence.items ?? [];
 
   const isUnlocked = useMemo(() => {
     if (!scene?.requiredEvidence || scene.requiredEvidence.length === 0) return true;
@@ -32,7 +33,14 @@ export function CaseStoryRenderer() {
   }, [scene, viewedEvidence]);
 
   const choose = (choice: CaseChoice) => {
-    const event: ScoringEvent = { type: 'choice', id: choice.id, points: choice.score };
+    const event: ScoringEvent = {
+      type: 'choice',
+      id: choice.id,
+      points: choice.score,
+      app: 'case',
+      action: 'choice',
+      target: choice.id,
+    };
     addScoringEvent(event);
     if (choice.next === '__end') {
       completeSession();
@@ -62,7 +70,7 @@ export function CaseStoryRenderer() {
   if (!scene) return null;
 
   return (
-    <FocusedSandboxLayout title={caseContent.title} instructions={caseContent.instructions}>
+    <AppFrame title={environment.title} instructions={environment.briefing}>
       <div className="grid h-full grid-cols-1 gap-4 overflow-auto p-4 lg:grid-cols-3 lg:overflow-hidden">
         <div className="plate col-span-1 flex h-full flex-col gap-4 overflow-hidden p-4 sm:p-5 lg:col-span-2">
           <div className="flex-1 overflow-auto border border-hairline bg-stock-drift p-4 sm:p-5">
@@ -164,6 +172,6 @@ export function CaseStoryRenderer() {
           )}
         </div>
       </div>
-    </FocusedSandboxLayout>
+    </AppFrame>
   );
 }
