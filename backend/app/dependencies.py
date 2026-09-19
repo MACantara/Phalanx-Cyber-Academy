@@ -107,3 +107,15 @@ async def get_current_user(request: Request):
         user = _provision_profile(clerk_user_id)
 
     return user.to_dict()
+
+
+async def optional_current_user(request: Request):
+    """Resolve the caller when a valid Bearer token is present, else None.
+
+    For public endpoints that personalize responses for signed-in users
+    without requiring authentication.
+    """
+    try:
+        return await get_current_user(request)
+    except HTTPException:
+        return None

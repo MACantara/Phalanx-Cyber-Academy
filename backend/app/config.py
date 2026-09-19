@@ -11,10 +11,6 @@ class Settings(BaseSettings):
     app_name: str = "Phalanx Cyber Academy API"
     debug: bool = False
 
-    # Supabase (legacy, being retired)
-    supabase_url: str | None = None
-    supabase_service_role_key: str | None = None
-
     # Neon Postgres — pooled for app traffic, direct for migrations
     database_url: str | None = None
     database_url_unpooled: str | None = None
@@ -37,7 +33,7 @@ class Settings(BaseSettings):
     # CORS
     cors_allowed_origins: str = "http://localhost:5173"
     cors_allowed_methods: str = "GET,POST,PUT,DELETE,OPTIONS"
-    cors_allowed_headers: str = "Authorization,Content-Type,X-User-Id,X-Requested-With"
+    cors_allowed_headers: str = "Authorization,Content-Type,X-Requested-With"
 
 
 settings = Settings()

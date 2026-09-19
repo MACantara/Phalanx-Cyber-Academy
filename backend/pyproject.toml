@@ -13,7 +13,6 @@ dependencies = [
     "pydantic[email]",
     "pydantic-settings",
     "python-dotenv",
-    "supabase",
     "httpx",
     "python-docx",
     "jinja2",
