@@ -26,6 +26,7 @@ export default function Login() {
             path="/login"
             signUpUrl="/signup"
             fallbackRedirectUrl="/dashboard"
+            signUpFallbackRedirectUrl="/onboarding"
           />
         </div>
 
