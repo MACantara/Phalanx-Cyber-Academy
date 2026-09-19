@@ -1,14 +1,38 @@
-from datetime import datetime, timedelta
+import uuid
+from datetime import timedelta
 from typing import Any, Dict, List, Optional, Tuple
-from app.supabase_client import get_supabase
-from app.errors import DatabaseError, handle_supabase_error
+
+from sqlalchemy import func, or_, select
+from sqlalchemy.exc import SQLAlchemyError
+
+from app.db import session_scope
+from app.errors import DatabaseError
+from app.models import Profile
 from app.utils.timezone_utils import parse_datetime_aware, utc_now
+
+
+def _profile_to_dict(row: Profile) -> Dict[str, Any]:
+    return {
+        "id": str(row.id),
+        "clerk_user_id": row.clerk_user_id,
+        "username": row.username,
+        "email": row.email,
+        "is_active": row.is_active,
+        "is_admin": row.is_admin,
+        "total_xp": row.total_xp,
+        "timezone": row.timezone,
+        "cybersecurity_experience": row.cybersecurity_experience,
+        "onboarding_completed": row.onboarding_completed,
+        "created_at": row.created_at,
+        "last_login": row.last_login,
+    }
 
 
 class User:
     def __init__(self, data: Dict[str, Any]):
-        """Initialize User from Supabase data."""
+        """Initialize User from a profile dict."""
         self.id = data.get("id")
+        self.clerk_user_id = data.get("clerk_user_id")
         self.username = data.get("username")
         self.email = data.get("email")
         self._is_active = data.get("is_active", True)
@@ -25,6 +49,10 @@ class User:
         if isinstance(self.last_login, str):
             self.last_login = parse_datetime_aware(self.last_login)
 
+    @classmethod
+    def _from_row(cls, row: Profile) -> "User":
+        return cls(_profile_to_dict(row))
+
     @property
     def is_active(self):
         return self._is_active
@@ -36,6 +64,7 @@ class User:
     def to_dict(self) -> Dict[str, Any]:
         return {
             "id": self.id,
+            "clerk_user_id": self.clerk_user_id,
             "username": self.username,
             "email": self.email,
             "is_active": self.is_active,
@@ -49,84 +78,103 @@ class User:
         }
 
     def save(self):
-        supabase = get_supabase()
         try:
-            user_data = {
-                "username": self.username,
-                "email": self.email,
-                "is_active": self.is_active,
-                "is_admin": self.is_admin,
-                "total_xp": self.total_xp,
-                "timezone": self.timezone,
-                "cybersecurity_experience": self.cybersecurity_experience,
-                "onboarding_completed": self.onboarding_completed,
-                "last_login": self.last_login.isoformat() if self.last_login else None,
-            }
-
-            if self.id:
-                response = supabase.table("profiles").update(user_data).eq("id", self.id).execute()
-                handle_supabase_error(response)
-            else:
-                user_data["created_at"] = utc_now().isoformat()
-                response = supabase.table("profiles").insert(user_data).execute()
-                data = handle_supabase_error(response)
-                if data and len(data) > 0:
-                    self.id = data[0]["id"]
-                    self.created_at = parse_datetime_aware(data[0]["created_at"])
-        except Exception as e:
+            with session_scope() as session:
+                if self.id:
+                    row = session.get(Profile, uuid.UUID(str(self.id)))
+                    if row is None:
+                        raise DatabaseError(f"Profile {self.id} not found")
+                    for field in (
+                        "clerk_user_id",
+                        "username",
+                        "email",
+                        "is_active",
+                        "is_admin",
+                        "total_xp",
+                        "timezone",
+                        "cybersecurity_experience",
+                        "onboarding_completed",
+                    ):
+                        setattr(row, field, getattr(self, field))
+                    row.is_active = self.is_active
+                    row.last_login = self.last_login
+                else:
+                    row = Profile(
+                        clerk_user_id=self.clerk_user_id,
+                        username=self.username,
+                        email=self.email,
+                        is_active=self.is_active,
+                        is_admin=self.is_admin,
+                        total_xp=self.total_xp,
+                        timezone=self.timezone,
+                        cybersecurity_experience=self.cybersecurity_experience,
+                        onboarding_completed=self.onboarding_completed,
+                        last_login=self.last_login,
+                    )
+                    session.add(row)
+                    session.flush()
+                    self.id = str(row.id)
+                    self.created_at = row.created_at
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to save user: {e}")
 
     @classmethod
     def find_by_id(cls, user_id: str) -> Optional["User"]:
-        supabase = get_supabase()
         try:
-            response = supabase.table("profiles").select("*").eq("id", user_id).execute()
-            data = handle_supabase_error(response)
-            if data and len(data) > 0:
-                return cls(data[0])
+            uid = uuid.UUID(str(user_id))
+        except (ValueError, AttributeError):
             return None
-        except Exception as e:
+        try:
+            with session_scope() as session:
+                row = session.get(Profile, uid)
+                return cls._from_row(row) if row else None
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to find user by ID: {e}")
 
     @classmethod
-    def find_by_username(cls, username: str) -> Optional["User"]:
-        supabase = get_supabase()
+    def find_by_clerk_user_id(cls, clerk_user_id: str) -> Optional["User"]:
         try:
-            response = supabase.table("profiles").select("*").eq("username", username).execute()
-            data = handle_supabase_error(response)
-            if data and len(data) > 0:
-                return cls(data[0])
-            return None
-        except Exception as e:
+            with session_scope() as session:
+                row = session.execute(
+                    select(Profile).where(Profile.clerk_user_id == clerk_user_id)
+                ).scalar_one_or_none()
+                return cls._from_row(row) if row else None
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Failed to find user by Clerk ID: {e}")
+
+    @classmethod
+    def find_by_username(cls, username: str) -> Optional["User"]:
+        try:
+            with session_scope() as session:
+                row = session.execute(
+                    select(Profile).where(Profile.username == username)
+                ).scalar_one_or_none()
+                return cls._from_row(row) if row else None
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to find user by username: {e}")
 
     @classmethod
     def find_by_email(cls, email: str) -> Optional["User"]:
-        supabase = get_supabase()
         try:
-            response = supabase.table("profiles").select("*").eq("email", email).execute()
-            data = handle_supabase_error(response)
-            if data and len(data) > 0:
-                return cls(data[0])
-            return None
-        except Exception as e:
+            with session_scope() as session:
+                row = session.execute(
+                    select(Profile).where(Profile.email == email)
+                ).scalar_one_or_none()
+                return cls._from_row(row) if row else None
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to find user by email: {e}")
 
     @classmethod
     def find_by_username_or_email(cls, identifier: str) -> Optional["User"]:
-        supabase = get_supabase()
         try:
-            response = (
-                supabase.table("profiles")
-                .select("*")
-                .or_(f"username.eq.{identifier},email.eq.{identifier}")
-                .execute()
-            )
-            data = handle_supabase_error(response)
-            if data and len(data) > 0:
-                return cls(data[0])
-            return None
-        except Exception as e:
+            with session_scope() as session:
+                row = session.execute(
+                    select(Profile).where(
+                        or_(Profile.username == identifier, Profile.email == identifier)
+                    )
+                ).scalar_one_or_none()
+                return cls._from_row(row) if row else None
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to find user by username or email: {e}")
 
     @classmethod
@@ -137,68 +185,70 @@ class User:
         search: Optional[str] = None,
         status_filter: str = "all",
     ) -> Tuple[List["User"], int]:
-        supabase = get_supabase()
         try:
-            query = supabase.table("profiles").select("*", count="exact")
+            with session_scope() as session:
+                query = select(Profile)
+                count_query = select(func.count()).select_from(Profile)
 
-            if search:
-                query = query.or_(f"username.ilike.%{search}%,email.ilike.%{search}%")
+                if search:
+                    pattern = f"%{search}%"
+                    cond = or_(
+                        Profile.username.ilike(pattern), Profile.email.ilike(pattern)
+                    )
+                    query = query.where(cond)
+                    count_query = count_query.where(cond)
 
-            if status_filter == "active":
-                query = query.eq("is_active", True)
-            elif status_filter == "inactive":
-                query = query.eq("is_active", False)
-            elif status_filter == "admin":
-                query = query.eq("is_admin", True)
+                if status_filter == "active":
+                    query = query.where(Profile.is_active.is_(True))
+                    count_query = count_query.where(Profile.is_active.is_(True))
+                elif status_filter == "inactive":
+                    query = query.where(Profile.is_active.is_(False))
+                    count_query = count_query.where(Profile.is_active.is_(False))
+                elif status_filter == "admin":
+                    query = query.where(Profile.is_admin.is_(True))
+                    count_query = count_query.where(Profile.is_admin.is_(True))
 
-            offset = (page - 1) * per_page
-            response = (
-                query.order("created_at", desc=True)
-                .range(offset, offset + per_page - 1)
-                .execute()
-            )
-            data = handle_supabase_error(response)
-            total_count = response.count if hasattr(response, "count") else len(data)
-            return [cls(user_data) for user_data in data], total_count
-        except Exception as e:
+                total_count = session.execute(count_query).scalar() or 0
+                rows = session.execute(
+                    query.order_by(Profile.created_at.desc())
+                    .offset((page - 1) * per_page)
+                    .limit(per_page)
+                ).scalars().all()
+                return [cls._from_row(r) for r in rows], total_count
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to get users: {e}")
 
     @classmethod
     def count_all(cls) -> int:
-        supabase = get_supabase()
         try:
-            response = supabase.table("profiles").select("*", count="exact").execute()
-            return response.count if hasattr(response, "count") else 0
-        except Exception as e:
+            with session_scope() as session:
+                return session.execute(select(func.count()).select_from(Profile)).scalar() or 0
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to count users: {e}")
 
     @classmethod
     def count_active(cls) -> int:
-        supabase = get_supabase()
         try:
-            response = (
-                supabase.table("profiles")
-                .select("*", count="exact")
-                .eq("is_active", True)
-                .execute()
-            )
-            return response.count if hasattr(response, "count") else 0
-        except Exception as e:
+            with session_scope() as session:
+                return session.execute(
+                    select(func.count())
+                    .select_from(Profile)
+                    .where(Profile.is_active.is_(True))
+                ).scalar() or 0
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to count active users: {e}")
 
     @classmethod
     def count_recent_registrations(cls, days: int = 30) -> int:
-        supabase = get_supabase()
         try:
-            cutoff_date = (utc_now() - timedelta(days=days)).isoformat()
-            response = (
-                supabase.table("profiles")
-                .select("*", count="exact")
-                .gte("created_at", cutoff_date)
-                .execute()
-            )
-            return response.count if hasattr(response, "count") else 0
-        except Exception as e:
+            cutoff = utc_now() - timedelta(days=days)
+            with session_scope() as session:
+                return session.execute(
+                    select(func.count())
+                    .select_from(Profile)
+                    .where(Profile.created_at >= cutoff)
+                ).scalar() or 0
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to count recent registrations: {e}")
 
     def __repr__(self):
