@@ -1,18 +1,21 @@
 """Blue Team vs Red Team simulation API."""
+import logging
+import uuid
 from datetime import datetime
 from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
+from sqlalchemy.exc import SQLAlchemyError
 
+from app.db import session_scope
 from app.dependencies import get_current_user
-from app.errors import DatabaseError, handle_supabase_error
+from app.errors import DatabaseError
+from app.models import BvrGameState
 from app.services.session_service import Session
 from app.services.xp_award import XPManager
 from app.services.xp_history_service import XPHistory
-from app.supabase_client import get_supabase
 from app.utils.timezone_utils import utc_now, parse_datetime_aware
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -57,17 +60,19 @@ def _default_state() -> Dict[str, Any]:
 
 def _load_state(user_id: str) -> Dict[str, Any]:
     try:
-        supabase = get_supabase()
-        response = supabase.table("bvr_game_states").select("*").eq("profile_id", user_id).execute()
-        data = handle_supabase_error(response)
-        if data:
-            stored = data[0].get("state", {})
+        uid = uuid.UUID(str(user_id))
+    except (ValueError, AttributeError):
+        return _default_state()
+    try:
+        with session_scope() as session:
+            row = session.get(BvrGameState, uid)
+            if row is None:
+                return _default_state()
             state = _default_state()
-            state.update(stored)
+            state.update(row.state or {})
             return state
-    except Exception as e:
+    except SQLAlchemyError as e:
         raise DatabaseError(f"Failed to load BvR game state: {e}")
-    return _default_state()
 
 
 def _get_state(user_id: str) -> Dict[str, Any]:
@@ -79,13 +84,18 @@ def _get_state(user_id: str) -> Dict[str, Any]:
 def _save_state(user_id: str) -> None:
     state = _game_states.get(user_id, _default_state())
     try:
-        supabase = get_supabase()
-        supabase.table("bvr_game_states").upsert({
-            "profile_id": user_id,
-            "state": state,
-            "updated_at": utc_now().isoformat(),
-        }).execute()
-    except Exception as e:
+        uid = uuid.UUID(str(user_id))
+    except (ValueError, AttributeError) as e:
+        raise DatabaseError(f"Failed to save BvR game state: {e}")
+    try:
+        with session_scope() as session:
+            row = session.get(BvrGameState, uid)
+            if row is None:
+                row = BvrGameState(profile_id=uid)
+                session.add(row)
+            row.state = state
+            row.updated_at = utc_now()
+    except SQLAlchemyError as e:
         raise DatabaseError(f"Failed to save BvR game state: {e}")
 
 

@@ -1,31 +1,52 @@
 import csv
 import io
+import logging
 import secrets
+import uuid
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
+import httpx
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, EmailStr, Field
+from sqlalchemy import func, select
+from sqlalchemy.exc import SQLAlchemyError
 
+from app.config import settings
+from app.db import session_scope
 from app.dependencies import get_current_user
-import logging
-
-logger = logging.getLogger(__name__)
-from app.errors import DatabaseError, handle_supabase_error
-from app.supabase_client import get_supabase
+from app.errors import DatabaseError
+from app.models import AdminAuditLog, ContactSubmission, Level, Profile, Session
 from app.services.user_service import User as UserService
-from app.services.contact_service import Contact
-from app.services.level_service import Level
 from app.utils.timezone_utils import utc_now
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter(tags=["admin"])
+
+CLERK_API_BASE = "https://api.clerk.com/v1"
 
 
 async def require_admin(user: Dict[str, Any] = Depends(get_current_user)):
     if not user.get("is_admin"):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin required")
     return user
+
+
+def _clerk_delete_user(clerk_user_id: str) -> None:
+    """Delete a Clerk user via the Backend API. Raises on failure."""
+    if not settings.clerk_secret_key:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Delete failed: CLERK_SECRET_KEY is not configured",
+        )
+    response = httpx.delete(
+        f"{CLERK_API_BASE}/users/{clerk_user_id}",
+        headers={"Authorization": f"Bearer {settings.clerk_secret_key}"},
+        timeout=10,
+    )
+    response.raise_for_status()
 
 
 def _log_admin_action(
@@ -37,21 +58,46 @@ def _log_admin_action(
 ) -> None:
     """Best-effort insertion of an admin audit log entry."""
     try:
-        supabase = get_supabase()
-        supabase.table("admin_audit_logs").insert({
-            "admin_id": admin_id,
-            "action": action,
-            "target_type": target_type,
-            "target_id": target_id,
-            "details": details or {},
-            "created_at": utc_now().isoformat(),
-        }).execute()
+        with session_scope() as session:
+            session.add(
+                AdminAuditLog(
+                    admin_id=uuid.UUID(str(admin_id)) if admin_id else None,
+                    action=action,
+                    target_type=target_type,
+                    target_id=target_id,
+                    details=details or {},
+                    created_at=utc_now(),
+                )
+            )
     except Exception as exc:
         logger.warning("Failed to log admin action %s: %s", action, exc)
 
 
 @router.get("/stats")
 def get_stats(user: Dict[str, Any] = Depends(require_admin)):
+    try:
+        with session_scope() as session:
+            unread_contacts = session.execute(
+                select(func.count())
+                .select_from(ContactSubmission)
+                .where(ContactSubmission.is_read.is_(False))
+            ).scalar() or 0
+            recent_contacts = session.execute(
+                select(func.count())
+                .select_from(ContactSubmission)
+                .where(ContactSubmission.created_at >= utc_now() - timedelta(days=30))
+            ).scalar() or 0
+            total_levels = session.execute(
+                select(func.count()).select_from(Level)
+            ).scalar() or 0
+            available_levels = session.execute(
+                select(func.count())
+                .select_from(Level)
+                .where(Level.coming_soon.is_(False))
+            ).scalar() or 0
+    except SQLAlchemyError as e:
+        raise DatabaseError(f"Failed to get admin stats: {e}")
+
     return {
         "users": {
             "total": UserService.count_all(),
@@ -59,56 +105,64 @@ def get_stats(user: Dict[str, Any] = Depends(require_admin)):
             "recent_30d": UserService.count_recent_registrations(days=30),
         },
         "contacts": {
-            "unread": Contact.get_unread_count(),
-            "recent_30d": Contact.count_recent_submissions(days=30),
+            "unread": unread_contacts,
+            "recent_30d": recent_contacts,
         },
         "levels": {
-            "total": len(Level.get_all_levels()),
-            "available": len(Level.get_available_levels()),
+            "total": total_levels,
+            "available": available_levels,
         },
     }
 
 
-def _safe(query, default=None):
+def _safe(query) -> List[Any]:
+    """Run a SELECT and return its rows, or [] on failure (best-effort)."""
     try:
-        return handle_supabase_error(query.execute()) or default
+        with session_scope() as session:
+            return list(session.execute(query).scalars().all())
     except Exception as exc:
-        logger.warning("Supabase query failed in _safe: %s", exc)
-        return default
+        logger.warning("Database query failed in _safe: %s", exc)
+        return []
 
 
-def _get_logs(supabase, limit: int = 100) -> List[Dict[str, Any]]:
-    contacts = _safe(supabase.table("contact_submissions").select("*").order("created_at", desc=True).limit(limit), [])
-    sessions = _safe(supabase.table("sessions").select("*").order("start_time", desc=True).limit(limit), [])
-    users = _safe(supabase.table("profiles").select("*").order("created_at", desc=True).limit(limit), [])
+def _get_logs(limit: int = 100) -> List[Dict[str, Any]]:
+    contacts = _safe(
+        select(ContactSubmission).order_by(ContactSubmission.created_at.desc()).limit(limit)
+    )
+    sessions = _safe(
+        select(Session).order_by(Session.start_time.desc()).limit(limit)
+    )
+    users = _safe(
+        select(Profile).order_by(Profile.created_at.desc()).limit(limit)
+    )
 
     logs = []
     for c in contacts:
         logs.append({
-            "id": f"contact_{c.get('id')}",
+            "id": f"contact_{c.id}",
             "type": "contact",
-            "timestamp": c.get("created_at"),
-            "message": f"Contact submission from {c.get('name')} <{c.get('email')}>",
-            "status": "read" if c.get("is_read") else "unread",
-            "details": c.get("subject"),
+            "timestamp": c.created_at.isoformat() if c.created_at else None,
+            "message": f"Contact submission from {c.name} <{c.email}>",
+            "status": "read" if c.is_read else "unread",
+            "details": c.subject,
         })
     for s in sessions:
         logs.append({
-            "id": f"session_{s.get('id')}",
+            "id": f"session_{s.id}",
             "type": "session",
-            "timestamp": s.get("start_time"),
-            "message": f"Session '{s.get('session_name')}' started for level {s.get('level_id')}",
-            "status": "completed" if s.get("end_time") else "active",
-            "details": f"score={s.get('score')} profile_id={s.get('profile_id')}",
+            "timestamp": s.start_time.isoformat() if s.start_time else None,
+            "message": f"Session '{s.session_name}' started for level {s.level_id}",
+            "status": "completed" if s.end_time else "active",
+            "details": f"score={s.score} profile_id={s.profile_id}",
         })
     for u in users:
         logs.append({
-            "id": f"user_{u.get('id')}",
+            "id": f"user_{u.id}",
             "type": "registration",
-            "timestamp": u.get("created_at"),
-            "message": f"New user registered: {u.get('email')}",
-            "status": "active" if u.get("is_active") else "inactive",
-            "details": f"admin={u.get('is_admin')} onboarding_completed={u.get('onboarding_completed')}",
+            "timestamp": u.created_at.isoformat() if u.created_at else None,
+            "message": f"New user registered: {u.email}",
+            "status": "active" if u.is_active else "inactive",
+            "details": f"admin={u.is_admin} onboarding_completed={u.onboarding_completed}",
         })
 
     logs.sort(key=lambda x: x.get("timestamp") or "", reverse=True)
@@ -132,8 +186,7 @@ def get_logs(
     event_type: str | None = None,
     user: Dict[str, Any] = Depends(require_admin),
 ):
-    supabase = get_supabase()
-    logs = _get_logs(supabase, limit=page * per_page)
+    logs = _get_logs(limit=page * per_page)
     logs = _filter_logs(logs, search, event_type)
     total = len(logs)
     start = (page - 1) * per_page
@@ -147,8 +200,7 @@ def export_logs(
     event_type: str | None = None,
     user: Dict[str, Any] = Depends(require_admin),
 ):
-    supabase = get_supabase()
-    logs = _get_logs(supabase, limit=10000)
+    logs = _get_logs(limit=10000)
     logs = _filter_logs(logs, search, event_type)
     output = io.StringIO()
     writer = csv.DictWriter(output, fieldnames=["id", "type", "timestamp", "message", "status", "details"])
@@ -166,20 +218,24 @@ def export_logs(
 
 @router.get("/analytics/dashboard")
 def get_analytics_dashboard(user: Dict[str, Any] = Depends(require_admin)):
-    supabase = get_supabase()
     total_users = UserService.count_all()
-    cutoff = (datetime.utcnow() - timedelta(days=30)).isoformat()
+    cutoff = utc_now() - timedelta(days=30)
     try:
-        recent_signups = handle_supabase_error(supabase.table("profiles").select("created_at", count="exact").gte("created_at", cutoff).execute())
-        recent_signups_count = recent_signups[0].get("count") if isinstance(recent_signups, list) and recent_signups else 0
+        with session_scope() as session:
+            recent_signups_count = session.execute(
+                select(func.count())
+                .select_from(Profile)
+                .where(Profile.created_at >= cutoff)
+            ).scalar() or 0
     except Exception:
         recent_signups_count = 0
     try:
-        sessions = handle_supabase_error(supabase.table("sessions").select("*").execute()) or []
+        with session_scope() as session:
+            sessions = session.execute(select(Session)).scalars().all()
     except Exception:
         sessions = []
-    completed_sessions = [s for s in sessions if s.get("end_time") is not None]
-    avg_score = sum(s.get("score", 0) or 0 for s in completed_sessions) / len(completed_sessions) if completed_sessions else 0
+    completed_sessions = [s for s in sessions if s.end_time is not None]
+    avg_score = sum(s.score or 0 for s in completed_sessions) / len(completed_sessions) if completed_sessions else 0
     return {
         "total_users": total_users,
         "recent_signups": recent_signups_count,
@@ -191,23 +247,23 @@ def get_analytics_dashboard(user: Dict[str, Any] = Depends(require_admin)):
 
 @router.get("/analytics/levels")
 def get_analytics_levels(user: Dict[str, Any] = Depends(require_admin)):
-    supabase = get_supabase()
     try:
-        sessions = handle_supabase_error(supabase.table("sessions").select("*").execute()) or []
+        with session_scope() as session:
+            sessions = session.execute(select(Session)).scalars().all()
     except Exception:
         sessions = []
     level_stats: Dict[int, Dict[str, Any]] = {}
     for s in sessions:
-        lid = s.get("level_id")
+        lid = s.level_id
         if lid is None:
             continue
         if lid not in level_stats:
             level_stats[lid] = {"sessions": 0, "completed": 0, "total_score": 0, "scores": []}
         level_stats[lid]["sessions"] += 1
-        if s.get("end_time") is not None:
+        if s.end_time is not None:
             level_stats[lid]["completed"] += 1
-        level_stats[lid]["total_score"] += s.get("score", 0) or 0
-        level_stats[lid]["scores"].append(s.get("score", 0) or 0)
+        level_stats[lid]["total_score"] += s.score or 0
+        level_stats[lid]["scores"].append(s.score or 0)
     result = []
     for level_id, stats in level_stats.items():
         result.append({
@@ -248,29 +304,59 @@ def create_user(payload: CreateUserPayload, user: Dict[str, Any] = Depends(requi
     if existing:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists")
 
-    supabase = get_supabase()
+    if not settings.clerk_secret_key:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create auth user: CLERK_SECRET_KEY is not configured",
+        )
+
     temp_password = secrets.token_urlsafe(16)
+    clerk_body = {
+        "email_address": [payload.email],
+        "password": temp_password,
+        "public_metadata": {
+            "username": payload.username,
+            "timezone": payload.timezone,
+        },
+    }
+    if payload.username:
+        clerk_body["username"] = payload.username
     try:
-        auth_response = supabase.auth.admin.create_user({
-            "email": payload.email,
-            "password": temp_password,
-            "email_confirm": True,
-            "user_metadata": {
-                "username": payload.username,
-                "timezone": payload.timezone,
-            },
-        })
-    except Exception as exc:
+        auth_response = httpx.post(
+            f"{CLERK_API_BASE}/users",
+            headers={"Authorization": f"Bearer {settings.clerk_secret_key}"},
+            json=clerk_body,
+            timeout=10,
+        )
+        auth_response.raise_for_status()
+        clerk_user = auth_response.json()
+    except httpx.HTTPError as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to create auth user: {exc}",
         ) from exc
 
-    new_id = str(auth_response.user.id)
+    clerk_user_id = clerk_user.get("id")
     try:
-        supabase.table("profiles").update({"is_admin": payload.is_admin}).eq("id", new_id).execute()
-    except Exception:
-        pass
+        with session_scope() as session:
+            row = Profile(
+                clerk_user_id=clerk_user_id,
+                username=payload.username,
+                email=payload.email,
+                timezone=payload.timezone,
+                is_admin=payload.is_admin,
+            )
+            session.add(row)
+            session.flush()
+            new_id = str(row.id)
+    except SQLAlchemyError as e:
+        # Best-effort rollback so no orphaned Clerk account remains.
+        if clerk_user_id:
+            try:
+                _clerk_delete_user(clerk_user_id)
+            except Exception:
+                logger.warning("Failed to roll back Clerk user %s", clerk_user_id)
+        raise DatabaseError(f"Failed to create user profile: {e}")
 
     _log_admin_action(
         admin_id=user["id"],
@@ -339,11 +425,18 @@ def perform_user_action(
             details={"is_admin": target.is_admin, "user_id": user_id},
         )
     elif payload.action == "delete":
-        supabase = get_supabase()
+        if target.clerk_user_id:
+            try:
+                _clerk_delete_user(target.clerk_user_id)
+            except httpx.HTTPError as e:
+                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Delete failed: {e}")
         try:
-            supabase.auth.admin.delete_user(user_id)
-        except Exception as e:
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Delete failed: {e}")
+            with session_scope() as session:
+                row = session.get(Profile, uuid.UUID(str(user_id)))
+                if row is not None:
+                    session.delete(row)
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Delete failed: {e}")
         _log_admin_action(
             admin_id=user["id"],
             action="delete_user",
@@ -358,22 +451,39 @@ def perform_user_action(
     return {"success": True, "user": target.to_dict()}
 
 
+def _session_to_dict(s: Session) -> Dict[str, Any]:
+    return {
+        "id": s.id,
+        "profile_id": str(s.profile_id),
+        "session_name": s.session_name,
+        "level_id": s.level_id,
+        "score": s.score,
+        "start_time": s.start_time.isoformat() if s.start_time else None,
+        "end_time": s.end_time.isoformat() if s.end_time else None,
+        "created_at": s.created_at.isoformat() if s.created_at else None,
+    }
+
+
 @router.get("/users/{user_id}/activity")
 def get_user_activity(
     user_id: str,
     user: Dict[str, Any] = Depends(require_admin),
 ):
-    supabase = get_supabase()
     target = UserService.find_by_id(user_id)
     if not target:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     def safe(query):
         try:
-            return handle_supabase_error(query.execute()) or []
+            with session_scope() as session:
+                return [_session_to_dict(s) for s in session.execute(query).scalars().all()]
         except Exception:
             return []
 
     return {
-        "sessions": safe(supabase.table("sessions").select("*").eq("profile_id", user_id).order("start_time", desc=True)),
+        "sessions": safe(
+            select(Session)
+            .where(Session.profile_id == uuid.UUID(str(user_id)))
+            .order_by(Session.start_time.desc())
+        ),
     }
