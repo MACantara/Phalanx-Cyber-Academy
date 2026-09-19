@@ -108,3 +108,55 @@ def test_primary_email_unverified_rejected():
     from app.dependencies import _primary_email
 
     assert _primary_email(_clerk_user("a@b.c", verified=False), require_verified=True) is None
+
+
+class _Profile:
+    def __init__(self, clerk_user_id=None):
+        self.clerk_user_id = clerk_user_id
+        self.saved = False
+
+    def save(self):
+        self.saved = True
+
+
+def _provision_setup(monkeypatch, profile, exists):
+    from app import dependencies
+
+    monkeypatch.setattr(
+        dependencies, "_fetch_clerk_user", lambda uid: _clerk_user("a@b.c")
+    )
+    monkeypatch.setattr(dependencies, "_clerk_user_exists", lambda uid: exists)
+    monkeypatch.setattr(
+        dependencies.UserService,
+        "find_by_email",
+        staticmethod(lambda email: profile),
+    )
+    return dependencies
+
+
+def test_provision_rebinds_deleted_clerk_user(monkeypatch):
+    profile = _Profile(clerk_user_id="user_deleted")
+    deps = _provision_setup(monkeypatch, profile, exists=False)
+    user = deps._provision_profile("user_new")
+    assert user is profile
+    assert profile.clerk_user_id == "user_new"
+    assert profile.saved
+
+
+def test_provision_conflicts_live_clerk_user(monkeypatch):
+    from fastapi import HTTPException
+
+    profile = _Profile(clerk_user_id="user_other")
+    deps = _provision_setup(monkeypatch, profile, exists=True)
+    with pytest.raises(HTTPException) as exc:
+        deps._provision_profile("user_new")
+    assert exc.value.status_code == 409
+    assert profile.clerk_user_id == "user_other"
+
+
+def test_provision_claims_unlinked_profile(monkeypatch):
+    profile = _Profile(clerk_user_id=None)
+    deps = _provision_setup(monkeypatch, profile, exists=True)
+    user = deps._provision_profile("user_new")
+    assert profile.clerk_user_id == "user_new"
+    assert profile.saved
