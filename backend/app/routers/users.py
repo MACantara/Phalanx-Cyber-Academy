@@ -1,3 +1,4 @@
+import re
 from typing import Any, Dict, List
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
@@ -30,7 +31,19 @@ def update_profile(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     if payload.username is not None:
-        db_user.username = payload.username
+        username = payload.username.strip()
+        if not re.match(r"^[a-zA-Z0-9_]{3,30}$", username):
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Username must be 3-30 characters: letters, numbers, underscores",
+            )
+        taken = UserService.find_by_username(username)
+        if taken and str(taken.id) != str(user["id"]):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Username is already taken",
+            )
+        db_user.username = username
     if payload.timezone is not None:
         db_user.timezone = payload.timezone
     if payload.cybersecurity_experience is not None:

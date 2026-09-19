@@ -2,7 +2,7 @@ import uuid
 from datetime import timedelta
 from typing import Any, Dict, List, Optional, Tuple
 
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, or_, select, update
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.db import session_scope
@@ -117,6 +117,24 @@ class User:
                     self.created_at = row.created_at
         except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to save user: {e}")
+
+    def touch_last_login(self, min_interval_minutes: int = 15):
+        """Update last_login at most once per interval (JWT auth has no login event)."""
+        now = utc_now()
+        if self.last_login and (now - self.last_login) < timedelta(
+            minutes=min_interval_minutes
+        ):
+            return
+        self.last_login = now
+        try:
+            with session_scope() as session:
+                session.execute(
+                    update(Profile)
+                    .where(Profile.id == uuid.UUID(str(self.id)))
+                    .values(last_login=now)
+                )
+        except SQLAlchemyError:
+            pass
 
     @classmethod
     def find_by_id(cls, user_id: str) -> Optional["User"]:
