@@ -3,15 +3,26 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=("../.env", ".env"),
         env_file_encoding="utf-8",
         extra="ignore",
     )
 
     app_name: str = "Phalanx Cyber Academy API"
     debug: bool = False
-    supabase_url: str
-    supabase_service_role_key: str
+
+    # Supabase (legacy, being retired)
+    supabase_url: str | None = None
+    supabase_service_role_key: str | None = None
+
+    # Neon Postgres — pooled for app traffic, direct for migrations
+    database_url: str | None = None
+    database_url_unpooled: str | None = None
+
+    # Clerk auth
+    clerk_secret_key: str | None = None
+    clerk_jwks_url: str | None = None
+    clerk_issuer: str | None = None
 
     # Brevo transactional email
     brevo_api_key: str | None = None

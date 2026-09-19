@@ -17,7 +17,14 @@ dependencies = [
     "httpx",
     "python-docx",
     "jinja2",
+    "sqlalchemy",
+    "alembic",
+    "psycopg[binary]",
+    "pyjwt[crypto]",
 ]
+
+[tool.setuptools]
+packages = ["app"]
 
 [project.optional-dependencies]
 dev = ["pytest", "httpx"]
