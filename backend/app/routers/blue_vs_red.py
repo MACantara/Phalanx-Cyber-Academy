@@ -19,7 +19,7 @@ from app.utils.timezone_utils import utc_now, parse_datetime_aware
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/blue-vs-red", tags=["blue-vs-red"])
+router = APIRouter(tags=["blue-vs-red"])
 
 _game_states: Dict[int, Dict[str, Any]] = {}
 
