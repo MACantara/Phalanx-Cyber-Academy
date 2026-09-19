@@ -19,6 +19,7 @@ services:
       - frontend/.env.local
     environment:
       - VITE_PROXY_TARGET=http://backend:8000
+      - CHOKIDAR_USEPOLLING=true
     volumes:
       - ./frontend:/app
       - /app/node_modules
