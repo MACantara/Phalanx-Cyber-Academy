@@ -46,38 +46,39 @@ export default function Reports() {
   };
 
   return (
-    <section className="relative min-h-[80vh] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 py-12">
-      <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <section className="min-h-[80vh] bg-stock py-12">
+      <div className="mx-auto max-w-4xl px-5 sm:px-8">
         <FadeIn className="mb-8">
-          <Link to="/admin" className="mb-4 inline-flex items-center text-slate-300 hover:text-white">
+          <Link to="/admin" className="mb-4 inline-flex items-center font-mono text-xs uppercase tracking-[0.14em] text-seal-ink underline-offset-[3px] hover:underline">
             <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
           </Link>
-          <h1 className="text-4xl font-bold text-white md:text-5xl">Reports & Documents</h1>
-          <p className="mt-2 text-lg text-slate-300">Generate Word documents from user data</p>
+          <span className="register block">Admin — Document Register</span>
+          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">Reports & Documents</h1>
+          <p className="mt-2 text-sm text-ink-soft sm:text-base">Generate Word documents from user data</p>
         </FadeIn>
 
-        {error && <p className="mb-6 rounded-lg bg-red-100 p-4 text-center text-red-700 dark:bg-red-900/30 dark:text-red-200">{error}</p>}
+        {error && <p className="mb-6 border border-strike/60 bg-stock px-4 py-3 font-mono text-sm text-strike">{error}</p>}
 
-        <FadeIn className="rounded-2xl border border-slate-700 bg-slate-800/70 p-8 shadow-lg backdrop-blur-md" delay="0.1s">
+        <FadeIn className="plate plate-strong p-6 sm:p-8" delay="0.1s">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 text-white">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center bg-seal text-seal-ink">
               <FileText className="h-6 w-6" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">Certificate of Achievement</h2>
-              <p className="text-slate-300">Generate a completion certificate for a selected user.</p>
+              <h2 className="text-xl font-bold tracking-tight text-ink">Certificate of Achievement</h2>
+              <p className="mt-1 text-sm text-ink-soft">Generate a completion certificate for a selected user.</p>
             </div>
           </div>
 
-          <div className="mt-6 space-y-4">
+          <div className="mt-6 space-y-5">
             <AsyncSection state={users} onRetry={users.reload} skeleton={<ReportsUserSkeleton />}>
               <div>
-                <label htmlFor="user" className="block text-sm font-semibold text-slate-300">Select user</label>
+                <label htmlFor="user" className="register mb-2 block">Select user</label>
                 <select
                   id="user"
                   value={selected}
                   onChange={(e) => setSelected(Number(e.target.value) || '')}
-                  className="mt-2 w-full cursor-pointer rounded-xl border border-slate-600 bg-slate-900 px-4 py-3 text-white focus:border-blue-500 focus:outline-none"
+                  className="mt-2 w-full cursor-pointer border border-hairline bg-stock px-4 py-3 text-sm text-ink focus:border-seal-ink focus:outline-none focus:ring-2 focus:ring-seal-ink/40"
                 >
                   <option value="">Choose a user</option>
                   {users.data.map((u) => (
@@ -90,7 +91,7 @@ export default function Reports() {
             <button
               onClick={downloadCertificate}
               disabled={!selected || loading}
-              className="inline-flex items-center rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-3 font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex min-h-[44px] items-center justify-center bg-ink px-8 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink hover:text-stock disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-seal dark:hover:text-seal-ink"
             >
               <Download className="mr-2 h-5 w-5" /> {loading ? 'Generating...' : 'Download Certificate'}
             </button>
@@ -104,8 +105,8 @@ export default function Reports() {
 function ReportsUserSkeleton() {
   return (
     <div>
-      <div className="mb-2 h-4 w-24 rounded bg-slate-500/30" />
-      <div className="h-12 w-full rounded-xl bg-slate-500/30" />
+      <div className="mb-2 h-3 w-24 bg-ink-soft/20" />
+      <div className="h-12 w-full bg-ink-soft/20" />
     </div>
   );
 }

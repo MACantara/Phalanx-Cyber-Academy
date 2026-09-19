@@ -29,12 +29,12 @@ const initialDashboard: DashboardStats = {
 };
 
 const StatCard = ({ icon: Icon, label, value }: { icon: typeof Trophy; label: string; value: string | number }) => (
-  <div className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 shadow-lg backdrop-blur-md">
-    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-      <Icon className="h-6 w-6" />
+  <div className="plate p-4 transition-colors hover:border-ink">
+    <div className="mb-4 flex h-10 w-10 items-center justify-center bg-seal text-seal-ink">
+      <Icon className="h-5 w-5" />
     </div>
-    <p className="text-slate-400">{label}</p>
-    <p className="text-3xl font-bold text-white">{value}</p>
+    <p className="register">{label}</p>
+    <p className="mt-1 text-3xl font-bold tracking-tight text-ink">{value}</p>
   </div>
 );
 
@@ -50,18 +50,19 @@ export default function Analytics() {
   }, [], { initial: [] });
 
   return (
-    <section className="relative min-h-[80vh] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900 py-12">
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="min-h-[80vh] bg-stock py-12">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <FadeIn className="mb-8">
-          <Link to="/admin" className="mb-4 inline-flex items-center text-slate-300 hover:text-white">
+          <Link to="/admin" className="mb-4 inline-flex items-center font-mono text-xs uppercase tracking-[0.14em] text-seal-ink underline-offset-[3px] hover:underline">
             <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
           </Link>
-          <h1 className="text-4xl font-bold text-white md:text-5xl">Player Analytics</h1>
-          <p className="mt-2 text-lg text-slate-300">Platform metrics and level performance</p>
+          <span className="register block">Admin — Analytics Register</span>
+          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">Player Analytics</h1>
+          <p className="mt-2 text-sm text-ink-soft sm:text-base">Platform metrics and level performance</p>
         </FadeIn>
 
         <AsyncSection state={dashboard} onRetry={dashboard.reload} skeleton={<AnalyticsStatsSkeleton />}>
-          <FadeIn className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" delay="0.1s">
+          <FadeIn className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" delay="0.1s">
             <StatCard icon={Target} label="Total Users" value={dashboard.data.total_users} />
             <StatCard icon={BarChart3} label="Recent Signups" value={dashboard.data.recent_signups} />
             <StatCard icon={Trophy} label="Completed Sessions" value={dashboard.data.completed_sessions} />
@@ -69,30 +70,34 @@ export default function Analytics() {
           </FadeIn>
         </AsyncSection>
 
-        <FadeIn className="mt-10 rounded-2xl border border-slate-700 bg-slate-800/70 p-6 shadow-lg backdrop-blur-md" delay="0.2s">
-          <h2 className="mb-4 text-2xl font-bold text-white">Level Performance</h2>
-          <AsyncSection state={levels} onRetry={levels.reload} skeleton={<LevelPerformanceSkeleton />}>
-            {levels.data.length === 0 ? (
-              <p className="text-slate-300">No level session data yet.</p>
-            ) : (
-              <div className="space-y-4">
-                {levels.data.map((l) => (
-                  <div key={l.level_id} className="flex items-center gap-4">
-                    <span className="w-16 text-slate-300">Level {l.level_id}</span>
-                    <div className="flex-1">
-                      <div className="h-4 rounded bg-slate-700">
-                        <div
-                          className="h-4 rounded bg-gradient-to-r from-blue-500 to-purple-600"
-                          style={{ width: `${Math.min(100, (l.average_score || 0))}%` }}
-                        />
+        <FadeIn className="plate plate-strong mt-8" delay="0.2s">
+          <div className="border-b border-hairline px-5 py-4">
+            <h2 className="text-lg font-bold tracking-tight text-ink">Level Performance</h2>
+          </div>
+          <div className="p-5">
+            <AsyncSection state={levels} onRetry={levels.reload} skeleton={<LevelPerformanceSkeleton />}>
+              {levels.data.length === 0 ? (
+                <p className="text-sm text-ink-soft">No level session data yet.</p>
+              ) : (
+                <div className="space-y-4">
+                  {levels.data.map((l) => (
+                    <div key={l.level_id} className="flex items-center gap-4">
+                      <span className="w-16 font-mono text-xs uppercase tracking-[0.14em] text-ink">Level {l.level_id}</span>
+                      <div className="flex-1">
+                        <div className="h-3 border border-hairline bg-stock">
+                          <div
+                            className="h-full bg-ink"
+                            style={{ width: `${Math.min(100, (l.average_score || 0))}%` }}
+                          />
+                        </div>
                       </div>
+                      <span className="w-32 text-right font-mono text-xs uppercase tracking-[0.14em] text-ink-soft">{l.sessions} sessions</span>
                     </div>
-                    <span className="w-32 text-right text-slate-300">{l.sessions} sessions</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </AsyncSection>
+                  ))}
+                </div>
+              )}
+            </AsyncSection>
+          </div>
         </FadeIn>
       </div>
     </section>
@@ -101,13 +106,13 @@ export default function Analytics() {
 
 function AnalyticsStatsSkeleton() {
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {[...Array(4)].map((_, i) => (
-        <div key={i} className="rounded-2xl border border-slate-700 bg-slate-800/70 p-6 shadow-lg backdrop-blur-md">
-          <div className="mb-4 h-12 w-12 rounded-xl bg-slate-500/30" />
+        <div key={i} className="plate p-4">
+          <div className="mb-4 h-10 w-10 bg-ink-soft/20" />
           <div className="space-y-2">
-            <div className="h-4 w-24 rounded bg-slate-500/30" />
-            <div className="h-8 w-16 rounded bg-slate-500/30" />
+            <div className="h-3 w-24 bg-ink-soft/20" />
+            <div className="h-8 w-16 bg-ink-soft/20" />
           </div>
         </div>
       ))}
@@ -118,16 +123,11 @@ function AnalyticsStatsSkeleton() {
 function LevelPerformanceSkeleton() {
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-4 border-b border-slate-600 pb-2">
-        <div className="h-4 w-12 rounded bg-slate-500/30" />
-        <div className="h-4 flex-1 rounded bg-slate-500/30" />
-        <div className="h-4 w-24 rounded bg-slate-500/30" />
-      </div>
       {[...Array(6)].map((_, i) => (
         <div key={i} className="flex items-center gap-4">
-          <div className="h-4 w-16 rounded bg-slate-500/30" />
-          <div className="h-4 flex-1 rounded bg-slate-500/30" />
-          <div className="h-4 w-20 rounded bg-slate-500/30" />
+          <div className="h-4 w-16 bg-ink-soft/20" />
+          <div className="h-4 flex-1 bg-ink-soft/20" />
+          <div className="h-4 w-20 bg-ink-soft/20" />
         </div>
       ))}
     </div>
