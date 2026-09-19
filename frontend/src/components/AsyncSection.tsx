@@ -18,8 +18,8 @@ export default function AsyncSection<T>({
   state,
   children,
   skeleton,
-  shimmerColor = 'rgba(107, 114, 128, 0.25)',
-  backgroundColor = 'rgba(156, 163, 175, 0.15)',
+  shimmerColor = 'rgba(155, 156, 151, 0.35)',
+  backgroundColor = 'rgba(155, 156, 151, 0.15)',
 }: AsyncSectionProps<T>) {
   const [ready, setReady] = useState(false);
 

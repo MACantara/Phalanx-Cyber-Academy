@@ -11,11 +11,6 @@ export default function Cookies() {
       title="Cookie Policy"
       subtitle="How we use cookies and similar technologies"
       icon={Cookie}
-      headerGradient="from-orange-600 to-amber-600"
-      subtitleColor="text-orange-100"
-      dateBarBg="bg-orange-50 dark:bg-orange-900/20"
-      dateBarBorder="border-b border-orange-200 dark:border-orange-800"
-      dateText="text-orange-800 dark:text-orange-200"
       updated={updated}
       effective={effective}
     >

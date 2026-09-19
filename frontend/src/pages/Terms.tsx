@@ -11,11 +11,6 @@ export default function Terms() {
       title="Terms of Service"
       subtitle="Legal terms and conditions for using our service"
       icon={FileText}
-      headerGradient="from-green-600 to-teal-600"
-      subtitleColor="text-green-100"
-      dateBarBg="bg-green-50 dark:bg-green-900/20"
-      dateBarBorder="border-b border-green-200 dark:border-green-800"
-      dateText="text-green-800 dark:text-green-200"
       updated={updated}
       effective={effective}
     >

@@ -11,11 +11,6 @@ export default function Privacy() {
       title="Privacy Policy"
       subtitle="Your privacy and data protection rights under RA 10173"
       icon={Shield}
-      headerGradient="from-blue-600 to-indigo-600"
-      subtitleColor="text-blue-100"
-      dateBarBg="bg-blue-50 dark:bg-blue-900/20"
-      dateBarBorder="border-b border-blue-200 dark:border-blue-800"
-      dateText="text-blue-800 dark:text-blue-200"
       updated={updated}
       effective={effective}
     >
