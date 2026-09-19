@@ -117,7 +117,7 @@ docker compose up --build
 
 ## Environment
 
-- Backend reads `backend/.env` (canonical; falls back to repo-root `.env`) through `app/config.py`. Repo-root `.env` holds legacy Flask keys only.
+- Backend reads `backend/.env` through `app/config.py` (its legacy/feature-flag block is unused by FastAPI — kept for reference only). Repo root has no `.env` — only `.env.local` holding the Vercel CLI token.
 - Frontend Vite proxy forwards `/api` to `http://localhost:8000`.
 - Neon: pooled `DATABASE_URL` for the app, `DATABASE_URL_UNPOOLED` for Alembic/dumps. Manage branches via the Neon CLI.
 - Clerk: `clerk env pull` writes `frontend/.env.local`; `CLERK_SECRET_KEY`/`CLERK_ISSUER`/`CLERK_JWKS_URL` belong in `backend/.env` only.
