@@ -1,5 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import AuthBridge from './components/AuthBridge';
+import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import Home from './pages/Home';
@@ -9,9 +11,6 @@ import Level from './pages/Level';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Onboarding from './pages/Onboarding';
-import Verify from './pages/Verify';
-import EmailSent from './pages/EmailSent';
-import ConfirmEmail from './pages/ConfirmEmail';
 import Leaderboard from './pages/Leaderboard';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
@@ -39,6 +38,7 @@ function App() {
   return (
     <AuthProvider>
       <ToastProvider>
+        <AuthBridge />
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
@@ -49,33 +49,34 @@ function App() {
             <Route path="levels" element={<Levels />} />
             <Route path="levels/:levelId" element={<Level />} />
             <Route path="login" element={<Login />} />
-            <Route path="verify" element={<Verify />} />
-            <Route path="email-sent" element={<EmailSent />} />
-            <Route path="confirm-email" element={<ConfirmEmail />} />
-            <Route path="onboarding" element={<Onboarding />} />
+            <Route path="signup" element={<Signup />} />
             <Route path="server-error" element={<ServerError />} />
             <Route path="leaderboard" element={<Leaderboard />} />
-            <Route path="signup" element={<Signup />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="profile/edit" element={<EditProfile />} />
             <Route path="contact" element={<Contact />} />
-            <Route path="admin" element={<AdminDashboard />} />
-            <Route path="admin/users" element={<Users />} />
-            <Route path="admin/users/:userId" element={<UserDetails />} />
-            <Route path="admin/logs" element={<Logs />} />
-            <Route path="admin/analytics" element={<Analytics />} />
-            <Route path="admin/reports" element={<Reports />} />
-            <Route path="admin/backups" element={<Backup />} />
-            <Route path="admin/backups/schedule" element={<Schedule />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="onboarding" element={<Onboarding />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="profile/edit" element={<EditProfile />} />
+              <Route path="admin" element={<AdminDashboard />} />
+              <Route path="admin/users" element={<Users />} />
+              <Route path="admin/users/:userId" element={<UserDetails />} />
+              <Route path="admin/logs" element={<Logs />} />
+              <Route path="admin/analytics" element={<Analytics />} />
+              <Route path="admin/reports" element={<Reports />} />
+              <Route path="admin/backups" element={<Backup />} />
+              <Route path="admin/backups/schedule" element={<Schedule />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Route>
 
-          <Route path="blue-vs-red" element={<BvRLayout />}>
-            <Route index element={<BlueVsRedIntroduction />} />
-            <Route path="tutorial" element={<BlueVsRedTutorial />} />
-            <Route path="dashboard" element={<BlueVsRedDashboard />} />
-            <Route path="*" element={<NotFound />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="blue-vs-red" element={<BvRLayout />}>
+              <Route index element={<BlueVsRedIntroduction />} />
+              <Route path="tutorial" element={<BlueVsRedTutorial />} />
+              <Route path="dashboard" element={<BlueVsRedDashboard />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
           </Route>
         </Routes>
       </ToastProvider>

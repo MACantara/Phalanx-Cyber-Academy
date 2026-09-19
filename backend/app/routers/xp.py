@@ -1,14 +1,19 @@
-from typing import Any, Dict, List
+import uuid
+from typing import Any, Dict
+
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
+from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 
+from app.db import session_scope
 from app.dependencies import get_current_user
-from app.errors import DatabaseError, handle_supabase_error
+from app.errors import DatabaseError
+from app.models import Badge, UserBadge, UserStreak
 from app.services.user_service import User
 from app.services.xp_service import calculate_level_xp, get_user_level_info
 from app.services.xp_award import XPManager
 from app.services.xp_history_service import XPHistory
-from app.supabase_client import get_supabase
 
 router = APIRouter()
 
@@ -107,20 +112,34 @@ def recalculate_xp(user: Dict[str, Any] = Depends(get_current_user)):
 def xp_badges(user: Dict[str, Any] = Depends(get_current_user)):
     """Return the current user's earned badges alongside the badge catalog."""
     try:
-        supabase = get_supabase()
-        badges_data = handle_supabase_error(supabase.table("badges").select("*").execute()) or []
-        user_badges_data = handle_supabase_error(
-            supabase.table("user_badges").select("*").eq("profile_id", user["id"]).execute()
-        ) or []
-        earned_ids = {ub["badge_id"] for ub in user_badges_data}
-        return {
-            "profile_id": user["id"],
-            "badges": [
-                {"id": b["id"], "name": b["name"], "description": b["description"], "icon": b.get("icon"), "category": b.get("category"), "earned": b["id"] in earned_ids}
-                for b in badges_data
-            ],
-        }
-    except Exception as e:
+        uid = uuid.UUID(str(user["id"]))
+    except (ValueError, AttributeError):
+        uid = None
+    try:
+        with session_scope() as session:
+            badges = session.execute(select(Badge)).scalars().all()
+            earned_ids = set()
+            if uid is not None:
+                earned_ids = set(
+                    session.execute(
+                        select(UserBadge.badge_id).where(UserBadge.profile_id == uid)
+                    ).scalars().all()
+                )
+            return {
+                "profile_id": user["id"],
+                "badges": [
+                    {
+                        "id": b.id,
+                        "name": b.name,
+                        "description": b.description,
+                        "icon": b.icon,
+                        "category": b.category,
+                        "earned": b.id in earned_ids,
+                    }
+                    for b in badges
+                ],
+            }
+    except SQLAlchemyError as e:
         raise DatabaseError(f"Failed to load badges: {e}")
 
 
@@ -128,12 +147,23 @@ def xp_badges(user: Dict[str, Any] = Depends(get_current_user)):
 def xp_streak(user: Dict[str, Any] = Depends(get_current_user)):
     """Return the current user's daily login streak."""
     try:
-        supabase = get_supabase()
-        response = supabase.table("user_streaks").select("*").eq("profile_id", user["id"]).execute()
-        data = handle_supabase_error(response)
-        if data:
-            streak = data[0]
-        else:
+        uid = uuid.UUID(str(user["id"]))
+    except (ValueError, AttributeError):
+        uid = None
+    try:
+        streak = None
+        if uid is not None:
+            with session_scope() as session:
+                row = session.get(UserStreak, uid)
+                if row is not None:
+                    streak = {
+                        "profile_id": str(row.profile_id),
+                        "current_streak": row.current_streak,
+                        "longest_streak": row.longest_streak,
+                        "last_login_date": row.last_login_date,
+                        "updated_at": row.updated_at,
+                    }
+        if streak is None:
             streak = {
                 "profile_id": user["id"],
                 "current_streak": 0,
@@ -141,5 +171,5 @@ def xp_streak(user: Dict[str, Any] = Depends(get_current_user)):
                 "last_login_date": None,
             }
         return {"profile_id": user["id"], "streak": streak}
-    except Exception as e:
+    except SQLAlchemyError as e:
         raise DatabaseError(f"Failed to load streak: {e}")

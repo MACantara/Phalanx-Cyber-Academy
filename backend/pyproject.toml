@@ -13,11 +13,16 @@ dependencies = [
     "pydantic[email]",
     "pydantic-settings",
     "python-dotenv",
-    "supabase",
     "httpx",
     "python-docx",
-    "jinja2",
+    "sqlalchemy",
+    "alembic",
+    "psycopg[binary]",
+    "pyjwt[crypto]",
 ]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
 
 [project.optional-dependencies]
 dev = ["pytest", "httpx"]

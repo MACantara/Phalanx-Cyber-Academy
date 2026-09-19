@@ -2,6 +2,8 @@
 
 **Train. Coordinate. Defend.**
 
+> **Historical reference** — this documents the legacy Flask application, which is not present in this checkout. Current stack: FastAPI (`backend/`) + React (`frontend/`).
+
 This document provides a comprehensive overview of all modules, features, and components within the Phalanx Cyber Academy platform.
 
 ---

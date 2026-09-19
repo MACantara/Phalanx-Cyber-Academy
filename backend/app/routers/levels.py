@@ -2,9 +2,9 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, Depends, Header, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.dependencies import get_current_user
+from app.dependencies import get_current_user, optional_current_user
 from app.services.level_service import Level
 from app.services.session_service import Session
 
@@ -27,13 +27,13 @@ def _compute_unlocked(levels: List[Level], completed_level_ids: set) -> List[Dic
 
 
 @router.get("/")
-def list_levels(x_user_id: Optional[int] = Header(None)):
+def list_levels(user: Optional[Dict[str, Any]] = Depends(optional_current_user)):
     """List all levels. Levels that are not coming soon are marked as unlocked."""
     levels = Level.get_all_levels()
     completed_level_ids = set()
-    if x_user_id is not None:
+    if user is not None:
         try:
-            summary = Session.get_user_progress_summary(x_user_id)
+            summary = Session.get_user_progress_summary(user["id"])
             completed_level_ids = set(summary.get("completed_level_ids", []))
         except Exception:
             pass

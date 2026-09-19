@@ -2,11 +2,28 @@
 Contact service
 Manages contact form submissions
 """
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Any, Dict, List, Optional, Tuple
-from app.supabase_client import get_supabase
-from app.errors import DatabaseError, handle_supabase_error
+
+from sqlalchemy import delete, func, or_, select
+from sqlalchemy.exc import SQLAlchemyError
+
+from app.db import session_scope
+from app.errors import DatabaseError
+from app.models import ContactSubmission
 from app.utils.timezone_utils import parse_datetime_aware, utc_now
+
+
+def _contact_to_dict(row: ContactSubmission) -> Dict[str, Any]:
+    return {
+        "id": row.id,
+        "name": row.name,
+        "email": row.email,
+        "subject": row.subject,
+        "message": row.message,
+        "created_at": row.created_at,
+        "is_read": row.is_read,
+    }
 
 
 class Contact:
@@ -24,33 +41,33 @@ class Contact:
         if isinstance(self.created_at, str):
             self.created_at = parse_datetime_aware(self.created_at)
 
-    def save(self):
-        supabase = get_supabase()
-        try:
-            contact_data = {
-                "name": self.name,
-                "email": self.email,
-                "subject": self.subject,
-                "message": self.message,
-                "is_read": self.is_read,
-            }
+    @classmethod
+    def _from_row(cls, row: ContactSubmission) -> "Contact":
+        return cls(_contact_to_dict(row))
 
-            if self.id:
-                response = (
-                    supabase.table("contact_submissions")
-                    .update(contact_data)
-                    .eq("id", self.id)
-                    .execute()
-                )
-                handle_supabase_error(response)
-            else:
-                contact_data["created_at"] = utc_now().isoformat()
-                response = supabase.table("contact_submissions").insert(contact_data).execute()
-                data = handle_supabase_error(response)
-                if data and len(data) > 0:
-                    self.id = data[0]["id"]
-                    self.created_at = parse_datetime_aware(data[0]["created_at"])
-        except Exception as e:
+    def save(self):
+        try:
+            with session_scope() as session:
+                if self.id:
+                    row = session.get(ContactSubmission, int(self.id))
+                    if row is None:
+                        raise DatabaseError(f"Contact submission {self.id} not found")
+                    for field in ("name", "email", "subject", "message", "is_read"):
+                        setattr(row, field, getattr(self, field))
+                else:
+                    row = ContactSubmission(
+                        name=self.name,
+                        email=self.email,
+                        subject=self.subject,
+                        message=self.message,
+                        is_read=self.is_read,
+                        created_at=utc_now(),
+                    )
+                    session.add(row)
+                    session.flush()
+                    self.id = row.id
+                    self.created_at = row.created_at
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to save contact: {e}")
 
     def mark_as_read(self):
@@ -84,32 +101,27 @@ class Contact:
 
     @classmethod
     def get_unread_count(cls) -> int:
-        supabase = get_supabase()
         try:
-            response = (
-                supabase.table("contact_submissions")
-                .select("*", count="exact")
-                .eq("is_read", False)
-                .execute()
-            )
-            return response.count if hasattr(response, "count") else 0
-        except Exception as e:
+            with session_scope() as session:
+                return session.execute(
+                    select(func.count())
+                    .select_from(ContactSubmission)
+                    .where(ContactSubmission.is_read.is_(False))
+                ).scalar() or 0
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to count unread contacts: {e}")
 
     @classmethod
     def get_recent_submissions(cls, limit: int = 10) -> List["Contact"]:
-        supabase = get_supabase()
         try:
-            response = (
-                supabase.table("contact_submissions")
-                .select("*")
-                .order("created_at", desc=True)
-                .limit(limit)
-                .execute()
-            )
-            data = handle_supabase_error(response)
-            return [cls(contact_data) for contact_data in data]
-        except Exception as e:
+            with session_scope() as session:
+                rows = session.execute(
+                    select(ContactSubmission)
+                    .order_by(ContactSubmission.created_at.desc())
+                    .limit(limit)
+                ).scalars().all()
+                return [cls._from_row(r) for r in rows]
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to get recent submissions: {e}")
 
     @classmethod
@@ -120,61 +132,63 @@ class Contact:
         search: Optional[str] = None,
         status_filter: str = "all",
     ) -> Tuple[List["Contact"], int]:
-        supabase = get_supabase()
         try:
-            query = supabase.table("contact_submissions").select("*", count="exact")
+            with session_scope() as session:
+                query = select(ContactSubmission)
+                count_query = select(func.count()).select_from(ContactSubmission)
 
-            if search:
-                query = query.or_(
-                    f"name.ilike.%{search}%,email.ilike.%{search}%,subject.ilike.%{search}%"
-                )
+                if search:
+                    pattern = f"%{search}%"
+                    cond = or_(
+                        ContactSubmission.name.ilike(pattern),
+                        ContactSubmission.email.ilike(pattern),
+                        ContactSubmission.subject.ilike(pattern),
+                    )
+                    query = query.where(cond)
+                    count_query = count_query.where(cond)
 
-            if status_filter == "read":
-                query = query.eq("is_read", True)
-            elif status_filter == "unread":
-                query = query.eq("is_read", False)
+                if status_filter == "read":
+                    query = query.where(ContactSubmission.is_read.is_(True))
+                    count_query = count_query.where(ContactSubmission.is_read.is_(True))
+                elif status_filter == "unread":
+                    query = query.where(ContactSubmission.is_read.is_(False))
+                    count_query = count_query.where(ContactSubmission.is_read.is_(False))
 
-            offset = (page - 1) * per_page
-            response = (
-                query.order("created_at", desc=True)
-                .range(offset, offset + per_page - 1)
-                .execute()
-            )
-            data = handle_supabase_error(response)
-            total_count = response.count if hasattr(response, "count") else len(data)
-            return [cls(contact_data) for contact_data in data], total_count
-        except Exception as e:
+                total_count = session.execute(count_query).scalar() or 0
+                rows = session.execute(
+                    query.order_by(ContactSubmission.created_at.desc())
+                    .offset((page - 1) * per_page)
+                    .limit(per_page)
+                ).scalars().all()
+                return [cls._from_row(r) for r in rows], total_count
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to get contact submissions: {e}")
 
     @classmethod
     def count_recent_submissions(cls, days: int = 30) -> int:
-        supabase = get_supabase()
         try:
-            cutoff_date = (utc_now() - timedelta(days=days)).isoformat()
-            response = (
-                supabase.table("contact_submissions")
-                .select("*", count="exact")
-                .gte("created_at", cutoff_date)
-                .execute()
-            )
-            return response.count if hasattr(response, "count") else 0
-        except Exception as e:
+            cutoff = utc_now() - timedelta(days=days)
+            with session_scope() as session:
+                return session.execute(
+                    select(func.count())
+                    .select_from(ContactSubmission)
+                    .where(ContactSubmission.created_at >= cutoff)
+                ).scalar() or 0
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to count recent submissions: {e}")
 
     @classmethod
     def cleanup_old_submissions(cls, days_old: int = 365) -> int:
-        supabase = get_supabase()
         try:
-            cutoff_date = (utc_now() - timedelta(days=days_old)).isoformat()
-            response = (
-                supabase.table("contact_submissions")
-                .delete()
-                .lt("created_at", cutoff_date)
-                .execute()
-            )
-            data = handle_supabase_error(response)
-            return len(data) if data else 0
-        except Exception as e:
+            cutoff = utc_now() - timedelta(days=days_old)
+            with session_scope() as session:
+                result = session.execute(
+                    delete(ContactSubmission).where(
+                        ContactSubmission.created_at < cutoff
+                    )
+                )
+                return result.rowcount or 0
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to cleanup old submissions: {e}")
 
     def __repr__(self):

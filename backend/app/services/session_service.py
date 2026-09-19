@@ -3,13 +3,39 @@ Session service
 Tracks user learning sessions for levels and other game modes
 """
 import logging
+import uuid
 from typing import Any, Dict, List, Optional
-from app.supabase_client import get_supabase
-from app.errors import DatabaseError, handle_supabase_error
+
+from sqlalchemy import delete, select
+from sqlalchemy.exc import SQLAlchemyError
+
+from app.db import session_scope
+from app.errors import DatabaseError
+from app.models import Session as SessionModel
 from app.utils.timezone_utils import utc_now, parse_datetime_aware
 
 
 logger = logging.getLogger(__name__)
+
+
+def _session_to_dict(row: SessionModel) -> Dict[str, Any]:
+    return {
+        "id": row.id,
+        "profile_id": str(row.profile_id),
+        "session_name": row.session_name,
+        "level_id": row.level_id,
+        "score": row.score,
+        "start_time": row.start_time,
+        "end_time": row.end_time,
+        "created_at": row.created_at,
+    }
+
+
+def _profile_uuid(user_id: Any) -> Optional[uuid.UUID]:
+    try:
+        return uuid.UUID(str(user_id))
+    except (ValueError, AttributeError):
+        return None
 
 
 class Session:
@@ -31,6 +57,10 @@ class Session:
             self.end_time = parse_datetime_aware(self.end_time)
         if self.created_at and isinstance(self.created_at, str):
             self.created_at = parse_datetime_aware(self.created_at)
+
+    @classmethod
+    def _from_row(cls, row: SessionModel) -> "Session":
+        return cls(_session_to_dict(row))
 
     def __repr__(self):
         return f"<Session {self.user_id}: {self.session_name} ({self.score})>"
@@ -57,21 +87,22 @@ class Session:
 
     @classmethod
     def start_session(cls, user_id: str, session_name: str, level_id: Optional[int] = None) -> "Session":
+        profile_id = _profile_uuid(user_id)
+        if profile_id is None:
+            raise DatabaseError(f"Failed to start session: invalid user_id {user_id}")
         try:
-            supabase = get_supabase()
-            session_data = {
-                "profile_id": user_id,
-                "session_name": session_name,
-                "level_id": level_id,
-                "start_time": utc_now().isoformat(),
-                "created_at": utc_now().isoformat(),
-            }
-            response = supabase.table("sessions").insert(session_data).execute()
-            data = handle_supabase_error(response)
-            if data and len(data) > 0:
-                return cls(data[0])
-            raise DatabaseError("No data returned from session creation")
-        except Exception as e:
+            with session_scope() as session:
+                row = SessionModel(
+                    profile_id=profile_id,
+                    session_name=session_name,
+                    level_id=level_id,
+                    start_time=utc_now(),
+                    created_at=utc_now(),
+                )
+                session.add(row)
+                session.flush()
+                return cls._from_row(row)
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to start session: {str(e)}")
 
     @classmethod
@@ -83,72 +114,66 @@ class Session:
     ) -> "Session":
         if score is not None and not (0 <= score <= 100):
             raise ValueError("Score must be between 0 and 100")
+
+        profile_id = _profile_uuid(user_id) if user_id is not None else None
+        if user_id is not None and profile_id is None:
+            raise ValueError(f"Session {session_id} not found")
+
         try:
-            supabase = get_supabase()
-            query = supabase.table("sessions").select("*").eq("id", session_id)
-            if user_id is not None:
-                query = query.eq("profile_id", user_id)
-            response = query.execute()
-            data = handle_supabase_error(response)
-            if not data or len(data) == 0:
-                raise ValueError(f"Session {session_id} not found")
+            with session_scope() as session:
+                query = select(SessionModel).where(SessionModel.id == session_id)
+                if profile_id is not None:
+                    query = query.where(SessionModel.profile_id == profile_id)
+                row = session.execute(query).scalar_one_or_none()
+                if row is None:
+                    raise ValueError(f"Session {session_id} not found")
 
-            update_data = {
-                "end_time": utc_now().isoformat(),
-                "score": score,
-            }
-            update_query = (
-                supabase.table("sessions").update(update_data).eq("id", session_id)
-            )
-            if user_id is not None:
-                update_query = update_query.eq("profile_id", user_id)
-            response = update_query.execute()
-            updated_data = handle_supabase_error(response)
-
-            if updated_data and len(updated_data) > 0:
-                updated_session = cls(updated_data[0])
-
-                if score is not None and score > 0:
-                    try:
-                        from app.services.xp_award import XPManager
-                        xp_result = XPManager.award_session_xp(
-                            user_id=updated_session.user_id,
-                            session_name=updated_session.session_name,
-                            score=score,
-                            time_spent=updated_session.time_spent,
-                            level_id=updated_session.level_id,
-                            session_id=updated_session.id,
-                            reason="session_completion",
-                        )
-                        updated_session._xp_awarded = xp_result["xp_awarded"]
-                        updated_session._xp_calculation = xp_result.get("calculation_details", {})
-                        updated_session._new_total_xp = xp_result.get("new_total", 0)
-                    except Exception as xp_error:
-                        logger.warning("Failed to award session XP: %s", xp_error)
-                        updated_session._xp_awarded = 0
-                        updated_session._xp_calculation = {}
-                        updated_session._new_total_xp = 0
-
-                return updated_session
-            raise DatabaseError("No data returned from session update")
-        except Exception as e:
+                row.end_time = utc_now()
+                row.score = score
+                session.flush()
+                updated_session = cls._from_row(row)
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to end session: {str(e)}")
+
+        if score is not None and score > 0:
+            try:
+                from app.services.xp_award import XPManager
+                xp_result = XPManager.award_session_xp(
+                    user_id=updated_session.user_id,
+                    session_name=updated_session.session_name,
+                    score=score,
+                    time_spent=updated_session.time_spent,
+                    level_id=updated_session.level_id,
+                    session_id=updated_session.id,
+                    reason="session_completion",
+                )
+                updated_session._xp_awarded = xp_result["xp_awarded"]
+                updated_session._xp_calculation = xp_result.get("calculation_details", {})
+                updated_session._new_total_xp = xp_result.get("new_total", 0)
+            except Exception as xp_error:
+                logger.warning("Failed to award session XP: %s", xp_error)
+                updated_session._xp_awarded = 0
+                updated_session._xp_calculation = {}
+                updated_session._new_total_xp = 0
+
+        return updated_session
 
     @classmethod
     def get_user_sessions(cls, user_id: str, limit: int = 50, offset: int = 0) -> List["Session"]:
+        profile_id = _profile_uuid(user_id)
+        if profile_id is None:
+            return []
         try:
-            supabase = get_supabase()
-            response = (
-                supabase.table("sessions")
-                .select("*")
-                .eq("profile_id", user_id)
-                .order("created_at", desc=True)
-                .range(offset, offset + limit - 1)
-                .execute()
-            )
-            data = handle_supabase_error(response)
-            return [cls(session_data) for session_data in data] if data else []
-        except Exception as e:
+            with session_scope() as session:
+                rows = session.execute(
+                    select(SessionModel)
+                    .where(SessionModel.profile_id == profile_id)
+                    .order_by(SessionModel.created_at.desc())
+                    .offset(offset)
+                    .limit(limit)
+                ).scalars().all()
+                return [cls._from_row(row) for row in rows]
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to get user sessions: {str(e)}")
 
     @classmethod
@@ -156,48 +181,49 @@ class Session:
         try:
             from app.services.level_service import Level
 
-            supabase = get_supabase()
             total_levels = len(Level.get_available_levels())
+            profile_id = _profile_uuid(user_id)
 
-            response = (
-                supabase.table("sessions")
-                .select("level_id, session_name, score")
-                .eq("profile_id", user_id)
-                .not_.is_("end_time", "null")
-                .execute()
-            )
-            session_data = handle_supabase_error(response)
+            with session_scope() as session:
+                session_rows = []
+                if profile_id is not None:
+                    session_rows = session.execute(
+                        select(
+                            SessionModel.level_id,
+                            SessionModel.session_name,
+                            SessionModel.score,
+                        )
+                        .where(SessionModel.profile_id == profile_id)
+                        .where(SessionModel.end_time.is_not(None))
+                    ).all()
 
-            completed_level_ids = set()
-            if session_data:
-                for session in session_data:
-                    level_id = session.get("level_id")
-                    if level_id is not None:
-                        completed_level_ids.add(level_id)
+                completed_level_ids = set()
+                for row in session_rows:
+                    if row.level_id is not None:
+                        completed_level_ids.add(row.level_id)
+                completed_levels = len(completed_level_ids)
 
-            completed_levels = len(completed_level_ids)
-            best_scores = {}
-            if session_data:
-                session_names = list(set(s["session_name"] for s in session_data))
+                best_scores = {}
+                session_names = list(set(r.session_name for r in session_rows))
                 for session_name in session_names:
-                    session_response = (
-                        supabase.table("sessions")
-                        .select("score, start_time, end_time")
-                        .eq("profile_id", user_id)
-                        .eq("session_name", session_name)
-                        .not_.is_("end_time", "null")
-                        .order("score", desc=True)
+                    best = session.execute(
+                        select(
+                            SessionModel.score,
+                            SessionModel.start_time,
+                            SessionModel.end_time,
+                        )
+                        .where(SessionModel.profile_id == profile_id)
+                        .where(SessionModel.session_name == session_name)
+                        .where(SessionModel.end_time.is_not(None))
+                        .order_by(SessionModel.score.desc())
                         .limit(1)
-                        .execute()
-                    )
-                    session_best_data = handle_supabase_error(session_response)
-                    if session_best_data and len(session_best_data) > 0:
-                        session_info = session_best_data[0]
-                        start_time = parse_datetime_aware(session_info["start_time"])
-                        end_time = parse_datetime_aware(session_info["end_time"])
+                    ).first()
+                    if best:
+                        start_time = best.start_time
+                        end_time = best.end_time
                         time_spent = int((end_time - start_time).total_seconds()) if start_time and end_time else 0
                         best_scores[session_name] = {
-                            "score": session_info["score"],
+                            "score": best.score,
                             "time": time_spent,
                         }
 
@@ -210,23 +236,24 @@ class Session:
                 "best_scores": best_scores,
                 "completed_level_ids": list(completed_level_ids),
             }
-        except Exception as e:
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to get user progress summary: {str(e)}")
 
     @classmethod
     def get_session_statistics(cls, session_name: str) -> Dict[str, Any]:
         try:
-            supabase = get_supabase()
-            response = (
-                supabase.table("sessions")
-                .select("score, start_time, end_time")
-                .eq("session_name", session_name)
-                .not_.is_("end_time", "null")
-                .execute()
-            )
-            data = handle_supabase_error(response)
+            with session_scope() as session:
+                rows = session.execute(
+                    select(
+                        SessionModel.score,
+                        SessionModel.start_time,
+                        SessionModel.end_time,
+                    )
+                    .where(SessionModel.session_name == session_name)
+                    .where(SessionModel.end_time.is_not(None))
+                ).all()
 
-            if not data:
+            if not rows:
                 return {
                     "session_name": session_name,
                     "total_sessions": 0,
@@ -236,122 +263,123 @@ class Session:
                     "min_time": 0,
                 }
 
-            scores = [s["score"] for s in data if s["score"] is not None]
+            scores = [r.score for r in rows if r.score is not None]
             times = []
-            for s in data:
-                if s["start_time"] and s["end_time"]:
-                    start = parse_datetime_aware(s["start_time"])
-                    end = parse_datetime_aware(s["end_time"])
-                    time_spent = int((end - start).total_seconds())
+            for r in rows:
+                if r.start_time and r.end_time:
+                    time_spent = int((r.end_time - r.start_time).total_seconds())
                     times.append(time_spent)
 
             return {
                 "session_name": session_name,
-                "total_sessions": len(data),
+                "total_sessions": len(rows),
                 "avg_score": round(sum(scores) / len(scores), 1) if scores else 0,
                 "max_score": max(scores) if scores else 0,
                 "avg_time": round(sum(times) / len(times), 1) if times else 0,
                 "min_time": min(times) if times else 0,
             }
-        except Exception as e:
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to get session statistics: {str(e)}")
 
     def save(self) -> bool:
+        profile_id = _profile_uuid(self.user_id)
+        if profile_id is None:
+            raise DatabaseError(f"Failed to save session: invalid user_id {self.user_id}")
         try:
-            supabase = get_supabase()
-            session_data = {
-                "profile_id": self.user_id,
-                "session_name": self.session_name,
-                "level_id": self.level_id,
-                "score": self.score,
-                "start_time": self.start_time.isoformat() if self.start_time else None,
-                "end_time": self.end_time.isoformat() if self.end_time else None,
-            }
-            if self.id:
-                response = supabase.table("sessions").update(session_data).eq("id", self.id).execute()
-                handle_supabase_error(response)
-            else:
-                session_data["created_at"] = utc_now().isoformat()
-                response = supabase.table("sessions").insert(session_data).execute()
-                data = handle_supabase_error(response)
-                if data and len(data) > 0:
-                    self.id = data[0]["id"]
-                    self.created_at = data[0]["created_at"]
+            with session_scope() as session:
+                if self.id:
+                    row = session.get(SessionModel, self.id)
+                    if row is not None:
+                        row.profile_id = profile_id
+                        row.session_name = self.session_name
+                        row.level_id = self.level_id
+                        row.score = self.score
+                        row.start_time = self.start_time
+                        row.end_time = self.end_time
+                else:
+                    row = SessionModel(
+                        profile_id=profile_id,
+                        session_name=self.session_name,
+                        level_id=self.level_id,
+                        score=self.score,
+                        start_time=self.start_time,
+                        end_time=self.end_time,
+                        created_at=utc_now(),
+                    )
+                    session.add(row)
+                    session.flush()
+                    self.id = row.id
+                    self.created_at = row.created_at
             return True
-        except Exception as e:
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to save session: {str(e)}")
 
     def delete(self) -> bool:
+        if not self.id:
+            raise ValueError("Cannot delete session without ID")
         try:
-            if not self.id:
-                raise ValueError("Cannot delete session without ID")
-            supabase = get_supabase()
-            response = supabase.table("sessions").delete().eq("id", self.id).execute()
-            handle_supabase_error(response)
+            with session_scope() as session:
+                session.execute(
+                    delete(SessionModel).where(SessionModel.id == self.id)
+                )
             return True
-        except Exception as e:
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to delete session: {str(e)}")
 
     @classmethod
     def get_by_id(cls, session_id: int) -> Optional["Session"]:
         try:
-            supabase = get_supabase()
-            response = supabase.table("sessions").select("*").eq("id", session_id).execute()
-            data = handle_supabase_error(response)
-            if data and len(data) > 0:
-                return cls(data[0])
-            return None
-        except Exception as e:
+            with session_scope() as session:
+                row = session.get(SessionModel, session_id)
+                return cls._from_row(row) if row else None
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to get session {session_id}: {str(e)}")
 
     @classmethod
     def get_active_session(cls, user_id: str) -> Optional["Session"]:
-        try:
-            supabase = get_supabase()
-            response = (
-                supabase.table("sessions")
-                .select("*")
-                .eq("profile_id", user_id)
-                .is_("end_time", "null")
-                .order("created_at", desc=True)
-                .limit(1)
-                .execute()
-            )
-            data = handle_supabase_error(response)
-            if data and len(data) > 0:
-                return cls(data[0])
+        profile_id = _profile_uuid(user_id)
+        if profile_id is None:
             return None
-        except Exception as e:
+        try:
+            with session_scope() as session:
+                row = session.execute(
+                    select(SessionModel)
+                    .where(SessionModel.profile_id == profile_id)
+                    .where(SessionModel.end_time.is_(None))
+                    .order_by(SessionModel.created_at.desc())
+                    .limit(1)
+                ).scalar_one_or_none()
+                return cls._from_row(row) if row else None
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to get active session: {str(e)}")
 
     @classmethod
     def get_latest_completed_sessions_per_level(cls, user_id: str) -> Dict[int, "Session"]:
+        profile_id = _profile_uuid(user_id)
+        if profile_id is None:
+            return {}
         try:
-            supabase = get_supabase()
-            response = (
-                supabase.table("sessions")
-                .select("*")
-                .eq("profile_id", user_id)
-                .not_.is_("end_time", "null")
-                .not_.is_("level_id", "null")
-                .order("created_at", desc=True)
-                .execute()
-            )
-            data = handle_supabase_error(response)
+            with session_scope() as session:
+                rows = session.execute(
+                    select(SessionModel)
+                    .where(SessionModel.profile_id == profile_id)
+                    .where(SessionModel.end_time.is_not(None))
+                    .where(SessionModel.level_id.is_not(None))
+                    .order_by(SessionModel.created_at.desc())
+                ).scalars().all()
 
             session_lookup = {}
-            if data:
-                for session_data in data:
-                    level_id = session_data.get("level_id")
-                    if level_id is not None:
-                        try:
-                            normalized_level_id = int(level_id)
-                        except (ValueError, TypeError):
-                            normalized_level_id = level_id
+            for row in rows:
+                level_id = row.level_id
+                if level_id is not None:
+                    try:
+                        normalized_level_id = int(level_id)
+                    except (ValueError, TypeError):
+                        normalized_level_id = level_id
 
-                        if normalized_level_id not in session_lookup:
-                            session_lookup[normalized_level_id] = cls(session_data)
+                    if normalized_level_id not in session_lookup:
+                        session_lookup[normalized_level_id] = cls._from_row(row)
 
             return session_lookup
-        except Exception as e:
+        except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to get latest completed sessions per level: {str(e)}")

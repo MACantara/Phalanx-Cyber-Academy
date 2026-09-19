@@ -3,9 +3,33 @@ Level service
 Represents level metadata and configuration for Phalanx Cyber Academy
 """
 from typing import Any, Dict, List, Optional
-from app.supabase_client import get_supabase
-from app.errors import DatabaseError, handle_supabase_error
+
+from sqlalchemy import delete, select, update
+from sqlalchemy.exc import SQLAlchemyError
+
+from app.db import session_scope
+from app.errors import DatabaseError
+from app.models import Level as LevelRow
 from app.utils.timezone_utils import utc_now, parse_datetime_aware
+
+
+def _level_to_dict(row: LevelRow) -> Dict[str, Any]:
+    return {
+        "id": row.id,
+        "level_id": row.level_id,
+        "name": row.name,
+        "description": row.description,
+        "category": row.category,
+        "icon": row.icon,
+        "estimated_time": row.estimated_time,
+        "xp_reward": row.xp_reward,
+        "skills": row.skills,
+        "difficulty": row.difficulty,
+        "unlocked": row.unlocked,
+        "coming_soon": row.coming_soon,
+        "created_at": row.created_at,
+        "updated_at": row.updated_at,
+    }
 
 
 class Level:
@@ -32,6 +56,10 @@ class Level:
         if self.updated_at and isinstance(self.updated_at, str):
             self.updated_at = parse_datetime_aware(self.updated_at)
 
+    @classmethod
+    def _from_row(cls, row: LevelRow) -> "Level":
+        return cls(_level_to_dict(row))
+
     def __repr__(self):
         return f"<Level {self.level_id}: {self.name}>"
 
@@ -56,50 +84,46 @@ class Level:
     @classmethod
     def get_by_level_id(cls, level_id: int) -> Optional["Level"]:
         try:
-            supabase = get_supabase()
-            response = supabase.table("levels").select("*").eq("level_id", level_id).execute()
-            data = handle_supabase_error(response)
-
-            if data and len(data) > 0:
-                return cls(data[0])
-            return None
-        except Exception as e:
-            raise DatabaseError(f"Failed to get level {level_id}: {str(e)}")
+            with session_scope() as session:
+                row = session.execute(
+                    select(LevelRow).where(LevelRow.level_id == level_id)
+                ).scalar_one_or_none()
+                return cls._from_row(row) if row else None
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Failed to get level {level_id}: {e}")
 
     @classmethod
     def get_by_category(cls, category: str) -> List["Level"]:
         try:
-            supabase = get_supabase()
-            response = supabase.table("levels").select("*").eq("category", category).execute()
-            data = handle_supabase_error(response)
-            return [cls(level_data) for level_data in data] if data else []
-        except Exception as e:
-            raise DatabaseError(f"Failed to get levels for category {category}: {str(e)}")
+            with session_scope() as session:
+                rows = session.execute(
+                    select(LevelRow).where(LevelRow.category == category)
+                ).scalars().all()
+                return [cls._from_row(r) for r in rows]
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Failed to get levels for category {category}: {e}")
 
     @classmethod
     def get_available_levels(cls) -> List["Level"]:
         try:
-            supabase = get_supabase()
-            response = (
-                supabase.table("levels")
-                .select("*")
-                .eq("coming_soon", False)
-                .execute()
-            )
-            data = handle_supabase_error(response)
-            return [cls(level_data) for level_data in data] if data else []
-        except Exception as e:
-            raise DatabaseError(f"Failed to get available levels: {str(e)}")
+            with session_scope() as session:
+                rows = session.execute(
+                    select(LevelRow).where(LevelRow.coming_soon.is_(False))
+                ).scalars().all()
+                return [cls._from_row(r) for r in rows]
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Failed to get available levels: {e}")
 
     @classmethod
     def get_all_levels(cls) -> List["Level"]:
         try:
-            supabase = get_supabase()
-            response = supabase.table("levels").select("*").order("level_id").execute()
-            data = handle_supabase_error(response)
-            return [cls(level_data) for level_data in data] if data else []
-        except Exception as e:
-            raise DatabaseError(f"Failed to get all levels: {str(e)}")
+            with session_scope() as session:
+                rows = session.execute(
+                    select(LevelRow).order_by(LevelRow.level_id)
+                ).scalars().all()
+                return [cls._from_row(r) for r in rows]
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Failed to get all levels: {e}")
 
     @classmethod
     def create_level(
@@ -117,76 +141,76 @@ class Level:
         coming_soon: bool = False,
     ) -> "Level":
         try:
-            supabase = get_supabase()
-            level_data = {
-                "level_id": level_id,
-                "name": name,
-                "description": description,
-                "category": category,
-                "difficulty": difficulty,
-                "icon": icon,
-                "estimated_time": estimated_time,
-                "xp_reward": xp_reward,
-                "skills": skills or [],
-                "unlocked": unlocked,
-                "coming_soon": coming_soon,
-                "created_at": utc_now().isoformat(),
-                "updated_at": utc_now().isoformat(),
-            }
-
-            response = supabase.table("levels").insert(level_data).execute()
-            data = handle_supabase_error(response)
-
-            if data and len(data) > 0:
-                return cls(data[0])
-            raise DatabaseError("No data returned from level creation")
-        except Exception as e:
-            raise DatabaseError(f"Failed to create level: {str(e)}")
+            with session_scope() as session:
+                row = LevelRow(
+                    level_id=level_id,
+                    name=name,
+                    description=description,
+                    category=category,
+                    difficulty=difficulty,
+                    icon=icon,
+                    estimated_time=estimated_time,
+                    xp_reward=xp_reward,
+                    skills=skills or [],
+                    unlocked=unlocked,
+                    coming_soon=coming_soon,
+                    created_at=utc_now(),
+                    updated_at=utc_now(),
+                )
+                session.add(row)
+                session.flush()
+                return cls._from_row(row)
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Failed to create level: {e}")
 
     def save(self) -> bool:
         try:
-            supabase = get_supabase()
-            level_data = {
-                "name": self.name,
-                "description": self.description,
-                "category": self.category,
-                "icon": self.icon,
-                "estimated_time": self.estimated_time,
-                "xp_reward": self.xp_reward,
-                "skills": self.skills,
-                "difficulty": self.difficulty,
-                "unlocked": self.unlocked,
-                "coming_soon": self.coming_soon,
-                "updated_at": utc_now().isoformat(),
-            }
+            with session_scope() as session:
+                values = {
+                    "name": self.name,
+                    "description": self.description,
+                    "category": self.category,
+                    "icon": self.icon,
+                    "estimated_time": self.estimated_time,
+                    "xp_reward": self.xp_reward,
+                    "skills": self.skills,
+                    "difficulty": self.difficulty,
+                    "unlocked": self.unlocked,
+                    "coming_soon": self.coming_soon,
+                    "updated_at": utc_now(),
+                }
 
-            if self.id:
-                response = supabase.table("levels").update(level_data).eq("id", self.id).execute()
-                handle_supabase_error(response)
-            else:
-                level_data["level_id"] = self.level_id
-                level_data["created_at"] = utc_now().isoformat()
-                response = supabase.table("levels").insert(level_data).execute()
-                data = handle_supabase_error(response)
-                if data and len(data) > 0:
-                    self.id = data[0]["id"]
-                    self.created_at = data[0]["created_at"]
+                if self.id:
+                    session.execute(
+                        update(LevelRow)
+                        .where(LevelRow.id == self.id)
+                        .values(**values)
+                    )
+                else:
+                    row = LevelRow(
+                        level_id=self.level_id,
+                        created_at=utc_now(),
+                        **values,
+                    )
+                    session.add(row)
+                    session.flush()
+                    self.id = row.id
+                    self.created_at = row.created_at
 
             return True
-        except Exception as e:
-            raise DatabaseError(f"Failed to save level: {str(e)}")
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Failed to save level: {e}")
 
     def delete(self) -> bool:
         try:
             if not self.id:
-                raise ValueError("Cannot delete level without ID")
+                raise DatabaseError("Cannot delete level without ID")
 
-            supabase = get_supabase()
-            response = supabase.table("levels").delete().eq("id", self.id).execute()
-            handle_supabase_error(response)
+            with session_scope() as session:
+                session.execute(delete(LevelRow).where(LevelRow.id == self.id))
             return True
-        except Exception as e:
-            raise DatabaseError(f"Failed to delete level: {str(e)}")
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Failed to delete level: {e}")
 
     @classmethod
     def validate_level_exists(cls, level_id: int) -> bool:
