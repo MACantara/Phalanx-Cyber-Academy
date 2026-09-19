@@ -21,8 +21,8 @@ dependencies = [
     "pyjwt[crypto]",
 ]
 
-[tool.setuptools]
-packages = ["app"]
+[tool.setuptools.packages.find]
+include = ["app*"]
 
 [project.optional-dependencies]
 dev = ["pytest", "httpx"]
