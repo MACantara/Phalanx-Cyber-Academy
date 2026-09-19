@@ -30,9 +30,12 @@ export interface RubricItem {
 }
 
 export interface ScoringEvent {
-  type: 'email-classified' | 'choice' | 'flag-captured';
+  type: 'email-classified' | 'choice' | 'flag-captured' | string;
   id: string;
   points: number;
+  app?: string;
+  action?: string;
+  target?: string;
 }
 
 export interface AdaptiveConfig {
@@ -195,6 +198,79 @@ export type SimulationContent =
   | TerminalCtfContent
   | ArticleSandboxContent;
 
+/* Environment platform: a level describes a world (apps + content + scenario),
+   not a single-purpose minigame. Apps are registered components reusable
+   across any level. */
+
+export type AppId = string;
+
+export interface AppInstall {
+  appId: AppId;
+  label?: string;
+  icon?: string;
+  pinned?: boolean;
+}
+
+export interface EventMatcher {
+  app: AppId;
+  action: string;
+  target?: string;
+}
+
+export interface Objective {
+  id: string;
+  description: string;
+  event: EventMatcher;
+  points: number;
+  required?: boolean;
+}
+
+export interface TriggerEffect {
+  unlock?: string;
+  notify?: string;
+  objective?: string;
+}
+
+export interface Trigger {
+  on: EventMatcher;
+  then: TriggerEffect[];
+}
+
+export interface Scenario {
+  objectives: Objective[];
+  triggers?: Trigger[];
+  dialogues?: Record<string, DialoguePhase>;
+}
+
+export interface LevelEnvironment {
+  environment: true;
+  version: string;
+  title: string;
+  briefing?: string;
+  apps: AppInstall[];
+  content: Record<AppId, unknown>;
+  scenario?: Scenario;
+  scoring: ScoringRules;
+  adaptive?: AdaptiveConfig;
+}
+
+/* App content slices — the data payload each registered app consumes
+   from environment.content[appId]. */
+
+export interface MailContent {
+  emails: EmailItem[];
+}
+
+export interface ReaderContent {
+  articles: Article[];
+}
+
+export interface CaseContent {
+  initialSceneId: string;
+  scenes: Record<string, CaseScene>;
+  evidence: CaseEvidence;
+}
+
 export interface LevelData {
   id: number;
   name: string;
@@ -203,7 +279,7 @@ export interface LevelData {
   difficulty: string;
   xp_reward: number;
   session_id?: string;
-  content?: SimulationContent;
+  content?: SimulationContent | LevelEnvironment;
 }
 
 export interface OpenWindow {
