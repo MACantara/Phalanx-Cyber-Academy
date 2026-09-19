@@ -48,8 +48,8 @@ function App() {
             <Route path="cookies" element={<Cookies />} />
             <Route path="levels" element={<Levels />} />
             <Route path="levels/:levelId" element={<Level />} />
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<Signup />} />
+            <Route path="login/*" element={<Login />} />
+            <Route path="signup/*" element={<Signup />} />
             <Route path="server-error" element={<ServerError />} />
             <Route path="leaderboard" element={<Leaderboard />} />
             <Route path="contact" element={<Contact />} />
