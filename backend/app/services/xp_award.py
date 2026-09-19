@@ -2,12 +2,17 @@
 XP award manager
 Wraps XPCalculator and persists XP awards to user totals and history
 """
+import uuid
 from typing import Any, Dict, List, Optional
-from app.errors import DatabaseError, handle_supabase_error
+
+from sqlalchemy import select
+
+from app.db import session_scope
+from app.errors import DatabaseError
+from app.models import Badge, UserBadge
 from app.services.xp_service import XPCalculator
 from app.services.user_service import User
 from app.services.xp_history_service import XPHistory
-from app.supabase_client import get_supabase
 
 
 class XPManager:
@@ -46,6 +51,7 @@ class XPManager:
                 balance_before=old_total,
                 balance_after=new_total,
                 session_id=session_id,
+                user_id=user_id,
             )
 
             awarded_badges = cls._sync_badges(user_id, new_total)
@@ -121,6 +127,7 @@ class XPManager:
                 balance_before=old_total,
                 balance_after=new_total,
                 session_id=session_id,
+                user_id=user_id,
             )
 
             awarded_badges = cls._sync_badges(user_id, new_total)
@@ -184,32 +191,31 @@ class XPManager:
     def _sync_badges(cls, user_id: str, total_xp: int) -> List[int]:
         """Award any badges whose xp_threshold the user has now crossed."""
         try:
-            supabase = get_supabase()
-            badges_response = supabase.table("badges").select("*").lte("xp_threshold", total_xp).execute()
-            badges = handle_supabase_error(badges_response) or []
-            if not badges:
-                return []
+            uid = uuid.UUID(str(user_id))
+        except (ValueError, AttributeError):
+            return []
+        try:
+            with session_scope() as session:
+                badges = session.execute(
+                    select(Badge).where(Badge.xp_threshold <= total_xp)
+                ).scalars().all()
+                if not badges:
+                    return []
 
-            user_badges_response = (
-                supabase.table("user_badges")
-                .select("badge_id")
-                .eq("profile_id", user_id)
-                .execute()
-            )
-            earned = {ub["badge_id"] for ub in handle_supabase_error(user_badges_response) or []}
+                earned = set(
+                    session.execute(
+                        select(UserBadge.badge_id).where(UserBadge.profile_id == uid)
+                    ).scalars().all()
+                )
 
-            awarded: List[int] = []
-            for badge in badges:
-                badge_id = badge["id"]
-                if badge_id in earned:
-                    continue
-                insert_response = supabase.table("user_badges").insert({
-                    "profile_id": user_id,
-                    "badge_id": badge_id,
-                }).execute()
-                if handle_supabase_error(insert_response):
-                    awarded.append(badge_id)
-            return awarded
+                awarded: List[int] = []
+                for badge in badges:
+                    if badge.id in earned:
+                        continue
+                    session.add(UserBadge(profile_id=uid, badge_id=badge.id))
+                    session.flush()
+                    awarded.append(badge.id)
+                return awarded
         except Exception:
             # Badge sync is best-effort; do not block XP awarding.
             return []
