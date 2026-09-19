@@ -155,7 +155,8 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
 
   return (
     <SimulatedPCContext.Provider value={context}>
-      <div className="fixed inset-0 z-50 overflow-hidden bg-black">
+      <div className="fixed inset-0 z-50 overflow-hidden bg-[#0c0c0e] p-0 sm:p-3">
+        <div className="relative h-full w-full overflow-hidden bg-stock sm:border sm:border-ink">
         {phase === 'boot' && <BootSequence onComplete={() => setPhase('desktop')} />}
         {phase === 'desktop' && <Renderer key={replayId} />}
         {phase === 'shutdown' && (
@@ -163,6 +164,7 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
             onComplete={onShutdownFinished}
           />
         )}
+        </div>
       </div>
     </SimulatedPCContext.Provider>
   );

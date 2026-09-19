@@ -28,7 +28,7 @@ function parseInline(text: string, keyPrefix: string): ReactNode[] {
     }
     if (match[1] !== undefined) {
       nodes.push(
-        <em key={`${keyPrefix}-${key++}`} className="italic text-green-300">
+        <em key={`${keyPrefix}-${key++}`} className="italic text-seal-ink">
           {match[1]}
         </em>
       );
@@ -36,7 +36,7 @@ function parseInline(text: string, keyPrefix: string): ReactNode[] {
       nodes.push(
         <code
           key={`${keyPrefix}-${key++}`}
-          className="rounded bg-gray-700 px-1 font-mono text-sm text-yellow-300"
+          className="border border-hairline bg-stock-drift px-1 font-mono text-sm text-seal-ink"
         >
           {match[2]}
         </code>
@@ -151,33 +151,33 @@ export function DialogueOverlay({ character, messages, onComplete, storageKey }:
         visible ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      <div className="w-full max-w-xs rounded-lg border-2 border-gray-600 bg-gray-800/95 p-3 shadow-2xl sm:max-w-lg sm:p-4 md:max-w-2xl md:p-6">
+      <div className="plate plate-strong w-full max-w-xs p-3 sm:max-w-lg sm:p-4 md:max-w-2xl md:p-6">
         <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:gap-8">
           <img
             src={avatar}
             alt={name}
-            className="mx-auto h-24 w-24 flex-shrink-0 rounded border-2 border-gray-600 object-cover sm:h-28 sm:w-28 md:mx-0 md:h-36 md:w-36"
+            className="mx-auto h-24 w-24 flex-shrink-0 border border-hairline object-cover sm:h-28 sm:w-28 md:mx-0 md:h-36 md:w-36"
             onError={(e) => {
               (e.target as HTMLImageElement).src = CHARACTER_AVATARS.default;
             }}
           />
           <div className="flex min-h-[150px] flex-1 flex-col">
-            <div className="mb-3 text-center text-lg font-bold text-green-500 sm:text-xl md:mb-4 md:text-left">
+            <div className="register mb-3 text-center !text-ink md:mb-4 md:text-left">
               {name}
             </div>
-            <div className="mb-4 flex-grow overflow-y-auto text-sm leading-relaxed text-green-400 sm:text-base md:text-lg">
+            <div className="mb-4 flex-grow overflow-y-auto text-sm leading-relaxed text-ink sm:text-base">
               <FormattedText text={current.text} />
             </div>
 
             {current.example && (
               <div
                 ref={exampleRef}
-                className="mb-4 rounded-lg border-2 border-yellow-500 bg-gray-700/50 p-3 sm:p-4"
+                className="mb-4 border border-hairline border-l-2 border-l-seal-ink bg-stock-drift p-3 sm:p-4"
               >
-                <div className="mb-2 flex items-center justify-center text-sm font-semibold text-yellow-400 sm:text-base">
+                <div className="register mb-2 flex items-center justify-center !text-seal-ink">
                   <Lightbulb className="mr-2 h-4 w-4" /> Example
                 </div>
-                <div className="whitespace-pre-wrap text-xs text-gray-200 sm:text-sm md:text-base">
+                <div className="whitespace-pre-wrap text-xs text-ink-soft sm:text-sm">
                   <FormattedText text={current.example} />
                 </div>
               </div>
@@ -189,18 +189,18 @@ export function DialogueOverlay({ character, messages, onComplete, storageKey }:
                   <button
                     key={i}
                     onClick={() => advance()}
-                    className="rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+                    className="border border-ink bg-ink px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-stock transition-colors hover:bg-seal hover:text-seal-ink"
                   >
                     {choice.text}
                   </button>
                 ))}
               </div>
             ) : (
-              <div className="mt-auto flex flex-row flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4">
+              <div className="mt-auto flex flex-row flex-wrap items-center justify-center gap-2 sm:gap-3">
                 <button
                   onClick={goBack}
                   disabled={index === 0}
-                  className="flex w-[70px] items-center justify-center rounded bg-gray-700 px-2 py-2 text-xs text-gray-300 transition-colors hover:bg-gray-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 sm:w-[90px] sm:px-3 sm:text-sm md:w-[100px] md:text-base"
+                  className="flex min-h-[40px] items-center justify-center border border-hairline px-3 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-soft transition-colors hover:border-ink hover:text-ink disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <ChevronLeft className="mr-1 h-3 w-3 sm:h-4 sm:w-4" />
                   <span className="hidden sm:inline">Previous</span>
@@ -208,7 +208,7 @@ export function DialogueOverlay({ character, messages, onComplete, storageKey }:
                 </button>
                 <button
                   onClick={advance}
-                  className="flex w-[70px] items-center justify-center rounded bg-gray-700 px-2 py-2 text-xs text-green-400 transition-colors hover:bg-green-400 hover:text-black sm:w-[90px] sm:px-3 sm:text-sm md:w-[100px] md:text-base"
+                  className="flex min-h-[40px] items-center justify-center bg-ink px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-stock transition-colors hover:bg-seal hover:text-seal-ink"
                 >
                   {isLast ? 'Continue' : <span className="hidden sm:inline">Next</span>}
                   {!isLast && <ChevronRight className="ml-1 h-3 w-3 sm:h-4 sm:w-4" />}
@@ -216,7 +216,7 @@ export function DialogueOverlay({ character, messages, onComplete, storageKey }:
                 {hasViewed && (
                   <button
                     onClick={skip}
-                    className="flex w-[70px] items-center justify-center rounded bg-gray-700 px-2 py-2 text-xs text-gray-300 transition-colors hover:bg-gray-600 hover:text-white sm:w-[90px] sm:px-3 sm:text-sm md:w-[100px] md:text-base"
+                    className="flex min-h-[40px] items-center justify-center border border-hairline px-3 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-soft transition-colors hover:border-ink hover:text-ink"
                   >
                     <SkipForward className="mr-1 h-3 w-3 sm:h-4 sm:w-4" /> Skip
                   </button>
@@ -225,8 +225,8 @@ export function DialogueOverlay({ character, messages, onComplete, storageKey }:
             )}
           </div>
         </div>
-        <div className="mt-3 text-right text-xs text-gray-400 md:mt-4">
-          Click or press Enter / Space to continue, ← to go back, Esc to skip
+        <div className="register mt-3 text-right normal-case tracking-normal md:mt-4">
+          Enter / Space to continue · ← back · Esc skip
         </div>
       </div>
     </div>

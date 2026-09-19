@@ -35,20 +35,20 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-black font-mono text-green-400">
-      <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle, #10b981 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden bg-stock font-mono text-ink">
+      <div className="dotfield absolute inset-0" aria-hidden="true" />
 
       <div className="z-10 flex w-full max-w-md flex-col items-center px-6">
-        <div className="mb-6 flex h-24 w-24 items-center justify-center rounded border-2 border-gray-600 bg-gray-700 shadow-2xl sm:h-28 sm:w-28">
-          <div className="animate-pulse text-3xl text-green-400 sm:text-4xl">🛡️</div>
+        <div className="plate plate-strong reg-corners mb-6 flex h-24 w-24 items-center justify-center sm:h-28 sm:w-28">
+          <img src="/logo-bg.png" alt="Phalanx-OS" className="h-14 w-14 object-contain sm:h-16 sm:w-16" />
         </div>
 
-        <h1 className="mb-2 text-3xl font-bold text-white sm:text-5xl">CyberOS</h1>
-        <p className="mb-8 text-sm text-gray-400 sm:text-base">Version 2.1.0</p>
+        <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-ink sm:text-5xl">Phalanx-OS</h1>
+        <p className="register mb-8">Version 4.1 · Training Environment</p>
 
-        <div className="mb-4 h-2 w-full overflow-hidden rounded border border-gray-600 bg-gray-700">
+        <div className="mb-4 h-2 w-full border border-hairline bg-stock-drift">
           <div
-            className="h-full bg-green-400 transition-all duration-100"
+            className="h-full bg-ink transition-all duration-100"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -57,13 +57,13 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="h-3 w-3 animate-bounce rounded-full bg-green-400"
-              style={{ animationDelay: `${i * 0.1}s` }}
+              className="h-2 w-2 animate-pulse bg-ink"
+              style={{ animationDelay: `${i * 0.15}s` }}
             />
           ))}
         </div>
 
-        <p className="text-lg text-green-400">{loadingTexts[textIndex]}</p>
+        <p className="register">{loadingTexts[textIndex]}</p>
       </div>
     </div>
   );
