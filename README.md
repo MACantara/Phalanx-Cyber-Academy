@@ -64,48 +64,48 @@ git clone <repository-url>
 cd Phalanx-Cyber-Academy
 ```
 
-### 2. Backend
+### 2. Configure Environment
+
+```bash
+# backend/.env — Neon + Clerk values (see backend/.env.example)
+cd backend && cp .env.example .env    # On Windows: copy .env.example .env
+cd ..
+
+# frontend/.env.local — Clerk publishable key
+cd frontend && clerk env pull && cd ..
+```
+
+### 3. Run with Docker Compose (recommended)
+
+```bash
+docker compose up --build
+```
+
+- Requires Docker Desktop running
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:8000
+
+### Manual Setup (alternative)
+
+Backend:
 
 ```bash
 cd backend
 
-# create and activate a virtual environment
 python -m venv venv
 source venv/bin/activate    # On Windows: venv\Scripts\activate
 
-# create backend/.env from the example (Neon + Clerk values)
-cp .env.example .env        # On Windows: copy .env.example .env
-
-# install the package and apply migrations
 pip install -e .
 alembic upgrade head
-
-# start the FastAPI server
 python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### 3. Frontend
-
-Open a second terminal:
+Frontend, in a second terminal:
 
 ```bash
 cd frontend
-
-# pull the Clerk publishable key (writes .env.local)
-clerk env pull
-
-# install dependencies and start the dev server
 npm install
-npm run dev
-```
-
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8000 (proxied through Vite)
-
-### Docker Compose (alternative)
-
-```bash
-docker compose up --build
+npm run dev               # http://localhost:5173 (proxies /api → localhost:8000)
 ```
 
 ## 🎮 How to Play

@@ -1,44 +1,39 @@
 # Testing Guide
 
-The repository uses `pytest` and `pytest-flask` for unit, integration, and contract tests.
+## Backend — pytest
 
-## Running Tests
-
-Activate the virtual environment and run all tests:
+Tests live in `backend/tests/`. Run them from `backend/`:
 
 ```bash
-python -m pytest
+cd backend
+python -m pytest -q          # all tests
+python -m pytest tests/test_clerk_auth.py -q   # focused file
 ```
 
-Run only unit or integration suites:
+- `test_clerk_auth.py` signs JWTs with a fixture RSA keypair and serves a mocked JWKS — covers valid/expired/wrong-issuer/unknown-kid/tampered tokens with no network calls.
+- `test_xp.py` covers XP calculation logic.
+- Auth tests bypass the database by patching profile lookup; anything that needs a DB should use a Neon branch, never the production database.
+
+## Frontend — typecheck & build
+
+There is no JS test runner configured yet; the verification gates are:
 
 ```bash
-python -m pytest tests/unit
-python -m pytest tests/integration
-python -m pytest tests/contracts
+cd frontend
+npx tsc --noEmit   # type check
+npm run build      # production build
 ```
 
-## Configuration
+## API client (orval)
 
-- `pytest.ini` sets the test path to `tests/` and adds the project root to `pythonpath`.
-- `config.py` has a `TestingConfig` that disables the real Supabase client and suppresses email sending.
-- Shared fixtures (`app` and `client`) are defined in `tests/conftest.py`.
+```bash
+cd frontend
+npm run api:gen    # dumps backend openapi.json, regenerates src/lib/generated/
+```
 
-## Test Structure
-
-- `tests/unit/` — Pure business-logic tests that do not need a Flask app context or database.
-- `tests/integration/` — Flask route tests using the `client` fixture.
-- `tests/contracts/` — Response-shape checks that document the current API contract for the future FastAPI migration.
+Regenerate after changing backend routes — the generated client diff is the API drift check.
 
 ## Adding New Tests
 
-1. Place unit tests in `tests/unit/` and route tests in `tests/integration/`.
-2. Use the `client` fixture for any test that exercises HTTP endpoints.
-3. Keep unit tests free of Flask request context and real network calls.
-4. For contract tests, assert on status codes, content types, and stable response keys.
-
-## Notes for the FastAPI Migration
-
-- Contract tests are the primary migration acceptance criteria.
-- When a route is re-implemented in FastAPI, update the corresponding contract test to point to the new backend and compare response shapes.
-- Unit tests can be reused directly because they exercise `app/utils/` and `app/models/` without Flask-specific context.
+- Put backend tests in `backend/tests/test_<area>.py`; follow the `test_clerk_auth.py` pattern of mocking external services (JWKS, Clerk API) rather than hitting them.
+- Keep tests free of real network calls and real credentials.
