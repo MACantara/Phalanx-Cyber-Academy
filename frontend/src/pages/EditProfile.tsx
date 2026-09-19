@@ -79,7 +79,11 @@ export default function EditProfile() {
         <AsyncSection state={remote} onRetry={remote.reload} skeleton={<EditProfileSkeleton />}>
           <form onSubmit={handleSubmit} className="space-y-5">
             <Field label="Username" name="username" type="text" value={form.username} onChange={handleChange} />
-            <Field label="Email" name="email" type="email" value={form.email} onChange={handleChange} />
+            <div>
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-300">Email</label>
+              <input id="email" name="email" type="email" value={form.email} readOnly disabled className="mt-2 w-full cursor-not-allowed rounded-xl border border-gray-300 bg-gray-100 px-4 py-3 text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400" />
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Managed by your sign-in provider</p>
+            </div>
             <Field label="Timezone" name="timezone" type="text" value={form.timezone} onChange={handleChange} />
             <div>
               <label htmlFor="cybersecurity_experience" className="block text-sm font-semibold text-gray-700 dark:text-gray-300">Experience Level</label>

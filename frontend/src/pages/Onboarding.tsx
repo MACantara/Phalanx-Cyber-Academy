@@ -16,6 +16,7 @@ export default function Onboarding() {
   });
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [usernameTaken, setUsernameTaken] = useState(false);
 
   useEffect(() => {
     if (!loading) {
@@ -23,6 +24,23 @@ export default function Onboarding() {
       else if (user.onboarding_completed) navigate('/dashboard');
     }
   }, [user, loading, navigate]);
+
+  useEffect(() => {
+    const username = form.username.trim();
+    if (!username || username === user?.username) {
+      setUsernameTaken(false);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      try {
+        const res = await api.post('/auth/check-availability', { field: 'username', value: username });
+        setUsernameTaken(!res.data.available);
+      } catch {
+        setUsernameTaken(false);
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [form.username, user?.username]);
 
   if (loading || !user) return null;
 
@@ -68,6 +86,9 @@ export default function Onboarding() {
                   className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-white dark:placeholder-slate-500"
                   placeholder="Enter a username"
                 />
+                {usernameTaken && (
+                  <p className="mt-1 text-xs text-red-600 dark:text-red-400">Username is already taken</p>
+                )}
               </div>
 
               <div>
@@ -112,7 +133,7 @@ export default function Onboarding() {
 
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || usernameTaken}
               className="mt-6 w-full rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 py-3 font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {saving ? 'Saving...' : 'Complete Onboarding'}
