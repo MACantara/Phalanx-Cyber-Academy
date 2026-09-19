@@ -1,10 +1,10 @@
-interface FocusedSandboxLayoutProps {
+interface AppFrameProps {
   title: string;
   instructions?: string;
   children: React.ReactNode;
 }
 
-export function FocusedSandboxLayout({ title, instructions, children }: FocusedSandboxLayoutProps) {
+export function AppFrame({ title, instructions, children }: AppFrameProps) {
   return (
     <div className="flex h-full flex-col bg-stock text-ink">
       <header className="flex items-center gap-3 border-b border-ink bg-stock px-4 py-3 sm:px-5">
