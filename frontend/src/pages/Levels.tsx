@@ -37,13 +37,13 @@ const ICON_BY_NAME: Record<string, typeof Shield> = {
   'bi-shield-check': Shield,
 };
 
-const DIFFICULTY_COLORS: Record<string, string> = {
-  'Beginner': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-  'Easy': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-  'Medium': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-  'Intermediate': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-  'Hard': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-  'Advanced': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+const DIFFICULTY_STYLES: Record<string, string> = {
+  'Beginner': 'text-confirm',
+  'Easy': 'text-confirm',
+  'Medium': 'text-ink',
+  'Intermediate': 'text-ink',
+  'Hard': 'text-strike',
+  'Advanced': 'text-strike',
 };
 
 interface ProgressData {
@@ -76,79 +76,83 @@ export default function Levels() {
   const completedIds = new Set<number>(progress.data.completed_level_ids);
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 transition-colors dark:from-gray-900 dark:to-gray-800">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="min-h-screen bg-stock py-14 transition-colors duration-300 sm:py-16">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <FadeIn className="mb-12 text-center">
-          <h1 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl">
-            Cybersecurity <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Levels</span>
+          <span className="register">Plate 02 — Level Register</span>
+          <h1 className="mb-4 mt-3 text-4xl font-extrabold tracking-tight text-ink md:text-5xl">
+            Cybersecurity Levels
           </h1>
-          <p className="mx-auto max-w-3xl text-xl text-gray-600 dark:text-gray-300">
+          <p className="mx-auto max-w-3xl text-lg text-ink-soft">
             Master cybersecurity through gamified challenges. Complete levels to unlock new skills and advance your digital defense expertise.
           </p>
         </FadeIn>
 
-        <FadeIn className="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+        <FadeIn className="plate mb-8 p-5 sm:p-6">
           <AsyncSection state={progress} onRetry={progress.reload} skeleton={<YourProgressSkeleton />}>
-            <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
               <div>
-                <h2 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">Your Progress</h2>
+                <h2 className="mb-2 text-2xl font-bold text-ink">Your Progress</h2>
                 <div className="flex flex-wrap items-center gap-6">
-                  <span className="flex items-center text-gray-600 dark:text-gray-300">
-                    <Trophy className="mr-2 h-5 w-5 text-yellow-500" />
-                    Completed: <strong className="ml-1 text-gray-900 dark:text-white">{progress.data.completed_levels}/{progress.data.total_levels}</strong>
+                  <span className="flex items-center text-ink-soft">
+                    <Trophy className="mr-2 h-4 w-4 text-ink" />
+                    <span className="register">Completed</span>
+                    <strong className="ml-2 font-mono text-sm text-ink">{progress.data.completed_levels}/{progress.data.total_levels}</strong>
                   </span>
-                  <span className="flex items-center text-gray-600 dark:text-gray-300">
+                  <span className="flex items-center text-ink-soft">
                     <StarIcon />
-                    Total XP: <strong className="ml-1 text-gray-900 dark:text-white">{progress.data.total_xp}</strong>
+                    <span className="register">Marks</span>
+                    <strong className="ml-2 font-mono text-sm text-ink">{progress.data.total_xp}</strong>
                   </span>
                 </div>
               </div>
-              <div className="w-full text-center sm:w-48 sm:text-right">
-                <div className="mb-1 text-sm text-gray-500 dark:text-gray-400">Overall Progress</div>
-                <div className="h-3 w-full rounded-full bg-gray-200 dark:bg-gray-700">
+              <div className="w-full sm:w-48 sm:text-right">
+                <div className="mb-1 register">Overall Progress</div>
+                <div className="h-2 w-full border border-hairline">
                   <div
-                    className="h-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all"
+                    className="h-full bg-ink transition-all"
                     style={{ width: `${Math.min(progress.data.completion_percentage, 100)}%` }}
                   />
                 </div>
-                <div className="mt-1 text-sm text-gray-600 dark:text-gray-300">{Math.round(progress.data.completion_percentage)}% Complete</div>
+                <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-soft">{Math.round(progress.data.completion_percentage)}% Complete</div>
               </div>
             </div>
           </AsyncSection>
         </FadeIn>
 
         <FadeIn className="mb-8" delay="0.2s">
-          <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 p-6 text-gray-900 shadow-lg transition-colors dark:border-gray-700 dark:from-slate-900 dark:to-blue-900 dark:text-white sm:p-8">
+          <div className="plate reg-corners p-5 text-ink sm:p-8">
             <div className="flex flex-col items-center gap-6 md:flex-row md:items-start md:justify-between">
               <div className="text-center md:text-left">
                 <div className="mb-3 flex justify-center gap-3 md:justify-start">
-                  <Shield className="h-10 w-10 text-green-500 dark:text-green-400" />
-                  <Sword className="h-10 w-10 text-red-500 dark:text-red-400" />
+                  <Shield className="h-10 w-10 text-confirm" />
+                  <Sword className="h-10 w-10 text-strike" />
                 </div>
-                <h2 className="mb-2 text-2xl font-bold">Blue Team vs Red Team</h2>
-                <p className="max-w-2xl text-gray-600 dark:text-slate-200">
+                <span className="plate-id">SIM-01</span>
+                <h2 className="mb-2 mt-2 text-2xl font-bold">Blue Team vs Red Team</h2>
+                <p className="max-w-2xl text-ink-soft">
                   Defend Project Sentinel Academy against adaptive AI attacks in a live cyberwarfare simulation.
                 </p>
               </div>
               <Link
                 to="/blue-vs-red"
-                className="inline-flex items-center rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700"
+                className="inline-flex min-h-[44px] items-center bg-ink px-6 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink"
               >
-                <Sword className="mr-2 h-5 w-5" /> Start Simulation <ArrowRight className="ml-2 h-4 w-4" />
+                <Sword className="mr-2 h-4 w-4" /> Start Simulation <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </div>
             <div className="mt-6 grid gap-4 text-left sm:grid-cols-2">
-              <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800/70">
-                <h3 className="mb-2 text-lg font-bold text-green-600 dark:text-green-300">Blue Team</h3>
-                <ul className="list-disc space-y-1 pl-4 text-sm text-gray-600 dark:text-slate-300">
+              <div className="border border-hairline p-4">
+                <h3 className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-confirm">Blue Team</h3>
+                <ul className="list-disc space-y-1 pl-4 text-sm text-ink-soft">
                   <li>Monitor systems and alerts</li>
                   <li>Apply patches and defenses</li>
                   <li>Contain breaches and restore services</li>
                 </ul>
               </div>
-              <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800/70">
-                <h3 className="mb-2 text-lg font-bold text-red-600 dark:text-red-300">Red Team</h3>
-                <ul className="list-disc space-y-1 pl-4 text-sm text-gray-600 dark:text-slate-300">
+              <div className="border border-hairline p-4">
+                <h3 className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-strike">Red Team</h3>
+                <ul className="list-disc space-y-1 pl-4 text-sm text-ink-soft">
                   <li>Launch simulated attacks</li>
                   <li>Exploit vulnerabilities</li>
                   <li>Disrupt defender operations</li>
@@ -167,125 +171,107 @@ export default function Levels() {
                   const completed = completedIds.has(level.level_id);
                   const comingSoon = level.coming_soon;
                   const locked = !level.unlocked && !comingSoon;
-                  const borderColor = completed
-                    ? 'border-green-400 dark:border-green-500'
-                    : comingSoon
-                      ? 'border-purple-400 dark:border-purple-500'
-                      : 'border-blue-400 dark:border-blue-500';
-                  const iconGradient = completed
-                    ? 'from-green-500 to-emerald-600'
-                    : comingSoon
-                      ? 'from-purple-500 to-indigo-600'
-                      : 'from-blue-500 to-purple-600';
 
                   return (
                     <div
                       key={level.id}
                       data-level-id={level.level_id}
-                      className={`group relative rounded-2xl border ${borderColor} bg-white shadow-lg transition-all hover:-translate-y-1 dark:bg-gray-800`}
+                      className="plate reg-corners group p-5 transition-colors hover:border-ink sm:p-6"
                     >
-                      <div className="p-6">
-                        <div className="mb-4 flex items-start justify-between">
-                          <div className="flex items-center">
-                            <div className={`mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${iconGradient} text-white shadow-md`}>
-                              <Icon className="h-6 w-6" />
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Level {level.level_id}</p>
-                              <h3 className="text-lg font-bold text-gray-900 dark:text-white">{level.name}</h3>
-                              {completed && (
-                                <p className="mt-1 flex items-center text-xs font-medium text-green-600 dark:text-green-400">
-                                  <CheckCircle className="mr-1 h-3 w-3" /> Completed
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                          <div className="text-xl">
-                            {completed ? (
-                              <CheckCircle className="h-6 w-6 text-green-500" />
-                            ) : comingSoon ? (
-                              <Clock className="h-6 w-6 text-purple-500" />
-                            ) : locked ? (
-                              <Lock className="h-6 w-6 text-gray-400" />
-                            ) : (
-                              <Lock className="h-6 w-6 text-blue-500" />
-                            )}
-                          </div>
+                      <div className="mb-4 flex items-start justify-between">
+                        <div className="flex h-12 w-12 items-center justify-center border border-hairline text-ink">
+                          <Icon className="h-5 w-5" />
                         </div>
-
-                        <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">{level.description}</p>
-
-                        <div className="mb-4 space-y-2 text-sm">
-                          <div className="flex items-center justify-between">
-                            <span className="text-gray-500 dark:text-gray-400">Difficulty:</span>
-                            <span className={`rounded-full px-2 py-1 text-xs font-semibold ${DIFFICULTY_COLORS[level.difficulty] || 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'}`}>
-                              {level.difficulty}
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-gray-500 dark:text-gray-400">XP Reward:</span>
-                            <span className="font-medium text-blue-600 dark:text-blue-400">
-                              {level.level_id <= 4 ? (
-                                <span className="cursor-help" title="XP reward varies based on your performance: speed, accuracy, and completion time">
-                                  Performance-based
-                                </span>
-                              ) : (
-                                `${level.xp_reward} XP`
-                              )}
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-gray-500 dark:text-gray-400">Time:</span>
-                            <span className="text-gray-700 dark:text-gray-300">{level.estimated_time || '10 min'}</span>
-                          </div>
-                        </div>
-
-                        {level.skills && level.skills.length > 0 && (
-                          <div className="mb-4">
-                            <p className="mb-2 text-xs text-gray-500 dark:text-gray-400">Skills you'll learn:</p>
-                            <div className="flex flex-wrap gap-1">
-                              {level.skills.map((skill) => (
-                                <span
-                                  key={skill}
-                                  className="rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
-                                >
-                                  {skill}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {completed ? (
-                          <Link
-                            to={`/levels/${level.level_id}`}
-                            className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 px-4 py-3 font-semibold text-white shadow-lg transition-all hover:from-green-700 hover:to-emerald-700"
-                          >
-                            <PlayCircle className="mr-2 h-5 w-5" /> Replay Level
-                          </Link>
-                        ) : comingSoon ? (
-                          <button
-                            disabled
-                            className="flex w-full cursor-not-allowed items-center justify-center rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 px-4 py-3 font-semibold text-white opacity-80"
-                          >
-                            <Clock className="mr-2 h-5 w-5" /> Coming Soon
-                          </button>
-                        ) : locked ? (
-                          <button
-                            disabled
-                            className="flex w-full items-center justify-center rounded-xl bg-gray-500 px-4 py-3 font-semibold text-white opacity-70"
-                          >
-                            <Lock className="mr-2 h-5 w-5" /> Locked
-                          </button>
-                        ) : (
-                          <Link
-                            to={`/levels/${level.level_id}`}
-                            className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3 font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700"
-                          >
-                            <PlayCircle className="mr-2 h-5 w-5" /> Start Level
-                          </Link>
-                        )}
+                        <span className="plate-id">LVL-{String(level.level_id).padStart(2, '0')}</span>
                       </div>
+
+                      <h3 className="text-lg font-bold text-ink">{level.name}</h3>
+                      <p className={`mb-4 mt-1 flex items-center font-mono text-[10px] uppercase tracking-[0.14em] ${
+                        completed ? 'text-confirm' : comingSoon ? 'text-ink-soft' : locked ? 'text-ink-soft' : 'text-ink'
+                      }`}>
+                        {completed ? (
+                          <><CheckCircle className="mr-1 h-3 w-3" /> Completed</>
+                        ) : comingSoon ? (
+                          <><Clock className="mr-1 h-3 w-3" /> Coming Soon</>
+                        ) : locked ? (
+                          <><Lock className="mr-1 h-3 w-3" /> Locked</>
+                        ) : (
+                          'Available'
+                        )}
+                      </p>
+
+                      <p className="mb-4 text-sm text-ink-soft">{level.description}</p>
+
+                      <div className="mb-4 space-y-2 border-t border-hairline pt-4 text-sm">
+                        <div className="flex items-center justify-between">
+                          <span className="register">Difficulty</span>
+                          <span className={`font-mono text-[10px] uppercase tracking-[0.14em] ${DIFFICULTY_STYLES[level.difficulty] || 'text-ink-soft'}`}>
+                            {level.difficulty}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="register">XP Reward</span>
+                          <span className="font-mono text-xs text-ink">
+                            {level.level_id <= 4 ? (
+                              <span className="cursor-help" title="XP reward varies based on your performance: speed, accuracy, and completion time">
+                                Performance-based
+                              </span>
+                            ) : (
+                              `MARKS ${level.xp_reward}`
+                            )}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="register">Time</span>
+                          <span className="font-mono text-xs text-ink">{level.estimated_time || '10 min'}</span>
+                        </div>
+                      </div>
+
+                      {level.skills && level.skills.length > 0 && (
+                        <div className="mb-4">
+                          <p className="mb-2 register">Skills you'll learn</p>
+                          <div className="flex flex-wrap gap-1">
+                            {level.skills.map((skill) => (
+                              <span
+                                key={skill}
+                                className="border border-hairline px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-soft"
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {completed ? (
+                        <Link
+                          to={`/levels/${level.level_id}`}
+                          className="flex min-h-[44px] w-full items-center justify-center border border-ink px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:bg-stock-green"
+                        >
+                          <PlayCircle className="mr-2 h-4 w-4" /> Replay Level
+                        </Link>
+                      ) : comingSoon ? (
+                        <button
+                          disabled
+                          className="flex min-h-[44px] w-full cursor-not-allowed items-center justify-center border border-hairline px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink-soft opacity-60"
+                        >
+                          <Clock className="mr-2 h-4 w-4" /> Coming Soon
+                        </button>
+                      ) : locked ? (
+                        <button
+                          disabled
+                          className="flex min-h-[44px] w-full cursor-not-allowed items-center justify-center border border-hairline px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink-soft opacity-60"
+                        >
+                          <Lock className="mr-2 h-4 w-4" /> Locked
+                        </button>
+                      ) : (
+                        <Link
+                          to={`/levels/${level.level_id}`}
+                          className="flex min-h-[44px] w-full items-center justify-center bg-ink px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink"
+                        >
+                          <PlayCircle className="mr-2 h-4 w-4" /> Start Level
+                        </Link>
+                      )}
                     </div>
                   );
                 })}
@@ -298,18 +284,18 @@ export default function Levels() {
 
 function YourProgressSkeleton() {
   return (
-    <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+    <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
       <div className="w-full space-y-3 sm:w-auto">
-        <div className="h-8 w-48 rounded bg-slate-200 dark:bg-slate-700" />
+        <div className="h-8 w-48 bg-hairline-soft" />
         <div className="flex flex-wrap items-center gap-6">
-          <div className="h-5 w-32 rounded bg-slate-200 dark:bg-slate-700" />
-          <div className="h-5 w-28 rounded bg-slate-200 dark:bg-slate-700" />
+          <div className="h-5 w-32 bg-hairline-soft" />
+          <div className="h-5 w-28 bg-hairline-soft" />
         </div>
       </div>
       <div className="w-full space-y-2 sm:w-48">
-        <div className="h-4 w-28 rounded bg-slate-200 dark:bg-slate-700 ml-auto" />
-        <div className="h-3 w-full rounded-full bg-slate-200 dark:bg-slate-700" />
-        <div className="h-4 w-16 rounded bg-slate-200 dark:bg-slate-700 ml-auto" />
+        <div className="h-4 w-28 bg-hairline-soft sm:ml-auto" />
+        <div className="h-2 w-full border border-hairline bg-hairline-soft" />
+        <div className="h-4 w-16 bg-hairline-soft sm:ml-auto" />
       </div>
     </div>
   );
@@ -317,49 +303,45 @@ function YourProgressSkeleton() {
 
 function LevelCardSkeleton() {
   return (
-    <div className="rounded-2xl border border-blue-400 bg-white p-6 shadow-lg transition-all hover:-translate-y-1 dark:border-blue-500 dark:bg-gray-800">
+    <div className="plate p-5 sm:p-6">
       <div className="mb-4 flex items-start justify-between">
-        <div className="flex items-center">
-          <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-md">
-            <div className="h-6 w-6 rounded bg-white/30" />
-          </div>
-          <div>
-            <div className="mb-1 h-4 w-20 rounded bg-slate-200 dark:bg-slate-700" />
-            <div className="h-5 w-32 rounded bg-slate-200 dark:bg-slate-700" />
-            <div className="mt-1 h-3 w-24 rounded bg-slate-200 dark:bg-slate-700" />
-          </div>
+        <div className="flex h-12 w-12 items-center justify-center border border-hairline">
+          <div className="h-5 w-5 bg-hairline-soft" />
         </div>
-        <div className="h-6 w-6 rounded-full bg-slate-200 dark:bg-slate-700" />
+        <div className="h-5 w-14 bg-hairline-soft" />
       </div>
+
+      <div className="mb-1 h-5 w-32 bg-hairline-soft" />
+      <div className="mb-4 h-3 w-24 bg-hairline-soft" />
 
       <div className="mb-4 space-y-2">
-        <div className="h-4 w-full rounded bg-slate-200 dark:bg-slate-700" />
-        <div className="h-4 w-5/6 rounded bg-slate-200 dark:bg-slate-700" />
+        <div className="h-4 w-full bg-hairline-soft" />
+        <div className="h-4 w-5/6 bg-hairline-soft" />
       </div>
 
-      <div className="mb-4 space-y-2 text-sm">
+      <div className="mb-4 space-y-2 border-t border-hairline pt-4">
         <div className="flex items-center justify-between">
-          <div className="h-4 w-20 rounded bg-slate-200 dark:bg-slate-700" />
-          <div className="h-6 w-20 rounded-full bg-slate-200 dark:bg-slate-700" />
+          <div className="h-4 w-20 bg-hairline-soft" />
+          <div className="h-4 w-20 bg-hairline-soft" />
         </div>
         <div className="flex items-center justify-between">
-          <div className="h-4 w-24 rounded bg-slate-200 dark:bg-slate-700" />
-          <div className="h-4 w-16 rounded bg-slate-200 dark:bg-slate-700" />
+          <div className="h-4 w-24 bg-hairline-soft" />
+          <div className="h-4 w-16 bg-hairline-soft" />
         </div>
         <div className="flex items-center justify-between">
-          <div className="h-4 w-16 rounded bg-slate-200 dark:bg-slate-700" />
-          <div className="h-4 w-20 rounded bg-slate-200 dark:bg-slate-700" />
+          <div className="h-4 w-16 bg-hairline-soft" />
+          <div className="h-4 w-20 bg-hairline-soft" />
         </div>
       </div>
 
-      <div className="mb-2 h-3 w-28 rounded bg-slate-200 dark:bg-slate-700" />
+      <div className="mb-2 h-3 w-28 bg-hairline-soft" />
       <div className="mb-4 flex flex-wrap gap-1">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-6 w-16 rounded-full bg-slate-200 dark:bg-slate-700 px-2 py-1" />
+          <div key={i} className="h-6 w-16 border border-hairline bg-hairline-soft px-2 py-1" />
         ))}
       </div>
 
-      <div className="h-10 w-full rounded-xl bg-slate-200 dark:bg-slate-700" />
+      <div className="h-11 w-full bg-hairline-soft" />
     </div>
   );
 }
@@ -376,7 +358,7 @@ function LevelsSkeleton() {
 
 function StarIcon() {
   return (
-    <svg className="mr-2 h-5 w-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+    <svg className="mr-2 h-4 w-4 text-ink" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.26.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.55-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
     </svg>
   );

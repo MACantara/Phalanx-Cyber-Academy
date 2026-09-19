@@ -55,13 +55,14 @@ export default function Level() {
 
   if (Number.isNaN(id)) {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 px-4 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900">
-        <FadeIn className="max-w-md rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-2xl dark:border-gray-700 dark:bg-gray-800">
-          <h1 className="text-2xl font-bold text-red-600">Mission Error</h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-300">Invalid level ID</p>
+      <section className="flex min-h-screen items-center justify-center bg-stock px-5 transition-colors duration-300">
+        <FadeIn className="plate w-full max-w-md p-8 text-center">
+          <span className="register">Plate Error — Invalid Route</span>
+          <h1 className="mt-3 text-2xl font-bold text-strike">Mission Error</h1>
+          <p className="mt-2 text-ink-soft">Invalid level ID</p>
           <button
             onClick={() => navigate('/levels')}
-            className="mt-6 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-2 font-semibold text-white transition-all hover:from-blue-700 hover:to-purple-700"
+            className="mt-6 inline-flex min-h-[44px] items-center bg-ink px-6 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink"
           >
             Back to Levels
           </button>
@@ -71,7 +72,7 @@ export default function Level() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-stock text-ink">
       {level.data ? (
         <SimulatedPC
           level={level.data}
@@ -79,11 +80,11 @@ export default function Level() {
           onComplete={handleComplete}
         />
       ) : (
-        <Shimmer loading={true} shimmerColor="rgba(255,255,255,0.15)" backgroundColor="rgba(255,255,255,0.08)">
+        <Shimmer loading={true} shimmerColor="rgba(155, 156, 151, 0.35)" backgroundColor="rgba(155, 156, 151, 0.15)">
           <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-8">
-            <div className="h-10 w-64 rounded-lg bg-slate-700" />
-            <div className="h-6 w-96 rounded bg-slate-700" />
-            <div className="mt-8 h-64 w-full max-w-4xl rounded-xl bg-slate-700" />
+            <div className="h-10 w-64 bg-hairline-soft" />
+            <div className="h-6 w-96 bg-hairline-soft" />
+            <div className="mt-8 h-64 w-full max-w-4xl border border-hairline bg-hairline-soft" />
           </div>
         </Shimmer>
       )}
