@@ -259,10 +259,18 @@ export interface Trigger {
   once?: boolean;
 }
 
+export interface SpeakerProfile {
+  name: string;
+  role?: string;
+  avatar?: string;
+  avatarStatic?: string;
+}
+
 export interface Scenario {
   objectives: Objective[];
   triggers?: Trigger[];
   dialogues?: Record<string, DialoguePhase>;
+  cast?: Record<string, SpeakerProfile>;
 }
 
 export interface LevelEnvironment {
