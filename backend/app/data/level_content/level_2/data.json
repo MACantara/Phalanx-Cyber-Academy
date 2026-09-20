@@ -4,46 +4,11 @@
   "title": "Shadow in the Inbox",
   "instructions": "Analyze each email and decide whether it is legitimate or a phishing attempt.",
   "dialogues": {
-    "completion": {
-      "character": "instructor",
-      "messages": [
-        {
-          "text": "Outstanding work, Agent! You've successfully completed Level 2: Shadow Inbox. Your email security analysis skills are now at professional level."
-        },
-        {
-          "text": "You've demonstrated exceptional ability to identify sophisticated phishing attempts, distinguish legitimate communications, and protect sensitive information from cybercriminals."
-        },
-        {
-          "text": "Your analysis helped prevent multiple potential security breaches. You correctly identified advanced threats including spear-phishing, credential harvesting, and social engineering attacks."
-        },
-        {
-          "text": "You've earned 150 XP in Cybersecurity. These skills are crucial for protecting both personal and organizational digital assets."
-        },
-        {
-          "text": "Remember: Email remains the primary attack vector for cybercriminals. Your vigilance and expertise in email security make you a valuable defender against digital threats."
-        },
-        {
-          "text": "You're now ready for advanced cybersecurity challenges. Keep applying these skills - verify sender authenticity, scrutinize links and attachments, and help others recognize email-based threats!"
-        }
-      ]
-    },
     "briefing": {
       "character": "instructor",
       "messages": [
         {
-          "text": "Welcome to your second cybersecurity challenge! As a SOC analyst, you'll analyze 10 emails to identify phishing attempts and protect our organization from cyber threats."
-        },
-        {
-          "text": "Threat Intelligence:\nPhishing attacks account for 90% of successful data breaches. You'll evaluate 5 legitimate business emails and 5 sophisticated phishing attempts using real-world attack patterns."
-        },
-        {
-          "text": "Email Analysis Challenge:\n• 5 Legitimate Emails: Real business communications from trusted sources\n• 5 Phishing Emails: Malicious attempts designed to steal credentials or deploy malware"
-        },
-        {
-          "text": "Your Mission:\nCarefully examine each of the 10 emails to distinguish between authentic business communications and cleverly crafted phishing attempts."
-        },
-        {
-          "text": "Your accuracy directly impacts organizational security. Each correct identification strengthens our defense against cybercriminals targeting our data and systems."
+          "text": "Mission Brief: Shadow Inbox\nWelcome to your second cybersecurity challenge. As a SOC analyst, you'll analyze 10 emails to identify phishing attempts: 5 legitimate business emails from trusted sources and 5 phishing emails built on real-world attack patterns."
         },
         {
           "text": "Email Analysis Framework:\nSender Verification: Check email addresses for subtle misspellings or suspicious domains that impersonate legitimate organizations.",
@@ -70,36 +35,37 @@
           "example": "Never legitimate: 'Please confirm your password and SSN for security'\nAlways suspicious: 'We has detected suspicious activity in you're account'"
         },
         {
-          "text": "Response Protocols:\nSAFE: Mark legitimate emails to allow delivery\nPHISHING: Quarantine suspicious emails immediately"
+          "text": "Response Protocols:\nSAFE marks a legitimate email for delivery. PHISHING quarantines it.\nCritical rule: never click suspicious links or open unexpected attachments.\nDetection Tips:\n• Check email headers for routing anomalies\n• Verify unusual requests through a second channel\n• Be extra cautious with financial or HR-related requests\n• When in doubt, choose security over convenience"
         },
         {
-          "text": "REPORT: Document phishing attempts for threat intelligence\nCritical Rule: Never click suspicious links or download unexpected attachments"
-        },
-        {
-          "text": "Advanced Detection Tips:\n• Check email headers for routing anomalies\n• Verify requests through alternative communication channels"
-        },
-        {
-          "text": "• Be extra cautious with financial or HR-related requests\n• When in doubt, always choose security over convenience"
-        },
-        {
-          "text": "Scoring System:\nBase XP Award: 100 XP for completing Level 2\nAccuracy Multiplier: Up to 2x bonus for perfect email classification (100%)"
-        },
-        {
-          "text": "Speed Bonus: Additional XP for efficient threat detection\nMaximum Possible: ~200 XP for perfect performance!"
-        },
-        {
-          "text": "How to Play:\nOpen the Email Client and analyze all 10 emails systematically. Each email contains clues about its authenticity - examine sender details, content, and formatting carefully."
-        },
-        {
-          "text": "Use 'SAFE' for legitimate business emails or 'PHISHING' for malicious attempts. You'll receive immediate feedback and automatically progress through all 10 emails."
-        },
-        {
-          "text": "Ready for Action?\nYou'll analyze 10 emails representing real-world scenarios. Flag the obvious phish and the sophisticated ones alike."
-        },
-        {
-          "text": "Your ability to distinguish between the 5 legitimate and 5 phishing emails protects our entire organization from cyber threats. Ready to secure the inbox?"
+          "text": "How to Play:\nOpen Mail and work all 10 emails systematically - sender details, content, and formatting. Use 'SAFE' for legitimate business emails and 'PHISHING' for malicious attempts. You'll get immediate feedback and advance automatically."
         }
       ]
+    }
+  },
+  "scenario": {
+    "triggers": [
+      {
+        "on": {
+          "app": "mail",
+          "action": "classify",
+          "data": {
+            "correct": false
+          }
+        },
+        "then": [
+          {
+            "notify": {
+              "text": "Verdict challenged. Recheck the sender domain for character swaps before moving on.",
+              "speaker": "instructor"
+            }
+          }
+        ]
+      }
+    ],
+    "debrief": {
+      "speaker": "instructor",
+      "text": "Check the sender domain before the message. Most lures fail there."
     }
   },
   "scoring": {
