@@ -5,6 +5,7 @@ import { useData } from '../hooks/useData';
 import { FadeIn } from '../components/Animated';
 import { Shimmer } from '@shimmer-from-structure/react';
 import { SimulatedPC } from '../features/simulated-pc';
+import { PROOF_LEVEL } from '../features/simulated-pc/lib/proofLevel';
 import type { LevelData } from '../features/simulated-pc';
 
 export default function Level() {
@@ -12,8 +13,10 @@ export default function Level() {
   const navigate = useNavigate();
   const [sessionId, setSessionId] = useState<string | null>(null);
 
+  const isPreview = levelId === 'preview';
   const id = Number(levelId);
   const level = useData<LevelData | null>(async () => {
+    if (isPreview) return PROOF_LEVEL;
     if (Number.isNaN(id)) throw new Error('Invalid level ID');
     const [meta, content] = await Promise.all([
       api.get(`/levels/${id}`),
@@ -31,7 +34,7 @@ export default function Level() {
   }, [levelId], { initial: null });
 
   useEffect(() => {
-    if (!level.data) return;
+    if (!level.data || isPreview) return;
     api
       .post('/sessions/start', {
         session_name: level.data.name,
@@ -39,7 +42,7 @@ export default function Level() {
       })
       .then((res) => setSessionId(res.data.session?.id?.toString() ?? null))
       .catch(() => setSessionId(null));
-  }, [level.data]);
+  }, [level.data, isPreview]);
 
   const handleComplete = async (payload: { score: number; timeSpent: number }) => {
     if (sessionId) {
@@ -53,7 +56,7 @@ export default function Level() {
     navigate('/levels');
   };
 
-  if (Number.isNaN(id)) {
+  if (Number.isNaN(id) && !isPreview) {
     return (
       <section className="flex min-h-screen items-center justify-center bg-stock px-5 transition-colors duration-300">
         <FadeIn className="plate w-full max-w-md p-8 text-center">
