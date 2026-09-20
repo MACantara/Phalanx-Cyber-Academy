@@ -272,11 +272,22 @@ export interface SpeakerProfile {
   avatarStatic?: string;
 }
 
+export interface BriefingMessage {
+  text: string;
+  example?: string;
+}
+
+export interface ScenarioBriefing {
+  speaker?: string;
+  messages: BriefingMessage[];
+}
+
 export interface Scenario {
   objectives: Objective[];
   triggers?: Trigger[];
   dialogues?: Record<string, DialoguePhase>;
   cast?: Record<string, SpeakerProfile>;
+  briefing?: ScenarioBriefing;
 }
 
 export interface LevelEnvironment {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronLeft, Circle, Power, Square } from 'lucide-react';
+import { ChevronLeft, Circle, Power, Radio, Square } from 'lucide-react';
 import { useSimulatedPC } from '../context/SimulatedPCContext';
 import { getApp } from '../apps';
 import { AppContent } from './AppContent';
@@ -7,6 +7,7 @@ import { requiredObjectives } from '../lib/scenario';
 import { useAppLauncher } from '../lib/useAppLauncher';
 import { NotificationStack } from './NotificationStack';
 import { SessionReport } from './SessionReport';
+import { BriefingPlate } from './BriefingPlate';
 
 /* Handset shell — the "found phone" grammar: status bar, home-screen app
    grid, one app full-screen at a time, bottom nav (Back/Home/Switcher/Power).
@@ -28,6 +29,7 @@ export function HandsetShell() {
   } = useSimulatedPC();
   const { apps, launchApp } = useAppLauncher();
   const [switcherOpen, setSwitcherOpen] = useState(false);
+  const [briefingOpen, setBriefingOpen] = useState(true);
 
   const objectives = environment?.scenario?.objectives ?? [];
   const required = requiredObjectives(environment);
@@ -129,6 +131,7 @@ export function HandsetShell() {
         ))}
 
         <NotificationStack />
+        <BriefingPlate open={briefingOpen} onClose={() => setBriefingOpen(false)} />
         {completed && <SessionReport />}
 
         {/* recents sheet */}
@@ -143,6 +146,19 @@ export function HandsetShell() {
                 Close
               </button>
             </div>
+            {environment.scenario?.briefing && (
+              <button
+                onClick={() => {
+                  setSwitcherOpen(false);
+                  setBriefingOpen(true);
+                }}
+                className="mb-1.5 flex min-h-[48px] w-full items-center gap-3 border border-hairline bg-stock px-3 text-left text-ink hover:bg-stock-green"
+              >
+                <Radio className="h-4 w-4 shrink-0" />
+                <span className="flex-1 truncate text-sm font-semibold">Mission briefing</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.14em] opacity-70">Comms</span>
+              </button>
+            )}
             {runningWindows.length === 0 ? (
               <p className="py-4 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-ink-soft">
                 No running apps

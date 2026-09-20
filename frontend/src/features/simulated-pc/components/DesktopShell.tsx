@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { Power } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Power, Radio } from 'lucide-react';
 import { useSimulatedPC } from '../context/SimulatedPCContext';
 import { getApp } from '../apps';
 import { AppContent } from './AppContent';
@@ -8,6 +8,7 @@ import { useAppLauncher } from '../lib/useAppLauncher';
 import { NotificationStack } from './NotificationStack';
 import { SessionReport } from './SessionReport';
 import { WindowFrame } from './WindowFrame';
+import { BriefingPlate } from './BriefingPlate';
 
 export function DesktopShell() {
   const {
@@ -23,6 +24,8 @@ export function DesktopShell() {
   } = useSimulatedPC();
   const { apps, toggleApp, launchApp } = useAppLauncher();
   const boundsRef = useRef<HTMLDivElement>(null);
+  const [briefingOpen, setBriefingOpen] = useState(true);
+  const commsRef = useRef<HTMLButtonElement>(null);
 
   const objectives = environment?.scenario?.objectives ?? [];
   const required = requiredObjectives(environment);
@@ -94,6 +97,13 @@ export function DesktopShell() {
         )}
 
         <NotificationStack />
+        <BriefingPlate
+          open={briefingOpen}
+          onClose={() => {
+            setBriefingOpen(false);
+            commsRef.current?.focus();
+          }}
+        />
         {completed && <SessionReport />}
       </div>
 
@@ -128,6 +138,16 @@ export function DesktopShell() {
           })}
         </div>
         <div className="register flex items-center gap-3 border-l border-hairline px-3">
+          {environment.scenario?.briefing && (
+            <button
+              ref={commsRef}
+              onClick={() => setBriefingOpen(true)}
+              className="flex min-h-[32px] items-center gap-1.5 border border-hairline px-2 font-mono text-[9px] uppercase tracking-[0.14em] text-ink-soft transition-colors hover:border-ink hover:text-ink"
+              title="Mission briefing"
+            >
+              <Radio className="h-3 w-3" /> Comms
+            </button>
+          )}
           {required.length > 0 && (
             <span>
               OBJ {doneCount}/{objectives.length}

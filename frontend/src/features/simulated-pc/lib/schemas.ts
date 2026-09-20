@@ -185,6 +185,16 @@ export const triggerSchema = z.object({
   once: z.boolean().optional(),
 });
 
+export const scenarioBriefingSchema = z.object({
+  speaker: z.string().optional(),
+  messages: z.array(
+    z.object({
+      text: z.string(),
+      example: z.string().optional(),
+    })
+  ),
+});
+
 export const levelEnvironmentSchema = z.object({
   environment: z.literal(true),
   version: z.string(),
@@ -204,6 +214,7 @@ export const levelEnvironmentSchema = z.object({
       objectives: z.array(objectiveSchema),
       triggers: z.array(triggerSchema).optional(),
       dialogues: z.record(z.string(), z.unknown()).optional(),
+      briefing: scenarioBriefingSchema.optional(),
     })
     .optional(),
   scoring: scoringRulesSchema,
