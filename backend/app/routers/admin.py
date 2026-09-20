@@ -569,7 +569,7 @@ def get_level_content_admin(
     level_id: int,
     user: Dict[str, Any] = Depends(require_admin),
 ):
-    """Raw (unresolved) level content for editing."""
+    """Editor view: draft wins over the live payload, plus revision metadata."""
     from app.services import level_content_service
 
     with session_scope() as s:
@@ -577,7 +577,15 @@ def get_level_content_admin(
     if not exists:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Level not found")
     view = level_content_service.get_admin_view(level_id)
-    return {"level_id": level_id, "content": view["content"] if view else None}
+    if view is None:
+        return {"level_id": level_id, "content": None, "has_draft": False, "revision": 0}
+    return {
+        "level_id": level_id,
+        "content": view["content"],
+        "has_draft": view["has_draft"],
+        "revision": view["revision"],
+        "published_at": view["published_at"],
+    }
 
 
 @router.put("/levels/{level_id}/content")
@@ -586,13 +594,31 @@ def put_level_content(
     body: LevelContentIn,
     user: Dict[str, Any] = Depends(require_admin),
 ):
-    """Save a level's environment/content payload (the publish step)."""
+    """Save edits to the draft — nothing goes live until publish."""
     from app.services import level_content_service
 
     with session_scope() as s:
         exists = s.execute(select(Level.id).where(Level.level_id == level_id)).scalar_one_or_none()
     if not exists:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Level not found")
-    level_content_service.upsert_payload(level_id, body.content, user.get("id"))
-    _log_admin_action(user.get("id"), "level_content_update", "level", level_id, None)
-    return {"level_id": level_id, "content": body.content}
+    row = level_content_service.save_draft(level_id, body.content, user.get("id"))
+    _log_admin_action(user.get("id"), "level_content_draft", "level", level_id, None)
+    return {"level_id": level_id, "revision": row["revision"], "has_draft": True}
+
+
+@router.post("/levels/{level_id}/content/publish")
+def publish_level_content(
+    level_id: int,
+    user: Dict[str, Any] = Depends(require_admin),
+):
+    """Promote the draft to the live payload and bump the revision."""
+    from app.services import level_content_service
+
+    try:
+        row = level_content_service.publish(level_id, user.get("id"))
+    except DatabaseError as exc:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))
+    if row is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Level not found")
+    _log_admin_action(user.get("id"), "level_content_publish", "level", level_id, {"revision": row["revision"]})
+    return {"level_id": level_id, "revision": row["revision"], "published_at": row["published_at"]}
