@@ -8,6 +8,7 @@ import { applyAdaptive } from './lib/adaptive';
 import { toEnvironment } from './lib/environment';
 import { applyWorldEvent, freshWorld, requiredObjectives, type WorldState } from './lib/scenario';
 import { usePrefersHandset } from './lib/usePrefersHandset';
+import { validateAppContent } from './lib/schemas';
 import { getApp } from './apps';
 import type { LevelData, OpenWindow, ScoringEvent, SimulationContent, LevelEnvironment, ShellMode, WorldEvent, WorldNotification } from './types';
 
@@ -45,6 +46,18 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
   }, [formFactor]);
 
   const environment = useMemo(() => toEnvironment(activeContent), [activeContent]);
+
+  const contentErrors = useMemo(() => {
+    const errors: SimulatedPCContextValue['contentErrors'] = {};
+    for (const install of environment?.apps ?? []) {
+      const issues = validateAppContent(
+        environment?.content[install.appId],
+        getApp(install.appId)?.schema
+      );
+      if (issues.length > 0) errors[install.appId] = issues;
+    }
+    return errors;
+  }, [environment]);
 
   const openWindow = useCallback((id: string, title: string, icon: string, appId: string) => {
     setWindows((prev) => {
@@ -220,12 +233,13 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
       notifications,
       dismissNotification,
       browserUrl,
+      contentErrors,
       completeSession,
       startShutdown,
       startReplay,
       completed,
     }),
-    [level, activeContent, environment, sessionId, score, windows, activeWindow, openWindow, closeWindow, focusWindow, minimizeWindow, restoreWindow, moveWindow, formFactor, shellMode, cycleShellMode, addScoringEvent, emit, world, notifications, dismissNotification, browserUrl, completeSession, startShutdown, startReplay, completed]
+    [level, activeContent, environment, contentErrors, sessionId, score, windows, activeWindow, openWindow, closeWindow, focusWindow, minimizeWindow, restoreWindow, moveWindow, formFactor, shellMode, cycleShellMode, addScoringEvent, emit, world, notifications, dismissNotification, browserUrl, completeSession, startShutdown, startReplay, completed]
   );
 
   return (

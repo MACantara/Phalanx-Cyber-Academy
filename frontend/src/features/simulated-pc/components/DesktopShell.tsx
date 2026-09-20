@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { Power } from 'lucide-react';
 import { useSimulatedPC } from '../context/SimulatedPCContext';
-import { getApp, getAppComponent } from '../apps';
+import { getApp } from '../apps';
+import { AppContent } from './AppContent';
 import { requiredObjectives } from '../lib/scenario';
 import { useAppLauncher } from '../lib/useAppLauncher';
 import { NotificationStack } from './NotificationStack';
@@ -80,21 +81,17 @@ export function DesktopShell() {
           </div>
         )}
 
-        {windows.map((w) => {
-          const App = getAppComponent(w.appId);
-          if (!floating) {
-            return (
-              <div key={w.id} className={w.id === visibleWindow?.id ? 'absolute inset-0' : 'hidden'}>
-                <App />
-              </div>
-            );
-          }
-          return (
+        {windows.map((w) =>
+          !floating ? (
+            <div key={w.id} className={w.id === visibleWindow?.id ? 'absolute inset-0' : 'hidden'}>
+              <AppContent appId={w.appId} />
+            </div>
+          ) : (
             <WindowFrame key={w.id} win={w} boundsRef={boundsRef}>
-              <App />
+              <AppContent appId={w.appId} />
             </WindowFrame>
-          );
-        })}
+          )
+        )}
 
         <NotificationStack />
         {completed && <SessionReport />}

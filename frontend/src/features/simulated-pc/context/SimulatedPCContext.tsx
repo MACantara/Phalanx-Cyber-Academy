@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
 import type {
+  AppId,
   FormFactor,
   LevelData,
   LevelEnvironment,
@@ -9,6 +10,7 @@ import type {
   WorldEvent,
   WorldNotification,
 } from '../types';
+import type { ContentIssue } from '../lib/schemas';
 
 export interface SimulatedPCContextValue {
   level: LevelData;
@@ -34,6 +36,7 @@ export interface SimulatedPCContextValue {
   notifications: WorldNotification[];
   dismissNotification: (id: number) => void;
   browserUrl: string | null;
+  contentErrors: Record<AppId, ContentIssue[]>;
   completeSession: (finalScore?: number) => void;
   startShutdown: () => void;
   startReplay: () => void;

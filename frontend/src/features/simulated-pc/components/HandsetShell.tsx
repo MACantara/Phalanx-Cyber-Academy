@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { ChevronLeft, Circle, Power, Square } from 'lucide-react';
 import { useSimulatedPC } from '../context/SimulatedPCContext';
-import { getApp, getAppComponent } from '../apps';
+import { getApp } from '../apps';
+import { AppContent } from './AppContent';
 import { requiredObjectives } from '../lib/scenario';
 import { useAppLauncher } from '../lib/useAppLauncher';
 import { NotificationStack } from './NotificationStack';
@@ -121,14 +122,11 @@ export function HandsetShell() {
           </div>
         )}
 
-        {windows.map((w) => {
-          const App = getAppComponent(w.appId);
-          return (
-            <div key={w.id} className={w.id === visibleWindow?.id ? 'absolute inset-0' : 'hidden'}>
-              <App />
-            </div>
-          );
-        })}
+        {windows.map((w) => (
+          <div key={w.id} className={w.id === visibleWindow?.id ? 'absolute inset-0' : 'hidden'}>
+            <AppContent appId={w.appId} />
+          </div>
+        ))}
 
         <NotificationStack />
         {completed && <SessionReport />}
