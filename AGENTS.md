@@ -129,3 +129,17 @@ docker compose up --build
 
 - [Design System](DESIGN.md)
 - [README](README.md)
+
+<!-- antislop:start -->
+## antislop
+
+For UI, copy, people, mobile layout, or code comments work, read `C:\Users\mikmikk03\.agents\skills\antislop\SKILL.md` (core) and then the skill for the task:
+
+- UI / visual: `C:\Users\mikmikk03\.agents\skills\antislop-ui\SKILL.md`
+- Copy & text: `C:\Users\mikmikk03\.agents\skills\antislop-copywriting\SKILL.md`
+- People: `C:\Users\mikmikk03\.agents\skills\antislop-human\SKILL.md`
+- Mobile / responsive: `C:\Users\mikmikk03\.agents\skills\antislop-layoutmobile\SKILL.md`
+- Code comments: `C:\Users\mikmikk03\.agents\skills\antislop-code\SKILL.md`
+
+Direction: `DESIGN.md` is the canonical design spec (Design Annual). Before starting, ask the user when antislop applies: during the work, or after it is done.
+<!-- antislop:end -->
