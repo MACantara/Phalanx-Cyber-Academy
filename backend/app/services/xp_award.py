@@ -231,6 +231,50 @@ class XPManager:
             raise DatabaseError(f"Failed to award lesson XP: {e}")
 
     @classmethod
+    def award_first_clear_bonus(
+        cls,
+        user_id: str,
+        level_id: int,
+        session_id: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        """One-time first-clear bonus for lesson-tracked sessions — the
+        per-lesson awards already banked the base XP, so level completion
+        adds only this bonus. `first_clear` in level_progress is set once
+        per (profile, level), which gates repeat awards."""
+        from app.services.level_service import Level
+
+        level = Level.get_by_level_id(level_id)
+        difficulty = level.difficulty if level else "medium"
+        base_xp = XPCalculator.BASE_XP.get(difficulty.lower(), XPCalculator.BASE_XP["medium"])
+        xp_earned = int(round(base_xp * XPCalculator.FIRST_CLEAR_RATIO))
+
+        user = User.find_by_id(user_id)
+        if not user:
+            raise ValueError(f"User {user_id} not found")
+        old_total = user.total_xp or 0
+        new_total = old_total + xp_earned
+        user.total_xp = new_total
+        user.save()
+
+        xp_entry = XPHistory.create_entry(
+            xp_change=xp_earned,
+            reason="first_clear",
+            balance_before=old_total,
+            balance_after=new_total,
+            session_id=session_id,
+            user_id=user_id,
+        )
+        awarded_badges = cls._sync_badges(user_id, new_total)
+        return {
+            "xp_awarded": xp_earned,
+            "old_total": old_total,
+            "new_total": new_total,
+            "calculation_details": {"first_clear_bonus": xp_earned, "base_xp": base_xp},
+            "history_entry_id": xp_entry.id,
+            "awarded_badges": awarded_badges,
+        }
+
+    @classmethod
     def recalculate_user_total_xp(cls, user_id: str) -> Dict[str, Any]:
         try:
             total_xp = XPHistory.calculate_user_total_xp(user_id)

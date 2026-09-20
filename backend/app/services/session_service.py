@@ -165,17 +165,29 @@ class Session:
         if score is not None and score > 0:
             try:
                 from app.services.xp_award import XPManager
-                xp_result = XPManager.award_session_xp(
-                    user_id=updated_session.user_id,
-                    session_name=updated_session.session_name,
-                    score=score,
-                    time_spent=updated_session.time_spent,
-                    level_id=updated_session.level_id,
-                    session_id=updated_session.id,
-                    reason="session_completion",
-                    breakdown=breakdown,
-                    first_clear=first_clear,
-                )
+                if updated_session.lessons_completed and updated_session.level_id is not None:
+                    # Lesson-tracked session: base XP was banked per-lesson;
+                    # ending adds only the one-time first-clear bonus.
+                    if first_clear:
+                        xp_result = XPManager.award_first_clear_bonus(
+                            user_id=updated_session.user_id,
+                            level_id=updated_session.level_id,
+                            session_id=updated_session.id,
+                        )
+                    else:
+                        xp_result = {"xp_awarded": 0, "calculation_details": {}, "new_total": None}
+                else:
+                    xp_result = XPManager.award_session_xp(
+                        user_id=updated_session.user_id,
+                        session_name=updated_session.session_name,
+                        score=score,
+                        time_spent=updated_session.time_spent,
+                        level_id=updated_session.level_id,
+                        session_id=updated_session.id,
+                        reason="session_completion",
+                        breakdown=breakdown,
+                        first_clear=first_clear,
+                    )
                 updated_session._xp_awarded = xp_result["xp_awarded"]
                 updated_session._xp_calculation = xp_result.get("calculation_details", {})
                 updated_session._new_total_xp = xp_result.get("new_total", 0)

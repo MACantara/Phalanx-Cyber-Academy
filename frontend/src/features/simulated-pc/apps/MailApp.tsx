@@ -41,7 +41,7 @@ function techniqueAcc(email: EmailItem, selected: Set<string>): number | undefin
 }
 
 export function MailApp() {
-  const { environment, completeSession, startShutdown, startReplay, addScoringEvent, emit, unlocked, score } = useSimulatedPC();
+  const { environment, completeSession, startShutdown, startReplay, addScoringEvent, emit, unlocked, score, bankLesson, resumeState } = useSimulatedPC();
   if (!environment) return null;
   const mail = environment.content.mail as MailContent | undefined;
 
@@ -52,9 +52,11 @@ export function MailApp() {
     [mail, unlocked]
   );
 
+  const mailResume = (resumeState?.mail as { lessonIndex?: number } | undefined)?.lessonIndex ?? 0;
   const lesson = useLesson(emails, {
     getId: (e) => e.id,
     lessonSize: environment.scenario?.lessonSize,
+    resumeLessonIndex: mailResume,
     onLessonComplete: (lessonIndex, results) => {
       const correct = results.filter((r) => r.correct).length;
       const ev = results.map((r) => r.evidenceAcc).filter((v): v is number => v !== undefined);
@@ -68,6 +70,7 @@ export function MailApp() {
           evidenceAcc: ev.length ? ev.reduce((a, b) => a + b, 0) / ev.length : undefined,
         },
       });
+      bankLesson('mail', lessonIndex, Math.ceil(emails.length / (environment.scenario?.lessonSize ?? 7)), results);
     },
   });
 

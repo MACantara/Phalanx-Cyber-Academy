@@ -10,17 +10,21 @@ import { applyWorldEvent, freshWorld, requiredObjectives, type WorldState } from
 import { usePrefersHandset } from './lib/usePrefersHandset';
 import { validateAppContent } from './lib/schemas';
 import { getApp } from './apps';
+import { api } from '../../lib/api';
+import type { LessonBreakdown } from './context/SimulatedPCContext';
 import type { LevelData, OpenWindow, ScoringEvent, SimulationContent, LevelEnvironment, ShellMode, WorldEvent, WorldNotification } from './types';
 
 export interface SimulatedPCProps {
   level: LevelData;
   sessionId?: string | null;
-  onComplete: (payload: { score: number; timeSpent: number }) => void;
+  /** Resumable checkpoint state from the active session (session.state). */
+  resume?: Record<string, unknown> | null;
+  onComplete: (payload: { score: number; timeSpent: number; breakdown?: LessonBreakdown }) => void;
 }
 
 type Phase = 'boot' | 'desktop' | 'shutdown';
 
-export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) {
+export function SimulatedPC({ level, sessionId, resume, onComplete }: SimulatedPCProps) {
   const [phase, setPhase] = useState<Phase>('boot');
   const [score, setScore] = useState(0);
   const [completed, setCompleted] = useState(false);
@@ -161,6 +165,63 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   }, []);
 
+  /* Session banking — per-app checkpoint state lives in session.state[appId]
+     ({lessonIndex: next lesson to serve}); lessons_completed is the sum
+     across apps. Breakdowns accumulate for the end-of-session competence
+     report. Best-effort: banking failures never block play. */
+  const stateRef = useRef<Record<string, unknown>>(resume ?? {});
+  const lessonsDoneRef = useRef<Record<string, number>>({});
+  const breakdownRef = useRef<{ correct: number; total: number; evSum: number; evN: number }>({
+    correct: 0, total: 0, evSum: 0, evN: 0,
+  });
+
+  const bankLesson = useCallback(
+    async (appId: string, lessonIndex: number, lessonsTotal: number, results: { correct: boolean; evidenceAcc?: number }[]) => {
+      const correct = results.filter((r) => r.correct).length;
+      const ev = results.map((r) => r.evidenceAcc).filter((v): v is number => v !== undefined);
+      breakdownRef.current.correct += correct;
+      breakdownRef.current.total += results.length;
+      if (ev.length) {
+        breakdownRef.current.evSum += ev.reduce((a, b) => a + b, 0);
+        breakdownRef.current.evN += ev.length;
+      }
+      if (!sessionId) return;
+      const competence =
+        ev.length > 0
+          ? 0.6 * (results.length ? correct / results.length : 0) +
+            0.4 * (ev.reduce((a, b) => a + b, 0) / ev.length)
+          : results.length
+            ? correct / results.length
+            : 0;
+      stateRef.current = { ...stateRef.current, [appId]: { lessonIndex: lessonIndex + 1 } };
+      lessonsDoneRef.current = { ...lessonsDoneRef.current, [appId]: lessonIndex + 1 };
+      try {
+        await api.post(`/sessions/${sessionId}/lesson`, {
+          lesson_index: lessonIndex,
+          lessons_total: lessonsTotal,
+          competence,
+        });
+        await api.post(`/sessions/${sessionId}/checkpoint`, {
+          state: stateRef.current,
+          lessons_completed: Object.values(lessonsDoneRef.current).reduce((a, b) => a + b, 0),
+          lessons_total: lessonsTotal,
+        });
+      } catch {
+        /* banking is best-effort; play continues offline-safe */
+      }
+    },
+    [sessionId]
+  );
+
+  const sessionBreakdown = useCallback((): LessonBreakdown | undefined => {
+    const b = breakdownRef.current;
+    if (b.total === 0) return undefined;
+    return {
+      verdict_acc: b.correct / b.total,
+      evidence_acc: b.evN ? b.evSum / b.evN : undefined,
+    };
+  }, []);
+
   const startReplay = useCallback(() => {
     if (!activeContent) return;
     const mutated = applyAdaptive(activeContent);
@@ -176,8 +237,8 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
 
   const onShutdownFinished = useCallback(() => {
     const timeSpent = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
-    onComplete({ score, timeSpent });
-  }, [onComplete, score, startTime]);
+    onComplete({ score, timeSpent, breakdown: sessionBreakdown() });
+  }, [onComplete, score, startTime, sessionBreakdown]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -238,8 +299,10 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
       startShutdown,
       startReplay,
       completed,
+      resumeState: resume ?? null,
+      bankLesson,
     }),
-    [level, activeContent, environment, contentErrors, sessionId, score, windows, activeWindow, openWindow, closeWindow, focusWindow, minimizeWindow, restoreWindow, moveWindow, formFactor, shellMode, cycleShellMode, addScoringEvent, emit, world, notifications, dismissNotification, browserUrl, completeSession, startShutdown, startReplay, completed]
+    [level, activeContent, environment, contentErrors, sessionId, score, windows, activeWindow, openWindow, closeWindow, focusWindow, minimizeWindow, restoreWindow, moveWindow, formFactor, shellMode, cycleShellMode, addScoringEvent, emit, world, notifications, dismissNotification, browserUrl, completeSession, startShutdown, startReplay, completed, resume, bankLesson]
   );
 
   return (

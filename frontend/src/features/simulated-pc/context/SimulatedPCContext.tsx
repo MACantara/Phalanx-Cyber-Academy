@@ -12,6 +12,11 @@ import type {
 } from '../types';
 import type { ContentIssue } from '../lib/schemas';
 
+export interface LessonBreakdown {
+  verdict_acc: number;
+  evidence_acc?: number;
+}
+
 export interface SimulatedPCContextValue {
   level: LevelData;
   content?: LevelData['content'];
@@ -41,6 +46,15 @@ export interface SimulatedPCContextValue {
   startShutdown: () => void;
   startReplay: () => void;
   completed: boolean;
+  /** Session checkpoint state from the resume anchor (session.state). */
+  resumeState: Record<string, unknown> | null;
+  /** Bank a finished lesson: XP award + checkpoint write. Best-effort. */
+  bankLesson: (
+    appId: string,
+    lessonIndex: number,
+    lessonsTotal: number,
+    results: { correct: boolean; evidenceAcc?: number }[]
+  ) => void;
 }
 
 export const SimulatedPCContext = createContext<SimulatedPCContextValue | null>(null);

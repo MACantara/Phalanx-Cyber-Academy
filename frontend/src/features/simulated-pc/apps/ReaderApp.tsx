@@ -21,15 +21,17 @@ interface ItemState {
 const EMPTY: ItemState = { cues: {} };
 
 export function ReaderApp() {
-  const { environment, completeSession, startShutdown, startReplay, emit, score } = useSimulatedPC();
+  const { environment, completeSession, startShutdown, startReplay, emit, score, bankLesson, resumeState } = useSimulatedPC();
   if (!environment) return null;
   const reader = environment.content.reader as ReaderContent | undefined;
 
   const articles = useMemo(() => reader?.articles ?? [], [reader]);
   const scoring = environment.scoring;
+  const readerResume = (resumeState?.reader as { lessonIndex?: number } | undefined)?.lessonIndex ?? 0;
   const lesson = useLesson(articles, {
     getId: (a) => a.id,
     lessonSize: environment.scenario?.lessonSize,
+    resumeLessonIndex: readerResume,
     onLessonComplete: (lessonIndex, results) => {
       const correct = results.filter((r) => r.correct).length;
       const ev = results.map((r) => r.evidenceAcc).filter((v): v is number => v !== undefined);
@@ -43,6 +45,7 @@ export function ReaderApp() {
           evidenceAcc: ev.length ? ev.reduce((a, b) => a + b, 0) / ev.length : undefined,
         },
       });
+      bankLesson('reader', lessonIndex, Math.ceil(articles.length / (environment.scenario?.lessonSize ?? 7)), results);
     },
   });
   const [states, setStates] = useState<Record<string, ItemState>>({});
