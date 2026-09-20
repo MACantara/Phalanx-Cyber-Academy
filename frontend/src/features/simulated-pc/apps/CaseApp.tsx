@@ -13,7 +13,7 @@ const kindIcons = {
 } as const;
 
 export function CaseApp() {
-  const { environment, addScoringEvent, completeSession, startShutdown } = useSimulatedPC();
+  const { environment, addScoringEvent, emit, completeSession, startShutdown } = useSimulatedPC();
   if (!environment) return null;
   const caseData = environment.content.case as CaseContent | undefined;
   if (!caseData) return null;
@@ -56,12 +56,14 @@ export function CaseApp() {
     setOpenFileId(file.id);
     setOpenItemId(null);
     setViewedEvidence((prev) => new Set([...prev, file.id]));
+    emit({ app: 'case', action: 'view', target: file.id });
   };
 
   const openItem = (item: EvidenceItem) => {
     setOpenItemId(item.id);
     setOpenFileId(null);
     setViewedEvidence((prev) => new Set([...prev, item.id]));
+    emit({ app: 'case', action: 'view', target: item.id });
   };
 
   const activeFile = evidenceFiles.find((f) => f.id === openFileId);

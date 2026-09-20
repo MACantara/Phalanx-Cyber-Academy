@@ -1,3 +1,5 @@
+import { useSimulatedPC } from '../context/SimulatedPCContext';
+
 interface AppFrameProps {
   title: string;
   instructions?: string;
@@ -5,6 +7,7 @@ interface AppFrameProps {
 }
 
 export function AppFrame({ title, instructions, children }: AppFrameProps) {
+  const { activeWindow, minimizeWindow } = useSimulatedPC();
   return (
     <div className="flex h-full flex-col bg-stock text-ink">
       <header className="flex items-center gap-3 border-b border-ink bg-stock px-4 py-3 sm:px-5">
@@ -13,9 +16,15 @@ export function AppFrame({ title, instructions, children }: AppFrameProps) {
           <h1 className="truncate text-sm font-bold tracking-wide">{title}</h1>
           {instructions && <p className="register mt-0.5 truncate normal-case tracking-normal">{instructions}</p>}
         </div>
-        <div className="ml-auto flex gap-1.5" aria-hidden="true">
-          <span className="block h-3 w-3 border border-ink" />
-          <span className="block h-3 w-3 bg-ink" />
+        <div className="ml-auto flex items-center gap-1.5">
+          <button
+            onClick={() => activeWindow && minimizeWindow(activeWindow)}
+            aria-label="Minimize to taskbar"
+            className="flex h-8 w-8 items-center justify-center hover:bg-stock-green"
+          >
+            <span className="block h-3 w-3 border border-ink" aria-hidden="true" />
+          </button>
+          <span className="block h-3 w-3 bg-ink" aria-hidden="true" />
         </div>
       </header>
       <main className="flex-1 overflow-hidden">{children}</main>

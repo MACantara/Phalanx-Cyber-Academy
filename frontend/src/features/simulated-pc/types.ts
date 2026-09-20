@@ -110,6 +110,11 @@ export interface EmailSandboxContent extends BaseContent {
   emails: EmailItem[];
 }
 
+export interface EmailLink {
+  label: string;
+  url: string;
+}
+
 export interface EmailItem {
   id: string;
   from: string;
@@ -118,6 +123,8 @@ export interface EmailItem {
   isPhishing: boolean;
   redFlags?: string[];
   explanation?: string;
+  locked?: boolean;
+  links?: EmailLink[];
 }
 
 export interface TerminalCtfContent extends BaseContent {
@@ -174,6 +181,7 @@ export interface FileItem {
   path: string;
   content: string;
   hidden?: boolean;
+  locked?: boolean;
 }
 
 export interface TerminalCommand {
@@ -211,10 +219,23 @@ export interface AppInstall {
   pinned?: boolean;
 }
 
+export interface WorldEvent {
+  app: AppId;
+  action: string;
+  target: string;
+  data?: Record<string, unknown>;
+}
+
+export interface WorldNotification {
+  id: number;
+  message: string;
+}
+
 export interface EventMatcher {
   app: AppId;
   action: string;
   target?: string;
+  data?: Record<string, unknown>;
 }
 
 export interface Objective {
@@ -229,11 +250,13 @@ export interface TriggerEffect {
   unlock?: string;
   notify?: string;
   objective?: string;
+  openUrl?: string;
 }
 
 export interface Trigger {
   on: EventMatcher;
   then: TriggerEffect[];
+  once?: boolean;
 }
 
 export interface Scenario {
@@ -269,6 +292,34 @@ export interface CaseContent {
   initialSceneId: string;
   scenes: Record<string, CaseScene>;
   evidence: CaseEvidence;
+}
+
+export interface FilesContent {
+  files: FileItem[];
+}
+
+export interface BrowserField {
+  id: string;
+  label: string;
+  password?: boolean;
+}
+
+export interface BrowserSite {
+  id: string;
+  url: string;
+  title: string;
+  body: string;
+  locked?: boolean;
+  form?: {
+    fields: BrowserField[];
+    submitLabel?: string;
+  };
+  afterSubmit?: string;
+}
+
+export interface BrowserContent {
+  sites: BrowserSite[];
+  home?: string;
 }
 
 export interface LevelData {

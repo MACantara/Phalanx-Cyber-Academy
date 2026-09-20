@@ -1,5 +1,12 @@
 import { createContext, useContext } from 'react';
-import type { LevelData, LevelEnvironment, OpenWindow, ScoringEvent } from '../types';
+import type {
+  LevelData,
+  LevelEnvironment,
+  OpenWindow,
+  ScoringEvent,
+  WorldEvent,
+  WorldNotification,
+} from '../types';
 
 export interface SimulatedPCContextValue {
   level: LevelData;
@@ -15,6 +22,12 @@ export interface SimulatedPCContextValue {
   minimizeWindow: (id: string) => void;
   restoreWindow: (id: string) => void;
   addScoringEvent: (event: ScoringEvent) => void;
+  emit: (event: WorldEvent) => void;
+  unlocked: ReadonlySet<string>;
+  objectivesDone: ReadonlySet<string>;
+  notifications: WorldNotification[];
+  dismissNotification: (id: number) => void;
+  browserUrl: string | null;
   completeSession: (finalScore?: number) => void;
   startShutdown: () => void;
   startReplay: () => void;

@@ -5,7 +5,7 @@ import { Newspaper, ArrowRight, CheckCircle, XCircle, RefreshCcw, LogOut } from 
 import type { Article, ReaderContent } from '../types';
 
 export function ReaderApp() {
-  const { environment, completeSession, startShutdown, startReplay, score } = useSimulatedPC();
+  const { environment, completeSession, startShutdown, startReplay, emit, score } = useSimulatedPC();
   if (!environment) return null;
   const reader = environment.content.reader as ReaderContent | undefined;
 
@@ -55,6 +55,7 @@ export function ReaderApp() {
     if (!current) return;
     const nextAnswers = { ...answers, [current.id]: value };
     setAnswers(nextAnswers);
+    emit({ app: 'reader', action: 'classify', target: current.id, data: { value, correct: value === current.label } });
 
     if (index + 1 >= total) {
       const final = computeScore(nextAnswers);

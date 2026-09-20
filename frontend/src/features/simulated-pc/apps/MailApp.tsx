@@ -5,14 +5,21 @@ import { Inbox, Mail, ShieldCheck, ShieldAlert, CheckCircle, XCircle } from 'luc
 import type { MailContent, ScoringEvent } from '../types';
 
 export function MailApp() {
-  const { environment, completeSession, startShutdown, startReplay, addScoringEvent, score } = useSimulatedPC();
+  const { environment, completeSession, startShutdown, startReplay, addScoringEvent, emit, unlocked, score } = useSimulatedPC();
   if (!environment) return null;
   const mail = environment.content.mail as MailContent | undefined;
 
-  const emails = mail?.emails ?? [];
+  // Locked items are scenario-gated: they surface only once a trigger unlocks
+  // their content id — that's how mail arrives mid-scenario.
+  const emails = (mail?.emails ?? []).filter((e) => !e.locked || unlocked.has(e.id));
   const [selectedId, setSelectedId] = useState<string>(emails[0]?.id ?? '');
   const [answers, setAnswers] = useState<Record<string, 'phishing' | 'legitimate'>>({});
   const [finished, setFinished] = useState(false);
+
+  const selectEmail = (id: string) => {
+    setSelectedId(id);
+    emit({ app: 'mail', action: 'open', target: id });
+  };
 
   const selected = emails.find((e) => e.id === selectedId) ?? emails[0];
   const answered = selected ? answers[selected.id] : undefined;
@@ -39,10 +46,11 @@ export function MailApp() {
       target: e.id,
     };
     addScoringEvent(event);
+    emit({ app: 'mail', action: 'classify', target: e.id, data: { verdict: label, correct: label === expected } });
     setAnswers((prev) => ({ ...prev, [e.id]: label }));
     const nextIndex = emails.findIndex((item) => item.id === e.id) + 1;
     if (nextIndex < emails.length) {
-      setSelectedId(emails[nextIndex].id);
+      selectEmail(emails[nextIndex].id);
     } else {
       setFinished(true);
       completeSession();
@@ -93,7 +101,7 @@ export function MailApp() {
                 return (
                   <button
                     key={email.id}
-                    onClick={() => setSelectedId(email.id)}
+                    onClick={() => selectEmail(email.id)}
                     className={`relative w-56 shrink-0 border-r border-hairline-soft px-3 py-3 text-left transition-colors sm:w-full sm:border-b sm:border-r-0 ${
                       selectedId === email.id ? 'bg-seal text-seal-ink' : 'hover:bg-stock-green'
                     }`}
@@ -137,6 +145,23 @@ export function MailApp() {
                   </div>
                 </div>
                 <div className="flex-1 overflow-auto whitespace-pre-wrap p-4 text-sm leading-relaxed text-ink sm:p-5">{selected.body}</div>
+
+                {selected.links && selected.links.length > 0 && (
+                  <div className="border-t border-hairline bg-stock-drift p-4">
+                    <p className="register mb-2">Referenced locations</p>
+                    <div className="flex flex-wrap gap-2">
+                      {selected.links.map((link) => (
+                        <button
+                          key={link.url}
+                          onClick={() => emit({ app: 'mail', action: 'click-link', target: link.url })}
+                          className="min-h-[44px] border border-ink px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-seal-ink transition-colors hover:bg-seal hover:text-seal-ink"
+                        >
+                          {link.label} →
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {answered && (
                   <div className="border-t border-hairline bg-stock-drift p-4">

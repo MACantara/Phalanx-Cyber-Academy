@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BootSequence } from './components/BootSequence';
 import { ShutdownSequence } from './components/ShutdownSequence';
+import { DesktopShell } from './components/DesktopShell';
 import { SimulatedPCContext, type SimulatedPCContextValue } from './context/SimulatedPCContext';
-import { getAppComponent } from './apps';
 import { applyAdaptive } from './lib/adaptive';
 import { toEnvironment } from './lib/environment';
-import type { LevelData, OpenWindow, ScoringEvent, SimulationContent, LevelEnvironment } from './types';
+import { applyWorldEvent, freshWorld, requiredObjectives, type WorldState } from './lib/scenario';
+import type { LevelData, OpenWindow, ScoringEvent, SimulationContent, LevelEnvironment, WorldEvent, WorldNotification } from './types';
 
 export interface SimulatedPCProps {
   level: LevelData;
@@ -26,6 +27,13 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
   const [scoringEvents, setScoringEvents] = useState<ScoringEvent[]>([]);
   const [activeContent, setActiveContent] = useState<SimulationContent | LevelEnvironment | undefined>(level.content);
   const [replayId, setReplayId] = useState(0);
+  const [world, setWorld] = useState<WorldState>(freshWorld);
+  const [notifications, setNotifications] = useState<WorldNotification[]>([]);
+  const [browserUrl, setBrowserUrl] = useState<string | null>(null);
+  const worldRef = useRef<WorldState>(world);
+  const notificationSeq = useRef(0);
+
+  const environment = useMemo(() => toEnvironment(activeContent), [activeContent]);
 
   const openWindow = useCallback((id: string, title: string, icon: string, appId: string) => {
     setWindows((prev) => {
@@ -78,24 +86,63 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
     setScoringEvents((prev) => [...prev, event]);
   }, []);
 
+  const resetWorld = useCallback(() => {
+    const fresh = freshWorld();
+    worldRef.current = fresh;
+    setWorld(fresh);
+    setNotifications([]);
+    setBrowserUrl(null);
+    setWindows([]);
+    setActiveWindow(null);
+  }, []);
+
   const completeSession = useCallback((finalScore?: number) => {
+    // Environment-owned completion: app-level finishes are advisory while
+    // required objectives remain. Legacy envs declare none, so their
+    // per-app completion flow is unchanged.
+    const required = requiredObjectives(environment);
+    if (required.some((o) => !worldRef.current.objectivesDone.has(o.id))) return;
     if (finalScore !== undefined) {
       setScore(finalScore);
     }
     setCompleted(true);
+  }, [environment]);
+
+  const emit = useCallback((event: WorldEvent) => {
+    const { next, scoring, notifications: notes, openUrl, completedNow } =
+      applyWorldEvent(environment, worldRef.current, event);
+    if (next === worldRef.current) return;
+    worldRef.current = next;
+    setWorld(next);
+    for (const s of scoring) setScoringEvents((prev) => [...prev, s]);
+    if (notes.length) {
+      setNotifications((prev) => [
+        ...prev,
+        ...notes.map((message) => ({ id: notificationSeq.current++, message })),
+      ]);
+    }
+    if (openUrl) {
+      setBrowserUrl(openUrl);
+      openWindow('app-browser', 'Browser', 'browser', 'browser');
+    }
+    if (completedNow) completeSession();
+  }, [environment, openWindow, completeSession]);
+
+  const dismissNotification = useCallback((id: number) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
   }, []);
 
   const startReplay = useCallback(() => {
     if (!activeContent) return;
     const mutated = applyAdaptive(activeContent);
-    if (!mutated) return;
-    setActiveContent(mutated);
+    if (mutated) setActiveContent(mutated);
     setScoringEvents([]);
     setCompleted(false);
     setScore(0);
+    resetWorld();
     setPhase('desktop');
     setReplayId((id) => id + 1);
-  }, [activeContent]);
+  }, [activeContent, resetWorld]);
 
   const onShutdownFinished = useCallback(() => {
     const timeSpent = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
@@ -125,11 +172,10 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
     setScoringEvents([]);
     setCompleted(false);
     setScore(0);
+    resetWorld();
     setPhase('boot');
     setReplayId((id) => id + 1);
-  }, [level]);
-
-  const environment = useMemo(() => toEnvironment(activeContent), [activeContent]);
+  }, [level, resetWorld]);
 
   const context = useMemo<SimulatedPCContextValue>(
     () => ({
@@ -146,23 +192,26 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
       minimizeWindow,
       restoreWindow,
       addScoringEvent,
+      emit,
+      unlocked: world.unlocked,
+      objectivesDone: world.objectivesDone,
+      notifications,
+      dismissNotification,
+      browserUrl,
       completeSession,
       startShutdown,
       startReplay,
       completed,
     }),
-    [level, activeContent, environment, sessionId, score, windows, activeWindow, openWindow, closeWindow, focusWindow, minimizeWindow, restoreWindow, addScoringEvent, completeSession, startShutdown, startReplay, completed]
+    [level, activeContent, environment, sessionId, score, windows, activeWindow, openWindow, closeWindow, focusWindow, minimizeWindow, restoreWindow, addScoringEvent, emit, world, notifications, dismissNotification, browserUrl, completeSession, startShutdown, startReplay, completed]
   );
-
-  // Phase A: environments carry an app list; multi-app windowing lands in Phase B.
-  const ActiveApp = getAppComponent(environment?.apps[0]?.appId);
 
   return (
     <SimulatedPCContext.Provider value={context}>
       <div className="fixed inset-0 z-50 overflow-hidden bg-[#0c0c0e] p-0 sm:p-3">
         <div className="relative h-full w-full overflow-hidden bg-stock sm:border sm:border-ink">
         {phase === 'boot' && <BootSequence onComplete={() => setPhase('desktop')} />}
-        {phase === 'desktop' && <ActiveApp key={replayId} />}
+        {phase === 'desktop' && <DesktopShell key={replayId} />}
         {phase === 'shutdown' && (
           <ShutdownSequence
             onComplete={onShutdownFinished}
