@@ -24,6 +24,8 @@ import Analytics from './pages/admin/Analytics';
 import Backup from './pages/admin/Backup';
 import Schedule from './pages/admin/Schedule';
 import Reports from './pages/admin/Reports';
+import ContentLibrary from './pages/admin/ContentLibrary';
+import LevelContent from './pages/admin/LevelContent';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Cookies from './pages/Cookies';
@@ -66,6 +68,8 @@ function App() {
               <Route path="admin/reports" element={<Reports />} />
               <Route path="admin/backups" element={<Backup />} />
               <Route path="admin/backups/schedule" element={<Schedule />} />
+              <Route path="admin/content" element={<ContentLibrary />} />
+              <Route path="admin/level-content" element={<LevelContent />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Route>

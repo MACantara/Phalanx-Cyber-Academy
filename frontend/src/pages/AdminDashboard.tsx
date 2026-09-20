@@ -140,6 +140,18 @@ export default function AdminDashboard() {
                   Player Analytics
                 </Link>
                 <Link
+                  to="/admin/content"
+                  className="flex min-h-[44px] items-center justify-center border border-hairline bg-stock px-4 py-3 text-center font-mono text-xs uppercase tracking-[0.14em] text-ink transition-colors hover:border-ink hover:bg-stock-green"
+                >
+                  Content Library
+                </Link>
+                <Link
+                  to="/admin/level-content"
+                  className="flex min-h-[44px] items-center justify-center border border-hairline bg-stock px-4 py-3 text-center font-mono text-xs uppercase tracking-[0.14em] text-ink transition-colors hover:border-ink hover:bg-stock-green"
+                >
+                  Level Content
+                </Link>
+                <Link
                   to="/admin/reports"
                   className="flex min-h-[44px] items-center justify-center border border-hairline bg-stock px-4 py-3 text-center font-mono text-xs uppercase tracking-[0.14em] text-ink transition-colors hover:border-ink hover:bg-stock-green"
                 >
