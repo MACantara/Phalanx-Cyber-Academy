@@ -143,10 +143,14 @@ export function MailApp() {
                         From: <span className="font-bold text-ink">{selected.from}</span>
                       </p>
                     </div>
-                    {selected.isPhishing ? (
-                      <span className="shrink-0 border border-strike px-2 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-strike">Flagged</span>
+                    {answered ? (
+                      selected.isPhishing ? (
+                        <span className="shrink-0 border border-strike px-2 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-strike">Flagged</span>
+                      ) : (
+                        <span className="shrink-0 border border-confirm px-2 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-confirm">Verified</span>
+                      )
                     ) : (
-                      <span className="shrink-0 border border-confirm px-2 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-confirm">Verified</span>
+                      <span className="shrink-0 border border-hairline px-2 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-ink-soft">Unclassified</span>
                     )}
                   </div>
                 </div>
