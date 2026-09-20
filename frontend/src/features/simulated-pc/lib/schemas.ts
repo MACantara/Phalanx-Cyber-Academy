@@ -213,8 +213,21 @@ export const levelEnvironmentSchema = z.object({
     .object({
       objectives: z.array(objectiveSchema),
       triggers: z.array(triggerSchema).optional(),
-      dialogues: z.record(z.string(), z.unknown()).optional(),
       briefing: scenarioBriefingSchema.optional(),
+      debrief: z
+        .object({ speaker: z.string().optional(), text: z.string() })
+        .optional(),
+      cast: z
+        .record(
+          z.string(),
+          z.object({
+            name: z.string(),
+            role: z.string().optional(),
+            avatar: z.string().optional(),
+            avatarStatic: z.string().optional(),
+          })
+        )
+        .optional(),
     })
     .optional(),
   scoring: scoringRulesSchema,

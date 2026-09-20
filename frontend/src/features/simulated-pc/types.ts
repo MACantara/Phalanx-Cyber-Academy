@@ -54,6 +54,7 @@ export interface BaseContent {
   title: string;
   instructions?: string;
   dialogues?: Record<string, DialoguePhase>;
+  scenario?: Scenario;
   scoring: ScoringRules;
   adaptive?: AdaptiveConfig;
 }
@@ -282,12 +283,17 @@ export interface ScenarioBriefing {
   messages: BriefingMessage[];
 }
 
+export interface ScenarioDebrief {
+  speaker?: string;
+  text: string;
+}
+
 export interface Scenario {
   objectives: Objective[];
   triggers?: Trigger[];
-  dialogues?: Record<string, DialoguePhase>;
   cast?: Record<string, SpeakerProfile>;
   briefing?: ScenarioBriefing;
+  debrief?: ScenarioDebrief;
 }
 
 export interface LevelEnvironment {

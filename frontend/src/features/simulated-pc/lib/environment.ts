@@ -47,6 +47,25 @@ function env(
   apps: LevelEnvironment['apps'],
   content: LevelEnvironment['content']
 ): LevelEnvironment {
+  // Legacy payloads author scenario blocks directly; dialogues.briefing is
+  // the deprecated path and only fills briefing when nothing authored one.
+  // dialogues.completion is intentionally dropped — app verdict screens own
+  // endings on legacy envs.
+  const legacyBriefing = c.dialogues?.briefing;
+  const scenario =
+    c.scenario || legacyBriefing
+      ? {
+          objectives: c.scenario?.objectives ?? [],
+          triggers: c.scenario?.triggers,
+          cast: c.scenario?.cast,
+          briefing:
+            c.scenario?.briefing ??
+            (legacyBriefing
+              ? { speaker: legacyBriefing.character, messages: legacyBriefing.messages }
+              : undefined),
+          debrief: c.scenario?.debrief,
+        }
+      : undefined;
   return {
     environment: true,
     version: c.version,
@@ -54,7 +73,7 @@ function env(
     briefing: c.instructions,
     apps,
     content,
-    scenario: c.dialogues ? { objectives: [], dialogues: c.dialogues } : undefined,
+    scenario,
     scoring: c.scoring,
     adaptive: c.adaptive,
   };
