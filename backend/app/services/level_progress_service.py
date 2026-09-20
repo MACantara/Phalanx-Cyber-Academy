@@ -77,9 +77,14 @@ def upsert_progress(
                 row.resume_session_id = None
             if completed and row.completed_at is None:
                 row.completed_at = utc_now()
+                first_clear = True
+            else:
+                first_clear = False
             row.updated_at = utc_now()
             s.flush()
-            return _to_dict(row)
+            d = _to_dict(row)
+            d["first_clear"] = first_clear
+            return d
     except SQLAlchemyError as e:
         raise DatabaseError(f"Failed to upsert progress for level {level_id}: {e}")
 

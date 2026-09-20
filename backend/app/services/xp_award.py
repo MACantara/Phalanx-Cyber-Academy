@@ -77,6 +77,8 @@ class XPManager:
         level_id: Optional[int] = None,
         session_id: Optional[int] = None,
         reason: str = "session_completion",
+        breakdown: Optional[Dict[str, Any]] = None,
+        first_clear: bool = False,
     ) -> Dict[str, Any]:
         try:
             if level_id is not None:
@@ -84,7 +86,8 @@ class XPManager:
                 level = Level.get_by_level_id(level_id)
                 difficulty = level.difficulty if level else "medium"
                 xp_calculation = XPCalculator.calculate_level_xp(
-                    level_id, score, time_spent, difficulty
+                    level_id, score, time_spent, difficulty,
+                    breakdown=breakdown, first_clear=first_clear,
                 )
             else:
                 base_xp = 50

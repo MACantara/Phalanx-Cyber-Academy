@@ -120,6 +120,7 @@ class Session:
         session_id: int,
         score: Optional[int] = None,
         user_id: Optional[str] = None,
+        breakdown: Optional[Dict[str, Any]] = None,
     ) -> "Session":
         if score is not None and not (0 <= score <= 100):
             raise ValueError("Score must be between 0 and 100")
@@ -144,17 +145,20 @@ class Session:
         except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to end session: {str(e)}")
 
+        first_clear = False
         if updated_session.level_id is not None and profile_id is not None:
             try:
                 from app.services import level_progress_service
-                level_progress_service.upsert_progress(
+                progress = level_progress_service.upsert_progress(
                     profile_id,
                     updated_session.level_id,
                     lessons_done=updated_session.lessons_completed,
                     score=score,
+                    accuracy=(breakdown or {}).get("evidence_acc"),
                     clear_resume=True,
                     completed=True,
                 )
+                first_clear = bool(progress.get("first_clear"))
             except Exception:
                 logger.warning("Failed to upsert level progress", exc_info=True)
 
@@ -169,6 +173,8 @@ class Session:
                     level_id=updated_session.level_id,
                     session_id=updated_session.id,
                     reason="session_completion",
+                    breakdown=breakdown,
+                    first_clear=first_clear,
                 )
                 updated_session._xp_awarded = xp_result["xp_awarded"]
                 updated_session._xp_calculation = xp_result.get("calculation_details", {})
