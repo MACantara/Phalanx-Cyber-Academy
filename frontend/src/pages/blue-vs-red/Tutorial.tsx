@@ -236,7 +236,7 @@ export default function Tutorial() {
                 </div>
 
                 <p className="mb-12 text-center text-lg text-ink-soft sm:text-xl">
-                  You are the cybersecurity specialist for Project Sentinel Academy, a cutting-edge educational institution that houses sensitive research data, student records, and proprietary learning systems.
+                  You are the cybersecurity specialist for Project Sentinel Academy, a fictional institution housing sensitive research data, student records, and proprietary learning systems.
                 </p>
 
                 <div className="grid gap-8 md:grid-cols-3">

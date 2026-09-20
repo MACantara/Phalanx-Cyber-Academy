@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FadeIn, Stagger } from '../components/Animated';
-import { ArrowRight, CheckCircle, Cpu, Layers, Trophy, ShieldCheck, Gamepad2, Zap, Shield, type LucideIcon } from 'lucide-react';
+import { ArrowRight, CheckCircle, Monitor, Layers, Trophy, ShieldCheck, Gamepad2, Zap, Shield, type LucideIcon } from 'lucide-react';
 
 const team = [
   { name: 'Jean Alexis L. Santos', role: 'Project Manager', image: '/team/santos.png' },
@@ -29,7 +29,7 @@ export default function About() {
           </div>
           <h1 className="mb-5 text-4xl font-extrabold tracking-tight text-ink opacity-0 animate-fade-in-up sm:text-6xl" style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>About Phalanx Cyber Academy</h1>
           <p className="mx-auto mb-3 max-w-3xl text-xl font-semibold text-ink opacity-0 animate-fade-in-up sm:text-2xl" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>Train. Coordinate. Defend.</p>
-          <p className="mx-auto max-w-3xl text-base text-ink-soft opacity-0 animate-fade-in-up sm:text-lg" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>Empowering digital citizens through gamified cybersecurity education</p>
+          <p className="mx-auto max-w-3xl text-base text-ink-soft opacity-0 animate-fade-in-up sm:text-lg" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>A training academy where missions play inside a simulated workstation</p>
         </div>
       </section>
 
@@ -41,9 +41,9 @@ export default function About() {
               <span className="register">Plate 02 — Mission</span>
               <h2 className="mb-6 mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">Our Mission</h2>
               <div className="space-y-6 text-base leading-relaxed text-ink-soft sm:text-lg">
-                <p>Phalanx Cyber Academy was born from a critical need: making cybersecurity education accessible, engaging, and effective for everyone. In an era where digital threats evolve daily, we believe that learning to protect yourself online shouldn't be boring or overwhelming.</p>
-                <p>Through gamification, real-time feedback systems, and realistic simulations, we transform complex cybersecurity concepts into interactive adventures. Every scenario you complete, every challenge you overcome, and every achievement you unlock makes the digital world safer for everyone.</p>
-                <p>Our platform addresses critical digital literacy gaps by combining the engagement of gaming with the rigor of professional cybersecurity training, creating an environment where learning is both fun and profoundly practical.</p>
+                <p>Phalanx Cyber Academy teaches digital defense the way the job works: by making calls under realistic conditions. Each level is a scenario inside a simulated PC. You read the inbox, check the source, contain the infection, and every decision is scored.</p>
+                <p>Missions cover phishing, misinformation, malware response, ethical hacking, and digital forensics. Progress is tracked in XP, badges, streaks, and a session report per scenario.</p>
+                <p>Nothing here is a video to watch and forget. Scenarios are hands-on exercises in a safe environment where a wrong call costs marks, not machines.</p>
               </div>
               <Link to="/contact" className="mt-8 inline-flex min-h-[44px] items-center justify-center bg-ink px-8 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink hover:text-stock dark:hover:bg-seal dark:hover:text-seal-ink">
                 Get Involved <ArrowRight className="ml-2 h-4 w-4" />
@@ -55,7 +55,7 @@ export default function About() {
                 <div>
                   <ShieldCheck className="mx-auto mb-4 h-20 w-20 text-seal-ink sm:h-24 sm:w-24" />
                   <h3 className="mb-2 text-2xl font-bold text-ink">Cybersecurity Education</h3>
-                  <p className="register">Reimagined for the Digital Age</p>
+                  <p className="register">Field training, on the record</p>
                 </div>
               </div>
             </FadeIn>
@@ -69,12 +69,12 @@ export default function About() {
           <FadeIn className="mb-12 text-center sm:mb-16">
             <span className="register">Plate 03 — Doctrine</span>
             <h2 className="mb-4 mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">Learning Through Experience</h2>
-            <p className="mx-auto max-w-3xl text-ink-soft sm:text-lg">Our educational approach combines proven learning methodologies with cutting-edge technology to create meaningful, lasting cybersecurity knowledge.</p>
+            <p className="mx-auto max-w-3xl text-ink-soft sm:text-lg">Every mission runs on the same loop: observe, decide, take the verdict.</p>
           </FadeIn>
           <Stagger className="grid gap-6 md:grid-cols-3" baseDelay={0.1} increment={0.2}>
-            <PhilosophyCard code="DOC-01" icon={Gamepad2} title="Gamification" text="Transform learning into adventure. Earn XP, unlock achievements, and progress through levels while mastering essential cybersecurity skills through interactive challenges and real-world scenarios." />
-            <PhilosophyCard code="DOC-02" icon={Zap} title="Real-Time Feedback" text="Receive instant performance analysis and adaptive corrections as you learn. Our system identifies mistakes immediately and provides contextual tips to accelerate your cybersecurity mastery." />
-            <PhilosophyCard code="DOC-03" icon={Shield} title="Real Scenarios" text="Practice with realistic cybersecurity simulations including phishing detection and network defense." />
+            <PhilosophyCard code="DOC-01" icon={Gamepad2} title="Missions" text="Level-based scenarios inside a simulated workstation. Apps share the world: an email's link opens the browser, evidence unlocks the case." />
+            <PhilosophyCard code="DOC-02" icon={Zap} title="Verdicts" text="Every call lands a verdict with the reasoning attached. Scoring follows your decisions, not a pass/fail gate." />
+            <PhilosophyCard code="DOC-03" icon={Shield} title="The Record" text="XP, badges, streaks, and a session report per mission. The register keeps score across levels." />
           </Stagger>
         </div>
       </section>
@@ -85,7 +85,7 @@ export default function About() {
           <FadeIn className="mb-12 text-center sm:mb-16">
             <span className="register">Plate 04 — Personnel</span>
             <h2 className="mb-4 mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">Meet Our Team</h2>
-            <p className="mx-auto max-w-3xl text-ink-soft sm:text-lg">Dedicated professionals working together to make cybersecurity education accessible and engaging for everyone</p>
+            <p className="mx-auto max-w-3xl text-ink-soft sm:text-lg">The team behind the academy</p>
           </FadeIn>
           <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" baseDelay={0.1} increment={0.15}>
             {team.map((member, i) => (
@@ -105,25 +105,25 @@ export default function About() {
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           <FadeIn className="mb-12 text-center sm:mb-16">
             <span className="register">Plate 05 — Capability</span>
-            <h2 className="mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">What Makes Phalanx Cyber Academy Different</h2>
+            <h2 className="mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">How the Academy Differs</h2>
           </FadeIn>
           <Stagger className="grid items-center gap-12 lg:grid-cols-2" baseDelay={0.1} increment={0.15}>
             <div className="space-y-8">
-              <ShowcaseItem icon={Cpu} title="Adaptive Game Engine" text="Our AI game master adapts cybersecurity scenarios to your skill level, creating personalized gaming experiences that evolve with your expertise." />
-              <ShowcaseItem icon={Layers} title="Immersive Cyber Adventures" text="Dive into realistic cybersecurity missions and interactive storylines that make learning feel like playing your favorite video game." />
-              <ShowcaseItem icon={Trophy} title="Epic Achievement System" text="Unlock legendary badges and compete in cybersecurity tournaments while building real-world digital defense skills." />
+              <ShowcaseItem icon={Monitor} title="One Environment, Not Minigames" text="Apps share the world. An email's link opens the browser, a download lands in Files, and evidence unlocks the case." />
+              <ShowcaseItem icon={Layers} title="Objectives Gate Completion" text="A mission ends when its objectives are done. The score follows the calls you made along the way." />
+              <ShowcaseItem icon={Trophy} title="An Adaptive Adversary" text="In the Blue vs. Red exercise, an AI red team picks its attacks from your defensive moves." />
             </div>
             <div className="plate plate-strong reg-corners p-6 sm:p-8">
               <span className="plate-id absolute left-3 top-3">ENR-01</span>
-              <h3 className="mb-6 mt-4 text-2xl font-bold tracking-tight text-ink">{user ? 'Continue' : 'Start'} Your Cybersecurity Adventure</h3>
+              <h3 className="mb-6 mt-4 text-2xl font-bold tracking-tight text-ink">{user ? 'Resume' : 'Begin'} Training</h3>
               <div className="space-y-4 text-ink-soft">
-                <ListItem>Epic phishing detection missions</ListItem>
-                <ListItem>AI-powered quest customization</ListItem>
-                <ListItem>Multiplayer cybersecurity battles</ListItem>
-                <ListItem>Real-time skill progression tracking</ListItem>
+                <ListItem>Phishing, misinformation, malware, hacking, and forensics scenarios</ListItem>
+                <ListItem>Workstation and handset play</ListItem>
+                <ListItem>Blue vs. Red defense exercise</ListItem>
+                <ListItem>XP, badges, streaks, and leaderboard standing</ListItem>
               </div>
               <Link to={user ? '/levels' : '/signup'} className="mt-6 inline-flex min-h-[44px] items-center justify-center bg-ink px-8 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink hover:text-stock dark:hover:bg-seal dark:hover:text-seal-ink">
-                {user ? 'Continue Adventure' : 'Begin Quest'}
+                {user ? 'Continue Training' : 'Enlist'}
               </Link>
             </div>
           </Stagger>

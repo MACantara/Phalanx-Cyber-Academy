@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FadeIn, Stagger } from '../components/Animated';
-import { Gamepad2, Newspaper, MailWarning, Bug, Terminal, Trophy, Zap, Shield } from 'lucide-react';
+import { Monitor, Newspaper, MailWarning, Bug, Terminal, Trophy, Stamp, type LucideIcon } from 'lucide-react';
 
 export default function Home() {
   const { user } = useAuth();
@@ -41,20 +41,20 @@ export default function Home() {
             Train. Coordinate. Defend.
           </p>
           <p className="mx-auto mb-9 max-w-3xl text-base leading-relaxed text-ink-soft opacity-0 animate-fade-in-up sm:text-lg" style={{ animationDelay: '0.55s', animationFillMode: 'forwards' }}>
-            Level up your digital literacy and cybersecurity skills through gamified learning. Defend virtual networks, detect phishing attacks, and master ethical hacking in a safe, interactive environment.
+            A training academy for digital defense. Missions play out inside a simulated workstation: phishing inboxes, misinformation feeds, malware outbreaks. Make the calls, earn the marks.
           </p>
           <div className="flex flex-col justify-center gap-4 opacity-0 animate-fade-in-up sm:flex-row" style={{ animationDelay: '0.65s', animationFillMode: 'forwards' }}>
             <Link
               to={user ? '/levels' : '/signup'}
               className="inline-flex min-h-[44px] items-center justify-center bg-ink px-8 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:bg-seal-ink hover:text-stock dark:hover:bg-seal dark:hover:text-seal-ink"
             >
-              {user ? 'Start Learning' : 'Get Started'}
+              {user ? 'Open Missions' : 'Enlist'}
             </Link>
             <Link
               to="/about"
               className="inline-flex min-h-[44px] items-center justify-center border border-ink px-8 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:bg-stock-green"
             >
-              Learn More
+              About the Academy
             </Link>
           </div>
         </div>
@@ -65,13 +65,13 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           <FadeIn className="mb-12 text-center">
             <span className="register">Plate 02 — Field Training</span>
-            <h2 className="mb-4 mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">Learning Features</h2>
-            <p className="mx-auto max-w-3xl text-ink-soft sm:text-lg">Interactive gaming, real-time feedback, and realistic simulations — structured as field training.</p>
+            <h2 className="mb-4 mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">Field Training</h2>
+            <p className="mx-auto max-w-3xl text-ink-soft sm:text-lg">Missions inside a simulated workstation, with a verdict on every call.</p>
           </FadeIn>
           <Stagger className="grid gap-6 md:grid-cols-3" baseDelay={0.1} increment={0.15}>
-            <FeatureCard code="FTR-01" icon={Gamepad2} title="Gamified Learning" text="Earn XP, unlock achievements, and level up through interactive cybersecurity challenges and mini-games." />
-            <FeatureCard code="FTR-02" icon={Zap} title="Real-Time Feedback" text="Instant feedback and adaptive guidance as you learn, with immediate corrections and personalized tips." />
-            <FeatureCard code="FTR-03" icon={Shield} title="Real Scenarios" text="Practice with realistic simulations — phishing detection, network defense, digital forensics." />
+            <FeatureCard code="FTR-01" icon={Monitor} title="Simulated Workstation" text="Missions run inside a full PC environment: mail, browser, files, and case apps sharing one world." />
+            <FeatureCard code="FTR-02" icon={Stamp} title="Verdicts" text="Every call lands a verdict with the reasoning attached, scored per decision." />
+            <FeatureCard code="FTR-03" icon={Trophy} title="The Record" text="XP, badges, streaks, and a session report per mission. The leaderboard keeps standing." />
           </Stagger>
         </div>
       </section>
@@ -81,15 +81,15 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-5 sm:px-8">
           <FadeIn className="mb-12 text-center">
             <span className="register">Plate 03 — Scenario Register</span>
-            <h2 className="mb-4 mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">Cybersecurity Game Scenarios</h2>
-            <p className="mx-auto max-w-3xl text-ink-soft sm:text-lg">Level up your digital defense skills through immersive gamified challenges.</p>
+            <h2 className="mb-4 mt-3 text-3xl tracking-tight text-ink sm:text-4xl lg:text-5xl">Scenario Register</h2>
+            <p className="mx-auto max-w-3xl text-ink-soft sm:text-lg">Missions ordered by difficulty. Each is a scored exercise inside the simulated PC.</p>
           </FadeIn>
           <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" baseDelay={0.1} increment={0.1}>
-            <ScenarioCard code="MSN-01" icon={Newspaper} title="The Misinformation Maze" description="Navigate fake news and stop misinformation from influencing an election." diff="Intermediate" />
-            <ScenarioCard code="MSN-02" icon={MailWarning} title="Shadow in the Inbox" description="Spot phishing attempts and practice safe email protocols against social engineering." diff="Beginner" />
-            <ScenarioCard code="MSN-03" icon={Bug} title="Malware Mayhem" description="Isolate infections and perform digital cleanup during a gaming tournament under pressure." diff="Intermediate" />
-            <ScenarioCard code="MSN-04" icon={Terminal} title="The White Hat Test" description="Practice ethical hacking and responsible vulnerability disclosure in controlled scenarios." diff="Advanced" />
-            <ScenarioCard code="MSN-05" icon={Trophy} title="The Hunt for The Null" description="Use advanced digital forensics to expose The Null's identity in the ultimate challenge." diff="Advanced" />
+            <ScenarioCard code="MSN-01" icon={Newspaper} title="The Misinformation Maze" description="Sort credible reporting from fake news with an election on the line." diff="Intermediate" />
+            <ScenarioCard code="MSN-02" icon={MailWarning} title="Shadow in the Inbox" description="Work the inbox. Flag the phish before the credentials walk out." diff="Beginner" />
+            <ScenarioCard code="MSN-03" icon={Bug} title="Malware Mayhem" description="Isolate the infection and clean the machine while the tournament clock runs." diff="Intermediate" />
+            <ScenarioCard code="MSN-04" icon={Terminal} title="The White Hat Test" description="Run a controlled intrusion, then disclose what you find the right way." diff="Advanced" />
+            <ScenarioCard code="MSN-05" icon={Trophy} title="The Hunt for The Null" description="Follow the forensic evidence to unmask The Null." diff="Advanced" />
           </Stagger>
         </div>
       </section>
@@ -99,18 +99,18 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-5 text-center sm:px-8">
           <FadeIn>
             <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-stock/70">Final Plate — Enlistment</span>
-            <h2 className="mb-4 mt-3 text-3xl tracking-tight sm:text-4xl lg:text-5xl">Ready to Become a Cyber Champion?</h2>
-            <p className="mx-auto mb-10 max-w-3xl text-stock/80 sm:text-lg">Join thousands of learners mastering cybersecurity through gamified experiences. Start your journey to digital safety today.</p>
+            <h2 className="mb-4 mt-3 text-3xl tracking-tight sm:text-4xl lg:text-5xl">Report for Training</h2>
+            <p className="mx-auto mb-10 max-w-3xl text-stock/80 sm:text-lg">Create an account, clear intake, and take your first mission.</p>
           </FadeIn>
           <div className="flex flex-col justify-center gap-4 opacity-0 animate-fade-in-up sm:flex-row" style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}>
             {user ? (
               <Link to="/levels" className="inline-flex min-h-[44px] items-center justify-center bg-stock px-10 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:bg-seal">
-                Start Learning
+                Open Missions
               </Link>
             ) : (
               <>
                 <Link to="/signup" className="inline-flex min-h-[44px] items-center justify-center bg-stock px-10 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink transition-colors hover:bg-seal">
-                  Get Started
+                  Enlist
                 </Link>
                 <Link to="/login" className="inline-flex min-h-[44px] items-center justify-center border border-stock/50 px-10 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-stock transition-colors hover:border-stock hover:bg-stock/10">
                   Log In
@@ -124,7 +124,7 @@ export default function Home() {
   );
 }
 
-function FeatureCard({ code, icon: Icon, title, text }: { code: string; icon: typeof Gamepad2; title: string; text: string }) {
+function FeatureCard({ code, icon: Icon, title, text }: { code: string; icon: LucideIcon; title: string; text: string }) {
   return (
     <div className="plate reg-corners group p-6 text-center transition-colors hover:border-ink sm:p-8">
       <span className="plate-id absolute left-3 top-3">{code}</span>
@@ -137,7 +137,7 @@ function FeatureCard({ code, icon: Icon, title, text }: { code: string; icon: ty
   );
 }
 
-function ScenarioCard({ code, icon: Icon, title, description, diff }: { code: string; icon: typeof Gamepad2; title: string; description: string; diff: string }) {
+function ScenarioCard({ code, icon: Icon, title, description, diff }: { code: string; icon: LucideIcon; title: string; description: string; diff: string }) {
   return (
     <div className="plate reg-corners group p-5 transition-colors hover:border-ink sm:p-6">
       <div className="mb-4 flex items-center justify-between">

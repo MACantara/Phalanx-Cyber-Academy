@@ -54,7 +54,7 @@ export default function Contact() {
         <div className="relative z-10 mx-auto max-w-6xl px-5 text-center sm:px-8">
           <span className="register">Plate 01 — Communications</span>
           <h1 className="mb-5 mt-3 text-4xl font-extrabold tracking-tight text-ink opacity-0 animate-fade-in-up sm:text-6xl" style={{ animationFillMode: 'forwards' }}>Contact Us</h1>
-          <p className="mx-auto max-w-3xl text-base text-ink-soft opacity-0 animate-fade-in-up sm:text-lg" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>We'd love to hear from you and discuss your next project</p>
+          <p className="mx-auto max-w-3xl text-base text-ink-soft opacity-0 animate-fade-in-up sm:text-lg" style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}>Questions about the academy, missions, or enrollment: send a transmission.</p>
         </div>
       </section>
 

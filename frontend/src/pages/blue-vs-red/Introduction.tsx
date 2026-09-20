@@ -22,7 +22,7 @@ export default function Introduction() {
             <span className="text-seal-ink">Blue Team</span> vs <span className="text-strike">Red Team</span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-ink-soft sm:text-xl">
-            Experience the ultimate cybersecurity simulation where you defend against intelligent AI adversaries
+            Defend a network under attack. An adaptive AI red team picks its moves from yours.
           </p>
 
           <div className="plate reg-corners mt-12 p-5 sm:p-8">
@@ -33,7 +33,7 @@ export default function Introduction() {
               Ready to Begin?
             </h2>
             <p className="mb-8 text-lg text-ink-soft sm:text-xl">
-              Enter the cybersecurity battlefield and defend Project Sentinel Academy against adaptive AI attacks
+              Defend Project Sentinel Academy against an adaptive AI red team
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link

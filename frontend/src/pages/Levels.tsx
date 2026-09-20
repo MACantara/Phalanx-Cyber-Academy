@@ -84,7 +84,7 @@ export default function Levels() {
             Cybersecurity Levels
           </h1>
           <p className="mx-auto max-w-3xl text-lg text-ink-soft">
-            Master cybersecurity through gamified challenges. Complete levels to unlock new skills and advance your digital defense expertise.
+            Complete missions to clear the register. Each level is a scored scenario inside the simulated PC.
           </p>
         </FadeIn>
 

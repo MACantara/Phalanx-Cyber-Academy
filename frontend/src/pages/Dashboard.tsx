@@ -189,7 +189,7 @@ export default function Dashboard() {
               <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-ink md:text-4xl">
                 Welcome back{user?.username ? `, ${user.username}` : ''}!
               </h1>
-              <p className="mt-2 text-ink-soft">Track your cybersecurity learning progress and achievements</p>
+              <p className="mt-2 text-ink-soft">Your record of marks, streaks, and missions</p>
             </div>
             <Link
               to="/levels"
