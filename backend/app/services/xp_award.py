@@ -144,6 +144,90 @@ class XPManager:
             raise DatabaseError(f"Failed to award session XP: {str(e)}")
 
     @classmethod
+    def award_lesson_xp(
+        cls,
+        user_id: str,
+        level_id: int,
+        session_id: int,
+        lesson_index: int,
+        lessons_total: int,
+        competence: Optional[float] = None,
+    ) -> Dict[str, Any]:
+        """Award XP for one banked lesson. Idempotent — the
+        uq_xp_lesson_award index plus this pre-check mean re-awarding the
+        same lesson is a no-op returning already_awarded."""
+        try:
+            uuid.UUID(str(user_id))
+        except (ValueError, AttributeError):
+            raise DatabaseError(f"Failed to award lesson XP: invalid user_id {user_id}")
+
+        from app.services.level_service import Level
+        from app.models import XPHistory as XPHistoryRow
+
+        level = Level.get_by_level_id(level_id)
+        difficulty = level.difficulty if level else "medium"
+        xp_calculation = XPCalculator.calculate_lesson_xp(
+            difficulty, lessons_total, competence
+        )
+        xp_earned = xp_calculation["xp_earned"]
+
+        try:
+            with session_scope() as session:
+                already = session.execute(
+                    select(XPHistoryRow.id).where(
+                        XPHistoryRow.session_id == session_id,
+                        XPHistoryRow.lesson_index == lesson_index,
+                        XPHistoryRow.reason == "lesson_completion",
+                    )
+                ).scalar_one_or_none()
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Failed to check lesson award: {e}")
+        if already is not None:
+            return {
+                "xp_awarded": 0,
+                "already_awarded": True,
+                "calculation_details": xp_calculation,
+            }
+
+        try:
+            user = User.find_by_id(user_id)
+            if not user:
+                raise ValueError(f"User {user_id} not found")
+            old_total = user.total_xp or 0
+            new_total = old_total + xp_earned
+            user.total_xp = new_total
+            user.save()
+
+            xp_entry = XPHistory.create_entry(
+                xp_change=xp_earned,
+                reason="lesson_completion",
+                balance_before=old_total,
+                balance_after=new_total,
+                session_id=session_id,
+                user_id=user_id,
+                lesson_index=lesson_index,
+            )
+            awarded_badges = cls._sync_badges(user_id, new_total)
+            return {
+                "xp_awarded": xp_earned,
+                "already_awarded": False,
+                "old_total": old_total,
+                "new_total": new_total,
+                "calculation_details": xp_calculation,
+                "history_entry_id": xp_entry.id,
+                "awarded_badges": awarded_badges,
+            }
+        except Exception as e:
+            # Unique-index race: another request banked this lesson first.
+            if "uq_xp_lesson_award" in str(e):
+                return {
+                    "xp_awarded": 0,
+                    "already_awarded": True,
+                    "calculation_details": xp_calculation,
+                }
+            raise DatabaseError(f"Failed to award lesson XP: {e}")
+
+    @classmethod
     def recalculate_user_total_xp(cls, user_id: str) -> Dict[str, Any]:
         try:
             total_xp = XPHistory.calculate_user_total_xp(user_id)

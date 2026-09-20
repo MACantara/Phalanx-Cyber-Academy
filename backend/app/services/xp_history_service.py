@@ -76,6 +76,7 @@ class XPHistory:
         balance_after: Optional[int] = None,
         session_id: Optional[int] = None,
         user_id: Optional[int] = None,
+        lesson_index: Optional[int] = None,
     ) -> "XPHistory":
         try:
             if session_id is not None:
@@ -111,6 +112,7 @@ class XPHistory:
                     balance_after=balance_after,
                     reason=reason,
                     session_id=session_id,
+                    lesson_index=lesson_index,
                     created_at=utc_now(),
                 )
                 session.add(row)

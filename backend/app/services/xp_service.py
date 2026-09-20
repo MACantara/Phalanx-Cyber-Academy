@@ -147,6 +147,35 @@ class XPCalculator:
         return 25
 
     @classmethod
+    def calculate_lesson_xp(
+        cls,
+        difficulty: str,
+        lessons_total: int,
+        competence: Optional[float] = None,
+    ) -> Dict[str, Any]:
+        """Per-lesson award for chunked environment levels.
+
+        The level's base XP is split evenly across its lessons and scaled by
+        competence (0..1) — the composite accuracy the sim reports. No time
+        multiplier: speed is not the skill being trained."""
+        try:
+            base_xp = cls.BASE_XP.get(difficulty.lower(), cls.BASE_XP["medium"])
+            comp = 1.0 if competence is None else max(0.0, min(1.0, competence))
+            total = max(1, lessons_total)
+            xp_earned = int(round(base_xp * comp / total))
+            return {
+                "xp_earned": xp_earned,
+                "breakdown": {
+                    "base_xp": base_xp,
+                    "competence": comp,
+                    "lessons_total": total,
+                    "total_xp": xp_earned,
+                },
+            }
+        except Exception as e:
+            raise ValueError(f"Failed to calculate lesson XP: {str(e)}")
+
+    @classmethod
     def get_user_level(cls, total_xp: int) -> Dict[str, Any]:
         """Calculate user level based on total XP."""
         if total_xp < 0:

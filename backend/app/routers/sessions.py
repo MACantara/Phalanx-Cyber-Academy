@@ -55,6 +55,78 @@ def end_session(
     return {"success": True, "session": session.to_dict()}
 
 
+@router.post("/{session_id}/checkpoint")
+def checkpoint_session(
+    session_id: int,
+    payload: Dict[str, Any],
+    user: Dict[str, Any] = Depends(get_current_user),
+):
+    """Bank lesson progress mid-session — the resume anchor for chunked
+    environment levels. Overwrites prior state (latest checkpoint wins)."""
+    try:
+        session = Session.checkpoint(
+            session_id=session_id,
+            user_id=user["id"],
+            state=payload.get("state") or {},
+            lessons_completed=payload.get("lessons_completed"),
+            lessons_total=payload.get("lessons_total"),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    except DatabaseError:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to checkpoint session",
+        )
+    return {"success": True, "session": session.to_dict()}
+
+
+@router.post("/{session_id}/lesson")
+def award_lesson(
+    session_id: int,
+    payload: Dict[str, Any],
+    user: Dict[str, Any] = Depends(get_current_user),
+):
+    """Award XP for one banked lesson. Idempotent per (session, lesson)."""
+    try:
+        lesson_index = int(payload.get("lesson_index"))
+        lessons_total = int(payload.get("lessons_total"))
+    except (TypeError, ValueError):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="lesson_index and lessons_total are required integers",
+        )
+    competence = payload.get("competence")
+    try:
+        result = Session.award_lesson(
+            session_id=session_id,
+            user_id=user["id"],
+            lesson_index=lesson_index,
+            lessons_total=lessons_total,
+            competence=float(competence) if competence is not None else None,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    except DatabaseError:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to award lesson",
+        )
+    return {"success": True, **result}
+
+
+@router.get("/active")
+def get_active_session(
+    level_id: int,
+    user: Dict[str, Any] = Depends(get_current_user),
+):
+    """The caller's open session on a level — the resume anchor. 404s quietly."""
+    session = Session.get_active_session_for_level(user_id=user["id"], level_id=level_id)
+    if session is None:
+        return {"session": None}
+    return {"session": session.to_dict()}
+
+
 @router.get("/")
 def get_user_sessions(
     user: Dict[str, Any] = Depends(get_current_user),

@@ -25,6 +25,9 @@ def _session_to_dict(row: SessionModel) -> Dict[str, Any]:
         "session_name": row.session_name,
         "level_id": row.level_id,
         "score": row.score,
+        "state": row.state,
+        "lessons_completed": row.lessons_completed,
+        "lessons_total": row.lessons_total,
         "start_time": row.start_time,
         "end_time": row.end_time,
         "created_at": row.created_at,
@@ -49,6 +52,9 @@ class Session:
         self.score = data.get("score")
         self.start_time = data.get("start_time")
         self.end_time = data.get("end_time")
+        self.state = data.get("state")
+        self.lessons_completed = data.get("lessons_completed", 0)
+        self.lessons_total = data.get("lessons_total")
         self.created_at = data.get("created_at")
 
         if self.start_time and isinstance(self.start_time, str):
@@ -79,6 +85,9 @@ class Session:
             "session_name": self.session_name,
             "level_id": self.level_id,
             "score": self.score,
+            "state": self.state,
+            "lessons_completed": self.lessons_completed,
+            "lessons_total": self.lessons_total,
             "start_time": self.start_time,
             "end_time": self.end_time,
             "time_spent": self.time_spent,
@@ -135,6 +144,20 @@ class Session:
         except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to end session: {str(e)}")
 
+        if updated_session.level_id is not None and profile_id is not None:
+            try:
+                from app.services import level_progress_service
+                level_progress_service.upsert_progress(
+                    profile_id,
+                    updated_session.level_id,
+                    lessons_done=updated_session.lessons_completed,
+                    score=score,
+                    clear_resume=True,
+                    completed=True,
+                )
+            except Exception:
+                logger.warning("Failed to upsert level progress", exc_info=True)
+
         if score is not None and score > 0:
             try:
                 from app.services.xp_award import XPManager
@@ -157,6 +180,110 @@ class Session:
                 updated_session._new_total_xp = 0
 
         return updated_session
+
+    @classmethod
+    def checkpoint(
+        cls,
+        session_id: int,
+        user_id: str,
+        state: Dict[str, Any],
+        lessons_completed: Optional[int] = None,
+        lessons_total: Optional[int] = None,
+    ) -> "Session":
+        """Bank lesson progress on an open session and mark it as the
+        level's resume anchor. Overwrites state — latest checkpoint wins."""
+        profile_id = _profile_uuid(user_id)
+        if profile_id is None:
+            raise ValueError(f"Session {session_id} not found")
+        try:
+            with session_scope() as session:
+                row = session.execute(
+                    select(SessionModel)
+                    .where(SessionModel.id == session_id)
+                    .where(SessionModel.profile_id == profile_id)
+                    .where(SessionModel.end_time.is_(None))
+                ).scalar_one_or_none()
+                if row is None:
+                    raise ValueError(f"Session {session_id} not found or already ended")
+                row.state = state
+                if lessons_completed is not None:
+                    row.lessons_completed = lessons_completed
+                if lessons_total is not None:
+                    row.lessons_total = lessons_total
+                session.flush()
+                updated = cls._from_row(row)
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Failed to checkpoint session {session_id}: {e}")
+
+        if updated.level_id is not None:
+            from app.services import level_progress_service
+            level_progress_service.upsert_progress(
+                profile_id,
+                updated.level_id,
+                lessons_done=lessons_completed,
+                lessons_total=lessons_total,
+                resume_session_id=session_id,
+            )
+        return updated
+
+    @classmethod
+    def award_lesson(
+        cls,
+        session_id: int,
+        user_id: str,
+        lesson_index: int,
+        lessons_total: int,
+        competence: Optional[float] = None,
+    ) -> Dict[str, Any]:
+        """Award XP for a banked lesson — validates the session is the
+        caller's and still open, then delegates to XPManager (idempotent)."""
+        profile_id = _profile_uuid(user_id)
+        if profile_id is None:
+            raise ValueError(f"Session {session_id} not found")
+        try:
+            with session_scope() as session:
+                row = session.execute(
+                    select(SessionModel)
+                    .where(SessionModel.id == session_id)
+                    .where(SessionModel.profile_id == profile_id)
+                ).scalar_one_or_none()
+                if row is None or row.level_id is None:
+                    raise ValueError(f"Session {session_id} not found")
+                level_id = row.level_id
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Failed to award lesson: {e}")
+
+        from app.services.xp_award import XPManager
+        return XPManager.award_lesson_xp(
+            user_id=user_id,
+            level_id=level_id,
+            session_id=session_id,
+            lesson_index=lesson_index,
+            lessons_total=lessons_total,
+            competence=competence,
+        )
+
+    @classmethod
+    def get_active_session_for_level(cls, user_id: str, level_id: int) -> Optional["Session"]:
+        """The caller's open session on a specific level — the resume anchor."""
+        profile_id = _profile_uuid(user_id)
+        if profile_id is None:
+            return None
+        try:
+            with session_scope() as session:
+                row = session.execute(
+                    select(SessionModel)
+                    .where(SessionModel.profile_id == profile_id)
+                    .where(SessionModel.level_id == level_id)
+                    .where(SessionModel.end_time.is_(None))
+                    .order_by(SessionModel.created_at.desc())
+                    .limit(1)
+                ).scalar_one_or_none()
+                if row is None:
+                    return None
+                return cls._from_row(row)
+        except SQLAlchemyError as e:
+            raise DatabaseError(f"Failed to get active session for level {level_id}: {e}")
 
     @classmethod
     def get_user_sessions(cls, user_id: str, limit: int = 50, offset: int = 0) -> List["Session"]:
