@@ -2,7 +2,7 @@
 
 **Final Mission**: Use advanced digital forensics to expose The Null's identity.
 
-## 🎯 Level Overview
+## Level Overview
 
 This level implements a comprehensive digital forensics investigation aligned with industry standards:
 - **NIST SP 800-86**: Integration of forensic techniques into incident response
@@ -10,7 +10,7 @@ This level implements a comprehensive digital forensics investigation aligned wi
 
 The player takes on the role of a digital forensics investigator tracking down "The Null," a master cybercriminal who has been orchestrating attacks throughout the previous levels.
 
-## 🔍 Core Learning Objectives
+## Core Learning Objectives
 
 ### NIST SP 800-86 Compliance
 - **Evidence Collection**: Proper acquisition of digital evidence
@@ -24,7 +24,7 @@ The player takes on the role of a digital forensics investigator tracking down "
 - **Legal Admissibility**: Ensuring evidence can be used in court
 - **Documentation Standards**: Comprehensive case file management
 
-## 🎮 Game Mechanics
+## Game Mechanics
 
 ### 1. **Evidence Collection Phase**
 ```javascript
@@ -111,7 +111,7 @@ forensicTools: [
 - Identify unique behavioral patterns
 - Compile final investigation report
 
-## 🏆 Scoring & XP System
+## Scoring & XP System
 
 ### Evidence Quality Scoring
 ```python
@@ -137,7 +137,7 @@ evidence_scoring = {
 - **Documentation Bonus**: Comprehensive case notes
 - **Insight Bonus**: Discover hidden connections between evidence
 
-## 🎲 Interactive Challenges
+## Interactive Challenges
 
 ### 1. **Timeline Reconstruction**
 **Mechanic**: Drag-and-drop timeline builder
@@ -167,7 +167,7 @@ evidence_scoring = {
 - Explain technical concepts to jury
 - Maintain evidence integrity under scrutiny
 
-## 🔧 Technical Implementation
+## Technical Implementation
 
 ### Evidence Database Structure
 ```javascript
@@ -210,7 +210,7 @@ analysisPipeline: [
 ]
 ```
 
-## 💻 Level 5 Application Architecture
+## Level 5 Application Architecture
 
 ### Required Applications Overview
 Based on the Phalanx Cyber Academy application framework, Level 5 requires specialized forensic applications that extend `WindowBase` and integrate with the `ApplicationRegistry` and `ApplicationLauncher` systems.
@@ -440,7 +440,7 @@ const level5AppState = {
 
 This application architecture ensures that Level 5 provides a comprehensive, realistic, and educational digital forensics experience while maintaining consistency with the existing Phalanx Cyber Academy application framework.
 
-## 🎭 Narrative Elements
+## Narrative Elements
 
 ### The Null's Digital Persona
 - **Aliases**: Multiple online identities across platforms
@@ -455,7 +455,7 @@ This application architecture ensures that Level 5 provides a comprehensive, rea
 4. **Climax**: Final correlation reveals The Null's true identity
 5. **Resolution**: Preparation for legal proceedings
 
-## 🚨 Failure States & Recovery
+## Failure States & Recovery
 
 ### Critical Failures
 - **Evidence Contamination**: Breaks chain of custody
@@ -469,7 +469,7 @@ This application architecture ensures that Level 5 provides a comprehensive, rea
 - **Procedure Review**: Access to standard operating procedures
 - **Practice Mode**: Safe environment to learn tools
 
-## 📚 Educational Resources Integration
+## Educational Resources Integration
 
 ### Reference Materials
 - NIST SP 800-86 excerpts as in-game documentation
@@ -481,7 +481,7 @@ This application architecture ensures that Level 5 provides a comprehensive, rea
 - **Progress Checkpoints**: Validate learning at each phase
 - **Industry Alignment**: Map to SANS FOR500/GCFA curriculum
 
-## 🌟 Advanced Features
+## Advanced Features
 
 ### 1. **LLM-Generated Evidence Dataset**
 - **Pre-generated Evidence Pool**: Large Language Models generate comprehensive evidence datasets before gameplay
@@ -508,7 +508,7 @@ This application architecture ensures that Level 5 provides a comprehensive, rea
 - Expert mentor feedback system
 - Industry case study integration
 
-## 🎯 Success Metrics
+## Success Metrics
 
 ### Player Engagement
 - **Completion Rate**: Target 80% completion

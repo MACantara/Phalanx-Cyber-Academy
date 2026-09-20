@@ -7,7 +7,7 @@
 
 ---
 
-## 🔧 Technical/Gameplay Phase: Penetration Testing
+## Technical/Gameplay Phase: Penetration Testing
 
 ### Network Reconnaissance
 - **Tool Simulation**: Use simulated `nmap` commands in terminal to discover network architecture
@@ -37,7 +37,7 @@
 
 ---
 
-## ⚖️ Ethical Dilemma Scenarios
+## Ethical Dilemma Scenarios
 
 ### 1. Cryptocurrency Bribe Attempt
 **Trigger**: After documenting the vulnerability  
@@ -82,7 +82,7 @@
 
 ---
 
-<!-- ## 📋 Documentation & Reporting Phase
+<!-- ## Documentation & Reporting Phase
 
 ### Professional Bug Bounty Report
 **Interactive Form Fields**:
@@ -115,7 +115,7 @@
 
 ---
 
-## 🎓 Learning & XP Mechanics
+## Learning & XP Mechanics
 
 ### Ethical Behavior Rewards
 **Positive Actions (+XP)**:
@@ -147,7 +147,7 @@
 
 ---
 
-## 🧠 Philosophical Reflection & Learning
+## Philosophical Reflection & Learning
 
 ### Critical Thinking Prompts
 **Reflection Questions** (End of Level):
@@ -187,7 +187,7 @@ Player affirms commitment to:
 
 ---
 
-## 🎮 Implementation Technical Details
+## Implementation Technical Details
 
 ### Terminal Commands Simulation
 ```bash
@@ -229,7 +229,7 @@ const ethicsScore = (
 
 ---
 
-## 🏆 Success Criteria & Badges
+## Success Criteria & Badges
 
 ### Level Completion Requirements
 - Discover at least 3 critical vulnerabilities

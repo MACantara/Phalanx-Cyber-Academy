@@ -6,13 +6,13 @@ This document describes the automated testing system for Level 4's performance-b
 
 ## Features
 
-### 🤖 Full Automation
+### Full Automation
 - **Complete Level 4 Flow**: Simulates entire completion → dialogue → session summary workflow
 - **Mock Challenge Tracker**: Creates realistic challenge tracking data with all 7 flags
 - **Environment Setup**: Configures localStorage with appropriate timing data
 - **Desktop Simulation**: Creates mock desktop environment for dialogue system integration
 
-### 🧪 Performance Testing  
+### Performance Testing
 - **Scoring Validation**: Tests 5 different performance scenarios from perfect to struggling
 - **XP Calculation**: Validates efficiency (attempts/flag) and speed (completion time) scoring
 - **Real-time Metrics**: Displays performance ratings and score calculations
@@ -46,11 +46,11 @@ The system tests 5 distinct performance scenarios:
 
 | Scenario | Avg Attempts/Flag | Duration | Expected Score | Performance Level |
 |----------|------------------|----------|----------------|-------------------|
-| 🏆 Perfect | 1.0 | 15 min | ~125% | Elite performance |
-| 🥇 Excellent | 1.4 | 22 min | ~115% | Outstanding |
-| 🥈 Good | 2.3 | 35 min | ~105% | Above average |
-| 🥉 Average | 3.4 | 50 min | ~90% | Standard |
-| 😅 Struggling | 5.3 | 70 min | ~80% | Below average |
+| Perfect | 1.0 | 15 min | ~125% | Elite performance |
+| Excellent | 1.4 | 22 min | ~115% | Outstanding |
+| Good | 2.3 | 35 min | ~105% | Above average |
+| Average | 3.4 | 50 min | ~90% | Standard |
+| Struggling | 5.3 | 70 min | ~80% | Below average |
 
 ## Technical Implementation
 

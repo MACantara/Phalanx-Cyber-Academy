@@ -111,4 +111,4 @@ This implementation teaches:
 - **Long-term Consequences of Ethical Choices**
 - **Real-world Security Research Challenges**
 
-The system successfully transforms the technical vulnerability scanning process into an immersive ethical decision-making experience that prepares students for real-world cybersecurity responsibilities.
+The system transforms the technical vulnerability scanning process into an ethical decision-making exercise that prepares students for real-world cybersecurity responsibilities.

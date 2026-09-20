@@ -1,6 +1,6 @@
 # Timezone Settings Implementation
 
-> Paths reference the legacy layout — current equivalents: `app/utils/timezone_utils.py` → `backend/app/utils/timezone_utils.py`, `app/models/user.py` → `backend/app/models/__init__.py` (`Profile.timezone`), `app/routes/profile.py` → `backend/app/routers/users.py` (`PUT /users/me`), templates → `frontend/src/pages/EditProfile.tsx` / `Profile.tsx` + `frontend/src/lib/dates.ts`.
+> Paths reference the legacy layout; current equivalents: `app/utils/timezone_utils.py` → `backend/app/utils/timezone_utils.py`, `app/models/user.py` → `backend/app/models/__init__.py` (`Profile.timezone`), `app/routes/profile.py` → `backend/app/routers/users.py` (`PUT /users/me`), templates → `frontend/src/pages/EditProfile.tsx` / `Profile.tsx` + `frontend/src/lib/dates.ts`.
 
 This document describes the timezone settings feature implementation for Phalanx Cyber Academy, allowing users to set their preferred timezone for date and time display.
 

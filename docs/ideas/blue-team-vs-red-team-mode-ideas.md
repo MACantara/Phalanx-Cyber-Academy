@@ -1,7 +1,7 @@
 ## Blue Team vs Red Team Mode Ideas
 
 ### 1. Overview
-This game mode immerses the player as the Blue Team (defender) tasked with protecting a digital environment, while the Red Team (attacker) is powered by an adaptive AI. The Red Team AI leverages reinforcement learning algorithms (such as Q-learning or Deep Q-Networks) to evolve its attack strategies in response to the player's defensive actions.
+This game mode immerses the player as the Blue Team (defender) tasked with protecting a digital environment, while the Red Team (attacker) is powered by an adaptive AI. The Red Team AI uses reinforcement learning algorithms (such as Q-learning or Deep Q-Networks) to evolve its attack strategies in response to the player's defensive actions.
 
 ### 2. Objectives
 - **Blue Team (Player):** Safeguard assets, detect and respond to intrusions, and mitigate threats.
@@ -19,7 +19,7 @@ This game mode immerses the player as the Blue Team (defender) tasked with prote
 - **State Space:** Considers network topology, asset status, player actions, and alert levels.
 
 ### 5. Scenario: Defending Project Sentinel Academy
-In this simulation, the player is the lead defender for Project Sentinel Academy—a fictional institution specializing in cybersecurity education and research. The AI Red Team launches coordinated attacks mapped to MITRE ATT&CK tactics and techniques, attempting to compromise the academy's digital infrastructure.
+In this simulation, the player is the lead defender for Project Sentinel Academy, a fictional institution specializing in cybersecurity education and research. The AI Red Team launches coordinated attacks mapped to MITRE ATT&CK tactics and techniques, attempting to compromise the academy's digital infrastructure.
 
 #### Player Objectives
 - Monitor network activity and system logs for signs of intrusion.
@@ -59,7 +59,7 @@ This scenario provides a realistic, standards-based training environment for pla
 ### 8. Alignment with MITRE ATT&CK & ISO 27001
 
 #### MITRE ATT&CK Tactics
-MITRE ATT&CK tactics represent specific adversarial goals—what attackers want to accomplish at each stage of a cyberattack. These tactics correspond to phases such as:
+MITRE ATT&CK tactics represent specific adversarial goals: what attackers want to accomplish at each stage of a cyberattack. These tactics correspond to phases such as:
 
 - **Reconnaissance:** Gathering information for planning an attack.
 - **Resource Development:** Establishing resources to support attack operations.
@@ -157,7 +157,7 @@ flowchart TD
 
 ---
 
-## 📚 References
+## References
 
 - MITRE ATT&CK framework for attack techniques
 - ISO 27001 for security controls and best practices

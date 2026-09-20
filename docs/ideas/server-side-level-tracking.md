@@ -2,7 +2,7 @@
 
 Status: Draft
 
-This document outlines a plan to implement server-side tracking of learning sessions and XP in Phalanx Cyber Academy. It relies on the existing client-side level completion logic found under `app/static/js/simulated-pc/levels/` and introduces a robust back-end system to record session activity, XP awards, and history.
+This document outlines a plan to implement server-side tracking of learning sessions and XP in Phalanx Cyber Academy. It relies on the existing client-side level completion logic found under `app/static/js/simulated-pc/levels/` and introduces a back-end system to record session activity, XP awards, and history.
 
 ## Goals
 
@@ -17,7 +17,7 @@ This document outlines a plan to implement server-side tracking of learning sess
 
 Client-side completion events are currently stored or handled in the browser. To support multi-device continuity, anti-fraud measures, and analytics, sessions and XP must be persisted server-side.
 
-The client-side code to inspect: `app/static/js/simulated-pc/levels/` — each level's completion logic should emit an event or call the server API when the level is started and completed.
+The client-side code to inspect: `app/static/js/simulated-pc/levels/`. Each level's completion logic should emit an event or call the server API when the level is started and completed.
 
 ## High-level Design
 

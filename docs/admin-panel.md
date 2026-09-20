@@ -1,14 +1,16 @@
 # Admin Panel Documentation
 
-This template includes a powerful admin panel for comprehensive site management.
+> This doc describes the legacy Flask admin panel. In the current stack, FastAPI routers under `backend/app/routers/` serve `/api/admin/*` endpoints consumed by the React admin pages under `/admin`.
 
-## 🛡️ Admin Features
+The admin panel covers user management, system monitoring, security logs, and maintenance.
+
+## Admin Features
 
 ### User Management
 - **User Overview**: View all registered users with search and filtering
 - **User Actions**: Activate/deactivate users, grant/revoke admin privileges
 - **User Details**: Detailed user information with activity history
-- **Bulk Operations**: Manage multiple users efficiently
+- **Bulk Operations**: Manage multiple users at once
 
 ### System Monitoring
 - **Real-time Dashboard**: Live statistics and activity monitoring
@@ -21,7 +23,7 @@ This template includes a powerful admin panel for comprehensive site management.
 - **Database Maintenance**: Built-in tools for system optimization
 - **Backup Monitoring**: Track system health and performance
 
-## 📊 Admin Dashboard
+## Admin Dashboard
 
 ### Real-time Statistics
 - **User Metrics**: Total users, active accounts, recent registrations
@@ -32,16 +34,16 @@ This template includes a powerful admin panel for comprehensive site management.
 ### Quick Actions
 - **User Management**: Quick access to user creation and management
 - **System Cleanup**: One-click cleanup of old data
-- **Security Tools**: Immediate access to security logs and lockout management
+- **Security Tools**: Access to security logs and lockout management
 - **Maintenance**: Database optimization and system health checks
 
-## 🔐 Admin Access
+## Admin Access
 
 ### Default Admin Account
 - **Username**: `admin`
 - **Email**: `admin@example.com`
-- **Authentication**: Passwordless — the first login uses an email verification code
-- **⚠️ Security Warning**: Change the default admin email to a real, verified address in production!
+- **Authentication**: passwordless; the first login uses an email verification code
+- **Security Warning**: Change the default admin email to a real, verified address in production!
 
 ### Security Features
 - **Role-based Access**: Admin-only routes with decorator protection
@@ -49,7 +51,7 @@ This template includes a powerful admin panel for comprehensive site management.
 - **Session Management**: Secure admin session handling
 - **Audit Trail**: All admin actions are logged for security
 
-## 📋 Comprehensive Logging
+## Logging
 
 ### Login Attempts
 - **Success/Failure Tracking**: Monitor all login attempts with timestamps
@@ -81,13 +83,13 @@ This template includes a powerful admin panel for comprehensive site management.
 - **Performance Optimization**: Regular database optimization tasks
 - **Storage Management**: Monitor and manage database storage usage
 
-## 🎯 Admin Routes
+## Admin Routes
 
 ### Main Routes
 - `/admin/` - Main dashboard with statistics and recent activity
-- `/admin/users` - User management with advanced search and filtering
-- `/admin/user/<id>` - Detailed user information and comprehensive activity history
-- `/admin/logs` - System logs with powerful filtering and pagination
+- `/admin/users` - User management with search and filtering
+- `/admin/user/<id>` - User information and activity history
+- `/admin/logs` - System logs with filtering and pagination
 - `/admin/cleanup` - Database cleanup and maintenance tools
 
 ### API Endpoints
@@ -96,7 +98,7 @@ This template includes a powerful admin panel for comprehensive site management.
 - `/admin/api/logs/filter` - Log filtering API
 - `/admin/api/cleanup/status` - Cleanup status monitoring
 
-## 🔧 Configuration
+## Configuration
 
 ### Admin Settings
 ```python
@@ -123,14 +125,13 @@ ADMIN_MAX_SEARCH_RESULTS = 1000
 ADMIN_CACHE_TIMEOUT = 300  # 5 minutes
 ```
 
-## 🚀 Best Practices
+## Best Practices
 
 ### Security
 1. **Set a Real Admin Email**: Update the default `admin@example.com` account to a verified, monitored email
 2. **Restrict Admin Access**: Consider IP whitelisting or VPN requirements for the admin panel
 3. **Monitor Access**: Regularly review admin access logs
-4. **IP Restrictions**: Consider IP whitelisting for admin access
-5. **Regular Audits**: Perform regular security audits
+4. **Regular Audits**: Perform regular security audits
 
 ### Maintenance
 1. **Regular Cleanup**: Schedule regular database cleanup

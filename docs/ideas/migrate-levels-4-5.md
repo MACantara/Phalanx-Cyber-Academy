@@ -13,7 +13,7 @@ Proposed split with new sequential IDs:
 - **Level 4** → `4` Network Reconnaissance (`case-story` with terminal evidence)
 - **Level 5** → `5` Responsible Vulnerability Disclosure (`case-story`)
 - **Level 6** → `6` Evidence Acquisition & Chain of Custody (`case-story`)
-- **Level 7** → `7` Evidence Analysis — laptop, memory, logs (`case-story` with a dedicated evidence viewer)
+- **Level 7** → `7` Evidence Analysis: laptop, memory, logs (`case-story` with a dedicated evidence viewer)
 - **Level 8** → `8` Forensic Report & Identify The Null (`case-story`)
 
 ## Key Assumptions to Validate
@@ -35,13 +35,13 @@ Proposed split with new sequential IDs:
 
 ## Not Doing (and Why)
 
-- **Level 1 migration** — it is a simpler legacy level and a good last migration candidate; keep scope on 4/5 first.
-- **New `terminal-ctf` renderer** — the terminal content can be represented as `FileItem` or `terminal` evidence inside `case-story` for now.
-- **Authoring UI / no-code editor** — valuable later, but it does not help ship the migration and it is not the learner's pain.
-- **Adaptive replay for case stories** — the engine supports it, but the first pass should be static; add replay only if the split proves it is needed.
+- **Level 1 migration**: it is a simpler legacy level and a good last migration candidate; keep scope on 4/5 first.
+- **New `terminal-ctf` renderer**: the terminal content can be represented as `FileItem` or `terminal` evidence inside `case-story` for now.
+- **Authoring UI / no-code editor**: valuable later, but it does not help ship the migration and it is not the learner's pain.
+- **Adaptive replay for case stories**: the engine supports it, but the first pass should be static; add replay only if the split proves it is needed.
 
 ## Decisions
 
-- **Level IDs** — use new sequential IDs `4-8`. The old levels 4 and 5 are removed, so their numbers are reassigned to the first two split levels.
-- **`coming_soon` flags** — yes. Add the new `level_id` rows early with `coming_soon: true`, then flip them to `false` as each level's `data.json` is ready.
-- **Evidence viewer** — yes. A dedicated evidence viewer is appropriate for the laptop image, memory dump, and network logs in the forensics levels.
+- **Level IDs**: use new sequential IDs `4-8`. The old levels 4 and 5 are removed, so their numbers are reassigned to the first two split levels.
+- **`coming_soon` flags**: yes. Add the new `level_id` rows early with `coming_soon: true`, then flip them to `false` as each level's `data.json` is ready.
+- **Evidence viewer**: yes. A dedicated evidence viewer is appropriate for the laptop image, memory dump, and network logs in the forensics levels.

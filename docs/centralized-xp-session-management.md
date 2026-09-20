@@ -1,6 +1,6 @@
 # Centralized XP and Session Management Utilities
 
-> Paths in this doc reference the legacy layout — current equivalents: `app/routes/xp_api.py` → `backend/app/routers/xp.py`, `app/utils/xp.py` → `backend/app/services/xp_service.py` + `xp_award.py` + `xp_history_service.py`, session APIs → `backend/app/routers/sessions.py` + `services/session_service.py`.
+> Paths in this doc reference the legacy layout; current equivalents: `app/routes/xp_api.py` → `backend/app/routers/xp.py`, `app/utils/xp.py` → `backend/app/services/xp_service.py` + `xp_award.py` + `xp_history_service.py`, session APIs → `backend/app/routers/sessions.py` + `services/session_service.py`.
 
 This documentation describes the centralized utility system for XP performance-based tracking and session management across all Phalanx Cyber Academy levels and modes.
 

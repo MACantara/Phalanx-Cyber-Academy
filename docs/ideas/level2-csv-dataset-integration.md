@@ -4,11 +4,11 @@
 **Date:** September 19, 2025  
 **Status:** ✅ COMPLETED - Ready for testing and deployment
 
-## 🎯 Project Overview
+## Project Overview
 
 This project replaced the hardcoded email files in Level 2 with the real-world CEAS_08.csv phishing email dataset, providing 39,126 authentic emails (17,297 legitimate, 21,829 phishing) for more realistic cybersecurity training.
 
-## 📊 Dataset Information
+## Dataset Information
 
 **Source:** CEAS_08.csv phishing email dataset  
 **Location:** `c:\Programming-Projects\CyberQuest\CEAS_08.csv`  
@@ -21,9 +21,9 @@ This project replaced the hardcoded email files in Level 2 with the real-world C
 sender,receiver,date,subject,body,label
 ```
 
-## 🛠️ Technical Implementation
+## Technical Implementation
 
-### 1. Flask API Backend (`app/routes/email_api.py`) - ✅ NEW FILE
+### 1. Flask API Backend (`app/routes/email_api.py`) - NEW FILE
 **Purpose:** Serve CSV email data through REST endpoints
 
 **Endpoints:**
@@ -38,7 +38,7 @@ sender,receiver,date,subject,body,label
 - Caching mechanism for performance
 - Error handling for missing CSV file
 
-### 2. Frontend Email Registry (`app/static/js/simulated-pc/levels/level-two/emails/email-registry.js`) - ✅ MODIFIED
+### 2. Frontend Email Registry (`app/static/js/simulated-pc/levels/level-two/emails/email-registry.js`) - MODIFIED
 **Changes Made:**
 - **BEFORE:** Imported hardcoded email files
 - **AFTER:** Loads emails dynamically from CSV API
@@ -48,7 +48,7 @@ sender,receiver,date,subject,body,label
 - `ALL_EMAILS` - Proxy object that loads data on first access
 - Error handling with fallback messages
 
-### 3. Email Application (`app/static/js/simulated-pc/desktop-components/desktop-applications/email-app.js`) - ✅ MODIFIED
+### 3. Email Application (`app/static/js/simulated-pc/desktop-components/desktop-applications/email-app.js`) - MODIFIED
 **Enhancements:**
 - **Async Initialization:** Added `ensureInitialized()` method
 - **Loading States:** Shows loading spinner while CSV data loads
@@ -58,20 +58,20 @@ sender,receiver,date,subject,body,label
   - Date: CSV date field
 - **Sender Formatting:** Smart formatting for "Display Name <email@domain.com>" format
 
-## 📁 Files Changed/Added/Deleted
+## Files Changed/Added/Deleted
 
-### ✅ NEW FILES:
+### NEW FILES:
 ```
 app/routes/email_api.py
 ```
 
-### ✅ MODIFIED FILES:
+### MODIFIED FILES:
 ```
 app/static/js/simulated-pc/levels/level-two/emails/email-registry.js
 app/static/js/simulated-pc/desktop-components/desktop-applications/email-app.js
 ```
 
-### ❌ DELETED FILES:
+### DELETED FILES:
 ```
 app/static/js/simulated-pc/levels/level-two/emails/bank-email.js
 app/static/js/simulated-pc/levels/level-two/emails/company-update-email.js
@@ -85,7 +85,7 @@ app/static/js/simulated-pc/levels/level-two/emails/virus-warning-email.js
 app/static/js/simulated-pc/levels/level-two/emails/index.js (redundant after CSV integration)
 ```
 
-## 🔧 API Integration Details
+## API Integration Details
 
 ### Email API Route Registration
 The new email API needs to be registered in the main Flask application:
@@ -103,7 +103,7 @@ app.register_blueprint(email_api)
 4. **Response:** JSON array with email objects
 5. **Frontend Update:** Emails loaded into `ALL_EMAILS` proxy
 
-## 🧪 Testing & Validation
+## Testing & Validation
 
 ### Manual Testing Completed:
 - ✅ API endpoints return correct JSON structure
@@ -123,7 +123,7 @@ curl http://localhost:5000/api/emails/stats
 python -c "from app import app; print([rule.rule for rule in app.url_map.iter_rules() if 'email' in rule.rule])"
 ```
 
-## 🚀 Deployment Requirements
+## Deployment Requirements
 
 ### Dependencies Added:
 ```
@@ -138,7 +138,7 @@ No new environment variables required - uses existing Flask configuration.
 - All hardcoded email files have been removed
 - Email API blueprint is registered in main app
 
-## 🔄 Backward Compatibility
+## Backward Compatibility
 
 ### Maintained Interfaces:
 - `ALL_EMAILS` array interface preserved
@@ -150,7 +150,7 @@ No new environment variables required - uses existing Flask configuration.
 - No user data migration needed
 - Existing Level 2 progress preserved
 
-## 🐛 Known Issues & Solutions
+## Known Issues & Solutions
 
 ### Issue 1: Async Loading Race Conditions
 **Problem:** Email app tries to access data before CSV loads  
@@ -164,14 +164,14 @@ No new environment variables required - uses existing Flask configuration.
 **Problem:** Deployment environments might not have CSV  
 **Solution:** API returns proper error responses, frontend shows fallback messages
 
-## 📋 Future Enhancements
+## Future Enhancements
 
 ### Immediate Tasks:
 - [x] **Update email display format** - Enhance the visual presentation and layout of emails in the email client interface
 - [x] **Fix issue of missing email details displayed** - Resolve any gaps in email header information or content rendering
 - [ ] **Streamline the classifying of phishing and legit emails** - Improve the classification logic and user feedback for email security assessment
 
-## 🔍 Development Context
+## Development Context
 
 ### Previous State:
 Level 2 used 9 hardcoded JavaScript email files with static content, limiting training variety and realism.
@@ -185,7 +185,7 @@ Level 2 now uses a real-world phishing dataset with 39,126 emails, providing aut
 - **Maintenance:** Reduced code duplication and hardcoded content
 - **Realism:** Authentic email formats and phishing techniques
 
-## 🚨 Critical Notes for Development Continuation
+## Critical Notes for Development Continuation
 
 1. **CSV Location:** Ensure `CEAS_08.csv` is in project root before testing
 2. **API Registration:** Verify email_api blueprint is registered in main Flask app
@@ -193,7 +193,7 @@ Level 2 now uses a real-world phishing dataset with 39,126 emails, providing aut
 4. **Browser Cache:** Clear browser cache when testing frontend changes
 5. **Error Handling:** Check browser console for any async loading errors
 
-## 📞 Support Information
+## Support Information
 
 **Primary Developer:** GitHub Copilot Assistant  
 **Branch Owner:** MACantara  

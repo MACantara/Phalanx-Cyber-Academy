@@ -19,7 +19,7 @@ Once Level 1 works, remove `LegacyRenderer`, `LegacyContent`, and the `legacy` f
 - [ ] `label: 0` consistently means `legitimate_news` and `label: 1` means `fake_news` across all 30 articles.
 - [ ] The existing `Article` type is sufficient; only the renderer and scoring logic are missing.
 - [ ] `ScoringRules` can be extended with optional `penalties` and `bonuses` without breaking `case-story` or `email-sandbox` levels.
-- [ ] The `completeSession(finalScore)` API is robust enough to accept a precomputed score and not be overwritten by the `scoringEvents` `useEffect`.
+- [ ] `completeSession(finalScore)` accepts a precomputed score without the `scoringEvents` `useEffect` overwriting it.
 - [ ] Removing `LegacyRenderer` will not affect any other part of the app once Level 1 is migrated.
 
 ## MVP Scope
@@ -37,12 +37,12 @@ Once Level 1 works, remove `LegacyRenderer`, `LegacyContent`, and the `legacy` f
 
 ## Not Doing (and Why)
 
-- **No new content type** — `article-sandbox` already exists and the data already matches it.
-- **No new authoring UI** — the migration is the priority, not a no-code editor.
-- **No real article-shuffling algorithm** — keep articles in the order they appear in `data.json`; adaptive replay can be added later.
+- **No new content type**: `article-sandbox` already exists and the data already matches it.
+- **No new authoring UI**: the migration is the priority, not a no-code editor.
+- **No real article-shuffling algorithm**: keep articles in the order they appear in `data.json`; adaptive replay can be added later.
 
 ## Decisions
 
-- **Article display** — one article at a time, with a "Next" button that advances to the next article.
-- **Classification submission** — per-article: the learner clicks **Credible** or **Misinformation** for each article before moving on.
-- **`news_articles.json`** — merge its content into `data.json`, then delete the old `news_articles.json` file.
+- **Article display**: one article at a time, with a "Next" button that advances to the next article.
+- **Classification submission**: per-article: the learner clicks **Credible** or **Misinformation** for each article before moving on.
+- **`news_articles.json`**: merge its content into `data.json`, then delete the old `news_articles.json` file.

@@ -8,7 +8,7 @@ web
 
 ## Users
 
-Self-directed learners (students, career-switchers, general learners building digital-literacy and cybersecurity skills) and educators/institutions evaluating the platform for classes — the landing page must persuade both equally.
+Self-directed learners (students, career-switchers, general learners building digital-literacy and cybersecurity skills) and educators/institutions evaluating the platform for classes. The landing page must persuade both equally.
 
 ## Product Purpose
 
@@ -16,7 +16,7 @@ Game-based cybersecurity learning platform. Teaches phishing detection, malware 
 
 ## Positioning
 
-Cybersecurity education structured as a training academy with missions — real attack scenarios played safely — rather than video courses or capture-the-flag tooling that assumes prior skill.
+Cybersecurity education structured as a training academy with missions (real attack scenarios played safely) rather than video courses or capture-the-flag tooling that assumes prior skill.
 
 ## Operating Context
 
@@ -32,7 +32,7 @@ Binding: the name "Phalanx Cyber Academy", the shield logo (`frontend/public/log
 
 ## Evidence on Hand
 
-Real scenario content: The Misinformation Maze, Shadow in the Inbox, Malware Mayhem, The White Hat Test, The Hunt for The Null. Logo asset at `frontend/public/logo-bg.png`. No testimonials, metrics, or named customers — do not fabricate them.
+Real scenario content: The Misinformation Maze, Shadow in the Inbox, Malware Mayhem, The White Hat Test, The Hunt for The Null. Logo asset at `frontend/public/logo-bg.png`. No testimonials, metrics, or named customers: do not fabricate them.
 
 ## Product Principles
 

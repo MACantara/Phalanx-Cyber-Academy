@@ -143,4 +143,4 @@ Expected: Vulnerability Scanner should show network-level vulnerabilities from n
 4. **Evidence Collection**: Preserves scan output as evidence
 5. **Port Correlation**: Links services to discovered vulnerabilities
 
-The integration now works seamlessly between the terminal nmap command and the vulnerability scanner application, providing comprehensive security assessment capabilities.
+The integration now works between the terminal nmap command and the vulnerability scanner application.

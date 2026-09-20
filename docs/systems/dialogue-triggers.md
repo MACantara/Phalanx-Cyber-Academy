@@ -82,7 +82,7 @@ const allTutorialsCompleted = [
 
 ## **Integration Flow Summary:**
 
-### **First Time User Journey:**
+### First-time user flow:
 1. **Desktop Loads** → Check for level-specific dialogue
 2. **Level Dialogue** → Level introduction and context setting
 3. **Tutorial Intro** → Educational bridge (if needed)
@@ -109,4 +109,4 @@ const allTutorialsCompleted = [
 - Error scenarios (help and guidance)
 - Achievement milestones (celebration and next steps)
 
-This creates a **guided, narrative-driven learning experience** that seamlessly integrates story elements with hands-on cybersecurity training, starting directly with level-specific content!
+This creates a guided, narrative-driven learning experience that weaves story elements into hands-on cybersecurity training, starting directly with level-specific content.

@@ -8,9 +8,9 @@ How might we rebuild the hands-on simulation environment so learners from high s
 
 Build a new simulation engine with two content types that share the same rendering and scoring layer:
 
-1. **Case Stories** — short, branching cybersecurity incidents presented as interactive narratives. Learners investigate by opening apps, reading files/emails/logs, talking to simulated characters, and making decisions at critical moments. Outcomes and score depend on the quality of their choices, not just whether they clicked the right button.
+1. **Case Stories**: short, branching cybersecurity incidents presented as interactive narratives. Learners investigate by opening apps, reading files/emails/logs, talking to simulated characters, and making decisions at critical moments. Outcomes and score depend on the quality of their choices, not just whether they clicked the right button.
 
-2. **Skill Sandboxes** — focused, single-purpose practice environments for one concept at a time (e.g., identify phishing emails, configure a firewall rule, read suspicious network traffic). Each sandbox is short, repeatable, and gives immediate feedback.
+2. **Skill Sandboxes**: focused, single-purpose practice environments for one concept at a time (e.g., identify phishing emails, configure a firewall rule, read suspicious network traffic). Each sandbox is short, repeatable, and gives immediate feedback.
 
 Both content types feed into the same **adaptive replay** mechanism: after a successful or failed attempt, the engine regenerates the scenario with varied details (different sender, different IOC, different topology) to test whether the learner has generalized the skill or simply memorized the level.
 
@@ -27,8 +27,8 @@ The existing SimulatedPC desktop becomes **one possible rendering target** for c
 
 ### In
 
-- One **Case Story** rebuilt from existing **Level 3 — Malware Mayhem** as data-driven, branching incident-response narrative.
-- One **Skill Sandbox** rebuilt from existing **Level 2 — Email Phishing** as a focused email-classification sandbox.
+- One **Case Story** rebuilt from existing **Level 3: Malware Mayhem** as data-driven, branching incident-response narrative.
+- One **Skill Sandbox** rebuilt from existing **Level 2: Email Phishing** as a focused email-classification sandbox.
 - An **adaptive replay** loop for the email sandbox that re-runs with different email contents.
 - A shared scoring and feedback system that reports score + time + decisions to the existing backend session endpoint.
 - A unified data schema for cases and sandboxes so the platform can load either from the same `LevelData` type.
@@ -331,8 +331,8 @@ function applyAdaptive(content: SimulationContent, variants: VariantTemplate[]):
 
 ## Locked Decisions
 
-- **First case story:** Level 3 — Malware Mayhem.
-- **First skill sandbox:** Level 2 — Email Phishing.
+- **First case story:** Level 3: Malware Mayhem.
+- **First skill sandbox:** Level 2: Email Phishing.
 - **Sandbox placement:** Separate lesson nodes on the dashboard; no embedded tools in case stories for MVP.
 - **Legacy compatibility:** New engine keeps a `LegacyRenderer` that falls back to `getLevelComponent(level.id)` for unmigrated levels.
 - **Backend content files:** One unified `data.json` per level for the new format; legacy split files stay for unmigrated levels.

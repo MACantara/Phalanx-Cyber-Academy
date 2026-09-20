@@ -1,25 +1,25 @@
 ---
 version: 2.0
-name: Phalanx Cyber Academy — Design Annual
+name: Phalanx Cyber Academy: Design Annual
 description: Print-plate design system for the Phalanx Cyber Academy gamified cybersecurity learning platform.
 ---
 
-# Phalanx Cyber Academy — Design Annual
+# Phalanx Cyber Academy: Design Annual
 
 ## Overview
 
-Phalanx Cyber Academy is a game-based learning platform for digital literacy and cybersecurity awareness. Its visual identity is **Design Annual**: the product is presented as a printed credential — plates, hairline rules, registration marks, mono labels, and rubber-stamp verdicts. The website is the prospectus; the simulated PC is the evidence dossier. One grammar, two surfaces.
+Phalanx Cyber Academy is a game-based learning platform for digital literacy and cybersecurity awareness. Its visual identity is **Design Annual**: the product is presented as a printed credential: plates, hairline rules, registration marks, mono labels, and rubber-stamp verdicts. The website is the prospectus; the simulated PC is the evidence dossier. One grammar, two surfaces.
 
 - **Target audience:** Students, career-switchers, and general learners, plus educators/institutions evaluating the platform.
 - **Mood:** Composed, precise, credential-bearing. Austere chroma; energy comes from composition confidence and ritual interactions (stamps, plate numbering), not decoration.
 - **Density:** Medium. Editorial whitespace on marketing surfaces; hairline-ruled density on Operate surfaces (dashboards, admin, simulated PC).
-- **Core metaphor:** A print artifact — every surface is a plate in a bound volume. Scenarios are exhibits; verdicts are stamps; progress is a register of marks.
+- **Core metaphor:** A print artifact: every surface is a plate in a bound volume. Scenarios are exhibits; verdicts are stamps; progress is a register of marks.
 
 ### Principles
 
 1. **Ink and stock, not glow.** Flat surfaces, hairline rules, zero gradients, zero drop-shadow effects (a single functional window shadow in the simulated PC is permitted).
 2. **Mono is the label voice.** Metadata, IDs, captions, and verdicts are always Chivo Mono, uppercase, letterspaced.
-3. **Stamps are the ritual.** Confirmations, verdicts, and achievements are rubber-stamp moments — rotated, double-ringed, ink-colored.
+3. **Stamps are the ritual.** Confirmations, verdicts, and achievements are rubber-stamp moments: rotated, double-ringed, ink-colored.
 4. **The logo is a registered mark.** The shield appears as a printed emblem, occasionally with the rotating certification stamp half off its edge. Never glowed, never gradiented.
 5. **Mobile-first.** Every surface is composed at 390px first and scaled up; desktop structure is additive, not assumed.
 
@@ -29,7 +29,7 @@ Phalanx Cyber Academy is a game-based learning platform for digital literacy and
 
 | Token | Light | Dark | Role |
 |---|---|---|---|
-| `stock` | `#F5F4F6` | `#141518` | Page/field background — paper / carbon plate |
+| `stock` | `#F5F4F6` | `#141518` | Page/field background · paper / carbon plate |
 | `stock-drift` | `#FAF6F5` | `#1B1C20` | Subtle tonal wash, hero/desktop fields |
 | `stock-green` | `#EEF3EF` | `#15201A` | Secondary tonal wash, hover tint |
 | `ink` | `#16181A` | `#EBE9E4` | Primary text, hairline-strong rules, solid fills |
@@ -41,7 +41,7 @@ Phalanx Cyber Academy is a game-based learning platform for digital literacy and
 
 | Token | Light | Dark | Role |
 |---|---|---|---|
-| `seal` | `#DCDDF3` | `#2E2F45` | Accent plate fill — active states, badges, marks of record |
+| `seal` | `#DCDDF3` | `#2E2F45` | Accent plate fill · active states, badges, marks of record |
 | `seal-ink` | `#3C3D63` | `#C9CBEF` | Text/icons on `seal`; link color |
 | `strike` | `#B03A2E` | `#D0674F` | Danger, phishing verdicts, destructive actions, flag marks |
 | `confirm` | `#2E7D4F` | `#5FA878` | Success, legitimate verdicts, completion |
@@ -52,10 +52,10 @@ Difficulty/severity mapping: Beginner → `confirm`; Intermediate → `ink` (neu
 
 | Token | Value | Role |
 |---|---|---|
-| `sans` | `'Archivo', sans-serif` | Display and body — one grotesque carries everything |
+| `sans` | `'Archivo', sans-serif` | Display and body · one grotesque carries everything |
 | `mono` | `'Chivo Mono', monospace` | Labels, IDs, metadata, verdicts, terminal/log text |
 
-- **Display (H1):** Archivo 800, `clamp(2.4rem, 6vw, 4.5rem)`, `letter-spacing:-0.03em`, `line-height:1.05`. Sentence case, not all-caps — the grotesque carries authority.
+- **Display (H1):** Archivo 800, `clamp(2.4rem, 6vw, 4.5rem)`, `letter-spacing:-0.03em`, `line-height:1.05`. Sentence case, not all-caps; the grotesque carries authority.
 - **H2:** Archivo 400–600, `clamp(1.9rem, 4vw, 3rem)`, `letter-spacing:-0.02em`.
 - **H3:** Archivo 700, 1.25rem.
 - **Body:** Archivo 400, 16px, `line-height:1.65`, `ink` for primary, `ink-soft` for supporting.
@@ -78,16 +78,16 @@ The container. `border:1px solid ink` (strong plate) or `hairline` (quiet plate)
 `1px` rules are the primary divider and structural device. Full-bleed hairlines separate page sections; inset hairlines divide index lists and table rows.
 
 ### Registration marks
-`+` crosses and small dots placed in page margins/corners — furniture that implies the plate was registered on a press. Sparingly: 2–4 per viewport on desktop, hidden or reduced on mobile (`opacity:.55`, mono glyphs).
+`+` crosses and small dots placed in page margins/corners, furniture that implies the plate was registered on a press. Sparingly: 2–4 per viewport on desktop, hidden or reduced on mobile (`opacity:.55`, mono glyphs).
 
 ### Stamp
-Verdict/achievement ring: circular, `border:2px solid currentColor` + inner ring `inset:3px`, mono uppercase text, rotated `-8deg`. Interaction: stamps **land** — `scale(1.6)→1` with rotate, `cubic-bezier(.19,1,.22,1)`, ~0.5s. Colors: `strike` (phishing/danger), `confirm` (legit/success), `ink` (neutral certification).
+Verdict/achievement ring: circular, `border:2px solid currentColor` + inner ring `inset:3px`, mono uppercase text, rotated `-8deg`. Interaction: stamps **land**: `scale(1.6)→1` with rotate, `cubic-bezier(.19,1,.22,1)`, ~0.5s. Colors: `strike` (phishing/danger), `confirm` (legit/success), `ink` (neutral certification).
 
 ### Plate ID
 Mono chip: `font-mono text-[9px] tracking-[.2em] px-1.5 py-0.5 bg-seal text-seal-ink`, e.g. `PLT-03`, `EXH-01`, `MSN-07`. Numbers every scenario, level, window, and exhibit.
 
 ### Dotfield
-Registration dot matrix — `radial-gradient` 1px dots at 22px pitch, masked to the periphery (`opacity:.5` light / `.35` dark). Desktop/hero furniture only; never behind reading content.
+Registration dot matrix: `radial-gradient` 1px dots at 22px pitch, masked to the periphery (`opacity:.5` light / `.35` dark). Desktop/hero furniture only; never behind reading content.
 
 ## Components
 
@@ -96,11 +96,11 @@ Registration dot matrix — `radial-gradient` 1px dots at 22px pitch, masked to 
 - **Primary (Enlist/Start):** `bg-ink text-stock`, square, mono uppercase `.78rem/.12em`, `px-6 py-3`. Hover: `bg-accent-hover` (lighten/darken step). No radius, no shadow.
 - **Stamp buttons (verdicts):** transparent, `border:2px solid currentColor`, inner hairline ring, mono uppercase, `strike`/`confirm` color. Hover rotates `-1.2deg`.
 - **Ghost:** `border:1px solid ink`, transparent bg, mono uppercase. Hover: `stock-green` fill.
-- **Disabled:** `opacity-50`, keep borders visible — never fade into the stock.
+- **Disabled:** `opacity-50`, keep borders visible; never fade into the stock.
 
 ### Cards
 
-Plates. `border border-hairline bg-stock p-5 sm:p-6`, registration corners on feature/scenario cards, plate-ID chip top-left. Hover: border strengthens to `ink` — no lift, no shadow.
+Plates. `border border-hairline bg-stock p-5 sm:p-6`, registration corners on feature/scenario cards, plate-ID chip top-left. Hover: border strengthens to `ink`; no lift, no shadow.
 
 ### Badges & status
 
@@ -133,30 +133,30 @@ Top-right plate: `border border-ink bg-stock`, mono label + Archivo message, lef
 - Allowed: fade/slide entrances ≤0.4s, mono log line-by-line reveals (boot/register sequences).
 - Banned: gradients animating, bouncing orbs, parallax, scale-on-hover for cards, marquee loops, autoplaying backgrounds.
 
-## The simulated PC — dossier grammar
+## The simulated PC: dossier grammar
 
-The simulated machine is **a forensic dossier on a light table** — the same system translated, not reskinned:
+The simulated machine is **a forensic dossier on a light table**: the same system translated, not reskinned:
 
 - **Desktop** = plate field: `stock` background, dotfield + registration crosses, boot log as `PLATE REGISTER` mono block.
 - **Windows** = numbered plates: `border-ink` strong plate, title bar carries `PLT-0N` chip + Archivo 700 title + mono exhibit subtitle; controls are outlined squares (no traffic lights).
 - **Taskbar** = plate rail: bottom bar, logo + `PHALANX-OS` mark, open windows as mono plate tokens (`PLT-03 · MAIL`), tray carries `MARKS n/n`, UTC clock, `ESC · EJECT`.
 - **Desktop icons** = plate thumbnails: 52px square plates with registration corners, mono label + `APP-0N` number beneath.
 - **Verdicts** = stamp buttons + landed stamp overlay on the exhibit.
-- **Document bodies** (email/article content) may keep light "printed document" stock in dark mode — the exhibit is the paper; the machine is carbon. Verify per-renderer before applying globally.
-- **Small screens (<768px):** the desktop metaphor collapses — rail becomes a bottom plate-switcher bar, one window fills the screen, icons and furniture hidden, verdict stamps become full-width buttons. Boot/shutdown keep the mono register at reduced density.
+- **Document bodies** (email/article content) may keep light "printed document" stock in dark mode: the exhibit is the paper; the machine is carbon. Verify per-renderer before applying globally.
+- **Small screens (<768px):** the desktop metaphor collapses: rail becomes a bottom plate-switcher bar, one window fills the screen, icons and furniture hidden, verdict stamps become full-width buttons. Boot/shutdown keep the mono register at reduced density.
 
 ## Voice
 
-- Mission register stays binding: "Train. Coordinate. Defend.", "recruit", "ENLIST", "Mission Not Found", "Return to Base" — now delivered in terse plate-register style.
-- Labels are registers, not sentences: `EXHIBIT 3 OF 5`, `RENDER VERDICT`, `PLATE REGISTER — SCENARIO LOADED`.
+- Mission register stays binding: "Train. Coordinate. Defend.", "recruit", "ENLIST", "Mission Not Found", "Return to Base", now delivered in terse plate-register style.
+- Labels are registers, not sentences: `EXHIBIT 3 OF 5`, `RENDER VERDICT`, `PLATE REGISTER · SCENARIO LOADED`.
 - Encouraging, never fear-mongering; error messages helpful and specific, mono for IDs/codes.
 
 ## Anti-patterns
 
-- No gradients anywhere — including text gradients, hero washes, and button fills.
+- No gradients anywhere, including text gradients, hero washes, and button fills.
 - No drop shadows except the single simulated-PC window elevation.
 - No border radius on plates, buttons, inputs, or badges (avatars may stay circular; stamps are circular by nature).
 - No glass/blur effects, no glow, no animated decorative backgrounds.
-- No color-only state — every status also carries a mono verdict label or glyph.
-- No un-numbered plates — every scenario/level/window/exhibit carries a plate ID.
-- Do not modify legacy `app/`; do not hardcode hex values in components — use tokens (`bg-stock`, `text-ink`, `border-hairline`, `bg-seal`, `text-seal-ink`, `text-strike`, `text-confirm`).
+- No color-only state: every status also carries a mono verdict label or glyph.
+- No un-numbered plates: every scenario/level/window/exhibit carries a plate ID.
+- Do not modify legacy `app/`; do not hardcode hex values in components; use tokens (`bg-stock`, `text-ink`, `border-hairline`, `bg-seal`, `text-seal-ink`, `text-strike`, `text-confirm`).

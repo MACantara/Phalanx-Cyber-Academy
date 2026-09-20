@@ -1,23 +1,23 @@
 # Intelligent Red Team AI (Q-Learning)
 
-## 🎯 Overview
+## Overview
 
 An intelligent Red Team AI opponent for the Blue Team vs Red Team mode that uses **Rule-Based Context Analysis** and **Q-Learning Reinforcement Learning** to select appropriate attack patterns based on the **MITRE ATT&CK framework**.
 
 **Note:** This implementation uses simplified heuristics instead of heavy NLP processing, achieving similar intelligent behavior while remaining lightweight and fast. Perfect for Q-learning integration!
 
-## ✨ Key Features
+## Key Features
 
-- 🧠 **Rule-Based Context Analysis** - Fast heuristic evaluation of defensive posture
-- 🎓 **MITRE ATT&CK Framework** - 33 real-world attack techniques across 11 tactics
-- 🤖 **Q-Learning AI** - Adaptive learning from player strategies
-- 📊 **Intelligent Attack Selection** - Context-aware technique selection
-- 🔄 **Phase Progression** - Realistic attack chain with prerequisites
-- 📈 **Success Prediction** - Probability-based attack planning
-- 🎮 **Educational** - Teaches real cybersecurity concepts
-- ⚡ **Lightweight** - No heavy ML dependencies, fast and deployable
+- **Rule-Based Context Analysis** - Fast heuristic evaluation of defensive posture
+- **MITRE ATT&CK Framework** - 33 real-world attack techniques across 11 tactics
+- **Q-Learning AI** - Adaptive learning from player strategies
+- **Intelligent Attack Selection** - Context-aware technique selection
+- **Phase Progression** - Realistic attack chain with prerequisites
+- **Success Prediction** - Probability-based attack planning
+- **Educational** - Teaches real cybersecurity concepts
+- **Lightweight** - No heavy ML dependencies, fast and deployable
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -44,14 +44,14 @@ python tests/test_nlp_red_team_api.py
 # Press F12 → Console tab
 ```
 
-## 📚 Documentation
+## Documentation
 
 - **[Full Documentation](docs/systems/nlp-enhanced-red-team-ai.md)** - Complete system overview
 - **[Quick Reference](docs/systems/nlp-ai-quick-reference.md)** - Developer reference
 - **[Architecture Diagrams](docs/systems/nlp-ai-architecture-diagram.md)** - Visual documentation
 - **[Implementation Summary](docs/systems/nlp-implementation-summary.md)** - Technical details
 
-## 🎮 How It Works
+## How It Works
 
 ### 1. Context Analysis
 The AI analyzes the current game state using rule-based heuristics:
@@ -80,7 +80,7 @@ Updates Q-table with rewards:
 🎯 NLP prediction was accurate! Bonus reward.
 ```
 
-## 🎯 MITRE ATT&CK Coverage
+## MITRE ATT&CK Coverage
 
 | Tactic | Techniques | Severity |
 |--------|-----------|----------|
@@ -98,7 +98,7 @@ Updates Q-table with rewards:
 
 **Total: 33 MITRE ATT&CK techniques**
 
-## 💡 Example Scenarios
+## Example Scenarios
 
 ### Weak Defenses
 ```javascript
@@ -121,7 +121,7 @@ AI Response: Lateral movement, data collection
 Expected Success: 50-70%
 ```
 
-## 🔧 API Endpoints
+## API Endpoints
 
 ### Analyze Context
 ```http
@@ -152,7 +152,7 @@ Content-Type: application/json
 }
 ```
 
-## 🐛 Debug Console
+## Debug Console
 
 Monitor AI decisions in real-time:
 
@@ -170,7 +170,7 @@ window.gameController.aiEngine.exportNLPStats()
 window.gameController.aiEngine.getCurrentIPInfo()
 ```
 
-## 🎨 Key Components
+## Key Components
 
 ### Frontend
 - `nlp-attack-analyzer.js` - NLP context analyzer (608 lines)
@@ -188,7 +188,7 @@ window.gameController.aiEngine.getCurrentIPInfo()
 - Quick reference guides
 - Testing documentation
 
-## 📊 Performance
+## Performance
 
 - **NLP Analysis**: <10ms per analysis
 - **Memory Usage**: ~2MB for technique database
@@ -196,7 +196,7 @@ window.gameController.aiEngine.getCurrentIPInfo()
 - **No FPS degradation**: Maintains 60fps gameplay
 - **Scalable**: Client-side processing reduces server load
 
-## 🔬 Testing
+## Testing
 
 ```bash
 # Run automated tests
@@ -210,7 +210,7 @@ python tests/test_nlp_red_team_api.py
 5. Verify attack progression
 ```
 
-## 🌟 Benefits
+## Benefits
 
 ### Educational
 - Learn real MITRE ATT&CK techniques
@@ -227,7 +227,7 @@ python tests/test_nlp_red_team_api.py
 - Dynamic difficulty
 - Transparent AI decisions
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 ### Short Term
 - [ ] More MITRE techniques (50+)
@@ -241,25 +241,25 @@ python tests/test_nlp_red_team_api.py
 - [ ] Real threat intelligence
 - [ ] Adversarial training
 
-## 🤝 Contributing
+## Contributing
 
 1. Review documentation
 2. Test current implementation
 3. Propose enhancements
 4. Submit pull requests
 
-## 📝 License
+## License
 
 Part of the CyberQuest/Phalanx Cyber Academy project.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - MITRE ATT&CK Framework
 - Q-Learning research community
 - NLP and AI/ML communities
 - Cybersecurity education initiatives
 
-## 📞 Support
+## Support
 
 For issues or questions:
 1. Check documentation
@@ -270,5 +270,5 @@ For issues or questions:
 ---
 
 **Version**: 1.0  
-**Status**: ✅ Production Ready  
+**Status**: complete
 **Last Updated**: November 11, 2025

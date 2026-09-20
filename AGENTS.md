@@ -1,4 +1,4 @@
-# AGENTS.md — Phalanx Cyber Academy
+# AGENTS.md: Phalanx Cyber Academy
 
 ## Project
 
@@ -11,8 +11,8 @@ Phalanx Cyber Academy is a game-based learning platform for digital literacy and
 
 - **Backend**: Python 3.12, FastAPI, Uvicorn, SQLAlchemy 2 (sync, `psycopg3`), Alembic, Pydantic Settings.
 - **Frontend**: React 18, TypeScript, Vite, React Router v7, Tailwind CSS 4 (`@tailwindcss/vite`), shadcn/ui (`components.json`, `cn()` in `src/lib/utils.ts`), `lucide-react`, `axios`.
-- **Database**: Neon Postgres — schema owned by Alembic in `backend/alembic/versions/` (baseline `0001_baseline.py`).
-- **Auth**: Clerk — `@clerk/react` on the frontend, JWT/JWKS verification on the backend.
+- **Database**: Neon Postgres. Schema owned by Alembic in `backend/alembic/versions/` (baseline `0001_baseline.py`).
+- **Auth**: Clerk (`@clerk/react` on the frontend, JWT/JWKS verification on the backend).
 - **Styling**: Tailwind CSS 4 with `dark:` class-mode theme (`@custom-variant dark` in `index.css`). See `DESIGN.md` for the design system.
 
 ## Architecture
@@ -51,7 +51,7 @@ Clerk-hosted authentication (email OTP, OAuth, etc. configured in the Clerk dash
 
 1. `<SignIn>`/`<SignUp>` components on `/login` and `/signup` issue a Clerk session.
 2. `AuthBridge` registers Clerk's `getToken` with the axios instance; every API call sends `Authorization: Bearer <clerk-jwt>`.
-3. Backend `get_current_user` verifies the JWT against Clerk JWKS (`CLERK_JWKS_URL`/`CLERK_ISSUER`), then resolves the local `profiles` row by `clerk_user_id` — provisioning it just-in-time on first login (claims existing rows by verified email).
+3. Backend `get_current_user` verifies the JWT against Clerk JWKS (`CLERK_JWKS_URL`/`CLERK_ISSUER`), then resolves the local `profiles` row by `clerk_user_id`, provisioning it just-in-time on first login (claims existing rows by verified email).
 4. `ProtectedRoute` gates signed-in pages; `optional_current_user` personalizes public endpoints (e.g. `/levels`).
 
 ## Conventions
@@ -68,13 +68,13 @@ Clerk-hosted authentication (email OTP, OAuth, etc. configured in the Clerk dash
 ### Ask first
 
 - Adding or removing npm/Python dependencies.
-- Changing the database schema — Alembic migrations are the only path (`alembic revision --autogenerate`, then `alembic upgrade head`).
+- Changing the database schema: Alembic migrations are the only path (`alembic revision --autogenerate`, then `alembic upgrade head`).
 - Creating new top-level files or directories outside `frontend/` or `backend/`.
 
 ### Never
 
 - Commit `.env`, `.env.local`, or real API keys (`CLERK_SECRET_KEY` is backend-only; only `VITE_CLERK_PUBLISHABLE_KEY` belongs in frontend env).
-- Trust client-supplied identity headers — `X-User-Id` is retired; identity comes only from the verified Clerk JWT.
+- Trust client-supplied identity headers; `X-User-Id` is retired; identity comes only from the verified Clerk JWT.
 - Use `console.log` in production code; use toast notifications or proper logging.
 - Leave stub UI on public pages; match established content and design where parity is requested.
 - Use `any` types in new TypeScript code unless absolutely unavoidable.
@@ -96,7 +96,7 @@ npm run build         # production build
 
 ```bash
 cd backend
-# backend/.env provides DATABASE_URL, DATABASE_URL_UNPOOLED, CLERK_* — see backend/.env.example
+# backend/.env provides DATABASE_URL, DATABASE_URL_UNPOOLED, CLERK_*; see backend/.env.example
 pip install -e .
 alembic upgrade head
 python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
@@ -111,16 +111,16 @@ docker compose up --build
 
 ## Environment
 
-- Backend reads `backend/.env` through `app/config.py` (its legacy/feature-flag block is unused by FastAPI — kept for reference only). Repo root has no `.env` — only `.env.local` holding the Vercel CLI token.
+- Backend reads `backend/.env` through `app/config.py` (its legacy/feature-flag block is unused by FastAPI, kept for reference only). Repo root has no `.env`, only `.env.local` holding the Vercel CLI token.
 - Frontend Vite proxy forwards `/api` to `http://localhost:8000`.
 - Neon: pooled `DATABASE_URL` for the app, `DATABASE_URL_UNPOOLED` for Alembic/dumps. Manage branches via the Neon CLI.
 - Clerk: `clerk env pull` writes `frontend/.env.local`; `CLERK_SECRET_KEY`/`CLERK_ISSUER`/`CLERK_JWKS_URL` belong in `backend/.env` only.
 
 ## Gotchas
 
-- `profiles.id` is a local UUID distinct from `clerk_user_id` (a `user_…` string) — always join on `clerk_user_id`, never assume they match.
+- `profiles.id` is a local UUID distinct from `clerk_user_id` (a `user_…` string). Always join on `clerk_user_id`, never assume they match.
 - `optional_current_user` returns `None` for anonymous/bad-token requests; use it only on endpoints that are safe without auth.
-- `api.ts` gets tokens through `setAuthTokenGetter` (wired by `AuthBridge`) — don't import Clerk hooks outside React components.
+- `api.ts` gets tokens through `setAuthTokenGetter` (wired by `AuthBridge`); don't import Clerk hooks outside React components.
 - Tailwind 4: no `tailwind.config.ts`; theme/custom utilities live in `index.css` via `@theme`/`@utility`.
 - Dark mode is toggled by a `dark` class on `<html>` (`@custom-variant dark`).
 - `lucide-react` does not include every Bootstrap icon; check `lucide-react` exports before using a new icon name.
