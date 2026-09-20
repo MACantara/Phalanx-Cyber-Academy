@@ -62,6 +62,22 @@ def get_level(level_id: int, user: Dict[str, Any] = Depends(get_current_user)):
     return level.to_dict()
 
 
+@router.get("/{level_id}/leaderboard")
+def get_level_leaderboard(level_id: int, limit: int = 10):
+    """Per-level board: best score per profile, earliest completion breaks
+    ties. Sourced from level_progress — public like the global XP board."""
+    from app.services import level_progress_service
+
+    level = Level.get_by_level_id(level_id)
+    if not level:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Level not found",
+        )
+    limit = max(1, min(limit, 50))
+    return {"level_id": level_id, "leaderboard": level_progress_service.leaderboard_for_level(level_id, limit)}
+
+
 @router.get("/{level_id}/content")
 def get_level_content(level_id: int, user: Dict[str, Any] = Depends(get_current_user)):
     """Get the interactive content bundle for a level.
