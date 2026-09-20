@@ -1,5 +1,7 @@
 # Dialogue Trigger Documentation
 
+> This doc describes the legacy dialogue overlay system, which has been retired. In the current stack, persona guidance is delivered diegetically through scene `speaker` fields, `scenario.briefing`, speaker'd notifications, and `scenario.debrief` — see `docs/systems/handler-persona.md`.
+
 ## Dialogue Flow Throughout Phalanx Cyber Academy Interface
 
 ### 1. **Level Dialogues** (Level-specific introduction dialogues)
