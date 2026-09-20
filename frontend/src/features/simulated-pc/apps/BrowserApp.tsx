@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSimulatedPC } from '../context/SimulatedPCContext';
 import { AppFrame } from '../components/AppFrame';
-import { Globe, Lock, ShieldAlert } from 'lucide-react';
+import { Globe, Lock, ShieldAlert, FileSearch } from 'lucide-react';
 import type { BrowserContent, BrowserSite } from '../types';
 
 export function BrowserApp() {
@@ -11,6 +11,7 @@ export function BrowserApp() {
   const [url, setUrl] = useState(browser?.home ?? '');
   const [formValues, setFormValues] = useState<Record<string, string>>({});
   const [submittedIds, setSubmittedIds] = useState<Set<string>>(new Set());
+  const [inspectedIds, setInspectedIds] = useState<Set<string>>(new Set());
 
   const isLocked = (s: BrowserSite) => !!s.locked && !unlocked.has(s.id);
 
@@ -21,6 +22,15 @@ export function BrowserApp() {
     if (site && !isLocked(site)) {
       emit({ app: 'browser', action: 'visit', target: site.id });
     }
+  };
+
+  const inspect = (s: BrowserSite) => {
+    if (inspectedIds.has(s.id)) {
+      setInspectedIds((prev) => { const n = new Set(prev); n.delete(s.id); return n; });
+      return;
+    }
+    setInspectedIds((prev) => new Set([...prev, s.id]));
+    emit({ app: 'browser', action: 'inspect', target: s.id });
   };
 
   // The environment navigates the browser (openUrl trigger effect) by setting
@@ -97,6 +107,19 @@ export function BrowserApp() {
             <div className="border-b border-hairline bg-stock-drift px-4 py-3 sm:px-6">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="truncate text-lg font-extrabold tracking-tight">{site.title}</h2>
+                {site.inspect && (
+                  <button
+                    onClick={() => inspect(site)}
+                    aria-pressed={inspectedIds.has(site.id)}
+                    className={`flex min-h-[44px] shrink-0 items-center border px-3 py-1 font-mono text-[9px] uppercase tracking-[0.16em] transition-colors ${
+                      inspectedIds.has(site.id)
+                        ? 'border-ink bg-ink text-stock'
+                        : 'border-ink text-ink hover:bg-stock-green'
+                    }`}
+                  >
+                    <FileSearch className="mr-1 h-3 w-3" /> Inspect
+                  </button>
+                )}
                 {site.form && (
                   <span className="flex shrink-0 items-center border border-strike px-2 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-strike">
                     <ShieldAlert className="mr-1 h-3 w-3" /> Requests credentials
@@ -105,6 +128,16 @@ export function BrowserApp() {
               </div>
             </div>
             <div className="flex-1 overflow-auto p-4 sm:p-6">
+              {inspectedIds.has(site.id) && site.inspect && (
+                <div className="mb-4 border border-hairline border-l-2 border-l-ink bg-stock-drift p-3">
+                  <p className="register mb-2">Host record</p>
+                  <ul className="space-y-1 font-mono text-[11px] text-ink-soft">
+                    {site.inspect.map((line, i) => (
+                      <li key={i}>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink sm:text-base">{site.body}</p>
 
               {site.form && !submitted && (
