@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSimulatedPC } from '../context/SimulatedPCContext';
 
 const bootLines = [
   { text: 'Phalanx Cyber Academy Security Training Environment v2.1.0', type: 'info', delay: 30 },
@@ -26,6 +27,7 @@ const bootLines = [
 ];
 
 export function BootSequence({ onComplete }: { onComplete: () => void }) {
+  const { formFactor } = useSimulatedPC();
   const [lines, setLines] = useState<{ text: string; type: string; status?: string }[]>([]);
 
   useEffect(() => {
@@ -74,6 +76,31 @@ export function BootSequence({ onComplete }: { onComplete: () => void }) {
         return 'text-ink-soft';
     }
   };
+
+  if (formFactor === 'handset') {
+    const progress = Math.round((lines.length / bootLines.length) * 100);
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-stock p-6 font-mono">
+        <div className="plate w-full max-w-xs border-ink p-6 text-center">
+          <img src="/logo.png" alt="Phalanx" className="mx-auto h-14 w-14 object-contain" />
+          <div className="register mt-3">PHALANX-OS · MOBILE</div>
+          <div className="mt-4 h-px w-full bg-hairline">
+            <div className="h-px bg-ink transition-all duration-200" style={{ width: `${progress}%` }} />
+          </div>
+          <div className="mt-4 min-h-[4.5rem] space-y-1 text-left text-[10px] leading-snug text-ink-soft">
+            {lines.slice(-4).map((line, i) =>
+              line.text ? (
+                <div key={i} className="truncate">
+                  {line.text}
+                  {line.status && <span className="ml-2 font-bold text-confirm">{line.status}</span>}
+                </div>
+              ) : null
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 overflow-y-auto bg-stock p-6 font-mono text-[13px] leading-relaxed sm:p-10">

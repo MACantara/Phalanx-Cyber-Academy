@@ -1,9 +1,11 @@
 import { createContext, useContext } from 'react';
 import type {
+  FormFactor,
   LevelData,
   LevelEnvironment,
   OpenWindow,
   ScoringEvent,
+  ShellMode,
   WorldEvent,
   WorldNotification,
 } from '../types';
@@ -21,6 +23,10 @@ export interface SimulatedPCContextValue {
   focusWindow: (id: string) => void;
   minimizeWindow: (id: string) => void;
   restoreWindow: (id: string) => void;
+  moveWindow: (id: string, x: number, y: number) => void;
+  formFactor: FormFactor;
+  shellMode: ShellMode;
+  cycleShellMode: () => void;
   addScoringEvent: (event: ScoringEvent) => void;
   emit: (event: WorldEvent) => void;
   unlocked: ReadonlySet<string>;

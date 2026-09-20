@@ -333,6 +333,9 @@ export interface LevelData {
   content?: SimulationContent | LevelEnvironment;
 }
 
+export type FormFactor = 'handset' | 'workstation';
+export type ShellMode = FormFactor | 'auto';
+
 export interface OpenWindow {
   id: string;
   title: string;
@@ -340,4 +343,6 @@ export interface OpenWindow {
   zIndex: number;
   appId?: string;
   minimized?: boolean;
+  x?: number;
+  y?: number;
 }

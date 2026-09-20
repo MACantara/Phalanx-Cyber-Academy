@@ -2,12 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BootSequence } from './components/BootSequence';
 import { ShutdownSequence } from './components/ShutdownSequence';
 import { DesktopShell } from './components/DesktopShell';
+import { HandsetShell } from './components/HandsetShell';
 import { SimulatedPCContext, type SimulatedPCContextValue } from './context/SimulatedPCContext';
 import { applyAdaptive } from './lib/adaptive';
 import { toEnvironment } from './lib/environment';
 import { applyWorldEvent, freshWorld, requiredObjectives, type WorldState } from './lib/scenario';
+import { usePrefersHandset } from './lib/usePrefersHandset';
 import { getApp } from './apps';
-import type { LevelData, OpenWindow, ScoringEvent, SimulationContent, LevelEnvironment, WorldEvent, WorldNotification } from './types';
+import type { LevelData, OpenWindow, ScoringEvent, SimulationContent, LevelEnvironment, ShellMode, WorldEvent, WorldNotification } from './types';
 
 export interface SimulatedPCProps {
   level: LevelData;
@@ -34,6 +36,13 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
   const [browserUrl, setBrowserUrl] = useState<string | null>(null);
   const worldRef = useRef<WorldState>(world);
   const notificationSeq = useRef(0);
+  const prefersHandset = usePrefersHandset();
+  const [shellMode, setShellMode] = useState<ShellMode>('auto');
+  const formFactor = shellMode === 'auto' ? (prefersHandset ? 'handset' : 'workstation') : shellMode;
+
+  const cycleShellMode = useCallback(() => {
+    setShellMode((m) => (m === 'auto' ? (formFactor === 'handset' ? 'workstation' : 'handset') : 'auto'));
+  }, [formFactor]);
 
   const environment = useMemo(() => toEnvironment(activeContent), [activeContent]);
 
@@ -47,7 +56,8 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
       const nextZ = zCounter + 1;
       setZCounter(nextZ);
       setActiveWindow(id);
-      return [...prev, { id, title, icon, zIndex: nextZ, appId }];
+      const i = prev.length;
+      return [...prev, { id, title, icon, zIndex: nextZ, appId, x: 48 + i * 28, y: 32 + i * 28 }];
     });
   }, [zCounter]);
 
@@ -79,6 +89,10 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
     );
     setActiveWindow(id);
   }, [zCounter]);
+
+  const moveWindow = useCallback((id: string, x: number, y: number) => {
+    setWindows((prev) => prev.map((w) => (w.id === id ? { ...w, x, y } : w)));
+  }, []);
 
   const startShutdown = useCallback(() => {
     setPhase('shutdown');
@@ -195,6 +209,10 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
       focusWindow,
       minimizeWindow,
       restoreWindow,
+      moveWindow,
+      formFactor,
+      shellMode,
+      cycleShellMode,
       addScoringEvent,
       emit,
       unlocked: world.unlocked,
@@ -207,7 +225,7 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
       startReplay,
       completed,
     }),
-    [level, activeContent, environment, sessionId, score, windows, activeWindow, openWindow, closeWindow, focusWindow, minimizeWindow, restoreWindow, addScoringEvent, emit, world, notifications, dismissNotification, browserUrl, completeSession, startShutdown, startReplay, completed]
+    [level, activeContent, environment, sessionId, score, windows, activeWindow, openWindow, closeWindow, focusWindow, minimizeWindow, restoreWindow, moveWindow, formFactor, shellMode, cycleShellMode, addScoringEvent, emit, world, notifications, dismissNotification, browserUrl, completeSession, startShutdown, startReplay, completed]
   );
 
   return (
@@ -215,7 +233,12 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
       <div className="fixed inset-0 z-50 overflow-hidden bg-[#0c0c0e] p-0 sm:p-3">
         <div className="relative h-full w-full overflow-hidden bg-stock sm:border sm:border-ink">
         {phase === 'boot' && <BootSequence onComplete={() => setPhase('desktop')} />}
-        {phase === 'desktop' && <DesktopShell key={replayId} />}
+        {phase === 'desktop' &&
+          (formFactor === 'handset' ? (
+            <HandsetShell key={replayId} />
+          ) : (
+            <DesktopShell key={replayId} />
+          ))}
         {phase === 'shutdown' && (
           <ShutdownSequence
             onComplete={onShutdownFinished}
