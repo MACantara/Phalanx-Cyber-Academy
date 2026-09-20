@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useSimulatedPC } from '../context/SimulatedPCContext';
 import { AppFrame } from '../components/AppFrame';
 import { EvidenceViewer } from '../components/EvidenceViewer';
+import { SpeakerChip } from '../components/SpeakerChip';
 import { FileText, Lock, AlertCircle, FileImage, Hexagon, Activity } from 'lucide-react';
 import type { CaseChoice, CaseContent, FileItem, EvidenceItem, ScoringEvent } from '../types';
 
@@ -77,9 +78,9 @@ export function CaseApp() {
         <div className="plate col-span-1 flex h-full flex-col gap-4 overflow-hidden p-4 sm:p-5 lg:col-span-2">
           <div className="flex-1 overflow-auto border border-hairline bg-stock-drift p-4 sm:p-5">
             {scene.speaker && (
-              <p className="register mb-2 !text-seal-ink">
-                {scene.speaker}
-              </p>
+              <div className="mb-3">
+                <SpeakerChip speaker={scene.speaker} />
+              </div>
             )}
             <p className="whitespace-pre-wrap text-base leading-relaxed text-ink sm:text-lg">
               {scene.narrative}
