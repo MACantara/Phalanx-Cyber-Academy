@@ -570,11 +570,14 @@ def get_level_content_admin(
     user: Dict[str, Any] = Depends(require_admin),
 ):
     """Raw (unresolved) level content for editing."""
+    from app.services import level_content_service
+
     with session_scope() as s:
-        row = s.execute(select(Level).where(Level.level_id == level_id)).scalar_one_or_none()
-    if not row:
+        exists = s.execute(select(Level.id).where(Level.level_id == level_id)).scalar_one_or_none()
+    if not exists:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Level not found")
-    return {"level_id": level_id, "content": row.content}
+    view = level_content_service.get_admin_view(level_id)
+    return {"level_id": level_id, "content": view["content"] if view else None}
 
 
 @router.put("/levels/{level_id}/content")
@@ -584,11 +587,12 @@ def put_level_content(
     user: Dict[str, Any] = Depends(require_admin),
 ):
     """Save a level's environment/content payload (the publish step)."""
+    from app.services import level_content_service
+
     with session_scope() as s:
-        row = s.execute(select(Level).where(Level.level_id == level_id)).scalar_one_or_none()
-        if not row:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Level not found")
-        row.content = body.content
-        row.updated_at = utc_now()
+        exists = s.execute(select(Level.id).where(Level.level_id == level_id)).scalar_one_or_none()
+    if not exists:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Level not found")
+    level_content_service.upsert_payload(level_id, body.content, user.get("id"))
     _log_admin_action(user.get("id"), "level_content_update", "level", level_id, None)
     return {"level_id": level_id, "content": body.content}

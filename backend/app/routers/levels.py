@@ -3,12 +3,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
 
-from app.db import session_scope
 from app.dependencies import get_current_user, optional_current_user
-from app.models import Level as LevelRow
 from app.services.content_service import resolve_content_refs
+from app.services import level_content_service
 from app.services.level_service import Level
 from app.services.session_service import Session
 
@@ -67,9 +65,10 @@ def get_level(level_id: int, user: Dict[str, Any] = Depends(get_current_user)):
 def get_level_content(level_id: int, user: Dict[str, Any] = Depends(get_current_user)):
     """Get the interactive content bundle for a level.
 
-    Content comes from `levels.content` when present (the authored source of
-    truth), falling back to the bundled data.json for unmigrated rows. Any
-    `lib:kind:key` refs are resolved against the content library."""
+    Content comes from the published `level_content.payload` when present
+    (the authored source of truth), falling back to the bundled data.json
+    for unseeded rows. Any `lib:kind:key` refs are resolved against the
+    content library."""
     level = Level.get_by_level_id(level_id)
     if not level:
         raise HTTPException(
@@ -77,10 +76,7 @@ def get_level_content(level_id: int, user: Dict[str, Any] = Depends(get_current_
             detail="Level not found",
         )
 
-    with session_scope() as s:
-        data = s.execute(
-            select(LevelRow.content).where(LevelRow.level_id == level_id)
-        ).scalar_one_or_none()
+    data = level_content_service.get_payload(level_id)
 
     if data is None:
         content_path = _level_content_path(level_id)
