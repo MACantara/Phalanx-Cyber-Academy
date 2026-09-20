@@ -1,9 +1,11 @@
 import type { ComponentType } from 'react';
 import { createElement } from 'react';
-import { Mail, Newspaper, FolderOpen, type LucideIcon } from 'lucide-react';
+import { Mail, Newspaper, FolderOpen, Folder, Globe, type LucideIcon } from 'lucide-react';
 import { MailApp } from './MailApp';
 import { ReaderApp } from './ReaderApp';
 import { CaseApp } from './CaseApp';
+import { FilesApp } from './FilesApp';
+import { BrowserApp } from './BrowserApp';
 import type { AppId } from '../types';
 
 export interface SimApp {
@@ -17,6 +19,8 @@ const appRegistry: Record<AppId, SimApp> = {
   mail: { id: 'mail', name: 'Mail', icon: Mail, component: MailApp },
   reader: { id: 'reader', name: 'Reader', icon: Newspaper, component: ReaderApp },
   case: { id: 'case', name: 'Case Files', icon: FolderOpen, component: CaseApp },
+  files: { id: 'files', name: 'Files', icon: Folder, component: FilesApp },
+  browser: { id: 'browser', name: 'Browser', icon: Globe, component: BrowserApp },
 };
 
 export function registerApp(app: SimApp) {
