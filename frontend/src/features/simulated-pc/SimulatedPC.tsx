@@ -6,6 +6,7 @@ import { SimulatedPCContext, type SimulatedPCContextValue } from './context/Simu
 import { applyAdaptive } from './lib/adaptive';
 import { toEnvironment } from './lib/environment';
 import { applyWorldEvent, freshWorld, requiredObjectives, type WorldState } from './lib/scenario';
+import { getApp } from './apps';
 import type { LevelData, OpenWindow, ScoringEvent, SimulationContent, LevelEnvironment, WorldEvent, WorldNotification } from './types';
 
 export interface SimulatedPCProps {
@@ -25,6 +26,7 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
   const [activeWindow, setActiveWindow] = useState<string | null>(null);
   const [zCounter, setZCounter] = useState(1000);
   const [scoringEvents, setScoringEvents] = useState<ScoringEvent[]>([]);
+  const [lockedScore, setLockedScore] = useState<number | null>(null);
   const [activeContent, setActiveContent] = useState<SimulationContent | LevelEnvironment | undefined>(level.content);
   const [replayId, setReplayId] = useState(0);
   const [world, setWorld] = useState<WorldState>(freshWorld);
@@ -103,7 +105,7 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
     const required = requiredObjectives(environment);
     if (required.some((o) => !worldRef.current.objectivesDone.has(o.id))) return;
     if (finalScore !== undefined) {
-      setScore(finalScore);
+      setLockedScore(finalScore);
     }
     setCompleted(true);
   }, [environment]);
@@ -123,7 +125,7 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
     }
     if (openUrl) {
       setBrowserUrl(openUrl);
-      openWindow('app-browser', 'Browser', 'browser', 'browser');
+      openWindow('app-browser', getApp('browser')?.name ?? 'Browser', 'browser', 'browser');
     }
     if (completedNow) completeSession();
   }, [environment, openWindow, completeSession]);
@@ -137,6 +139,7 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
     const mutated = applyAdaptive(activeContent);
     if (mutated) setActiveContent(mutated);
     setScoringEvents([]);
+    setLockedScore(null);
     setCompleted(false);
     setScore(0);
     resetWorld();
@@ -160,16 +163,17 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
   }, []);
 
   useEffect(() => {
-    if (completed) return;
+    if (lockedScore !== null) return;
     if (!activeContent || !('scoring' in activeContent)) return;
     const scoring = activeContent.scoring;
     const raw = scoringEvents.reduce((sum, e) => sum + e.points, 0);
     setScore(Math.max(0, Math.min(scoring.maxScore, raw)));
-  }, [activeContent, scoringEvents, completed]);
+  }, [activeContent, scoringEvents, lockedScore]);
 
   useEffect(() => {
     setActiveContent(level.content);
     setScoringEvents([]);
+    setLockedScore(null);
     setCompleted(false);
     setScore(0);
     resetWorld();
