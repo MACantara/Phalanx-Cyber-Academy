@@ -93,6 +93,17 @@ def upgrade() -> None:
     )
     op.drop_column("levels", "content")
 
+    # Backfill progress rollups from completed sessions: best score per
+    # (profile, level), first completion timestamp, lessons unknown.
+    op.execute(
+        sa.text(
+            "INSERT INTO level_progress (profile_id, level_id, best_score, completed_at, created_at, updated_at) "
+            "SELECT DISTINCT ON (profile_id, level_id) profile_id, level_id, score, end_time, now(), now() "
+            "FROM sessions WHERE level_id IS NOT NULL AND end_time IS NOT NULL AND score IS NOT NULL "
+            "ORDER BY profile_id, level_id, score DESC"
+        )
+    )
+
 
 def downgrade() -> None:
     op.add_column("levels", sa.Column("content", JSONB, nullable=True))

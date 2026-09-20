@@ -311,55 +311,28 @@ class Session:
 
     @classmethod
     def get_user_progress_summary(cls, user_id: str) -> Dict[str, Any]:
+        """Progress rollup sourced from level_progress — one upserted row per
+        (profile, level) instead of scanning every session. `best_scores`
+        keeps its legacy shape for existing consumers."""
         try:
             from app.services.level_service import Level
+            from app.services import level_progress_service
 
-            total_levels = len(Level.get_available_levels())
-            profile_id = _profile_uuid(user_id)
+            levels = Level.get_available_levels()
+            total_levels = len(levels)
+            name_by_level_id = {l.level_id: l.name for l in levels}
+            progress = level_progress_service.get_map_for_user(user_id)
 
-            with session_scope() as session:
-                session_rows = []
-                if profile_id is not None:
-                    session_rows = session.execute(
-                        select(
-                            SessionModel.level_id,
-                            SessionModel.session_name,
-                            SessionModel.score,
-                        )
-                        .where(SessionModel.profile_id == profile_id)
-                        .where(SessionModel.end_time.is_not(None))
-                    ).all()
+            completed_level_ids = [
+                lid for lid, p in progress.items() if p["completed_at"] is not None
+            ]
+            best_scores = {
+                name_by_level_id[lid]: {"score": p["best_score"], "time": 0}
+                for lid, p in progress.items()
+                if p["best_score"] is not None and lid in name_by_level_id
+            }
 
-                completed_level_ids = set()
-                for row in session_rows:
-                    if row.level_id is not None:
-                        completed_level_ids.add(row.level_id)
-                completed_levels = len(completed_level_ids)
-
-                best_scores = {}
-                session_names = list(set(r.session_name for r in session_rows))
-                for session_name in session_names:
-                    best = session.execute(
-                        select(
-                            SessionModel.score,
-                            SessionModel.start_time,
-                            SessionModel.end_time,
-                        )
-                        .where(SessionModel.profile_id == profile_id)
-                        .where(SessionModel.session_name == session_name)
-                        .where(SessionModel.end_time.is_not(None))
-                        .order_by(SessionModel.score.desc())
-                        .limit(1)
-                    ).first()
-                    if best:
-                        start_time = best.start_time
-                        end_time = best.end_time
-                        time_spent = int((end_time - start_time).total_seconds()) if start_time and end_time else 0
-                        best_scores[session_name] = {
-                            "score": best.score,
-                            "time": time_spent,
-                        }
-
+            completed_levels = len(completed_level_ids)
             return {
                 "total_levels": total_levels,
                 "completed_levels": completed_levels,
@@ -367,7 +340,8 @@ class Session:
                 if total_levels > 0
                 else 0,
                 "best_scores": best_scores,
-                "completed_level_ids": list(completed_level_ids),
+                "completed_level_ids": completed_level_ids,
+                "level_progress": progress,
             }
         except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to get user progress summary: {str(e)}")
