@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "title": "Responsible Vulnerability Disclosure",
   "instructions": "You discovered exposed credentials during the tournament. Follow responsible disclosure practices to report the issue without causing harm.",
+  "scenario": {
+    "briefing": { "speaker": "instructor", "messages": [
+      { "text": "You found exposed credentials. Open the case file - how you handle this is the assessment." }
+    ] },
+    "triggers": [
+      { "on": { "app": "case", "action": "view", "target": "env-file" }, "once": true,
+        "then": [{ "notify": { "text": "Credentials in a public directory. Scope it before you touch anything else.", "speaker": "instructor" } }] },
+      { "on": { "app": "case", "action": "view", "target": "disclosure-guide" }, "once": true,
+        "then": [{ "notify": { "text": "The checklist is the process - follow it in order.", "speaker": "instructor" } }] }
+    ]
+  },
   "scoring": {
     "maxScore": 500,
     "passingScore": 350,

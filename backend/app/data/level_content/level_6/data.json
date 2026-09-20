@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "title": "Evidence Acquisition & Chain of Custody",
   "instructions": "The tournament's incident response team needs you to collect digital evidence correctly. Follow chain-of-custody and evidence-integrity principles to avoid contamination.",
+  "scenario": {
+    "briefing": { "speaker": "instructor", "messages": [
+      { "text": "The scoring server is evidence now. Open the case file and preserve it by the book." }
+    ] },
+    "triggers": [
+      { "on": { "app": "case", "action": "view", "target": "hash-guide" }, "once": true,
+        "then": [{ "notify": { "text": "Hash before you image. Integrity first, everything else after.", "speaker": "instructor" } }] },
+      { "on": { "app": "case", "action": "view", "target": "chain-form" }, "once": true,
+        "then": [{ "notify": { "text": "Every transfer gets a line. A gap in custody is a gap in the case.", "speaker": "instructor" } }] }
+    ]
+  },
   "scoring": {
     "maxScore": 500,
     "passingScore": 350,

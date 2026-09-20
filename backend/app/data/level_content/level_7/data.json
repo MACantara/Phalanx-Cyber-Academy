@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "title": "Evidence Analysis",
   "instructions": "Analyze the laptop image, memory dump, and network logs. Each artifact points to the same suspect.",
+  "scenario": {
+    "briefing": { "speaker": "instructor", "messages": [
+      { "text": "Three artifacts, one operator. Open the case file and let the evidence answer." }
+    ] },
+    "triggers": [
+      { "on": { "app": "case", "action": "view", "target": "memory-dump" }, "once": true,
+        "then": [{ "notify": { "text": "Memory holds what disk forgot. Find the process that spawned the payload.", "speaker": "instructor" } }] },
+      { "on": { "app": "case", "action": "view", "target": "network-logs" }, "once": true,
+        "then": [{ "notify": { "text": "Logs show the exfil path - destination first, then volume.", "speaker": "instructor" } }] }
+    ]
+  },
   "scoring": {
     "maxScore": 750,
     "passingScore": 550,

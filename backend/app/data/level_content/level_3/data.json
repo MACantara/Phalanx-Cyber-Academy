@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "title": "Malware Mayhem",
   "instructions": "A sophisticated malware campaign is hitting the Phalanx Cyber Academy Gaming Championship. Investigate the infected system, identify the real threats, and avoid false positives.",
+  "scenario": {
+    "briefing": { "speaker": "instructor", "messages": [
+      { "text": "Championship systems are down. Open the case file, work the exhibits, and render your call." }
+    ] },
+    "triggers": [
+      { "on": { "app": "case", "action": "view", "target": "malware-list" }, "once": true,
+        "then": [{ "notify": { "text": "The scan names the payload. Check the process list for what spawned it.", "speaker": "instructor" } }] },
+      { "on": { "app": "case", "action": "view", "target": "process-list" }, "once": true,
+        "then": [{ "notify": { "text": "Look for the parent process - payloads rarely run alone.", "speaker": "instructor" } }] }
+    ]
+  },
   "scoring": {
     "maxScore": 1000,
     "passingScore": 700,

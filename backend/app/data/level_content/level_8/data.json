@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "title": "Forensic Report & Identify The Null",
   "instructions": "Write the final forensic report and identify the operator behind the tournament incident.",
+  "scenario": {
+    "briefing": { "speaker": "instructor", "messages": [
+      { "text": "Analysis is done - attribution and the report are yours. Open the case file." }
+    ] },
+    "triggers": [
+      { "on": { "app": "case", "action": "view", "target": "suspect-profiles" }, "once": true,
+        "then": [{ "notify": { "text": "Attribution is evidence, not hunch - match the artifact to the operator.", "speaker": "instructor" } }] },
+      { "on": { "app": "case", "action": "view", "target": "report-template" }, "once": true,
+        "then": [{ "notify": { "text": "The template is the standard - findings map to artifacts.", "speaker": "instructor" } }] }
+    ]
+  },
   "scoring": {
     "maxScore": 500,
     "passingScore": 350,

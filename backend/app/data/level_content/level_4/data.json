@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "title": "Network Reconnaissance",
   "instructions": "A suspicious device is on the tournament network. Use the reconnaissance tools in the Evidence panel to identify the open ports and the rogue host.",
+  "scenario": {
+    "briefing": { "speaker": "instructor", "messages": [
+      { "text": "An unknown device sits on the tournament network. Open the case file and map it before anyone acts." }
+    ] },
+    "triggers": [
+      { "on": { "app": "case", "action": "view", "target": "nmap-scan" }, "once": true,
+        "then": [{ "notify": { "text": "Map the host before you touch it - the scan tells you what it reaches.", "speaker": "instructor" } }] },
+      { "on": { "app": "case", "action": "view", "target": "packet-capture" }, "once": true,
+        "then": [{ "notify": { "text": "Watch what talks outbound. Beacon intervals give implants away.", "speaker": "instructor" } }] }
+    ]
+  },
   "scoring": {
     "maxScore": 500,
     "passingScore": 350,
