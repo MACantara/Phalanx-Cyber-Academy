@@ -229,6 +229,7 @@ export interface WorldEvent {
 export interface WorldNotification {
   id: number;
   message: string;
+  speaker?: string;
 }
 
 export interface EventMatcher {
@@ -246,9 +247,14 @@ export interface Objective {
   required?: boolean;
 }
 
+export interface NotifyMessage {
+  text: string;
+  speaker?: string;
+}
+
 export interface TriggerEffect {
   unlock?: string;
-  notify?: string;
+  notify?: string | NotifyMessage;
   objective?: string;
   openUrl?: string;
 }

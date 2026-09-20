@@ -167,12 +167,17 @@ export const objectiveSchema = z.object({
   required: z.boolean().optional(),
 });
 
+export const notifyMessageSchema = z.object({
+  text: z.string(),
+  speaker: z.string().optional(),
+});
+
 export const triggerSchema = z.object({
   on: eventMatcherSchema,
   then: z.array(
     z.object({
       unlock: z.string().optional(),
-      notify: z.string().optional(),
+      notify: z.union([z.string(), notifyMessageSchema]).optional(),
       objective: z.string().optional(),
       openUrl: z.string().optional(),
     })

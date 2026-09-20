@@ -147,7 +147,7 @@ export function SimulatedPC({ level, sessionId, onComplete }: SimulatedPCProps) 
     if (notes.length) {
       setNotifications((prev) => [
         ...prev,
-        ...notes.map((message) => ({ id: notificationSeq.current++, message })),
+        ...notes.map((n) => ({ id: notificationSeq.current++, message: n.message, speaker: n.speaker })),
       ]);
     }
     if (openUrl) {

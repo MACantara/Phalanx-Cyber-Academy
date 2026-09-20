@@ -38,7 +38,7 @@ export function matchesEvent(matcher: EventMatcher, event: WorldEvent): boolean 
 export interface EmitResult {
   next: WorldState;
   scoring: ScoringEvent[];
-  notifications: string[];
+  notifications: { message: string; speaker?: string }[];
   openUrl?: string;
   completedNow: boolean;
 }
@@ -91,7 +91,13 @@ export function applyWorldEvent(
     next.firedTriggers.add(index);
     for (const effect of trigger.then) {
       if (effect.unlock) next.unlocked.add(effect.unlock);
-      if (effect.notify) result.notifications.push(effect.notify);
+      if (effect.notify) {
+        result.notifications.push(
+          typeof effect.notify === 'string'
+            ? { message: effect.notify }
+            : { message: effect.notify.text, speaker: effect.notify.speaker }
+        );
+      }
       if (effect.openUrl) result.openUrl = effect.openUrl;
       if (effect.objective) {
         const obj = scenario.objectives.find((o) => o.id === effect.objective);
