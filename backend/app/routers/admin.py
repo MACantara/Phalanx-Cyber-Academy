@@ -487,3 +487,108 @@ def get_user_activity(
             .order_by(Session.start_time.desc())
         ),
     }
+
+
+# ---------------------------------------------------------------------------
+# Content platform — shared content library + level content authoring
+# ---------------------------------------------------------------------------
+
+CONTENT_KINDS = ("emails", "articles", "files", "sites", "scenes", "evidence")
+
+
+class ContentItemIn(BaseModel):
+    kind: str = Field(pattern="^[a-z_]+$")
+    key: str = Field(min_length=1, max_length=120, pattern="^[A-Za-z0-9_-]+$")
+    data: Dict[str, Any]
+
+
+class ContentItemUpdate(BaseModel):
+    data: Dict[str, Any]
+
+
+class LevelContentIn(BaseModel):
+    content: Dict[str, Any]
+
+
+@router.get("/content-items")
+def list_content_items(
+    kind: Optional[str] = Query(default=None),
+    user: Dict[str, Any] = Depends(require_admin),
+):
+    from app.services import content_service
+
+    return {"items": content_service.list_items(kind)}
+
+
+@router.post("/content-items", status_code=status.HTTP_201_CREATED)
+def upsert_content_item(
+    body: ContentItemIn,
+    user: Dict[str, Any] = Depends(require_admin),
+):
+    from app.services import content_service
+
+    if body.kind not in CONTENT_KINDS:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Unknown content kind '{body.kind}'. Known kinds: {', '.join(CONTENT_KINDS)}",
+        )
+    item = content_service.upsert_item(body.kind, body.key, body.data)
+    _log_admin_action(user.get("id"), "content_item_upsert", "content_item", None, {"kind": body.kind, "key": body.key})
+    return item
+
+
+@router.put("/content-items/{item_id}")
+def update_content_item(
+    item_id: str,
+    body: ContentItemUpdate,
+    user: Dict[str, Any] = Depends(require_admin),
+):
+    from app.services import content_service
+
+    item = content_service.update_item(item_id, body.data)
+    if not item:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Content item not found")
+    _log_admin_action(user.get("id"), "content_item_update", "content_item", None, {"item_id": item_id})
+    return item
+
+
+@router.delete("/content-items/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_content_item(
+    item_id: str,
+    user: Dict[str, Any] = Depends(require_admin),
+):
+    from app.services import content_service
+
+    if not content_service.delete_item(item_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Content item not found")
+    _log_admin_action(user.get("id"), "content_item_delete", "content_item", None, {"item_id": item_id})
+
+
+@router.get("/levels/{level_id}/content")
+def get_level_content_admin(
+    level_id: int,
+    user: Dict[str, Any] = Depends(require_admin),
+):
+    """Raw (unresolved) level content for editing."""
+    with session_scope() as s:
+        row = s.execute(select(Level).where(Level.level_id == level_id)).scalar_one_or_none()
+    if not row:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Level not found")
+    return {"level_id": level_id, "content": row.content}
+
+
+@router.put("/levels/{level_id}/content")
+def put_level_content(
+    level_id: int,
+    body: LevelContentIn,
+    user: Dict[str, Any] = Depends(require_admin),
+):
+    """Save a level's environment/content payload (the publish step)."""
+    with session_scope() as s:
+        row = s.execute(select(Level).where(Level.level_id == level_id)).scalar_one_or_none()
+        if not row:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Level not found")
+        row.content = body.content
+        row.updated_at = utc_now()
+    _log_admin_action(user.get("id"), "level_content_update", "level", level_id, None)
+    return {"level_id": level_id, "content": body.content}

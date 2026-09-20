@@ -3,8 +3,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import select
 
+from app.db import session_scope
 from app.dependencies import get_current_user, optional_current_user
+from app.models import Level as LevelRow
+from app.services.content_service import resolve_content_refs
 from app.services.level_service import Level
 from app.services.session_service import Session
 
@@ -61,24 +65,40 @@ def get_level(level_id: int, user: Dict[str, Any] = Depends(get_current_user)):
 
 @router.get("/{level_id}/content")
 def get_level_content(level_id: int, user: Dict[str, Any] = Depends(get_current_user)):
-    """Get the interactive content bundle for a level."""
+    """Get the interactive content bundle for a level.
+
+    Content comes from `levels.content` when present (the authored source of
+    truth), falling back to the bundled data.json for unmigrated rows. Any
+    `lib:kind:key` refs are resolved against the content library."""
     level = Level.get_by_level_id(level_id)
     if not level:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Level not found",
         )
-    content_path = _level_content_path(level_id)
-    if not content_path.is_file():
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Level content not found",
-        )
+
+    with session_scope() as s:
+        data = s.execute(
+            select(LevelRow.content).where(LevelRow.level_id == level_id)
+        ).scalar_one_or_none()
+
+    if data is None:
+        content_path = _level_content_path(level_id)
+        if not content_path.is_file():
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Level content not found",
+            )
+        try:
+            data = json.loads(content_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to read level content: {exc}",
+            )
+
     try:
-        data = json.loads(content_path.read_text(encoding="utf-8"))
-    except Exception as exc:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to read level content: {exc}",
-        )
-    return data
+        return resolve_content_refs(data)
+    except Exception:
+        # Resolution failure should not take the level down — serve unresolved
+        return data
