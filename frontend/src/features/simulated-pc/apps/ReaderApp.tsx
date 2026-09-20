@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useSimulatedPC } from '../context/SimulatedPCContext';
 import { AppFrame } from '../components/AppFrame';
+import { DebriefLine } from '../components/DebriefLine';
 import { Newspaper, ArrowRight, CheckCircle, XCircle, RefreshCcw, LogOut } from 'lucide-react';
 import type { Article, ReaderContent } from '../types';
 
@@ -145,6 +146,7 @@ export function ReaderApp() {
           <p className="mb-6 text-ink-soft">
             You correctly classified {correctCount} of {total} exhibits.
           </p>
+          <DebriefLine className="mb-6" />
           <div className="stamp stamp-in mb-6 h-28 w-28 flex-col text-confirm">
             <span className="text-xl">{score}</span>
             <span className="text-[8px] tracking-[0.3em]">Marks</span>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSimulatedPC } from '../context/SimulatedPCContext';
 import { AppFrame } from '../components/AppFrame';
+import { DebriefLine } from '../components/DebriefLine';
 import { Inbox, Mail, ShieldCheck, ShieldAlert, CheckCircle, XCircle } from 'lucide-react';
 import type { MailContent, ScoringEvent } from '../types';
 
@@ -64,6 +65,7 @@ export function MailApp() {
           <span className="register mb-3">Session Report</span>
           <h2 className="mb-2 text-2xl font-extrabold tracking-tight">Email Security Complete</h2>
           <p className="mb-6 text-ink-soft">You correctly identified {correct} of {emails.length} exhibits.</p>
+          <DebriefLine className="mb-6" />
           <div className="stamp stamp-in mb-6 h-28 w-28 flex-col text-confirm">
             <span className="text-xl">{score}</span>
             <span className="text-[8px] tracking-[0.3em]">Marks</span>

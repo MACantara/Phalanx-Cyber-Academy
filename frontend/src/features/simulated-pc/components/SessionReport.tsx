@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CheckCircle, Circle } from 'lucide-react';
 import { useSimulatedPC } from '../context/SimulatedPCContext';
+import { DebriefLine } from './DebriefLine';
 
 /* Environment-level session report — overlays the shell when all required
    objectives are met. Legacy single-app envs declare no objectives and keep
@@ -37,6 +38,7 @@ export function SessionReport() {
             );
           })}
         </ul>
+        <DebriefLine className="mt-5" />
         <div className="stamp stamp-in mx-auto my-6 flex h-28 w-28 flex-col items-center justify-center text-confirm">
           <span className="text-xl">{score}</span>
           <span className="text-[8px] tracking-[0.3em]">Marks</span>
