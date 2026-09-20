@@ -81,6 +81,12 @@ export function MailApp() {
             >
               Replay
             </button>
+            <button
+              onClick={() => setFinished(false)}
+              className="min-h-[44px] px-6 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-ink-soft hover:text-ink"
+            >
+              Back to Inbox
+            </button>
           </div>
         </div>
       </AppFrame>
