@@ -11,6 +11,16 @@ export const emailLinkSchema = z.object({
   url: z.string(),
 });
 
+export const scaffoldStageSchema = z.enum(['worked', 'prompted', 'free']);
+
+export const evidenceFlagSchema = z.object({
+  id: z.string(),
+  region: z.enum(['sender', 'subject', 'body', 'link']),
+  match: z.string().optional(),
+  why: z.string(),
+  technique: z.string().optional(),
+});
+
 export const emailItemSchema = z.object({
   id: z.string(),
   from: z.string(),
@@ -21,6 +31,9 @@ export const emailItemSchema = z.object({
   explanation: z.string().optional(),
   locked: z.boolean().optional(),
   links: z.array(emailLinkSchema).optional(),
+  flags: z.array(evidenceFlagSchema).optional(),
+  techniques: z.array(z.string()).optional(),
+  scaffold: scaffoldStageSchema.optional(),
 });
 
 export const articleSchema = z.object({
@@ -32,6 +45,16 @@ export const articleSchema = z.object({
   website: z.string(),
   content: z.string(),
   label: z.number(),
+  cues: z
+    .object({
+      source: z.enum(['strong', 'weak', 'mixed']).optional(),
+      author: z.enum(['strong', 'weak', 'mixed']).optional(),
+      evidence: z.enum(['strong', 'weak', 'mixed']).optional(),
+      recency: z.enum(['strong', 'weak', 'mixed']).optional(),
+    })
+    .optional(),
+  techniques: z.array(z.string()).optional(),
+  scaffold: scaffoldStageSchema.optional(),
 });
 
 export const fileItemSchema = z.object({
@@ -49,6 +72,9 @@ export const caseChoiceSchema = z.object({
   score: z.number(),
   feedback: z.string().optional(),
   next: z.string().optional(),
+  requiresCite: z
+    .object({ evidenceId: z.string(), match: z.string().optional() })
+    .optional(),
 });
 
 export const caseSceneSchema = z.object({
@@ -57,6 +83,13 @@ export const caseSceneSchema = z.object({
   speaker: z.string().optional(),
   choices: z.array(caseChoiceSchema),
   requiredEvidence: z.array(z.string()).optional(),
+  type: z.enum(['narrative', 'sequence']).optional(),
+  order: z
+    .object({
+      items: z.array(z.string()),
+      steps: z.array(z.string()),
+    })
+    .optional(),
 });
 
 export const evidenceItemSchema = z.object({
@@ -103,6 +136,7 @@ export const browserSiteSchema = z.object({
   title: z.string(),
   body: z.string(),
   locked: z.boolean().optional(),
+  inspect: z.array(z.string()).optional(),
   form: z
     .object({
       fields: z.array(browserFieldSchema),
@@ -116,7 +150,16 @@ export const browserSiteSchema = z.object({
 
 export const mailContentSchema = z.object({ emails: z.array(emailItemSchema) });
 export const readerContentSchema = z.object({ articles: z.array(articleSchema) });
-export const filesContentSchema = z.object({ files: z.array(fileItemSchema) });
+export const filesContentSchema = z.object({
+  files: z.array(fileItemSchema),
+  task: z
+    .object({
+      prompt: z.string(),
+      answerFileId: z.string(),
+      matchHint: z.string().optional(),
+    })
+    .optional(),
+});
 export const browserContentSchema = z.object({
   sites: z.array(browserSiteSchema),
   home: z.string().optional(),
@@ -217,6 +260,7 @@ export const levelEnvironmentSchema = z.object({
       debrief: z
         .object({ speaker: z.string().optional(), text: z.string() })
         .optional(),
+      lessonSize: z.number().optional(),
       cast: z
         .record(
           z.string(),

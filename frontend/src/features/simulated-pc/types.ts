@@ -78,6 +78,13 @@ export interface CaseScene {
   speaker?: string;
   choices: CaseChoice[];
   requiredEvidence?: string[];
+  /** 'sequence' scenes ask the learner to order evidence items before the
+      choices unlock. Default is a narrative scene. */
+  type?: 'narrative' | 'sequence';
+  order?: {
+    items: string[];
+    steps: string[];
+  };
 }
 
 export interface CaseChoice {
@@ -86,6 +93,13 @@ export interface CaseChoice {
   score: number;
   feedback?: string;
   next?: string;
+  /** Cite-before-choose: the learner must open `evidenceId` and mark the
+      proving line (or the exhibit itself when no match is given) before
+      this choice unlocks. */
+  requiresCite?: {
+    evidenceId: string;
+    match?: string;
+  };
 }
 
 export interface CaseEvidence {
@@ -116,6 +130,22 @@ export interface EmailLink {
   url: string;
 }
 
+/* Evidence mechanics — the learner-produced input behind a verdict.
+   `scaffold` sets how much support an exhibit carries: worked (cues
+   pre-flagged), prompted (flag required before verdict), free (verdict
+   alone commits, flags earn bonus). */
+export type ScaffoldStage = 'worked' | 'prompted' | 'free';
+
+export interface EvidenceFlag {
+  id: string;
+  /** Whole-field targets (sender/subject) need no match; body/link regions
+      locate the tappable span by substring. */
+  region: 'sender' | 'subject' | 'body' | 'link';
+  match?: string;
+  why: string;
+  technique?: string;
+}
+
 export interface EmailItem {
   id: string;
   from: string;
@@ -126,6 +156,9 @@ export interface EmailItem {
   explanation?: string;
   locked?: boolean;
   links?: EmailLink[];
+  flags?: EvidenceFlag[];
+  techniques?: string[];
+  scaffold?: ScaffoldStage;
 }
 
 export interface TerminalCtfContent extends BaseContent {
@@ -174,6 +207,16 @@ export interface Article {
   website: string;
   content: string;
   label: number;
+  /** Source-triage: the learner rates each dimension before the verdict;
+      these are the expected ratings for scoring. */
+  cues?: {
+    source?: 'strong' | 'weak' | 'mixed';
+    author?: 'strong' | 'weak' | 'mixed';
+    evidence?: 'strong' | 'weak' | 'mixed';
+    recency?: 'strong' | 'weak' | 'mixed';
+  };
+  techniques?: string[];
+  scaffold?: ScaffoldStage;
 }
 
 export interface FileItem {
@@ -294,6 +337,9 @@ export interface Scenario {
   cast?: Record<string, SpeakerProfile>;
   briefing?: ScenarioBriefing;
   debrief?: ScenarioDebrief;
+  /** Exhibits per lesson for sliceable apps (mail/reader). Apps pick a
+      sane default when unset. */
+  lessonSize?: number;
 }
 
 export interface LevelEnvironment {
@@ -327,6 +373,12 @@ export interface CaseContent {
 
 export interface FilesContent {
   files: FileItem[];
+  /** Find-the-match task: gives the file browser a goal beyond inspection. */
+  task?: {
+    prompt: string;
+    answerFileId: string;
+    matchHint?: string;
+  };
 }
 
 export interface BrowserField {
@@ -341,6 +393,9 @@ export interface BrowserSite {
   title: string;
   body: string;
   locked?: boolean;
+  /** Inspect affordance: metadata revealed when the learner checks the site
+      before interacting with its form (registered domain, certs, flags). */
+  inspect?: string[];
   form?: {
     fields: BrowserField[];
     submitLabel?: string;
